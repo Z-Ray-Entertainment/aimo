@@ -4,6 +4,7 @@ from application.auth.decorators import get_current_user, require_auth
 from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.lorebook_repository import LorebookRepository
 from infrastructure.repositories.persona_repository import PersonaRepository
+from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 
 overview_bp = Blueprint("overview", __name__)
@@ -89,14 +90,19 @@ def index():
             }
         )
 
+    trans_repo = TranslationRepository()
     personas = persona_repo.list_for_user(user.id)
-    persona_items = [
-        {
-            "persona": p,
-            "in_use": persona_repo.is_used_in_any_session(p.id) if p.id else False,
-        }
-        for p in personas
-    ]
+    persona_items = []
+    for p in personas:
+        p_trans = trans_repo.get_entity_translations_map("persona", p.id) if p.id else {}
+        persona_items.append(
+            {
+                "persona": p,
+                "in_use": persona_repo.is_used_in_any_session(p.id) if p.id else False,
+                "i18n_description": p_trans.get("description", {}),
+                "i18n_appearance": p_trans.get("appearance", {}),
+            }
+        )
 
     return render_template(
         "overview/index.html",

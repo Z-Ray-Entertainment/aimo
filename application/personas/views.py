@@ -4,9 +4,8 @@ from application.auth.decorators import get_current_user, require_permission
 from domain.permissions.models import FunctionPermission
 from domain.personas.models import Gender
 from domain.personas.services import PersonaService
-from infrastructure.llm.factory import get_llm_provider
 from infrastructure.repositories.persona_repository import PersonaRepository
-from infrastructure.repositories.settings_repository import SettingsRepository
+from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
 
@@ -19,13 +18,17 @@ def create_persona():
     user = get_current_user()
     assert user is not None and user.id is not None
     repo = PersonaRepository()
+    trans_repo = TranslationRepository()
     service = PersonaService()
     storage = FileStorage()
 
     try:
         portrait_file = request.files.get("portrait")
+        preuploaded = request.form.get("preuploaded_portrait_path", "").strip()
         if portrait_file and portrait_file.filename:
             portrait_path = storage.save_portrait(portrait_file.stream, portrait_file.filename)
+        elif preuploaded:
+            portrait_path = preuploaded
         else:
             portrait_path = "portraits/default_persona.png"
 
@@ -42,23 +45,14 @@ def create_persona():
             is_default=is_default,
         )
 
-        if not persona.appearance and request.form.get("vision_analyze"):
-            settings = SettingsRepository().get_settings()
-            llm = get_llm_provider(settings)
-            try:
-                resolved = storage.resolve_path(portrait_path)
-                if resolved.is_file():
-                    service.analyze_appearance(
-                        persona=persona,
-                        vision_provider=llm,
-                        vision_model=settings.tasks.vision_model,
-                        prompt=settings.prompts.vision_persona_prompt,
-                        resolved_image_path=resolved,
-                    )
-            except Exception:
-                pass
-
-        repo.create(persona)
+        saved = repo.create(persona)
+        if saved.id is not None:
+            trans_repo.save_field_variants_json(
+                "persona", saved.id, "description", request.form.get("i18n_description")
+            )
+            trans_repo.save_field_variants_json(
+                "persona", saved.id, "appearance", request.form.get("i18n_appearance")
+            )
         flash(f"Persona '{persona.name}' erfolgreich erstellt.", "success")
     except AimoError as exc:
         flash(str(exc), "error")
@@ -72,6 +66,7 @@ def edit_persona(persona_id: int):
     user = get_current_user()
     assert user is not None and user.id is not None
     repo = PersonaRepository()
+    trans_repo = TranslationRepository()
     service = PersonaService()
     storage = FileStorage()
 
@@ -83,8 +78,11 @@ def edit_persona(persona_id: int):
     try:
         portrait_path = persona.portrait_path
         portrait_file = request.files.get("portrait")
+        preuploaded = request.form.get("preuploaded_portrait_path", "").strip()
         if portrait_file and portrait_file.filename:
             portrait_path = storage.save_portrait(portrait_file.stream, portrait_file.filename)
+        elif preuploaded:
+            portrait_path = preuploaded
 
         service.update_persona(
             persona=persona,
@@ -94,25 +92,16 @@ def edit_persona(persona_id: int):
             description=request.form.get("description", persona.description),
             appearance=request.form.get("appearance", persona.appearance),
         )
-        if request.form.get("vision_analyze"):
-            settings = SettingsRepository().get_settings()
-            llm = get_llm_provider(settings)
-            try:
-                resolved = storage.resolve_path(portrait_path)
-                if resolved.is_file():
-                    service.analyze_appearance(
-                        persona=persona,
-                        vision_provider=llm,
-                        vision_model=settings.tasks.vision_model,
-                        prompt=settings.prompts.vision_persona_prompt,
-                        resolved_image_path=resolved,
-                    )
-            except Exception:
-                pass
 
         if request.form.get("is_default"):
             persona.is_default = True
         repo.update(persona)
+        trans_repo.save_field_variants_json(
+            "persona", persona_id, "description", request.form.get("i18n_description")
+        )
+        trans_repo.save_field_variants_json(
+            "persona", persona_id, "appearance", request.form.get("i18n_appearance")
+        )
         flash(f"Persona '{persona.name}' aktualisiert.", "success")
     except AimoError as exc:
         flash(str(exc), "error")

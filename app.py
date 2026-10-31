@@ -19,6 +19,7 @@ from application.setup import setup_bp
 from application.worldinfo import worldinfo_bp
 from infrastructure.database import init_db
 from infrastructure.repositories.persona_repository import PersonaRepository
+from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.config import Config
@@ -82,15 +83,21 @@ def create_app(config_class: type[Config] = Config) -> Flask:
         get_current_permissions()
         if user is not None and user.id is not None:
             persona_repo = PersonaRepository()
+            trans_repo = TranslationRepository()
             personas = persona_repo.list_for_user(user.id)
             g.default_persona = next((p for p in personas if p.is_default), personas[0] if personas else None)
-            g.persona_items = [
-                {
-                    "persona": p,
-                    "in_use": persona_repo.is_used_in_any_session(p.id) if p.id else False,
-                }
-                for p in personas
-            ]
+            persona_items = []
+            for p in personas:
+                p_trans = trans_repo.get_entity_translations_map("persona", p.id) if p.id else {}
+                persona_items.append(
+                    {
+                        "persona": p,
+                        "in_use": persona_repo.is_used_in_any_session(p.id) if p.id else False,
+                        "i18n_description": p_trans.get("description", {}),
+                        "i18n_appearance": p_trans.get("appearance", {}),
+                    }
+                )
+            g.persona_items = persona_items
         else:
             g.default_persona = None
             g.persona_items = []

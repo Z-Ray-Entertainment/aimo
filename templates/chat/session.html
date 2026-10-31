@@ -137,15 +137,17 @@
             <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp" style="display: none;" onchange="document.getElementById('upload-file-indicator').textContent = this.files[0] ? this.files[0].name : '';">
           </label>
 
-          <!-- Zauberstab-Button für ComfyUI Szenenbild -->
-          <button type="button" class="btn btn-sparkle" style="padding: 0.6rem 0.8rem;" onclick="window.chatStream.triggerComfyUIGeneration()" title="Szenenbild mit ComfyUI generieren">
-            <span class="icon-sparkle">✨</span>
-          </button>
+          {% if comfyui_available %}
+            <!-- Zauberstab-Button für ComfyUI Szenenbild -->
+            <button type="button" class="btn btn-sparkle" style="padding: 0.6rem 0.8rem;" onclick="window.chatStream.triggerComfyUIGeneration()" title="Szenenbild mit ComfyUI generieren">
+              <span class="icon-sparkle">✨</span>
+            </button>
 
-          <!-- Abbrechen-Button während ComfyUI-Bildgenerierung -->
-          <button type="button" id="cancel-image-gen-btn" class="btn btn-danger" style="display: none; padding: 0.6rem 0.85rem;" onclick="window.chatStream.cancelComfyUIGeneration()">
-            ✕ Abbrechen
-          </button>
+            <!-- Abbrechen-Button während ComfyUI-Bildgenerierung -->
+            <button type="button" id="cancel-image-gen-btn" class="btn btn-danger" style="display: none; padding: 0.6rem 0.85rem;" onclick="window.chatStream.cancelComfyUIGeneration()">
+              ✕ Abbrechen
+            </button>
+          {% endif %}
 
           <div style="flex: 1;">
             <div id="upload-file-indicator" style="font-size: 0.75rem; color: var(--gold-accent); margin-bottom: 0.2rem;"></div>
@@ -255,6 +257,8 @@
             data-persona-gender="{{ persona.gender.value }}"
             data-persona-description="{{ persona.description }}"
             data-persona-appearance="{{ persona.appearance }}"
+            data-persona-i18n-description='{{ (persona_i18n_description or {}) | tojson }}'
+            data-persona-i18n-appearance='{{ (persona_i18n_appearance or {}) | tojson }}'
             data-persona-default="{{ '1' if persona.is_default else '0' }}"
             onclick="window.AimoModals.open('persona-manager-modal'); openEditPersonaFromBtn(this);">
             <span class="icon-mono">✏️</span>

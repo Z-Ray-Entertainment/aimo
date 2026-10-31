@@ -7,6 +7,7 @@ from domain.personas.services import PersonaService
 from infrastructure.llm.factory import get_llm_provider
 from infrastructure.repositories.persona_repository import PersonaRepository
 from infrastructure.repositories.settings_repository import SettingsRepository
+from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
 
@@ -19,6 +20,7 @@ def list_personas():
     user = get_current_user()
     assert user is not None and user.id is not None
     repo = PersonaRepository()
+    trans_repo = TranslationRepository()
     personas = repo.list_for_user(user.id)
     return jsonify(
         {
@@ -32,6 +34,7 @@ def list_personas():
                     "appearance": p.appearance,
                     "is_default": p.is_default,
                     "in_use": repo.is_used_in_any_session(p.id) if p.id else False,
+                    "i18n": trans_repo.get_entity_translations_map("persona", p.id) if p.id else {},
                 }
                 for p in personas
             ]
@@ -45,6 +48,7 @@ def create_persona():
     user = get_current_user()
     assert user is not None and user.id is not None
     repo = PersonaRepository()
+    trans_repo = TranslationRepository()
     service = PersonaService()
     storage = FileStorage()
 
@@ -58,7 +62,7 @@ def create_persona():
             if portrait_file and portrait_file.filename:
                 portrait_path = storage.save_portrait(portrait_file.stream, portrait_file.filename)
             else:
-                portrait_path = data.get("portrait_path", "portraits/default_persona.png")
+                portrait_path = data.get("portrait_path") or data.get("preuploaded_portrait_path") or "portraits/default_persona.png"
 
         existing = repo.list_for_user(user.id)
         is_default = bool(data.get("is_default")) or len(existing) == 0
@@ -73,23 +77,14 @@ def create_persona():
             is_default=is_default,
         )
 
-        if not persona.appearance and data.get("auto_analyze"):
-            settings = SettingsRepository().get_settings()
-            llm = get_llm_provider(settings)
-            try:
-                resolved_img = storage.resolve_path(persona.portrait_path)
-                if resolved_img.is_file():
-                    service.analyze_appearance(
-                        persona=persona,
-                        vision_provider=llm,
-                        vision_model=settings.tasks.vision_model,
-                        prompt=settings.prompts.vision_persona_prompt,
-                        resolved_image_path=resolved_img,
-                    )
-            except Exception:
-                pass
-
         saved = repo.create(persona)
+        if saved.id is not None:
+            i18n_desc = data.get("i18n_description")
+            i18n_app = data.get("i18n_appearance")
+            if isinstance(i18n_desc, str):
+                trans_repo.save_field_variants_json("persona", saved.id, "description", i18n_desc)
+            if isinstance(i18n_app, str):
+                trans_repo.save_field_variants_json("persona", saved.id, "appearance", i18n_app)
         return jsonify(
             {
                 "id": saved.id,
@@ -111,6 +106,7 @@ def update_persona(persona_id: int):
     user = get_current_user()
     assert user is not None and user.id is not None
     repo = PersonaRepository()
+    trans_repo = TranslationRepository()
     service = PersonaService()
     storage = FileStorage()
 
@@ -128,7 +124,7 @@ def update_persona(persona_id: int):
             if portrait_file and portrait_file.filename:
                 portrait_path = storage.save_portrait(portrait_file.stream, portrait_file.filename)
             else:
-                portrait_path = data.get("portrait_path", persona.portrait_path)
+                portrait_path = data.get("portrait_path") or data.get("preuploaded_portrait_path") or persona.portrait_path
 
         service.update_persona(
             persona=persona,
@@ -142,6 +138,12 @@ def update_persona(persona_id: int):
             persona.is_default = True
 
         saved = repo.update(persona)
+        i18n_desc = data.get("i18n_description")
+        i18n_app = data.get("i18n_appearance")
+        if isinstance(i18n_desc, str):
+            trans_repo.save_field_variants_json("persona", persona_id, "description", i18n_desc)
+        if isinstance(i18n_app, str):
+            trans_repo.save_field_variants_json("persona", persona_id, "appearance", i18n_app)
         return jsonify(
             {
                 "id": saved.id,
@@ -155,6 +157,59 @@ def update_persona(persona_id: int):
         )
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 400
+
+
+@api_personas_bp.route("/analyze-portrait", methods=["POST"])
+@require_permission(FunctionPermission.PERSONA_MANAGE)
+def analyze_uploaded_or_existing_portrait():
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = PersonaRepository()
+    service = PersonaService()
+    storage = FileStorage()
+
+    portrait_path: str = ""
+    try:
+        if request.is_json:
+            data = request.get_json(silent=True) or {}
+            raw_pid = data.get("persona_id")
+            raw_path = str(data.get("portrait_path", "")).strip()
+        else:
+            data = request.form.to_dict()
+            raw_pid = data.get("persona_id")
+            raw_path = str(data.get("portrait_path") or data.get("preuploaded_portrait_path") or "").strip()
+            portrait_file = request.files.get("portrait")
+            if portrait_file and portrait_file.filename:
+                portrait_path = storage.save_portrait(portrait_file.stream, portrait_file.filename)
+
+        if not portrait_path and raw_path:
+            portrait_path = raw_path
+        elif not portrait_path and raw_pid and str(raw_pid).isdigit():
+            persona = repo.get_by_id(int(raw_pid))
+            if persona is None or persona.user_id != user.id:
+                return jsonify({"error": "Persona nicht gefunden."}), 404
+            portrait_path = persona.portrait_path
+
+        if not portrait_path:
+            return jsonify({"error": "Bitte wähle zuerst ein Porträtbild aus."}), 400
+
+        resolved_path = storage.resolve_path(portrait_path)
+        if not resolved_path.is_file():
+            return jsonify({"error": "Kein gültiges Porträtbild zum Analysieren vorhanden. Bitte lade zuerst ein Bild hoch."}), 400
+
+        settings = SettingsRepository().get_settings()
+        llm = get_llm_provider(settings)
+        appearance = service.extract_appearance_from_image(
+            image_path=resolved_path,
+            vision_provider=llm,
+            vision_model=settings.tasks.vision_model,
+            prompt=settings.prompts.vision_persona_prompt,
+        )
+        return jsonify({"appearance": appearance, "portrait_path": portrait_path})
+    except AimoError as exc:
+        return jsonify({"error": str(exc)}), 502
+    except Exception as exc:
+        return jsonify({"error": f"Bildanalyse fehlgeschlagen: {exc}"}), 502
 
 
 @api_personas_bp.route("/<int:persona_id>/analyze", methods=["POST"])

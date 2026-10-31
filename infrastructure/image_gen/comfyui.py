@@ -90,10 +90,12 @@ class ComfyUIImageGenProvider(ImageGenProvider):
             ) from exc
 
     def check_health(self) -> bool:
+        if not self.base_url:
+            return False
         try:
             response = requests.get(
                 f"{self.base_url}/system_stats",
-                timeout=(5.0, 5.0),
+                timeout=(1.5, 2.0),
             )
             return response.status_code == 200
         except requests.RequestException:

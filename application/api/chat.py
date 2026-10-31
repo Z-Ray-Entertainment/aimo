@@ -292,6 +292,14 @@ def _start_background_turn(
                     "character", w_character.id, "dialogue_examples", "en", w_character.dialogue_examples
                 )
 
+            if w_persona.id is not None:
+                w_persona.description = w_trans_repo.get_localized_field(
+                    "persona", w_persona.id, "description", "en", w_persona.description
+                )
+                w_persona.appearance = w_trans_repo.get_localized_field(
+                    "persona", w_persona.id, "appearance", "en", w_persona.appearance
+                )
+
             w_worldinfo = (
                 w_wi_repo.get_by_id(w_session.active_worldinfo_id)
                 if w_session.active_worldinfo_id
@@ -754,6 +762,19 @@ def generate_scene_image(session_id: int):
     persona = persona_repo.get_by_id(chat_session.persona_id)
     if character is None or persona is None:
         return jsonify({"error": "Character or Persona not found."}), 404
+
+    trans_repo = TranslationRepository()
+    if character.id is not None:
+        character.description = trans_repo.get_localized_field(
+            "character", character.id, "description", "en", character.description
+        )
+    if persona.id is not None:
+        persona.description = trans_repo.get_localized_field(
+            "persona", persona.id, "description", "en", persona.description
+        )
+        persona.appearance = trans_repo.get_localized_field(
+            "persona", persona.id, "appearance", "en", persona.appearance
+        )
 
     settings = settings_repo.get_settings()
     llm = get_llm_provider(settings)

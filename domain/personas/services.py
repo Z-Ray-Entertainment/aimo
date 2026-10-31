@@ -82,6 +82,24 @@ class PersonaService:
         persona.appearance = appearance.strip() if isinstance(appearance, str) else ""
         return persona
 
+    def extract_appearance_from_image(
+        self,
+        image_path: Path,
+        vision_provider: VisionAnalysisProvider,
+        vision_model: str,
+        prompt: str,
+    ) -> str:
+        effective_prompt = (
+            f"{prompt.strip()}\n"
+            "Focus strictly on facial features, eye color, hairstyle, hair color, skin tone, "
+            "and physical build. Ignore any backgrounds, lighting, or situational body poses."
+        )
+        return vision_provider.analyze_image(
+            image_path=image_path,
+            prompt=effective_prompt,
+            model=vision_model,
+        ).strip()
+
     def analyze_appearance(
         self,
         persona: UserPersona,
@@ -95,16 +113,12 @@ class PersonaService:
             if resolved_image_path is not None
             else Path(persona.portrait_path)
         )
-        effective_prompt = (
-            f"{prompt.strip()}\n"
-            "Focus strictly on facial features, eye color, hairstyle, hair color, skin tone, "
-            "and physical build. Ignore any backgrounds, lighting, or situational body poses."
-        )
-        extracted_appearance = vision_provider.analyze_image(
+        extracted_appearance = self.extract_appearance_from_image(
             image_path=target_path,
-            prompt=effective_prompt,
-            model=vision_model,
-        ).strip()
+            vision_provider=vision_provider,
+            vision_model=vision_model,
+            prompt=prompt,
+        )
         persona.appearance = extracted_appearance
         return extracted_appearance
 

@@ -1,6 +1,110 @@
+window.aimoPersonaVisionRunning = false;
+
+window.setPersonaEditorLocked = function setPersonaEditorLocked(locked) {
+  window.aimoPersonaVisionRunning = Boolean(locked);
+  const modal = document.getElementById("persona-manager-modal");
+  if (!modal) return;
+  if (locked) {
+    modal.setAttribute("data-locked", "1");
+  } else {
+    modal.removeAttribute("data-locked");
+  }
+  modal.querySelectorAll("[data-persona-lockable='1']").forEach((el) => {
+    el.disabled = Boolean(locked);
+  });
+};
+
+window.extractPersonaVisionFeatures = async function extractPersonaVisionFeatures(mode) {
+  if (window.aimoPersonaVisionRunning) return;
+
+  const isEdit = mode === "edit";
+  const fileInput = document.getElementById(isEdit ? "edit-persona-portrait" : "new-persona-portrait");
+  const preuploadedInput = document.getElementById(
+    isEdit ? "edit-persona-preuploaded-portrait" : "new-persona-preuploaded-portrait"
+  );
+  const personaIdInput = document.getElementById("edit-persona-id");
+  const appInput = document.getElementById(isEdit ? "edit-persona-appearance" : "new-persona-appearance");
+  const visionBtn = document.getElementById(isEdit ? "edit-persona-vision-btn" : "new-persona-vision-btn");
+  const statusEl = document.getElementById(isEdit ? "edit-persona-vision-status" : "new-persona-vision-status");
+
+  const hasFile = fileInput && fileInput.files && fileInput.files.length > 0;
+  const hasPreuploaded = preuploadedInput && preuploadedInput.value.trim() !== "";
+  const hasPersonaId = isEdit && personaIdInput && personaIdInput.value.trim() !== "";
+
+  if (!hasFile && !hasPreuploaded && !hasPersonaId) {
+    alert("Bitte wähle zuerst ein Porträtbild aus, um die Bild-Features zu extrahieren.");
+    return;
+  }
+
+  const formData = new FormData();
+  if (hasFile) {
+    formData.append("portrait", fileInput.files[0]);
+  }
+  if (hasPreuploaded) {
+    formData.append("preuploaded_portrait_path", preuploadedInput.value.trim());
+  }
+  if (hasPersonaId) {
+    formData.append("persona_id", personaIdInput.value.trim());
+  }
+
+  const origBtnHtml = visionBtn ? visionBtn.innerHTML : "";
+  window.setPersonaEditorLocked(true);
+  if (visionBtn) {
+    visionBtn.textContent = "⏳ Analysiere Bild...";
+  }
+  if (statusEl) {
+    statusEl.style.color = "var(--gold-accent)";
+    statusEl.textContent = "⏳ Bildanalyse läuft… (Speichern & Schließen gesperrt)";
+  }
+
+  try {
+    const resp = await fetch("/api/personas/analyze-portrait", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await resp.json();
+    if (resp.ok && data.appearance) {
+      if (data.portrait_path && preuploadedInput) {
+        preuploadedInput.value = data.portrait_path;
+      }
+      if (appInput) {
+        appInput.value = data.appearance;
+        appInput.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      if (statusEl) {
+        statusEl.style.color = "#58D68D";
+        statusEl.textContent = "✓ Bild-Features extrahiert";
+      }
+    } else {
+      const errMsg = data.error || "Bildanalyse fehlgeschlagen.";
+      if (statusEl) {
+        statusEl.style.color = "#E74C3C";
+        statusEl.textContent = `⚠️ ${errMsg}`;
+      } else {
+        alert(errMsg);
+      }
+    }
+  } catch (_) {
+    if (statusEl) {
+      statusEl.style.color = "#E74C3C";
+      statusEl.textContent = "⚠️ Verbindungsfehler bei der Bildanalyse.";
+    } else {
+      alert("Verbindungsfehler bei der Bildanalyse.");
+    }
+  } finally {
+    window.setPersonaEditorLocked(false);
+    if (visionBtn && origBtnHtml) {
+      visionBtn.innerHTML = origBtnHtml;
+    }
+  }
+};
+
 window.openNewPersonaForm = function openNewPersonaForm() {
+  if (window.aimoPersonaVisionRunning) return;
   const editBox = document.getElementById("edit-persona-form-box");
   const newBox = document.getElementById("new-persona-form-box");
+  const statusEl = document.getElementById("new-persona-vision-status");
+  if (statusEl) statusEl.textContent = "";
   if (editBox) editBox.style.display = "none";
   if (newBox) {
     newBox.style.display = "block";
@@ -9,7 +113,7 @@ window.openNewPersonaForm = function openNewPersonaForm() {
 };
 
 window.openEditPersonaFromBtn = function openEditPersonaFromBtn(btn) {
-  if (!btn) return;
+  if (!btn || window.aimoPersonaVisionRunning) return;
   const newBox = document.getElementById("new-persona-form-box");
   const editBox = document.getElementById("edit-persona-form-box");
   const form = document.getElementById("edit-persona-form");
@@ -17,27 +121,45 @@ window.openEditPersonaFromBtn = function openEditPersonaFromBtn(btn) {
 
   if (newBox) newBox.style.display = "none";
 
-  const id = btn.getAttribute("data-persona-id");
+  const id = btn.getAttribute("data-persona-id") || "";
   const name = btn.getAttribute("data-persona-name") || "";
   const gender = btn.getAttribute("data-persona-gender") || "non-binary";
   const desc = btn.getAttribute("data-persona-description") || "";
   const appearance = btn.getAttribute("data-persona-appearance") || "";
+  const i18nDesc = btn.getAttribute("data-persona-i18n-description") || "{}";
+  const i18nApp = btn.getAttribute("data-persona-i18n-appearance") || "{}";
   const isDefault = btn.getAttribute("data-persona-default") === "1";
 
   form.action = `/personas/${id}/edit`;
+  const idInput = document.getElementById("edit-persona-id");
+  const preuploadedInput = document.getElementById("edit-persona-preuploaded-portrait");
+  const portraitInput = document.getElementById("edit-persona-portrait");
+  const statusEl = document.getElementById("edit-persona-vision-status");
   const nameInput = document.getElementById("edit-persona-name");
   const genderSelect = document.getElementById("edit-persona-gender");
   const descInput = document.getElementById("edit-persona-description");
   const appInput = document.getElementById("edit-persona-appearance");
   const defCheck = document.getElementById("edit-persona-default");
-  const visCheck = document.getElementById("edit-persona-vision");
 
+  if (idInput) idInput.value = id;
+  if (preuploadedInput) preuploadedInput.value = "";
+  if (portraitInput) portraitInput.value = "";
+  if (statusEl) statusEl.textContent = "";
   if (nameInput) nameInput.value = name;
   if (genderSelect) genderSelect.value = gender;
-  if (descInput) descInput.value = desc;
-  if (appInput) appInput.value = appearance;
+  if (descInput) {
+    descInput.value = desc;
+    if (typeof descInput._reloadI18nVariants === "function") {
+      descInput._reloadI18nVariants(i18nDesc, id, desc);
+    }
+  }
+  if (appInput) {
+    appInput.value = appearance;
+    if (typeof appInput._reloadI18nVariants === "function") {
+      appInput._reloadI18nVariants(i18nApp, id, appearance);
+    }
+  }
   if (defCheck) defCheck.checked = isDefault;
-  if (visCheck) visCheck.checked = false;
 
   editBox.style.display = "block";
   editBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -96,7 +218,7 @@ function initEditorI18nFields() {
 
     const fieldName = inputEl.getAttribute("data-i18n-field") || "";
     const entityType = inputEl.getAttribute("data-i18n-entity-type") || "";
-    const entityId = inputEl.getAttribute("data-i18n-entity-id") || "";
+    let entityId = inputEl.getAttribute("data-i18n-entity-id") || "";
     const hiddenId = inputEl.getAttribute("data-i18n-hidden") || "";
     const hiddenInput = hiddenId ? document.getElementById(hiddenId) : null;
 
@@ -450,7 +572,11 @@ function initEditorI18nFields() {
 
     const parentForm = inputEl.closest("form");
     if (parentForm) {
-      parentForm.addEventListener("submit", () => {
+      parentForm.addEventListener("submit", (e) => {
+        if (window.aimoPersonaVisionRunning && parentForm.closest("#persona-manager-modal")) {
+          e.preventDefault();
+          return;
+        }
         if (activeLang && inputEl.value.trim() !== "") {
           const curOutdated = Boolean(variants[activeLang]?.is_outdated);
           variants[activeLang] = {
@@ -484,6 +610,60 @@ function initEditorI18nFields() {
         }
       });
     }
+
+    inputEl._reloadI18nVariants = (rawJsonStr, newEntityId, fallbackText) => {
+      if (typeof newEntityId === "string") {
+        entityId = newEntityId;
+        inputEl.setAttribute("data-i18n-entity-id", newEntityId);
+      }
+      Object.keys(variants).forEach((k) => delete variants[k]);
+      let parsed = {};
+      if (rawJsonStr) {
+        try {
+          parsed = typeof rawJsonStr === "string" ? JSON.parse(rawJsonStr) : rawJsonStr;
+        } catch (_) {
+          parsed = {};
+        }
+      }
+      const nextRaw =
+        parsed && typeof parsed.variants === "object" && parsed.variants !== null
+          ? parsed.variants
+          : parsed;
+      Object.keys(nextRaw || {}).forEach((code) => {
+        const item = nextRaw[code];
+        if (item && typeof item === "object") {
+          const txt = String(item.content ?? item.text ?? "");
+          const out = Boolean(item.is_outdated ?? item.outdated ?? false);
+          if (txt.trim() !== "") {
+            variants[code] = { content: txt, text: txt, is_outdated: out, outdated: out };
+          }
+        }
+      });
+
+      originLang =
+        Object.keys(variants)[0] ||
+        (AIMO_LANGUAGES.some((l) => l.code === sysLang) ? sysLang : "de");
+
+      const initTxt = typeof fallbackText === "string" ? fallbackText : inputEl.value || "";
+      if (initTxt.trim() && Object.keys(variants).length === 0) {
+        variants[originLang] = {
+          content: initTxt,
+          text: initTxt,
+          is_outdated: false,
+          outdated: false,
+        };
+      }
+
+      activeLang = variants[originLang]
+        ? originLang
+        : Object.keys(variants)[0] || originLang;
+      isProvidingTranslation = false;
+      originSelect.value = originLang;
+      updateDefaultTargetOption();
+      inputEl.value = variants[activeLang]?.content ?? initTxt;
+      syncHiddenJson();
+      renderFlags();
+    };
 
     syncHiddenJson();
     renderFlags();

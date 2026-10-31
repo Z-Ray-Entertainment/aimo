@@ -58,14 +58,14 @@
   {% if g.current_user %}
     <!-- Globaler Modal: Persona-Manager (inkl. Bearbeiten) -->
     <div class="modal-backdrop" id="persona-manager-modal" aria-hidden="true">
-      <div class="modal-frame">
+      <div class="modal-frame" style="max-width: 780px;">
         <div class="modal-header">
           <h2 style="color: var(--gold-accent);"><span class="icon-mono">👤</span> Spieler-Personas verwalten</h2>
-          <button type="button" class="btn" data-modal-close="persona-manager-modal">✕</button>
+          <button type="button" id="persona-modal-close-btn" class="btn" data-modal-close="persona-manager-modal" data-persona-lockable="1">✕</button>
         </div>
 
         <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); margin-bottom: 1.5rem;">
-          <div class="add-card-tile" style="min-height: 200px;" onclick="openNewPersonaForm()">
+          <div class="add-card-tile" style="min-height: 200px;" onclick="if (!window.aimoPersonaVisionRunning) openNewPersonaForm()">
             <div class="plus-symbol">+</div>
             <div>Neue Persona</div>
           </div>
@@ -87,7 +87,7 @@
               <div style="display: flex; gap: 0.4rem; margin-top: 0.75rem; flex-wrap: wrap; align-items: center;">
                 {% if not p.is_default %}
                   <form method="POST" action="{{ url_for('personas.set_default', persona_id=p.id) }}">
-                    <button type="submit" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.78rem;">Als Standard</button>
+                    <button type="submit" class="btn" data-persona-lockable="1" style="padding: 0.3rem 0.6rem; font-size: 0.78rem;">Als Standard</button>
                   </form>
                 {% else %}
                   <span style="font-size: 0.78rem; color: var(--gold-accent); font-weight: 700;">★ Standard</span>
@@ -96,6 +96,7 @@
                 <button
                   type="button"
                   class="btn"
+                  data-persona-lockable="1"
                   style="padding: 0.3rem 0.55rem; font-size: 0.78rem;"
                   title="Persona bearbeiten"
                   data-persona-id="{{ p.id }}"
@@ -103,8 +104,10 @@
                   data-persona-gender="{{ p.gender.value }}"
                   data-persona-description="{{ p.description }}"
                   data-persona-appearance="{{ p.appearance }}"
+                  data-persona-i18n-description='{{ (p_item.i18n_description or {}) | tojson }}'
+                  data-persona-i18n-appearance='{{ (p_item.i18n_appearance or {}) | tojson }}'
                   data-persona-default="{{ '1' if p.is_default else '0' }}"
-                  onclick="openEditPersonaFromBtn(this)">
+                  onclick="if (!window.aimoPersonaVisionRunning) openEditPersonaFromBtn(this)">
                   <span class="icon-mono">✏️</span> Bearbeiten
                 </button>
 
@@ -112,7 +115,7 @@
                   <button type="button" class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.78rem;" disabled title="Wird in aktiven Chats verwendet (Lösch-Schutz)">🔒</button>
                 {% else %}
                   <form method="POST" action="{{ url_for('personas.delete_persona', persona_id=p.id) }}">
-                    <button type="submit" class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.78rem;" title="Persona löschen"><span class="icon-mono">🗑️</span></button>
+                    <button type="submit" class="btn btn-danger" data-persona-lockable="1" style="padding: 0.3rem 0.6rem; font-size: 0.78rem;" title="Persona löschen"><span class="icon-mono">🗑️</span></button>
                   </form>
                 {% endif %}
               </div>
@@ -124,9 +127,10 @@
         <div id="new-persona-form-box" style="display: none; border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
             <h3 style="color: var(--gold-accent);">Neue Persona anlegen</h3>
-            <button type="button" class="btn" style="padding: 0.25rem 0.6rem; font-size: 0.8rem;" onclick="document.getElementById('new-persona-form-box').style.display='none'">Abbrechen</button>
+            <button type="button" id="new-persona-cancel-btn" class="btn" data-persona-lockable="1" style="padding: 0.25rem 0.6rem; font-size: 0.8rem;" onclick="if (!window.aimoPersonaVisionRunning) document.getElementById('new-persona-form-box').style.display='none'">Abbrechen</button>
           </div>
-          <form method="POST" action="{{ url_for('personas.create_persona') }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <form id="new-persona-form" method="POST" action="{{ url_for('personas.create_persona') }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <input type="hidden" name="preuploaded_portrait_path" id="new-persona-preuploaded-portrait" value="">
             <div>
               <label>Name *</label>
               <input type="text" name="name" required>
@@ -141,22 +145,52 @@
             </div>
             <div>
               <label>Porträtbild (PNG/JPG/WEBP)</label>
-              <input type="file" name="portrait" accept=".png,.jpg,.jpeg,.webp">
+              <input type="file" id="new-persona-portrait" name="portrait" accept=".png,.jpg,.jpeg,.webp" onchange="document.getElementById('new-persona-preuploaded-portrait').value=''; document.getElementById('new-persona-vision-status').textContent='';">
             </div>
             <div>
               <label>Hintergrund / Persönlichkeit</label>
-              <textarea name="description" rows="2"></textarea>
+              <input type="hidden" name="i18n_description" id="i18n-persona-new-desc" value="{}">
+              <textarea
+                id="new-persona-description"
+                name="description"
+                rows="2"
+                data-i18n-field="description"
+                data-i18n-entity-type="persona"
+                data-i18n-entity-id=""
+                data-i18n-hidden="i18n-persona-new-desc"></textarea>
             </div>
             <div>
-              <label>Physisches Aussehen (leer lassen für Vision-Extraktion)</label>
-              <textarea name="appearance" rows="2"></textarea>
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.35rem;">
+                <label style="margin-bottom: 0;">Physisches Aussehen</label>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span id="new-persona-vision-status" style="font-size: 0.78rem; color: var(--gold-accent);"></span>
+                  <button
+                    type="button"
+                    id="new-persona-vision-btn"
+                    class="btn"
+                    data-persona-lockable="1"
+                    style="padding: 0.25rem 0.65rem; font-size: 0.78rem;"
+                    onclick="window.extractPersonaVisionFeatures('new')"
+                    title="Aussehen per Vision-Modell automatisch aus dem gewählten Porträtbild extrahieren">
+                    <span class="icon-mono">🔍</span> Bild-Features extrahieren
+                  </button>
+                </div>
+              </div>
+              <input type="hidden" name="i18n_appearance" id="i18n-persona-new-app" value="{}">
+              <textarea
+                id="new-persona-appearance"
+                name="appearance"
+                rows="2"
+                data-i18n-field="appearance"
+                data-i18n-entity-type="persona"
+                data-i18n-entity-id=""
+                data-i18n-hidden="i18n-persona-new-app"></textarea>
             </div>
             <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-              <label><input type="checkbox" name="vision_analyze" value="1" checked> Aussehen via Vision-Modell aus Porträt extrahieren</label>
               <label><input type="checkbox" name="is_default" value="1"> Als Standard-Persona setzen</label>
             </div>
             <div style="text-align: right;">
-              <button type="submit" class="btn">Persona speichern</button>
+              <button type="submit" id="new-persona-submit-btn" class="btn" data-persona-lockable="1">Persona speichern</button>
             </div>
           </form>
         </div>
@@ -165,9 +199,11 @@
         <div id="edit-persona-form-box" style="display: none; border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
             <h3 style="color: var(--gold-accent);">Persona bearbeiten</h3>
-            <button type="button" class="btn" style="padding: 0.25rem 0.6rem; font-size: 0.8rem;" onclick="document.getElementById('edit-persona-form-box').style.display='none'">Abbrechen</button>
+            <button type="button" id="edit-persona-cancel-btn" class="btn" data-persona-lockable="1" style="padding: 0.25rem 0.6rem; font-size: 0.8rem;" onclick="if (!window.aimoPersonaVisionRunning) document.getElementById('edit-persona-form-box').style.display='none'">Abbrechen</button>
           </div>
           <form id="edit-persona-form" method="POST" action="" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <input type="hidden" id="edit-persona-id" name="persona_id" value="">
+            <input type="hidden" name="preuploaded_portrait_path" id="edit-persona-preuploaded-portrait" value="">
             <div>
               <label>Name *</label>
               <input type="text" id="edit-persona-name" name="name" required>
@@ -182,22 +218,52 @@
             </div>
             <div>
               <label>Neues Porträtbild (optional, PNG/JPG/WEBP)</label>
-              <input type="file" name="portrait" accept=".png,.jpg,.jpeg,.webp">
+              <input type="file" id="edit-persona-portrait" name="portrait" accept=".png,.jpg,.jpeg,.webp" onchange="document.getElementById('edit-persona-preuploaded-portrait').value=''; document.getElementById('edit-persona-vision-status').textContent='';">
             </div>
             <div>
               <label>Hintergrund / Persönlichkeit</label>
-              <textarea id="edit-persona-description" name="description" rows="2"></textarea>
+              <input type="hidden" name="i18n_description" id="i18n-persona-edit-desc" value="{}">
+              <textarea
+                id="edit-persona-description"
+                name="description"
+                rows="2"
+                data-i18n-field="description"
+                data-i18n-entity-type="persona"
+                data-i18n-entity-id=""
+                data-i18n-hidden="i18n-persona-edit-desc"></textarea>
             </div>
             <div>
-              <label>Physisches Aussehen</label>
-              <textarea id="edit-persona-appearance" name="appearance" rows="2"></textarea>
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.35rem;">
+                <label style="margin-bottom: 0;">Physisches Aussehen</label>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span id="edit-persona-vision-status" style="font-size: 0.78rem; color: var(--gold-accent);"></span>
+                  <button
+                    type="button"
+                    id="edit-persona-vision-btn"
+                    class="btn"
+                    data-persona-lockable="1"
+                    style="padding: 0.25rem 0.65rem; font-size: 0.78rem;"
+                    onclick="window.extractPersonaVisionFeatures('edit')"
+                    title="Aussehen per Vision-Modell automatisch aus dem Porträtbild extrahieren">
+                    <span class="icon-mono">🔍</span> Bild-Features extrahieren
+                  </button>
+                </div>
+              </div>
+              <input type="hidden" name="i18n_appearance" id="i18n-persona-edit-app" value="{}">
+              <textarea
+                id="edit-persona-appearance"
+                name="appearance"
+                rows="2"
+                data-i18n-field="appearance"
+                data-i18n-entity-type="persona"
+                data-i18n-entity-id=""
+                data-i18n-hidden="i18n-persona-edit-app"></textarea>
             </div>
             <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-              <label><input type="checkbox" id="edit-persona-vision" name="vision_analyze" value="1"> Aussehen via Vision-Modell neu aus Porträt extrahieren</label>
               <label><input type="checkbox" id="edit-persona-default" name="is_default" value="1"> Als Standard-Persona setzen</label>
             </div>
             <div style="text-align: right;">
-              <button type="submit" class="btn"><span class="icon-mono">💾</span> Änderungen speichern</button>
+              <button type="submit" id="edit-persona-submit-btn" class="btn" data-persona-lockable="1"><span class="icon-mono">💾</span> Änderungen speichern</button>
             </div>
           </form>
         </div>

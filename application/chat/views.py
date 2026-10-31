@@ -9,10 +9,12 @@ from domain.memories.services import MemoryService
 from domain.permissions.models import FunctionPermission
 from domain.personas.models import Gender
 from domain.personas.services import PersonaService
+from infrastructure.image_gen.factory import get_image_gen_provider
 from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.chat_repository import ChatRepository
 from infrastructure.repositories.memory_repository import MemoryRepository
 from infrastructure.repositories.persona_repository import PersonaRepository
+from infrastructure.repositories.settings_repository import SettingsRepository
 from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from shared.exceptions import AimoError
@@ -227,11 +229,24 @@ def view_session(session_id: int):
         m.image_path for m in messages if m.image_path
     ]
 
+    settings = SettingsRepository().get_settings()
+    comfyui_available = (
+        bool(settings.comfyui_url and settings.comfyui_url.strip())
+        and get_image_gen_provider(settings).check_health()
+    )
+    persona_trans = (
+        trans_repo.get_entity_translations_map("persona", persona.id)
+        if persona and persona.id
+        else {}
+    )
+
     return render_template(
         "chat/session.html",
         chat_session=chat_session,
         character=character,
         persona=persona,
+        persona_i18n_description=persona_trans.get("description", {}),
+        persona_i18n_appearance=persona_trans.get("appearance", {}),
         user_personas=user_personas,
         all_sessions=all_sessions,
         messages=messages,
@@ -245,6 +260,7 @@ def view_session(session_id: int):
         unlocked_gallery=unlocked_gallery,
         session_media_images=session_media_images,
         sys_lang=sys_lang,
+        comfyui_available=comfyui_available,
     )
 
 

@@ -12,6 +12,9 @@ window.AimoModals = {
   close(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
+      if (modal.getAttribute("data-locked") === "1") {
+        return;
+      }
       modal.classList.remove("open");
       modal.setAttribute("aria-hidden", "true");
     }
