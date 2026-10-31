@@ -252,8 +252,13 @@ class AimoChatStream {
       isAnalyzingImage: hasFile,
     });
 
+    const regenBtn = document.getElementById("chat-regenerate-btn");
+    const abortBtn = document.getElementById("chat-abort-btn");
+
     if (input) input.disabled = true;
     if (submitBtn) submitBtn.disabled = true;
+    if (regenBtn) regenBtn.disabled = true;
+    if (abortBtn) abortBtn.style.display = "inline-flex";
 
     try {
       const prepResp = await fetch(`/api/chat/${this.sessionId}/messages`, {
@@ -276,9 +281,12 @@ class AimoChatStream {
       await this.startSSEStream(messagesList, thinkingUI);
     } finally {
       this.isSending = false;
+      this.activeThinkingUI = null;
       if (!this.isGeneratingImage) {
         if (input) input.disabled = false;
         if (submitBtn) submitBtn.disabled = false;
+        if (regenBtn) regenBtn.disabled = false;
+        if (abortBtn) abortBtn.style.display = "none";
         if (input) input.focus();
       }
     }
@@ -404,7 +412,7 @@ class AimoChatStream {
     header.className = "chat-bubble-header";
     header.style.cssText =
       "display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem; font-size: 0.76rem; color: var(--gold-accent);";
-    header.innerHTML = `<strong>${escapeHtml(meta.characterName)}</strong><div class="chat-bubble-actions" style="display: flex; gap: 0.4rem;"></div>`;
+    header.innerHTML = `<strong>${escapeHtml(meta.characterName)}</strong><div class="chat-bubble-actions" style="display: flex; gap: 0.4rem;"><button type="button" class="btn-abort-turn" onclick="window.chatStream.abortTurn()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.85rem;" title="Antwort-Generierung abbrechen">✕</button></div>`;
     bubble.appendChild(header);
 
     const initialLabel = isAnalyzingImage
@@ -429,7 +437,9 @@ class AimoChatStream {
     container.appendChild(row);
     container.scrollTop = container.scrollHeight;
 
-    return { row, bubble, header, thinkingBox, statusEl, avatar };
+    const ui = { row, bubble, header, thinkingBox, statusEl, avatar };
+    this.activeThinkingUI = ui;
+    return ui;
   }
 
   startSSEStream(container, thinkingUI) {
@@ -440,6 +450,19 @@ class AimoChatStream {
     return new Promise((resolve) => {
       let rawTokens = "";
       const es = new EventSource(`/api/chat/${this.sessionId}/stream?language=${encodeURIComponent(meta.sysLang || "de")}`);
+      this.eventSource = es;
+
+      es.addEventListener("aborted", (e) => {
+        es.close();
+        if (this.eventSource === es) {
+          this.eventSource = null;
+        }
+        if (ui?.row) {
+          ui.row.remove();
+        }
+        this.activeThinkingUI = null;
+        resolve();
+      });
 
       es.addEventListener("image_analyzed", (e) => {
         try {
@@ -533,12 +556,20 @@ class AimoChatStream {
         }
 
         es.close();
+        if (this.eventSource === es) {
+          this.eventSource = null;
+        }
+        this.activeThinkingUI = null;
         if (container) container.scrollTop = container.scrollHeight;
         resolve();
       });
 
       es.onerror = () => {
         es.close();
+        if (this.eventSource === es) {
+          this.eventSource = null;
+        }
+        this.activeThinkingUI = null;
         resolve();
       };
     });
@@ -666,6 +697,92 @@ class AimoChatStream {
     if (input) input.disabled = false;
     if (submitBtn) submitBtn.disabled = false;
     if (cancelBtn) cancelBtn.style.display = "none";
+  }
+
+  async abortTurn() {
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = null;
+    }
+
+    if (this.activeThinkingUI?.row) {
+      this.activeThinkingUI.row.remove();
+      this.activeThinkingUI = null;
+    }
+
+    try {
+      await fetch(`/api/chat/${this.sessionId}/abort`, {
+        method: "POST",
+      });
+    } catch (_) {}
+
+    this.isSending = false;
+    const input = document.getElementById("chat-message-textarea");
+    const submitBtn = document.getElementById("chat-send-btn");
+    const regenBtn = document.getElementById("chat-regenerate-btn");
+    const abortBtn = document.getElementById("chat-abort-btn");
+
+    if (!this.isGeneratingImage) {
+      if (input) input.disabled = false;
+      if (submitBtn) submitBtn.disabled = false;
+      if (regenBtn) regenBtn.disabled = false;
+      if (abortBtn) abortBtn.style.display = "none";
+      if (input) input.focus();
+    }
+  }
+
+  async regenerateLastTurn() {
+    if (this.isSending || this.isGeneratingImage) return;
+    this.isSending = true;
+
+    const messagesList = document.getElementById("chat-messages-list");
+    const input = document.getElementById("chat-message-textarea");
+    const submitBtn = document.getElementById("chat-send-btn");
+    const regenBtn = document.getElementById("chat-regenerate-btn");
+    const abortBtn = document.getElementById("chat-abort-btn");
+
+    if (input) input.disabled = true;
+    if (submitBtn) submitBtn.disabled = true;
+    if (regenBtn) regenBtn.disabled = true;
+    if (abortBtn) abortBtn.style.display = "inline-flex";
+
+    let thinkingUI = null;
+
+    try {
+      const resp = await fetch(`/api/chat/${this.sessionId}/regenerate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ language: this.getChatMetadata().sysLang }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        alert(data.error || "Fehler beim Neu-Generieren.");
+        return;
+      }
+
+      if (data.deleted_message_idx !== undefined && data.deleted_message_idx !== null) {
+        const deletedRow = messagesList?.querySelector(`[data-message-idx="${data.deleted_message_idx}"]`);
+        if (deletedRow) {
+          deletedRow.remove();
+        }
+      }
+
+      thinkingUI = this.createThinkingBubble(messagesList);
+      await this.startSSEStream(messagesList, thinkingUI);
+    } catch (err) {
+      if (thinkingUI?.row) thinkingUI.row.remove();
+      alert(`Verbindungsfehler: ${err.message}`);
+    } finally {
+      this.isSending = false;
+      this.activeThinkingUI = null;
+      if (!this.isGeneratingImage) {
+        if (input) input.disabled = false;
+        if (submitBtn) submitBtn.disabled = false;
+        if (regenBtn) regenBtn.disabled = false;
+        if (abortBtn) abortBtn.style.display = "none";
+        if (input) input.focus();
+      }
+    }
   }
 }
 

@@ -68,6 +68,7 @@ class _BackgroundTurnTask:
         self.result_payload: dict | None = None
         self.error_message: str | None = None
         self.delivered_via_stream: bool = False
+        self.is_aborted: bool = False
 
 
 _TASKS_LOCK = threading.Lock()
@@ -156,6 +157,7 @@ def _start_background_turn(
     user_language: str,
     uploaded_image_file=None,
     is_admin: bool = False,
+    existing_user_msg: Message | None = None,
 ) -> tuple[_BackgroundTurnTask, Message, dict | None]:
     chat_repo = ChatRepository()
     char_repo = CharacterRepository()
@@ -177,30 +179,35 @@ def _start_background_turn(
     if persona is None:
         raise AimoError("Persona not found.")
 
-    image_path: str | None = None
-    if uploaded_image_file and uploaded_image_file.filename:
-        image_path = storage.save_generated_image(
-            uploaded_image_file.stream, uploaded_image_file.filename
+    if existing_user_msg is not None:
+        saved_user_msg = existing_user_msg
+        image_path = saved_user_msg.image_path
+        cleaned_user_text = saved_user_msg.localized_content or ""
+    else:
+        image_path = None
+        if uploaded_image_file and uploaded_image_file.filename:
+            image_path = storage.save_generated_image(
+                uploaded_image_file.stream, uploaded_image_file.filename
+            )
+
+        chat_service.apply_time_decay(chat_session)
+        chat_service.apply_user_message_affection(chat_session)
+        chat_service.lock_persona(chat_session)
+
+        cleaned_user_text = user_text.strip()
+        next_idx = chat_repo.get_next_message_idx(session_id)
+        user_msg = Message(
+            id=None,
+            session_id=session_id,
+            message_idx=next_idx,
+            role=MessageRole.USER,
+            english_content=cleaned_user_text or "An uploaded image.",
+            localized_content=cleaned_user_text,
+            image_path=image_path,
+            image_alt_text=None,
+            created_at=datetime.now(timezone.utc),
         )
-
-    chat_service.apply_time_decay(chat_session)
-    chat_service.apply_user_message_affection(chat_session)
-    chat_service.lock_persona(chat_session)
-
-    cleaned_user_text = user_text.strip()
-    next_idx = chat_repo.get_next_message_idx(session_id)
-    user_msg = Message(
-        id=None,
-        session_id=session_id,
-        message_idx=next_idx,
-        role=MessageRole.USER,
-        english_content=cleaned_user_text or "An uploaded image.",
-        localized_content=cleaned_user_text,
-        image_path=image_path,
-        image_alt_text=None,
-        created_at=datetime.now(timezone.utc),
-    )
-    saved_user_msg = chat_repo.add_message(user_msg)
+        saved_user_msg = chat_repo.add_message(user_msg)
 
     worldinfo = (
         wi_repo.get_by_id(chat_session.active_worldinfo_id)
@@ -255,6 +262,9 @@ def _start_background_turn(
         w_storage = FileStorage()
 
         try:
+            if task.is_aborted:
+                return
+
             w_session = w_chat_repo.get_session(session_id)
             if w_session is None:
                 with task.condition:
@@ -277,19 +287,22 @@ def _start_background_turn(
 
             image_alt_text: str | None = None
             if image_path:
-                try:
-                    resolved_img = w_storage.resolve_path(image_path)
-                    image_alt_text = llm.analyze_image(
-                        image_path=resolved_img,
-                        prompt="Describe what is shown in this image concisely in English for a roleplay conversation.",
-                        model=settings.tasks.vision_model,
-                    ).strip()
-                except Exception:
-                    image_alt_text = "An uploaded image."
+                if existing_user_msg is not None and saved_user_msg.image_alt_text:
+                    image_alt_text = saved_user_msg.image_alt_text
+                else:
+                    try:
+                        resolved_img = w_storage.resolve_path(image_path)
+                        image_alt_text = llm.analyze_image(
+                            image_path=resolved_img,
+                            prompt="Describe what is shown in this image concisely in English for a roleplay conversation.",
+                            model=settings.tasks.vision_model,
+                        ).strip()
+                    except Exception:
+                        image_alt_text = "An uploaded image."
 
-                saved_user_msg.image_alt_text = image_alt_text
-                saved_user_msg.english_content = cleaned_user_text or (image_alt_text or "")
-                w_chat_repo.update_message(saved_user_msg)
+                    saved_user_msg.image_alt_text = image_alt_text
+                    saved_user_msg.english_content = cleaned_user_text or (image_alt_text or "")
+                    w_chat_repo.update_message(saved_user_msg)
 
                 with task.condition:
                     task.image_alt_text = image_alt_text
@@ -297,8 +310,9 @@ def _start_background_turn(
                     task.status = "thinking"
                     task.condition.notify_all()
             else:
-                saved_user_msg.english_content = cleaned_user_text
-                w_chat_repo.update_message(saved_user_msg)
+                if existing_user_msg is None:
+                    saved_user_msg.english_content = cleaned_user_text
+                    w_chat_repo.update_message(saved_user_msg)
 
             if w_character.id is not None:
                 w_character.description = w_trans_repo.get_localized_field(
@@ -423,17 +437,27 @@ def _start_background_turn(
                     params=settings.params,
                     stop=stop_sequences,
                 ):
+                    if task.is_aborted:
+                        break
                     full_english_chunks.append(token)
                     with task.condition:
                         task.tokens.append({"token": token})
                         task.condition.notify_all()
             except Exception as exc:
+                if task.is_aborted:
+                    return
                 if not full_english_chunks:
                     fallback_en = f"*{w_character.name} pauses thoughtfully and looks at you.*"
                     full_english_chunks.append(fallback_en)
                     with task.condition:
                         task.tokens.append({"token": fallback_en, "fallback": str(exc)})
                         task.condition.notify_all()
+
+            if task.is_aborted:
+                with task.condition:
+                    task.status = "aborted"
+                    task.condition.notify_all()
+                return
 
             raw_reply = "".join(full_english_chunks).strip()
             for stop_seq in stop_sequences:
@@ -505,6 +529,12 @@ def _start_background_turn(
             source_hash = w_trans_service.compute_source_hash(english_reply)
             cached_rec = w_trans_repo.get_translation(source_hash, user_language)
             localized_reply = cached_rec.translated_text if cached_rec else english_reply
+
+            if task.is_aborted:
+                with task.condition:
+                    task.status = "aborted"
+                    task.condition.notify_all()
+                return
 
             ai_next_idx = w_chat_repo.get_next_message_idx(session_id)
             ai_msg = Message(
@@ -597,7 +627,7 @@ def _stream_from_task(task: _BackgroundTurnTask):
                 sent_tokens >= len(task.tokens)
                 and (sent_gen_done or not task.generation_done)
                 and (sent_image_analyzed or not task.image_analyzed)
-                and task.status not in ("completed", "error")
+                and task.status not in ("completed", "error", "aborted")
             ):
                 task.condition.wait(timeout=15.0)
 
@@ -624,6 +654,11 @@ def _stream_from_task(task: _BackgroundTurnTask):
 
         if emit_gen_done:
             yield f"event: generation_done\ndata: {json.dumps({'english_content': english_reply})}\n\n"
+
+        if current_status == "aborted" or task.is_aborted:
+            task.delivered_via_stream = True
+            yield f"event: aborted\ndata: {json.dumps({'error': error_message or 'Generation aborted by user'})}\n\n"
+            break
 
         if current_status == "error":
             task.delivered_via_stream = True
@@ -740,6 +775,87 @@ def get_session_generation_status(session_id: int):
                 "has_image": task.has_image,
             }
         )
+
+
+@api_chat_bp.route("/<int:session_id>/abort", methods=["POST"])
+@require_permission(FunctionPermission.CHAT_ACCESS)
+def abort_generation(session_id: int):
+    with _TASKS_LOCK:
+        task = _BACKGROUND_TASKS.get(session_id)
+
+    if task is None:
+        return jsonify({"aborted": False, "message": "No active turn."})
+
+    with task.condition:
+        if task.status in ("analyzing_image", "thinking", "streaming", "translating"):
+            task.is_aborted = True
+            task.status = "aborted"
+            task.error_message = "Generation aborted by user"
+            task.condition.notify_all()
+            return jsonify({"aborted": True})
+
+    return jsonify({"aborted": False, "status": task.status if task else "idle"})
+
+
+@api_chat_bp.route("/<int:session_id>/regenerate", methods=["POST"])
+@require_permission(FunctionPermission.CHAT_ACCESS)
+def regenerate_turn(session_id: int):
+    user = get_current_user()
+    assert user is not None
+    is_admin = bool(user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS))
+
+    data = request.get_json(silent=True) or {}
+    user_lang = str(data.get("language", "de")).strip()
+
+    chat_repo = ChatRepository()
+    mem_repo = MemoryRepository()
+
+    all_messages = chat_repo.get_messages(session_id, limit=None)
+    narrative_msgs = [
+        m for m in all_messages if m.role in (MessageRole.USER, MessageRole.CHARACTER)
+    ]
+    if not narrative_msgs:
+        return jsonify({"error": "Keine Nachrichten zum Neu-Generieren vorhanden."}), 400
+
+    last_msg = narrative_msgs[-1]
+    deleted_msg_idx = None
+
+    if last_msg.role == MessageRole.CHARACTER:
+        if last_msg.message_idx == 0:
+            return jsonify({"error": "Die Begrüßung der KI kann nicht neu generiert werden."}), 400
+
+        chat_repo.delete_messages_after(session_id, last_msg.message_idx, inclusive=True)
+        mem_repo.delete_after_idx(session_id, last_msg.message_idx - 1)
+        deleted_msg_idx = last_msg.message_idx
+
+        updated_messages = chat_repo.get_messages(session_id, limit=None)
+        user_msgs = [m for m in updated_messages if m.role == MessageRole.USER]
+        if not user_msgs:
+            return jsonify({"error": "Keine Spielernachricht zum Neu-Generieren gefunden."}), 400
+        target_user_msg = user_msgs[-1]
+
+    elif last_msg.role == MessageRole.USER:
+        target_user_msg = last_msg
+    else:
+        return jsonify({"error": "Ungültiger Rollenstatus der letzten Nachricht."}), 400
+
+    try:
+        task, _, triggered_event = _start_background_turn(
+            session_id=session_id,
+            user_text=target_user_msg.localized_content or "",
+            user_language=user_lang,
+            is_admin=is_admin,
+            existing_user_msg=target_user_msg,
+        )
+        return jsonify({
+            "task_id": task.task_id,
+            "session_id": session_id,
+            "deleted_message_idx": deleted_msg_idx,
+            "user_message_idx": target_user_msg.message_idx,
+            "triggered_event": triggered_event,
+        }), 201
+    except AimoError as exc:
+        return jsonify({"error": str(exc)}), 400
 
 
 @api_chat_bp.route("/<int:session_id>/messages/<int:message_idx>/prompt", methods=["GET"])

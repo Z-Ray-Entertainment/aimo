@@ -137,6 +137,21 @@ button.btn:hover {
   border-color: #E74C3C;
 }
 
+.btn-abort-turn {
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.btn-abort-turn:hover {
+  color: #ff6b6b !important;
+  transform: scale(1.15);
+}
+
+#chat-abort-btn:hover {
+  color: #ff6b6b !important;
+  border-color: #ff6b6b !important;
+  box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
+}
+
 .btn-sparkle {
   background: linear-gradient(135deg, #4A235A, #6E472A);
   border-color: var(--sparkle-gold);
