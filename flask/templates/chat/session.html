@@ -178,17 +178,17 @@
           </div>
 
           <!-- Re-Generate Button links vor dem Senden-Button -->
-          <button type="button" id="chat-regenerate-btn" class="btn" style="padding: 0.65rem 0.95rem; display: inline-flex; align-items: center; gap: 0.35rem;" onclick="window.chatStream.regenerateLastTurn()" title="Antwort neu generieren (Re-Generate)">
-            <span class="icon-mono">🔄</span> Re-Generate
+          <button type="button" id="chat-regenerate-btn" class="btn" style="padding: 0.6rem 0.85rem;" onclick="window.chatStream.regenerateLastTurn()" title="Antwort neu generieren (Re-Generate) – Ersetzt die letzte KI-Antwort bzw. wiederholt die Generierung">
+            <span class="icon-mono">🔄</span>
           </button>
 
           <!-- Abbrechen-Button während aktiver Antwort-Generierung -->
-          <button type="button" id="chat-abort-btn" class="btn btn-abort-turn" style="display: none; background: none; border: 1px solid var(--border-wood-dark); color: var(--text-muted); cursor: pointer; padding: 0.65rem 0.85rem; font-size: 0.95rem; border-radius: var(--radius-btn);" onclick="window.chatStream.abortTurn()" title="Antwort-Generierung abbrechen">
-            ✕
+          <button type="button" id="chat-abort-btn" class="btn btn-abort-turn" style="display: none; background: none; border: 1px solid var(--border-wood-dark); color: var(--text-muted); cursor: pointer; padding: 0.6rem 0.85rem; border-radius: var(--radius-btn);" onclick="window.chatStream.abortTurn()" title="Antwort-Generierung abbrechen">
+            <span class="icon-mono">✕</span>
           </button>
 
-          <button type="submit" id="chat-send-btn" class="btn" style="padding: 0.65rem 1.25rem;">
-            Senden ➤
+          <button type="submit" id="chat-send-btn" class="btn" style="padding: 0.6rem 0.85rem;" title="Nachricht senden (Enter)">
+            <span class="icon-mono">➤</span>
           </button>
         </form>
       </div>

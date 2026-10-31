@@ -130,6 +130,44 @@ class AimoChatStream {
     this.isSending = false;
   }
 
+  setGeneratingUIState(isGenerating) {
+    const input = document.getElementById("chat-message-textarea") || document.querySelector("#chat-input-form textarea, #chat-input-form input[name='message']");
+    const submitBtn = document.getElementById("chat-send-btn") || document.querySelector("#chat-input-form button[type='submit']");
+    const regenBtn = document.getElementById("chat-regenerate-btn");
+    const abortBtn = document.getElementById("chat-abort-btn");
+
+    if (isGenerating) {
+      if (input) input.disabled = true;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.style.display = "none";
+      }
+      if (regenBtn) {
+        regenBtn.disabled = true;
+        regenBtn.style.display = "none";
+      }
+      if (abortBtn) {
+        abortBtn.style.display = "inline-flex";
+      }
+    } else {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.style.display = "";
+      }
+      if (regenBtn) {
+        regenBtn.disabled = false;
+        regenBtn.style.display = "inline-flex";
+      }
+      if (abortBtn) {
+        abortBtn.style.display = "none";
+      }
+      if (input && !this.isGeneratingImage) {
+        input.disabled = false;
+        input.focus();
+      }
+    }
+  }
+
   getChatMetadata() {
     const list = document.getElementById("chat-messages-list");
     return {
@@ -196,14 +234,17 @@ class AimoChatStream {
       const data = await resp.json();
       if (data.active) {
         this.isSending = true;
+        this.setGeneratingUIState(true);
         const thinkingUI = this.createThinkingBubble(messagesList, {
           isAnalyzingImage: data.status === "analyzing_image",
         });
         await this.startSSEStream(messagesList, thinkingUI);
-        this.isSending = false;
       }
     } catch (_) {
+    } finally {
       this.isSending = false;
+      this.activeThinkingUI = null;
+      this.setGeneratingUIState(false);
     }
   }
 
@@ -211,7 +252,6 @@ class AimoChatStream {
     if (this.isSending) return;
     const input = formElement.querySelector("textarea[name='message'], input[name='message']");
     const fileInput = formElement.querySelector("input[type='file'][name='image']");
-    const submitBtn = formElement.querySelector("button[type='submit']");
     const fileIndicator = document.getElementById("upload-file-indicator");
     const messagesList = document.getElementById("chat-messages-list");
     const meta = this.getChatMetadata();
@@ -221,6 +261,8 @@ class AimoChatStream {
     if (!text && !hasFile) return;
 
     this.isSending = true;
+    this.setGeneratingUIState(true);
+
     const selectedFile = hasFile ? fileInput.files[0] : null;
     const localPreviewUrl = selectedFile ? URL.createObjectURL(selectedFile) : null;
 
@@ -252,14 +294,6 @@ class AimoChatStream {
       isAnalyzingImage: hasFile,
     });
 
-    const regenBtn = document.getElementById("chat-regenerate-btn");
-    const abortBtn = document.getElementById("chat-abort-btn");
-
-    if (input) input.disabled = true;
-    if (submitBtn) submitBtn.disabled = true;
-    if (regenBtn) regenBtn.disabled = true;
-    if (abortBtn) abortBtn.style.display = "inline-flex";
-
     try {
       const prepResp = await fetch(`/api/chat/${this.sessionId}/messages`, {
         method: "POST",
@@ -282,13 +316,7 @@ class AimoChatStream {
     } finally {
       this.isSending = false;
       this.activeThinkingUI = null;
-      if (!this.isGeneratingImage) {
-        if (input) input.disabled = false;
-        if (submitBtn) submitBtn.disabled = false;
-        if (regenBtn) regenBtn.disabled = false;
-        if (abortBtn) abortBtn.style.display = "none";
-        if (input) input.focus();
-      }
+      this.setGeneratingUIState(false);
     }
   }
 
@@ -653,12 +681,20 @@ class AimoChatStream {
     this.isGeneratingImage = true;
 
     const input = document.querySelector("#chat-input-form textarea, #chat-input-form input[name='message']");
-    const submitBtn = document.querySelector("#chat-input-form button[type='submit']");
+    const submitBtn = document.getElementById("chat-send-btn") || document.querySelector("#chat-input-form button[type='submit']");
+    const regenBtn = document.getElementById("chat-regenerate-btn");
     const cancelBtn = document.getElementById("cancel-image-gen-btn");
     const messagesList = document.getElementById("chat-messages-list");
 
     if (input) input.disabled = true;
-    if (submitBtn) submitBtn.disabled = true;
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.style.display = "none";
+    }
+    if (regenBtn) {
+      regenBtn.disabled = true;
+      regenBtn.style.display = "none";
+    }
     if (cancelBtn) cancelBtn.style.display = "inline-flex";
 
     const notice = document.createElement("div");
@@ -683,7 +719,14 @@ class AimoChatStream {
     } finally {
       this.isGeneratingImage = false;
       if (input) input.disabled = false;
-      if (submitBtn) submitBtn.disabled = false;
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.style.display = "";
+      }
+      if (regenBtn) {
+        regenBtn.disabled = false;
+        regenBtn.style.display = "inline-flex";
+      }
       if (cancelBtn) cancelBtn.style.display = "none";
     }
   }
@@ -692,10 +735,18 @@ class AimoChatStream {
     await fetch(`/api/chat/${this.sessionId}/cancel-image`, { method: "POST" });
     this.isGeneratingImage = false;
     const input = document.querySelector("#chat-input-form textarea, #chat-input-form input[name='message']");
-    const submitBtn = document.querySelector("#chat-input-form button[type='submit']");
+    const submitBtn = document.getElementById("chat-send-btn") || document.querySelector("#chat-input-form button[type='submit']");
+    const regenBtn = document.getElementById("chat-regenerate-btn");
     const cancelBtn = document.getElementById("cancel-image-gen-btn");
     if (input) input.disabled = false;
-    if (submitBtn) submitBtn.disabled = false;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.style.display = "";
+    }
+    if (regenBtn) {
+      regenBtn.disabled = false;
+      regenBtn.style.display = "inline-flex";
+    }
     if (cancelBtn) cancelBtn.style.display = "none";
   }
 
@@ -717,18 +768,8 @@ class AimoChatStream {
     } catch (_) {}
 
     this.isSending = false;
-    const input = document.getElementById("chat-message-textarea");
-    const submitBtn = document.getElementById("chat-send-btn");
-    const regenBtn = document.getElementById("chat-regenerate-btn");
-    const abortBtn = document.getElementById("chat-abort-btn");
-
-    if (!this.isGeneratingImage) {
-      if (input) input.disabled = false;
-      if (submitBtn) submitBtn.disabled = false;
-      if (regenBtn) regenBtn.disabled = false;
-      if (abortBtn) abortBtn.style.display = "none";
-      if (input) input.focus();
-    }
+    this.activeThinkingUI = null;
+    this.setGeneratingUIState(false);
   }
 
   async regenerateLastTurn() {
@@ -736,15 +777,7 @@ class AimoChatStream {
     this.isSending = true;
 
     const messagesList = document.getElementById("chat-messages-list");
-    const input = document.getElementById("chat-message-textarea");
-    const submitBtn = document.getElementById("chat-send-btn");
-    const regenBtn = document.getElementById("chat-regenerate-btn");
-    const abortBtn = document.getElementById("chat-abort-btn");
-
-    if (input) input.disabled = true;
-    if (submitBtn) submitBtn.disabled = true;
-    if (regenBtn) regenBtn.disabled = true;
-    if (abortBtn) abortBtn.style.display = "inline-flex";
+    this.setGeneratingUIState(true);
 
     let thinkingUI = null;
 
@@ -775,13 +808,7 @@ class AimoChatStream {
     } finally {
       this.isSending = false;
       this.activeThinkingUI = null;
-      if (!this.isGeneratingImage) {
-        if (input) input.disabled = false;
-        if (submitBtn) submitBtn.disabled = false;
-        if (regenBtn) regenBtn.disabled = false;
-        if (abortBtn) abortBtn.style.display = "none";
-        if (input) input.focus();
-      }
+      this.setGeneratingUIState(false);
     }
   }
 }
