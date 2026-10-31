@@ -12,7 +12,7 @@
 {% block content %}
 <div class="chat-layout">
   <!-- Linke Seitenleiste: Multi-Chat-Sessions -->
-  <aside class="wood-frame" style="padding: 1rem; display: flex; flex-direction: column; justify-content: space-between;">
+  <aside class="wood-frame chat-glass-panel" style="padding: 1rem; display: flex; flex-direction: column; justify-content: space-between;">
     <div>
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-wood-dark);">
         <h3 style="color: var(--gold-accent); font-size: 1rem;"><span class="icon-mono">💬</span> Sitzungen</h3>
@@ -41,7 +41,7 @@
   </aside>
 
   <!-- Mittlere Hauptbühne: 3-Reiter-Navigation (Chat, Medien, Erinnerungen) -->
-  <section id="chat-main-stage" class="wood-frame chat-main-stage">
+  <section id="chat-main-stage" class="wood-frame chat-main-stage chat-glass-panel">
     <div class="chat-stage-overlay" data-tab-group>
       <!-- Top Bar mit 3 Reitern -->
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem; border-bottom: 2px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
@@ -177,14 +177,16 @@
           <!-- Mitte: Textarea ohne eigenen Rahmen & Datei-Indikator -->
           <div class="chat-input-content">
             <div id="upload-file-indicator"></div>
-            <textarea id="chat-message-textarea" name="message" rows="2" placeholder="Schreibe deine Antwort oder Handlung... (Enter zum Senden, Shift+Enter für Zeilenumbruch)"></textarea>
+            <textarea id="chat-message-textarea" name="message" rows="5" placeholder="Schreibe deine Antwort oder Handlung... (Enter zum Senden, Shift+Enter für Zeilenumbruch)"></textarea>
           </div>
 
           <!-- Rechts: Re-Generate, Abort & Senden als Overlay-Buttons -->
           <div class="chat-input-actions-right">
-            <!-- Re-Generate Button links vor dem Senden-Button -->
-            <button type="button" id="chat-regenerate-btn" class="chat-overlay-btn" onclick="window.chatStream.regenerateLastTurn()" title="Antwort neu generieren (Re-Generate) – Ersetzt die letzte KI-Antwort bzw. wiederholt die Generierung">
-              <span class="icon-mono">🔄</span>
+            <!-- Re-Generate Button links vor dem Senden-Button: Nur die Pfeile des 🔄 Emojis ohne Hintergrund -->
+            <button type="button" id="chat-regenerate-btn" class="chat-overlay-btn btn-regenerate-icon" onclick="window.chatStream.regenerateLastTurn()" title="Antwort neu generieren (Re-Generate) – Ersetzt die letzte KI-Antwort bzw. wiederholt die Generierung">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="icon-regenerate" aria-hidden="true">
+                <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+              </svg>
             </button>
 
             <!-- Abbrechen-Button während aktiver Antwort-Generierung -->
@@ -262,9 +264,9 @@
   </section>
 
   <!-- Rechte Info-Box: Sprite, Beziehungsbalken, WorldInfo, Persona, Events -->
-  <aside class="wood-frame" style="padding: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+  <aside class="wood-frame chat-glass-panel" style="padding: 1rem; display: flex; flex-direction: column; gap: 1rem; overflow-y: auto;">
     <!-- Aktives Charakter-Sprite -->
-    <div class="portrait-frame" style="overflow: hidden; text-align: center; background: rgba(15, 11, 8, 0.9);">
+    <div class="portrait-frame chat-glass-panel" style="overflow: hidden; text-align: center;">
       <img id="active-character-sprite" src="{{ url_for('uploaded_file', filename=active_sprite.file_path) }}" alt="{{ character.name }}" style="width: 100%; height: 260px; object-fit: contain;" onerror="this.src='/static/img/cover.svg'">
       <div style="padding: 0.45rem; border-top: 1px solid var(--border-wood-dark); font-weight: 700; color: var(--gold-accent);">
         {{ character.name }}
@@ -272,7 +274,7 @@
     </div>
 
     <!-- Beziehungsbalken (-100 bis +100) -->
-    <div class="relationship-bar-wrap wood-frame" data-relationship-score="{{ chat_session.relationship_value }}" style="border-radius: 10px; padding: 0.65rem;">
+    <div class="relationship-bar-wrap wood-frame chat-glass-panel" data-relationship-score="{{ chat_session.relationship_value }}" style="border-radius: 10px; padding: 0.65rem;">
       <div class="relationship-header">
         <span>Zuneigung: <strong id="rel-score-label">{{ "%.1f"|format(chat_session.relationship_value) }}</strong></span>
         <span class="heart-icon">❤️</span>

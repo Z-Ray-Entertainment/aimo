@@ -446,12 +446,30 @@ def _start_background_turn(
             except Exception as exc:
                 if task.is_aborted:
                     return
-                if not full_english_chunks:
-                    fallback_en = f"*{w_character.name} pauses thoughtfully and looks at you.*"
-                    full_english_chunks.append(fallback_en)
-                    with task.condition:
-                        task.tokens.append({"token": fallback_en, "fallback": str(exc)})
-                        task.condition.notify_all()
+                raw_err = str(exc)
+                if (
+                    "Failed to stream response from Ollama" in raw_err
+                    or "Connection refused" in raw_err
+                    or "Failed to establish a new connection" in raw_err
+                    or "Max retries exceeded" in raw_err
+                ):
+                    user_friendly_err = (
+                        f"Verbindung zu Ollama ({settings.tasks.roleplay_model}) fehlgeschlagen oder unterbrochen. "
+                        "Bitte stelle sicher, dass der Ollama-Dienst läuft."
+                    )
+                elif "not found" in raw_err.lower():
+                    user_friendly_err = (
+                        f"Ollama-Modell '{settings.tasks.roleplay_model}' wurde nicht gefunden. "
+                        f"Bitte in Ollama laden (ollama run {settings.tasks.roleplay_model})."
+                    )
+                else:
+                    user_friendly_err = f"Ollama-Verbindungsfehler ({settings.tasks.roleplay_model}): {raw_err}"
+
+                with task.condition:
+                    task.error_message = user_friendly_err
+                    task.status = "error"
+                    task.condition.notify_all()
+                return
 
             if task.is_aborted:
                 with task.condition:

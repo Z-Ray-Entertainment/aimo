@@ -289,7 +289,7 @@ class AimoChatStream {
       local_image_url: localPreviewUrl,
     });
 
-    // 2. Visuelles Feedback sofort anzeigen (bei Bild-Upload zuerst "... [char] schaut sich das Bild an")
+    // 2. Visuelles Feedback sofort anzeigen (bei Bild-Upload zuerst "[char] schaut sich das Bild an")
     const thinkingUI = this.createThinkingBubble(messagesList, {
       isAnalyzingImage: hasFile,
     });
@@ -304,7 +304,11 @@ class AimoChatStream {
         if (thinkingUI?.row) thinkingUI.row.remove();
         if (userRow) userRow.remove();
         if (tempGalleryTile) tempGalleryTile.remove();
-        alert(prepData.error || "Fehler beim Senden der Nachricht.");
+        if (window.showToastError) {
+          window.showToastError(prepData.error || "Fehler beim Senden der Nachricht.", "Ollama-Fehler");
+        } else {
+          alert(prepData.error || "Fehler beim Senden der Nachricht.");
+        }
         return;
       }
 
@@ -444,8 +448,8 @@ class AimoChatStream {
     bubble.appendChild(header);
 
     const initialLabel = isAnalyzingImage
-      ? `... ${meta.characterName} schaut sich das Bild an`
-      : `... ${meta.characterName} denkt über eine Antwort nach`;
+      ? `${meta.characterName} schaut sich das Bild an`
+      : `${meta.characterName} denkt über eine Antwort nach`;
 
     const thinkingBox = document.createElement("div");
     thinkingBox.className = "ai-thinking-indicator";
@@ -477,10 +481,33 @@ class AimoChatStream {
 
     return new Promise((resolve) => {
       let rawTokens = "";
+      let isCompleted = false;
+      let hasErrorHandled = false;
+
+      const handleError = (errMsg, title) => {
+        if (isCompleted || hasErrorHandled) return;
+        hasErrorHandled = true;
+        es.close();
+        if (this.eventSource === es) {
+          this.eventSource = null;
+        }
+        if (ui?.row && !ui.row.hasAttribute("data-message-idx")) {
+          ui.row.remove();
+        }
+        this.activeThinkingUI = null;
+        if (window.showToastError) {
+          window.showToastError(errMsg || "Verbindung zu Ollama unterbrochen.", title || "Ollama-Verbindungsfehler");
+        } else {
+          alert(`Ollama-Verbindungsfehler: ${errMsg}`);
+        }
+        resolve();
+      };
+
       const es = new EventSource(`/api/chat/${this.sessionId}/stream?language=${encodeURIComponent(meta.sysLang || "de")}`);
       this.eventSource = es;
 
       es.addEventListener("aborted", (e) => {
+        isCompleted = true;
         es.close();
         if (this.eventSource === es) {
           this.eventSource = null;
@@ -492,12 +519,23 @@ class AimoChatStream {
         resolve();
       });
 
+      es.addEventListener("error", (e) => {
+        let errMessage = "Verbindung zu Ollama unterbrochen.";
+        try {
+          if (e.data) {
+            const data = JSON.parse(e.data);
+            if (data.error) errMessage = data.error;
+          }
+        } catch (_) {}
+        handleError(errMessage, "Ollama-Verbindungsfehler");
+      });
+
       es.addEventListener("image_analyzed", (e) => {
         try {
           const data = JSON.parse(e.data);
           const label = ui.thinkingBox?.querySelector(".thinking-label");
           if (label) {
-            label.textContent = `... ${meta.characterName} denkt über eine Antwort nach`;
+            label.textContent = `${meta.characterName} denkt über eine Antwort nach`;
           }
           if (data.user_message_idx !== undefined) {
             const altEl = document.getElementById(`msg-alt-${data.user_message_idx}`);
@@ -513,9 +551,9 @@ class AimoChatStream {
         rawTokens += data.token || "";
         const label = ui.thinkingBox?.querySelector(".thinking-label");
         if (label && !rawTokens.trim()) {
-          label.textContent = `... ${meta.characterName} denkt über eine Antwort nach`;
+          label.textContent = `${meta.characterName} denkt über eine Antwort nach`;
         } else if (label) {
-          label.textContent = `... ${meta.characterName} antwortet`;
+          label.textContent = `${meta.characterName} antwortet`;
         }
         if (ui.statusEl) {
           ui.statusEl.innerHTML = window.renderChatMarkdown(rawTokens);
@@ -526,7 +564,7 @@ class AimoChatStream {
       es.addEventListener("generation_done", () => {
         const label = ui.thinkingBox?.querySelector(".thinking-label");
         if (label) {
-          label.textContent = `... ${meta.characterName} ordnet Stimmung & Szene ein`;
+          label.textContent = `${meta.characterName} ordnet Stimmung & Szene ein`;
         }
       });
 
@@ -583,6 +621,7 @@ class AimoChatStream {
           this.showLocationSwitchCountdown(data.suggested_location);
         }
 
+        isCompleted = true;
         es.close();
         if (this.eventSource === es) {
           this.eventSource = null;
@@ -593,12 +632,7 @@ class AimoChatStream {
       });
 
       es.onerror = () => {
-        es.close();
-        if (this.eventSource === es) {
-          this.eventSource = null;
-        }
-        this.activeThinkingUI = null;
-        resolve();
+        handleError("Verbindung zum Chat-Stream oder zu Ollama unterbrochen.", "Ollama-Verbindungsfehler");
       };
     });
   }
@@ -789,7 +823,11 @@ class AimoChatStream {
       });
       const data = await resp.json();
       if (!resp.ok) {
-        alert(data.error || "Fehler beim Neu-Generieren.");
+        if (window.showToastError) {
+          window.showToastError(data.error || "Fehler beim Neu-Generieren.", "Ollama-Fehler");
+        } else {
+          alert(data.error || "Fehler beim Neu-Generieren.");
+        }
         return;
       }
 
@@ -804,7 +842,11 @@ class AimoChatStream {
       await this.startSSEStream(messagesList, thinkingUI);
     } catch (err) {
       if (thinkingUI?.row) thinkingUI.row.remove();
-      alert(`Verbindungsfehler: ${err.message}`);
+      if (window.showToastError) {
+        window.showToastError(`Verbindungsfehler: ${err.message}`, "Ollama-Verbindungsfehler");
+      } else {
+        alert(`Verbindungsfehler: ${err.message}`);
+      }
     } finally {
       this.isSending = false;
       this.activeThinkingUI = null;

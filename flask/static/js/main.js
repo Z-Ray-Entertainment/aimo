@@ -202,6 +202,39 @@ window.showAimoToast = function showAimoToast(notif) {
   setTimeout(removeToast, 9000);
 };
 
+window.showToastError = function showToastError(message, title) {
+  const container = document.getElementById("aimo-toast-container");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className = "aimo-toast toast-error wood-frame";
+
+  toast.innerHTML = `
+    <div style="font-size: 1.4rem; line-height: 1; flex-shrink: 0; padding-top: 0.15rem;" aria-hidden="true">⚠️</div>
+    <div class="aimo-toast-body">
+      <div class="aimo-toast-title"></div>
+      <div class="aimo-toast-preview" style="-webkit-line-clamp: 4;"></div>
+    </div>
+    <button type="button" class="aimo-toast-close" title="Schließen">✕</button>
+  `;
+
+  const titleEl = toast.querySelector(".aimo-toast-title");
+  if (titleEl) titleEl.textContent = title || "Ollama-Verbindungsfehler";
+
+  const previewEl = toast.querySelector(".aimo-toast-preview");
+  if (previewEl) previewEl.textContent = message || "Verbindung zu Ollama unterbrochen.";
+
+  const removeToast = () => {
+    toast.classList.add("closing");
+    setTimeout(() => toast.remove(), 220);
+  };
+
+  toast.querySelector(".aimo-toast-close")?.addEventListener("click", removeToast);
+  container.appendChild(toast);
+
+  setTimeout(removeToast, 9000);
+};
+
 const AIMO_LANGUAGES = [
   { code: "de", flag: "🇩🇪", label: "Deutsch" },
   { code: "en", flag: "🇬🇧", label: "English" },
