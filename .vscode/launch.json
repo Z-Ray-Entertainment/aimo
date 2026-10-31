@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: aimo_flask.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/aimo_flask.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "python": "${workspaceFolder}/venv/bin/python",
+            "subProcess": true
+        },
+        {
+            "name": "Python: aimo_flask.py (Fallback: type python)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/aimo_flask.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "python": "${workspaceFolder}/venv/bin/python",
+            "subProcess": true
+        }
+    ]
+}
