@@ -35,7 +35,7 @@ class LLMProvider(ABC):
     def classify_turn(
         self,
         text: str,
-        emotion_candidates: list[str],
+        emotion_candidates: list[str] | None,
         location_candidates: list[str] | None,
         model: str,
     ) -> tuple[str, str | None]:

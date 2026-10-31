@@ -136,19 +136,25 @@ class OllamaLLMProvider(LLMProvider):
     def classify_turn(
         self,
         text: str,
-        emotion_candidates: list[str],
+        emotion_candidates: list[str] | None,
         location_candidates: list[str] | None,
         model: str,
     ) -> tuple[str, str | None]:
-        clean_emotions = [e.strip() for e in emotion_candidates if e.strip()]
+        clean_emotions = [e.strip() for e in (emotion_candidates or []) if e.strip()]
         clean_locs = [l.strip() for l in (location_candidates or []) if l.strip()]
 
-        if not clean_emotions:
-            clean_emotions = ["neutral"]
+        if not clean_emotions and not clean_locs:
+            return "neutral", None
 
-        if not clean_locs:
+        if clean_emotions and not clean_locs:
             detected_emotion = self.classify(text=text, candidates=clean_emotions, model=model)
             return detected_emotion, None
+
+        if clean_locs and not clean_emotions:
+            raw_loc = self.classify(text=text, candidates=clean_locs, model=model)
+            loc_matched = self._match_candidate(raw_loc, clean_locs)
+            matched_loc = None if loc_matched.lower() == "stay_here" else loc_matched
+            return "neutral", matched_loc
 
         emotions_str = ", ".join(clean_emotions)
         locs_str = ", ".join(clean_locs)

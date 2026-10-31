@@ -477,12 +477,18 @@ def _start_background_turn(
                 task.status = "translating"
                 task.condition.notify_all()
 
-            emotion_candidates = [
-                e.value
-                for e in Emotion
-                if e.name not in ("EMBERASSED", "RELIFE", "SUPRISE")
-            ]
+            # 1. Emotionsanalyse nur durchführen, wenn der Charakter emotionale Sprites besitzt
+            emotion_candidates = None
+            if w_character.sprites:
+                distinct_emotions = {sp.emotion for sp in w_character.sprites}
+                if len(distinct_emotions) > 1 or (len(distinct_emotions) == 1 and Emotion.NEUTRAL not in distinct_emotions):
+                    emotion_candidates = [
+                        e.value
+                        for e in Emotion
+                        if e.name not in ("EMBERASSED", "RELIFE", "SUPRISE")
+                    ]
 
+            # 2. Ortsanalyse nur durchführen, wenn eine WorldInfo mit alternativen Orten am Chat hängt
             other_locations = []
             loc_candidates = None
             if w_session.active_worldinfo_id is not None:
@@ -501,16 +507,17 @@ def _start_background_turn(
 
             detected_emotion_str = Emotion.NEUTRAL.value
             matched_loc_name = None
-            try:
-                detected_emotion_str, matched_loc_name = llm.classify_turn(
-                    text=english_reply,
-                    emotion_candidates=emotion_candidates,
-                    location_candidates=loc_candidates,
-                    model=classification_model,
-                )
-            except Exception:
-                detected_emotion_str = Emotion.NEUTRAL.value
-                matched_loc_name = None
+            if emotion_candidates is not None or loc_candidates is not None:
+                try:
+                    detected_emotion_str, matched_loc_name = llm.classify_turn(
+                        text=english_reply,
+                        emotion_candidates=emotion_candidates,
+                        location_candidates=loc_candidates,
+                        model=classification_model,
+                    )
+                except Exception:
+                    detected_emotion_str = Emotion.NEUTRAL.value
+                    matched_loc_name = None
 
             detected_emotion = Emotion.resolve(detected_emotion_str)
             selected_sprite = w_char_service.select_sprite_for_emotion(w_character, detected_emotion)
