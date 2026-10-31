@@ -77,6 +77,7 @@ class OllamaLLMProvider(LLMProvider):
         model: str,
         params: ModelParameters,
         stop: list[str] | None = None,
+        format: str | None = None,
     ) -> str:
         options = self._build_options(params)
         if stop:
@@ -87,6 +88,8 @@ class OllamaLLMProvider(LLMProvider):
             "stream": False,
             "options": options,
         }
+        if format:
+            payload["format"] = format
         try:
             response = requests.post(
                 f"{self.base_url}/api/generate",
@@ -129,6 +132,71 @@ class OllamaLLMProvider(LLMProvider):
             prompt=prompt, model=model, params=classification_params
         )
         return self._match_candidate(raw_output, cleaned_candidates)
+
+    def classify_turn(
+        self,
+        text: str,
+        emotion_candidates: list[str],
+        location_candidates: list[str] | None,
+        model: str,
+    ) -> tuple[str, str | None]:
+        clean_emotions = [e.strip() for e in emotion_candidates if e.strip()]
+        clean_locs = [l.strip() for l in (location_candidates or []) if l.strip()]
+
+        if not clean_emotions:
+            clean_emotions = ["neutral"]
+
+        if not clean_locs:
+            detected_emotion = self.classify(text=text, candidates=clean_emotions, model=model)
+            return detected_emotion, None
+
+        emotions_str = ", ".join(clean_emotions)
+        locs_str = ", ".join(clean_locs)
+        prompt = (
+            "Analyze the narrative response and classify two attributes strictly in JSON format:\n"
+            f"1. 'emotion': strictly choose one emotion label from: [{emotions_str}]\n"
+            f"2. 'location': strictly choose one location label from: [{locs_str}] (choose 'stay_here' if no explicit relocation or journey was decided or proposed)\n\n"
+            f"Passage:\n{text}\n\n"
+            'Respond ONLY with a valid JSON object of the exact shape: {"emotion": "...", "location": "..."}'
+        )
+        classification_params = ModelParameters(
+            num_ctx=2048,
+            temperature=0.0,
+            top_p=0.9,
+            repeat_penalty=1.0,
+        )
+        raw_emotion = "neutral"
+        raw_loc = "stay_here"
+        try:
+            raw_output = self.generate(
+                prompt=prompt,
+                model=model,
+                params=classification_params,
+                format="json",
+            )
+            data = json.loads(raw_output)
+            raw_emotion = str(data.get("emotion", "")).strip()
+            raw_loc = str(data.get("location", "")).strip()
+        except Exception:
+            try:
+                raw_output = self.generate(
+                    prompt=prompt,
+                    model=model,
+                    params=classification_params,
+                )
+                start = raw_output.find("{")
+                end = raw_output.rfind("}")
+                if start != -1 and end != -1:
+                    data = json.loads(raw_output[start : end + 1])
+                    raw_emotion = str(data.get("emotion", "")).strip()
+                    raw_loc = str(data.get("location", "")).strip()
+            except Exception:
+                raw_emotion = "neutral"
+                raw_loc = "stay_here"
+
+        detected_emotion = self._match_candidate(raw_emotion, clean_emotions)
+        detected_loc = self._match_candidate(raw_loc, clean_locs)
+        return detected_emotion, (detected_loc if detected_loc != "stay_here" else None)
 
     def analyze_image(self, image_path: Path, prompt: str, model: str) -> str:
         resolved_path = Path(image_path).resolve()

@@ -98,6 +98,7 @@ class TaskAssignment:
     roleplay_model: str = RECOMMENDED_DEFAULT_MODEL
     memory_model: str = RECOMMENDED_DEFAULT_MODEL
     assistant_model: str = RECOMMENDED_DEFAULT_MODEL
+    classification_model: str = RECOMMENDED_DEFAULT_MODEL
     vision_model: str = "llava:latest"
 
 

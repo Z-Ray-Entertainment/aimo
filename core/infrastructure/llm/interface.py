@@ -23,11 +23,22 @@ class LLMProvider(ABC):
         model: str,
         params: ModelParameters,
         stop: list[str] | None = None,
+        format: str | None = None,
     ) -> str:
         raise NotImplementedError
 
     @abstractmethod
     def classify(self, text: str, candidates: list[str], model: str) -> str:
+        raise NotImplementedError
+
+    @abstractmethod
+    def classify_turn(
+        self,
+        text: str,
+        emotion_candidates: list[str],
+        location_candidates: list[str] | None,
+        model: str,
+    ) -> tuple[str, str | None]:
         raise NotImplementedError
 
     @abstractmethod

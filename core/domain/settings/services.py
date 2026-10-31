@@ -47,17 +47,23 @@ class SettingsService:
         memory_model: str,
         assistant_model: str,
         vision_model: str,
+        classification_model: str | None = None,
     ) -> ServiceSettings:
         cleaned_roleplay = self._validate_model_name("roleplay_model", roleplay_model)
         cleaned_memory = self._validate_model_name("memory_model", memory_model)
         cleaned_assistant = self._validate_model_name("assistant_model", assistant_model)
         cleaned_vision = self._validate_model_name("vision_model", vision_model)
+        cleaned_classification = self._validate_model_name(
+            "classification_model",
+            classification_model or cleaned_roleplay,
+        )
 
         settings.tasks = TaskAssignment(
             roleplay_model=cleaned_roleplay,
             memory_model=cleaned_memory,
             assistant_model=cleaned_assistant,
             vision_model=cleaned_vision,
+            classification_model=cleaned_classification,
         )
         return settings
 

@@ -41,12 +41,12 @@ class SettingsRepository:
             """
             INSERT INTO system_settings (
                 id, ollama_url, comfyui_url, searxng_url, searxng_enabled,
-                roleplay_model, memory_model, assistant_model, vision_model,
+                roleplay_model, memory_model, assistant_model, vision_model, classification_model,
                 num_ctx, temperature, top_p, repeat_penalty,
                 roleplay_prompt, memory_prompt, diffuser_prompt,
                 sparkle_assistant_prompt, vision_persona_prompt
             )
-            VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(id) DO UPDATE SET
                 ollama_url = excluded.ollama_url,
                 comfyui_url = excluded.comfyui_url,
@@ -56,6 +56,7 @@ class SettingsRepository:
                 memory_model = excluded.memory_model,
                 assistant_model = excluded.assistant_model,
                 vision_model = excluded.vision_model,
+                classification_model = excluded.classification_model,
                 num_ctx = excluded.num_ctx,
                 temperature = excluded.temperature,
                 top_p = excluded.top_p,
@@ -75,6 +76,7 @@ class SettingsRepository:
                 settings.tasks.memory_model,
                 settings.tasks.assistant_model,
                 settings.tasks.vision_model,
+                settings.tasks.classification_model,
                 settings.params.num_ctx,
                 settings.params.temperature,
                 settings.params.top_p,
@@ -89,6 +91,12 @@ class SettingsRepository:
 
     @staticmethod
     def _to_entity(row: sqlite3.Row) -> ServiceSettings:
+        keys = row.keys() if hasattr(row, "keys") else []
+        classification_val = (
+            str(row["classification_model"])
+            if "classification_model" in keys
+            else str(row["roleplay_model"])
+        )
         return ServiceSettings(
             id=int(row["id"]),
             ollama_url=str(row["ollama_url"]),
@@ -100,6 +108,7 @@ class SettingsRepository:
                 memory_model=str(row["memory_model"]),
                 assistant_model=str(row["assistant_model"]),
                 vision_model=str(row["vision_model"]),
+                classification_model=classification_val,
             ),
             params=ModelParameters(
                 num_ctx=int(row["num_ctx"]),

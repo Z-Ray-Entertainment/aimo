@@ -461,8 +461,10 @@ class AimoChatStream {
         const data = JSON.parse(e.data);
         rawTokens += data.token || "";
         const label = ui.thinkingBox?.querySelector(".thinking-label");
-        if (label) {
+        if (label && !rawTokens.trim()) {
           label.textContent = `... ${meta.characterName} denkt über eine Antwort nach`;
+        } else if (label) {
+          label.textContent = `... ${meta.characterName} antwortet`;
         }
         if (ui.statusEl) {
           ui.statusEl.innerHTML = window.renderChatMarkdown(rawTokens);
@@ -473,7 +475,7 @@ class AimoChatStream {
       es.addEventListener("generation_done", () => {
         const label = ui.thinkingBox?.querySelector(".thinking-label");
         if (label) {
-          label.textContent = `... ${meta.characterName} denkt über eine Antwort nach`;
+          label.textContent = `... ${meta.characterName} ordnet Stimmung & Szene ein`;
         }
       });
 

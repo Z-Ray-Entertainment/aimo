@@ -47,7 +47,10 @@
       <h3 style="color: var(--gold-accent); font-size: 1rem; margin-bottom: 0.75rem;">2. Task-spezifische Modell-Zuweisung</h3>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
         <div>
-          <label>Roleplay-Modell (Dialog, Klassifikation)</label>
+          <label>
+            Roleplay
+            <span class="field-help-btn" title="Roleplay-Modell:&#10;Primäres Sprachmodell für die narrative Dialog-Generierung und das Rollenspiel im Chat.">?</span>
+          </label>
           <select name="roleplay_model">
             {% for m in installed_models %}
               <option value="{{ m }}" {% if m == settings.tasks.roleplay_model %}selected{% endif %}>{{ m }}</option>
@@ -55,7 +58,21 @@
           </select>
         </div>
         <div>
-          <label>Memory-Modell (10-Nachrichten-Episoden)</label>
+          <label>
+            Classification
+            <span class="field-help-btn" title="Classification-Modell:&#10;Schnelles, leichtgewichtiges Modell für die nachgelagerte Erkennung von Emotionen (Avatar-Sprites) und Ortswechsel-Vorschlägen in einem Durchlauf.">?</span>
+          </label>
+          <select name="classification_model">
+            {% for m in installed_models %}
+              <option value="{{ m }}" {% if m == settings.tasks.classification_model %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label>
+            Memory
+            <span class="field-help-btn" title="Memory-Modell:&#10;Erstellt alle 10 Nachrichten automatisch episodische Zusammenfassungen (Memories) und aktualisiert den Chat-Titel.">?</span>
+          </label>
           <select name="memory_model">
             {% for m in installed_models %}
               <option value="{{ m }}" {% if m == settings.tasks.memory_model %}selected{% endif %}>{{ m }}</option>
@@ -63,7 +80,10 @@
           </select>
         </div>
         <div>
-          <label>Assistant-Modell (Sparkle ✨, Übersetzung, SD-Prompt)</label>
+          <label>
+            Assistant
+            <span class="field-help-btn" title="Assistant-Modell:&#10;Zuständig für KI-Autor Optimierung (Sparkle ✨), Text-Übersetzungen und Stable Diffusion Bild-Prompts für ComfyUI.">?</span>
+          </label>
           <select name="assistant_model">
             {% for m in installed_models %}
               <option value="{{ m }}" {% if m == settings.tasks.assistant_model %}selected{% endif %}>{{ m }}</option>
@@ -71,7 +91,10 @@
           </select>
         </div>
         <div>
-          <label>Vision-Modell (Persona-Porträts, 16:9 Orte, Bild-Uploads)</label>
+          <label>
+            Vision
+            <span class="field-help-btn" title="Vision-Modell:&#10;Multimodales Modell zur optischen Analyse von Persona-Porträts, 16:9 Schauplatz-Bildern und Bild-Uploads im Chat.">?</span>
+          </label>
           <select name="vision_model">
             {% for m in installed_models %}
               <option value="{{ m }}" {% if m == settings.tasks.vision_model %}selected{% endif %}>{{ m }}</option>

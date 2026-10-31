@@ -209,6 +209,7 @@ def services_config():
                 memory_model=form.memory_model,
                 assistant_model=form.assistant_model,
                 vision_model=form.vision_model,
+                classification_model=form.classification_model,
             )
             settings_service.update_parameters(
                 settings=settings,
@@ -247,6 +248,7 @@ def services_config():
         settings.tasks.roleplay_model,
         settings.tasks.memory_model,
         settings.tasks.assistant_model,
+        settings.tasks.classification_model,
         settings.tasks.vision_model,
     ):
         if assigned and assigned not in installed_models:

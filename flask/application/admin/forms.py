@@ -35,6 +35,7 @@ class AdminServicesForm:
     roleplay_model: str = ""
     memory_model: str = ""
     assistant_model: str = ""
+    classification_model: str = ""
     vision_model: str = ""
     num_ctx: int = 4096
     temperature: float = 0.7
@@ -68,6 +69,7 @@ class AdminServicesForm:
             roleplay_model=str(form_data.get("roleplay_model", "")).strip(),
             memory_model=str(form_data.get("memory_model", "")).strip(),
             assistant_model=str(form_data.get("assistant_model", "")).strip(),
+            classification_model=str(form_data.get("classification_model", "")).strip(),
             vision_model=str(form_data.get("vision_model", "")).strip(),
             num_ctx=_int("num_ctx", 4096),
             temperature=_float("temperature", 0.7),

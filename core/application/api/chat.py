@@ -457,20 +457,9 @@ def _start_background_turn(
                 for e in Emotion
                 if e.name not in ("EMBERASSED", "RELIFE", "SUPRISE")
             ]
-            detected_emotion_str = Emotion.NEUTRAL.value
-            try:
-                detected_emotion_str = llm.classify(
-                    text=english_reply,
-                    candidates=emotion_candidates,
-                    model=settings.tasks.roleplay_model,
-                )
-            except Exception:
-                detected_emotion_str = Emotion.NEUTRAL.value
 
-            detected_emotion = Emotion.resolve(detected_emotion_str)
-            selected_sprite = w_char_service.select_sprite_for_emotion(w_character, detected_emotion)
-
-            suggested_location = None
+            other_locations = []
+            loc_candidates = None
             if w_session.active_worldinfo_id is not None:
                 locations = w_wi_repo.list_locations(w_session.active_worldinfo_id)
                 other_locations = [
@@ -478,25 +467,39 @@ def _start_background_turn(
                 ]
                 if other_locations:
                     loc_candidates = ["stay_here"] + [loc.name for loc in other_locations]
-                    try:
-                        loc_choice = llm.classify(
-                            text=(
-                                "Based on this dialogue, did the characters explicitly decide or propose "
-                                f"to move to a new location? Text: {english_reply}"
-                            ),
-                            candidates=loc_candidates,
-                            model=settings.tasks.roleplay_model,
-                        )
-                        for loc in other_locations:
-                            if loc.name.lower() == loc_choice.strip().lower():
-                                suggested_location = {
-                                    "id": loc.id,
-                                    "name": loc.name,
-                                    "background_image_path": loc.background_image_path,
-                                }
-                                break
-                    except Exception:
-                        pass
+
+            classification_model = (
+                settings.tasks.classification_model
+                if getattr(settings.tasks, "classification_model", None)
+                else settings.tasks.roleplay_model
+            )
+
+            detected_emotion_str = Emotion.NEUTRAL.value
+            matched_loc_name = None
+            try:
+                detected_emotion_str, matched_loc_name = llm.classify_turn(
+                    text=english_reply,
+                    emotion_candidates=emotion_candidates,
+                    location_candidates=loc_candidates,
+                    model=classification_model,
+                )
+            except Exception:
+                detected_emotion_str = Emotion.NEUTRAL.value
+                matched_loc_name = None
+
+            detected_emotion = Emotion.resolve(detected_emotion_str)
+            selected_sprite = w_char_service.select_sprite_for_emotion(w_character, detected_emotion)
+
+            suggested_location = None
+            if matched_loc_name and other_locations:
+                for loc in other_locations:
+                    if loc.name.lower() == matched_loc_name.strip().lower():
+                        suggested_location = {
+                            "id": loc.id,
+                            "name": loc.name,
+                            "background_image_path": loc.background_image_path,
+                        }
+                        break
 
             source_hash = w_trans_service.compute_source_hash(english_reply)
             cached_rec = w_trans_repo.get_translation(source_hash, user_language)
