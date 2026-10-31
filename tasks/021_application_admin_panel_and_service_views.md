@@ -44,7 +44,7 @@ Umsetzung des Administrationsbereichs zur Verwaltung von Benutzern, funktionalen
 - **System-Prompts:** Editierbare Textareas für Rollenspiel-, Memory-, Diffuser- und Sparkle-Prompts.
 
 ## ✅ Akzeptanzkriterien
-- [ ] Nur für Nutzer mit Permission `ADMIN_ACCESS` erreichbar.
-- [ ] Initialer Admin kann nicht manipuliert oder degradiert werden.
-- [ ] Ollama Modelle können direkt über die Oberfläche installiert und gelöscht werden.
-- [ ] Alle System-Prompts und Task-Zuweisungen lassen sich speichern und sofort wirksam anwenden.
+- [x] Nur für Nutzer mit Permission `ADMIN_ACCESS` erreichbar.
+- [x] Initialer Admin kann nicht manipuliert oder degradiert werden.
+- [x] Ollama Modelle können direkt über die Oberfläche installiert und gelöscht werden.
+- [x] Alle System-Prompts und Task-Zuweisungen lassen sich speichern und sofort wirksam anwenden.

@@ -51,6 +51,6 @@ Verwaltung der Systemeinstellungen für externe KI-Dienste (Ollama, ComfyUI, Sea
   - `update_system_prompts(...) -> ServiceSettings`
 
 ## ✅ Akzeptanzkriterien
-- [ ] Vollständige Repräsentation aller Modell-Parameter und System-Prompts.
-- [ ] Standard-Prompts entsprechen exakt den Vorgaben aus AGENTS.md (inkl. Rollenspiel-Disziplin und Autor-Sparkle).
-- [ ] Saubere Validierung der Inferenzparameter (z. B. positive Kontextgrößen, plausible Temperatur).
+- [x] Vollständige Repräsentation aller Modell-Parameter und System-Prompts.
+- [x] Standard-Prompts entsprechen exakt den Vorgaben aus AGENTS.md (inkl. Rollenspiel-Disziplin und Autor-Sparkle).
+- [x] Saubere Validierung der Inferenzparameter (z. B. positive Kontextgrößen, plausible Temperatur).

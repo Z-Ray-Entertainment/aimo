@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}AIMO — Lorebook: {{ lorebook.name }}{% endblock %}
+
+{% block content %}
+<div class="wood-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+  <div style="display: flex; align-items: center; gap: 1rem;">
+    <a href="{{ url_for('overview.index') }}" class="btn"><span class="icon-mono">←</span> Zurück</a>
+    <form method="POST" action="{{ url_for('lorebooks.detail', lorebook_id=lorebook.id) }}" style="display: flex; align-items: center; gap: 0.75rem;">
+      <input type="text" name="name" value="{{ lorebook.name }}" style="width: 260px; font-weight: 700;">
+      <input type="text" name="description" value="{{ lorebook.description }}" placeholder="Kurzbeschreibung..." style="width: 320px;">
+      {% if has_perm('lorebook_edit') %}
+        <button type="submit" class="btn"><span class="icon-mono">💾</span></button>
+      {% endif %}
+    </form>
+  </div>
+  {% if has_perm('lorebook_delete') %}
+    <form method="POST" action="{{ url_for('lorebooks.delete_lorebook', lorebook_id=lorebook.id) }}" onsubmit="return confirm('Lorebook wirklich löschen?');">
+      <button type="submit" class="btn btn-danger"><span class="icon-mono">🗑️</span> Lorebook löschen</button>
+    </form>
+  {% endif %}
+</div>
+
+<div class="card-grid">
+  {% if has_perm('lorebook_edit') %}
+    <button type="button" class="add-card-tile" data-modal-open="new-entry-modal">
+      <div class="plus-symbol">+</div>
+      <div>Neuer Eintrag</div>
+    </button>
+  {% endif %}
+
+  {% for entry in entries %}
+    <div class="card-tile" style="padding: 1.25rem; justify-content: space-between; cursor: pointer;" data-modal-open="edit-entry-modal-{{ entry.id }}">
+      <div>
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">{{ entry.title }}</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.75rem;">
+          {% for tag in entry.tags %}
+            <span style="font-size: 0.75rem; padding: 0.15rem 0.5rem; border: 1px solid var(--border-wood); border-radius: 10px;">#{{ tag }}</span>
+          {% endfor %}
+        </div>
+        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.4;">
+          {{ entry.content[:180] }}{% if entry.content|length > 180 %}...{% endif %}
+        </p>
+      </div>
+      <div style="margin-top: 0.85rem; font-size: 0.8rem; color: var(--gold-accent);">
+        <span class="icon-mono">✏️</span> Klicken zum Bearbeiten
+      </div>
+    </div>
+
+    <!-- Modal: Eintrag bearbeiten -->
+    <div class="modal-backdrop" id="edit-entry-modal-{{ entry.id }}" aria-hidden="true">
+      <div class="modal-frame">
+        <div class="modal-header">
+          <h3 style="color: var(--gold-accent);">Lorebook-Eintrag: {{ entry.title }}</h3>
+          <button type="button" class="btn" data-modal-close="edit-entry-modal-{{ entry.id }}">✕</button>
+        </div>
+        <form method="POST" action="{{ url_for('lorebooks.edit_entry', lorebook_id=lorebook.id, entry_id=entry.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
+          <div>
+            <label>Titel *</label>
+            <input type="text" name="title" value="{{ entry.title }}" required>
+          </div>
+          <div>
+            <label>Tags (Kommagetrennt für vektorloses RAG) *</label>
+            <input type="text" name="tags" value="{{ entry.tags|join(', ') }}" required>
+          </div>
+          <div>
+            <label>Fließtext / Wissensinhalt *</label>
+            <textarea name="content" rows="6" required>{{ entry.content }}</textarea>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+            <button type="submit" form="delete-entry-form-{{ entry.id }}" class="btn btn-danger"><span class="icon-mono">🗑️</span> Löschen</button>
+            <button type="submit" class="btn"><span class="icon-mono">💾</span> Speichern</button>
+          </div>
+        </form>
+        <form id="delete-entry-form-{{ entry.id }}" method="POST" action="{{ url_for('lorebooks.delete_entry', lorebook_id=lorebook.id, entry_id=entry.id) }}" style="display: none;"></form>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Modal: Neuer Eintrag -->
+<div class="modal-backdrop" id="new-entry-modal" aria-hidden="true">
+  <div class="modal-frame">
+    <div class="modal-header">
+      <h3 style="color: var(--gold-accent);">Neuen Lorebook-Eintrag anlegen</h3>
+      <button type="button" class="btn" data-modal-close="new-entry-modal">✕</button>
+    </div>
+    <form method="POST" action="{{ url_for('lorebooks.add_entry', lorebook_id=lorebook.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
+      <div>
+        <label>Titel *</label>
+        <input type="text" name="title" required>
+      </div>
+      <div>
+        <label>Tags (Kommagetrennt) *</label>
+        <input type="text" name="tags" placeholder="magie, gilde, hauptstadt" required>
+      </div>
+      <div>
+        <label>Fließtext / Wissensinhalt *</label>
+        <textarea name="content" rows="6" required></textarea>
+      </div>
+      <div style="text-align: right;">
+        <button type="submit" class="btn">Eintrag speichern</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

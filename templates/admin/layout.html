@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}AIMO — Administration{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+  <div class="rpg-tabs" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
+    <a href="{{ url_for('admin.users_list') }}" class="rpg-tab-btn {% if request.endpoint in ('admin.users_list', 'admin.create_user', 'admin.edit_user') %}active{% endif %}">
+      <span class="icon-mono">👥</span> Benutzerverwaltung
+    </a>
+    <a href="{{ url_for('admin.services_config') }}" class="rpg-tab-btn {% if request.endpoint == 'admin.services_config' %}active{% endif %}">
+      <span class="icon-mono">⚙️</span> Services, Modelle & Prompts
+    </a>
+  </div>
+  <a href="{{ url_for('overview.index') }}" class="btn">← Zurück zum Hub</a>
+</div>
+
+{% block admin_content %}{% endblock %}
+{% endblock %}

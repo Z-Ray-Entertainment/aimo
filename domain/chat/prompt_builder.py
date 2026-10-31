@@ -1,0 +1,175 @@
+from domain.characters.models import Character
+from domain.chat.models import Message, MessageRole
+from domain.lorebooks.models import LorebookEntry
+from domain.memories.models import Memory
+from domain.personas.models import UserPersona
+from domain.worldinfo.models import Event, Location, WorldInfo
+
+
+class PromptBuilder:
+    def build_roleplay_prompt(
+        self,
+        roleplay_system_prompt: str,
+        character: Character,
+        persona: UserPersona,
+        worldinfo: WorldInfo | None,
+        current_location: Location | None,
+        triggered_event: Event | None,
+        recent_messages: list[Message],
+        matched_memories: list[Memory],
+        matched_lorebooks: list[LorebookEntry],
+        available_locations: list[Location] | None = None,
+        relationship_value: float = 0.0,
+    ) -> str:
+        system_section = roleplay_system_prompt.strip()
+        character_section = self._format_character_definition(
+            character=character,
+            relationship_value=relationship_value,
+        )
+        persona_section = self._format_user_persona(persona=persona)
+        world_section = self._format_world_info(
+            worldinfo=worldinfo,
+            current_location=current_location,
+            triggered_event=triggered_event,
+            available_locations=available_locations or [],
+            character=character,
+        )
+        history_section = self._format_chat_history(
+            messages=recent_messages,
+            character_name=character.name,
+            persona_name=persona.name,
+        )
+        memories_section = self._format_memories(memories=matched_memories)
+        lorebooks_section = self._format_lorebooks(entries=matched_lorebooks)
+
+        return (
+            f"[SYSTEM_PROMPT]\n{system_section}\n[/SYSTEM_PROMPT]\n\n"
+            f"[CHARACTER_DEFINITION]\n{character_section}\n[/CHARACTER_DEFINITION]\n\n"
+            f"[USER_PERSONA]\n{persona_section}\n[/USER_PERSONA]\n\n"
+            f"[WORLD_INFO]\n{world_section}\n[/WORLD_INFO]\n\n"
+            f"[CHAT_HISTORY]\n{history_section}\n[/CHAT_HISTORY]\n\n"
+            f"[RELEVANT_MEMORIES]\n{memories_section}\n[/RELEVANT_MEMORIES]\n\n"
+            f"[RELEVANT_LOREBOOKS]\n{lorebooks_section}\n[/RELEVANT_LOREBOOKS]"
+        )
+
+    @staticmethod
+    def _format_character_definition(
+        character: Character,
+        relationship_value: float,
+    ) -> str:
+        lines = [
+            f"Name: {character.name}",
+            f"Gender: {character.gender.value}",
+            f"Current Affection / Relationship Score (-100 to +100): {relationship_value:.1f}",
+            f"Description & Personality:\n{character.description.strip()}",
+        ]
+        if character.dialogue_examples:
+            examples_text = "\n".join(f"- {ex}" for ex in character.dialogue_examples)
+            lines.append(f"Dialogue Examples:\n{examples_text}")
+        return "\n".join(lines)
+
+    @staticmethod
+    def _format_user_persona(persona: UserPersona) -> str:
+        lines = [
+            f"Name: {persona.name}",
+            f"Gender: {persona.gender.value}",
+        ]
+        if persona.description.strip():
+            lines.append(f"Background & Personality: {persona.description.strip()}")
+        if persona.appearance.strip():
+            lines.append(f"Physical Appearance: {persona.appearance.strip()}")
+        return "\n".join(lines)
+
+    @staticmethod
+    def _format_world_info(
+        worldinfo: WorldInfo | None,
+        current_location: Location | None,
+        triggered_event: Event | None,
+        available_locations: list[Location],
+        character: Character,
+    ) -> str:
+        if worldinfo is None:
+            return "Active World: None (Neutral setting, no specific world events)."
+
+        lines = [f"World Name: {worldinfo.name}"]
+        if current_location is not None:
+            lines.append(f"Current Location: {current_location.name}")
+            if current_location.description.strip():
+                lines.append(f"Location Description: {current_location.description.strip()}")
+            if current_location.vision_alt_text:
+                lines.append(f"Visual Environment: {current_location.vision_alt_text.strip()}")
+        else:
+            lines.append("Current Location: Unspecified")
+
+        if available_locations:
+            loc_map = {loc.id: loc.name for loc in available_locations if loc.id is not None}
+            pref_names = [
+                loc_map[lid]
+                for lid in character.preferred_location_ids
+                if lid in loc_map
+            ]
+            disliked_names = [
+                loc_map[lid]
+                for lid in character.disliked_location_ids
+                if lid in loc_map
+            ]
+            if pref_names:
+                lines.append(f"Character's Preferred Locations: {', '.join(pref_names)}")
+            if disliked_names:
+                lines.append(f"Character's Disliked Locations: {', '.join(disliked_names)}")
+
+        if triggered_event is not None:
+            lines.append(
+                f"Active Narrative Event ({triggered_event.title}): "
+                f"{triggered_event.description.strip()}"
+            )
+
+        return "\n".join(lines)
+
+    @staticmethod
+    def _format_chat_history(
+        messages: list[Message],
+        character_name: str,
+        persona_name: str,
+    ) -> str:
+        narrative_messages = [
+            msg
+            for msg in messages
+            if msg.role in (MessageRole.USER, MessageRole.CHARACTER)
+        ][-10:]
+
+        if not narrative_messages:
+            return "No messages yet."
+
+        lines: list[str] = []
+        for msg in narrative_messages:
+            speaker = persona_name if msg.role == MessageRole.USER else character_name
+            content = msg.english_content.strip()
+            if msg.image_alt_text and msg.image_alt_text.strip():
+                alt = msg.image_alt_text.strip()
+                if content:
+                    content = f"[Player shows an image: {alt}] {content}"
+                else:
+                    content = f"[Player shows an image: {alt}]"
+            if content:
+                lines.append(f"{speaker}: {content}")
+
+        return "\n".join(lines) if lines else "No messages yet."
+
+    @staticmethod
+    def _format_memories(memories: list[Memory]) -> str:
+        if not memories:
+            return "None."
+        return "\n\n".join(
+            f"- {mem.title}: {mem.summary.strip()}"
+            for mem in memories
+        )
+
+    @staticmethod
+    def _format_lorebooks(entries: list[LorebookEntry]) -> str:
+        if not entries:
+            return "None."
+        return "\n\n".join(
+            f"- {entry.title}: {entry.content.strip()}"
+            for entry in entries
+        )

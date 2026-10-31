@@ -49,7 +49,7 @@ Umsetzung des Charakter-Designers (`/characters/new` und `/characters/<id>/edit`
   - Bei Einzelsprite: Löschen-Button direkt als Overlay über dem Bild.
 
 ## ✅ Akzeptanzkriterien
-- [ ] Sparkle-Button ✨ optimiert Textarea-Inhalt via KI-Autor-Prompt.
-- [ ] Galeriebilder besitzen konfigurierbare Schwellenwerte (-100 bis +100).
-- [ ] Sprite-Grid unterstützt Upload, Papier-Plus für Varianten, Stackview und Augen-Modal.
-- [ ] Formularvalidierung erzwingt Name, Geschlecht und Primary Portrait.
+- [x] Sparkle-Button ✨ optimiert Textarea-Inhalt via KI-Autor-Prompt.
+- [x] Galeriebilder besitzen konfigurierbare Schwellenwerte (-100 bis +100).
+- [x] Sprite-Grid unterstützt Upload, Papier-Plus für Varianten, Stackview und Augen-Modal.
+- [x] Formularvalidierung erzwingt Name, Geschlecht und Primary Portrait.

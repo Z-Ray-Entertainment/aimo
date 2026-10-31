@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}AIMO — Immersive Roleplay Hub{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="app-overlay">
+    <header class="top-header">
+      <a href="{{ url_for('overview.index') }}" class="brand-title">
+        <span class="icon-mono">⚔️</span>
+        <span>AIMO</span>
+      </a>
+      <div class="header-actions">
+        {% block header_actions %}
+          {% if g.current_user %}
+            {% if g.default_persona %}
+              <button type="button" class="persona-avatar-btn" data-modal-open="persona-manager-modal" title="Standard-Persona verwalten">
+                <img src="{{ url_for('uploaded_file', filename=g.default_persona.portrait_path) }}" alt="{{ g.default_persona.name }}" onerror="this.src='/static/img/cover.svg'">
+                <span>{{ g.default_persona.name }}</span>
+              </button>
+            {% else %}
+              <button type="button" class="persona-avatar-btn" data-modal-open="persona-manager-modal">
+                <span class="icon-mono">👤</span>
+                <span>Persona wählen</span>
+              </button>
+            {% endif %}
+            {% if has_perm('admin_access') %}
+              <a href="{{ url_for('admin.users_list') }}" class="btn"><span class="icon-mono">⚙️</span> Admin</a>
+            {% endif %}
+            <a href="{{ url_for('auth.logout') }}" class="btn"><span class="icon-mono">🚪</span> Logout</a>
+          {% endif %}
+        {% endblock %}
+      </div>
+    </header>
+
+    <main class="main-container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-list">
+            {% for category, message in messages %}
+              <div class="flash-msg {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/modals.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,78 @@
+from functools import wraps
+from typing import Any, Callable
+
+from flask import abort, g, jsonify, redirect, request, session, url_for
+
+from domain.auth.models import User
+from domain.permissions.models import FunctionPermission, UserPermissions
+from domain.permissions.services import PermissionService
+from infrastructure.repositories.user_repository import UserRepository
+
+
+def get_current_user() -> User | None:
+    if hasattr(g, "current_user"):
+        return g.current_user
+    user_id = session.get("user_id")
+    if not user_id:
+        g.current_user = None
+        return None
+    repo = UserRepository()
+    user = repo.get_by_id(int(user_id))
+    g.current_user = user
+    return user
+
+
+def get_current_permissions() -> UserPermissions:
+    if hasattr(g, "current_permissions"):
+        return g.current_permissions
+    user = get_current_user()
+    if user is None or user.id is None:
+        perms = UserPermissions(user_id=0, permissions=set())
+    else:
+        repo = UserRepository()
+        perms = repo.get_permissions(user.id)
+    g.current_permissions = perms
+    return perms
+
+
+def has_perm(permission: str | FunctionPermission) -> bool:
+    user = get_current_user()
+    if user is None:
+        return False
+    if user.is_initial_admin:
+        return True
+    perms = get_current_permissions()
+    return PermissionService().has_permission(perms, permission)
+
+
+def require_auth(view_func: Callable[..., Any]) -> Callable[..., Any]:
+    @wraps(view_func)
+    def wrapped(*args: Any, **kwargs: Any) -> Any:
+        user = get_current_user()
+        if user is None:
+            if request.path.startswith("/api/"):
+                return jsonify({"error": "Authentication required."}), 401
+            return redirect(url_for("auth.login", next=request.path))
+        return view_func(*args, **kwargs)
+
+    return wrapped
+
+
+def require_permission(permission: str | FunctionPermission) -> Callable[..., Any]:
+    def decorator(view_func: Callable[..., Any]) -> Callable[..., Any]:
+        @wraps(view_func)
+        def wrapped(*args: Any, **kwargs: Any) -> Any:
+            user = get_current_user()
+            if user is None:
+                if request.path.startswith("/api/"):
+                    return jsonify({"error": "Authentication required."}), 401
+                return redirect(url_for("auth.login", next=request.path))
+            if not has_perm(permission):
+                if request.path.startswith("/api/"):
+                    return jsonify({"error": f"Missing permission: {permission}"}), 403
+                abort(403)
+            return view_func(*args, **kwargs)
+
+        return wrapped
+
+    return decorator

@@ -47,6 +47,6 @@ Erstellung und Verwaltung von Enzyklopädien und Wissensbüchern (`Lorebook`) mi
 - `LorebookNotFoundError`, `EntryNotFoundError`, `InvalidLorebookDataError`.
 
 ## ✅ Akzeptanzkriterien
-- [ ] Reine Domänenkomponenten ohne I/O.
-- [ ] Einträge besitzen zwingend Titel, Tags (`list[str]`) und Fließtext.
-- [ ] Tag-Suche arbeitet exakt nach der Regel `tags_overlap >= 1`.
+- [x] Reine Domänenkomponenten ohne I/O.
+- [x] Einträge besitzen zwingend Titel, Tags (`list[str]`) und Fließtext.
+- [x] Tag-Suche arbeitet exakt nach der Regel `tags_overlap >= 1`.

@@ -48,7 +48,7 @@ Jedes Repository kapselt Datenbankzugriffe und gibt reine Domain-Entities zurüc
 - **`SettingsRepository`:** `get_settings`, `save_settings`.
 
 ## ✅ Akzeptanzkriterien
-- [ ] Vollständige Mappings für alle Domänenentitäten.
-- [ ] Transaktionssicherheit über `get_db_session()`.
-- [ ] Keine Leaks von SQLAlchemy-Objekten in die Domain-Schicht.
-- [ ] Kaskadierende Löschungen und Fremdschlüssel-Integrität (`foreign_keys=ON`) verifiziert.
+- [x] Vollständige Mappings für alle Domänenentitäten.
+- [x] Transaktionssicherheit über `get_db_session()`.
+- [x] Keine Leaks von SQLAlchemy-Objekten in die Domain-Schicht.
+- [x] Kaskadierende Löschungen und Fremdschlüssel-Integrität (`foreign_keys=ON`) verifiziert.

@@ -42,6 +42,6 @@ Sicherstellung des englischen LLM-Kanons: Alle Daten werden im Hintergrund prim�
 - Nutzt `LLMProvider.generate()` mit einem spezialisierten Übersetzungs-Prompt zur präzisen Übersetzung zwischen Englisch und Nutzersprache.
 
 ## ✅ Akzeptanzkriterien
-- [ ] LLM-Kontext bleibt kanonisch auf Englisch.
-- [ ] Übersetzungs-Cache in SQLite (`TranslationRecord`) verhindert doppelte API-Calls.
-- [ ] Edits aktualisieren das englische Original und invalidieren abhängige Cache-Einträge.
+- [x] LLM-Kontext bleibt kanonisch auf Englisch.
+- [x] Übersetzungs-Cache in SQLite (`TranslationRecord`) verhindert doppelte API-Calls.
+- [x] Edits aktualisieren das englische Original und invalidieren abhängige Cache-Einträge.

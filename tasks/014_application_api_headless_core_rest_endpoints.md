@@ -45,6 +45,6 @@ Bereitstellung der zentralen REST-API (`/api/...`), um das System als autarken H
 - `GET /api/lorebooks`: Lorebook-Verwaltung.
 
 ## ✅ Akzeptanzkriterien
-- [ ] SSE-Streaming liefert Roh-Tokens, gefolgt von nachgelagerter Klassifikation und Übersetzung.
-- [ ] Alle wesentlichen Core-Funktionen sind über reine JSON-/REST-Endpunkte erreichbar.
-- [ ] Vollständige Entkopplung für alternative Frontends (GTK4/Flathub).
+- [x] SSE-Streaming liefert Roh-Tokens, gefolgt von nachgelagerter Klassifikation und Übersetzung.
+- [x] Alle wesentlichen Core-Funktionen sind über reine JSON-/REST-Endpunkte erreichbar.
+- [x] Vollständige Entkopplung für alternative Frontends (GTK4/Flathub).

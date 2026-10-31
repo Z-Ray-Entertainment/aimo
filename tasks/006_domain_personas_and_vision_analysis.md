@@ -48,7 +48,7 @@ Verwaltung von Spieler-Personas (Identität des Spielers im Rollenspiel) inklusi
 - `PersonaNotFoundError`, `InvalidPersonaDataError`, `PersonaInUseError`.
 
 ## ✅ Akzeptanzkriterien
-- [ ] Vollständige Domänenlogik für Personas mit `Gender`-Enum.
-- [ ] Automatisierte Vision-Analyse befüllt das Aussehen ohne Hintergrund/Posen.
-- [ ] Lösch-Schutz greift verlässlich, wenn die Persona in Chats verwendet wurde.
-- [ ] Manuell editierte Aussehensbeschreibungen bleiben geschützt.
+- [x] Vollständige Domänenlogik für Personas mit `Gender`-Enum.
+- [x] Automatisierte Vision-Analyse befüllt das Aussehen ohne Hintergrund/Posen.
+- [x] Lösch-Schutz greift verlässlich, wenn die Persona in Chats verwendet wurde.
+- [x] Manuell editierte Aussehensbeschreibungen bleiben geschützt.

@@ -46,7 +46,7 @@ Erstellung des automatisierten 10-Nachrichten-Memory-Systems, der dynamischen Ch
 - `MemoryNotFoundError`, `InvalidMemoryDataError`.
 
 ## ✅ Akzeptanzkriterien
-- [ ] Memory-Erzeugung wird alle 10 ungesicherten Nachrichten ausgelöst.
-- [ ] Vektorloses RAG arbeitet rein über Tag-Listen (`tags_overlap >= 1`).
-- [ ] Kaskadierende Löschung von Memories bei Löschen älterer Chat-Nachrichten.
-- [ ] Forking-Filterung übernimmt nur Memories bis `fork_point_idx`.
+- [x] Memory-Erzeugung wird alle 10 ungesicherten Nachrichten ausgelöst.
+- [x] Vektorloses RAG arbeitet rein über Tag-Listen (`tags_overlap >= 1`).
+- [x] Kaskadierende Löschung von Memories bei Löschen älterer Chat-Nachrichten.
+- [x] Forking-Filterung übernimmt nur Memories bis `fork_point_idx`.

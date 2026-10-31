@@ -68,7 +68,7 @@ Domänenmodellierung für KI-Charaktere inklusive Geschlechts-Enum, 28-stufigem 
 - `CharacterNotFoundError`, `InvalidCharacterDataError`.
 
 ## ✅ Akzeptanzkriterien
-- [ ] Alle 28 Emotionen im Enum typisiert; `neutral` ist definierter Fallback.
-- [ ] Zufällige Sprite-Variantenauswahl mit Fallback auf `neutral`.
-- [ ] Galeriebilder besitzen Schwellenwerte im Bereich -100 bis +100.
-- [ ] Sichtbarkeit (`private`/`public`) und First Message mit Initialort sind implementiert.
+- [x] Alle 28 Emotionen im Enum typisiert; `neutral` ist definierter Fallback.
+- [x] Zufällige Sprite-Variantenauswahl mit Fallback auf `neutral`.
+- [x] Galeriebilder besitzen Schwellenwerte im Bereich -100 bis +100.
+- [x] Sichtbarkeit (`private`/`public`) und First Message mit Initialort sind implementiert.

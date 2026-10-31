@@ -1,0 +1,242 @@
+{% extends "admin/layout.html" %}
+
+{% block admin_content %}
+<div style="display: grid; grid-template-columns: 1fr 380px; gap: 1.5rem; align-items: start;">
+  <!-- Linke Spalte: Hauptformular für URLs, Task-Zuweisung, Inferenz-Parameter & System-Prompts -->
+  <form method="POST" action="{{ url_for('admin.services_config') }}" class="wood-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
+    <h2 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
+      Service-Endpunkte, Modell-Aufgaben & System-Prompts
+    </h2>
+
+    <!-- 1. Service-URLs -->
+    <div>
+      <h3 style="color: var(--gold-accent); font-size: 1rem; margin-bottom: 0.75rem;">1. Externe Service-Verbindungen</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <label>Ollama API URL *
+            <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if ollama_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
+              ● {% if ollama_healthy %}Verbunden{% else %}Nicht erreichbar{% endif %}
+            </span>
+          </label>
+          <input type="url" name="ollama_url" value="{{ settings.ollama_url }}" required>
+        </div>
+        <div>
+          <label>ComfyUI API URL *
+            <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if comfy_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
+              ● {% if comfy_healthy %}Verbunden{% else %}Offline{% endif %}
+            </span>
+          </label>
+          <input type="url" name="comfyui_url" value="{{ settings.comfyui_url }}" required>
+        </div>
+      </div>
+
+      <div style="margin-top: 0.85rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: end;">
+        <div>
+          <label>SearXNG URL (Optional / vorbereitet)</label>
+          <input type="url" name="searxng_url" value="{{ settings.searxng_url }}" required>
+        </div>
+        <label style="display: flex; align-items: center; gap: 0.5rem; padding-bottom: 0.65rem; cursor: pointer;">
+          <input type="checkbox" name="searxng_enabled" value="1" {% if settings.searxng_enabled %}checked{% endif %}>
+          <span>SearXNG aktivieren</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 2. Task-spezifische Modell-Zuweisung -->
+    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
+      <h3 style="color: var(--gold-accent); font-size: 1rem; margin-bottom: 0.75rem;">2. Task-spezifische Modell-Zuweisung</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div>
+          <label>Roleplay-Modell (Dialog, Klassifikation)</label>
+          <select name="roleplay_model">
+            {% for m in installed_models %}
+              <option value="{{ m }}" {% if m == settings.tasks.roleplay_model %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label>Memory-Modell (10-Nachrichten-Episoden)</label>
+          <select name="memory_model">
+            {% for m in installed_models %}
+              <option value="{{ m }}" {% if m == settings.tasks.memory_model %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label>Assistant-Modell (Sparkle ✨, Übersetzung, SD-Prompt)</label>
+          <select name="assistant_model">
+            {% for m in installed_models %}
+              <option value="{{ m }}" {% if m == settings.tasks.assistant_model %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label>Vision-Modell (Persona-Porträts, 16:9 Orte, Bild-Uploads)</label>
+          <select name="vision_model">
+            {% for m in installed_models %}
+              <option value="{{ m }}" {% if m == settings.tasks.vision_model %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Inferenz-Parameter -->
+    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
+      <h3 style="color: var(--gold-accent); font-size: 1rem; margin-bottom: 0.75rem;">3. LLM Inferenz-Hyperparameter</h3>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.85rem;">
+        <div>
+          <label>Context (num_ctx)</label>
+          <input type="number" name="num_ctx" min="512" max="131072" step="256" value="{{ settings.params.num_ctx }}" required>
+        </div>
+        <div>
+          <label>Temperature (0.0–2.0)</label>
+          <input type="number" name="temperature" min="0.0" max="2.0" step="0.05" value="{{ settings.params.temperature }}" required>
+        </div>
+        <div>
+          <label>Top-P (0.05–1.0)</label>
+          <input type="number" name="top_p" min="0.05" max="1.0" step="0.05" value="{{ settings.params.top_p }}" required>
+        </div>
+        <div>
+          <label>Repeat Penalty</label>
+          <input type="number" name="repeat_penalty" min="0.5" max="2.5" step="0.05" value="{{ settings.params.repeat_penalty }}" required>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Editierbare System-Prompts -->
+    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+      <h3 style="color: var(--gold-accent); font-size: 1rem;">4. Editierbare System-Prompts (Englischer Kanon)</h3>
+
+      <div>
+        <label>Rollenspiel-System-Prompt ([SYSTEM_PROMPT])</label>
+        <textarea name="roleplay_prompt" rows="4" required>{{ settings.prompts.roleplay_prompt }}</textarea>
+      </div>
+
+      <div>
+        <label>Memory-Zusammenfassungs-Prompt (Alle 10 Nachrichten)</label>
+        <textarea name="memory_prompt" rows="3" required>{{ settings.prompts.memory_prompt }}</textarea>
+      </div>
+
+      <div>
+        <label>Diffuser-Prompt (Szenenbeschreibung → ComfyUI Prompt)</label>
+        <textarea name="diffuser_prompt" rows="3" required>{{ settings.prompts.diffuser_prompt }}</textarea>
+      </div>
+
+      <div>
+        <label>Sparkle-Assistent-Prompt (✨ Charakterbeschreibungs-Aufwertung)</label>
+        <textarea name="sparkle_assistant_prompt" rows="3" required>{{ settings.prompts.sparkle_assistant_prompt }}</textarea>
+      </div>
+
+      <div>
+        <label>Vision-Persona-Prompt (Physische Aussehens-Extraktion)</label>
+        <textarea name="vision_persona_prompt" rows="2" required>{{ settings.prompts.vision_persona_prompt }}</textarea>
+      </div>
+    </div>
+
+    <div style="text-align: right; margin-top: 0.5rem;">
+      <button type="submit" class="btn">Alle Einstellungen speichern</button>
+    </div>
+  </form>
+
+  <!-- Rechte Spalte: Ollama Modell-Management (Install / Pull & Delete) -->
+  <aside class="wood-frame" style="padding: 1.35rem; display: flex; flex-direction: column; gap: 1.1rem;">
+    <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
+      <span class="icon-mono">📦</span> Ollama Modell-Manager
+    </h3>
+
+    <div>
+      <label style="display: block; margin-bottom: 0.4rem; font-size: 0.88rem;">Neues Modell installieren (Pull)</label>
+      <div style="display: flex; gap: 0.5rem;">
+        <input type="text" id="pull-model-name" placeholder="z. B. llama3:8b oder llava:latest">
+        <button type="button" class="btn" id="pull-model-btn" onclick="pullOllamaModel()">Pull</button>
+      </div>
+      <div id="pull-progress-box" style="display: none; margin-top: 0.65rem; padding: 0.6rem; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--gold-accent); font-size: 0.8rem; color: var(--gold-accent);">
+        Starte Download...
+      </div>
+    </div>
+
+    <div>
+      <h4 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Installierte Modelle ({{ installed_models|length }})</h4>
+      <div id="installed-models-list" style="display: flex; flex-direction: column; gap: 0.45rem; max-height: 440px; overflow-y: auto;">
+        {% for model_name in installed_models %}
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.7rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 8px;">
+            <span style="font-size: 0.86rem; font-family: monospace;">{{ model_name }}</span>
+            <button type="button" class="btn btn-danger" style="padding: 0.25rem 0.55rem; font-size: 0.76rem;" onclick="deleteOllamaModel('{{ model_name }}')">
+              <span class="icon-mono">🗑️</span>
+            </button>
+          </div>
+        {% else %}
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Keine Modelle gefunden oder Ollama offline.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </aside>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  async function pullOllamaModel() {
+    const input = document.getElementById("pull-model-name");
+    const btn = document.getElementById("pull-model-btn");
+    const box = document.getElementById("pull-progress-box");
+    const name = input.value.trim();
+    if (!name) return;
+
+    btn.disabled = true;
+    box.style.display = "block";
+    box.textContent = `Lade Modell '${name}' herunter...`;
+
+    try {
+      const resp = await fetch("/api/admin/models/pull", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name }),
+      });
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const text = decoder.decode(value);
+        const lines = text.split("\n");
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            try {
+              const payload = JSON.parse(line.slice(6));
+              if (payload.error) {
+                box.textContent = "Fehler: " + payload.error;
+              } else if (payload.completed && payload.total) {
+                const pct = Math.round((payload.completed / payload.total) * 100);
+                box.textContent = `${payload.status || 'Downloading'}: ${pct}%`;
+              } else if (payload.status) {
+                box.textContent = payload.status;
+              }
+            } catch (err) {}
+          }
+        }
+      }
+      window.location.reload();
+    } catch (e) {
+      box.textContent = "Verbindungsfehler beim Modell-Download.";
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function deleteOllamaModel(modelName) {
+    if (!confirm(`Modell '${modelName}' wirklich von Ollama löschen?`)) return;
+    const resp = await fetch(`/api/admin/models/${encodeURIComponent(modelName)}`, {
+      method: "DELETE",
+    });
+    if (resp.ok) {
+      window.location.reload();
+    } else {
+      const data = await resp.json();
+      alert(data.error || "Löschen fehlgeschlagen.");
+    }
+  }
+</script>
+{% endblock %}

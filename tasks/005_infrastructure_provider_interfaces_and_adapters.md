@@ -67,8 +67,8 @@ Erstellung der abstrakten Provider-Schnittstellen und konkreten Implementierunge
 - Validierung von Bildformaten (PNG, JPG, WEBP).
 
 ## ✅ Akzeptanzkriterien
-- [ ] Vollständige Abstraktion aller externen Services über Interfaces.
-- [ ] `OllamaLLMProvider` unterstützt Streaming, synchrone Generierung, Vision und Klassifikation.
-- [ ] `ComfyUIImageGenProvider` unterstützt Workflow-Aufruf und Abbrechen.
-- [ ] `VoiceTTSStubProvider` ermöglicht es dem Kern, TTS sauber aufzurufen.
-- [ ] Datei-Storage speichert und liefert Bildpfade organisiert und sicher ab.
+- [x] Vollständige Abstraktion aller externen Services über Interfaces.
+- [x] `OllamaLLMProvider` unterstützt Streaming, synchrone Generierung, Vision und Klassifikation.
+- [x] `ComfyUIImageGenProvider` unterstützt Workflow-Aufruf und Abbrechen.
+- [x] `VoiceTTSStubProvider` ermöglicht es dem Kern, TTS sauber aufzurufen.
+- [x] Datei-Storage speichert und liefert Bildpfade organisiert und sicher ab.

@@ -48,7 +48,7 @@ Minimale PyPI-Abhängigkeiten festschreiben:
 - Schicht-Ausnahmen: `DomainError`, `InfrastructureError`, `ApplicationError`.
 
 ## ✅ Akzeptanzkriterien
-- [ ] `requirements.txt` definiert alle Kernabhängigkeiten ohne unnötige Bloat-Pakete.
-- [ ] `shared/config.py` liest Einstellungen strikt aus Umgebungsvariablen.
-- [ ] `shared/utils.py` enthält funktionierende Hashing-, Tag-Parsing- und Overlap-Routinen.
-- [ ] `shared/exceptions.py` stellt die standardisierte Ausnahme-Hierarchie bereit.
+- [x] `requirements.txt` definiert alle Kernabhängigkeiten ohne unnötige Bloat-Pakete.
+- [x] `shared/config.py` liest Einstellungen strikt aus Umgebungsvariablen.
+- [x] `shared/utils.py` enthält funktionierende Hashing-, Tag-Parsing- und Overlap-Routinen.
+- [x] `shared/exceptions.py` stellt die standardisierte Ausnahme-Hierarchie bereit.

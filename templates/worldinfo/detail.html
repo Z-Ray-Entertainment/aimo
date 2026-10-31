@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+{% block title %}AIMO — WorldInfo: {{ worldinfo.name }}{% endblock %}
+
+{% block content %}
+<div data-tab-group>
+  <div class="wood-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <a href="{{ url_for('overview.index') }}" class="btn"><span class="icon-mono">←</span> Zurück</a>
+      <form method="POST" action="{{ url_for('worldinfo.detail', worldinfo_id=worldinfo.id) }}" style="display: flex; align-items: center; gap: 0.6rem;">
+        <input type="text" name="icon" value="{{ worldinfo.icon or '🌐' }}" style="width: 64px; text-align: center;">
+        <input type="text" name="name" value="{{ worldinfo.name }}" style="width: 280px; font-weight: 700;">
+        {% if has_perm('worldinfo_edit') %}
+          <button type="submit" class="btn"><span class="icon-mono">💾</span></button>
+        {% endif %}
+      </form>
+    </div>
+    {% if has_perm('worldinfo_delete') %}
+      <form method="POST" action="{{ url_for('worldinfo.delete_worldinfo', worldinfo_id=worldinfo.id) }}" onsubmit="return confirm('WorldInfo wirklich löschen?');">
+        <button type="submit" class="btn btn-danger"><span class="icon-mono">🗑️</span> Welt löschen</button>
+      </form>
+    {% endif %}
+  </div>
+
+  <!-- Tabs: Places & Events -->
+  <div class="rpg-tabs">
+    <button type="button" class="rpg-tab-btn active" data-tab-target="tab-places">
+      <span class="icon-mono">📍</span> Tab 1: Places (Orte & 16:9-Hintergründe)
+    </button>
+    <button type="button" class="rpg-tab-btn" data-tab-target="tab-events">
+      <span class="icon-mono">🎲</span> Tab 2: Events (Zufalls-Ereignisse)
+    </button>
+  </div>
+
+  <!-- TAB 1: Places -->
+  <section id="tab-places" class="tab-pane active">
+    <div class="card-grid">
+      {% if has_perm('worldinfo_edit') %}
+        <button type="button" class="add-card-tile" data-modal-open="new-location-modal">
+          <div class="plus-symbol">+</div>
+          <div>Neuer Ort</div>
+        </button>
+      {% endif %}
+
+      {% for loc in locations %}
+        <div class="card-tile" style="cursor: pointer; justify-content: space-between;" data-modal-open="edit-location-modal-{{ loc.id }}">
+          <div style="height: 140px; background-image: url('{% if loc.background_image_path %}{{ url_for('uploaded_file', filename=loc.background_image_path) }}{% else %}/static/img/cover.svg{% endif %}'); background-size: cover; background-position: center; border-bottom: 1px solid var(--border-wood-dark);"></div>
+          <div style="padding: 1rem; flex: 1;">
+            <h3 style="color: var(--gold-accent); margin-bottom: 0.4rem;">📍 {{ loc.name }}</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">{{ loc.description[:120] }}{% if loc.description|length > 120 %}...{% endif %}</p>
+          </div>
+        </div>
+
+        <!-- Modal: Ort bearbeiten -->
+        <div class="modal-backdrop" id="edit-location-modal-{{ loc.id }}" aria-hidden="true">
+          <div class="modal-frame">
+            <div class="modal-header">
+              <h3 style="color: var(--gold-accent);">Ort bearbeiten: {{ loc.name }}</h3>
+              <button type="button" class="btn" data-modal-close="edit-location-modal-{{ loc.id }}">✕</button>
+            </div>
+            <form method="POST" action="{{ url_for('worldinfo.edit_location', worldinfo_id=worldinfo.id, location_id=loc.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
+              <div>
+                <label>Name des Orts *</label>
+                <input type="text" name="name" value="{{ loc.name }}" required>
+              </div>
+              <div>
+                <label>Tags (Kommagetrennt)</label>
+                <input type="text" name="tags" value="{{ loc.tags|join(', ') }}">
+              </div>
+              <div>
+                <label>16:9-Hintergrundbild (PNG, JPG, WEBP)</label>
+                <input type="file" name="background_file" accept=".png,.jpg,.jpeg,.webp">
+              </div>
+              <div>
+                <label>Ortsbeschreibung *</label>
+                <textarea name="description" rows="4" required>{{ loc.description }}</textarea>
+              </div>
+              <div>
+                <label>Zugeordnete Orts-Events:</label>
+                <ul style="margin-left: 1.2rem; font-size: 0.85rem; color: var(--text-muted);">
+                  {% for ev in events if ev.location_id == loc.id %}
+                    <li>{{ ev.title }} ({{ ev.probability }}%)</li>
+                  {% else %}
+                    <li>Keine spezifischen Orts-Events zugeordnet.</li>
+                  {% endfor %}
+                </ul>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                <button type="submit" form="delete-loc-form-{{ loc.id }}" class="btn btn-danger"><span class="icon-mono">🗑️</span> Löschen</button>
+                <button type="submit" class="btn"><span class="icon-mono">💾</span> Speichern</button>
+              </div>
+            </form>
+            <form id="delete-loc-form-{{ loc.id }}" method="POST" action="{{ url_for('worldinfo.delete_location', worldinfo_id=worldinfo.id, location_id=loc.id) }}" style="display: none;"></form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- TAB 2: Events -->
+  <section id="tab-events" class="tab-pane">
+    <div class="card-grid">
+      {% if has_perm('worldinfo_edit') %}
+        <button type="button" class="add-card-tile" data-modal-open="new-event-modal">
+          <div class="plus-symbol">+</div>
+          <div>Neues Event</div>
+        </button>
+      {% endif %}
+
+      {% for ev in events %}
+        <div class="card-tile" style="padding: 1.2rem; justify-content: space-between; cursor: pointer;" data-modal-open="edit-event-modal-{{ ev.id }}">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+              {% if ev.location_id and ev.location_id in loc_map %}
+                <span style="background: rgba(110, 71, 42, 0.9); border: 1px solid var(--gold-accent); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem;">
+                  📍 Ort: {{ loc_map[ev.location_id].name }}
+                </span>
+              {% else %}
+                <span style="background: rgba(45, 70, 95, 0.9); border: 1px solid var(--gold-accent); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem;">
+                  🌍 Gesamte Welt
+                </span>
+              {% endif %}
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--gold-accent);">{{ ev.probability }}%</span>
+            </div>
+
+            <h3 style="color: var(--gold-accent); margin-bottom: 0.4rem;">{{ ev.title }}</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">{{ ev.description[:140] }}{% if ev.description|length > 140 %}...{% endif %}</p>
+          </div>
+
+          <div style="margin-top: 0.75rem; font-size: 0.78rem; color: var(--text-muted);">
+            {% if ev.one_shot %}⚡ One-Shot (Max. 1x pro Session){% else %}🔄 Wiederholbar{% endif %}
+          </div>
+        </div>
+
+        <!-- Modal: Event bearbeiten -->
+        <div class="modal-backdrop" id="edit-event-modal-{{ ev.id }}" aria-hidden="true">
+          <div class="modal-frame">
+            <div class="modal-header">
+              <h3 style="color: var(--gold-accent);">Event bearbeiten: {{ ev.title }}</h3>
+              <button type="button" class="btn" data-modal-close="edit-event-modal-{{ ev.id }}">✕</button>
+            </div>
+            <form method="POST" action="{{ url_for('worldinfo.edit_event', worldinfo_id=worldinfo.id, event_id=ev.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
+              <div>
+                <label>Titel *</label>
+                <input type="text" name="title" value="{{ ev.title }}" required>
+              </div>
+              <div style="display: flex; gap: 1rem; align-items: center;">
+                <div style="flex: 1;">
+                  <label>Wahrscheinlichkeit (0 - 100%) *</label>
+                  <input type="number" name="probability" min="0" max="100" value="{{ ev.probability }}" required>
+                </div>
+                <div style="flex: 1; padding-top: 1.2rem;">
+                  <label><input type="checkbox" name="one_shot" value="1" {% if ev.one_shot %}checked{% endif %}> One-Shot (Max. 1x pro Session)</label>
+                </div>
+              </div>
+              <div>
+                <label>Zugehörigkeit (Exklusiv: Entweder Gesamte Welt ODER konkreter Ort)</label>
+                <select name="location_id">
+                  <option value="world" {% if not ev.location_id %}selected{% endif %}>🌍 Gesamte Welt</option>
+                  {% for loc in locations %}
+                    <option value="{{ loc.id }}" {% if ev.location_id == loc.id %}selected{% endif %}>📍 Ort: {{ loc.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div>
+                <label>Szenische Beschreibung des Ereignisses *</label>
+                <textarea name="description" rows="5" required>{{ ev.description }}</textarea>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                <button type="submit" form="delete-ev-form-{{ ev.id }}" class="btn btn-danger"><span class="icon-mono">🗑️</span> Löschen</button>
+                <button type="submit" class="btn"><span class="icon-mono">💾</span> Speichern</button>
+              </div>
+            </form>
+            <form id="delete-ev-form-{{ ev.id }}" method="POST" action="{{ url_for('worldinfo.delete_event', worldinfo_id=worldinfo.id, event_id=ev.id) }}" style="display: none;"></form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+<!-- Modal: Neuer Ort mit Vision-ALT-Abfrage -->
+<div class="modal-backdrop" id="new-location-modal" aria-hidden="true">
+  <div class="modal-frame">
+    <div class="modal-header">
+      <h3 style="color: var(--gold-accent);">Neuen Ort anlegen</h3>
+      <button type="button" class="btn" data-modal-close="new-location-modal">✕</button>
+    </div>
+    <form method="POST" action="{{ url_for('worldinfo.add_location', worldinfo_id=worldinfo.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
+      <div>
+        <label>Name des Orts *</label>
+        <input type="text" name="name" required>
+      </div>
+      <div>
+        <label>Tags (Kommagetrennt)</label>
+        <input type="text" name="tags" placeholder="taverne, wald, schloss">
+      </div>
+      <div>
+        <label>16:9-Hintergrundbild (PNG, JPG, WEBP)</label>
+        <input type="file" id="new-loc-bg-input" name="background_file" accept=".png,.jpg,.jpeg,.webp">
+        <input type="hidden" id="new-loc-bg-path" name="background_image_path">
+        <input type="hidden" id="new-loc-vision-alt" name="vision_alt_text">
+      </div>
+      <div>
+        <label>Ortsbeschreibung *</label>
+        <textarea id="new-loc-desc" name="description" rows="4" required></textarea>
+      </div>
+      <div style="text-align: right;">
+        <button type="submit" class="btn">Ort speichern</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Neues Event -->
+<div class="modal-backdrop" id="new-event-modal" aria-hidden="true">
+  <div class="modal-frame">
+    <div class="modal-header">
+      <h3 style="color: var(--gold-accent);">Neues Event anlegen</h3>
+      <button type="button" class="btn" data-modal-close="new-event-modal">✕</button>
+    </div>
+    <form method="POST" action="{{ url_for('worldinfo.add_event', worldinfo_id=worldinfo.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
+      <div>
+        <label>Titel *</label>
+        <input type="text" name="title" required>
+      </div>
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <div style="flex: 1;">
+          <label>Wahrscheinlichkeit (0 - 100%) *</label>
+          <input type="number" name="probability" min="0" max="100" value="50" required>
+        </div>
+        <div style="flex: 1; padding-top: 1.2rem;">
+          <label><input type="checkbox" name="one_shot" value="1"> One-Shot (Max. 1x pro Session)</label>
+        </div>
+      </div>
+      <div>
+        <label>Zugehörigkeit (Entweder Gesamte Welt oder konkreter Ort)</label>
+        <select name="location_id">
+          <option value="world">🌍 Gesamte Welt</option>
+          {% for loc in locations %}
+            <option value="{{ loc.id }}">📍 Ort: {{ loc.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label>Szenische Beschreibung des Ereignisses *</label>
+        <textarea name="description" rows="5" required></textarea>
+      </div>
+      <div style="text-align: right;">
+        <button type="submit" class="btn">Event speichern</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById("new-loc-bg-input")?.addEventListener("change", async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("background", file);
+
+  try {
+    const resp = await fetch("/api/worldinfo/locations/analyze-bg", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await resp.json();
+    if (resp.ok && data.vision_alt_text) {
+      document.getElementById("new-loc-bg-path").value = data.background_image_path || "";
+      document.getElementById("new-loc-vision-alt").value = data.vision_alt_text;
+      if (confirm(data.prompt_question || "Möchtest du die Ortsbeschreibung um die KI-generierte Bildbeschreibung erweitern?")) {
+        const descEl = document.getElementById("new-loc-desc");
+        descEl.value = descEl.value
+          ? `${descEl.value.trim()}\n\n${data.vision_alt_text}`
+          : data.vision_alt_text;
+      }
+    }
+  } catch (_) {}
+});
+</script>
+{% endblock %}

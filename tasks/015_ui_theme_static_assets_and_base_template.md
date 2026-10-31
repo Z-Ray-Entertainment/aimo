@@ -48,7 +48,7 @@ Umsetzung des verbindlichen Design-Systems für die Web-Oberfläche: Modernes RP
 - Responsives HTML5-Skelett mit Einbindung von `theme.css`, Meta-Tags, Flash-Messages und flexiblen Template-Blöcken (`{% block content %}`).
 
 ## ✅ Akzeptanzkriterien
-- [ ] Theme entspricht exakt den RPG-Vorgaben (Holztöne, Goldrahmen, Rundungen, Cover-Hintergrund).
-- [ ] SSE-Streaming-Skript ersetzt ausgegrauten englischen Text nahtlos nach Übersetzung.
-- [ ] 60-Sekunden-Countdown-Balken für Ortswechsel funktioniert zuverlässig.
-- [ ] Monochrome Standard-Icons und farbige Status-Herzen korrekt gestylt.
+- [x] Theme entspricht exakt den RPG-Vorgaben (Holztöne, Goldrahmen, Rundungen, Cover-Hintergrund).
+- [x] SSE-Streaming-Skript ersetzt ausgegrauten englischen Text nahtlos nach Übersetzung.
+- [x] 60-Sekunden-Countdown-Balken für Ortswechsel funktioniert zuverlässig.
+- [x] Monochrome Standard-Icons und farbige Status-Herzen korrekt gestylt.

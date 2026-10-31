@@ -41,7 +41,7 @@ Umsetzung des Erststart-Wizards (`/setup`), wenn noch keine Benutzer in der Date
   - `@require_permission(permission_name)`: Prüft funktionale Berechtigung via `PermissionService.has_permission()`. Wirft 403 bei fehlender Berechtigung.
 
 ## ✅ Akzeptanzkriterien
-- [ ] First-Boot sperrt sich nach erfolgreicher Erstellung des ersten Benutzers dauerhaft.
-- [ ] Initialer Admin erhält unentziehbare Super-User-Rechte.
-- [ ] Keine öffentliche Registrierung; Login-Maske validiert Passwörter sicher.
-- [ ] Ungeschützte Zugriffe leiten verlässlich auf `/login` weiter.
+- [x] First-Boot sperrt sich nach erfolgreicher Erstellung des ersten Benutzers dauerhaft.
+- [x] Initialer Admin erhält unentziehbare Super-User-Rechte.
+- [x] Keine öffentliche Registrierung; Login-Maske validiert Passwörter sicher.
+- [x] Ungeschützte Zugriffe leiten verlässlich auf `/login` weiter.

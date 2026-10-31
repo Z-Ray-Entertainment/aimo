@@ -48,6 +48,6 @@ Umsetzung der Editoren für Lorebooks und WorldInfo inklusive modalem Eintrags-E
     - Szenische Beschreibung des Ereignisses.
 
 ## ✅ Akzeptanzkriterien
-- [ ] Add-Kachel an erster Stelle in allen Grids.
-- [ ] 16:9-Hintergrunderweiterung mit interaktiver Vision-ALT-Abfrage.
-- [ ] Events zeigen Zugehörigkeits-Badges und sind exklusiv der Welt oder einem Ort zugeordnet.
+- [x] Add-Kachel an erster Stelle in allen Grids.
+- [x] 16:9-Hintergrunderweiterung mit interaktiver Vision-ALT-Abfrage.
+- [x] Events zeigen Zugehörigkeits-Badges und sind exklusiv der Welt oder einem Ort zugeordnet.

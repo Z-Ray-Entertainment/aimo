@@ -28,6 +28,6 @@ Erstellung der SQLAlchemy-Engine und Session-Verwaltung für SQLite mit zwingend
 - `init_db()`-Funktion zur Erstellung der Tabellenstruktur beim Systemstart.
 
 ## ✅ Akzeptanzkriterien
-- [ ] SQLite Engine initialisiert pragmas (`journal_mode=WAL`, `busy_timeout=30000`, `foreign_keys=ON`).
-- [ ] `get_db_session()` als Generator / Kontextmanager stellt threadsichere Sessions bereit.
-- [ ] `init_db()` erstellt alle registrierten ORM-Tabellen fehlerfrei.
+- [x] SQLite Engine initialisiert pragmas (`journal_mode=WAL`, `busy_timeout=30000`, `foreign_keys=ON`).
+- [x] `get_db_session()` als Generator / Kontextmanager stellt threadsichere Sessions bereit.
+- [x] `init_db()` erstellt alle registrierten ORM-Tabellen fehlerfrei.

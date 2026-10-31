@@ -48,7 +48,7 @@ Umsetzung der zentralen Hauptübersicht nach dem Login mit Persona-Avatar-Button
 - Kacheln mit Icon (`icon`), Titel und Ortsanzahl. Klick öffnet `/worldinfo/<id>`.
 
 ## ✅ Akzeptanzkriterien
-- [ ] 3-Tab-Container mit Icons (`👤`, `📜`, `🌐`) schaltet ohne Seiten-Reload reibungslos um.
-- [ ] Erste Kachel mit Plus-Symbol prüft Berechtigungen (`character_create` etc.).
-- [ ] Scrollender Beschreibungstext und Beziehungsbalken mit dynamischen Herzen im Charakter-Porträt.
-- [ ] Persona-Modal ermöglicht Wechsel, Neuanlage und respektiert die Lösch-Sperre.
+- [x] 3-Tab-Container mit Icons (`👤`, `📜`, `🌐`) schaltet ohne Seiten-Reload reibungslos um.
+- [x] Erste Kachel mit Plus-Symbol prüft Berechtigungen (`character_create` etc.).
+- [x] Scrollender Beschreibungstext und Beziehungsbalken mit dynamischen Herzen im Charakter-Porträt.
+- [x] Persona-Modal ermöglicht Wechsel, Neuanlage und respektiert die Lösch-Sperre.

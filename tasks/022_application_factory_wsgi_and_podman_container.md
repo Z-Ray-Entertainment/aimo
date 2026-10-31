@@ -46,7 +46,7 @@ Erstellung der zentralen Flask-App-Fabrik (`app.py`), des WSGI-Einstiegspunkts (
   - `CMD ["python", "wsgi.py"]`.
 
 ## ✅ Akzeptanzkriterien
-- [ ] `create_app()` startet sauber und bindet alle Blueprints ein.
-- [ ] Automatische Weiterleitung auf `/setup` beim Erststart ohne Benutzer.
-- [ ] Rootless Podman Containerfile baut fehlerfrei und startet ohne Root-Rechte.
-- [ ] Gesamtsystem arbeitet als in sich geschlossener, modularer Monolith mit getrennter REST-API.
+- [x] `create_app()` startet sauber und bindet alle Blueprints ein.
+- [x] Automatische Weiterleitung auf `/setup` beim Erststart ohne Benutzer.
+- [x] Rootless Podman Containerfile baut fehlerfrei und startet ohne Root-Rechte.
+- [x] Gesamtsystem arbeitet als in sich geschlossener, modularer Monolith mit getrennter REST-API.

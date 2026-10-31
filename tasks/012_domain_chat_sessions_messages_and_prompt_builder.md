@@ -101,7 +101,7 @@ Zentrale Rollenspiel- und Chatlogik: `ChatSession`, `Message`, Beziehungsdynamik
   - **Output-Reinheit:** Das Modell generiert reinen Fließtext. Nachgelagerter Klassifikations-Call ermittelt Emotion und Ortswechsel isoliert.
 
 ## ✅ Akzeptanzkriterien
-- [ ] Exakte 7-Stufen-Prompt-Assemblierung mit geschlossenen Begrenzern.
-- [ ] Beziehungsdynamik (+0.1 pro Nachricht, -0.1 pro Tag Inaktivität) strikt gedeckelt von -100 bis +100.
-- [ ] Persona-Sperre nach erster Benutzernachricht aktiv.
-- [ ] Reiner Rollenspieltext ohne eingebettete Steuercodes.
+- [x] Exakte 7-Stufen-Prompt-Assemblierung mit geschlossenen Begrenzern.
+- [x] Beziehungsdynamik (+0.1 pro Nachricht, -0.1 pro Tag Inaktivität) strikt gedeckelt von -100 bis +100.
+- [x] Persona-Sperre nach erster Benutzernachricht aktiv.
+- [x] Reiner Rollenspieltext ohne eingebettete Steuercodes.

@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% block title %}AIMO — Hub-Dashboard{% endblock %}
+
+{% block content %}
+<div data-tab-group>
+  <!-- 3-Tab Navigation -->
+  <div class="rpg-tabs">
+    <button type="button" class="rpg-tab-btn active" data-tab-target="tab-characters">
+      <span class="icon-mono">👤</span> KI-Charaktere
+    </button>
+    <button type="button" class="rpg-tab-btn" data-tab-target="tab-lorebooks">
+      <span class="icon-mono">📜</span> Lorebooks
+    </button>
+    <button type="button" class="rpg-tab-btn" data-tab-target="tab-worldinfo">
+      <span class="icon-mono">🌐</span> WorldInfo
+    </button>
+  </div>
+
+  <!-- TAB 1: KI-Charaktere -->
+  <section id="tab-characters" class="tab-pane active">
+    <form method="GET" action="{{ url_for('overview.index') }}" class="wood-frame" style="padding: 0.85rem 1.2rem; margin-bottom: 1.25rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+      <div style="flex: 1; min-width: 160px;">
+        <label style="font-size: 0.8rem; color: var(--text-muted);">Geschlecht</label>
+        <select name="gender" onchange="this.form.submit()">
+          <option value="" {% if not gender_filter %}selected{% endif %}>Alle Geschlechter</option>
+          <option value="female" {% if gender_filter == 'female' %}selected{% endif %}>Weiblich (female)</option>
+          <option value="male" {% if gender_filter == 'male' %}selected{% endif %}>Männlich (male)</option>
+          <option value="non-binary" {% if gender_filter == 'non-binary' %}selected{% endif %}>Nicht-Binär (non-binary)</option>
+        </select>
+      </div>
+      <div style="flex: 1; min-width: 160px;">
+        <label style="font-size: 0.8rem; color: var(--text-muted);">Chat-Status</label>
+        <select name="chatted" onchange="this.form.submit()">
+          <option value="" {% if not chat_filter %}selected{% endif %}>Alle Charaktere</option>
+          <option value="chatted" {% if chat_filter == 'chatted' %}selected{% endif %}>Bereits gechattet</option>
+          <option value="unchatted" {% if chat_filter == 'unchatted' %}selected{% endif %}>Noch nicht gechattet</option>
+        </select>
+      </div>
+      <div style="flex: 1; min-width: 160px;">
+        <label style="font-size: 0.8rem; color: var(--text-muted);">Sortierung</label>
+        <select name="sort" onchange="this.form.submit()">
+          <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Neueste zuerst</option>
+          <option value="chatted_first" {% if sort_by == 'chatted_first' %}selected{% endif %}>Meiste Nachrichten</option>
+          <option value="relationship" {% if sort_by == 'relationship' %}selected{% endif %}>Bester Beziehungswert</option>
+        </select>
+      </div>
+    </form>
+
+    <div class="card-grid">
+      {% if has_perm('character_create') %}
+        <a href="{{ url_for('characters.new_character') }}" class="add-card-tile">
+          <div class="plus-symbol">+</div>
+          <div>Neuer Charakter</div>
+        </a>
+      {% endif %}
+
+      {% for item in character_cards %}
+        {% set char = item.character %}
+        <div class="card-tile">
+          <a href="{{ url_for('chat.open_character_chat', character_id=char.id) }}" class="char-card-bg" style="background-image: url('{{ url_for('uploaded_file', filename=char.primary_portrait_path) }}'), url('/static/img/cover.svg');">
+            <div class="char-scroll-overlay">
+              <strong style="color: var(--gold-accent); display: block; margin-bottom: 0.35rem;">{{ char.name }} ({{ char.gender.value }})</strong>
+              <p>{{ char.description }}</p>
+            </div>
+            {% if item.message_count > 0 %}
+              <div class="char-msg-badge" title="Ausgetauschte Nachrichten">
+                <span class="icon-mono">💬</span> {{ item.message_count }}
+              </div>
+            {% endif %}
+          </a>
+
+          <div style="padding: 0.55rem 0.75rem; display: flex; justify-content: space-between; align-items: center; background: rgba(25, 18, 13, 0.96);">
+            <a href="{{ url_for('chat.open_character_chat', character_id=char.id) }}" style="font-weight: 700; color: var(--text-main);">
+              {{ char.name }}
+            </a>
+            {% if has_perm('character_edit') %}
+              <a href="{{ url_for('characters.edit_character', character_id=char.id) }}" title="Bearbeiten"><span class="icon-mono">✏️</span></a>
+            {% endif %}
+          </div>
+
+          <div class="relationship-bar-wrap" data-relationship-score="{{ item.best_relationship }}">
+            <div class="relationship-header">
+              <span>Beziehung: {{ "%.1f"|format(item.best_relationship) }}</span>
+              <span class="heart-icon">❤️</span>
+            </div>
+            <div class="relationship-track">
+              <div class="relationship-fill"></div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- TAB 2: Lorebooks -->
+  <section id="tab-lorebooks" class="tab-pane">
+    <div class="card-grid">
+      {% if has_perm('lorebook_create') %}
+        <button type="button" class="add-card-tile" data-modal-open="new-lorebook-modal">
+          <div class="plus-symbol">+</div>
+          <div>Neues Lorebook</div>
+        </button>
+      {% endif %}
+
+      {% for item in lorebook_cards %}
+        {% set lb = item.lorebook %}
+        <a href="{{ url_for('lorebooks.detail', lorebook_id=lb.id) }}" class="card-tile" style="padding: 1.25rem; justify-content: space-between; text-decoration: none;">
+          <div>
+            <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;"><span class="icon-mono">📜</span> {{ lb.name }}</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">{{ lb.description }}</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
+              {% for tag in item.tags %}
+                <span style="font-size: 0.75rem; padding: 0.15rem 0.5rem; border: 1px solid var(--border-wood); border-radius: 10px; color: var(--text-main);">#{{ tag }}</span>
+              {% endfor %}
+            </div>
+          </div>
+          <div style="margin-top: 1rem; font-size: 0.85rem; color: var(--gold-accent);">
+            {{ item.entry_count }} Einträge →
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- TAB 3: WorldInfo -->
+  <section id="tab-worldinfo" class="tab-pane">
+    <div class="card-grid">
+      {% if has_perm('worldinfo_create') %}
+        <button type="button" class="add-card-tile" data-modal-open="new-worldinfo-modal">
+          <div class="plus-symbol">+</div>
+          <div>Neue WorldInfo</div>
+        </button>
+      {% endif %}
+
+      {% for item in worldinfo_cards %}
+        {% set wi = item.worldinfo %}
+        <a href="{{ url_for('worldinfo.detail', worldinfo_id=wi.id) }}" class="card-tile" style="padding: 1.25rem; justify-content: space-between; text-decoration: none;">
+          <div>
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">{{ wi.icon or '🌐' }}</div>
+            <h3 style="color: var(--gold-accent); margin-bottom: 0.4rem;">{{ wi.name }}</h3>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            <div>📍 {{ item.location_count }} Orte</div>
+            <div>🎲 {{ item.event_count }} Events</div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+<!-- Modal: Persona-Manager -->
+<div class="modal-backdrop" id="persona-manager-modal" aria-hidden="true">
+  <div class="modal-frame">
+    <div class="modal-header">
+      <h2 style="color: var(--gold-accent);"><span class="icon-mono">👤</span> Spieler-Personas verwalten</h2>
+      <button type="button" class="btn" data-modal-close="persona-manager-modal">✕</button>
+    </div>
+
+    <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin-bottom: 1.5rem;">
+      <div class="add-card-tile" style="min-height: 200px;" onclick="document.getElementById('new-persona-form-box').style.display='block'">
+        <div class="plus-symbol">+</div>
+        <div>Neue Persona</div>
+      </div>
+
+      {% for p_item in persona_items %}
+        {% set p = p_item.persona %}
+        <div class="card-tile" style="min-height: 200px; padding: 0.85rem; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
+              <img src="{{ url_for('uploaded_file', filename=p.portrait_path) }}" alt="{{ p.name }}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid var(--gold-accent);" onerror="this.src='/static/img/cover.svg'">
+              <div>
+                <strong>{{ p.name }}</strong>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">{{ p.gender.value }}</div>
+              </div>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">{{ p.appearance or p.description }}</p>
+          </div>
+
+          <div style="display: flex; gap: 0.4rem; margin-top: 0.75rem; flex-wrap: wrap;">
+            {% if not p.is_default %}
+              <form method="POST" action="{{ url_for('personas.set_default', persona_id=p.id) }}">
+                <button type="submit" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.78rem;">Als Standard</button>
+              </form>
+            {% else %}
+              <span style="font-size: 0.78rem; color: var(--gold-accent); font-weight: 700;">★ Standard</span>
+            {% endif %}
+
+            {% if p_item.in_use %}
+              <button type="button" class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.78rem;" disabled title="Wird in aktiven Chats verwendet (Lösch-Schutz)">🔒 In Chat aktiv</button>
+            {% else %}
+              <form method="POST" action="{{ url_for('personas.delete_persona', persona_id=p.id) }}">
+                <button type="submit" class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.78rem;"><span class="icon-mono">🗑️</span></button>
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div id="new-persona-form-box" style="display: none; border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
+      <h3 style="color: var(--gold-accent); margin-bottom: 0.75rem;">Neue Persona anlegen</h3>
+      <form method="POST" action="{{ url_for('personas.create_persona') }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <div>
+          <label>Name *</label>
+          <input type="text" name="name" required>
+        </div>
+        <div>
+          <label>Geschlecht *</label>
+          <select name="gender">
+            <option value="female">Weiblich (female)</option>
+            <option value="male">Männlich (male)</option>
+            <option value="non-binary">Nicht-Binär (non-binary)</option>
+          </select>
+        </div>
+        <div>
+          <label>Porträtbild (PNG/JPG/WEBP)</label>
+          <input type="file" name="portrait" accept=".png,.jpg,.jpeg,.webp">
+        </div>
+        <div>
+          <label>Hintergrund / Persönlichkeit</label>
+          <textarea name="description" rows="2"></textarea>
+        </div>
+        <div>
+          <label>Physisches Aussehen (leer lassen für Vision-Extraktion)</label>
+          <textarea name="appearance" rows="2"></textarea>
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <label><input type="checkbox" name="vision_analyze" value="1" checked> Aussehen via Vision-Modell aus Porträt extrahieren</label>
+          <label><input type="checkbox" name="is_default" value="1"> Als Standard-Persona setzen</label>
+        </div>
+        <div style="text-align: right;">
+          <button type="submit" class="btn">Persona speichern</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Neues Lorebook -->
+<div class="modal-backdrop" id="new-lorebook-modal" aria-hidden="true">
+  <div class="modal-frame" style="max-width: 480px;">
+    <div class="modal-header">
+      <h3 style="color: var(--gold-accent);">Neues Lorebook erstellen</h3>
+      <button type="button" class="btn" data-modal-close="new-lorebook-modal">✕</button>
+    </div>
+    <form method="POST" action="{{ url_for('lorebooks.create_lorebook') }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
+      <div>
+        <label>Name des Lorebooks *</label>
+        <input type="text" name="name" required>
+      </div>
+      <div>
+        <label>Kurzbeschreibung</label>
+        <textarea name="description" rows="3"></textarea>
+      </div>
+      <div style="text-align: right;">
+        <button type="submit" class="btn">Anlegen</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Neue WorldInfo -->
+<div class="modal-backdrop" id="new-worldinfo-modal" aria-hidden="true">
+  <div class="modal-frame" style="max-width: 480px;">
+    <div class="modal-header">
+      <h3 style="color: var(--gold-accent);">Neue WorldInfo erstellen</h3>
+      <button type="button" class="btn" data-modal-close="new-worldinfo-modal">✕</button>
+    </div>
+    <form method="POST" action="{{ url_for('worldinfo.create_worldinfo') }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
+      <div>
+        <label>Name der Welt *</label>
+        <input type="text" name="name" required>
+      </div>
+      <div>
+        <label>Symbol / Icon</label>
+        <input type="text" name="icon" value="🌐">
+      </div>
+      <div style="text-align: right;">
+        <button type="submit" class="btn">Anlegen</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}AIMO — Neues Abenteuer mit {{ character.name }}{% endblock %}
+
+{% block content %}
+<div class="wood-frame" style="max-width: 640px; margin: 2rem auto; padding: 1.75rem;">
+  <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 1rem;">
+    <img src="{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}" alt="{{ character.name }}" style="width: 72px; height: 72px; border-radius: 12px; object-fit: cover; border: 2px solid var(--gold-accent);" onerror="this.src='/static/img/cover.svg'">
+    <div>
+      <h2 style="color: var(--gold-accent); margin-bottom: 0.25rem;">Neuer Chat mit {{ character.name }}</h2>
+      <p style="font-size: 0.88rem; color: var(--text-muted);">Konfiguriere deine Spieler-Persona und die aktive WorldInfo für diese Sitzung.</p>
+    </div>
+  </div>
+
+  <form method="POST" action="{{ url_for('chat.new_character_chat', character_id=character.id) }}" style="display: flex; flex-direction: column; gap: 1.2rem;">
+    <div>
+      <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">Spieler-Persona auswählen</label>
+      {% if personas|length > 1 %}
+        <select name="persona_id" required>
+          {% for p in personas %}
+            <option value="{{ p.id }}" {% if p.id == default_persona.id %}selected{% endif %}>
+              {{ p.name }} ({{ p.gender.value }}){% if p.is_default %} — ★ Standard{% endif %}
+            </option>
+          {% endfor %}
+        </select>
+        <small style="color: var(--text-muted); display: block; margin-top: 0.3rem;">
+          Hinweis: Nach dem Absenden der ersten Nachricht wird die Persona für diesen Chat fest gesperrt.
+        </small>
+      {% else %}
+        <input type="hidden" name="persona_id" value="{{ default_persona.id }}">
+        <div style="padding: 0.65rem 0.85rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 10px;">
+          👤 <strong>{{ default_persona.name }}</strong> ({{ default_persona.gender.value }}) — Automatisch zugewiesen
+        </div>
+      {% endif %}
+    </div>
+
+    <div>
+      <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">Aktive WorldInfo (Maximal eine pro Session)</label>
+      <select name="worldinfo_id">
+        <option value="none" selected>Ohne WorldInfo (Standard — Neutraler Hintergrund, keine Events)</option>
+        {% for wi in worldinfos %}
+          <option value="{{ wi.id }}">
+            {{ wi.icon or '🌐' }} {{ wi.name }}
+            {% if character.suggested_worldinfo_id == wi.id %} (Empfohlen für {{ character.name }}){% endif %}
+          </option>
+        {% endfor %}
+      </select>
+      {% if character.suggested_worldinfo_id %}
+        <small style="color: var(--gold-accent); display: block; margin-top: 0.3rem;">
+          💡 Dieser Charakter empfiehlt eine WorldInfo, du kannst jedoch frei wählen oder ohne WorldInfo starten.
+        </small>
+      {% endif %}
+    </div>
+
+    <div>
+      <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">Optionaler Sitzungstitel</label>
+      <input type="text" name="title" placeholder="Chat with {{ character.name }}">
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+      <a href="{{ url_for('overview.index') }}" class="btn">← Zurück zum Hub</a>
+      <button type="submit" class="btn">Abenteuer starten →</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

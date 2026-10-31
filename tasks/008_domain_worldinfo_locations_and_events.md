@@ -61,7 +61,7 @@ Verwaltung von Welten (`WorldInfo`), Orten (`Location`) mit 16:9-Hintergründen 
 - `WorldInfoNotFoundError`, `LocationNotFoundError`, `EventNotFoundError`.
 
 ## ✅ Akzeptanzkriterien
-- [ ] Saubere Trennung zwischen Welt-Events und Orts-Events in einem gemeinsamen Ziehungspool.
-- [ ] Cooldown-Zähler dekrementiert pro Chat-Nachricht (Spieler & KI) deterministisch um 1.
-- [ ] Bei `counter == 0` wird genau ein gewichtetes Event ausgelöst und der Cooldown neu gewürfelt (10–100).
-- [ ] One-Shot-Events können in derselben Chat-Session kein zweites Mal feuern.
+- [x] Saubere Trennung zwischen Welt-Events und Orts-Events in einem gemeinsamen Ziehungspool.
+- [x] Cooldown-Zähler dekrementiert pro Chat-Nachricht (Spieler & KI) deterministisch um 1.
+- [x] Bei `counter == 0` wird genau ein gewichtetes Event ausgelöst und der Cooldown neu gewürfelt (10–100).
+- [x] One-Shot-Events können in derselben Chat-Session kein zweites Mal feuern.

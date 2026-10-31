@@ -56,7 +56,7 @@ Implementierung der reinen Geschäftslogik für Benutzerverwaltung, Passwortvali
 - **Exceptions:** `PermissionDeniedError`, `SuperAdminProtectionError`.
 
 ## ✅ Akzeptanzkriterien
-- [ ] Reine Domain-Logik ohne Datenbank-Imports oder Flask-Abhängigkeiten.
-- [ ] Passwort-Hashing und -Validierung funktionieren sicher.
-- [ ] Initialer Admin kann sich weder Rechte entziehen noch deaktiviert werden.
-- [ ] Presets (`Admin`, `Creator`, `User`) weisen die definierten Flag-Mengen korrekt zu.
+- [x] Reine Domain-Logik ohne Datenbank-Imports oder Flask-Abhängigkeiten.
+- [x] Passwort-Hashing und -Validierung funktionieren sicher.
+- [x] Initialer Admin kann sich weder Rechte entziehen noch deaktiviert werden.
+- [x] Presets (`Admin`, `Creator`, `User`) weisen die definierten Flag-Mengen korrekt zu.

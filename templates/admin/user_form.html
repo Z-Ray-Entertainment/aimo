@@ -1,0 +1,91 @@
+{% extends "admin/layout.html" %}
+
+{% block admin_content %}
+<div class="wood-frame" style="max-width: 760px; margin: 0 auto; padding: 1.75rem;">
+  <h2 style="color: var(--gold-accent); margin-bottom: 1rem;">
+    {% if target_user %}
+      Benutzer bearbeiten: {{ target_user.username }}
+    {% else %}
+      Neuen Benutzer anlegen
+    {% endif %}
+  </h2>
+
+  {% if target_user and target_user.is_initial_admin %}
+    <div style="padding: 0.75rem 1rem; margin-bottom: 1.25rem; border-radius: 8px; border: 1px solid var(--gold-accent); background: rgba(65, 45, 25, 0.5); font-size: 0.88rem;">
+      🛡️ <strong>Super-Admin-Schutz:</strong> Dies ist der initiale Administrator. Seine Berechtigungen sind dauerhaft auf Vollzugriff (Admin) fixiert und können nicht entzogen werden.
+    </div>
+  {% endif %}
+
+  <form method="POST" style="display: flex; flex-direction: column; gap: 1.1rem;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div>
+        <label>Benutzername *</label>
+        <input type="text" name="username" value="{{ form.username }}" required>
+      </div>
+      <div>
+        <label>E-Mail-Adresse *</label>
+        <input type="email" name="email" value="{{ form.email }}" required>
+      </div>
+    </div>
+
+    <div>
+      <label>
+        {% if target_user %}
+          Neues Passwort (leer lassen, um Passwort beizubehalten)
+        {% else %}
+          Initialpasswort *
+        {% endif %}
+      </label>
+      <input type="password" name="password" {% if not target_user %}required{% endif %}>
+    </div>
+
+    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+        <label style="font-weight: 700; color: var(--gold-accent);">Schnellauswahl über Preset</label>
+        <div style="display: flex; gap: 0.5rem;">
+          {% for preset_name in presets %}
+            <button type="button" class="btn" style="padding: 0.3rem 0.75rem; font-size: 0.8rem;" onclick="applyPreset('{{ preset_name }}')" {% if target_user and target_user.is_initial_admin and preset_name != 'Admin' %}disabled{% endif %}>
+              Preset: {{ preset_name }}
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <input type="hidden" name="preset" id="selected-preset-input" value="">
+
+      <label style="display: block; margin-bottom: 0.5rem; font-size: 0.88rem; color: var(--text-muted);">
+        Einzelne funktionale Berechtigungen (FunctionPermission):
+      </label>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 0.55rem; background: var(--bg-input); padding: 1rem; border-radius: 10px; border: 1px solid var(--border-wood-dark);">
+        {% for perm in all_permissions %}
+          <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.86rem; cursor: pointer;">
+            <input type="checkbox" class="perm-checkbox" name="permissions" value="{{ perm }}"
+              {% if perm in form.permissions or (target_user and target_user.is_initial_admin) %}checked{% endif %}
+              {% if target_user and target_user.is_initial_admin %}disabled{% endif %}
+              onchange="document.getElementById('selected-preset-input').value = '';">
+            <span>{{ perm }}</span>
+          </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+      <a href="{{ url_for('admin.users_list') }}" class="btn">Abbrechen</a>
+      <button type="submit" class="btn">Speichern</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const PRESET_MAP = {{ preset_map|tojson }};
+  function applyPreset(presetName) {
+    const allowed = PRESET_MAP[presetName] || [];
+    document.querySelectorAll(".perm-checkbox").forEach((cb) => {
+      cb.checked = allowed.includes(cb.value);
+    });
+    document.getElementById("selected-preset-input").value = presetName;
+  }
+</script>
+{% endblock %}

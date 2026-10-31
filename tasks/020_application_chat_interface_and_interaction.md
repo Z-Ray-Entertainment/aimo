@@ -50,8 +50,8 @@ Umsetzung des vollständigen Chat-Interfaces: Multi-Chat-Seitenleiste links, 3-R
 - **Rechte Info-Box:** Beziehungsbalken (-100 bis +100 mit dynamischen Herzen), WorldInfo, Persona, Checkbox "Events aktivieren/deaktivieren".
 
 ## ✅ Akzeptanzkriterien
-- [ ] Welcome Message wird beim ersten Chat sofort geladen.
-- [ ] SSE-Streaming mit ausgegrautem Vorab-Text und Übersetzungstausch funktioniert flüssig.
-- [ ] 60s Countdown für Ortswechsel läuft mit rotem Balken ab.
-- [ ] Bildgenerierung sperrt Texteingabe und besitzt funktionierenden Abbrechen-Button.
-- [ ] Systemmeldungen ("Ihr seid nach...") tauchen niemals im LLM-Prompt auf.
+- [x] Welcome Message wird beim ersten Chat sofort geladen.
+- [x] SSE-Streaming mit ausgegrautem Vorab-Text und Übersetzungstausch funktioniert flüssig.
+- [x] 60s Countdown für Ortswechsel läuft mit rotem Balken ab.
+- [x] Bildgenerierung sperrt Texteingabe und besitzt funktionierenden Abbrechen-Button.
+- [x] Systemmeldungen ("Ihr seid nach...") tauchen niemals im LLM-Prompt auf.

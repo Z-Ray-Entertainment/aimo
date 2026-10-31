@@ -1,0 +1,523 @@
+:root {
+  --border-wood: #A77445;
+  --border-wood-dark: #8B5A2B;
+  --bg-leather: #6E472A;
+  --bg-leather-hover: #825634;
+  --gold-accent: #D4AF37;
+  --gold-glow: rgba(212, 175, 55, 0.45);
+  --bg-panel: rgba(30, 22, 16, 0.88);
+  --bg-panel-light: rgba(45, 34, 24, 0.92);
+  --bg-input: rgba(18, 13, 9, 0.85);
+  --text-main: #F4EAD5;
+  --text-muted: #B8A68E;
+  --heart-broken: #7A1C1C;
+  --heart-cold: #A93226;
+  --heart-neutral: #C08B5C;
+  --heart-warm: #E74C3C;
+  --heart-love: #FF69B4;
+  --sparkle-gold: #FFD700;
+  --sparkle-violet: #B388FF;
+  --radius-card: 12px;
+  --radius-btn: 10px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--text-main);
+  background-color: #14100C;
+  background-image: url("/static/img/cover.svg"), radial-gradient(circle at top, #2c1e14, #120d09);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.app-overlay {
+  backdrop-filter: blur(8px);
+  background: rgba(20, 16, 12, 0.85);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: var(--gold-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* RPG Frames & Borders */
+.wood-frame,
+.modal-frame,
+.card-tile,
+.portrait-frame {
+  border: 2px solid var(--border-wood);
+  border-radius: var(--radius-card);
+  background: var(--bg-panel);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 235, 200, 0.08);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  background: var(--bg-input);
+  color: var(--text-main);
+  border: 2px solid var(--border-wood-dark);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 8px var(--gold-glow);
+}
+
+/* RPG Buttons */
+.btn,
+button.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  background: var(--bg-leather);
+  color: var(--text-main);
+  border: 1px solid var(--gold-accent);
+  border-radius: var(--radius-btn);
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+
+.btn:hover,
+button.btn:hover {
+  background: var(--bg-leather-hover);
+  box-shadow: 0 0 12px var(--gold-glow);
+  text-decoration: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-danger {
+  background: #641E16;
+  border-color: #E74C3C;
+}
+
+.btn-sparkle {
+  background: linear-gradient(135deg, #4A235A, #6E472A);
+  border-color: var(--sparkle-gold);
+  color: var(--sparkle-gold);
+}
+
+/* Monochrome Standard Icons vs Special Colored Icons */
+.icon-mono {
+  filter: grayscale(100%) brightness(1.2);
+  display: inline-block;
+}
+
+.icon-sparkle {
+  color: var(--sparkle-gold);
+  text-shadow: 0 0 6px var(--sparkle-violet);
+}
+
+/* Header Navigation */
+.top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.5rem;
+  border-bottom: 2px solid var(--border-wood-dark);
+  background: rgba(24, 17, 12, 0.94);
+}
+
+.brand-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gold-accent);
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.persona-avatar-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0.75rem;
+  border: 2px solid var(--border-wood);
+  border-radius: 24px;
+  background: var(--bg-panel-light);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.persona-avatar-btn img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--gold-accent);
+}
+
+/* Container & Tabs */
+.main-container {
+  flex: 1;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.rpg-tabs {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 2px solid var(--border-wood-dark);
+  padding-bottom: 0.6rem;
+}
+
+.rpg-tab-btn {
+  padding: 0.6rem 1.25rem;
+  background: rgba(40, 28, 19, 0.75);
+  color: var(--text-muted);
+  border: 1px solid var(--border-wood-dark);
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.rpg-tab-btn.active {
+  background: var(--bg-leather);
+  color: var(--text-main);
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 10px var(--gold-glow);
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+/* Grid & Cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.25rem;
+}
+
+.card-tile {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 310px;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+
+.card-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.7), 0 0 10px var(--gold-glow);
+}
+
+.add-card-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 310px;
+  border: 2px dashed var(--border-wood);
+  border-radius: var(--radius-card);
+  background: rgba(35, 25, 18, 0.6);
+  color: #4CAF50;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.add-card-tile .plus-symbol {
+  font-size: 3.2rem;
+  line-height: 1;
+  color: #4CAF50;
+  margin-bottom: 0.5rem;
+}
+
+/* Character Portrait Card specifics */
+.char-card-bg {
+  position: relative;
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.char-scroll-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 11, 8, 0.82);
+  padding: 0.85rem;
+  overflow-y: auto;
+  opacity: 0;
+  transition: opacity 0.25s;
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+
+.card-tile:hover .char-scroll-overlay {
+  opacity: 1;
+}
+
+.char-msg-badge {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  background: rgba(18, 13, 9, 0.88);
+  border: 1px solid var(--border-wood);
+  border-radius: 14px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.78rem;
+  z-index: 2;
+}
+
+/* Relationship Bar */
+.relationship-bar-wrap {
+  padding: 0.45rem 0.65rem;
+  background: rgba(18, 13, 9, 0.95);
+  border-top: 1px solid var(--border-wood-dark);
+}
+
+.relationship-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.relationship-track {
+  width: 100%;
+  height: 8px;
+  background: #241911;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-wood-dark);
+}
+
+.relationship-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--heart-broken), var(--heart-neutral), var(--heart-love));
+  transition: width 0.3s ease;
+}
+
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 6, 4, 0.8);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-backdrop.open {
+  display: flex;
+}
+
+.modal-frame {
+  width: 100%;
+  max-width: 720px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-wood-dark);
+}
+
+/* Chat Interface */
+.chat-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr 290px;
+  gap: 1rem;
+  min-height: calc(100vh - 130px);
+}
+
+.chat-main-stage {
+  display: flex;
+  flex-direction: column;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.chat-stage-overlay {
+  background: rgba(16, 12, 9, 0.78);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.chat-messages-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding-right: 0.4rem;
+  max-height: 62vh;
+}
+
+.chat-bubble-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.chat-bubble-row.user {
+  flex-direction: row-reverse;
+}
+
+.chat-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 10px;
+  border: 2px solid var(--border-wood);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.chat-bubble {
+  max-width: 72%;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-wood);
+  background: rgba(34, 25, 18, 0.92);
+  line-height: 1.45;
+}
+
+.chat-bubble-row.user .chat-bubble {
+  background: rgba(65, 42, 25, 0.92);
+  border-color: var(--gold-accent);
+}
+
+.raw-stream-preview {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-style: italic;
+  opacity: 0.75;
+}
+
+.system-ui-notice {
+  text-align: center;
+  align-self: center;
+  font-size: 0.85rem;
+  color: var(--gold-accent);
+  background: rgba(25, 18, 12, 0.85);
+  border: 1px solid var(--border-wood-dark);
+  border-radius: 20px;
+  padding: 0.3rem 1rem;
+  margin: 0.35rem 0;
+}
+
+/* Location Switch Prompt & 60s Red Countdown Bar */
+.location-prompt-banner {
+  margin-top: 0.65rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--gold-accent);
+  border-radius: 10px;
+  background: rgba(30, 20, 14, 0.95);
+}
+
+.countdown-bar-track {
+  width: 100%;
+  height: 6px;
+  background: #2b1818;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+
+.countdown-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: #E74C3C;
+  transition: width 1s linear;
+}
+
+/* Sprite Stackview */
+.sprite-stack {
+  position: relative;
+}
+
+.sprite-stack.has-multiple::before {
+  content: "";
+  position: absolute;
+  inset: -4px 4px 4px -4px;
+  border: 2px solid var(--border-wood-dark);
+  border-radius: var(--radius-card);
+  z-index: 0;
+}
+
+/* Flash messages */
+.flash-list {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.flash-msg {
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--gold-accent);
+  background: rgba(55, 36, 22, 0.95);
+}

@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+{% block title %}AIMO — Character Designer{% endblock %}
+
+{% block content %}
+<div data-tab-group>
+  <!-- Top Action Bar -->
+  <div class="wood-frame" style="padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <a href="{{ url_for('overview.index') }}" class="btn"><span class="icon-mono">←</span> Zurück</a>
+      <h2 style="color: var(--gold-accent);">
+        {% if character %}Charakter bearbeiten: {{ character.name }}{% else %}Neuen Charakter erschaffen{% endif %}
+      </h2>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 0.65rem;">
+      <button type="submit" form="character-main-form" class="btn"><span class="icon-mono">💾</span> Speichern</button>
+      {% if character %}
+        <form method="POST" action="{{ url_for('characters.copy_character', character_id=character.id) }}" style="display: inline;">
+          <button type="submit" class="btn"><span class="icon-mono">📄</span> Kopieren</button>
+        </form>
+        <form method="POST" action="{{ url_for('characters.delete_character', character_id=character.id) }}" style="display: inline;" onsubmit="return confirm('Charakter wirklich unwiderruflich löschen?');">
+          <button type="submit" class="btn btn-danger"><span class="icon-mono">🗑️</span> Löschen</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Designer Tabs -->
+  <div class="rpg-tabs">
+    <button type="button" class="rpg-tab-btn active" data-tab-target="tab-char-info">
+      <span class="icon-mono">📋</span> Tab 1: Hauptinformationen & Galerie
+    </button>
+    <button type="button" class="rpg-tab-btn" data-tab-target="tab-char-sprites" {% if not character %}disabled title="Bitte zuerst Grunddaten speichern"{% endif %}>
+      <span class="icon-mono">🎭</span> Tab 2: Emotionale Sprites (28 Emotionen)
+    </button>
+  </div>
+
+  <!-- TAB 1: Hauptinformationen -->
+  <section id="tab-char-info" class="tab-pane active">
+    <form id="character-main-form" method="POST" action="{% if character %}{{ url_for('characters.edit_character', character_id=character.id) }}{% else %}{{ url_for('characters.new_character') }}{% endif %}" enctype="multipart/form-data" class="wood-frame" style="padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+      <div>
+        <label>Name des Charakters *</label>
+        <input type="text" id="char-name-input" name="name" value="{{ form.name }}" required>
+      </div>
+      <div style="display: flex; gap: 1rem;">
+        <div style="flex: 1;">
+          <label>Geschlecht *</label>
+          <select name="gender">
+            <option value="female" {% if form.gender == 'female' %}selected{% endif %}>Weiblich (female)</option>
+            <option value="male" {% if form.gender == 'male' %}selected{% endif %}>Männlich (male)</option>
+            <option value="non-binary" {% if form.gender == 'non-binary' %}selected{% endif %}>Nicht-Binär (non-binary)</option>
+          </select>
+        </div>
+        <div style="flex: 1;">
+          <label>Sichtbarkeit</label>
+          <select name="visibility">
+            <option value="private" {% if form.visibility == 'private' %}selected{% endif %}>Privat</option>
+            <option value="public" {% if form.visibility == 'public' %}selected{% endif %}>Öffentlich</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label>Primary Portrait (Pflicht-Upload) {% if not character %}*{% endif %}</label>
+        <input type="file" name="primary_portrait" accept=".png,.jpg,.jpeg,.webp" {% if not character %}required{% endif %}>
+      </div>
+      <div>
+        <label>Initialer Beziehungswert (-100 bis +100)</label>
+        <input type="number" name="initial_relationship" min="-100" max="100" value="{{ form.initial_relationship }}">
+      </div>
+
+      <div style="grid-column: 1 / -1;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+          <label>Charakterbeschreibung & Persönlichkeit *</label>
+          <button type="button" id="sparkle-improve-btn" class="btn btn-sparkle">
+            <span class="icon-sparkle">✨</span> KI-Autor Optimierung
+          </button>
+        </div>
+        <textarea id="char-description-textarea" name="description" rows="6" required>{{ form.description }}</textarea>
+      </div>
+
+      <div>
+        <label>Gesprächsbeispiele (Ein Beispiel pro Zeile)</label>
+        <textarea name="dialogue_examples" rows="4">{{ form.dialogue_examples_text }}</textarea>
+      </div>
+      <div>
+        <label>First Message (Welcome Message beim ersten Chat) *</label>
+        <textarea name="first_message" rows="4" required>{{ form.first_message }}</textarea>
+      </div>
+
+      <div>
+        <label>Empfohlene WorldInfo</label>
+        <select name="suggested_worldinfo_id">
+          <option value="">-- Keine WorldInfo --</option>
+          {% for wi in worldinfos %}
+            <option value="{{ wi.id }}" {% if form.suggested_worldinfo_id == wi.id %}selected{% endif %}>{{ wi.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label>Initialort der First Message</label>
+        <select name="initial_location_id">
+          <option value="">-- Kein fester Startort --</option>
+          {% for loc in all_locations %}
+            <option value="{{ loc.id }}" {% if form.initial_location_id == loc.id %}selected{% endif %}>{{ loc.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label>Verknüpfte Lorebooks (Mehrfachauswahl)</label>
+        <select name="linked_lorebook_ids" multiple size="4">
+          {% for lb in lorebooks %}
+            <option value="{{ lb.id }}" {% if lb.id in form.linked_lorebook_ids %}selected{% endif %}>{{ lb.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="display: flex; gap: 0.75rem;">
+        <div style="flex: 1;">
+          <label>Bevorzugte Orte</label>
+          <select name="preferred_location_ids" multiple size="4">
+            {% for loc in all_locations %}
+              <option value="{{ loc.id }}" {% if loc.id in form.preferred_location_ids %}selected{% endif %}>{{ loc.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div style="flex: 1;">
+          <label>Gemiedene Orte</label>
+          <select name="disliked_location_ids" multiple size="4">
+            {% for loc in all_locations %}
+              <option value="{{ loc.id }}" {% if loc.id in form.disliked_location_ids %}selected{% endif %}>{{ loc.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </form>
+
+    {% if character %}
+      <!-- Freischaltbare 9:16 Galeriebilder -->
+      <div class="wood-frame" style="padding: 1.5rem; margin-top: 1.5rem;">
+        <h3 style="color: var(--gold-accent); margin-bottom: 1rem;">🖼️ Freischaltbare 9:16-Galeriebilder (Schwellenwert -100 bis +100)</h3>
+        <div class="card-grid">
+          <button type="button" class="add-card-tile" data-modal-open="add-gallery-modal">
+            <div class="plus-symbol">+</div>
+            <div>9:16 Bild hinzufügen</div>
+          </button>
+
+          {% for img in character.gallery_images %}
+            <div class="card-tile" style="justify-content: space-between;">
+              <div style="flex: 1; background-image: url('{{ url_for('uploaded_file', filename=img.file_path) }}'); background-size: cover; background-position: center; min-height: 240px; position: relative;">
+                <form method="POST" action="{{ url_for('characters.delete_gallery_image', character_id=character.id, image_id=img.id) }}" style="position: absolute; top: 0.5rem; right: 0.5rem;">
+                  <button type="submit" class="btn btn-danger" style="padding: 0.3rem 0.55rem;"><span class="icon-mono">🗑️</span></button>
+                </form>
+              </div>
+              <div style="padding: 0.6rem; text-align: center; font-size: 0.85rem;">
+                Freischaltung ab Beziehung: <strong>{{ img.unlock_threshold }}</strong>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- TAB 2: Emotionale Sprites -->
+  {% if character %}
+    <section id="tab-char-sprites" class="tab-pane">
+      <div class="wood-frame" style="padding: 1.5rem;">
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">🎭 Emotionale Sprites (28 Emotionen mit Varianten-Stackview)</h3>
+        <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
+          Wird eine Emotion erkannt, wählt das System zufällig eine hinterlegte Variante (<code>_[nummer]</code>). Fehlt ein Sprite, greift automatisch <code>neutral</code>.
+        </p>
+
+        <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));">
+          {% for emotion in emotions %}
+            {% set sp_list = sprites_by_emotion.get(emotion, []) %}
+            <div class="card-tile sprite-stack {% if sp_list|length > 1 %}has-multiple{% endif %}" style="min-height: 240px; justify-content: space-between;">
+              {% if sp_list|length == 0 %}
+                <form method="POST" action="{{ url_for('characters.upload_sprite', character_id=character.id) }}" enctype="multipart/form-data" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem;">
+                  <input type="hidden" name="emotion" value="{{ emotion }}">
+                  <label style="cursor: pointer; text-align: center; color: var(--text-muted);">
+                    <div style="font-size: 2rem; margin-bottom: 0.3rem;">➕</div>
+                    <div style="font-size: 0.8rem;">PNG/WEBP wählen</div>
+                    <input type="file" name="sprite_file" accept=".png,.webp" style="display: none;" onchange="this.form.submit()">
+                  </label>
+                </form>
+              {% else %}
+                <div style="flex: 1; background-image: url('{{ url_for('uploaded_file', filename=sp_list[0].file_path) }}'); background-size: contain; background-repeat: no-repeat; background-position: center; position: relative; min-height: 185px;">
+                  <!-- Top Right Action Overlay -->
+                  <div style="position: absolute; top: 0.4rem; right: 0.4rem; display: flex; gap: 0.35rem;">
+                    <!-- Papier-Plus für weitere Variante -->
+                    <form method="POST" action="{{ url_for('characters.upload_sprite', character_id=character.id) }}" enctype="multipart/form-data">
+                      <input type="hidden" name="emotion" value="{{ emotion }}">
+                      <label class="btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" title="Weitere Variante hochladen">
+                        <span class="icon-mono">📄➕</span>
+                        <input type="file" name="sprite_file" accept=".png,.webp" style="display: none;" onchange="this.form.submit()">
+                      </label>
+                    </form>
+
+                    {% if sp_list|length > 1 %}
+                      <!-- Augen-Button für Stackview Modal -->
+                      <button type="button" class="btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" data-modal-open="sprite-modal-{{ emotion }}" title="Alle {{ sp_list|length }} Varianten ansehen">
+                        <span class="icon-mono">👁️</span> {{ sp_list|length }}
+                      </button>
+                    {% else %}
+                      <!-- Einzelnes Sprite direkt löschen -->
+                      <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp_list[0].variant) }}">
+                        <button type="submit" class="btn btn-danger" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" title="Sprite löschen">
+                          <span class="icon-mono">🗑️</span>
+                        </button>
+                      </form>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+
+              <div style="padding: 0.45rem; text-align: center; background: rgba(18, 13, 9, 0.95); border-top: 1px solid var(--border-wood-dark); font-weight: 600; font-size: 0.85rem;">
+                {{ emotion }} {% if emotion == 'neutral' %}<span style="color: var(--gold-accent);">(Fallback)</span>{% endif %}
+              </div>
+            </div>
+
+            {% if sp_list|length > 1 %}
+              <!-- Modal für alle Varianten einer Emotion -->
+              <div class="modal-backdrop" id="sprite-modal-{{ emotion }}" aria-hidden="true">
+                <div class="modal-frame">
+                  <div class="modal-header">
+                    <h3 style="color: var(--gold-accent);">Varianten für Emotion: {{ emotion }}</h3>
+                    <button type="button" class="btn" data-modal-close="sprite-modal-{{ emotion }}">✕</button>
+                  </div>
+                  <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));">
+                    {% for sp in sp_list %}
+                      <div class="card-tile" style="min-height: 200px; position: relative;">
+                        <img src="{{ url_for('uploaded_file', filename=sp.file_path) }}" alt="{{ emotion }}_{{ sp.variant }}" style="width: 100%; height: 160px; object-fit: contain;">
+                        <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp.variant) }}" style="position: absolute; top: 0.4rem; right: 0.4rem;">
+                          <button type="submit" class="btn btn-danger" style="padding: 0.25rem 0.5rem;"><span class="icon-mono">🗑️</span></button>
+                        </form>
+                        <div style="text-align: center; padding: 0.35rem; font-size: 0.8rem;">
+                          {{ emotion }}_{{ sp.variant }}
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal: 9:16 Galeriebild hinzufügen -->
+    <div class="modal-backdrop" id="add-gallery-modal" aria-hidden="true">
+      <div class="modal-frame" style="max-width: 440px;">
+        <div class="modal-header">
+          <h3 style="color: var(--gold-accent);">9:16-Galeriebild hochladen</h3>
+          <button type="button" class="btn" data-modal-close="add-gallery-modal">✕</button>
+        </div>
+        <form method="POST" action="{{ url_for('characters.add_gallery_image', character_id=character.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
+          <div>
+            <label>Bilddatei (9:16 Hochformat) *</label>
+            <input type="file" name="gallery_image" accept=".png,.jpg,.jpeg,.webp" required>
+          </div>
+          <div>
+            <label>Freischalt-Schwellenwert (-100 bis +100) *</label>
+            <input type="number" name="unlock_threshold" min="-100" max="100" value="20" required>
+          </div>
+          <div style="text-align: right;">
+            <button type="submit" class="btn">Hochladen</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById("sparkle-improve-btn")?.addEventListener("click", async () => {
+  const btn = document.getElementById("sparkle-improve-btn");
+  const textarea = document.getElementById("char-description-textarea");
+  const nameInput = document.getElementById("char-name-input");
+  if (!textarea || !btn) return;
+
+  const origLabel = btn.innerHTML;
+  btn.disabled = true;
+  btn.textContent = "✨ KI-Autor schreibt...";
+
+  try {
+    const resp = await fetch("/api/characters/sparkle", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: nameInput ? nameInput.value : "",
+        description: textarea.value,
+      }),
+    });
+    const data = await resp.json();
+    if (resp.ok && data.description) {
+      textarea.value = data.description;
+    } else {
+      alert(data.error || "Konnte Beschreibung nicht generieren.");
+    }
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origLabel;
+  }
+});
+</script>
+{% endblock %}
