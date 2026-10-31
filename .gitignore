@@ -1,0 +1,7 @@
+__pycache__/
+**/__pycache__/
+*.py[cod]
+aimo-data/
+aimo-uploads/
+data/
+uploads/

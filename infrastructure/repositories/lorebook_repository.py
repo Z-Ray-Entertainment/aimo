@@ -1,147 +1,212 @@
 import json
-
-from sqlalchemy import select
+import sqlite3
 
 from domain.lorebooks.models import Lorebook, LorebookEntry
 from infrastructure.database import get_db_session
-from infrastructure.repositories.orm_models import LorebookEntryORM, LorebookORM
+from infrastructure.repositories.orm_models import format_datetime, parse_datetime
 
 
 class LorebookRepository:
     def list_for_user(self, user_id: int | None = None) -> list[Lorebook]:
-        with get_db_session() as session:
-            stmt = select(LorebookORM).order_by(LorebookORM.id.asc())
-            if user_id is not None:
-                stmt = select(LorebookORM).order_by(LorebookORM.id.asc())
-            rows = session.execute(stmt).scalars().all()
+        with get_db_session() as conn:
+            rows = conn.execute(
+                "SELECT * FROM lorebooks ORDER BY id ASC",
+            ).fetchall()
             return [self._to_entity(row) for row in rows]
 
     def get_by_id(self, lorebook_id: int) -> Lorebook | None:
-        with get_db_session() as session:
-            orm_lb = session.get(LorebookORM, lorebook_id)
-            if orm_lb is None:
+        with get_db_session() as conn:
+            row = conn.execute(
+                "SELECT * FROM lorebooks WHERE id = ?",
+                (lorebook_id,),
+            ).fetchone()
+            if row is None:
                 return None
-            return self._to_entity(orm_lb)
+            return self._to_entity(row)
 
     def create(self, lorebook: Lorebook) -> Lorebook:
-        with get_db_session() as session:
-            orm_lb = LorebookORM(
-                user_id=lorebook.user_id,
-                name=lorebook.name,
-                description=lorebook.description,
-                created_at=lorebook.created_at,
+        created_str = format_datetime(lorebook.created_at)
+        with get_db_session() as conn:
+            cursor = conn.execute(
+                """
+                INSERT INTO lorebooks (user_id, name, description, created_at)
+                VALUES (?, ?, ?, ?)
+                """,
+                (
+                    lorebook.user_id,
+                    lorebook.name,
+                    lorebook.description,
+                    created_str,
+                ),
             )
-            session.add(orm_lb)
-            session.flush()
-            return self._to_entity(orm_lb)
+            new_id = int(cursor.lastrowid or 0)
+            row = conn.execute(
+                "SELECT * FROM lorebooks WHERE id = ?",
+                (new_id,),
+            ).fetchone()
+            return self._to_entity(row)
 
     def update(self, lorebook: Lorebook) -> Lorebook:
         if lorebook.id is None:
             return self.create(lorebook)
-        with get_db_session() as session:
-            orm_lb = session.get(LorebookORM, lorebook.id)
-            if orm_lb is None:
+        with get_db_session() as conn:
+            existing = conn.execute(
+                "SELECT id FROM lorebooks WHERE id = ?",
+                (lorebook.id,),
+            ).fetchone()
+            if existing is None:
                 return self.create(lorebook)
-            orm_lb.name = lorebook.name
-            orm_lb.description = lorebook.description
-            session.flush()
-            return self._to_entity(orm_lb)
+            conn.execute(
+                """
+                UPDATE lorebooks
+                SET name = ?, description = ?
+                WHERE id = ?
+                """,
+                (lorebook.name, lorebook.description, lorebook.id),
+            )
+            row = conn.execute(
+                "SELECT * FROM lorebooks WHERE id = ?",
+                (lorebook.id,),
+            ).fetchone()
+            return self._to_entity(row)
 
     def delete(self, lorebook_id: int) -> bool:
-        with get_db_session() as session:
-            orm_lb = session.get(LorebookORM, lorebook_id)
-            if orm_lb is None:
+        with get_db_session() as conn:
+            existing = conn.execute(
+                "SELECT id FROM lorebooks WHERE id = ?",
+                (lorebook_id,),
+            ).fetchone()
+            if existing is None:
                 return False
-            session.delete(orm_lb)
+            conn.execute("DELETE FROM lorebooks WHERE id = ?", (lorebook_id,))
             return True
 
     def add_entry(self, entry: LorebookEntry) -> LorebookEntry:
-        with get_db_session() as session:
-            orm_entry = LorebookEntryORM(
-                lorebook_id=entry.lorebook_id,
-                title=entry.title,
-                tags_json=json.dumps(entry.tags),
-                content=entry.content,
-                created_at=entry.created_at,
-                updated_at=entry.updated_at,
+        created_str = format_datetime(entry.created_at)
+        updated_str = format_datetime(entry.updated_at)
+        with get_db_session() as conn:
+            cursor = conn.execute(
+                """
+                INSERT INTO lorebook_entries (lorebook_id, title, tags_json, content, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    entry.lorebook_id,
+                    entry.title,
+                    json.dumps(entry.tags),
+                    entry.content,
+                    created_str,
+                    updated_str,
+                ),
             )
-            session.add(orm_entry)
-            session.flush()
-            return self._entry_to_entity(orm_entry)
+            new_id = int(cursor.lastrowid or 0)
+            row = conn.execute(
+                "SELECT * FROM lorebook_entries WHERE id = ?",
+                (new_id,),
+            ).fetchone()
+            return self._entry_to_entity(row)
 
     def update_entry(self, entry: LorebookEntry) -> LorebookEntry:
         if entry.id is None:
             return self.add_entry(entry)
-        with get_db_session() as session:
-            orm_entry = session.get(LorebookEntryORM, entry.id)
-            if orm_entry is None:
+        updated_str = format_datetime(entry.updated_at)
+        with get_db_session() as conn:
+            existing = conn.execute(
+                "SELECT id FROM lorebook_entries WHERE id = ?",
+                (entry.id,),
+            ).fetchone()
+            if existing is None:
                 return self.add_entry(entry)
-            orm_entry.title = entry.title
-            orm_entry.tags_json = json.dumps(entry.tags)
-            orm_entry.content = entry.content
-            orm_entry.updated_at = entry.updated_at
-            session.flush()
-            return self._entry_to_entity(orm_entry)
+            conn.execute(
+                """
+                UPDATE lorebook_entries
+                SET title = ?, tags_json = ?, content = ?, updated_at = ?
+                WHERE id = ?
+                """,
+                (
+                    entry.title,
+                    json.dumps(entry.tags),
+                    entry.content,
+                    updated_str,
+                    entry.id,
+                ),
+            )
+            row = conn.execute(
+                "SELECT * FROM lorebook_entries WHERE id = ?",
+                (entry.id,),
+            ).fetchone()
+            return self._entry_to_entity(row)
 
     def get_entry(self, entry_id: int) -> LorebookEntry | None:
-        with get_db_session() as session:
-            orm_entry = session.get(LorebookEntryORM, entry_id)
-            if orm_entry is None:
+        with get_db_session() as conn:
+            row = conn.execute(
+                "SELECT * FROM lorebook_entries WHERE id = ?",
+                (entry_id,),
+            ).fetchone()
+            if row is None:
                 return None
-            return self._entry_to_entity(orm_entry)
+            return self._entry_to_entity(row)
 
     def list_entries(self, lorebook_id: int) -> list[LorebookEntry]:
-        with get_db_session() as session:
-            stmt = (
-                select(LorebookEntryORM)
-                .where(LorebookEntryORM.lorebook_id == lorebook_id)
-                .order_by(LorebookEntryORM.id.asc())
-            )
-            rows = session.execute(stmt).scalars().all()
+        with get_db_session() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM lorebook_entries
+                WHERE lorebook_id = ?
+                ORDER BY id ASC
+                """,
+                (lorebook_id,),
+            ).fetchall()
             return [self._entry_to_entity(row) for row in rows]
 
     def list_entries_for_lorebooks(self, lorebook_ids: list[int]) -> list[LorebookEntry]:
         if not lorebook_ids:
             return []
-        with get_db_session() as session:
-            stmt = (
-                select(LorebookEntryORM)
-                .where(LorebookEntryORM.lorebook_id.in_(lorebook_ids))
-                .order_by(LorebookEntryORM.id.asc())
-            )
-            rows = session.execute(stmt).scalars().all()
+        placeholders = ",".join("?" for _ in lorebook_ids)
+        with get_db_session() as conn:
+            rows = conn.execute(
+                f"""
+                SELECT * FROM lorebook_entries
+                WHERE lorebook_id IN ({placeholders})
+                ORDER BY id ASC
+                """,
+                tuple(lorebook_ids),
+            ).fetchall()
             return [self._entry_to_entity(row) for row in rows]
 
     def delete_entry(self, entry_id: int) -> bool:
-        with get_db_session() as session:
-            orm_entry = session.get(LorebookEntryORM, entry_id)
-            if orm_entry is None:
+        with get_db_session() as conn:
+            existing = conn.execute(
+                "SELECT id FROM lorebook_entries WHERE id = ?",
+                (entry_id,),
+            ).fetchone()
+            if existing is None:
                 return False
-            session.delete(orm_entry)
+            conn.execute("DELETE FROM lorebook_entries WHERE id = ?", (entry_id,))
             return True
 
     @staticmethod
-    def _to_entity(orm_lb: LorebookORM) -> Lorebook:
+    def _to_entity(row: sqlite3.Row) -> Lorebook:
         return Lorebook(
-            id=orm_lb.id,
-            user_id=orm_lb.user_id,
-            name=orm_lb.name,
-            description=orm_lb.description,
-            created_at=orm_lb.created_at,
+            id=int(row["id"]),
+            user_id=int(row["user_id"]),
+            name=str(row["name"]),
+            description=str(row["description"]),
+            created_at=parse_datetime(row["created_at"]),
         )
 
     @staticmethod
-    def _entry_to_entity(orm_entry: LorebookEntryORM) -> LorebookEntry:
+    def _entry_to_entity(row: sqlite3.Row) -> LorebookEntry:
         try:
-            tags = json.loads(orm_entry.tags_json)
+            tags = json.loads(row["tags_json"])
         except json.JSONDecodeError:
             tags = []
         return LorebookEntry(
-            id=orm_entry.id,
-            lorebook_id=orm_entry.lorebook_id,
-            title=orm_entry.title,
+            id=int(row["id"]),
+            lorebook_id=int(row["lorebook_id"]),
+            title=str(row["title"]),
             tags=list(tags) if isinstance(tags, list) else [],
-            content=orm_entry.content,
-            created_at=orm_entry.created_at,
-            updated_at=orm_entry.updated_at,
+            content=str(row["content"]),
+            created_at=parse_datetime(row["created_at"]),
+            updated_at=parse_datetime(row["updated_at"]),
         )

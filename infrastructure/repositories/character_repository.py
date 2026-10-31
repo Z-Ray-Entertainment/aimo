@@ -1,6 +1,5 @@
 import json
-
-from sqlalchemy import func, or_, select
+import sqlite3
 
 from domain.characters.models import (
     Character,
@@ -10,153 +9,204 @@ from domain.characters.models import (
     Gender,
 )
 from infrastructure.database import get_db_session
-from infrastructure.repositories.orm_models import (
-    CharacterImageORM,
-    CharacterORM,
-    ChatSessionORM,
-    MessageORM,
-    SpriteORM,
-)
+from infrastructure.repositories.orm_models import format_datetime, parse_datetime
 
 
 class CharacterRepository:
     def list_visible(self, user_id: int) -> list[Character]:
-        with get_db_session() as session:
-            stmt = (
-                select(CharacterORM)
-                .where(
-                    or_(
-                        CharacterORM.visibility == "public",
-                        CharacterORM.user_id == user_id,
-                    )
-                )
-                .order_by(CharacterORM.id.asc())
-            )
-            rows = session.execute(stmt).scalars().all()
-            return [self._to_entity(row) for row in rows]
+        with get_db_session() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM characters
+                WHERE visibility = 'public' OR user_id = ?
+                ORDER BY id ASC
+                """,
+                (user_id,),
+            ).fetchall()
+            return [self._to_entity(conn, row) for row in rows]
 
     def get_by_id(self, character_id: int) -> Character | None:
-        with get_db_session() as session:
-            orm_char = session.get(CharacterORM, character_id)
-            if orm_char is None:
+        with get_db_session() as conn:
+            row = conn.execute(
+                "SELECT * FROM characters WHERE id = ?",
+                (character_id,),
+            ).fetchone()
+            if row is None:
                 return None
-            return self._to_entity(orm_char)
+            return self._to_entity(conn, row)
 
     def save(self, character: Character) -> Character:
-        with get_db_session() as session:
+        created_str = format_datetime(character.created_at)
+        with get_db_session() as conn:
             if character.id is None:
-                orm_char = CharacterORM(
-                    user_id=character.user_id,
-                    name=character.name,
-                    gender=character.gender.value,
-                    visibility=character.visibility,
-                    primary_portrait_path=character.primary_portrait_path,
-                    description=character.description,
-                    dialogue_examples_json=json.dumps(character.dialogue_examples),
-                    linked_lorebook_ids_json=json.dumps(character.linked_lorebook_ids),
-                    suggested_worldinfo_id=character.suggested_worldinfo_id,
-                    first_message=character.first_message,
-                    initial_location_id=character.initial_location_id,
-                    initial_relationship=character.initial_relationship,
-                    preferred_location_ids_json=json.dumps(character.preferred_location_ids),
-                    disliked_location_ids_json=json.dumps(character.disliked_location_ids),
-                    created_at=character.created_at,
+                cursor = conn.execute(
+                    """
+                    INSERT INTO characters (
+                        user_id, name, gender, visibility, primary_portrait_path,
+                        description, dialogue_examples_json, linked_lorebook_ids_json,
+                        suggested_worldinfo_id, first_message, initial_location_id,
+                        initial_relationship, preferred_location_ids_json,
+                        disliked_location_ids_json, created_at
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        character.user_id,
+                        character.name,
+                        character.gender.value,
+                        character.visibility,
+                        character.primary_portrait_path,
+                        character.description,
+                        json.dumps(character.dialogue_examples),
+                        json.dumps(character.linked_lorebook_ids),
+                        character.suggested_worldinfo_id,
+                        character.first_message,
+                        character.initial_location_id,
+                        character.initial_relationship,
+                        json.dumps(character.preferred_location_ids),
+                        json.dumps(character.disliked_location_ids),
+                        created_str,
+                    ),
                 )
-                session.add(orm_char)
-                session.flush()
-                character.id = orm_char.id
+                character.id = int(cursor.lastrowid or 0)
             else:
-                orm_char = session.get(CharacterORM, character.id)
-                if orm_char is None:
+                existing = conn.execute(
+                    "SELECT id FROM characters WHERE id = ?",
+                    (character.id,),
+                ).fetchone()
+                if existing is None:
                     character.id = None
                     return self.save(character)
-                orm_char.name = character.name
-                orm_char.gender = character.gender.value
-                orm_char.visibility = character.visibility
-                orm_char.primary_portrait_path = character.primary_portrait_path
-                orm_char.description = character.description
-                orm_char.dialogue_examples_json = json.dumps(character.dialogue_examples)
-                orm_char.linked_lorebook_ids_json = json.dumps(character.linked_lorebook_ids)
-                orm_char.suggested_worldinfo_id = character.suggested_worldinfo_id
-                orm_char.first_message = character.first_message
-                orm_char.initial_location_id = character.initial_location_id
-                orm_char.initial_relationship = character.initial_relationship
-                orm_char.preferred_location_ids_json = json.dumps(character.preferred_location_ids)
-                orm_char.disliked_location_ids_json = json.dumps(character.disliked_location_ids)
-                session.flush()
-
-            return self._to_entity(orm_char)
+                conn.execute(
+                    """
+                    UPDATE characters
+                    SET name = ?, gender = ?, visibility = ?, primary_portrait_path = ?,
+                        description = ?, dialogue_examples_json = ?, linked_lorebook_ids_json = ?,
+                        suggested_worldinfo_id = ?, first_message = ?, initial_location_id = ?,
+                        initial_relationship = ?, preferred_location_ids_json = ?,
+                        disliked_location_ids_json = ?
+                    WHERE id = ?
+                    """,
+                    (
+                        character.name,
+                        character.gender.value,
+                        character.visibility,
+                        character.primary_portrait_path,
+                        character.description,
+                        json.dumps(character.dialogue_examples),
+                        json.dumps(character.linked_lorebook_ids),
+                        character.suggested_worldinfo_id,
+                        character.first_message,
+                        character.initial_location_id,
+                        character.initial_relationship,
+                        json.dumps(character.preferred_location_ids),
+                        json.dumps(character.disliked_location_ids),
+                        character.id,
+                    ),
+                )
+            row = conn.execute(
+                "SELECT * FROM characters WHERE id = ?",
+                (character.id,),
+            ).fetchone()
+            return self._to_entity(conn, row)
 
     def delete(self, character_id: int) -> bool:
-        with get_db_session() as session:
-            orm_char = session.get(CharacterORM, character_id)
-            if orm_char is None:
+        with get_db_session() as conn:
+            existing = conn.execute(
+                "SELECT id FROM characters WHERE id = ?",
+                (character_id,),
+            ).fetchone()
+            if existing is None:
                 return False
-            session.delete(orm_char)
+            conn.execute("DELETE FROM characters WHERE id = ?", (character_id,))
             return True
 
     def add_sprite(self, character_id: int, sprite: EmotionalSprite) -> EmotionalSprite:
-        with get_db_session() as session:
-            orm_sprite = SpriteORM(
+        with get_db_session() as conn:
+            cursor = conn.execute(
+                """
+                INSERT INTO character_sprites (character_id, emotion, variant, file_path)
+                VALUES (?, ?, ?, ?)
+                """,
+                (
+                    character_id,
+                    sprite.emotion.value,
+                    sprite.variant,
+                    sprite.file_path,
+                ),
+            )
+            new_id = int(cursor.lastrowid or 0)
+            return EmotionalSprite(
+                id=new_id,
                 character_id=character_id,
-                emotion=sprite.emotion.value,
+                emotion=sprite.emotion,
                 variant=sprite.variant,
                 file_path=sprite.file_path,
-            )
-            session.add(orm_sprite)
-            session.flush()
-            return EmotionalSprite(
-                id=orm_sprite.id,
-                character_id=orm_sprite.character_id,
-                emotion=Emotion.resolve(orm_sprite.emotion),
-                variant=orm_sprite.variant,
-                file_path=orm_sprite.file_path,
             )
 
     def delete_sprite(self, character_id: int, emotion: str, variant: int) -> bool:
         resolved_emotion = Emotion.resolve(emotion).value
-        with get_db_session() as session:
-            stmt = select(SpriteORM).where(
-                SpriteORM.character_id == character_id,
-                SpriteORM.emotion == resolved_emotion,
-                SpriteORM.variant == variant,
-            )
-            orm_sprite = session.execute(stmt).scalar_one_or_none()
-            if orm_sprite is None:
+        with get_db_session() as conn:
+            row = conn.execute(
+                """
+                SELECT id FROM character_sprites
+                WHERE character_id = ? AND emotion = ? AND variant = ?
+                """,
+                (character_id, resolved_emotion, variant),
+            ).fetchone()
+            if row is None:
                 return False
-            session.delete(orm_sprite)
+            conn.execute(
+                "DELETE FROM character_sprites WHERE id = ?",
+                (int(row["id"]),),
+            )
             return True
 
     def add_gallery_image(self, character_id: int, image: CharacterImage) -> CharacterImage:
-        with get_db_session() as session:
-            orm_img = CharacterImageORM(
+        with get_db_session() as conn:
+            cursor = conn.execute(
+                """
+                INSERT INTO character_images (character_id, file_path, unlock_threshold)
+                VALUES (?, ?, ?)
+                """,
+                (
+                    character_id,
+                    image.file_path,
+                    image.unlock_threshold,
+                ),
+            )
+            new_id = int(cursor.lastrowid or 0)
+            return CharacterImage(
+                id=new_id,
                 character_id=character_id,
                 file_path=image.file_path,
                 unlock_threshold=image.unlock_threshold,
             )
-            session.add(orm_img)
-            session.flush()
-            return CharacterImage(
-                id=orm_img.id,
-                character_id=orm_img.character_id,
-                file_path=orm_img.file_path,
-                unlock_threshold=orm_img.unlock_threshold,
-            )
 
     def update_gallery_image_threshold(self, image_id: int, threshold: int) -> bool:
-        with get_db_session() as session:
-            orm_img = session.get(CharacterImageORM, image_id)
-            if orm_img is None:
+        with get_db_session() as conn:
+            existing = conn.execute(
+                "SELECT id FROM character_images WHERE id = ?",
+                (image_id,),
+            ).fetchone()
+            if existing is None:
                 return False
-            orm_img.unlock_threshold = max(-100, min(100, int(threshold)))
+            clamped = max(-100, min(100, int(threshold)))
+            conn.execute(
+                "UPDATE character_images SET unlock_threshold = ? WHERE id = ?",
+                (clamped, image_id),
+            )
             return True
 
     def delete_gallery_image(self, image_id: int) -> bool:
-        with get_db_session() as session:
-            orm_img = session.get(CharacterImageORM, image_id)
-            if orm_img is None:
+        with get_db_session() as conn:
+            existing = conn.execute(
+                "SELECT id FROM character_images WHERE id = ?",
+                (image_id,),
+            ).fetchone()
+            if existing is None:
                 return False
-            session.delete(orm_img)
+            conn.execute("DELETE FROM character_images WHERE id = ?", (image_id,))
             return True
 
     def get_best_relationship_for_user(
@@ -165,34 +215,34 @@ class CharacterRepository:
         user_id: int,
         default_value: float = 0.0,
     ) -> float:
-        with get_db_session() as session:
-            stmt = (
-                select(func.max(ChatSessionORM.relationship_value))
-                .where(
-                    ChatSessionORM.character_id == character_id,
-                    ChatSessionORM.user_id == user_id,
-                )
-            )
-            best = session.execute(stmt).scalar_one_or_none()
-            if best is None:
+        with get_db_session() as conn:
+            row = conn.execute(
+                """
+                SELECT MAX(relationship_value) AS best
+                FROM chat_sessions
+                WHERE character_id = ? AND user_id = ?
+                """,
+                (character_id, user_id),
+            ).fetchone()
+            if row is None or row["best"] is None:
                 return float(default_value)
-            return float(best)
+            return float(row["best"])
 
     def get_message_count_for_user(self, character_id: int, user_id: int) -> int:
-        with get_db_session() as session:
-            stmt = (
-                select(func.count(MessageORM.id))
-                .join(ChatSessionORM, MessageORM.session_id == ChatSessionORM.id)
-                .where(
-                    ChatSessionORM.character_id == character_id,
-                    ChatSessionORM.user_id == user_id,
-                )
-            )
-            count = session.execute(stmt).scalar_one_or_none()
-            return int(count or 0)
+        with get_db_session() as conn:
+            row = conn.execute(
+                """
+                SELECT COUNT(m.id) AS cnt
+                FROM chat_messages m
+                JOIN chat_sessions s ON m.session_id = s.id
+                WHERE s.character_id = ? AND s.user_id = ?
+                """,
+                (character_id, user_id),
+            ).fetchone()
+            return int(row["cnt"] if row is not None and row["cnt"] is not None else 0)
 
     @staticmethod
-    def _to_entity(orm_char: CharacterORM) -> Character:
+    def _to_entity(conn: sqlite3.Connection, row: sqlite3.Row) -> Character:
         def _load_list(raw: str) -> list:
             try:
                 val = json.loads(raw)
@@ -200,43 +250,65 @@ class CharacterRepository:
             except json.JSONDecodeError:
                 return []
 
+        char_id = int(row["id"])
+        img_rows = conn.execute(
+            "SELECT * FROM character_images WHERE character_id = ? ORDER BY id ASC",
+            (char_id,),
+        ).fetchall()
         gallery = [
             CharacterImage(
-                id=img.id,
-                character_id=img.character_id,
-                file_path=img.file_path,
-                unlock_threshold=img.unlock_threshold,
+                id=int(img["id"]),
+                character_id=int(img["character_id"]),
+                file_path=str(img["file_path"]),
+                unlock_threshold=int(img["unlock_threshold"]),
             )
-            for img in orm_char.gallery_images
+            for img in img_rows
         ]
+
+        sprite_rows = conn.execute(
+            "SELECT * FROM character_sprites WHERE character_id = ? ORDER BY id ASC",
+            (char_id,),
+        ).fetchall()
         sprites = [
             EmotionalSprite(
-                id=sp.id,
-                character_id=sp.character_id,
-                emotion=Emotion.resolve(sp.emotion),
-                variant=sp.variant,
-                file_path=sp.file_path,
+                id=int(sp["id"]),
+                character_id=int(sp["character_id"]),
+                emotion=Emotion.resolve(str(sp["emotion"])),
+                variant=int(sp["variant"]),
+                file_path=str(sp["file_path"]),
             )
-            for sp in orm_char.sprites
+            for sp in sprite_rows
         ]
 
         return Character(
-            id=orm_char.id,
-            user_id=orm_char.user_id,
-            name=orm_char.name,
-            gender=Gender.resolve(orm_char.gender),
-            visibility=orm_char.visibility,
-            primary_portrait_path=orm_char.primary_portrait_path,
-            description=orm_char.description,
-            dialogue_examples=[str(x) for x in _load_list(orm_char.dialogue_examples_json)],
-            linked_lorebook_ids=[int(x) for x in _load_list(orm_char.linked_lorebook_ids_json)],
-            suggested_worldinfo_id=orm_char.suggested_worldinfo_id,
-            first_message=orm_char.first_message,
-            initial_location_id=orm_char.initial_location_id,
-            initial_relationship=orm_char.initial_relationship,
-            preferred_location_ids=[int(x) for x in _load_list(orm_char.preferred_location_ids_json)],
-            disliked_location_ids=[int(x) for x in _load_list(orm_char.disliked_location_ids_json)],
+            id=char_id,
+            user_id=int(row["user_id"]),
+            name=str(row["name"]),
+            gender=Gender.resolve(str(row["gender"])),
+            visibility=str(row["visibility"]),
+            primary_portrait_path=str(row["primary_portrait_path"]),
+            description=str(row["description"]),
+            dialogue_examples=[str(x) for x in _load_list(str(row["dialogue_examples_json"]))],
+            linked_lorebook_ids=[int(x) for x in _load_list(str(row["linked_lorebook_ids_json"]))],
+            suggested_worldinfo_id=(
+                int(row["suggested_worldinfo_id"])
+                if row["suggested_worldinfo_id"] is not None
+                else None
+            ),
+            first_message=str(row["first_message"]),
+            initial_location_id=(
+                int(row["initial_location_id"])
+                if row["initial_location_id"] is not None
+                else None
+            ),
+            initial_relationship=int(row["initial_relationship"]),
+            preferred_location_ids=[
+                int(x) for x in _load_list(str(row["preferred_location_ids_json"]))
+            ],
+            disliked_location_ids=[
+                int(x) for x in _load_list(str(row["disliked_location_ids_json"]))
+            ],
             gallery_images=gallery,
             sprites=sprites,
-            created_at=orm_char.created_at,
+            created_at=parse_datetime(row["created_at"]),
         )

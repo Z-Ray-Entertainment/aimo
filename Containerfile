@@ -10,6 +10,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN groupadd --gid 1000 aimo && \
     useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash aimo && \
     mkdir -p /app/data /app/uploads && \
+    chmod 0777 /app/data /app/uploads && \
     chown -R aimo:aimo /app
 
 WORKDIR /app

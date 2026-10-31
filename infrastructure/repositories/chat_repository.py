@@ -1,10 +1,9 @@
 import json
-
-from sqlalchemy import delete, func, select
+import sqlite3
 
 from domain.chat.models import ChatSession, Message, MessageRole
 from infrastructure.database import get_db_session
-from infrastructure.repositories.orm_models import ChatSessionORM, MessageORM
+from infrastructure.repositories.orm_models import format_datetime, parse_datetime
 
 
 class ChatRepository:
@@ -13,156 +12,235 @@ class ChatRepository:
         character_id: int,
         user_id: int,
     ) -> list[ChatSession]:
-        with get_db_session() as session:
-            stmt = (
-                select(ChatSessionORM)
-                .where(
-                    ChatSessionORM.character_id == character_id,
-                    ChatSessionORM.user_id == user_id,
-                )
-                .order_by(ChatSessionORM.last_message_at.desc(), ChatSessionORM.id.desc())
-            )
-            rows = session.execute(stmt).scalars().all()
+        with get_db_session() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM chat_sessions
+                WHERE character_id = ? AND user_id = ?
+                ORDER BY last_message_at DESC, id DESC
+                """,
+                (character_id, user_id),
+            ).fetchall()
             return [self._session_to_entity(row) for row in rows]
 
     def get_session(self, session_id: int) -> ChatSession | None:
-        with get_db_session() as session:
-            orm_sess = session.get(ChatSessionORM, session_id)
-            if orm_sess is None:
+        with get_db_session() as conn:
+            row = conn.execute(
+                "SELECT * FROM chat_sessions WHERE id = ?",
+                (session_id,),
+            ).fetchone()
+            if row is None:
                 return None
-            return self._session_to_entity(orm_sess)
+            return self._session_to_entity(row)
 
     def create_session(self, chat_session: ChatSession) -> ChatSession:
-        with get_db_session() as session:
-            orm_sess = ChatSessionORM(
-                user_id=chat_session.user_id,
-                character_id=chat_session.character_id,
-                persona_id=chat_session.persona_id,
-                active_worldinfo_id=chat_session.active_worldinfo_id,
-                current_location_id=chat_session.current_location_id,
-                title=chat_session.title,
-                relationship_value=chat_session.relationship_value,
-                events_enabled=chat_session.events_enabled,
-                cooldown_counter=chat_session.cooldown_counter,
-                last_message_at=chat_session.last_message_at,
-                parent_session_id=chat_session.parent_session_id,
-                persona_locked=chat_session.persona_locked,
-                triggered_event_ids_json=json.dumps(sorted(chat_session.triggered_event_ids)),
-                created_at=chat_session.created_at,
+        last_msg_str = format_datetime(chat_session.last_message_at)
+        created_str = format_datetime(chat_session.created_at)
+        with get_db_session() as conn:
+            cursor = conn.execute(
+                """
+                INSERT INTO chat_sessions (
+                    user_id, character_id, persona_id, active_worldinfo_id,
+                    current_location_id, title, relationship_value, events_enabled,
+                    cooldown_counter, last_message_at, parent_session_id,
+                    persona_locked, triggered_event_ids_json, created_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    chat_session.user_id,
+                    chat_session.character_id,
+                    chat_session.persona_id,
+                    chat_session.active_worldinfo_id,
+                    chat_session.current_location_id,
+                    chat_session.title,
+                    chat_session.relationship_value,
+                    1 if chat_session.events_enabled else 0,
+                    chat_session.cooldown_counter,
+                    last_msg_str,
+                    chat_session.parent_session_id,
+                    1 if chat_session.persona_locked else 0,
+                    json.dumps(sorted(chat_session.triggered_event_ids)),
+                    created_str,
+                ),
             )
-            session.add(orm_sess)
-            session.flush()
-            return self._session_to_entity(orm_sess)
+            new_id = int(cursor.lastrowid or 0)
+            row = conn.execute(
+                "SELECT * FROM chat_sessions WHERE id = ?",
+                (new_id,),
+            ).fetchone()
+            return self._session_to_entity(row)
 
     def update_session(self, chat_session: ChatSession) -> ChatSession:
         if chat_session.id is None:
             return self.create_session(chat_session)
-        with get_db_session() as session:
-            orm_sess = session.get(ChatSessionORM, chat_session.id)
-            if orm_sess is None:
+        last_msg_str = format_datetime(chat_session.last_message_at)
+        with get_db_session() as conn:
+            existing = conn.execute(
+                "SELECT id FROM chat_sessions WHERE id = ?",
+                (chat_session.id,),
+            ).fetchone()
+            if existing is None:
                 return self.create_session(chat_session)
-            orm_sess.persona_id = chat_session.persona_id
-            orm_sess.active_worldinfo_id = chat_session.active_worldinfo_id
-            orm_sess.current_location_id = chat_session.current_location_id
-            orm_sess.title = chat_session.title
-            orm_sess.relationship_value = chat_session.relationship_value
-            orm_sess.events_enabled = chat_session.events_enabled
-            orm_sess.cooldown_counter = chat_session.cooldown_counter
-            orm_sess.last_message_at = chat_session.last_message_at
-            orm_sess.persona_locked = chat_session.persona_locked
-            orm_sess.triggered_event_ids_json = json.dumps(
-                sorted(chat_session.triggered_event_ids)
+            conn.execute(
+                """
+                UPDATE chat_sessions
+                SET persona_id = ?, active_worldinfo_id = ?, current_location_id = ?,
+                    title = ?, relationship_value = ?, events_enabled = ?,
+                    cooldown_counter = ?, last_message_at = ?, persona_locked = ?,
+                    triggered_event_ids_json = ?
+                WHERE id = ?
+                """,
+                (
+                    chat_session.persona_id,
+                    chat_session.active_worldinfo_id,
+                    chat_session.current_location_id,
+                    chat_session.title,
+                    chat_session.relationship_value,
+                    1 if chat_session.events_enabled else 0,
+                    chat_session.cooldown_counter,
+                    last_msg_str,
+                    1 if chat_session.persona_locked else 0,
+                    json.dumps(sorted(chat_session.triggered_event_ids)),
+                    chat_session.id,
+                ),
             )
-            session.flush()
-            return self._session_to_entity(orm_sess)
+            row = conn.execute(
+                "SELECT * FROM chat_sessions WHERE id = ?",
+                (chat_session.id,),
+            ).fetchone()
+            return self._session_to_entity(row)
 
     def delete_session(self, session_id: int) -> bool:
-        with get_db_session() as session:
-            orm_sess = session.get(ChatSessionORM, session_id)
-            if orm_sess is None:
+        with get_db_session() as conn:
+            existing = conn.execute(
+                "SELECT id FROM chat_sessions WHERE id = ?",
+                (session_id,),
+            ).fetchone()
+            if existing is None:
                 return False
-            session.delete(orm_sess)
+            conn.execute("DELETE FROM chat_sessions WHERE id = ?", (session_id,))
             return True
 
     def add_message(self, message: Message) -> Message:
-        with get_db_session() as session:
+        created_str = format_datetime(message.created_at)
+        with get_db_session() as conn:
             if message.message_idx < 0:
-                stmt = select(func.max(MessageORM.message_idx)).where(
-                    MessageORM.session_id == message.session_id
-                )
-                max_idx = session.execute(stmt).scalar_one_or_none()
+                max_row = conn.execute(
+                    "SELECT MAX(message_idx) AS max_idx FROM chat_messages WHERE session_id = ?",
+                    (message.session_id,),
+                ).fetchone()
+                max_idx = max_row["max_idx"] if max_row is not None else None
                 message.message_idx = 0 if max_idx is None else int(max_idx) + 1
 
-            orm_msg = MessageORM(
-                session_id=message.session_id,
-                message_idx=message.message_idx,
-                role=message.role.value,
-                english_content=message.english_content,
-                localized_content=message.localized_content,
-                image_path=message.image_path,
-                image_alt_text=message.image_alt_text,
-                emotion_tag=message.emotion_tag,
-                created_at=message.created_at,
+            cursor = conn.execute(
+                """
+                INSERT INTO chat_messages (
+                    session_id, message_idx, role, english_content,
+                    localized_content, image_path, image_alt_text, emotion_tag, created_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    message.session_id,
+                    message.message_idx,
+                    message.role.value,
+                    message.english_content,
+                    message.localized_content,
+                    message.image_path,
+                    message.image_alt_text,
+                    message.emotion_tag,
+                    created_str,
+                ),
             )
-            session.add(orm_msg)
-            session.flush()
-            return self._message_to_entity(orm_msg)
+            new_id = int(cursor.lastrowid or 0)
+            row = conn.execute(
+                "SELECT * FROM chat_messages WHERE id = ?",
+                (new_id,),
+            ).fetchone()
+            return self._message_to_entity(row)
 
     def update_message(self, message: Message) -> Message:
         if message.id is None:
             return self.add_message(message)
-        with get_db_session() as session:
-            orm_msg = session.get(MessageORM, message.id)
-            if orm_msg is None:
+        with get_db_session() as conn:
+            existing = conn.execute(
+                "SELECT id FROM chat_messages WHERE id = ?",
+                (message.id,),
+            ).fetchone()
+            if existing is None:
                 return self.add_message(message)
-            orm_msg.english_content = message.english_content
-            orm_msg.localized_content = message.localized_content
-            orm_msg.image_path = message.image_path
-            orm_msg.image_alt_text = message.image_alt_text
-            orm_msg.emotion_tag = message.emotion_tag
-            session.flush()
-            return self._message_to_entity(orm_msg)
+            conn.execute(
+                """
+                UPDATE chat_messages
+                SET english_content = ?, localized_content = ?, image_path = ?,
+                    image_alt_text = ?, emotion_tag = ?
+                WHERE id = ?
+                """,
+                (
+                    message.english_content,
+                    message.localized_content,
+                    message.image_path,
+                    message.image_alt_text,
+                    message.emotion_tag,
+                    message.id,
+                ),
+            )
+            row = conn.execute(
+                "SELECT * FROM chat_messages WHERE id = ?",
+                (message.id,),
+            ).fetchone()
+            return self._message_to_entity(row)
 
     def get_message_by_idx(self, session_id: int, message_idx: int) -> Message | None:
-        with get_db_session() as session:
-            stmt = select(MessageORM).where(
-                MessageORM.session_id == session_id,
-                MessageORM.message_idx == message_idx,
-            )
-            orm_msg = session.execute(stmt).scalar_one_or_none()
-            if orm_msg is None:
+        with get_db_session() as conn:
+            row = conn.execute(
+                """
+                SELECT * FROM chat_messages
+                WHERE session_id = ? AND message_idx = ?
+                ORDER BY id DESC LIMIT 1
+                """,
+                (session_id, message_idx),
+            ).fetchone()
+            if row is None:
                 return None
-            return self._message_to_entity(orm_msg)
+            return self._message_to_entity(row)
 
     def get_messages(
         self,
         session_id: int,
         limit: int | None = 10,
     ) -> list[Message]:
-        with get_db_session() as session:
+        with get_db_session() as conn:
             if limit is not None and limit > 0:
-                stmt = (
-                    select(MessageORM)
-                    .where(MessageORM.session_id == session_id)
-                    .order_by(MessageORM.message_idx.desc(), MessageORM.id.desc())
-                    .limit(limit)
-                )
-                rows = list(reversed(session.execute(stmt).scalars().all()))
+                rows = conn.execute(
+                    """
+                    SELECT * FROM chat_messages
+                    WHERE session_id = ?
+                    ORDER BY message_idx DESC, id DESC
+                    LIMIT ?
+                    """,
+                    (session_id, limit),
+                ).fetchall()
+                rows = list(reversed(rows))
             else:
-                stmt = (
-                    select(MessageORM)
-                    .where(MessageORM.session_id == session_id)
-                    .order_by(MessageORM.message_idx.asc(), MessageORM.id.asc())
-                )
-                rows = session.execute(stmt).scalars().all()
+                rows = conn.execute(
+                    """
+                    SELECT * FROM chat_messages
+                    WHERE session_id = ?
+                    ORDER BY message_idx ASC, id ASC
+                    """,
+                    (session_id,),
+                ).fetchall()
             return [self._message_to_entity(row) for row in rows]
 
     def get_next_message_idx(self, session_id: int) -> int:
-        with get_db_session() as session:
-            stmt = select(func.max(MessageORM.message_idx)).where(
-                MessageORM.session_id == session_id
-            )
-            max_idx = session.execute(stmt).scalar_one_or_none()
+        with get_db_session() as conn:
+            row = conn.execute(
+                "SELECT MAX(message_idx) AS max_idx FROM chat_messages WHERE session_id = ?",
+                (session_id,),
+            ).fetchone()
+            max_idx = row["max_idx"] if row is not None else None
             return 0 if max_idx is None else int(max_idx) + 1
 
     def delete_messages_after(
@@ -171,55 +249,64 @@ class ChatRepository:
         message_idx: int,
         inclusive: bool = True,
     ) -> int:
-        with get_db_session() as session:
-            condition = (
-                MessageORM.message_idx >= message_idx
-                if inclusive
-                else MessageORM.message_idx > message_idx
+        operator = ">=" if inclusive else ">"
+        with get_db_session() as conn:
+            cursor = conn.execute(
+                f"DELETE FROM chat_messages WHERE session_id = ? AND message_idx {operator} ?",
+                (session_id, message_idx),
             )
-            stmt = delete(MessageORM).where(
-                MessageORM.session_id == session_id,
-                condition,
-            )
-            res = session.execute(stmt)
-            return int(res.rowcount or 0)
+            return int(cursor.rowcount or 0)
 
     @staticmethod
-    def _session_to_entity(orm_sess: ChatSessionORM) -> ChatSession:
+    def _session_to_entity(row: sqlite3.Row) -> ChatSession:
         try:
-            trig_ids = set(int(x) for x in json.loads(orm_sess.triggered_event_ids_json))
+            trig_ids = set(int(x) for x in json.loads(str(row["triggered_event_ids_json"])))
         except (json.JSONDecodeError, TypeError, ValueError):
             trig_ids = set()
 
         return ChatSession(
-            id=orm_sess.id,
-            user_id=orm_sess.user_id,
-            character_id=orm_sess.character_id,
-            persona_id=orm_sess.persona_id,
-            active_worldinfo_id=orm_sess.active_worldinfo_id,
-            current_location_id=orm_sess.current_location_id,
-            title=orm_sess.title,
-            relationship_value=orm_sess.relationship_value,
-            events_enabled=orm_sess.events_enabled,
-            cooldown_counter=orm_sess.cooldown_counter,
-            last_message_at=orm_sess.last_message_at,
-            parent_session_id=orm_sess.parent_session_id,
-            persona_locked=orm_sess.persona_locked,
+            id=int(row["id"]),
+            user_id=int(row["user_id"]),
+            character_id=int(row["character_id"]),
+            persona_id=int(row["persona_id"]),
+            active_worldinfo_id=(
+                int(row["active_worldinfo_id"])
+                if row["active_worldinfo_id"] is not None
+                else None
+            ),
+            current_location_id=(
+                int(row["current_location_id"])
+                if row["current_location_id"] is not None
+                else None
+            ),
+            title=str(row["title"]),
+            relationship_value=float(row["relationship_value"]),
+            events_enabled=bool(row["events_enabled"]),
+            cooldown_counter=int(row["cooldown_counter"]),
+            last_message_at=parse_datetime(row["last_message_at"]),
+            parent_session_id=(
+                int(row["parent_session_id"])
+                if row["parent_session_id"] is not None
+                else None
+            ),
+            persona_locked=bool(row["persona_locked"]),
             triggered_event_ids=trig_ids,
-            created_at=orm_sess.created_at,
+            created_at=parse_datetime(row["created_at"]),
         )
 
     @staticmethod
-    def _message_to_entity(orm_msg: MessageORM) -> Message:
+    def _message_to_entity(row: sqlite3.Row) -> Message:
         return Message(
-            id=orm_msg.id,
-            session_id=orm_msg.session_id,
-            message_idx=orm_msg.message_idx,
-            role=MessageRole.resolve(orm_msg.role),
-            english_content=orm_msg.english_content,
-            localized_content=orm_msg.localized_content,
-            image_path=orm_msg.image_path,
-            image_alt_text=orm_msg.image_alt_text,
-            emotion_tag=orm_msg.emotion_tag,
-            created_at=orm_msg.created_at,
+            id=int(row["id"]),
+            session_id=int(row["session_id"]),
+            message_idx=int(row["message_idx"]),
+            role=MessageRole.resolve(str(row["role"])),
+            english_content=str(row["english_content"]),
+            localized_content=str(row["localized_content"]),
+            image_path=str(row["image_path"]) if row["image_path"] is not None else None,
+            image_alt_text=(
+                str(row["image_alt_text"]) if row["image_alt_text"] is not None else None
+            ),
+            emotion_tag=str(row["emotion_tag"]) if row["emotion_tag"] is not None else None,
+            created_at=parse_datetime(row["created_at"]),
         )

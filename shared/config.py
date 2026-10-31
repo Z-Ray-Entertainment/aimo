@@ -6,11 +6,35 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR: Path = Path(__file__).resolve().parent.parent
-DATA_DIR: Path = Path(os.getenv("AIMO_DATA_DIR", str(BASE_DIR / "data"))).resolve()
-UPLOAD_DIR: Path = Path(os.getenv("AIMO_UPLOAD_DIR", str(BASE_DIR / "uploads"))).resolve()
 
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+def _resolve_writable_dir(preferred: Path, fallback_name: str) -> Path:
+    try:
+        preferred.mkdir(parents=True, exist_ok=True)
+        if os.access(preferred, os.W_OK):
+            return preferred
+        try:
+            preferred.chmod(0o777)
+            if os.access(preferred, os.W_OK):
+                return preferred
+        except OSError:
+            pass
+    except OSError:
+        pass
+
+    fallback = Path("/tmp/aimo") / fallback_name
+    fallback.mkdir(parents=True, exist_ok=True)
+    return fallback
+
+
+DATA_DIR: Path = _resolve_writable_dir(
+    Path(os.getenv("AIMO_DATA_DIR", str(BASE_DIR / "data"))).resolve(),
+    "data",
+)
+UPLOAD_DIR: Path = _resolve_writable_dir(
+    Path(os.getenv("AIMO_UPLOAD_DIR", str(BASE_DIR / "uploads"))).resolve(),
+    "uploads",
+)
 
 
 class Config:

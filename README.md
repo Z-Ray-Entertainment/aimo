@@ -46,8 +46,8 @@ podman build -t aimo -f Containerfile .
 podman run -d \
   --name aimo \
   -p 5000:5000 \
-  -v aimo-data:/app/data:Z \
-  -v aimo-uploads:/app/uploads:Z \
+  -v aimo-data:/app/data:Z,U \
+  -v aimo-uploads:/app/uploads:Z,U \
   aimo
 
 # 3. Im Browser aufrufen: http://localhost:5000

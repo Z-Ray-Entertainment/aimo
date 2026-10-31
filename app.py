@@ -17,7 +17,7 @@ from application.overview import overview_bp
 from application.personas import personas_bp
 from application.setup import setup_bp
 from application.worldinfo import worldinfo_bp
-from infrastructure.database import ScopedSession, init_db
+from infrastructure.database import init_db
 from infrastructure.repositories.persona_repository import PersonaRepository
 from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.storage.file_storage import FileStorage
@@ -92,9 +92,5 @@ def create_app(config_class: type[Config] = Config) -> Flask:
         return {
             "has_perm": has_perm,
         }
-
-    @app.teardown_appcontext
-    def shutdown_session(_exception=None):
-        ScopedSession.remove()
 
     return app

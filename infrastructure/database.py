@@ -1,80 +1,320 @@
 from collections.abc import Generator
 from contextlib import contextmanager
-import importlib
+from datetime import datetime, timezone
+import os
+from pathlib import Path
 import sqlite3
-from typing import Any
-
-from sqlalchemy import Engine, create_engine, event
-from sqlalchemy.orm import DeclarativeBase, Session, scoped_session, sessionmaker
 
 from shared.config import Config
 
+SCHEMA_DDL = """
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    is_initial_admin INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_users_email ON users (email);
 
-class Base(DeclarativeBase):
-    """Declarative base class for all SQLAlchemy ORM models."""
+CREATE TABLE IF NOT EXISTS user_permissions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    permission TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_user_permissions_user_id ON user_permissions (user_id);
+
+CREATE TABLE IF NOT EXISTS personas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    gender TEXT NOT NULL DEFAULT 'non-binary',
+    portrait_path TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    appearance TEXT NOT NULL DEFAULT '',
+    is_default INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_personas_user_id ON personas (user_id);
+
+CREATE TABLE IF NOT EXISTS lorebooks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_lorebooks_user_id ON lorebooks (user_id);
+
+CREATE TABLE IF NOT EXISTS lorebook_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    lorebook_id INTEGER NOT NULL REFERENCES lorebooks(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    tags_json TEXT NOT NULL DEFAULT '[]',
+    content TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_lorebook_entries_lorebook_id ON lorebook_entries (lorebook_id);
+
+CREATE TABLE IF NOT EXISTS worldinfos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    icon TEXT,
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_worldinfos_user_id ON worldinfos (user_id);
+
+CREATE TABLE IF NOT EXISTS locations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    worldinfo_id INTEGER NOT NULL REFERENCES worldinfos(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    tags_json TEXT NOT NULL DEFAULT '[]',
+    description TEXT NOT NULL DEFAULT '',
+    background_image_path TEXT,
+    vision_alt_text TEXT
+);
+CREATE INDEX IF NOT EXISTS ix_locations_worldinfo_id ON locations (worldinfo_id);
+
+CREATE TABLE IF NOT EXISTS events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    worldinfo_id INTEGER NOT NULL REFERENCES worldinfos(id) ON DELETE CASCADE,
+    location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    probability INTEGER NOT NULL DEFAULT 50,
+    one_shot INTEGER NOT NULL DEFAULT 0,
+    description TEXT NOT NULL DEFAULT ''
+);
+CREATE INDEX IF NOT EXISTS ix_events_worldinfo_id ON events (worldinfo_id);
+
+CREATE TABLE IF NOT EXISTS characters (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    gender TEXT NOT NULL DEFAULT 'non-binary',
+    visibility TEXT NOT NULL DEFAULT 'private',
+    primary_portrait_path TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    dialogue_examples_json TEXT NOT NULL DEFAULT '[]',
+    linked_lorebook_ids_json TEXT NOT NULL DEFAULT '[]',
+    suggested_worldinfo_id INTEGER REFERENCES worldinfos(id) ON DELETE SET NULL,
+    first_message TEXT NOT NULL DEFAULT '',
+    initial_location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL,
+    initial_relationship INTEGER NOT NULL DEFAULT 0,
+    preferred_location_ids_json TEXT NOT NULL DEFAULT '[]',
+    disliked_location_ids_json TEXT NOT NULL DEFAULT '[]',
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_characters_user_id ON characters (user_id);
+
+CREATE TABLE IF NOT EXISTS character_images (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    character_id INTEGER NOT NULL REFERENCES characters(id) ON DELETE CASCADE,
+    file_path TEXT NOT NULL,
+    unlock_threshold INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS ix_character_images_character_id ON character_images (character_id);
+
+CREATE TABLE IF NOT EXISTS character_sprites (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    character_id INTEGER NOT NULL REFERENCES characters(id) ON DELETE CASCADE,
+    emotion TEXT NOT NULL,
+    variant INTEGER NOT NULL DEFAULT 1,
+    file_path TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_character_sprites_character_id ON character_sprites (character_id);
+
+CREATE TABLE IF NOT EXISTS chat_sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    character_id INTEGER NOT NULL REFERENCES characters(id) ON DELETE CASCADE,
+    persona_id INTEGER NOT NULL REFERENCES personas(id) ON DELETE RESTRICT,
+    active_worldinfo_id INTEGER REFERENCES worldinfos(id) ON DELETE SET NULL,
+    current_location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL,
+    title TEXT NOT NULL DEFAULT 'Chat Session',
+    relationship_value REAL NOT NULL DEFAULT 0.0,
+    events_enabled INTEGER NOT NULL DEFAULT 1,
+    cooldown_counter INTEGER NOT NULL DEFAULT 25,
+    last_message_at TEXT NOT NULL,
+    parent_session_id INTEGER REFERENCES chat_sessions(id) ON DELETE SET NULL,
+    persona_locked INTEGER NOT NULL DEFAULT 0,
+    triggered_event_ids_json TEXT NOT NULL DEFAULT '[]',
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_chat_sessions_user_id ON chat_sessions (user_id);
+CREATE INDEX IF NOT EXISTS ix_chat_sessions_character_id ON chat_sessions (character_id);
+CREATE INDEX IF NOT EXISTS ix_chat_sessions_persona_id ON chat_sessions (persona_id);
+
+CREATE TABLE IF NOT EXISTS chat_messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id INTEGER NOT NULL REFERENCES chat_sessions(id) ON DELETE CASCADE,
+    message_idx INTEGER NOT NULL,
+    role TEXT NOT NULL,
+    english_content TEXT NOT NULL DEFAULT '',
+    localized_content TEXT NOT NULL DEFAULT '',
+    image_path TEXT,
+    image_alt_text TEXT,
+    emotion_tag TEXT,
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_chat_messages_session_id ON chat_messages (session_id);
+
+CREATE TABLE IF NOT EXISTS memories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    chat_session_id INTEGER NOT NULL REFERENCES chat_sessions(id) ON DELETE CASCADE,
+    message_idx INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    tags_json TEXT NOT NULL DEFAULT '[]',
+    summary TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_memories_chat_session_id ON memories (chat_session_id);
+
+CREATE TABLE IF NOT EXISTS translations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_hash TEXT NOT NULL,
+    english_text TEXT NOT NULL,
+    target_language TEXT NOT NULL,
+    translated_text TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_translations_source_hash ON translations (source_hash);
+CREATE INDEX IF NOT EXISTS ix_translations_target_language ON translations (target_language);
+
+CREATE TABLE IF NOT EXISTS system_settings (
+    id INTEGER PRIMARY KEY DEFAULT 1,
+    ollama_url TEXT NOT NULL,
+    comfyui_url TEXT NOT NULL,
+    searxng_url TEXT NOT NULL,
+    searxng_enabled INTEGER NOT NULL DEFAULT 0,
+    roleplay_model TEXT NOT NULL DEFAULT 'llama3:8b',
+    memory_model TEXT NOT NULL DEFAULT 'llama3:8b',
+    assistant_model TEXT NOT NULL DEFAULT 'llama3:8b',
+    vision_model TEXT NOT NULL DEFAULT 'llava:latest',
+    num_ctx INTEGER NOT NULL DEFAULT 4096,
+    temperature REAL NOT NULL DEFAULT 0.7,
+    top_p REAL NOT NULL DEFAULT 0.9,
+    repeat_penalty REAL NOT NULL DEFAULT 1.1,
+    roleplay_prompt TEXT NOT NULL,
+    memory_prompt TEXT NOT NULL,
+    diffuser_prompt TEXT NOT NULL,
+    sparkle_assistant_prompt TEXT NOT NULL,
+    vision_persona_prompt TEXT NOT NULL
+);
+"""
+
+_RESOLVED_DB_PATH: Path | None = None
 
 
-def _build_connect_args(database_uri: str) -> dict[str, Any]:
-    if database_uri.startswith("sqlite"):
-        return {
-            "check_same_thread": False,
-            "timeout": 30.0,
-        }
-    return {}
+def format_datetime(dt: datetime | None) -> str:
+    if dt is None:
+        return datetime.now(timezone.utc).isoformat()
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.isoformat()
 
 
-def configure_sqlite_pragmas(target_engine: Engine) -> None:
-    @event.listens_for(target_engine, "connect")
-    def _set_sqlite_pragma(dbapi_connection: Any, _connection_record: Any) -> None:
-        if isinstance(dbapi_connection, sqlite3.Connection):
-            cursor = dbapi_connection.cursor()
-            try:
-                cursor.execute("PRAGMA journal_mode=WAL;")
-                cursor.execute("PRAGMA busy_timeout=30000;")
-                cursor.execute("PRAGMA synchronous=NORMAL;")
-                cursor.execute("PRAGMA foreign_keys=ON;")
-            finally:
-                cursor.close()
+def parse_datetime(raw: str | datetime | None) -> datetime:
+    if isinstance(raw, datetime):
+        if raw.tzinfo is None:
+            return raw.replace(tzinfo=timezone.utc)
+        return raw
+    if not raw:
+        return datetime.now(timezone.utc)
+    try:
+        dt = datetime.fromisoformat(str(raw))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
+    except ValueError:
+        return datetime.now(timezone.utc)
 
 
-def create_db_engine(database_uri: str = Config.DATABASE_URI) -> Engine:
-    db_engine = create_engine(
-        database_uri,
-        connect_args=_build_connect_args(database_uri),
-        pool_pre_ping=True,
-    )
-    configure_sqlite_pragmas(db_engine)
-    return db_engine
+def _resolve_db_path(target: Path | str | None = None) -> Path:
+    global _RESOLVED_DB_PATH
+    if target is None and _RESOLVED_DB_PATH is not None:
+        return _RESOLVED_DB_PATH
+
+    raw_target = target if target is not None else Config.DATABASE_PATH
+    if isinstance(raw_target, str):
+        if raw_target.startswith("sqlite:///"):
+            raw_target = raw_target[len("sqlite:///") :]
+        candidate = Path(raw_target).resolve()
+    else:
+        candidate = raw_target.resolve()
+
+    parent = candidate.parent
+    try:
+        parent.mkdir(parents=True, exist_ok=True)
+        if os.access(parent, os.W_OK):
+            if target is None:
+                _RESOLVED_DB_PATH = candidate
+            return candidate
+    except OSError:
+        pass
+
+    fallback_dir = Path("/tmp/aimo/data")
+    fallback_dir.mkdir(parents=True, exist_ok=True)
+    fallback_path = fallback_dir / candidate.name
+    if target is None:
+        _RESOLVED_DB_PATH = fallback_path
+    return fallback_path
 
 
-engine: Engine = create_db_engine(Config.DATABASE_URI)
+def configure_sqlite_pragmas(connection: sqlite3.Connection) -> None:
+    cursor = connection.cursor()
+    try:
+        cursor.execute("PRAGMA journal_mode=WAL;")
+        cursor.execute("PRAGMA busy_timeout=30000;")
+        cursor.execute("PRAGMA synchronous=NORMAL;")
+        cursor.execute("PRAGMA foreign_keys=ON;")
+    finally:
+        cursor.close()
 
-session_factory: sessionmaker[Session] = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    expire_on_commit=False,
-    bind=engine,
-)
 
-ScopedSession = scoped_session(session_factory)
+def create_connection(db_path: Path | str | None = None) -> sqlite3.Connection:
+    resolved_path = _resolve_db_path(db_path)
+    try:
+        conn = sqlite3.connect(
+            str(resolved_path),
+            timeout=30.0,
+            check_same_thread=False,
+        )
+    except sqlite3.OperationalError:
+        fallback_dir = Path("/tmp/aimo/data")
+        fallback_dir.mkdir(parents=True, exist_ok=True)
+        fallback_path = fallback_dir / resolved_path.name
+        global _RESOLVED_DB_PATH
+        _RESOLVED_DB_PATH = fallback_path
+        conn = sqlite3.connect(
+            str(fallback_path),
+            timeout=30.0,
+            check_same_thread=False,
+        )
+    conn.row_factory = sqlite3.Row
+    configure_sqlite_pragmas(conn)
+    return conn
 
 
 @contextmanager
-def get_db_session() -> Generator[Session, None, None]:
-    session: Session = session_factory()
+def get_db_session(
+    db_path: Path | str | None = None,
+) -> Generator[sqlite3.Connection, None, None]:
+    conn = create_connection(db_path)
     try:
-        yield session
-        session.commit()
+        yield conn
+        conn.commit()
     except Exception:
-        session.rollback()
+        conn.rollback()
         raise
     finally:
-        session.close()
+        conn.close()
 
 
-def init_db(target_engine: Engine = engine) -> None:
-    try:
-        importlib.import_module("infrastructure.repositories.orm_models")
-    except ModuleNotFoundError:
-        pass
-    Base.metadata.create_all(bind=target_engine)
+def init_db(db_path: Path | str | None = None) -> None:
+    with get_db_session(db_path) as conn:
+        conn.executescript(SCHEMA_DDL)
+        configure_sqlite_pragmas(conn)

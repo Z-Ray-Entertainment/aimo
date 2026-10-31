@@ -2,7 +2,7 @@ import uuid
 from pathlib import Path
 from typing import BinaryIO
 
-from shared.config import Config
+from shared.config import Config, _resolve_writable_dir
 from shared.exceptions import InfrastructureError
 from shared.utils import sanitize_filename
 
@@ -18,7 +18,9 @@ _WEBP_FORMAT_SIGNATURE: bytes = b"WEBP"
 
 class FileStorage:
     def __init__(self, base_upload_dir: Path = Config.UPLOAD_DIR) -> None:
-        self.base_upload_dir: Path = Path(base_upload_dir).resolve()
+        self.base_upload_dir: Path = _resolve_writable_dir(
+            Path(base_upload_dir).resolve(), "uploads"
+        )
         self.portraits_dir: Path = self.base_upload_dir / "portraits"
         self.sprites_dir: Path = self.base_upload_dir / "sprites"
         self.backgrounds_dir: Path = self.base_upload_dir / "backgrounds"
