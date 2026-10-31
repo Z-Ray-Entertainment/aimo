@@ -5,6 +5,8 @@
 > - **Architektur:** Entworfen von Menschen (*Architecture designed by human*)
 > - **Qualitätssicherung:** Code geprüft und getestet von Menschen (*Code reviewed and tested by human*)
 > - **Implementierung:** Großteil des Codes geschrieben von KI (*Most code written by AI*)
+>
+> THIS IS STILL WIP, WHILE IT WORKS IT IS STILL ALPHA
 
 `aimo` ist eine modulare, lokale Rollenspiel-Plattform für interaktives KI-Storytelling und Textadventure-Abenteuer. Das System verbindet modernste lokale Sprach- und Vision-Modelle (Ollama) sowie generative Bild-Pipelines (ComfyUI) mit einem atmosphärischen Tabletop-RPG-Interface.
 
