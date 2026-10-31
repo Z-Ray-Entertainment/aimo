@@ -240,6 +240,8 @@ def view_session(session_id: int):
         else {}
     )
 
+    is_admin = bool(user and (user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS)))
+
     return render_template(
         "chat/session.html",
         chat_session=chat_session,
@@ -261,6 +263,7 @@ def view_session(session_id: int):
         session_media_images=session_media_images,
         sys_lang=sys_lang,
         comfyui_available=comfyui_available,
+        is_admin=is_admin,
     )
 
 

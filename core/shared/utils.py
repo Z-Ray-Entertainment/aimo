@@ -61,13 +61,76 @@ def sanitize_filename(filename: str) -> str:
 _CHAR_PLACEHOLDER_RE = re.compile(r"\{\{\s*char\s*\}\}|\{\s*char\s*\}", re.IGNORECASE)
 _USER_PLACEHOLDER_RE = re.compile(r"\{\{\s*user\s*\}\}|\{\s*user\s*\}", re.IGNORECASE)
 
+_CHAR_GENDER_RE = re.compile(r"\{\{\s*char_gender\s*\}\}|\{\s*char_gender\s*\}", re.IGNORECASE)
+_USER_GENDER_RE = re.compile(r"\{\{\s*user_gender\s*\}\}|\{\s*user_gender\s*\}", re.IGNORECASE)
+
+_CHAR_PRONOUNS_RE = re.compile(r"\{\{\s*char_pronouns\s*\}\}|\{\s*char_pronouns\s*\}", re.IGNORECASE)
+_USER_PRONOUNS_RE = re.compile(r"\{\{\s*user_pronouns\s*\}\}|\{\s*user_pronouns\s*\}", re.IGNORECASE)
+
+_CHAR_SUBJECT_RE = re.compile(r"\{\{\s*char_subject\s*\}\}|\{\s*char_subject\s*\}", re.IGNORECASE)
+_USER_SUBJECT_RE = re.compile(r"\{\{\s*user_subject\s*\}\}|\{\s*user_subject\s*\}", re.IGNORECASE)
+
+_CHAR_OBJECT_RE = re.compile(r"\{\{\s*char_object\s*\}\}|\{\s*char_object\s*\}", re.IGNORECASE)
+_USER_OBJECT_RE = re.compile(r"\{\{\s*user_object\s*\}\}|\{\s*user_object\s*\}", re.IGNORECASE)
+
+_CHAR_POSSESSIVE_RE = re.compile(r"\{\{\s*char_possessive\s*\}\}|\{\s*char_possessive\s*\}", re.IGNORECASE)
+_USER_POSSESSIVE_RE = re.compile(r"\{\{\s*user_possessive\s*\}\}|\{\s*user_possessive\s*\}", re.IGNORECASE)
+
+
+def get_gender_forms(gender: str | None) -> dict[str, str]:
+    raw = (gender or "").strip().lower()
+    if raw == "female":
+        return {
+            "gender": "female",
+            "pronouns": "she/her",
+            "subject": "she",
+            "object": "her",
+            "possessive": "her",
+        }
+    elif raw == "male":
+        return {
+            "gender": "male",
+            "pronouns": "he/him",
+            "subject": "he",
+            "object": "him",
+            "possessive": "his",
+        }
+    else:
+        return {
+            "gender": raw or "non-binary",
+            "pronouns": "they/them",
+            "subject": "they",
+            "object": "them",
+            "possessive": "their",
+        }
+
 
 def replace_roleplay_placeholders(
     text: str,
     character_name: str,
     persona_name: str,
+    character_gender: str | None = None,
+    persona_gender: str | None = None,
 ) -> str:
     if not text:
         return ""
     result = _CHAR_PLACEHOLDER_RE.sub(character_name, text)
-    return _USER_PLACEHOLDER_RE.sub(persona_name, result)
+    result = _USER_PLACEHOLDER_RE.sub(persona_name, result)
+
+    if character_gender is not None:
+        c_forms = get_gender_forms(character_gender)
+        result = _CHAR_GENDER_RE.sub(c_forms["gender"], result)
+        result = _CHAR_PRONOUNS_RE.sub(c_forms["pronouns"], result)
+        result = _CHAR_SUBJECT_RE.sub(c_forms["subject"], result)
+        result = _CHAR_OBJECT_RE.sub(c_forms["object"], result)
+        result = _CHAR_POSSESSIVE_RE.sub(c_forms["possessive"], result)
+
+    if persona_gender is not None:
+        u_forms = get_gender_forms(persona_gender)
+        result = _USER_GENDER_RE.sub(u_forms["gender"], result)
+        result = _USER_PRONOUNS_RE.sub(u_forms["pronouns"], result)
+        result = _USER_SUBJECT_RE.sub(u_forms["subject"], result)
+        result = _USER_OBJECT_RE.sub(u_forms["object"], result)
+        result = _USER_POSSESSIVE_RE.sub(u_forms["possessive"], result)
+
+    return result

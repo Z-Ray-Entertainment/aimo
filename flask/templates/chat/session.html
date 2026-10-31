@@ -73,7 +73,8 @@
           data-character-name="{{ character.name }}"
           data-character-portrait="{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}"
           data-persona-name="{{ persona.name if persona else 'Du' }}"
-          data-persona-portrait="{{ url_for('uploaded_file', filename=persona.portrait_path) if persona else '/static/img/cover.svg' }}">
+          data-persona-portrait="{{ url_for('uploaded_file', filename=persona.portrait_path) if persona else '/static/img/cover.svg' }}"
+          data-is-admin="{{ 'true' if is_admin else 'false' }}">
           {% for msg in messages %}
             {% if msg.role.value == 'character' %}
               <div class="chat-bubble-row character" data-message-idx="{{ msg.message_idx }}">
@@ -82,6 +83,9 @@
                   <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem; font-size: 0.76rem; color: var(--gold-accent);">
                     <strong>{{ character.name }}</strong>
                     <div style="display: flex; gap: 0.4rem;">
+                      {% if is_admin and msg.message_idx > 0 %}
+                        <button type="button" class="btn-prompt-debug" onclick="window.openPromptDebugModal({{ msg.message_idx }})" style="background:none; border:none; color:var(--gold-accent); cursor:pointer; font-family:monospace; font-weight:bold; font-size:0.85rem;" title="LLM-Prompt ansehen (Admin)"><span class="icon-mono">{ }</span></button>
+                      {% endif %}
                       <button type="button" onclick="window.translateChatMessage({{ msg.message_idx }}, this)" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht übersetzen (On-Demand)"><span class="icon-mono">🌐</span></button>
                       <button type="button" onclick="openEditMessageModal({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht bearbeiten"><span class="icon-mono">✏️</span></button>
                       <button type="button" onclick="forkChatAt({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Chat ab hier duplizieren (Fork)"><span class="icon-mono">🌿</span></button>
@@ -373,6 +377,33 @@
     </form>
   </div>
 </div>
+
+{% if is_admin %}
+<!-- Modal: LLM Inferenz Prompt (Admin Debug Overlay) -->
+<div class="modal-backdrop" id="prompt-debug-modal" aria-hidden="true">
+  <div class="modal-frame" style="max-width: 900px; width: 92%; max-height: 85vh; display: flex; flex-direction: column;">
+    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-wood); padding-bottom: 0.6rem; margin-bottom: 0.75rem;">
+      <h3 style="color: var(--gold-accent); margin: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+        <span style="font-family: monospace; font-weight: bold;">{ }</span> LLM Generation Prompt (Admin Debug)
+      </h3>
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <button type="button" class="btn" id="copy-prompt-debug-btn" onclick="copyPromptDebugText()" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
+          📋 Kopieren
+        </button>
+        <button type="button" class="btn" data-modal-close="prompt-debug-modal" style="padding: 0.35rem 0.65rem; font-size: 0.85rem;">
+          ✕
+        </button>
+      </div>
+    </div>
+    <div style="flex: 1; overflow-y: auto; background: rgba(10, 8, 6, 0.75); border: 1px solid var(--border-wood); border-radius: 8px; padding: 0.85rem; margin-bottom: 0.5rem;">
+      <pre id="prompt-debug-content" style="margin: 0; white-space: pre-wrap; word-break: break-word; font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace; font-size: 0.82rem; color: #E8D8C8; line-height: 1.45;"></pre>
+    </div>
+    <div style="text-align: right; font-size: 0.74rem; color: var(--text-muted);">
+      In-Memory Snapshot zum Inferenzzeitpunkt (nicht in Datenbank persistiert)
+    </div>
+  </div>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block extra_scripts %}
@@ -521,5 +552,64 @@
       }
     }
   }
+
+  window._adminPromptCache = window._adminPromptCache || {};
+
+  window.openPromptDebugModal = async function(msgIdx) {
+    const pre = document.getElementById("prompt-debug-content");
+    if (!pre) return;
+
+    pre.textContent = "Lade Prompt aus dem Arbeitsspeicher...";
+    if (window.AimoModals) {
+      window.AimoModals.open("prompt-debug-modal");
+    } else {
+      const modal = document.getElementById("prompt-debug-modal");
+      if (modal) modal.style.display = "flex";
+    }
+
+    if (window._adminPromptCache[msgIdx]) {
+      pre.textContent = window._adminPromptCache[msgIdx];
+      return;
+    }
+
+    const list = document.getElementById("chat-messages-list");
+    const sessionId = list ? list.dataset.sessionId : "{{ chat_session.id }}";
+
+    try {
+      const resp = await fetch(`/api/chat/${sessionId}/messages/${msgIdx}/prompt`);
+      if (!resp.ok) {
+        if (resp.status === 404) {
+          pre.textContent = "Dieser Prompt ist nicht mehr im Arbeitsspeicher vorhanden (Puffer überschritten oder Server wurde neu gestartet).";
+        } else if (resp.status === 403) {
+          pre.textContent = "Zugriff verweigert: Nur Administratoren dürfen Prompts einsehen.";
+        } else {
+          pre.textContent = `Fehler beim Abrufen des Prompts (HTTP ${resp.status}).`;
+        }
+        return;
+      }
+      const data = await resp.json();
+      if (data && data.prompt) {
+        window._adminPromptCache[msgIdx] = data.prompt;
+        pre.textContent = data.prompt;
+      } else {
+        pre.textContent = "Kein Prompt für diese Nachricht im Arbeitsspeicher verfügbar.";
+      }
+    } catch (err) {
+      pre.textContent = `Netzwerkfehler: ${err.message}`;
+    }
+  };
+
+  window.copyPromptDebugText = function() {
+    const pre = document.getElementById("prompt-debug-content");
+    if (!pre || !pre.textContent) return;
+    navigator.clipboard.writeText(pre.textContent).then(() => {
+      const btn = document.getElementById("copy-prompt-debug-btn");
+      if (btn) {
+        const orig = btn.textContent;
+        btn.textContent = "✓ Kopiert!";
+        setTimeout(() => { btn.textContent = orig; }, 1800);
+      }
+    });
+  };
 </script>
 {% endblock %}

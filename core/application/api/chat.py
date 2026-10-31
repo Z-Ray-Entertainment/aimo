@@ -48,6 +48,7 @@ class _BackgroundTurnTask:
         user_language: str = "de",
         has_image: bool = False,
         user_message_idx: int = 0,
+        is_admin: bool = False,
     ) -> None:
         self.task_id: str = uuid.uuid4().hex
         self.session_id: int = session_id
@@ -55,6 +56,8 @@ class _BackgroundTurnTask:
         self.user_language: str = user_language
         self.has_image: bool = has_image
         self.user_message_idx: int = user_message_idx
+        self.is_admin: bool = is_admin
+        self.assembled_prompt: str | None = None
         self.image_analyzed: bool = False
         self.image_alt_text: str | None = None
         self.condition: threading.Condition = threading.Condition()
@@ -70,6 +73,16 @@ class _BackgroundTurnTask:
 _TASKS_LOCK = threading.Lock()
 _BACKGROUND_TASKS: dict[int, _BackgroundTurnTask] = {}
 _USER_NOTIFICATIONS: dict[int, list[dict]] = {}
+_ADMIN_PROMPT_CACHE: dict[tuple[int, int], str] = {}
+_ADMIN_PROMPT_MAX_ENTRIES: int = 150
+
+
+def _record_admin_prompt(session_id: int, message_idx: int, prompt: str) -> None:
+    with _TASKS_LOCK:
+        if len(_ADMIN_PROMPT_CACHE) >= _ADMIN_PROMPT_MAX_ENTRIES:
+            oldest_key = next(iter(_ADMIN_PROMPT_CACHE))
+            _ADMIN_PROMPT_CACHE.pop(oldest_key, None)
+        _ADMIN_PROMPT_CACHE[(session_id, message_idx)] = prompt
 
 
 def _extract_active_tags(text: str) -> list[str]:
@@ -141,6 +154,7 @@ def _start_background_turn(
     user_text: str,
     user_language: str,
     uploaded_image_file=None,
+    is_admin: bool = False,
 ) -> tuple[_BackgroundTurnTask, Message, dict | None]:
     chat_repo = ChatRepository()
     char_repo = CharacterRepository()
@@ -216,6 +230,7 @@ def _start_background_turn(
         user_language=user_language,
         has_image=bool(image_path),
         user_message_idx=saved_user_msg.message_idx,
+        is_admin=is_admin,
     )
     with _TASKS_LOCK:
         _BACKGROUND_TASKS[session_id] = task
@@ -363,10 +378,20 @@ def _start_background_turn(
                 available_locations=available_locations,
                 relationship_value=w_session.relationship_value,
             )
+            if task.is_admin:
+                task.assembled_prompt = assembled_prompt
 
             with task.condition:
                 task.status = "streaming"
                 task.condition.notify_all()
+
+            stop_sequences = [
+                f"\n{w_persona.name}:",
+                f"\n{w_persona.name} (Player):",
+                f"\n[{w_persona.name}]:",
+                "\n[USER_PERSONA]",
+                "\n[CHAT_HISTORY]",
+            ]
 
             full_english_chunks: list[str] = []
             try:
@@ -374,6 +399,7 @@ def _start_background_turn(
                     prompt=assembled_prompt,
                     model=settings.tasks.roleplay_model,
                     params=settings.params,
+                    stop=stop_sequences,
                 ):
                     full_english_chunks.append(token)
                     with task.condition:
@@ -388,8 +414,16 @@ def _start_background_turn(
                         task.condition.notify_all()
 
             raw_reply = "".join(full_english_chunks).strip()
+            for stop_seq in stop_sequences:
+                if stop_seq.strip() and stop_seq in raw_reply:
+                    raw_reply = raw_reply.split(stop_seq)[0].strip()
+
             english_reply = replace_roleplay_placeholders(
-                raw_reply, w_character.name, w_persona.name
+                raw_reply,
+                w_character.name,
+                w_persona.name,
+                character_gender=w_character.gender.value,
+                persona_gender=w_persona.gender.value,
             )
             with task.condition:
                 task.english_reply = english_reply
@@ -459,6 +493,8 @@ def _start_background_turn(
                 created_at=datetime.now(timezone.utc),
             )
             saved_ai_msg = w_chat_repo.add_message(ai_msg)
+            if task.is_admin and task.assembled_prompt:
+                _record_admin_prompt(session_id, saved_ai_msg.message_idx, task.assembled_prompt)
 
             latest_session = w_chat_repo.get_session(session_id) or w_session
             if latest_session.active_worldinfo_id and latest_session.events_enabled:
@@ -483,6 +519,8 @@ def _start_background_turn(
                 "relationship_value": latest_session.relationship_value,
                 "suggested_location": suggested_location,
             }
+            if task.is_admin and task.assembled_prompt:
+                payload["prompt"] = task.assembled_prompt
 
             with _TASKS_LOCK:
                 user_notifs = _USER_NOTIFICATIONS.setdefault(w_session.user_id, [])
@@ -578,6 +616,7 @@ def _stream_from_task(task: _BackgroundTurnTask):
 def post_message(session_id: int):
     user = get_current_user()
     assert user is not None
+    is_admin = bool(user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS))
     if request.is_json:
         data = request.get_json(silent=True) or {}
         user_text = str(data.get("message", "")).strip()
@@ -599,6 +638,7 @@ def post_message(session_id: int):
             user_text=user_text,
             user_language=user_lang,
             uploaded_image_file=uploaded_file,
+            is_admin=is_admin,
         )
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 400
@@ -629,6 +669,8 @@ def post_message(session_id: int):
 @api_chat_bp.route("/<int:session_id>/stream", methods=["GET"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def stream_session_response(session_id: int):
+    user = get_current_user()
+    is_admin = bool(user and (user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS)))
     user_lang = request.args.get("language", "de")
     msg_text = request.args.get("message", "").strip()
 
@@ -638,6 +680,7 @@ def stream_session_response(session_id: int):
                 session_id=session_id,
                 user_text=msg_text,
                 user_language=user_lang,
+                is_admin=is_admin,
             )
         except AimoError as exc:
             return jsonify({"error": str(exc)}), 400
@@ -672,6 +715,23 @@ def get_session_generation_status(session_id: int):
                 "has_image": task.has_image,
             }
         )
+
+
+@api_chat_bp.route("/<int:session_id>/messages/<int:message_idx>/prompt", methods=["GET"])
+@require_permission(FunctionPermission.ADMIN_ACCESS)
+def get_message_prompt(session_id: int, message_idx: int):
+    with _TASKS_LOCK:
+        prompt = _ADMIN_PROMPT_CACHE.get((session_id, message_idx))
+    if prompt is None:
+        return jsonify({
+            "error": "Prompt not available in memory.",
+            "prompt": None,
+        }), 404
+    return jsonify({
+        "session_id": session_id,
+        "message_idx": message_idx,
+        "prompt": prompt,
+    })
 
 
 @api_chat_bp.route("/notifications", methods=["GET"])

@@ -25,13 +25,20 @@ class OllamaLLMProvider(LLMProvider):
         self.pull_timeout: tuple[float, float] = pull_timeout
 
     def generate_stream(
-        self, prompt: str, model: str, params: ModelParameters
+        self,
+        prompt: str,
+        model: str,
+        params: ModelParameters,
+        stop: list[str] | None = None,
     ) -> Iterator[str]:
+        options = self._build_options(params)
+        if stop:
+            options["stop"] = stop
         payload: dict[str, Any] = {
             "model": model,
             "prompt": prompt,
             "stream": True,
-            "options": self._build_options(params),
+            "options": options,
         }
         try:
             with requests.post(
@@ -64,12 +71,21 @@ class OllamaLLMProvider(LLMProvider):
                 f"Failed to stream response from Ollama at '{self.base_url}': {exc}"
             ) from exc
 
-    def generate(self, prompt: str, model: str, params: ModelParameters) -> str:
+    def generate(
+        self,
+        prompt: str,
+        model: str,
+        params: ModelParameters,
+        stop: list[str] | None = None,
+    ) -> str:
+        options = self._build_options(params)
+        if stop:
+            options["stop"] = stop
         payload: dict[str, Any] = {
             "model": model,
             "prompt": prompt,
             "stream": False,
-            "options": self._build_options(params),
+            "options": options,
         }
         try:
             response = requests.post(

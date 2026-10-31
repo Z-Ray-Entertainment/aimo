@@ -8,12 +8,22 @@ from domain.settings.models import ModelParameters
 class LLMProvider(ABC):
     @abstractmethod
     def generate_stream(
-        self, prompt: str, model: str, params: ModelParameters
+        self,
+        prompt: str,
+        model: str,
+        params: ModelParameters,
+        stop: list[str] | None = None,
     ) -> Iterator[str]:
         raise NotImplementedError
 
     @abstractmethod
-    def generate(self, prompt: str, model: str, params: ModelParameters) -> str:
+    def generate(
+        self,
+        prompt: str,
+        model: str,
+        params: ModelParameters,
+        stop: list[str] | None = None,
+    ) -> str:
         raise NotImplementedError
 
     @abstractmethod

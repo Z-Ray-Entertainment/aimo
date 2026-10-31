@@ -138,15 +138,21 @@ class AimoChatStream {
       characterPortrait: list?.getAttribute("data-character-portrait") || "/static/img/cover.svg",
       personaName: list?.getAttribute("data-persona-name") || "Du",
       personaPortrait: list?.getAttribute("data-persona-portrait") || "/static/img/cover.svg",
+      isAdmin: list?.getAttribute("data-is-admin") === "true",
     };
   }
 
   buildActionButtonsHtml(msgIdx, isCharacter) {
+    const meta = this.getChatMetadata();
     const deleteBtn =
       !isCharacter || msgIdx > 0
         ? `<button type="button" onclick="deleteMessagesFrom(${msgIdx})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Ab hier löschen"><span class="icon-mono">🗑️</span></button>`
         : "";
+    const promptDebugBtn = (isCharacter && meta.isAdmin && msgIdx > 0)
+      ? `<button type="button" class="btn-prompt-debug" onclick="window.openPromptDebugModal(${msgIdx})" style="background:none; border:none; color:var(--gold-accent); cursor:pointer; font-family:monospace; font-weight:bold; font-size:0.85rem;" title="LLM-Prompt ansehen (Admin)"><span class="icon-mono">{ }</span></button>`
+      : "";
     return `
+      ${promptDebugBtn}
       <button type="button" onclick="window.translateChatMessage(${msgIdx}, this)" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht übersetzen (On-Demand)"><span class="icon-mono">🌐</span></button>
       <button type="button" onclick="openEditMessageModal(${msgIdx})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht bearbeiten"><span class="icon-mono">✏️</span></button>
       <button type="button" onclick="forkChatAt(${msgIdx})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Chat ab hier duplizieren (Fork)"><span class="icon-mono">🌿</span></button>
@@ -482,6 +488,11 @@ class AimoChatStream {
 
         if (ui.thinkingBox) ui.thinkingBox.remove();
         if (ui.statusEl) ui.statusEl.remove();
+
+        if (data.prompt && data.message_idx !== undefined) {
+          window._adminPromptCache = window._adminPromptCache || {};
+          window._adminPromptCache[data.message_idx] = data.prompt;
+        }
 
         const finalContent = data.localized_content || data.english_content || "";
         const finalDiv = document.createElement("div");

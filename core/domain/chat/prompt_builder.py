@@ -4,7 +4,7 @@ from domain.lorebooks.models import LorebookEntry
 from domain.memories.models import Memory
 from domain.personas.models import UserPersona
 from domain.worldinfo.models import Event, Location, WorldInfo
-from shared.utils import replace_roleplay_placeholders
+from shared.utils import get_gender_forms, replace_roleplay_placeholders
 
 
 class PromptBuilder:
@@ -52,16 +52,24 @@ class PromptBuilder:
             f"[RELEVANT_MEMORIES]\n{memories_section}\n[/RELEVANT_MEMORIES]\n\n"
             f"[RELEVANT_LOREBOOKS]\n{lorebooks_section}\n[/RELEVANT_LOREBOOKS]"
         )
-        return replace_roleplay_placeholders(assembled, character.name, persona.name)
+        return replace_roleplay_placeholders(
+            assembled,
+            character.name,
+            persona.name,
+            character_gender=character.gender.value,
+            persona_gender=persona.gender.value,
+        )
 
     @staticmethod
     def _format_character_definition(
         character: Character,
         relationship_value: float,
     ) -> str:
+        c_forms = get_gender_forms(character.gender.value)
         lines = [
+            f"Role: You play this character ({character.name}). Embody these traits and voice exclusively:",
             f"Name: {character.name}",
-            f"Gender: {character.gender.value}",
+            f"Gender: {character.gender.value} ({c_forms['pronouns']})",
             f"Current Affection / Relationship Score (-100 to +100): {relationship_value:.1f}",
             f"Description & Personality:\n{character.description.strip()}",
         ]
@@ -72,9 +80,11 @@ class PromptBuilder:
 
     @staticmethod
     def _format_user_persona(persona: UserPersona) -> str:
+        u_forms = get_gender_forms(persona.gender.value)
         lines = [
+            f"Role: This is your conversation partner ({persona.name}). You are NOT this person. NEVER speak, act, think, or decide on behalf of {persona.name}:",
             f"Name: {persona.name}",
-            f"Gender: {persona.gender.value}",
+            f"Gender: {persona.gender.value} ({u_forms['pronouns']})",
         ]
         if persona.description.strip():
             lines.append(f"Background & Personality: {persona.description.strip()}")
@@ -145,7 +155,7 @@ class PromptBuilder:
 
         lines: list[str] = []
         for msg in narrative_messages:
-            speaker = persona_name if msg.role == MessageRole.USER else character_name
+            speaker = f"{persona_name} (Player)" if msg.role == MessageRole.USER else f"{character_name} (You)"
             content = msg.english_content.strip()
             if msg.image_alt_text and msg.image_alt_text.strip():
                 alt = msg.image_alt_text.strip()

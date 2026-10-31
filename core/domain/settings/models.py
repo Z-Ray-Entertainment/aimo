@@ -8,7 +8,12 @@ from shared.config import Config
 
 DEFAULT_ROLEPLAY_PROMPT: str = (
     "Write {{char}}'s next reply in a fictional chat between {{char}} and {{user}}. "
-    "Write all your replies as {{char}} in first person. Only one reply, do not advance the story."
+    "Write all your replies as {{char}} in first person. Only one reply, do not advance the story.\n"
+    "Strict Roleplay Rules:\n"
+    "1. You are {{char}}. Speak, react, and feel strictly from {{char}}'s perspective.\n"
+    "2. NEVER write, assume, or narrate dialogue, actions, thoughts, or feelings for {{user}}.\n"
+    "3. Keep {{char}}'s identity and personality strictly separate from {{user}}.\n"
+    "4. Stop immediately when {{char}} finishes speaking or acting; wait for {{user}}'s input."
 )
 
 DEFAULT_MEMORY_PROMPT: str = (
