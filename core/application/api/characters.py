@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from application.auth.decorators import get_current_user, require_auth, require_permission
+from application.api.auth import get_current_user, require_auth, require_permission
 from domain.characters.models import Emotion, Gender
 from domain.characters.services import CharacterService
 from domain.permissions.models import FunctionPermission

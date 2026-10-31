@@ -1,17 +1,23 @@
+import os
+from pathlib import Path
+import sys
+
+FLASK_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = FLASK_DIR.parent
+CORE_DIR = PROJECT_ROOT / "core"
+
+for path_entry in (str(CORE_DIR), str(FLASK_DIR)):
+    if path_entry in sys.path:
+        sys.path.remove(path_entry)
+    sys.path.insert(0, path_entry)
+
 from flask import Flask, abort, g, redirect, request, send_from_directory, url_for
 
 from application.admin import admin_bp
-from application.api import (
-    api_admin_bp,
-    api_characters_bp,
-    api_chat_bp,
-    api_lorebooks_bp,
-    api_personas_bp,
-    api_worldinfo_bp,
-)
 from application.auth import auth_bp, get_current_permissions, get_current_user, has_perm
 from application.characters import characters_bp
 from application.chat import chat_bp
+from application.core_client import core_proxy_bp
 from application.lorebooks import lorebooks_bp
 from application.overview import overview_bp
 from application.personas import personas_bp
@@ -26,11 +32,11 @@ from shared.config import Config
 from shared.exceptions import InfrastructureError
 
 
-def create_app(config_class: type[Config] = Config) -> Flask:
+def create_webui_app(config_class: type[Config] = Config) -> Flask:
     app = Flask(
         __name__,
-        static_folder=str(config_class.BASE_DIR / "static"),
-        template_folder=str(config_class.BASE_DIR / "templates"),
+        static_folder=str(FLASK_DIR / "static"),
+        template_folder=str(FLASK_DIR / "templates"),
     )
     app.config.from_object(config_class)
     app.secret_key = config_class.SECRET_KEY
@@ -47,13 +53,7 @@ def create_app(config_class: type[Config] = Config) -> Flask:
     app.register_blueprint(worldinfo_bp)
     app.register_blueprint(chat_bp)
     app.register_blueprint(admin_bp)
-
-    app.register_blueprint(api_admin_bp)
-    app.register_blueprint(api_characters_bp)
-    app.register_blueprint(api_chat_bp)
-    app.register_blueprint(api_lorebooks_bp)
-    app.register_blueprint(api_personas_bp)
-    app.register_blueprint(api_worldinfo_bp)
+    app.register_blueprint(core_proxy_bp)
 
     @app.route("/uploads/<path:filename>")
     def uploaded_file(filename: str):
@@ -63,7 +63,7 @@ def create_app(config_class: type[Config] = Config) -> Flask:
         except InfrastructureError:
             abort(404)
         if not resolved.is_file():
-            return send_from_directory(str(config_class.BASE_DIR / "static" / "img"), "cover.svg")
+            return send_from_directory(str(FLASK_DIR / "static" / "img"), "cover.svg")
         rel = resolved.relative_to(storage.base_upload_dir)
         return send_from_directory(str(storage.base_upload_dir), str(rel))
 
@@ -85,10 +85,14 @@ def create_app(config_class: type[Config] = Config) -> Flask:
             persona_repo = PersonaRepository()
             trans_repo = TranslationRepository()
             personas = persona_repo.list_for_user(user.id)
-            g.default_persona = next((p for p in personas if p.is_default), personas[0] if personas else None)
+            g.default_persona = next(
+                (p for p in personas if p.is_default), personas[0] if personas else None
+            )
             persona_items = []
             for p in personas:
-                p_trans = trans_repo.get_entity_translations_map("persona", p.id) if p.id else {}
+                p_trans = (
+                    trans_repo.get_entity_translations_map("persona", p.id) if p.id else {}
+                )
                 persona_items.append(
                     {
                         "persona": p,
@@ -110,3 +114,13 @@ def create_app(config_class: type[Config] = Config) -> Flask:
         }
 
     return app
+
+
+create_app = create_webui_app
+
+if __name__ == "__main__":
+    application = create_webui_app()
+    host = os.getenv("AIMO_HOST", "0.0.0.0")
+    port = int(os.getenv("AIMO_PORT", "5000"))
+    debug = os.getenv("AIMO_DEBUG", "false").lower() in ("1", "true", "yes")
+    application.run(host=host, port=port, debug=debug, threaded=True)

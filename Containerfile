@@ -27,4 +27,4 @@ VOLUME ["/app/data", "/app/uploads"]
 
 EXPOSE 5000
 
-CMD ["python", "wsgi.py"]
+CMD ["python", "aimo_flask.py"]

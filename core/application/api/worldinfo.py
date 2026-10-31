@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from application.auth.decorators import get_current_user, require_auth, require_permission
+from application.api.auth import get_current_user, require_auth, require_permission
 from domain.permissions.models import FunctionPermission
 from domain.worldinfo.services import WorldInfoService
 from infrastructure.llm.factory import get_llm_provider

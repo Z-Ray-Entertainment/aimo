@@ -71,9 +71,18 @@ source venv/bin/activate
 # Abhängigkeiten installieren
 pip install -r requirements.txt
 
-# Server starten
-python wsgi.py
-# Läuft auf http://localhost:5000
+# Variante 1: Kombi-Start via Wrapper (generiert automatisch einen UUID4 CLIENT_KEY,
+# startet den Core auf Port 5001 und anschließend die Flask Web-UI auf Port 5000)
+python aimo_flask.py
+
+# Variante 2: Core und Flask Web-UI getrennt als Standalone-Services starten
+# Terminal 1 — Headless Core starten (CLIENT_KEY ist Pflicht):
+export CLIENT_KEY="$(uuidgen)"
+python core/wsgi.py
+
+# Terminal 2 — Flask Web-UI mit demselben CLIENT_KEY starten:
+export CLIENT_KEY="<derselbe-client-key>"
+python flask/wsgi.py
 ```
 
 ---
@@ -101,14 +110,22 @@ Ausführliche Anleitungen für alle Aspekte der Anwendung findest du im Ordner [
 ### Schichtenmodell (Domain-Driven Design)
 ```
 aimo/
-├── domain/            # Reine Geschäftslogik (kein I/O, kein HTTP, kein DB)
-├── infrastructure/    # SQLite WAL, Repositories, Modulare Provider (Ollama, ComfyUI, TTS)
-├── application/       # Views, Formulare, Decorators & REST-API (/api/...)
-├── shared/            # Config via Env, bcrypt, Tag-Overlap-Helper, Exceptions
-├── static/            # Modernes RPG-Theme CSS (theme.css), JS (SSE Stream, Countdown)
-├── templates/         # Jinja2-HTML-Templates (Modulare Templates)
-├── tasks/             # Atomare Implementierungs-Tasks (001 bis 022)
-└── docs/              # Ausführliche Endbenutzer-Dokumentation
+├── core/                  # Standalone Headless Core Service (erfordert CLIENT_KEY)
+│   ├── domain/            # Reine Geschäftslogik (kein I/O, kein HTTP, kein DB)
+│   ├── infrastructure/    # SQLite WAL, Repositories, Modulare Provider (Ollama, ComfyUI, TTS)
+│   ├── application/api/   # REST-API Endpunkte (/api/...) gesichert via CLIENT_KEY
+│   ├── shared/            # Config via Env, bcrypt, Tag-Overlap-Helper, Exceptions
+│   ├── app.py             # Core Application Factory
+│   └── wsgi.py            # Core Standalone Entry Point
+├── flask/                 # Standalone Flask Web-UI Service
+│   ├── application/       # Web-Views, Formulare, Decorators & Core-API-Proxy
+│   ├── static/            # Modernes RPG-Theme CSS (theme.css), JS (SSE Stream, Countdown)
+│   ├── templates/         # Jinja2-HTML-Templates (Modulare Templates)
+│   ├── app.py             # Web-UI Application Factory
+│   └── wsgi.py            # Web-UI Standalone Entry Point
+├── aimo_flask.py          # Wrapper-Script (erzeugt UUID4 CLIENT_KEY, startet Core & Web-UI)
+├── tasks/                 # Atomare Implementierungs-Tasks (001 bis 022)
+└── docs/                  # Ausführliche Endbenutzer-Dokumentation
 ```
 
 ---

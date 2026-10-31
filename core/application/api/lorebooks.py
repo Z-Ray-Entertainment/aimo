@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from application.auth.decorators import get_current_user, require_auth, require_permission
+from application.api.auth import get_current_user, require_auth, require_permission
 from domain.lorebooks.services import LorebookService
 from domain.permissions.models import FunctionPermission
 from infrastructure.repositories.lorebook_repository import LorebookRepository

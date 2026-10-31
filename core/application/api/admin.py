@@ -2,7 +2,7 @@ import json
 
 from flask import Blueprint, Response, jsonify, request, stream_with_context
 
-from application.auth.decorators import require_permission
+from application.api.auth import require_permission
 from domain.permissions.models import FunctionPermission
 from infrastructure.image_gen.factory import get_image_gen_provider
 from infrastructure.llm.factory import get_llm_provider

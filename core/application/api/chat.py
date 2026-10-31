@@ -7,7 +7,7 @@ import uuid
 
 from flask import Blueprint, Response, jsonify, request, stream_with_context
 
-from application.auth.decorators import get_current_user, require_permission
+from application.api.auth import get_current_user, require_permission
 from domain.characters.models import Emotion
 from domain.characters.services import CharacterService
 from domain.chat.models import Message, MessageRole

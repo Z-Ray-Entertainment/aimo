@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from application.auth.decorators import get_current_user, require_auth, require_permission
+from application.api.auth import get_current_user, require_auth, require_permission
 from domain.permissions.models import FunctionPermission
 from domain.personas.models import Gender
 from domain.personas.services import PersonaService
