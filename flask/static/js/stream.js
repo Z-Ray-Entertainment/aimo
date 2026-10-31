@@ -604,9 +604,14 @@ class AimoChatStream {
           messagesList.appendChild(notice);
           messagesList.scrollTop = messagesList.scrollHeight;
         }
-        const stage = document.getElementById("chat-main-stage");
-        if (stage && resData.location?.background_image_path) {
-          stage.style.backgroundImage = `url('/uploads/${resData.location.background_image_path}')`;
+        const backdrop = document.getElementById("chat-location-backdrop");
+        if (backdrop && resData.location?.background_image_path) {
+          backdrop.style.backgroundImage = `url('/uploads/${resData.location.background_image_path}')`;
+          backdrop.classList.add("has-image");
+        }
+        const locIndicator = document.getElementById("chat-location-indicator");
+        if (locIndicator && resData.location?.name) {
+          locIndicator.innerHTML = `📍 Ort: <strong>${escapeHtml(resData.location.name)}</strong>`;
         }
       }
     });

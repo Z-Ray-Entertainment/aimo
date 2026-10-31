@@ -37,6 +37,8 @@
       </div>
     </header>
 
+    {% block page_backdrop %}{% endblock %}
+
     <main class="main-container">
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}

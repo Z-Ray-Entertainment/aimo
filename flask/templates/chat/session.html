@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% block title %}AIMO — {{ chat_session.title }} ({{ character.name }}){% endblock %}
 
+{% block page_backdrop %}
+  <div id="chat-location-backdrop" class="chat-location-backdrop{% if current_location and current_location.background_image_path %} has-image{% endif %}"
+    {% if current_location and current_location.background_image_path %}
+      style="background-image: url('{{ url_for('uploaded_file', filename=current_location.background_image_path) }}');"
+    {% endif %}>
+  </div>
+{% endblock %}
+
 {% block content %}
 <div class="chat-layout">
   <!-- Linke Seitenleiste: Multi-Chat-Sessions -->
@@ -33,10 +41,7 @@
   </aside>
 
   <!-- Mittlere Hauptbühne: 3-Reiter-Navigation (Chat, Medien, Erinnerungen) -->
-  <section id="chat-main-stage" class="wood-frame chat-main-stage"
-    {% if current_location and current_location.background_image_path %}
-      style="background-image: url('{{ url_for('uploaded_file', filename=current_location.background_image_path) }}');"
-    {% endif %}>
+  <section id="chat-main-stage" class="wood-frame chat-main-stage">
     <div class="chat-stage-overlay" data-tab-group>
       <!-- Top Bar mit 3 Reitern -->
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem; border-bottom: 2px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
@@ -52,7 +57,7 @@
           </button>
         </div>
 
-        <div style="font-size: 0.85rem; color: var(--gold-accent);">
+        <div id="chat-location-indicator" style="font-size: 0.85rem; color: var(--gold-accent);">
           {% if current_location %}
             📍 Ort: <strong>{{ current_location.name }}</strong>
           {% elif worldinfo %}
@@ -560,9 +565,14 @@
         messagesList.appendChild(notice);
         messagesList.scrollTop = messagesList.scrollHeight;
       }
-      const stage = document.getElementById("chat-main-stage");
-      if (stage && resData.location?.background_image_path) {
-        stage.style.backgroundImage = `url('/uploads/${resData.location.background_image_path}')`;
+      const backdrop = document.getElementById("chat-location-backdrop");
+      if (backdrop && resData.location?.background_image_path) {
+        backdrop.style.backgroundImage = `url('/uploads/${resData.location.background_image_path}')`;
+        backdrop.classList.add("has-image");
+      }
+      const locIndicator = document.getElementById("chat-location-indicator");
+      if (locIndicator && resData.location?.name) {
+        locIndicator.innerHTML = `📍 Ort: <strong>${escapeHtml(resData.location.name)}</strong>`;
       }
     }
   }
