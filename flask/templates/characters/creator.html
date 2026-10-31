@@ -39,12 +39,18 @@
   <section id="tab-char-info" class="tab-pane {% if active_tab != 'sprites' %}active{% endif %}">
     <form id="character-main-form" method="POST" action="{% if character %}{{ url_for('characters.edit_character', character_id=character.id) }}{% else %}{{ url_for('characters.new_character') }}{% endif %}" enctype="multipart/form-data" class="wood-frame" style="padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
       <div>
-        <label>Name des Charakters *</label>
+        <label>
+          Name des Charakters *
+          <span class="field-help-btn" title="Name des Charakters:&#10;Der eindeutige Rufname deiner KI-Figur. Dieser Name wird im Chat als Sprecher angezeigt und ersetzt {{char}} in allen System- und Rollenspiel-Prompts.">?</span>
+        </label>
         <input type="text" id="char-name-input" name="name" value="{{ form.name }}" required>
       </div>
       <div style="display: flex; gap: 1rem;">
         <div style="flex: 1;">
-          <label>Geschlecht *</label>
+          <label>
+            Geschlecht *
+            <span class="field-help-btn" title="Geschlecht &amp; Pronomen:&#10;Legt das Geschlecht fest. Passende Pronomen (she/her, he/him, they/them) werden abgeleitet und in den System-Prompt injiziert.">?</span>
+          </label>
           <select name="gender">
             <option value="female" {% if form.gender == 'female' %}selected{% endif %}>Weiblich (female)</option>
             <option value="male" {% if form.gender == 'male' %}selected{% endif %}>Männlich (male)</option>
@@ -52,7 +58,10 @@
           </select>
         </div>
         <div style="flex: 1;">
-          <label>Sichtbarkeit</label>
+          <label>
+            Sichtbarkeit
+            <span class="field-help-btn" title="Sichtbarkeit:&#10;Privat = Nur in deinem Account sichtbar und spielbar.&#10;Öffentlich = Alle Benutzer im Hub können diesen Charakter sehen und Chats starten.">?</span>
+          </label>
           <select name="visibility">
             <option value="private" {% if form.visibility == 'private' %}selected{% endif %}>Privat</option>
             <option value="public" {% if form.visibility == 'public' %}selected{% endif %}>Öffentlich</option>
@@ -61,7 +70,10 @@
       </div>
 
       <div>
-        <label>Primary Portrait (Pflicht-Upload) {% if not character %}*{% endif %}</label>
+        <label>
+          Primary Portrait (Pflicht-Upload) {% if not character %}*{% endif %}
+          <span class="field-help-btn" title="Primary Portrait (Haupt-Avatar):&#10;Das repräsentative Porträt des Charakters für den Chat und die Hub-Übersicht.">?</span>
+        </label>
         <div style="display: flex; gap: 0.85rem; align-items: center; margin-top: 0.35rem;">
           <div id="portrait-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 68px; height: 86px; border-radius: 8px; border: 2px solid var(--gold-accent); overflow: hidden; flex-shrink: 0; background: rgba(15, 11, 8, 0.9);">
             <img id="portrait-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}{% endif %}" alt="Portrait Preview" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
@@ -78,13 +90,19 @@
         </div>
       </div>
       <div>
-        <label>Initialer Beziehungswert (-100 bis +100)</label>
+        <label>
+          Initialer Beziehungswert (-100 bis +100)
+          <span class="field-help-btn" title="Initialer Beziehungswert (-100.0 bis +100.0):&#10;Startwert der Zuneigung (-100 = tiefe Feindschaft, +100 = höchstes Vertrauen/Liebe). Jede Spielernachricht erhöht den Wert um +0.1; bei Inaktivität sinkt er um -0.1 pro Tag. Höhere Werte schalten Galeriebilder frei.">?</span>
+        </label>
         <input type="number" name="initial_relationship" min="-100" max="100" value="{{ form.initial_relationship }}">
       </div>
 
       <div style="grid-column: 1 / -1;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-          <label>Charakterbeschreibung & Persönlichkeit *</label>
+          <label>
+            Charakterbeschreibung & Persönlichkeit *
+            <span class="field-help-btn" title="Charakterbeschreibung &amp; Persönlichkeit:&#10;Kernidentität der Figur (Wesen, Aussehen, Eigenarten, Hintergrundgeschichte, Ängste, Motivationen). Tipp: Nutze '✨ KI-Autor Optimierung'.">?</span>
+          </label>
           <button type="button" id="sparkle-improve-btn" class="btn btn-sparkle">
             <span class="icon-sparkle">✨</span> KI-Autor Optimierung
           </button>
@@ -102,7 +120,10 @@
       </div>
 
       <div>
-        <label>Gesprächsbeispiele (Ein Beispiel pro Zeile)</label>
+        <label>
+          Gesprächsbeispiele (Ein Beispiel pro Zeile)
+          <span class="field-help-btn" title="Gesprächsbeispiele (Few-Shot):&#10;Typische Zitate oder kurze Dialogbeispiele (eines pro Zeile). Die KI orientiert sich an diesen Beispielen für Tonfall, Dialekt und sprachliche Eigenheiten.">?</span>
+        </label>
         <input type="hidden" name="i18n_dialogue_examples" id="i18n-input-char-dialogue" value='{{ (field_translations.get("dialogue_examples", {}) if field_translations is defined else {}) | tojson }}'>
         <textarea
           name="dialogue_examples"
@@ -113,7 +134,10 @@
           data-i18n-hidden="i18n-input-char-dialogue">{{ form.dialogue_examples_text }}</textarea>
       </div>
       <div>
-        <label>First Message (Welcome Message beim ersten Chat) *</label>
+        <label>
+          First Message (Welcome Message beim ersten Chat) *
+          <span class="field-help-btn" title="First Message (Begrüßung):&#10;Die direkte erste Begrüßung des Charakters an den Spieler.&#10;WICHTIG: Keine Raumszene, Wetter oder Umgebung in der 3. Person beschreiben (das verleitet die KI zur Erzählerrolle). Ausgangsszenen und Orte gehören in die WorldInfo!">?</span>
+        </label>
         <input type="hidden" name="i18n_first_message" id="i18n-input-char-first-msg" value='{{ (field_translations.get("first_message", {}) if field_translations is defined else {}) | tojson }}'>
         <textarea
           name="first_message"
@@ -126,7 +150,10 @@
       </div>
 
       <div>
-        <label>Empfohlene WorldInfo</label>
+        <label>
+          Empfohlene WorldInfo
+          <span class="field-help-btn" title="Empfohlene WorldInfo:&#10;Verknüpft die passende Spielwelt für diesen Charakter. Beim Starten eines neuen Chats wird diese WorldInfo automatisch vorausgewählt.">?</span>
+        </label>
         <select name="suggested_worldinfo_id">
           <option value="">-- Keine WorldInfo --</option>
           {% for wi in worldinfos %}
@@ -135,7 +162,10 @@
         </select>
       </div>
       <div>
-        <label>Initialort der First Message</label>
+        <label>
+          Initialort der First Message
+          <span class="field-help-btn" title="Initialort der First Message:&#10;Spezifischer Schauplatz, an dem das Gespräch startet. Falls leer gelassen, wird der Initiale Ort der WorldInfo verwendet.">?</span>
+        </label>
         <select name="initial_location_id">
           <option value="">-- Kein fester Startort --</option>
           {% for loc in all_locations %}
@@ -145,7 +175,10 @@
       </div>
 
       <div>
-        <label>Verknüpfte Lorebooks (Mehrfachauswahl)</label>
+        <label>
+          Verknüpfte Lorebooks (Mehrfachauswahl)
+          <span class="field-help-btn" title="Verknüpfte Lorebooks:&#10;Wissenskompendien für diesen Charakter. Sobald passende Schlagworte (Tags) im Chat fallen, werden Einträge automatisch ohne Vektordatenbank in den Prompt geladen.">?</span>
+        </label>
         <select name="linked_lorebook_ids" multiple size="4">
           {% for lb in lorebooks %}
             <option value="{{ lb.id }}" {% if lb.id in form.linked_lorebook_ids %}selected{% endif %}>{{ lb.name }}</option>
@@ -154,7 +187,10 @@
       </div>
       <div style="display: flex; gap: 0.75rem;">
         <div style="flex: 1;">
-          <label>Bevorzugte Orte</label>
+          <label>
+            Bevorzugte Orte
+            <span class="field-help-btn" title="Bevorzugte Orte:&#10;Orte, an denen sich der Charakter besonders wohlfühlt oder gern aufhält. Fließen in [WORLD_INFO] ein und beeinflussen Dialoge.">?</span>
+          </label>
           <select name="preferred_location_ids" multiple size="4">
             {% for loc in all_locations %}
               <option value="{{ loc.id }}" {% if loc.id in form.preferred_location_ids %}selected{% endif %}>{{ loc.name }}</option>
@@ -162,7 +198,10 @@
           </select>
         </div>
         <div style="flex: 1;">
-          <label>Gemiedene Orte</label>
+          <label>
+            Gemiedene Orte
+            <span class="field-help-btn" title="Gemiedene Orte:&#10;Orte, die der Charakter meidet, fürchtet oder verabscheut. Fließen ebenfalls in [WORLD_INFO] ein.">?</span>
+          </label>
           <select name="disliked_location_ids" multiple size="4">
             {% for loc in all_locations %}
               <option value="{{ loc.id }}" {% if loc.id in form.disliked_location_ids %}selected{% endif %}>{{ loc.name }}</option>
@@ -175,7 +214,10 @@
     {% if character %}
       <!-- Freischaltbare 9:16 Galeriebilder -->
       <div class="wood-frame" style="padding: 1.5rem; margin-top: 1.5rem;">
-        <h3 style="color: var(--gold-accent); margin-bottom: 1rem;">🖼️ Freischaltbare 9:16-Galeriebilder (Schwellenwert -100 bis +100)</h3>
+        <h3 style="color: var(--gold-accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+          🖼️ Freischaltbare 9:16-Galeriebilder (Schwellenwert -100 bis +100)
+          <span class="field-help-btn" title="9:16 Galeriebilder:&#10;Exklusive Hochformat-Grafiken mit Freischalt-Schwellenwert (-100 bis +100). Bei Erreichen des Werts im Chat wird das Bild im Medien-Tab enthüllt.">?</span>
+        </h3>
         <div class="card-grid">
           <button type="button" class="add-card-tile" data-modal-open="add-gallery-modal">
             <div class="plus-symbol">+</div>
@@ -203,7 +245,10 @@
   {% if character %}
     <section id="tab-char-sprites" class="tab-pane {% if active_tab == 'sprites' %}active{% endif %}">
       <div class="wood-frame" style="padding: 1.5rem;">
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">🎭 Emotionale Sprites (28 Emotionen mit Varianten-Stackview)</h3>
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          🎭 Emotionale Sprites (28 Emotionen mit Varianten-Stackview)
+          <span class="field-help-btn" title="Emotionale Sprites:&#10;Bildvarianten für die 28 Emotionen. Das System klassifiziert nach jeder Antwort autonom die Emotion der KI und aktualisiert das Porträt im Chat.">?</span>
+        </h3>
         <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
           Wird eine Emotion erkannt, wählt das System zufällig eine hinterlegte Variante (<code>_[nummer]</code>). Fehlt ein Sprite, greift automatisch <code>neutral</code>.
         </p>
@@ -294,11 +339,17 @@
         </div>
         <form method="POST" action="{{ url_for('characters.add_gallery_image', character_id=character.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
           <div>
-            <label>Bilddatei (9:16 Hochformat) *</label>
+            <label>
+              Bilddatei (9:16 Hochformat) *
+              <span class="field-help-btn" title="9:16 Galeriebild:&#10;Exklusives Hochformat-Bild für diesen Charakter.">?</span>
+            </label>
             <input type="file" name="gallery_image" accept=".png,.jpg,.jpeg,.webp" required>
           </div>
           <div>
-            <label>Freischalt-Schwellenwert (-100 bis +100) *</label>
+            <label>
+              Freischalt-Schwellenwert (-100 bis +100) *
+              <span class="field-help-btn" title="Schwellenwert:&#10;Erforderlicher Beziehungswert (-100 bis +100), ab dem dieses Galeriebild für den Spieler freigeschaltet wird.">?</span>
+            </label>
             <input type="number" name="unlock_threshold" min="-100" max="100" value="20" required>
           </div>
           <div style="text-align: right;">

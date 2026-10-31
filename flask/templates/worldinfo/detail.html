@@ -8,18 +8,39 @@
       <a href="{{ url_for('overview.index') }}" class="btn"><span class="icon-mono">←</span> Zurück</a>
       <form method="POST" action="{{ url_for('worldinfo.detail', worldinfo_id=worldinfo.id) }}" style="display: flex; align-items: flex-end; gap: 0.75rem; flex-wrap: wrap;">
         <div>
-          <label style="font-size: 0.75rem; color: var(--text-muted);">Symbol</label>
+          <label style="font-size: 0.75rem; color: var(--text-muted);">
+            Symbol
+            <span class="field-help-btn" title="Symbol:&#10;Ein Emoji oder Symbol als visuelles Erkennungszeichen der Welt in Auswahlfeldern und Menüs.">?</span>
+          </label>
           <input type="text" name="icon" value="{{ worldinfo.icon or '🌐' }}" style="width: 64px; text-align: center;">
         </div>
         <div>
-          <label style="font-size: 0.75rem; color: var(--text-muted);">Welt-Name</label>
-          <input type="text" name="name" value="{{ worldinfo.name }}" style="width: 260px; font-weight: 700;">
+          <label style="font-size: 0.75rem; color: var(--text-muted);">
+            Welt-Name
+            <span class="field-help-btn" title="Welt-Name:&#10;Der Name des Universums oder Schauplatzes. Wird als Primärwelt in den Prompt-Kontext eingebunden.">?</span>
+          </label>
+          <input type="text" name="name" value="{{ worldinfo.name }}" style="width: 240px; font-weight: 700;">
         </div>
         <div>
-          <label style="font-size: 0.75rem; color: var(--text-muted);">Sichtbarkeit</label>
-          <select name="visibility" style="width: 150px;">
+          <label style="font-size: 0.75rem; color: var(--text-muted);">
+            Sichtbarkeit
+            <span class="field-help-btn" title="Sichtbarkeit:&#10;Privat = Nur dir zugänglich.&#10;Öffentlich = Allen Benutzern für Chats zugänglich.">?</span>
+          </label>
+          <select name="visibility" style="width: 140px;">
             <option value="private" {% if worldinfo.visibility != 'public' %}selected{% endif %}>Privat</option>
             <option value="public" {% if worldinfo.visibility == 'public' %}selected{% endif %}>Öffentlich</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 0.75rem; color: var(--text-muted);">
+            Initialer Ort (Startszene)
+            <span class="field-help-btn" title="Initialer Ort (Startszene):&#10;Der narrative Startpunkt: Ort dieser Welt, an dem neue Chats standardmäßig beginnen. Die Ortsbeschreibung wird als System-Text angezeigt und in [WORLD_INFO] bereitgestellt.">?</span>
+          </label>
+          <select name="initial_location_id" style="width: 200px;">
+            <option value="">-- Kein Startort --</option>
+            {% for loc in locations %}
+              <option value="{{ loc.id }}" {% if worldinfo.initial_location_id == loc.id %}selected{% endif %}>📍 {{ loc.name }}</option>
+            {% endfor %}
           </select>
         </div>
         {% if has_perm('worldinfo_edit') %}
@@ -72,19 +93,31 @@
             </div>
             <form method="POST" action="{{ url_for('worldinfo.edit_location', worldinfo_id=worldinfo.id, location_id=loc.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
               <div>
-                <label>Name des Orts *</label>
+                <label>
+                  Name des Orts *
+                  <span class="field-help-btn" title="Name des Schauplatzes:&#10;Die Bezeichnung des Orts (z. B. 'Alte Bibliothek', 'Taverne zum Greifen').">?</span>
+                </label>
                 <input type="text" name="name" value="{{ loc.name }}" required>
               </div>
               <div>
-                <label>Tags (Kommagetrennt)</label>
+                <label>
+                  Tags (Kommagetrennt)
+                  <span class="field-help-btn" title="Orts-Tags:&#10;Kommagetrennte Schlagwörter zur Charakterisierung der Umgebung (z. B. drinnen, gemütlich, bücher, ruhig).">?</span>
+                </label>
                 <input type="text" name="tags" value="{{ loc.tags|join(', ') }}">
               </div>
               <div>
-                <label>16:9-Hintergrundbild (PNG, JPG, WEBP)</label>
+                <label>
+                  16:9-Hintergrundbild (PNG, JPG, WEBP)
+                  <span class="field-help-btn" title="16:9 Hintergrundbild:&#10;Querformat-Bild (16:9) als Kulisse für die Chat-Bühne und Referenzbild für ComfyUI-Szenengenerierungen.">?</span>
+                </label>
                 <input type="file" name="background_file" accept=".png,.jpg,.jpeg,.webp">
               </div>
               <div>
-                <label>Ortsbeschreibung *</label>
+                <label>
+                  Ortsbeschreibung *
+                  <span class="field-help-btn" title="Ortsbeschreibung:&#10;Atmosphärische Schilderung der Umgebung, Geräusche und Stimmung. Fließt für die KI in [WORLD_INFO] ein und wird dem Spieler beim Betreten angezeigt.">?</span>
+                </label>
                 <input type="hidden" name="i18n_description" id="i18n-wi-loc-{{ loc.id }}" value='{{ (loc_translations.get(loc.id, {}).get("description", {}) if loc_translations is defined else {}) | tojson }}'>
                 <textarea
                   name="description"
@@ -161,20 +194,32 @@
             </div>
             <form method="POST" action="{{ url_for('worldinfo.edit_event', worldinfo_id=worldinfo.id, event_id=ev.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
               <div>
-                <label>Titel *</label>
+                <label>
+                  Titel *
+                  <span class="field-help-btn" title="Event-Titel:&#10;Name des Zufallsereignisses (z. B. 'Plötzlicher Gewittersturm', 'Brieftaube trifft ein').">?</span>
+                </label>
                 <input type="text" name="title" value="{{ ev.title }}" required>
               </div>
               <div style="display: flex; gap: 1rem; align-items: center;">
                 <div style="flex: 1;">
-                  <label>Wahrscheinlichkeit (0 - 100%) *</label>
+                  <label>
+                    Wahrscheinlichkeit (0 - 100%) *
+                    <span class="field-help-btn" title="Wahrscheinlichkeit (1-100%):&#10;Relative Gewichtung im gemeinsamen Ereignis-Pool. Alle 10 bis 100 Nachrichten (Cooldown-Zähler) wird ein Ereignis gewichtet ausgelöst.">?</span>
+                  </label>
                   <input type="number" name="probability" min="0" max="100" value="{{ ev.probability }}" required>
                 </div>
                 <div style="flex: 1; padding-top: 1.2rem;">
-                  <label><input type="checkbox" name="one_shot" value="1" {% if ev.one_shot %}checked{% endif %}> One-Shot (Max. 1x pro Session)</label>
+                  <label>
+                    <input type="checkbox" name="one_shot" value="1" {% if ev.one_shot %}checked{% endif %}> One-Shot (Max. 1x pro Session)
+                    <span class="field-help-btn" title="One-Shot (Einmaliges Ereignis):&#10;Wenn aktiviert, wird dieses Ereignis pro Chat-Sitzung maximal ein einziges Mal ausgelöst und danach aus dem aktiven Pool entfernt.">?</span>
+                  </label>
                 </div>
               </div>
               <div>
-                <label>Zugehörigkeit (Exklusiv: Entweder Gesamte Welt ODER konkreter Ort)</label>
+                <label>
+                  Zugehörigkeit (Exklusiv: Entweder Gesamte Welt ODER konkreter Ort)
+                  <span class="field-help-btn" title="Orts-Zuordnung:&#10;Wähle, ob dieses Ereignis nur an einem bestimmten Schauplatz auftreten kann oder als globales Ereignis für die gesamte Welt gilt.">?</span>
+                </label>
                 <select name="location_id">
                   <option value="world" {% if not ev.location_id %}selected{% endif %}>🌍 Gesamte Welt</option>
                   {% for loc in locations %}
@@ -183,7 +228,10 @@
                 </select>
               </div>
               <div>
-                <label>Szenische Beschreibung des Ereignisses *</label>
+                <label>
+                  Szenische Beschreibung des Ereignisses *
+                  <span class="field-help-btn" title="Event-Beschreibung:&#10;Der narrative Vorfall. Bei Auslösung wird diese Beschreibung für den nächsten Zug im [WORLD_INFO]-Bereich des Prompts platziert, damit die KI passend darauf reagiert.">?</span>
+                </label>
                 <input type="hidden" name="i18n_description" id="i18n-wi-ev-{{ ev.id }}" value='{{ (ev_translations.get(ev.id, {}).get("description", {}) if ev_translations is defined else {}) | tojson }}'>
                 <textarea
                   name="description"
@@ -216,21 +264,33 @@
     </div>
     <form method="POST" action="{{ url_for('worldinfo.add_location', worldinfo_id=worldinfo.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
       <div>
-        <label>Name des Orts *</label>
+        <label>
+          Name des Orts *
+          <span class="field-help-btn" title="Name des Schauplatzes:&#10;Die Bezeichnung des Orts (z. B. 'Alte Bibliothek', 'Taverne zum Greifen').">?</span>
+        </label>
         <input type="text" name="name" required>
       </div>
       <div>
-        <label>Tags (Kommagetrennt)</label>
+        <label>
+          Tags (Kommagetrennt)
+          <span class="field-help-btn" title="Orts-Tags:&#10;Kommagetrennte Schlagwörter zur Charakterisierung der Umgebung (z. B. drinnen, gemütlich, bücher, ruhig).">?</span>
+        </label>
         <input type="text" name="tags" placeholder="taverne, wald, schloss">
       </div>
       <div>
-        <label>16:9-Hintergrundbild (PNG, JPG, WEBP)</label>
+        <label>
+          16:9-Hintergrundbild (PNG, JPG, WEBP)
+          <span class="field-help-btn" title="16:9 Hintergrundbild:&#10;Querformat-Bild (16:9) als Kulisse für die Chat-Bühne und Referenzbild für ComfyUI-Szenengenerierungen.">?</span>
+        </label>
         <input type="file" id="new-loc-bg-input" name="background_file" accept=".png,.jpg,.jpeg,.webp">
         <input type="hidden" id="new-loc-bg-path" name="background_image_path">
         <input type="hidden" id="new-loc-vision-alt" name="vision_alt_text">
       </div>
       <div>
-        <label>Ortsbeschreibung *</label>
+        <label>
+          Ortsbeschreibung *
+          <span class="field-help-btn" title="Ortsbeschreibung:&#10;Atmosphärische Schilderung der Umgebung, Geräusche und Stimmung. Fließt für die KI in [WORLD_INFO] ein und wird dem Spieler beim Betreten angezeigt.">?</span>
+        </label>
         <input type="hidden" name="i18n_description" id="i18n-wi-loc-new" value="{}">
         <textarea
           id="new-loc-desc"
@@ -258,20 +318,32 @@
     </div>
     <form method="POST" action="{{ url_for('worldinfo.add_event', worldinfo_id=worldinfo.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
       <div>
-        <label>Titel *</label>
+        <label>
+          Titel *
+          <span class="field-help-btn" title="Event-Titel:&#10;Name des Zufallsereignisses (z. B. 'Plötzlicher Gewittersturm', 'Brieftaube trifft ein').">?</span>
+        </label>
         <input type="text" name="title" required>
       </div>
       <div style="display: flex; gap: 1rem; align-items: center;">
         <div style="flex: 1;">
-          <label>Wahrscheinlichkeit (0 - 100%) *</label>
+          <label>
+            Wahrscheinlichkeit (0 - 100%) *
+            <span class="field-help-btn" title="Wahrscheinlichkeit (1-100%):&#10;Relative Gewichtung im gemeinsamen Ereignis-Pool. Alle 10 bis 100 Nachrichten (Cooldown-Zähler) wird ein Ereignis gewichtet ausgelöst.">?</span>
+          </label>
           <input type="number" name="probability" min="0" max="100" value="50" required>
         </div>
         <div style="flex: 1; padding-top: 1.2rem;">
-          <label><input type="checkbox" name="one_shot" value="1"> One-Shot (Max. 1x pro Session)</label>
+          <label>
+            <input type="checkbox" name="one_shot" value="1"> One-Shot (Max. 1x pro Session)
+            <span class="field-help-btn" title="One-Shot (Einmaliges Ereignis):&#10;Wenn aktiviert, wird dieses Ereignis pro Chat-Sitzung maximal ein einziges Mal ausgelöst und danach aus dem aktiven Pool entfernt.">?</span>
+          </label>
         </div>
       </div>
       <div>
-        <label>Zugehörigkeit (Entweder Gesamte Welt oder konkreter Ort)</label>
+        <label>
+          Zugehörigkeit (Entweder Gesamte Welt oder konkreter Ort)
+          <span class="field-help-btn" title="Orts-Zuordnung:&#10;Wähle, ob dieses Ereignis nur an einem bestimmten Schauplatz auftreten kann oder als globales Ereignis für die gesamte Welt gilt.">?</span>
+        </label>
         <select name="location_id">
           <option value="world">🌍 Gesamte Welt</option>
           {% for loc in locations %}
@@ -280,7 +352,10 @@
         </select>
       </div>
       <div>
-        <label>Szenische Beschreibung des Ereignisses *</label>
+        <label>
+          Szenische Beschreibung des Ereignisses *
+          <span class="field-help-btn" title="Event-Beschreibung:&#10;Der narrative Vorfall. Bei Auslösung wird diese Beschreibung für den nächsten Zug im [WORLD_INFO]-Bereich des Prompts platziert, damit die KI passend darauf reagiert.">?</span>
+        </label>
         <input type="hidden" name="i18n_description" id="i18n-wi-ev-new" value="{}">
         <textarea
           name="description"

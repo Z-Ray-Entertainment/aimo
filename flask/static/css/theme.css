@@ -892,3 +892,31 @@ button.btn:hover {
   line-height: 1.35;
   font-style: italic;
 }
+
+/* Field Help Tooltip */
+.field-help-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-accent);
+  background: rgba(30, 20, 12, 0.7);
+  color: var(--gold-accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: help;
+  padding: 0;
+  line-height: 1;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.field-help-btn:hover {
+  background: var(--gold-accent);
+  color: #1a1008;
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.5);
+}
