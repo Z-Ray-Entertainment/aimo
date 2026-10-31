@@ -43,14 +43,15 @@ class WorldInfoRepository:
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO worldinfos (user_id, name, icon, visibility, created_at)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO worldinfos (user_id, name, icon, visibility, initial_location_id, created_at)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """,
                 (
                     worldinfo.user_id,
                     worldinfo.name,
                     worldinfo.icon,
                     worldinfo.visibility,
+                    worldinfo.initial_location_id,
                     created_str,
                 ),
             )
@@ -74,10 +75,16 @@ class WorldInfoRepository:
             conn.execute(
                 """
                 UPDATE worldinfos
-                SET name = ?, icon = ?, visibility = ?
+                SET name = ?, icon = ?, visibility = ?, initial_location_id = ?
                 WHERE id = ?
                 """,
-                (worldinfo.name, worldinfo.icon, worldinfo.visibility, worldinfo.id),
+                (
+                    worldinfo.name,
+                    worldinfo.icon,
+                    worldinfo.visibility,
+                    worldinfo.initial_location_id,
+                    worldinfo.id,
+                ),
             )
             row = conn.execute(
                 "SELECT * FROM worldinfos WHERE id = ?",
@@ -182,6 +189,10 @@ class WorldInfoRepository:
             ).fetchone()
             if existing is None:
                 return False
+            conn.execute(
+                "UPDATE worldinfos SET initial_location_id = NULL WHERE initial_location_id = ?",
+                (location_id,),
+            )
             conn.execute("DELETE FROM locations WHERE id = ?", (location_id,))
             return True
 
@@ -278,12 +289,18 @@ class WorldInfoRepository:
     def _to_entity(row: sqlite3.Row) -> WorldInfo:
         keys = row.keys()
         vis = str(row["visibility"]) if "visibility" in keys and row["visibility"] else "private"
+        init_loc = (
+            int(row["initial_location_id"])
+            if "initial_location_id" in keys and row["initial_location_id"] is not None
+            else None
+        )
         return WorldInfo(
             id=int(row["id"]),
             user_id=int(row["user_id"]),
             name=str(row["name"]),
             icon=row["icon"] if row["icon"] is not None else None,
             visibility=vis,
+            initial_location_id=init_loc,
             created_at=parse_datetime(row["created_at"]),
         )
 

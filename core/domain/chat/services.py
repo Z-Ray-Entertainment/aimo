@@ -52,6 +52,7 @@ class ChatService:
         title: str | None = None,
         persona_name: str = "User",
         localized_welcome_text: str | None = None,
+        initial_location_id: int | None = None,
     ) -> tuple[ChatSession, Message]:
         if isinstance(user_id, bool) or not isinstance(user_id, int) or user_id <= 0:
             raise InvalidChatDataError("A valid positive user_id is required.")
@@ -61,7 +62,11 @@ class ChatService:
             raise InvalidChatDataError("A valid positive persona_id is required.")
 
         initial_rel = float(max(-100, min(100, character.initial_relationship)))
-        initial_loc_id = character.initial_location_id if worldinfo_id is not None else None
+        initial_loc_id = (
+            initial_location_id
+            if initial_location_id is not None
+            else (character.initial_location_id if worldinfo_id is not None else None)
+        )
         now = datetime.now(timezone.utc)
 
         session = ChatSession(

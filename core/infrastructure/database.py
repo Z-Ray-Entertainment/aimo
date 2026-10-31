@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS worldinfos (
     name TEXT NOT NULL,
     icon TEXT,
     visibility TEXT NOT NULL DEFAULT 'private',
+    initial_location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL,
     created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_worldinfos_user_id ON worldinfos (user_id);
@@ -337,6 +338,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
     for stmt in (
         "ALTER TABLE lorebooks ADD COLUMN visibility TEXT NOT NULL DEFAULT 'private'",
         "ALTER TABLE worldinfos ADD COLUMN visibility TEXT NOT NULL DEFAULT 'private'",
+        "ALTER TABLE worldinfos ADD COLUMN initial_location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL",
     ):
         try:
             conn.execute(stmt)

@@ -791,15 +791,17 @@ def switch_location(session_id: int):
     chat_session.current_location_id = location.id
     chat_repo.update_session(chat_session)
 
+    desc_snippet = f" — {location.description}" if location.description else ""
     return jsonify(
         {
             "status": "switched",
             "location": {
                 "id": location.id,
                 "name": location.name,
+                "description": location.description,
                 "background_image_path": location.background_image_path,
             },
-            "ui_notice": f"Ihr seid nach {location.name} gegangen",
+            "ui_notice": f"Ihr seid nach {location.name} gegangen{desc_snippet}",
         }
     )
 

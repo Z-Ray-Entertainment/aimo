@@ -46,11 +46,18 @@ def detail(worldinfo_id: int):
 
     if request.method == "POST":
         try:
+            init_loc_raw = request.form.get("initial_location_id")
+            init_loc_id = (
+                int(init_loc_raw)
+                if init_loc_raw and init_loc_raw.strip() and init_loc_raw.strip().isdigit()
+                else None
+            )
             service.update_worldinfo(
                 worldinfo=worldinfo,
                 name=request.form.get("name", worldinfo.name),
                 icon=request.form.get("icon", worldinfo.icon),
                 visibility=request.form.get("visibility", worldinfo.visibility),
+                initial_location_id=init_loc_id,
             )
             worldinfo = repo.update(worldinfo)
             flash("WorldInfo gespeichert.", "success")

@@ -94,6 +94,13 @@ def new_character_chat(character_id: int):
         localized_welcome = trans_repo.get_localized_field(
             "character", character.id, "first_message", sys_lang, character.first_message
         )
+        initial_loc = None
+        if form.worldinfo_id:
+            wi = wi_repo.get_by_id(form.worldinfo_id)
+            if wi and wi.initial_location_id:
+                initial_loc = wi.initial_location_id
+        if initial_loc is None and character.initial_location_id and form.worldinfo_id:
+            initial_loc = character.initial_location_id
         try:
             session_obj, first_msg = chat_service.create_session(
                 user_id=user.id,
@@ -103,6 +110,7 @@ def new_character_chat(character_id: int):
                 title=form.title or None,
                 persona_name=selected_persona.name,
                 localized_welcome_text=localized_welcome,
+                initial_location_id=initial_loc,
             )
             saved_session = chat_repo.create_session(session_obj)
             assert saved_session.id is not None
@@ -291,8 +299,14 @@ def update_session_settings(session_id: int):
         elif action == "switch_worldinfo":
             raw_wi = request.form.get("worldinfo_id", "").strip()
             new_wi_id = int(raw_wi) if raw_wi and raw_wi != "none" else None
-            char = char_repo.get_by_id(chat_session.character_id)
-            init_loc = char.initial_location_id if char and new_wi_id else None
+            init_loc = None
+            if new_wi_id:
+                wi = wi_repo.get_by_id(new_wi_id)
+                if wi and wi.initial_location_id:
+                    init_loc = wi.initial_location_id
+            if init_loc is None and new_wi_id:
+                char = char_repo.get_by_id(chat_session.character_id)
+                init_loc = char.initial_location_id if char else None
             chat_service.switch_worldinfo(chat_session, new_wi_id, init_loc)
             flash("WorldInfo für diesen Chat gewechselt.", "success")
         elif action == "toggle_events":

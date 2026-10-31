@@ -13,6 +13,7 @@ class WorldInfoService:
         name: str,
         icon: str | None = None,
         visibility: str = "private",
+        initial_location_id: int | None = None,
     ) -> WorldInfo:
         if isinstance(user_id, bool) or not isinstance(user_id, int) or user_id <= 0:
             raise InvalidWorldInfoDataError("A valid positive user_id is required.")
@@ -23,6 +24,11 @@ class WorldInfoService:
 
         cleaned_icon = icon.strip() if isinstance(icon, str) and icon.strip() else None
         cleaned_vis = "public" if isinstance(visibility, str) and visibility.strip().lower() == "public" else "private"
+        cleaned_init_loc = (
+            initial_location_id
+            if isinstance(initial_location_id, int) and initial_location_id > 0
+            else None
+        )
 
         return WorldInfo(
             id=None,
@@ -30,6 +36,7 @@ class WorldInfoService:
             name=cleaned_name,
             icon=cleaned_icon,
             visibility=cleaned_vis,
+            initial_location_id=cleaned_init_loc,
             created_at=datetime.now(timezone.utc),
         )
 
@@ -39,6 +46,7 @@ class WorldInfoService:
         name: str,
         icon: str | None = None,
         visibility: str | None = None,
+        initial_location_id: int | None | object = ...,
     ) -> WorldInfo:
         cleaned_name = name.strip() if isinstance(name, str) else ""
         if not cleaned_name:
@@ -49,6 +57,12 @@ class WorldInfoService:
         if visibility is not None:
             worldinfo.visibility = (
                 "public" if isinstance(visibility, str) and visibility.strip().lower() == "public" else "private"
+            )
+        if initial_location_id is not ...:
+            worldinfo.initial_location_id = (
+                initial_location_id
+                if isinstance(initial_location_id, int) and initial_location_id > 0
+                else None
             )
         return worldinfo
 

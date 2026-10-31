@@ -31,6 +31,7 @@ def list_worldinfo():
                 "name": wi.name,
                 "icon": wi.icon,
                 "visibility": wi.visibility,
+                "initial_location_id": wi.initial_location_id,
                 "locations": [
                     {
                         "id": loc.id,
@@ -67,11 +68,14 @@ def create_worldinfo():
     service = WorldInfoService()
     repo = WorldInfoRepository()
     try:
+        init_loc_raw = data.get("initial_location_id")
+        init_loc_id = int(init_loc_raw) if init_loc_raw and str(init_loc_raw).isdigit() else None
         wi = service.create_worldinfo(
             user_id=user.id,
             name=data.get("name", ""),
             icon=data.get("icon", "🌐"),
             visibility=data.get("visibility", "private"),
+            initial_location_id=init_loc_id,
         )
         saved = repo.create(wi)
         return jsonify(
@@ -80,6 +84,7 @@ def create_worldinfo():
                 "name": saved.name,
                 "icon": saved.icon,
                 "visibility": saved.visibility,
+                "initial_location_id": saved.initial_location_id,
             }
         ), 201
     except AimoError as exc:
