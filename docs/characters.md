@@ -1,6 +1,6 @@
 # 🎭 KI-Charaktere & Character Designer
 
-[← Zurück zur Übersicht](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/README.md) | [← Spieler-Personas](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/personas.md) | [Lorebooks & Wissensbücher →](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/lorebooks.md)
+[← Zurück zur Übersicht](README.md) | [← Spieler-Personas](personas.md) | [Lorebooks & Wissensbücher →](lorebooks.md)
 
 Der **Character Designer** erlaubt Autoren das detaillierte Erschaffen interaktiver KI-Charaktere mit emotionalen Sprites, freischaltbaren Galeriebildern und dynamischen Ortspräferenzen.
 
@@ -27,7 +27,7 @@ Der **Character Designer** erlaubt Autoren das detaillierte Erschaffen interakti
 - **Gesprächsbeispiele:** Typische Dialoge zur Kalibrierung von Tonalität und Wortwahl.
 - **First Message (Welcome Message):** Die Eröffnungsnachricht des Charakters, die beim Anlegen eines neuen Chats automatisch erscheint.
 - **Empfohlene WorldInfo & Ortspräferenzen:**
-  - Wähle eine [WorldInfo](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/worldinfo.md) als Empfehlung.
+  - Wähle eine [WorldInfo](worldinfo.md) als Empfehlung.
   - Definiere **bevorzugte Orte** (an denen sich der Charakter gerne aufhält) und **gemiedene Orte** (die er ungern besucht).
 - **Freischaltbare 9:16-Galeriebilder:**
   - Lade Bilder im Smartphone-/Hochformat (9:16) hoch.
@@ -48,4 +48,4 @@ aimo unterstützt dynamische, transparente Sprites (Format PNG oder WEBP), die i
 - **Stackview & Augen-Button (👁️):** Bei mehreren Bildern deutet ein Stapel-Effekt die Vielfalt an. Ein Klick auf das Auge öffnet ein modales Popup, in dem du alle Varianten betrachten und einzeln löschen kannst.
 - **Zufallsauswahl zur Laufzeit:** Wenn die KI eine Emotion zeigt, wählt das System automatisch zufällig eine der vorhandenen Varianten aus.
 
-Weiter zu: [**Lorebooks & Wissensbücher →**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/lorebooks.md)
+Weiter zu: [**Lorebooks & Wissensbücher →**](lorebooks.md)

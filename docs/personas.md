@@ -1,6 +1,6 @@
 # 👤 Spieler-Personas
 
-[← Zurück zur Übersicht](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/README.md) | [← Das Hub-Dashboard](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/hub.md) | [KI-Charaktere & Designer →](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/characters.md)
+[← Zurück zur Übersicht](README.md) | [← Das Hub-Dashboard](hub.md) | [KI-Charaktere & Designer →](characters.md)
 
 Eine **Spieler-Persona** repräsentiert deine eigene Identität im Rollenspiel. Du kannst mehrere unterschiedliche Personas (z. B. Magier, Ritterin, Detektiv) anlegen und vor Chat-Beginn auswählen, in welcher Rolle du agieren möchtest.
 
@@ -10,7 +10,7 @@ Eine **Spieler-Persona** repräsentiert deine eigene Identität im Rollenspiel. 
 
 - **Name:** Dein Name im Rollenspiel, mit dem dich KI-Charaktere ansprechen.
 - **Geschlecht:** Zur konsistenten grammatikalischen Anrede im Prompt (`männlich`, `weiblich`, `nicht-binär`).
-- **Porträtbild:** Bilddatei (PNG, JPG, WEBP), die als visueller Avatar im Chat und als Referenzbild für [Bildgenerierungen](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/chat.md#bildgenerierung) dient.
+- **Porträtbild:** Bilddatei (PNG, JPG, WEBP), die als visueller Avatar im Chat und als Referenzbild für [Bildgenerierungen](chat.md#bildgenerierung) dient.
 - **Beschreibung:** Textfeld für die Hintergrundgeschichte, Motive, Verhaltensweisen und Eigenheiten deiner Figur.
 - **Aussehen (KI-Vision-Extraktion):** Detaillierte Beschreibung physischer Merkmale.
 
@@ -32,4 +32,4 @@ Um die narrative Konsistenz bestehender Gesprächsverläufe zu schützen, gilt:
 - **Personas, die bereits in mindestens einem Chat verwendet wurden, können nicht gelöscht werden.**
 - Der Lösch-Button ist in diesem Fall ausgegraut und mit einem Hinweistext versehen.
 
-Weiter zu: [**KI-Charaktere & Designer →**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/characters.md)
+Weiter zu: [**KI-Charaktere & Designer →**](characters.md)

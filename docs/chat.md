@@ -1,6 +1,6 @@
 # 💬 Das Chat- & Rollenspiel-Interface
 
-[← Zurück zur Übersicht](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/README.md) | [← Welten & Orte](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/worldinfo.md) | [Administration & Einstellungen →](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/admin.md)
+[← Zurück zur Übersicht](README.md) | [← Welten & Orte](worldinfo.md) | [Administration & Einstellungen →](admin.md)
 
 Das Chatfenster ist das Herzstück von aimo. Hier entfaltet sich das interaktive Textadventure mit Live-Streaming, emotionalen Sprites, dynamischen Ortswechseln und generativen Bildern.
 
@@ -70,4 +70,4 @@ Wenn die Erzählung der KI einen Ortswechsel vorschlägt (z. B. *"Lass uns in de
   - **Chat forken:** Erstellt eine Kopie des Chats ab genau diesem Zeitpunkt für alternative Handlungsstränge.
   - **Vorlesen:** Liest die Nachricht per Voice AI vor.
 
-Weiter zu: [**Administration & Einstellungen →**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/admin.md)
+Weiter zu: [**Administration & Einstellungen →**](admin.md)

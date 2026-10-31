@@ -1,6 +1,6 @@
 # 🛡️ Administration & Einstellungen
 
-[← Zurück zur Übersicht](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/README.md) | [← Das Chat-Interface](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/chat.md)
+[← Zurück zur Übersicht](README.md) | [← Das Chat-Interface](chat.md)
 
 Das Admin-Panel ist Benutzern mit der Berechtigung `ADMIN_ACCESS` vorbehalten. Hier verwaltest du Benutzerkonten, funktionale Rechte und deine lokalen KI-Modelle.
 

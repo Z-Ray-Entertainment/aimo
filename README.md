@@ -78,23 +78,23 @@ python wsgi.py
 
 ## 📖 Dokumentation & Handbücher
 
-Ausführliche Anleitungen für alle Aspekte der Anwendung findest du im Ordner [`docs/`](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/README.md):
+Ausführliche Anleitungen für alle Aspekte der Anwendung findest du im Ordner [`docs/`](docs/README.md):
 
-- [**Ersteinrichtung & First-Boot-Wizard**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/first_boot.md): Super-User-Anlage und Ollama-Konfiguration.
-- [**Das Hub-Dashboard**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/hub.md): 3-Tab-Navigation (Charaktere 👤, Lorebooks 📜, WorldInfo 🌐) und Filter.
-- [**Spieler-Personas**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/personas.md): Rollenspiel-Identitäten & automatische Vision-Aussehensanalyse.
-- [**KI-Charaktere & Designer**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/characters.md): Erstellung, Sprites, Varianten und 9:16-Galerien.
-- [**Lorebooks & Enzyklopädien**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/lorebooks.md): Thematisches Wissen & vektorloses Tag-RAG.
-- [**Welten, Orte & Ereignisse (WorldInfo)**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/worldinfo.md): 16:9-Hintergründe und Zufalls-Event-Mechanik.
-- [**Chat- & Rollenspiel-Interface**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/chat.md): Streaming, Übersetzung, Textadventure-Ortswechsel & ComfyUI.
-- [**Administration & Modell-Management**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/admin.md): Rechte-Presets, Ollama Pull/Delete und System-Prompts.
+- [**Ersteinrichtung & First-Boot-Wizard**](docs/first_boot.md): Super-User-Anlage und Ollama-Konfiguration.
+- [**Das Hub-Dashboard**](docs/hub.md): 3-Tab-Navigation (Charaktere 👤, Lorebooks 📜, WorldInfo 🌐) und Filter.
+- [**Spieler-Personas**](docs/personas.md): Rollenspiel-Identitäten & automatische Vision-Aussehensanalyse.
+- [**KI-Charaktere & Designer**](docs/characters.md): Erstellung, Sprites, Varianten und 9:16-Galerien.
+- [**Lorebooks & Enzyklopädien**](docs/lorebooks.md): Thematisches Wissen & vektorloses Tag-RAG.
+- [**Welten, Orte & Ereignisse (WorldInfo)**](docs/worldinfo.md): 16:9-Hintergründe und Zufalls-Event-Mechanik.
+- [**Chat- & Rollenspiel-Interface**](docs/chat.md): Streaming, Übersetzung, Textadventure-Ortswechsel & ComfyUI.
+- [**Administration & Modell-Management**](docs/admin.md): Rechte-Presets, Ollama Pull/Delete und System-Prompts.
 
 ---
 
 ## 🏛️ Architektur & Entwickler-Richtlinien
 
-- **Architekturregeln für Coding Assistants:** [AGENTS.md](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/AGENTS.md)
-- **Implementierungs-Fahrplan (Atomare Tasks):** [tasks/](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/tasks/README.md)
+- **Architekturregeln für Coding Assistants:** [AGENTS.md](AGENTS.md)
+- **Implementierungs-Fahrplan (Atomare Tasks):** [tasks/](tasks/README.md)
 
 ### Schichtenmodell (Domain-Driven Design)
 ```

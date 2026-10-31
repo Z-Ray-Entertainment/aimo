@@ -1,6 +1,6 @@
 # 🌍 Welten, Orte & Ereignisse (WorldInfo)
 
-[← Zurück zur Übersicht](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/README.md) | [← Lorebooks](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/lorebooks.md) | [Das Chat-Interface →](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/chat.md)
+[← Zurück zur Übersicht](README.md) | [← Lorebooks](lorebooks.md) | [Das Chat-Interface →](chat.md)
 
 Eine **WorldInfo** fasst die Geografie, Szenerien und zufälligen Ereignisse einer Spielwelt zusammen. Sie bestimmt die visuellen 16:9-Hintergründe im Chat und ermöglicht überraschende Zufallsbegegnungen.
 
@@ -50,4 +50,4 @@ Events hauchen der Welt unvorhersehbares Leben ein (z. B. ein plötzlicher Sturm
 - **Ziehung bei 0:** Sobald der Zähler 0 erreicht, wird genau ein Event gewichtet ausgelöst. Danach wird sofort eine neue Zahl zwischen 10 und 100 gewürfelt.
 - **Opt-Out:** In der Chat-Sidebar kannst du Events jederzeit über eine Checkbox deaktivieren, wenn du eine ruhige Szene bevorzugst.
 
-Weiter zu: [**Das Chat- & Rollenspiel-Interface →**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/chat.md)
+Weiter zu: [**Das Chat- & Rollenspiel-Interface →**](chat.md)

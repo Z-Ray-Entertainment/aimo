@@ -1,6 +1,6 @@
 # 📚 Lorebooks & Wissensbücher
 
-[← Zurück zur Übersicht](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/README.md) | [← KI-Charaktere](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/characters.md) | [Welten, Orte & Events →](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/worldinfo.md)
+[← Zurück zur Übersicht](README.md) | [← KI-Charaktere](characters.md) | [Welten, Orte & Events →](worldinfo.md)
 
 **Lorebooks** dienen als thematische Enzyklopädien. Sie erlauben es, der KI umfangreiches Hintergrundwissen über Fraktionen, Magiesysteme, historische Ereignisse oder Technologie bereitzustellen — ohne das Kontextfenster mit unnötigen Daten zu überlasten.
 
@@ -30,4 +30,4 @@ aimo nutzt ein **strikt regelbasiertes Tag-Matching**:
 - Fallen im laufenden Chat Wörter, die mit den Tags eines Lorebook-Eintrags übereinstimmen (`tags_overlap >= 1`), wird dieser Eintrag automatisch in den Kontext für die nächste KI-Antwort geladen.
 - Wird das Thema nicht erwähnt, bleibt der Eintrag inaktiv. So bleibt das Gedächtnis der KI schlank und präzise.
 
-Weiter zu: [**Welten, Orte & Ereignisse (WorldInfo) →**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/worldinfo.md)
+Weiter zu: [**Welten, Orte & Ereignisse (WorldInfo) →**](worldinfo.md)
