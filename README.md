@@ -1,7 +1,10 @@
 # aimo — Immersives KI-Rollenspiel im modernen RPG-Design
 
 > [!IMPORTANT]
-> **Hinweis zu KI-generiertem Code:** Dieses Projekt und die gesamte enthaltene Codebasis wurden durch **künstliche Intelligenz (KI)** generiert.
+> **Hinweis zur KI-gestützten Entwicklung (Human-in-the-Loop-Prinzip):**
+> - **Architektur:** Entworfen von Menschen (*Architecture designed by human*)
+> - **Qualitätssicherung:** Code geprüft und getestet von Menschen (*Code reviewed and tested by human*)
+> - **Implementierung:** Großteil des Codes geschrieben von KI (*Most code written by AI*)
 
 `aimo` ist eine modulare, lokale Rollenspiel-Plattform für interaktives KI-Storytelling und Textadventure-Abenteuer. Das System verbindet modernste lokale Sprach- und Vision-Modelle (Ollama) sowie generative Bild-Pipelines (ComfyUI) mit einem atmosphärischen Tabletop-RPG-Interface.
 
