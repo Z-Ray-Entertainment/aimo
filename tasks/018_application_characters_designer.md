@@ -1,55 +1,55 @@
-# Task 018: Character Designer (Info-Tab, Sparkle ✨, Sprites)
+# Task 018: Character Designer (Info Tab, Sparkle ✨, Sprites)
 
-## 🎯 Ziel & Umfang
-Umsetzung des Charakter-Designers (`/characters/new` und `/characters/<id>/edit`) mit oberer Aktionsleiste, Tab 1 (Hauptinformationen, KI-Sparkle-Button, freischaltbare Galeriebilder) und Tab 2 (Emotionale Sprites im Stackview mit Augen-Popup).
+## 🎯 Goal & Scope
+Implementation of the Character Designer (`/characters/new` and `/characters/<id>/edit`) with top action bar, Tab 1 (Main Information, AI Sparkle Button, unlockable gallery images), and Tab 2 (Emotional Sprites in stackview with eye modal).
 
-## 📂 Betroffene Schicht & Dateien
-- **Schicht:** `application/characters/`, `templates/characters/`
-- **Dateien:**
+## 📂 Affected Layer & Files
+- **Layer:** `application/characters/`, `templates/characters/`
+- **Files:**
   - `application/characters/views.py`
   - `application/characters/forms.py`
   - `templates/characters/creator.html`
 
-## 🔗 Abhängigkeiten
+## 🔗 Dependencies
 - `tasks/009_domain_characters_and_emotional_sprites.md`
 - `tasks/013_infrastructure_repositories.md`
 - `tasks/015_ui_theme_static_assets_and_base_template.md`
 
-## 📝 Fachliche Vorgaben & Spezifikation
+## 📝 Functional Specifications & Requirements
 
-### 1. Header & Aktionsleiste
-- Zurück-Button (`←`) zur Übersicht.
-- Obere Aktionsleiste:
-  - Sichtbarkeit: Dropdown (`Privat` / `Öffentlich`).
-  - Speichern: Validiert und persistiert den Charakter.
-  - Kopieren: Dupliziert den Charakter als neuen Entwurf.
-  - Löschen: Entfernt den Charakter (inkl. Bestätigungsabfrage).
+### 1. Header & Action Bar
+- Back button (`←`) to hub overview.
+- Top action bar:
+  - Visibility: Dropdown (`Private` / `Public`).
+  - Save: Validates and persists the character.
+  - Duplicate: Clones character into a new draft.
+  - Delete: Removes character (with confirmation modal).
 
-### 2. Tab 1: Hauptinformationen
-- Name, Geschlecht (`male`, `female`, `non-binary`).
-- Primary Portrait (Pflicht-Upload).
-- Beschreibung mit Sparkle-Button ✨:
-  - Asynchroner Aufruf des Assistant-Modells mit System-Prompt: *"Du bist ein professioneller Autor und entwirfst eine Charakterbeschreibung auf Basis der gegebenen Vorlage: {bisherige Beschreibung}"*.
-  - Schreibt das verbesserte Ergebnis direkt in die Textarea.
-- Gesprächsbeispiele (`list[str]`), First Message & Initialort.
-- Verknüpfte Lorebooks (Multi-Select) und empfohlene WorldInfo (Dropdown).
-- Ortspräferenzen (bevorzugt / gemieden).
-- Freischaltbare 9:16-Galeriebilder:
-  - Liste von Bildern mit Schwellenwert-Feld (-100 bis +100).
-  - Add-Kachel (`+`) zum Hochladen weiterer 9:16-Bilder.
-  - Löschen-Overlay über jedem Bild.
+### 2. Tab 1: Main Information
+- Name, gender (`male`, `female`, `non-binary`).
+- Primary Portrait (mandatory upload).
+- Description with Sparkle Button ✨:
+  - Asynchronous invocation of Assistant model with prompt: *"You are a professional author crafting a character description based on this draft: {existing description}"*.
+  - Writes refined text directly into the textarea.
+- Dialogue examples (`list[str]`), First Message & initial location.
+- Linked lorebooks (multi-select) and suggested WorldInfo (dropdown).
+- Location preferences (preferred / disliked).
+- Unlockable 9:16 Gallery Images:
+  - List of images with threshold input (-100 to +100).
+  - Add tile (`+`) to upload additional 9:16 artwork.
+  - Delete overlay over each image.
 
-### 3. Tab 2: Emotionale Sprites
-- Grid-Ansicht aller 28 Emotionen (`Emotion`-Enum); Name der Emotion steht unten im Bild.
-- Klick auf leere Kachel öffnet Upload-Dialog (transparentes PNG/WEBP).
-- **Varianten & Stackview:**
-  - Bei existierendem Sprite: Kleiner Button mit **Papier-Plus-Symbol** (📄➕) zum Upload weiterer Varianten.
-  - Bei mehreren Sprites: Gestapelte Ansicht (**Stackview**).
-  - **Augen-Button (👁️):** Erscheint nur bei mehreren Varianten. Klick öffnet modales Popup mit allen Bildern dieser Emotion und Löschen-Buttons über jedem Bild.
-  - Bei Einzelsprite: Löschen-Button direkt als Overlay über dem Bild.
+### 3. Tab 2: Emotional Sprites
+- Grid layout of all 28 emotions (`Emotion` enum); emotion title labeled below each image.
+- Clicking an empty tile opens the upload modal (transparent PNG/WEBP).
+- **Variants & Stackview:**
+  - When a sprite exists: Small button with **Paper-Plus icon** (📄➕) to upload further variants.
+  - When multiple sprites exist: Layered visual appearance (**Stackview**).
+  - **Eye Button (👁️):** Renders only when multiple variants exist. Clicking opens a modal popup displaying all variants for that emotion with individual delete buttons.
+  - For single sprites: Delete button overlays directly on hover.
 
-## ✅ Akzeptanzkriterien
-- [x] Sparkle-Button ✨ optimiert Textarea-Inhalt via KI-Autor-Prompt.
-- [x] Galeriebilder besitzen konfigurierbare Schwellenwerte (-100 bis +100).
-- [x] Sprite-Grid unterstützt Upload, Papier-Plus für Varianten, Stackview und Augen-Modal.
-- [x] Formularvalidierung erzwingt Name, Geschlecht und Primary Portrait.
+## ✅ Acceptance Criteria
+- [x] Sparkle button ✨ enhances textarea contents via AI author prompt.
+- [x] Gallery images feature configurable thresholds (-100 to +100).
+- [x] Sprite grid supports uploads, paper-plus variant additions, stackview, and eye viewer modal.
+- [x] Form validation enforces name, gender, and primary portrait upload.

@@ -1,73 +1,73 @@
-# 💬 Das Chat- & Rollenspiel-Interface
+# 💬 The Chat & Roleplay Interface
 
-[← Zurück zur Übersicht](README.md) | [← Welten & Orte](worldinfo.md) | [Administration & Einstellungen →](admin.md)
+[← Back to Overview](README.md) | [← Worlds & Places](worldinfo.md) | [Administration & Settings →](admin.md)
 
-Das Chatfenster ist das Herzstück von aimo. Hier entfaltet sich das interaktive Textadventure mit Live-Streaming, emotionalen Sprites, dynamischen Ortswechseln und generativen Bildern.
-
----
-
-## 🚀 Chat-Start ("First Chat")
-
-Wenn du einen Charakter zum ersten Mal anklickst:
-1. **Persona-Wahl:** Besitzt du mehr als eine Persona, fragt dich ein kurzer Dialog, wer du sein möchtest. (Nach der ersten Benutzernachricht ist deine Persona für diese Sitzung unveränderlich fixiert).
-2. **WorldInfo-Wahl:** Wähle die Spielwelt aus (die Empfehlung des Charakters ist vorausgewählt). Du kannst auch explizit *"Ohne WorldInfo"* spielen (dann gelten neutrale Hintergründe und keine Events).
-3. **Welcome Message:** Der Charakter begrüßt dich sofort mit seiner definierten Eröffnungsnachricht am passenden Anfangsort.
+The chat screen is the centerpiece of aimo. Here, the interactive text adventure unfolds with live token streaming, emotional sprites, dynamic location transitions, and generative imagery.
 
 ---
 
-## 🖥️ Bildschirmaufbau
+## 🚀 Starting a Chat ("First Chat")
 
-- **Header:** Zurück-Button (`←`) zur Übersicht.
-- **Linke Seitenleiste (Multi-Chat):** Zeigt alle deine Chat-Sessions und Forks mit diesem Charakter. Die Titel aktualisieren sich dynamisch anhand wichtiger Geschehnisse.
-- **Zentraler Drei-Reiter-Container:**
-  - **Tab 1: Chat:** Der fortlaufende Dialog in Sprechblasen (KI links mit Porträt/Sprite, Spieler rechts).
-  - **Tab 2: Medien:** Bündelt alle freigeschalteten 9:16-Galeriebilder, hochgeladenen Fotos und generierten Bilder.
-  - **Tab 3: Erinnerungen:** Zeigt alle vom System generierten Memories (Zusammenfassungen) und erlaubt manuelle Korrekturen.
-- **Rechte Info-Box:**
-  - Charakterporträt / transparenter Emotions-Sprite.
-  - Dynamischer Beziehungsbalken (-100 bis +100 mit Herz-Icon).
-  - Aktuelle WorldInfo mit Wechsel-Stift.
-  - Spieler-Persona.
-  - Aktionen: Events an/aus (Checkbox), Neuer Chat, Chat löschen.
+When you open a character for the first time:
+1. **Persona Selection:** If you have more than one persona, a quick dialog prompts you to choose who you want to play. (Once the first user message is sent, your persona is locked for that session).
+2. **WorldInfo Selection:** Select your setting (the character's recommendation is pre-selected). You can also explicitly choose *"Without WorldInfo"* (applies neutral backgrounds and no events).
+3. **Welcome Message:** The character immediately greets you with their opening message at the designated starting location.
 
 ---
 
-## ⚡ Live-Streaming & Nahtlose Lokalisierung
+## 🖥️ Screen Layout
 
-Da moderne KI-Modelle auf Englisch am nuanciertesten schreiben, das UI aber auf Deutsch operiert, nutzt aimo einen zweistufigen Ablauf:
-1. **Live-Stream (Englisch):** Nach Absenden erscheint *"Denkt nach..."*. Der englische Rohstream läuft live in die Chatbubble ein — jedoch **ausgegraut und in kleinerer Schrift**, damit du den Fortschritt siehst.
-2. **Übersetzungs-Swap:** Sobald der Text komplett ist, erscheint kurz ein Spinner und der ausgegraute Text wird nahtlos durch die **fertige deutsche Übersetzung** in normaler Schriftgröße ersetzt.
-
----
-
-## 🧭 Interaktiver Ortswechsel (Textadventure)
-
-Wenn die Erzählung der KI einen Ortswechsel vorschlägt (z. B. *"Lass uns in den Wald aufbrechen"*):
-- Ein Button blendet sich im Chat ein: *"Möchtest du zu [Neuer Ort] wechseln? [Ja] [Nein]"*.
-- **60-Sekunden-Countdown:** Ein kleiner roter Balken am unteren Rand des Buttons schrumpft 60 Sekunden lang zusammen. Reagierst du nicht, verschwindet die Abfrage rückstandslos.
-- **Bei "Ja":** Der Ort schaltet um, das 16:9-Hintergrundbild wechselt und im Chat erscheint eine dezente zentrierte Systemmeldung: *"Ihr seid nach {ort} gegangen"*.
-
----
-
-## 🎨 Multimodale Features & Eingabeleiste
-
-- **Klammer-Symbol (Bild hochladen):** Hänge ein beliebiges Bild an deine Nachricht an. Ein Vision-Modell erzeugt im Hintergrund einen präzisen ALT-Text, der der KI situativ erklärt, was du zeigst.
-- **Zauberstab mit Sparkles ✨ (ComfyUI Bildgenerierung):**
-  - Generiert auf Basis der aktuellen Szene ein Bild per ComfyUI.
-  - Während der Generierung erscheint *"Bild wird generiert..."* und das Texteingabefeld ist gesperrt.
-  - Über den angezeigten **Abbrechen-Button** kannst du den Vorgang jederzeit stoppen.
-  - Das fertige Bild erscheint im Chat und im Reiter *"Medien"*.
+- **Header:** Back button (`←`) to the main overview.
+- **Left Sidebar (Multi-Chat):** Lists all your chat sessions and forks with this character. Titles update dynamically based on key events.
+- **Central Three-Tab Container:**
+  - **Tab 1: Chat:** The ongoing dialogue in message bubbles (AI on the left with portrait/sprite, player on the right).
+  - **Tab 2: Media:** Aggregates all unlocked 9:16 gallery images, uploaded photos, and generated images.
+  - **Tab 3: Memories:** Lists all system-generated memory summaries and allows manual edits.
+- **Right Info Box:**
+  - Character portrait / transparent emotion sprite.
+  - Dynamic relationship bar (-100 to +100 with heart icon).
+  - Active WorldInfo with edit pencil.
+  - Player persona badge.
+  - Actions: Events toggle (checkbox), New Chat, Delete Chat.
 
 ---
 
-## 💔 Beziehungsdynamik & Memories
+## ⚡ Live Streaming & Seamless Localization
 
-- **Beziehungswert:** Jede deiner Nachrichten erhöht den Wert um `+0.1`. Bei längerer Inaktivität sinkt der Wert um `-0.1` pro Tag (maximal von -100 bis +100).
-- **Freischaltbare Bilder:** Erreicht der Wert den Schwellenwert eines hinterlegten 9:16-Bildes, wird es im Reiter *"Medien"* freigeschaltet.
-- **Memories (alle 10 Nachrichten):** Alle 10 Nachrichten fasst ein Hintergrund-Modell das Geschehen zusammen und aktualisiert den Chat-Titel in der linken Seitenleiste.
-- **Drei-Punkte-Menü (`...`):**
-  - **Nachricht löschen:** Löscht die Nachricht sowie alle folgenden Beiträge und kaskadierend alle zugehörigen Memories.
-  - **Chat forken:** Erstellt eine Kopie des Chats ab genau diesem Zeitpunkt für alternative Handlungsstränge.
-  - **Vorlesen:** Liest die Nachricht per Voice AI vor.
+Because modern LLMs write with the greatest depth and nuance in English while the UI operates in your localized language, aimo employs a two-stage streaming workflow:
+1. **Live Stream (English):** When submitted, a *"Thinking..."* state appears. The raw English token stream streams into the message bubble in real time — **dimmed in gray and rendered in smaller text** so you can follow the generation progress.
+2. **Translation Swap:** The instant generation finishes, a brief spinner appears and the dimmed English text is cleanly replaced by the **final translated text** in standard font size.
 
-Weiter zu: [**Administration & Einstellungen →**](admin.md)
+---
+
+## 🧭 Interactive Location Transitions (Text Adventure)
+
+When the AI narrative suggests travelling to a new location (e.g., *"Let us set out into the forest"*):
+- A confirmation button appears in chat: *"Would you like to move to [New Location]? [Yes] [No]"*.
+- **60-Second Countdown:** A red progress bar along the bottom edge of the button steadily shrinks over 60 seconds. If ignored, the prompt silently dissolves.
+- **On "Yes":** The location shifts, the 16:9 background image changes, and a discreet centered system notification appears: *"You travelled to {location}"*. This notice is **never** added to the LLM prompt history.
+
+---
+
+## 🎨 Multimodal Features & Input Bar
+
+- **Paperclip Icon (Image Upload):** Attach any image to your message. A Vision model generates a concise ALT description in the background, providing the AI with situational awareness of what you showed it.
+- **Magic Wand with Sparkles ✨ (ComfyUI Image Generation):**
+  - Generates a scene illustration via ComfyUI based on current narrative context.
+  - During generation, a centered status indicator displays *"Generating image..."* and user input is locked.
+  - A **Cancel Button** allows you to abort generation at any time and immediately unlocks input.
+  - The generated image renders directly in chat and archives under the *"Media"* tab.
+
+---
+
+## 💔 Relationship Dynamics & Memories
+
+- **Affection Score:** Each message sent by the player increases the score by `+0.1`. Extended inactivity decreases the score by `-0.1` per day (bounded between -100.0 and +100.0).
+- **Unlockable Artwork:** Once the relationship reaches the threshold set on a 9:16 character image, it automatically unlocks in the *"Media"* tab.
+- **Memories (Every 10 Messages):** Every 10 messages, a background LLM summarizes recent events and refreshes the chat session title in the sidebar.
+- **Three-Dot Menu (`...`):**
+  - **Delete Message:** Deletes the selected message along with all subsequent messages and cascaded memories.
+  - **Fork Chat:** Clones the conversation from this exact point forward into a branching timeline.
+  - **Read Aloud:** Synthesizes and plays back the message via Voice AI.
+
+Continue to: [**Administration & Settings →**](admin.md)

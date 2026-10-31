@@ -1,20 +1,20 @@
-# Task 006: Spieler-Personas & Vision-Aussehensanalyse
+# Task 006: Player Personas & Vision Appearance Analysis
 
-## 🎯 Ziel & Umfang
-Verwaltung von Spieler-Personas (Identität des Spielers im Rollenspiel) inklusive automatischer Aussehens-Extraktion via Vision-Modell und Lösch-Schutz für Personas, die in aktiven Chats verwendet werden.
+## 🎯 Goal & Scope
+Management of player personas (the user's identity in roleplay) including automated appearance extraction via Vision models and deletion protection for personas active in chat sessions.
 
-## 📂 Betroffene Schicht & Dateien
-- **Schicht:** `domain/personas/`
-- **Dateien:**
+## 📂 Affected Layer & Files
+- **Layer:** `domain/personas/`
+- **Files:**
   - `domain/personas/models.py`
   - `domain/personas/services.py`
   - `domain/personas/exceptions.py`
 
-## 🔗 Abhängigkeiten
+## 🔗 Dependencies
 - `tasks/001_foundation_config_and_shared_utils.md`
 - `tasks/005_infrastructure_provider_interfaces_and_adapters.md`
 
-## 📝 Fachliche Vorgaben & Spezifikation
+## 📝 Functional Specifications & Requirements
 
 ### 1. `domain/personas/models.py`
 - **`Gender` (Enum):**
@@ -26,10 +26,10 @@ Verwaltung von Spieler-Personas (Identität des Spielers im Rollenspiel) inklusi
   - `user_id: int`
   - `name: str`
   - `gender: Gender`
-  - `portrait_path: str` (visuelles Referenzbild)
-  - `description: str` (Hintergrund, Persönlichkeit des Nutzers)
-  - `appearance: str` (textuelle Beschreibung physischer Merkmale)
-  - `is_default: bool = False` (Standard-Persona für Dashboard-Button)
+  - `portrait_path: str` (visual reference image)
+  - `description: str` (backstory, personality traits)
+  - `appearance: str` (textual description of physical features)
+  - `is_default: bool = False` (default persona for header button)
   - `created_at: datetime`
 
 ### 2. `domain/personas/services.py`
@@ -37,18 +37,18 @@ Verwaltung von Spieler-Personas (Identität des Spielers im Rollenspiel) inklusi
   - `create_persona(user_id: int, name: str, gender: Gender, portrait_path: str, description: str, appearance: str = "", is_default: bool = False) -> UserPersona`
   - `update_persona(persona: UserPersona, name: str, gender: Gender, portrait_path: str, description: str, appearance: str) -> UserPersona`
   - `analyze_appearance(persona: UserPersona, vision_provider: LLMProvider, vision_model: str, prompt: str) -> str`:
-    - Ruft `vision_provider.analyze_image()` mit dem Porträtbild auf.
-    - **Fokus-Regel:** Extrahiert Gesichtsmerkmale, Haare, Teint, Statur. Bildhintergründe oder situative Körperposen werden ignoriert.
-    - Aktualisiert `persona.appearance`.
+    - Calls `vision_provider.analyze_image()` with the portrait image.
+    - **Focus Rule:** Extracts facial features, hair, complexion, physique. Image backgrounds and situational poses are ignored.
+    - Updates `persona.appearance`.
   - `delete_persona(persona: UserPersona, has_active_chats: bool) -> None`:
-    - **Lösch-Sperre:** Wenn `has_active_chats == True`, wird `PersonaInUseError` geworfen.
+    - **Deletion Lock:** If `has_active_chats == True`, raises `PersonaInUseError`.
   - `set_default_persona(user_id: int, persona_id: int) -> None`
 
 ### 3. `domain/personas/exceptions.py`
 - `PersonaNotFoundError`, `InvalidPersonaDataError`, `PersonaInUseError`.
 
-## ✅ Akzeptanzkriterien
-- [x] Vollständige Domänenlogik für Personas mit `Gender`-Enum.
-- [x] Automatisierte Vision-Analyse befüllt das Aussehen ohne Hintergrund/Posen.
-- [x] Lösch-Schutz greift verlässlich, wenn die Persona in Chats verwendet wurde.
-- [x] Manuell editierte Aussehensbeschreibungen bleiben geschützt.
+## ✅ Acceptance Criteria
+- [x] Complete domain logic for personas with `Gender` enum.
+- [x] Automated Vision analysis populates appearance without backgrounds/poses.
+- [x] Deletion protection reliably triggers if persona is referenced in chats.
+- [x] Manually edited appearance descriptions remain preserved.

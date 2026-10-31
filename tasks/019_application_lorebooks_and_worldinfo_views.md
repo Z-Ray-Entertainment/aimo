@@ -1,11 +1,11 @@
-# Task 019: Lorebook- & WorldInfo-Editoren (Places & Events)
+# Task 019: Lorebook & WorldInfo Editors (Places & Events)
 
-## 🎯 Ziel & Umfang
-Umsetzung der Editoren für Lorebooks und WorldInfo inklusive modalem Eintrags-Editor, 16:9-Orts-Upload mit Vision-ALT-Erweiterungsabfrage und Tab 2 für Events mit Zugehörigkeits-Badges.
+## 🎯 Goal & Scope
+Implementation of editors for Lorebooks and WorldInfo including modal entry editor, 16:9 location uploads with Vision ALT expansion prompt, and Tab 2 for events with scope badges.
 
-## 📂 Betroffene Schicht & Dateien
-- **Schicht:** `application/lorebooks/`, `application/worldinfo/`, `templates/lorebooks/`, `templates/worldinfo/`
-- **Dateien:**
+## 📂 Affected Layer & Files
+- **Layer:** `application/lorebooks/`, `application/worldinfo/`, `templates/lorebooks/`, `templates/worldinfo/`
+- **Files:**
   - `application/lorebooks/views.py`
   - `application/lorebooks/forms.py`
   - `templates/lorebooks/detail.html`
@@ -13,41 +13,41 @@ Umsetzung der Editoren für Lorebooks und WorldInfo inklusive modalem Eintrags-E
   - `application/worldinfo/forms.py`
   - `templates/worldinfo/detail.html`
 
-## 🔗 Abhängigkeiten
+## 🔗 Dependencies
 - `tasks/007_domain_lorebooks_and_entries.md`
 - `tasks/008_domain_worldinfo_locations_and_events.md`
 - `tasks/013_infrastructure_repositories.md`
 - `tasks/015_ui_theme_static_assets_and_base_template.md`
 
-## 📝 Fachliche Vorgaben & Spezifikation
+## 📝 Functional Specifications & Requirements
 
-### 1. Lorebook-Editor (`templates/lorebooks/detail.html`)
-- Name des Lorebooks (editierbar).
-- Kachelansicht aller Einträge:
-  - **Erste Kachel:** Platzhalter mit Plus-Symbol (`+`) zum Hinzufügen.
-  - Kacheln mit Titel, Tags und Textvorschau.
-- **Modaler Overlay-Frame für Einträge:**
-  - Titel (`str`), Tags (`list[str]`), Beschreibung / Fließtext (`textarea`).
-  - Speichern und Löschen.
+### 1. Lorebook Editor (`templates/lorebooks/detail.html`)
+- Editable lorebook title.
+- Tile overview of all entries:
+  - **First Tile:** Placeholder with plus icon (`+`) to add entries.
+  - Cards showing title, tags, and snippet preview.
+- **Modal Overlay Frame for Entries:**
+  - Title (`str`), tags (`list[str]`), description / prose (`textarea`).
+  - Save and delete actions.
 
-### 2. WorldInfo-Editor (`templates/worldinfo/detail.html`)
-- Name der Welt, Icon-Upload / Symbol (`icon`).
-- **Tab 1: Places (Orte):**
-  - Kachelansicht aller zugehörigen Orte; erste Kachel ist Add-Kachel (`+`).
-  - **Modaler Overlay-Frame für Orte:**
-    - Name, Tags, Beschreibung.
-    - Bildupload im Querformat 16:9 (PNG, JPG, WEBP).
-    - **Vision-ALT & Erweiterungsabfrage:** Nach Upload generiert das Vision-Modell einen ALT-Text; Dialog fragt: *"Möchtest du die Ortsbeschreibung um die KI-generierte Bildbeschreibung erweitern?"*.
-    - Event-Zuordnung (Liste der Events an diesem Ort).
-- **Tab 2: Events (Ereignisse):**
-  - Grid-Ansicht aller Events; erste Kachel ist Add-Kachel (`+`).
-  - Kacheln zeigen Titel, Wahrscheinlichkeit (0–100%), One-Shot-Status und deutlich ein **Zugehörigkeits-Badge** (konkreter Ort oder *"Gesamte Welt"*).
-  - **Modaler Overlay-Frame für Events:**
-    - Titel, Wahrscheinlichkeit (`0 - 100%`), One-Shot-Checkbox.
-    - Zugehörigkeit: Dropdown ("Gesamte Welt" oder Ort aus dieser WorldInfo). **Regel:** Entweder Welt oder konkreter Ort.
-    - Szenische Beschreibung des Ereignisses.
+### 2. WorldInfo Editor (`templates/worldinfo/detail.html`)
+- World title, icon upload / symbol (`icon`).
+- **Tab 1: Places (Locations):**
+  - Card gallery of all assigned locations; first card is Add tile (`+`).
+  - **Modal Overlay Frame for Locations:**
+    - Name, tags, description.
+    - Image upload in landscape 16:9 format (PNG, JPG, WEBP).
+    - **Vision-ALT & Expansion Dialog:** Following upload, the Vision model outputs an ALT text; dialog prompts: *"Would you like to expand the location description with this AI image description?"*.
+    - Event assignment (list of events occurring here).
+- **Tab 2: Events (Encounters):**
+  - Grid view of all events; first card is Add tile (`+`).
+  - Cards display title, probability (0–100%), one-shot status, and a distinct **scope badge** (specific place or *"Entire World"*).
+  - **Modal Overlay Frame for Events:**
+    - Title, probability (`0 - 100%`), one-shot toggle.
+    - Scope: Dropdown ("Entire World" or location within this WorldInfo). **Rule:** Exclusively world or specific location.
+    - Scenic prose description of the event.
 
-## ✅ Akzeptanzkriterien
-- [x] Add-Kachel an erster Stelle in allen Grids.
-- [x] 16:9-Hintergrunderweiterung mit interaktiver Vision-ALT-Abfrage.
-- [x] Events zeigen Zugehörigkeits-Badges und sind exklusiv der Welt oder einem Ort zugeordnet.
+## ✅ Acceptance Criteria
+- [x] Add tile positioned first across all grids.
+- [x] 16:9 background upload with interactive Vision ALT expansion prompt.
+- [x] Events display scope badges and are exclusively bound to either the world or a specific location.

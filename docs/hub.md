@@ -1,47 +1,47 @@
-# 🏰 Das Hub-Dashboard
+# 🏰 The Hub Dashboard
 
-[← Zurück zur Übersicht](README.md) | [← Ersteinrichtung](first_boot.md) | [Spieler-Personas →](personas.md)
+[← Back to Overview](README.md) | [← Initial Setup](first_boot.md) | [Player Personas →](personas.md)
 
-Nach erfolgreichem Login landest du direkt auf der zentralen Hauptübersicht von aimo. Von hier aus hast du Zugriff auf alle Rollenspiel-Charaktere, Wissensbücher und Welten.
-
----
-
-## 👤 Der Persona-Button im Header
-
-Am oberen Rand des Bildschirms befindet sich ein kompakter runder Button mit dem Porträt deiner aktuellen Standard-Persona.
-- **Klick auf das Avatar:** Öffnet das [Persona-Overlay-Modal](personas.md).
-- Hier kannst du schnell zwischen deinen Identitäten wechseln, neue Personas anlegen oder bestehende verwalten.
+Following a successful login, you land directly on the main central hub of aimo. From here, you have immediate access to all roleplay characters, lorebooks, and world settings.
 
 ---
 
-## 🗂️ Die drei Haupt-Tabs
+## 👤 The Header Persona Button
 
-Unterhalb des Headers navigierst du über drei thematische Reiter mit monochromen Icons:
+At the top of the screen sits a compact circular button displaying the avatar portrait of your current default persona.
+- **Clicking the Avatar:** Opens the [Persona Overlay Modal](personas.md).
+- Allows you to quickly switch between identities, create new personas, or manage existing ones.
 
-### 1. Tab: Charaktere (`👤`)
-Die zentrale Galerie aller für dich verfügbaren KI-Charaktere (öffentliche Charaktere aller Autoren sowie deine eigenen privaten Charaktere):
-- **Neuer Charakter (Erste Kachel):**  
-  Wenn du das Recht besitzt, neue Charaktere zu erstellen, siehst du als allererste Kachel einen Platzhalter mit einem grünen Plus-Symbol (`+`). Klick darauf öffnet den [Character Designer](characters.md).
-- **Charakter-Kacheln:**
-  - **Primary Portrait:** Großes Porträtbild des Charakters im Holzrahmen.
-  - **Scrollender Beschreibungstext:** Die Persönlichkeitsbeschreibung scrollt elegant als Overlay im unteren Bereich des Porträts.
-  - **Sprechblasen-Icon (unten links):** Zeigt an, wie viele Nachrichten du insgesamt (über alle Chats und Forks hinweg) mit diesem Charakter geschrieben hast.
-  - **Beziehungsstatus-Balken (-100 bis +100):**
-    - Zeigt den besten Beziehungswert aus allen deinen Chats mit diesem Charakter.
-    - Dynamische Farb- und Icon-Steuerung: Bei -100 dunkelrot mit zerbrochenem Herz (💔), bei +100 rosa mit funkelndem Herz (💖).
-- **Filter & Sortierung:**
-  - Filtere nach Geschlecht (`männlich`, `weiblich`, `nicht-binär`) oder nur neuen Charakteren.
-  - Sortiere nach *bereits gechattet* oder *noch nicht gechattet*.
-- **Klick auf eine Kachel:** Startet oder öffnet direkt den [Chat mit diesem Charakter](chat.md).
+---
+
+## 🗂️ The Three Main Tabs
+
+Beneath the header, navigation is split across three thematic tabs with monochrome icons:
+
+### 1. Tab: Characters (`👤`)
+The central gallery of all AI characters accessible to you (public characters created across the system as well as your own private characters):
+- **New Character (First Tile):**  
+  If your account has permission to create characters, the very first tile is a placeholder with a green plus icon (`+`). Clicking it opens the [Character Designer](characters.md).
+- **Character Tiles:**
+  - **Primary Portrait:** Large portrait image of the character enclosed in a wooden frame.
+  - **Scrolling Description Text:** The personality description smoothly scrolls as an overlay across the bottom area of the portrait.
+  - **Speech Bubble Icon (Bottom-Left):** Displays the total number of messages you have exchanged with this character across all chats and forks.
+  - **Relationship Status Bar (-100 to +100):**
+    - Displays the highest affection score achieved across all your chats with this character.
+    - Dynamic color and heart indicator: Dark red with broken heart (💔) at -100, bright pink with sparkling heart (💖) at +100.
+- **Filters & Sorting:**
+  - Filter by gender (`male`, `female`, `non-binary`) or view only new characters.
+  - Sort by *chatted before* or *never chatted*.
+- **Clicking a Tile:** Directly launches or resumes a [Chat with this Character](chat.md).
 
 ### 2. Tab: Lorebooks (`📜`)
-Übersicht aller thematischen Wissensbücher.
-- Erste Kachel (`+`) zum Hinzufügen eines neuen Lorebooks.
-- Kacheln zeigen Titel, Tags und die Anzahl hinterlegter Einträge. Klick öffnet den [Lorebook-Editor](lorebooks.md).
+Overview of all thematic knowledge encyclopedias.
+- First tile (`+`) to add a new lorebook.
+- Tiles show title, tags, and entry count. Clicking a tile opens the [Lorebook Editor](lorebooks.md).
 
 ### 3. Tab: WorldInfo (`🌐`)
-Übersicht aller gestalteten Welten.
-- Erste Kachel (`+`) zum Anlegen einer neuen Welt.
-- Kacheln mit Symbol-Icon (`icon`), Titel und der Anzahl enthaltener Orte. Klick öffnet den [WorldInfo-Editor](worldinfo.md).
+Overview of all world settings.
+- First tile (`+`) to create a new world.
+- Tiles display an icon symbol (`icon`), title, and count of included locations. Clicking a tile opens the [WorldInfo Editor](worldinfo.md).
 
-Weiter zu: [**Spieler-Personas →**](personas.md)
+Continue to: [**Player Personas →**](personas.md)

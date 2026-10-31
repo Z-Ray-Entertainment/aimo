@@ -1,19 +1,19 @@
-# Task 004: ServiceSettings & Editierbare System-Prompts
+# Task 004: ServiceSettings & Editable System Prompts
 
-## 🎯 Ziel & Umfang
-Verwaltung der Systemeinstellungen für externe KI-Dienste (Ollama, ComfyUI, SearXNG, Voice TTS) sowie aller editierbaren System-Prompts und task-spezifischen Hyperparameter.
+## 🎯 Goal & Scope
+Manage system settings for external AI services (Ollama, ComfyUI, SearXNG, Voice TTS) along with all editable system prompts and task-specific inference hyperparameters.
 
-## 📂 Betroffene Schicht & Dateien
-- **Schicht:** `domain/settings/`
-- **Dateien:**
+## 📂 Affected Layer & Files
+- **Layer:** `domain/settings/`
+- **Files:**
   - `domain/settings/models.py`
   - `domain/settings/services.py`
   - `domain/settings/exceptions.py`
 
-## 🔗 Abhängigkeiten
+## 🔗 Dependencies
 - `tasks/001_foundation_config_and_shared_utils.md`
 
-## 📝 Fachliche Vorgaben & Spezifikation
+## 📝 Functional Specifications & Requirements
 
 ### 1. `domain/settings/models.py`
 - **`ModelParameters` (Value Object):**
@@ -27,30 +27,30 @@ Verwaltung der Systemeinstellungen für externe KI-Dienste (Ollama, ComfyUI, Sea
   - `assistant_model: str`
   - `vision_model: str`
 - **`SystemPrompts` (Entity / Value Object):**
-  - `roleplay_prompt: str`: Kern-Instruktion für das interaktive Charakter-Rollenspiel (Strikte Regel: Niemals für den User antworten!).
-  - `memory_prompt: str`: Extraktions-Prompt für 10-Nachrichten-Zusammenfassungen und Tags.
-  - `diffuser_prompt: str`: Konvertiert Szene und Kontext in Stable Diffusion / Flux Prompts für ComfyUI.
-  - `sparkle_assistant_prompt: str`: KI-Autor zur Optimierung von Charakterbeschreibungen (*"Du bist ein professioneller Autor..."*).
-  - `vision_persona_prompt: str`: Extrahiert Gesichtszüge und äußere Merkmale aus Porträts (ohne Hintergrund/Posen).
+  - `roleplay_prompt: str`: Core instructions for interactive character roleplay (Strict rule: Never speak or act for the user!).
+  - `memory_prompt: str`: Extraction prompt for 10-message summaries and tags.
+  - `diffuser_prompt: str`: Converts scene context into Stable Diffusion / Flux prompts for ComfyUI.
+  - `sparkle_assistant_prompt: str`: AI author for enhancing character descriptions (*"You are a professional author..."*).
+  - `vision_persona_prompt: str`: Extracts facial features and physical appearance from portraits (ignoring background/poses).
 - **`ServiceSettings` (Entity):**
   - `id: int`
   - `ollama_url: str`
   - `comfyui_url: str`
   - `searxng_url: str`
-  - `searxng_enabled: bool = False` (vorerst TODO)
+  - `searxng_enabled: bool = False` (currently TODO)
   - `tasks: TaskAssignment`
   - `params: ModelParameters`
   - `prompts: SystemPrompts`
 
 ### 2. `domain/settings/services.py`
 - `SettingsService`:
-  - `get_default_settings() -> ServiceSettings`: Initialisiert robuste Defaults.
+  - `get_default_settings() -> ServiceSettings`: Initializes robust defaults.
   - `update_service_urls(...) -> ServiceSettings`
   - `update_task_models(...) -> ServiceSettings`
   - `update_parameters(...) -> ServiceSettings`
   - `update_system_prompts(...) -> ServiceSettings`
 
-## ✅ Akzeptanzkriterien
-- [x] Vollständige Repräsentation aller Modell-Parameter und System-Prompts.
-- [x] Standard-Prompts entsprechen exakt den Vorgaben aus AGENTS.md (inkl. Rollenspiel-Disziplin und Autor-Sparkle).
-- [x] Saubere Validierung der Inferenzparameter (z. B. positive Kontextgrößen, plausible Temperatur).
+## ✅ Acceptance Criteria
+- [x] Complete representation of all model parameters and system prompts.
+- [x] Standard prompts strictly adhere to specifications from AGENTS.md (including roleplay discipline and author sparkle).
+- [x] Clean validation of inference parameters (e.g., positive context window size, plausible temperature).

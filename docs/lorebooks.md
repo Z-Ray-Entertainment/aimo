@@ -1,33 +1,33 @@
-# 📚 Lorebooks & Wissensbücher
+# 📚 Lorebooks & Encyclopedias
 
-[← Zurück zur Übersicht](README.md) | [← KI-Charaktere](characters.md) | [Welten, Orte & Events →](worldinfo.md)
+[← Back to Overview](README.md) | [← AI Characters](characters.md) | [Worlds, Places & Events →](worldinfo.md)
 
-**Lorebooks** dienen als thematische Enzyklopädien. Sie erlauben es, der KI umfangreiches Hintergrundwissen über Fraktionen, Magiesysteme, historische Ereignisse oder Technologie bereitzustellen — ohne das Kontextfenster mit unnötigen Daten zu überlasten.
-
----
-
-## 🏗️ Aufbau eines Lorebooks
-
-1. **Name des Lorebooks:** Z. B. *"Geschichte von Eldoria"*, *"Magie & Zaubersprüche"*.
-2. **Kachel-Übersicht aller Einträge:**
-   - **Erste Kachel:** Ein Platzhalter mit Plus-Symbol (`+`), um neue Einträge hinzuzufügen.
-   - Alle weiteren Kacheln zeigen Titel, verknüpfte Tags und eine kurze Textvorschau.
+**Lorebooks** serve as thematic encyclopedias. They allow creators to provide rich background knowledge regarding factions, magic systems, historical events, or technology — without cluttering the LLM's context window with unnecessary data.
 
 ---
 
-## 📝 Einen Eintrag verfassen (Modaler Dialog)
+## 🏗️ Structure of a Lorebook
 
-Ein Klick auf eine Kachel öffnet das Overlay-Fenster für diesen Eintrag:
-- **Titel:** Z. B. *"Der Orden der Schattenmagier"*.
-- **Tags (Schlüsselwörter):** Kommagetrennte Liste von Schlagworten (z. B. `magie, orden, schatten, zauberer`).
-- **Beschreibung / Fließtext:** Ausführliche Erklärung und Fakten.
+1. **Lorebook Name:** E.g., *"History of Eldoria"*, *"Magic & Arcane Spells"*.
+2. **Tile Overview of Entries:**
+   - **First Tile:** A placeholder tile with a plus icon (`+`) to add new entries.
+   - All following tiles display the entry's title, linked tags, and a short snippet preview.
 
 ---
 
-## 🔍 Wie das Wissen in den Chat gelangt (Tag-RAG)
+## 📝 Composing an Entry (Modal Dialog)
 
-aimo nutzt ein **strikt regelbasiertes Tag-Matching**:
-- Fallen im laufenden Chat Wörter, die mit den Tags eines Lorebook-Eintrags übereinstimmen (`tags_overlap >= 1`), wird dieser Eintrag automatisch in den Kontext für die nächste KI-Antwort geladen.
-- Wird das Thema nicht erwähnt, bleibt der Eintrag inaktiv. So bleibt das Gedächtnis der KI schlank und präzise.
+Clicking an entry tile opens an overlay modal:
+- **Title:** E.g., *"The Order of Shadow Mages"*.
+- **Tags (Keywords):** Comma-separated list of keywords (e.g., `magic, order, shadow, wizard`).
+- **Description / Prose:** In-depth explanation, background facts, and context.
 
-Weiter zu: [**Welten, Orte & Ereignisse (WorldInfo) →**](worldinfo.md)
+---
+
+## 🔍 How Knowledge is Injected into Chat (Tag-RAG)
+
+aimo utilizes **strict rule-based tag matching**:
+- If words mentioned in the ongoing dialogue match any tags in an active lorebook entry (`tags_overlap >= 1`), that entry is automatically injected into the prompt context for the next AI generation.
+- If the topic is not mentioned, the entry remains dormant. This keeps the LLM's working memory lean and focused.
+
+Continue to: [**Worlds, Places & Events (WorldInfo) →**](worldinfo.md)

@@ -1,54 +1,54 @@
-# Task 017: Hub-Dashboard (3-Tab-Navigation & Persona-Modal)
+# Task 017: Hub Dashboard (3-Tab Navigation & Persona Modal)
 
-## 🎯 Ziel & Umfang
-Umsetzung der zentralen Hauptübersicht nach dem Login mit Persona-Avatar-Button im Header, modalem Persona-Manager und dem 3-Tab-Container (Charaktere 👤, Lorebooks 📜, WorldInfo 🌐).
+## 🎯 Goal & Scope
+Implementation of the central hub overview following user login, featuring a persona avatar button in the header, modal persona manager, and a 3-tab container (Characters 👤, Lorebooks 📜, WorldInfo 🌐).
 
-## 📂 Betroffene Schicht & Dateien
-- **Schicht:** `application/overview/`, `templates/overview/`
-- **Dateien:**
+## 📂 Affected Layer & Files
+- **Layer:** `application/overview/`, `templates/overview/`
+- **Files:**
   - `application/overview/views.py`
   - `templates/overview/index.html`
 
-## 🔗 Abhängigkeiten
+## 🔗 Dependencies
 - `tasks/006_domain_personas_and_vision_analysis.md`
 - `tasks/007_domain_lorebooks_and_entries.md`
 - `tasks/008_domain_worldinfo_locations_and_events.md`
 - `tasks/009_domain_characters_and_emotional_sprites.md`
 - `tasks/015_ui_theme_static_assets_and_base_template.md`
 
-## 📝 Fachliche Vorgaben & Spezifikation
+## 📝 Functional Specifications & Requirements
 
-### 1. Header & Default-Persona-Button
-- Zeigt oben rechts/mittig das Porträt der aktuellen Standard-Persona des Benutzers.
-- Klick öffnet ein **modales Overlay zur Persona-Verwaltung**:
-  - Grid-Ansicht aller eigenen Personas.
-  - Neuanlage-Kachel (`+`).
-  - Bearbeiten und Löschen (Lösch-Button deaktiviert mit Hinweis, wenn Persona in Chats verwendet wird).
+### 1. Header & Default Persona Button
+- Displays the avatar portrait of the user's current default persona in the top header.
+- Clicking the avatar opens a **modal overlay for persona management**:
+  - Grid view of all owned personas.
+  - New persona creation tile (`+`).
+  - Edit and delete actions (delete button disabled with explanatory tooltip when persona is used in active chats).
 
-### 2. Tab 1: KI-Charaktere (`👤`)
-- **Erste Kachel (Neuer Charakter):** Platzhalter mit grünem Plus-Symbol (`+`) im selben Fluss wie Porträts (nur sichtbar bei Berechtigung `character_create`). Klick führt zu `/characters/new`.
-- **Charakter-Kacheln:**
-  - Primary Portrait als Kachelhintergrund.
-  - **Scrollender Overlay-Text:** Zeigt die Persönlichkeitsbeschreibung im Porträtrahmen an.
-  - **Sprechblasen-Icon (unten links):** Zeigt Gesamtanzahl ausgetauschter Nachrichten dieses Benutzers mit dem Charakter (nur bei Nachrichten > 0).
-  - **Beziehungsstatus-Balken (-100 bis +100):**
-    - Zeigt den besten Beziehungswert aller Chats dieses Benutzers.
-    - Dynamische Farb- und Icon-Steuerung: -100 dunkelrot mit zerbrochenem Herz (💔), +100 rosa mit funkelndem Herz (💖).
-  - **Filter & Sortierung:** Neue Charaktere, Geschlecht (`Gender`), sortieren nach "bereits gechattet / noch nicht gechattet".
-  - Klick öffnet die Chat-Ansicht für den Charakter.
+### 2. Tab 1: AI Characters (`👤`)
+- **First Tile (New Character):** Placeholder tile with a green plus icon (`+`) matching the card flow (visible only with `character_create` permission). Clicking navigates to `/characters/new`.
+- **Character Cards:**
+  - Primary portrait as tile backdrop.
+  - **Scrolling Overlay Text:** Presents character description within the frame.
+  - **Speech Bubble Icon (Bottom-Left):** Shows total message count exchanged between user and character (only when count > 0).
+  - **Relationship Status Bar (-100 to +100):**
+    - Displays best relationship score across all user's chats with this character.
+    - Dynamic color and heart icon: -100 dark red with broken heart (💔), +100 bright pink with sparkling heart (💖).
+  - **Filters & Sorting:** New characters, gender (`Gender`), sort by "chatted before / never chatted".
+  - Clicking opens the chat view for that character.
 
 ### 3. Tab 2: Lorebooks (`📜`)
-- Grid-Ansicht aller Lorebooks.
-- Erste Kachel: Add-Kachel (`+`) zum Anlegen eines neuen Lorebooks (bei Recht `lorebook_create`).
-- Kacheln mit Titel, Tags und Eintragsanzahl. Klick öffnet `/lorebooks/<id>`.
+- Grid view of all lorebooks.
+- First tile: Add tile (`+`) to register a new lorebook (requires `lorebook_create` permission).
+- Cards display title, tags, and entry count. Clicking opens `/lorebooks/<id>`.
 
 ### 4. Tab 3: WorldInfo (`🌐`)
-- Grid-Ansicht aller Welten.
-- Erste Kachel: Add-Kachel (`+`) zum Anlegen (bei Recht `worldinfo_create`).
-- Kacheln mit Icon (`icon`), Titel und Ortsanzahl. Klick öffnet `/worldinfo/<id>`.
+- Grid view of all world settings.
+- First tile: Add tile (`+`) to register a new world (requires `worldinfo_create` permission).
+- Cards display icon symbol (`icon`), title, and location count. Clicking opens `/worldinfo/<id>`.
 
-## ✅ Akzeptanzkriterien
-- [x] 3-Tab-Container mit Icons (`👤`, `📜`, `🌐`) schaltet ohne Seiten-Reload reibungslos um.
-- [x] Erste Kachel mit Plus-Symbol prüft Berechtigungen (`character_create` etc.).
-- [x] Scrollender Beschreibungstext und Beziehungsbalken mit dynamischen Herzen im Charakter-Porträt.
-- [x] Persona-Modal ermöglicht Wechsel, Neuanlage und respektiert die Lösch-Sperre.
+## ✅ Acceptance Criteria
+- [x] 3-tab container with icons (`👤`, `📜`, `🌐`) switches seamlessly without full page reloads.
+- [x] First tile with plus symbol respects user permissions (`character_create`, etc.).
+- [x] Scrolling description text and relationship bar with dynamic hearts render cleanly on portrait cards.
+- [x] Persona modal allows switching, creation, and respects active chat deletion locks.

@@ -1,11 +1,11 @@
-# Task 016: First-Boot Wizard & Login-Controller
+# Task 016: First-Boot Wizard & Login Controllers
 
-## 🎯 Ziel & Umfang
-Umsetzung des Erststart-Wizards (`/setup`), wenn noch keine Benutzer in der Datenbank existieren, und der zentralen Login-Maske (`/login`). Kein öffentlicher Registrierungspfad (`/register` gesperrt/deaktiviert).
+## 🎯 Goal & Scope
+Implement the first-boot setup wizard (`/setup`), active only when no users exist in the database, and the central login portal (`/login`). No public registration endpoint (`/register` is locked/disabled).
 
-## 📂 Betroffene Schicht & Dateien
-- **Schicht:** `application/setup/`, `application/auth/`, `templates/setup/`, `templates/auth/`
-- **Dateien:**
+## 📂 Affected Layer & Files
+- **Layer:** `application/setup/`, `application/auth/`, `templates/setup/`, `templates/auth/`
+- **Files:**
   - `application/setup/views.py`
   - `application/setup/forms.py`
   - `application/auth/views.py`
@@ -14,34 +14,34 @@ Umsetzung des Erststart-Wizards (`/setup`), wenn noch keine Benutzer in der Date
   - `templates/setup/first_boot.html`
   - `templates/auth/login.html`
 
-## 🔗 Abhängigkeiten
+## 🔗 Dependencies
 - `tasks/003_domain_auth_and_permissions.md`
 - `tasks/013_infrastructure_repositories.md`
 - `tasks/015_ui_theme_static_assets_and_base_template.md`
 
-## 📝 Fachliche Vorgaben & Spezifikation
+## 📝 Functional Specifications & Requirements
 
 ### 1. First-Boot Wizard (`/setup`)
-- **Bedingung:** Nur aufrufbar, wenn `UserRepository.count_users() == 0`. Andernfalls Weiterleitung auf `/login`.
-- **Eingabefelder:**
-  - Initialer Administrator: Benutzername, E-Mail, Passwort.
-  - Externe Services: Ollama-URL (Pflichtfeld), SearXNG-URL (optional), ComfyUI-URL (optional).
-- **Aktionen beim Absenden:**
-  - Erstellt Super-User mit `is_initial_admin = True`.
-  - Weist via `PermissionService` das `Preset.ADMIN` zu.
-  - Speichert Service-Einstellungen in `SettingsRepository`.
-  - Loggt den Administrator automatisch ein und leitet zum Hub-Dashboard weiter.
+- **Condition:** Accessible strictly when `UserRepository.count_users() == 0`. Otherwise redirects to `/login`.
+- **Form Inputs:**
+  - Initial Administrator: Username, email, password.
+  - External Services: Ollama URL (mandatory), SearXNG URL (optional), ComfyUI URL (optional).
+- **Submission Actions:**
+  - Creates Super User with `is_initial_admin = True`.
+  - Assigns `Preset.ADMIN` via `PermissionService`.
+  - Persists service settings into `SettingsRepository`.
+  - Automatically authenticates administrator session and redirects to Hub Dashboard.
 
-### 2. Login & Session-Management (`/login`, `/logout`)
-- **Login-Maske (`templates/auth/login.html`):** E-Mail und Passwort.
-- Authentifizierung via `AuthService.authenticate_user()`.
-- Speichert `user_id` in Flask `session`.
-- **Geschützte Bereiche & Decorators (`decorators.py`):**
-  - `@require_auth`: Leitet unauthentifizierte Nutzer mit `next`-Parameter auf `/login` um.
-  - `@require_permission(permission_name)`: Prüft funktionale Berechtigung via `PermissionService.has_permission()`. Wirft 403 bei fehlender Berechtigung.
+### 2. Login & Session Management (`/login`, `/logout`)
+- **Login View (`templates/auth/login.html`):** Email and password.
+- Authenticates via `AuthService.authenticate_user()`.
+- Stores `user_id` in Flask `session`.
+- **Protected Endpoints & Decorators (`decorators.py`):**
+  - `@require_auth`: Redirects unauthenticated visitors to `/login` with `next` parameter.
+  - `@require_permission(permission_name)`: Checks functional permissions via `PermissionService.has_permission()`. Emits HTTP 403 on permission denial.
 
-## ✅ Akzeptanzkriterien
-- [x] First-Boot sperrt sich nach erfolgreicher Erstellung des ersten Benutzers dauerhaft.
-- [x] Initialer Admin erhält unentziehbare Super-User-Rechte.
-- [x] Keine öffentliche Registrierung; Login-Maske validiert Passwörter sicher.
-- [x] Ungeschützte Zugriffe leiten verlässlich auf `/login` weiter.
+## ✅ Acceptance Criteria
+- [x] First-Boot locks itself permanently following the successful creation of the first user.
+- [x] Initial admin receives non-revocable Super User privileges.
+- [x] No public self-registration; login form securely validates credentials.
+- [x] Unauthenticated requests reliably redirect to `/login`.

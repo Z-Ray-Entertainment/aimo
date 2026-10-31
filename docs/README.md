@@ -1,62 +1,62 @@
-# 📖 aimo — Benutzerhandbuch & Dokumentation
+# 📖 aimo — User Manual & Documentation
 
-Willkommen im offiziellen Benutzerhandbuch für **aimo**, der Plattform für immersives, lokales KI-Rollenspiel im modernen RPG-Design.
+Welcome to the official user manual for **aimo**, the platform for immersive local AI roleplay with a modern RPG design.
 
-Dieses Handbuch richtet sich an Endbenutzer, Autoren und Administratoren und beschreibt alle Funktionen und Interaktionsmöglichkeiten der Anwendung im Detail.
-
----
-
-## 🧭 Inhaltsverzeichnis
-
-1. [**Ersteinrichtung & First-Boot**](first_boot.md)
-   - Erstmaliger Systemstart und Setup-Wizard
-   - Administrator-Konto und Verbindung zu lokalen KI-Diensten (Ollama, ComfyUI)
-   - Sicheres Anmelden nach dem Erststart
-
-2. [**Das Hub-Dashboard**](hub.md)
-   - Navigation über die drei Haupt-Reiter: Charaktere 👤, Lorebooks 📜, WorldInfo 🌐
-   - Persona-Manager-Button im Header
-   - Filter, Beziehungsanzeigen und Nachrichtenstatistiken
-
-3. [**Spieler-Personas**](personas.md)
-   - Eigene Rollenspiel-Identitäten anlegen
-   - Porträt-Upload und automatische KI-Vision-Erkennung des Aussehens
-   - Schutz aktiver Personas vor versehentlichem Löschen
-
-4. [**KI-Charaktere & Designer**](characters.md)
-   - Charaktere erstellen und verwalten
-   - KI-Schreibassistent ✨ (Sparkle) zur Optimierung von Beschreibungen
-   - Transparente Emotions-Sprites & Varianten-Verwaltung
-   - Freischaltbare 9:16-Galeriebilder mit Beziehungsschwellenwert
-
-5. [**Lorebooks & Wissensbücher**](lorebooks.md)
-   - Strukturierung von Hintergrundwissen und Enzyklopädien
-   - Kachel-Übersicht und modaler Eintragseditor
-   - Verschlagwortung (Tags) für kontextuelles Rollenspiel-Wissen
-
-6. [**Welten, Orte & Ereignisse (WorldInfo)**](worldinfo.md)
-   - Welten anlegen und mit Icons versehen
-   - Orte mit 16:9-Hintergrundbildern und Vision-ALT-Erweiterung
-   - Zufalls-Events, Cooldown-Zähler und Eintrittswahrscheinlichkeiten
-
-7. [**Das Chat- & Rollenspiel-Interface**](chat.md)
-   - Dialogstart, Welcome Message und Erstauswahl
-   - Live-Streaming mit nahtloser Lokalisierung
-   - Interaktiver Ortswechsel (Textadventure mit 60s-Countdown)
-   - Multimodale Features (Bild-Upload mit ALT-Text, ComfyUI-Zauberstab ✨)
-   - Beziehungsbalken, automatische Erinnerungen (Memories) und Chat-Forks
-
-8. [**Administration & Einstellungen**](admin.md)
-   - Benutzer anlegen, verwalten und Presets zuweisen
-   - Lokale Ollama-Modelle herunterladen, zuweisen und löschen
-   - System-Prompts und Inferenz-Parameter feinjustieren
+This manual is intended for end users, story creators, and administrators, detailing all features and interaction mechanics within the application.
 
 ---
 
-## 🎨 Design & Bedienkonzept
+## 🧭 Table of Contents
 
-aimo setzt auf ein immersives **modernes RPG-Interface**:
-- **Hintergrund:** Halbtransparent mit stimmungsvollem Cover-Bild.
-- **Rahmen:** Warme hellbraune Holztöne mit abgerundeten Ecken für alle Textfelder, Overlays und Kacheln.
-- **Buttons:** Hellbrauner Hintergrund mit edlem, dezentem Goldrand.
-- **Icons:** Einheitlich monochrom gehalten; emotionale Elemente (Herzen für den Beziehungsstatus 💔 bis 💖) und magische Aktionen (Sparkles ✨) leuchten in Farbe.
+1. [**Initial Setup & First-Boot**](first_boot.md)
+   - First system launch and setup wizard
+   - Administrator account creation and local AI service connections (Ollama, ComfyUI)
+   - Secure authentication post-setup
+
+2. [**The Hub Dashboard**](hub.md)
+   - Navigation via the three primary tabs: Characters 👤, Lorebooks 📜, WorldInfo 🌐
+   - Persona manager button in header
+   - Filtering, relationship meters, and message counters
+
+3. [**Player Personas**](personas.md)
+   - Creating custom roleplay identities
+   - Portrait upload and automated AI Vision appearance analysis
+   - Deletion protection for active personas
+
+4. [**AI Characters & Designer**](characters.md)
+   - Character creation and management
+   - AI Writing Assistant ✨ (Sparkle) for description optimization
+   - Transparent emotional sprites & variant stacks
+   - Unlockable 9:16 gallery images with affection thresholds
+
+5. [**Lorebooks & Encyclopedias**](lorebooks.md)
+   - Structuring background lore and world lore
+   - Tile grid overview and modal entry editor
+   - Tagging system for contextual roleplay knowledge
+
+6. [**Worlds, Places & Events (WorldInfo)**](worldinfo.md)
+   - Creating worlds and assigning icons
+   - Locations with 16:9 background images and Vision ALT enhancement
+   - Random event pool, cooldown counter cycle, and probabilities
+
+7. [**Chat & Roleplay Interface**](chat.md)
+   - Dialogue launch, welcome message, and initial selection
+   - Live streaming with seamless localization
+   - Interactive location change (text adventure with 60s countdown)
+   - Multimodal features (image upload with ALT text, ComfyUI magic wand ✨)
+   - Relationship bar, automatic memories, and chat forks
+
+8. [**Administration & Settings**](admin.md)
+   - User creation, management, and permission presets
+   - Ollama local model pull, assignment, and deletion
+   - System prompts and fine-tuning inference parameters
+
+---
+
+## 🎨 Design & Interaction Concept
+
+aimo features an immersive **modern RPG interface**:
+- **Background:** Semi-transparent with an atmospheric cover image.
+- **Borders & Frames:** Warm light brown wood tones with rounded corners for all input fields, overlays, and cards.
+- **Buttons:** Warm leather-brown backgrounds with subtle gold borders.
+- **Icons:** Uniform monochrome styling for navigation; emotional elements (relationship status hearts 💔 to 💖) and magical actions (Sparkles ✨) glow in vibrant color.

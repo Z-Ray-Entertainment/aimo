@@ -1,35 +1,35 @@
-# 👤 Spieler-Personas
+# 👤 Player Personas
 
-[← Zurück zur Übersicht](README.md) | [← Das Hub-Dashboard](hub.md) | [KI-Charaktere & Designer →](characters.md)
+[← Back to Overview](README.md) | [← The Hub Dashboard](hub.md) | [AI Characters & Designer →](characters.md)
 
-Eine **Spieler-Persona** repräsentiert deine eigene Identität im Rollenspiel. Du kannst mehrere unterschiedliche Personas (z. B. Magier, Ritterin, Detektiv) anlegen und vor Chat-Beginn auswählen, in welcher Rolle du agieren möchtest.
-
----
-
-## 🎨 Eigenschaften einer Persona
-
-- **Name:** Dein Name im Rollenspiel, mit dem dich KI-Charaktere ansprechen.
-- **Geschlecht:** Zur konsistenten grammatikalischen Anrede im Prompt (`männlich`, `weiblich`, `nicht-binär`).
-- **Porträtbild:** Bilddatei (PNG, JPG, WEBP), die als visueller Avatar im Chat und als Referenzbild für [Bildgenerierungen](chat.md#bildgenerierung) dient.
-- **Beschreibung:** Textfeld für die Hintergrundgeschichte, Motive, Verhaltensweisen und Eigenheiten deiner Figur.
-- **Aussehen (KI-Vision-Extraktion):** Detaillierte Beschreibung physischer Merkmale.
+A **Player Persona** represents your personal identity in the roleplay. You can create multiple distinct personas (e.g., mage, knight, detective) and select which identity to embody before initiating a chat.
 
 ---
 
-## 👁️ Automatische Vision-Analyse des Aussehens
+## 🎨 Persona Properties
 
-Sobald du ein Porträtbild für deine Persona hochlädst und speicherst:
-1. **KI-Scan:** Ein Vision-Modell (über Ollama) analysiert das Gesicht und die sichtbaren physischen Merkmale (Haarfarbe, Augenfarbe, Teint, Statur).
-2. **Fokus-Regel:** Hintergründe, Räume oder situative Posen werden bewusst ignoriert.
-3. **Automatischer Eintrag:** Das Textfeld *"Aussehen"* wird automatisch mit diesen Merkmalen befüllt.
-4. **Volle Kontrolle:** Du kannst das Feld *"Aussehen"* jederzeit manuell anpassen oder ergänzen. Erst wenn du das Porträt austauschst, stößt das System einen erneuten Scan an.
+- **Name:** Your character name in the roleplay, used by AI characters when addressing you.
+- **Gender:** Ensures consistent grammatical addressing in prompts (`male`, `female`, `non-binary`).
+- **Portrait Image:** Image file (PNG, JPG, WEBP) serving as your visual avatar in chat and as a reference image for [image generation](chat.md#multimodal-features--input-bar).
+- **Description:** Text field detailing backstories, motives, behavioral traits, and personal quirks.
+- **Appearance (AI Vision Extraction):** Detailed textual description of physical traits.
 
 ---
 
-## 🛡️ Schutzregel: Lösch-Sperre aktiver Personas
+## 👁️ Automated Vision Appearance Analysis
 
-Um die narrative Konsistenz bestehender Gesprächsverläufe zu schützen, gilt:
-- **Personas, die bereits in mindestens einem Chat verwendet wurden, können nicht gelöscht werden.**
-- Der Lösch-Button ist in diesem Fall ausgegraut und mit einem Hinweistext versehen.
+Whenever you upload and save a portrait image for your persona:
+1. **AI Scan:** A Vision model (via Ollama) scans the face and visible physical attributes (hair color, eye color, complexion, build).
+2. **Focus Rule:** Backgrounds, rooms, and situational poses are intentionally ignored.
+3. **Automatic Field Population:** The *"Appearance"* field is automatically populated with these physical traits.
+4. **Full Control:** You can manually edit or refine the *"Appearance"* field at any time. The system only triggers a new scan if you replace the portrait image.
 
-Weiter zu: [**KI-Charaktere & Designer →**](characters.md)
+---
+
+## 🛡️ Protection Rule: Deletion Lock for Active Personas
+
+To protect the narrative consistency of existing conversations:
+- **Personas that are referenced in at least one chat session cannot be deleted.**
+- In this case, the delete button is disabled and displays an explanatory tooltip.
+
+Continue to: [**AI Characters & Designer →**](characters.md)

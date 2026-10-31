@@ -1,53 +1,53 @@
-# aimo — Immersives KI-Rollenspiel im modernen RPG-Design
+# aimo — Immersive AI Roleplay with Modern RPG Design
 
 > [!IMPORTANT]
-> **Hinweis zur KI-gestützten Entwicklung (Human-in-the-Loop-Prinzip):**
-> - **Architektur:** Entworfen von Menschen (*Architecture designed by human*)
-> - **Qualitätssicherung:** Code geprüft und getestet von Menschen (*Code reviewed and tested by human*)
-> - **Implementierung:** Großteil des Codes geschrieben von KI (*Most code written by AI*)
+> **Notice on AI-Assisted Development (Human-in-the-Loop Principle):**
+> - **Architecture:** Designed by human
+> - **Quality Assurance:** Code reviewed and tested by human
+> - **Implementation:** Most code written by AI
 >
 > THIS IS STILL WIP, WHILE IT WORKS IT IS STILL ALPHA
 
-`aimo` ist eine modulare, lokale Rollenspiel-Plattform für interaktives KI-Storytelling und Textadventure-Abenteuer. Das System verbindet modernste lokale Sprach- und Vision-Modelle (Ollama) sowie generative Bild-Pipelines (ComfyUI) mit einem atmosphärischen Tabletop-RPG-Interface.
+`aimo` is a modular, local-first roleplaying platform for interactive AI storytelling and text adventures. The system bridges state-of-the-art local language and vision models (Ollama) and generative image pipelines (ComfyUI) with an atmospheric tabletop RPG interface.
 
 ---
 
-## 🌟 Highlights & Kernfunktionen
+## 🌟 Highlights & Core Features
 
-- **🎭 Lebendige KI-Charaktere:**
-  - 28 differenzierte Emotionen mit transparenten Sprites und Varianten-Auswahl.
-  - KI-Schreibassistent ✨ (Sparkle-Button) zur Verfeinerung von Charakterbeschreibungen.
-  - Freischaltbare 9:16-Galeriebilder gekoppelt an dynamische Beziehungswerte (-100 bis +100).
-- **💬 Reiner Rollenspiel-Kontext (Zero-Control-Tags):**
-  - Das Roleplay-Modell schreibt zu 100 % immersive Fließtexte und Dialoge ohne technische Steuercodes.
-  - Metadaten (Emotionen, Ortswechsel) werden über einen autarken, nachgelagerten Klassifikations-Schritt ermittelt.
-  - Verbindliches 7-Stufen-Prompt-Layout mit geschlossenen Segment-Begrenzern.
-- **🧭 Textadventure-Mechanik & Lebendige Welten:**
-  - Interaktiver Ortswechsel mit animiertem 60-Sekunden-Countdown.
-  - Einheitlicher Event-Pool (Welt- und Orts-Events) mit Cooldown-Zähler-Kreislauf (10–100 Nachrichten).
-  - Multimodale Features: Bild-Uploads mit automatischer Vision-ALT-Text-Generierung und ComfyUI-Bildgenerierung via Zauberstab ✨.
-- **🎨 Modernes RPG-Theme:**
-  - Halbtransparenter Hintergrund mit atmosphärischem Cover-Image.
-  - Warme, hellbraune Holzrahmen mit abgerundeten Ecken für alle Eingabefelder und Kacheln.
-  - Lederoptik-Buttons mit feinem Goldrand und monochrome Icons mit farbigen Status-Herzen (💔 bis 💖).
+- **🎭 Living AI Characters:**
+  - 28 distinct emotions with transparent sprites and variant selection.
+  - AI Writing Assistant ✨ (Sparkle button) for refining character descriptions.
+  - Unlockable 9:16 portrait gallery images tied to dynamic relationship values (-100 to +100).
+- **💬 Pure Roleplay Context (Zero-Control-Tags):**
+  - The roleplay model produces 100% immersive prose and dialogue without technical control codes.
+  - Metadata (emotions, location changes) is detected via an autonomous, downstream classification step.
+  - Mandatory 7-stage prompt layout with enclosed segment delimiters.
+- **🧭 Text Adventure Mechanics & Dynamic Worlds:**
+  - Interactive location transitions with an animated 60-second countdown.
+  - Unified event pool (world and location events) with a cooldown counter cycle (10–100 messages).
+  - Multimodal features: Image uploads with automatic Vision ALT-text generation and ComfyUI image generation via Magic Wand ✨.
+- **🎨 Modern RPG Theme:**
+  - Semi-transparent background with atmospheric cover image.
+  - Warm light brown wood frames with rounded corners for all input fields and tiles.
+  - Leather-style buttons with a delicate gold border and monochrome icons with colored relationship status hearts (💔 to 💖).
 - **🔒 Local-First & Headless Core:**
-  - Vollständige Persistenz in lokaler SQLite-Datenbank mit WAL-Modus (keine externe DB nötig).
-  - Bereitstellung einer konsistenten REST-API (`/api/...`) — Web-UI und alternative Frontends (z. B. eine native GTK4/Libadwaita-App für Flathub) nutzen dieselben Core-Dienste.
-  - Modulare Provider-Schnittstellen für LLM (Ollama), Bildgenerierung (ComfyUI) und Voice-TTS.
+  - Full persistence in a local SQLite database with WAL mode (no external database required).
+  - Exposure of a consistent REST API (`/api/...`) — Web UI and alternative frontends (e.g., a native GTK4/Libadwaita Flathub app) share the exact same core services.
+  - Modular provider interfaces for LLM (Ollama), image generation (ComfyUI), and voice TTS.
 
 ---
 
-## 🚀 Schnellstart
+## 🚀 Quickstart
 
-### Option A: Direktstart mit Podman (Rootless User-Container)
+### Option A: Direct Run with Podman (Rootless User Container)
 
-Das Projekt verfügt über ein optimiertes `Containerfile` für unprivilegierte Container:
+The project includes an optimized `Containerfile` for unprivileged containers:
 
 ```bash
-# 1. Container-Image bauen
+# 1. Build the container image
 podman build -t aimo -f Containerfile .
 
-# 2. Container im User-Space starten (Port 5000, persistente Volumes)
+# 2. Run the container in user space (Port 5000, persistent volumes)
 podman run -d \
   --name aimo \
   -p 5000:5000 \
@@ -55,81 +55,81 @@ podman run -d \
   -v aimo-uploads:/app/uploads:Z,U \
   aimo
 
-# 3. Im Browser aufrufen: http://localhost:5000
+# 3. Open in your browser: http://localhost:5000
 ```
-*Beim ersten Start erscheint automatisch der Setup-Wizard zur Einrichtung des Administrators.*
+*On first boot, the setup wizard will launch automatically to set up the administrator account.*
 
 ---
 
-### Option B: Lokale Entwicklung
+### Option B: Local Development
 
 ```bash
-# Virtuelle Umgebung erstellen und aktivieren
+# Create and activate virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
-# Abhängigkeiten installieren
+# Install dependencies
 pip install -r requirements.txt
 
-# Variante 1: Kombi-Start via Wrapper (generiert automatisch einen UUID4 CLIENT_KEY,
-# startet den Core auf Port 5001 und anschließend die Flask Web-UI auf Port 5000)
+# Option 1: Combined start via wrapper (automatically generates a UUID4 CLIENT_KEY,
+# starts the Core on port 5001 and then the Flask Web UI on port 5000)
 python aimo_flask.py
 
-# Variante 2: Core und Flask Web-UI getrennt als Standalone-Services starten
-# Terminal 1 — Headless Core starten (CLIENT_KEY ist Pflicht):
+# Option 2: Start Core and Flask Web UI separately as standalone services
+# Terminal 1 — Start Headless Core (CLIENT_KEY is mandatory):
 export CLIENT_KEY="$(uuidgen)"
 python core/wsgi.py
 
-# Terminal 2 — Flask Web-UI mit demselben CLIENT_KEY starten:
-export CLIENT_KEY="<derselbe-client-key>"
+# Terminal 2 — Start Flask Web UI with the same CLIENT_KEY:
+export CLIENT_KEY="<the-same-client-key>"
 python flask/wsgi.py
 ```
 
 ---
 
-## 📖 Dokumentation & Handbücher
+## 📖 Documentation & Guides
 
-Ausführliche Anleitungen für alle Aspekte der Anwendung findest du im Ordner [`docs/`](docs/README.md):
+Comprehensive guides for all aspects of the application are located in [`docs/`](docs/README.md):
 
-- [**Ersteinrichtung & First-Boot-Wizard**](docs/first_boot.md): Super-User-Anlage und Ollama-Konfiguration.
-- [**Das Hub-Dashboard**](docs/hub.md): 3-Tab-Navigation (Charaktere 👤, Lorebooks 📜, WorldInfo 🌐) und Filter.
-- [**Spieler-Personas**](docs/personas.md): Rollenspiel-Identitäten & automatische Vision-Aussehensanalyse.
-- [**KI-Charaktere & Designer**](docs/characters.md): Erstellung, Sprites, Varianten und 9:16-Galerien.
-- [**Lorebooks & Enzyklopädien**](docs/lorebooks.md): Thematisches Wissen & vektorloses Tag-RAG.
-- [**Welten, Orte & Ereignisse (WorldInfo)**](docs/worldinfo.md): 16:9-Hintergründe und Zufalls-Event-Mechanik.
-- [**Chat- & Rollenspiel-Interface**](docs/chat.md): Streaming, Übersetzung, Textadventure-Ortswechsel & ComfyUI.
-- [**Administration & Modell-Management**](docs/admin.md): Rechte-Presets, Ollama Pull/Delete und System-Prompts.
+- [**Initial Setup & First-Boot Wizard**](docs/first_boot.md): Super-user creation and Ollama configuration.
+- [**The Hub Dashboard**](docs/hub.md): 3-tab navigation (Characters 👤, Lorebooks 📜, WorldInfo 🌐) and filtering.
+- [**Player Personas**](docs/personas.md): Roleplay identities & automated vision appearance extraction.
+- [**AI Characters & Designer**](docs/characters.md): Creation, sprites, variants, and 9:16 galleries.
+- [**Lorebooks & Encyclopedias**](docs/lorebooks.md): Thematic knowledge & vectorless tag-based RAG.
+- [**Worlds, Places & Events (WorldInfo)**](docs/worldinfo.md): 16:9 backgrounds and random event mechanics.
+- [**Chat & Roleplay Interface**](docs/chat.md): Streaming, translation, text adventure location changes & ComfyUI.
+- [**Administration & Model Management**](docs/admin.md): Permission presets, Ollama pull/delete, and system prompts.
 
 ---
 
-## 🏛️ Architektur & Entwickler-Richtlinien
+## 🏛️ Architecture & Developer Guidelines
 
-- **Architekturregeln für Coding Assistants:** [AGENTS.md](AGENTS.md)
-- **Implementierungs-Fahrplan (Atomare Tasks):** [tasks/](tasks/README.md)
+- **Architecture Rules for Coding Assistants:** [AGENTS.md](AGENTS.md)
+- **Implementation Roadmap (Atomic Tasks):** [tasks/](tasks/README.md)
 
-### Schichtenmodell (Domain-Driven Design)
+### Layer Architecture (Domain-Driven Design)
 ```
 aimo/
-├── core/                  # Standalone Headless Core Service (erfordert CLIENT_KEY)
-│   ├── domain/            # Reine Geschäftslogik (kein I/O, kein HTTP, kein DB)
-│   ├── infrastructure/    # SQLite WAL, Repositories, Modulare Provider (Ollama, ComfyUI, TTS)
-│   ├── application/api/   # REST-API Endpunkte (/api/...) gesichert via CLIENT_KEY
+├── core/                  # Standalone Headless Core Service (requires CLIENT_KEY)
+│   ├── domain/            # Pure business logic (no I/O, no HTTP, no DB)
+│   ├── infrastructure/    # SQLite WAL, Repositories, Modular Providers (Ollama, ComfyUI, TTS)
+│   ├── application/api/   # REST API endpoints (/api/...) secured via CLIENT_KEY
 │   ├── shared/            # Config via Env, bcrypt, Tag-Overlap-Helper, Exceptions
 │   ├── app.py             # Core Application Factory
 │   └── wsgi.py            # Core Standalone Entry Point
 ├── flask/                 # Standalone Flask Web-UI Service
-│   ├── application/       # Web-Views, Formulare, Decorators & Core-API-Proxy
-│   ├── static/            # Modernes RPG-Theme CSS (theme.css), JS (SSE Stream, Countdown)
-│   ├── templates/         # Jinja2-HTML-Templates (Modulare Templates)
+│   ├── application/       # Web views, forms, decorators & Core API proxy
+│   ├── static/            # Modern RPG theme CSS (theme.css), JS (SSE Stream, countdown)
+│   ├── templates/         # Modular Jinja2 HTML templates
 │   ├── app.py             # Web-UI Application Factory
 │   └── wsgi.py            # Web-UI Standalone Entry Point
-├── aimo_flask.py          # Wrapper-Script (erzeugt UUID4 CLIENT_KEY, startet Core & Web-UI)
-├── tasks/                 # Atomare Implementierungs-Tasks (001 bis 022)
-└── docs/                  # Ausführliche Endbenutzer-Dokumentation
+├── aimo_flask.py          # Wrapper script (generates UUID4 CLIENT_KEY, runs Core & Web-UI)
+├── tasks/                 # Atomic implementation tasks (001 to 022)
+└── docs/                  # Detailed end-user documentation
 ```
 
 ---
 
-## 📜 Lizenz
+## 📜 License
 
-MIT License — siehe LICENSE-Datei.
+MIT License — see LICENSE file.

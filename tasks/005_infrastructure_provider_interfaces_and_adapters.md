@@ -1,11 +1,11 @@
-# Task 005: Modulare Provider-Schicht (LLM, ComfyUI, Voice-TTS)
+# Task 005: Modular Provider Layer (LLM, ComfyUI, Voice-TTS)
 
-## 🎯 Ziel & Umfang
-Erstellung der abstrakten Provider-Schnittstellen und konkreten Implementierungen für externe KI-Backends. Der Kern darf niemals direkt an Ollama oder ComfyUI gekoppelt sein, sondern interagiert ausschließlich über die abstrakten Interfaces.
+## 🎯 Goal & Scope
+Construct abstract provider interfaces and concrete implementations for external AI backends. The core must never couple directly to Ollama or ComfyUI, interacting exclusively through abstract interfaces.
 
-## 📂 Betroffene Schicht & Dateien
-- **Schicht:** `infrastructure/`
-- **Dateien:**
+## 📂 Affected Layer & Files
+- **Layer:** `infrastructure/`
+- **Files:**
   - `infrastructure/llm/interface.py`
   - `infrastructure/llm/factory.py`
   - `infrastructure/llm/ollama.py`
@@ -17,25 +17,25 @@ Erstellung der abstrakten Provider-Schnittstellen und konkreten Implementierunge
   - `infrastructure/voice/stub.py`
   - `infrastructure/storage/file_storage.py`
 
-## 🔗 Abhängigkeiten
+## 🔗 Dependencies
 - `tasks/001_foundation_config_and_shared_utils.md`
 - `tasks/004_domain_settings_and_system_prompts.md`
 
-## 📝 Fachliche Vorgaben & Spezifikation
+## 📝 Functional Specifications & Requirements
 
 ### 1. `infrastructure/llm/`
 - **`interface.py` — `LLMProvider` (ABC):**
   - `generate_stream(prompt: str, model: str, params: ModelParameters) -> Iterator[str]`
   - `generate(prompt: str, model: str, params: ModelParameters) -> str`
-  - `classify(text: str, candidates: list[str], model: str) -> str`: Schneller Klassifikations-Call zur Extraktion von Emotionen oder Ortstags.
-  - `analyze_image(image_path: Path, prompt: str, model: str) -> str`: Vision-Extraktion für Persona-Porträts und Chat-Uploads.
+  - `classify(text: str, candidates: list[str], model: str) -> str`: Fast classification call to extract emotions or location tags.
+  - `analyze_image(image_path: Path, prompt: str, model: str) -> str`: Vision extraction for persona portraits and chat uploads.
   - `list_models() -> list[str]`
   - `pull_model(name: str) -> Iterator[dict]`
   - `delete_model(name: str) -> bool`
   - `check_health() -> bool`
 - **`ollama.py` — `OllamaLLMProvider(LLMProvider)`:**
-  - Konkrete HTTP-Anbindung an `/api/generate`, `/api/tags`, `/api/pull`, `/api/delete`.
-  - Robuste Timeouts und Exception-Handling (Übersetzung in `InfrastructureError`).
+  - Concrete HTTP client for `/api/generate`, `/api/tags`, `/api/pull`, `/api/delete`.
+  - Robust timeouts and error handling (translating into `InfrastructureError`).
 - **`factory.py`:**
   - `get_llm_provider(settings: ServiceSettings) -> LLMProvider`.
 
@@ -45,8 +45,8 @@ Erstellung der abstrakten Provider-Schnittstellen und konkreten Implementierunge
   - `cancel_generation(task_id: str) -> None`
   - `check_health() -> bool`
 - **`comfyui.py` — `ComfyUIImageGenProvider(ImageGenProvider)`:**
-  - Übergibt Diffuser-Prompt und Referenzbilder (Porträts, Ortshintergrund) an ComfyUI-Workflow.
-  - Websocket-/Polling-Überwachung und Cancel-Endpunkt.
+  - Passes diffuser prompts and reference images (portraits, scene backgrounds) to ComfyUI workflow.
+  - WebSocket / polling tracking and cancel endpoint.
 - **`factory.py`:**
   - `get_image_gen_provider(settings: ServiceSettings) -> ImageGenProvider`.
 
@@ -56,19 +56,19 @@ Erstellung der abstrakten Provider-Schnittstellen und konkreten Implementierunge
   - `list_voices() -> list[dict]`
   - `check_health() -> bool`
 - **`stub.py` — `VoiceTTSStubProvider(VoiceTTSProvider)`:**
-  - Platzhalter, der saubere No-Op-Rückgaben liefert, bis eine konkrete TTS-Engine angebunden wird.
+  - Clean no-op provider returning placeholders until a concrete TTS engine is connected.
 
 ### 4. `infrastructure/storage/file_storage.py`
-- Verwaltet Uploads und Dateipfade im Dateisystem:
-  - Porträts (`uploads/portraits/`)
+- Manages uploads and paths across the filesystem:
+  - Portraits (`uploads/portraits/`)
   - Sprites (`uploads/sprites/<character_id>/`)
-  - WorldInfo-Hintergründe (`uploads/backgrounds/`)
-  - Generierte Bilder (`uploads/generated/`)
-- Validierung von Bildformaten (PNG, JPG, WEBP).
+  - WorldInfo backgrounds (`uploads/backgrounds/`)
+  - Generated images (`uploads/generated/`)
+- Validates image formats (PNG, JPG, WEBP).
 
-## ✅ Akzeptanzkriterien
-- [x] Vollständige Abstraktion aller externen Services über Interfaces.
-- [x] `OllamaLLMProvider` unterstützt Streaming, synchrone Generierung, Vision und Klassifikation.
-- [x] `ComfyUIImageGenProvider` unterstützt Workflow-Aufruf und Abbrechen.
-- [x] `VoiceTTSStubProvider` ermöglicht es dem Kern, TTS sauber aufzurufen.
-- [x] Datei-Storage speichert und liefert Bildpfade organisiert und sicher ab.
+## ✅ Acceptance Criteria
+- [x] Complete abstraction of all external services behind interfaces.
+- [x] `OllamaLLMProvider` supports streaming, synchronous generation, vision, and classification.
+- [x] `ComfyUIImageGenProvider` supports workflow execution and abortion.
+- [x] `VoiceTTSStubProvider` allows clean invocation from the core.
+- [x] File storage safely stores and resolves image paths.

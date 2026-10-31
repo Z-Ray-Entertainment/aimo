@@ -1,11 +1,11 @@
-# Task 021: Admin-Dashboard, Benutzerverwaltung & Services
+# Task 021: Admin Dashboard, User Management & Services
 
-## 🎯 Ziel & Umfang
-Umsetzung des Administrationsbereichs zur Verwaltung von Benutzern, funktionalen Berechtigungen mit Presets sowie Service-Verbindungen (Ollama Modell-Management mit Install/Delete, ComfyUI, Task-Zuweisung und Hyperparameter).
+## 🎯 Goal & Scope
+Implementation of the administration area for managing user accounts, functional permissions with presets, and service connections (Ollama model management with install/delete, ComfyUI, task assignments, and hyperparameters).
 
-## 📂 Betroffene Schicht & Dateien
-- **Schicht:** `application/admin/`, `templates/admin/`
-- **Dateien:**
+## 📂 Affected Layer & Files
+- **Layer:** `application/admin/`, `templates/admin/`
+- **Files:**
   - `application/admin/views.py`
   - `application/admin/forms.py`
   - `templates/admin/layout.html`
@@ -13,38 +13,38 @@ Umsetzung des Administrationsbereichs zur Verwaltung von Benutzern, funktionalen
   - `templates/admin/user_form.html`
   - `templates/admin/services.html`
 
-## 🔗 Abhängigkeiten
+## 🔗 Dependencies
 - `tasks/003_domain_auth_and_permissions.md`
 - `tasks/004_domain_settings_and_system_prompts.md`
 - `tasks/005_infrastructure_provider_interfaces_and_adapters.md`
 - `tasks/013_infrastructure_repositories.md`
 - `tasks/015_ui_theme_static_assets_and_base_template.md`
 
-## 📝 Fachliche Vorgaben & Spezifikation
+## 📝 Functional Specifications & Requirements
 
-### 1. Benutzerverwaltung (`/admin/users`)
-- Übersicht aller Benutzer mit Berechtigungs-Badges und Datum.
-- **Neuanlage (`/admin/users/new`):**
-  - Benutzername, E-Mail, Initialpasswort.
-  - Zuweisung über Presets (`Admin`, `Creator`, `User`) oder Checkboxen einzelner Flags (`FunctionPermission`).
-- **Benutzer bearbeiten & löschen:**
-  - Berechtigungen anpassen.
-  - **Schutzregel:** Initialer Administrator (`is_initial_admin == True`) kann weder gelöscht werden noch können ihm Rechte entzogen werden.
+### 1. User Management (`/admin/users`)
+- Overview of all user accounts with permission badges and creation date.
+- **New Account Provisioning (`/admin/users/new`):**
+  - Username, email, initial password.
+  - Assignment via Presets (`Admin`, `Creator`, `User`) or individual checkable flags (`FunctionPermission`).
+- **Edit & Delete Users:**
+  - Adjust permissions.
+  - **Protection Rule:** Initial administrator (`is_initial_admin == True`) can neither be deleted nor have permissions revoked.
 
-### 2. Service-Management (`/admin/services`)
-- **Ollama Modell-Management:**
-  - Anzeige aller installierten Modelle (via `LLMProvider.list_models()`).
-  - Modell installieren: Eingabefeld für Modellnamen und Progress-Anzeige für `pull`.
-  - Modell löschen: Button zum Entfernen (`delete`) nicht mehr benötigter Modelle.
-- **Task-spezifische Zuweisung:**
-  - Dropdowns für `Roleplay`, `Memory`, `Assistant` und `Vision`.
-- **Inferenz-Parameter:**
+### 2. Service Management (`/admin/services`)
+- **Ollama Model Management:**
+  - Displays all installed models (via `LLMProvider.list_models()`).
+  - Install Model (Pull): Input for model tag and progress feedback for `pull`.
+  - Delete Model: Action button to remove (`delete`) models to reclaim storage.
+- **Task-Specific Assignments:**
+  - Dropdowns for `Roleplay`, `Memory`, `Assistant`, and `Vision`.
+- **Inference Parameters:**
   - `num_ctx`, `temperature`, `top_p`, `repeat_penalty`.
-- **ComfyUI- und SearXNG-Verbindung:** URLs und Verbindungsstatus.
-- **System-Prompts:** Editierbare Textareas für Rollenspiel-, Memory-, Diffuser- und Sparkle-Prompts.
+- **ComfyUI and SearXNG Connections:** URLs and connection health status.
+- **System Prompts:** Editable textareas for Roleplay, Memory, Diffuser, and Sparkle prompts.
 
-## ✅ Akzeptanzkriterien
-- [x] Nur für Nutzer mit Permission `ADMIN_ACCESS` erreichbar.
-- [x] Initialer Admin kann nicht manipuliert oder degradiert werden.
-- [x] Ollama Modelle können direkt über die Oberfläche installiert und gelöscht werden.
-- [x] Alle System-Prompts und Task-Zuweisungen lassen sich speichern und sofort wirksam anwenden.
+## ✅ Acceptance Criteria
+- [x] Accessible strictly to users holding `ADMIN_ACCESS` permission.
+- [x] Initial admin cannot be manipulated or demoted.
+- [x] Ollama models can be installed and deleted directly through the UI.
+- [x] All system prompts and task model assignments persist and apply immediately.

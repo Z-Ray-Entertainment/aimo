@@ -1,25 +1,25 @@
-# Task 022: App-Fabrik, WSGI-Entry & Podman Rootless Image
+# Task 022: App Factory, WSGI Entry & Podman Rootless Image
 
-## 🎯 Ziel & Umfang
-Erstellung der zentralen Flask-App-Fabrik (`app.py`), des WSGI-Einstiegspunkts (`wsgi.py`) und des optimierten `Containerfile` für unprivilegierte (rootless) Podman-Container. Abschließende Überprüfung des Gesamtsystems.
+## 🎯 Goal & Scope
+Creation of the central Flask application factory (`app.py`), WSGI entry point (`wsgi.py`), and optimized `Containerfile` for unprivileged (rootless) Podman containers. Comprehensive final review of the system.
 
-## 📂 Betroffene Schicht & Dateien
-- **Schicht:** Root & Orchestrierung
-- **Dateien:**
+## 📂 Affected Layer & Files
+- **Layer:** Root & Orchestration
+- **Files:**
   - `app.py`
   - `wsgi.py`
   - `Containerfile`
 
-## 🔗 Abhängigkeiten
-- Alle vorherigen Tasks (`tasks/001_...` bis `tasks/021_...`).
+## 🔗 Dependencies
+- All preceding tasks (`tasks/001_...` through `tasks/021_...`).
 
-## 📝 Fachliche Vorgaben & Spezifikation
+## 📝 Functional Specifications & Requirements
 
 ### 1. `app.py` (Flask Application Factory)
 - `create_app(config_class=Config) -> Flask`:
-  - Initialisiert Konfiguration aus `shared.config.Config`.
-  - Stellt sicher, dass SQLite-Tabellen via `infrastructure.database.init_db()` bereitstehen.
-  - Registriert alle Blueprints mit klaren URL-Präfixen:
+  - Initializes configuration from `shared.config.Config`.
+  - Ensures SQLite tables are created via `infrastructure.database.init_db()`.
+  - Registers all blueprints with clean URL prefixes:
     - `/setup` (`application.setup.views`)
     - `/` & `/auth` (`application.auth.views`)
     - `/characters` & `/overview` (`application.overview.views`, `application.characters.views`)
@@ -28,25 +28,25 @@ Erstellung der zentralen Flask-App-Fabrik (`app.py`), des WSGI-Einstiegspunkts (
     - `/worldinfo` (`application.worldinfo.views`)
     - `/chat` (`application.chat.views`)
     - `/admin` (`application.admin.views`)
-    - `/api` (`application.api` Blueprints für REST-Core)
-  - Registriert statische Ordner (`static/`) und Jinja2-Template-Pfade.
-  - Initialisiert Before-Request-Hooks (z. B. Weiterleitung auf `/setup`, wenn keine Benutzer existieren).
+    - `/api` (`application.api` blueprints for REST Core)
+  - Registers static directories (`static/`) and Jinja2 template search paths.
+  - Registers before-request hooks (e.g., redirecting to `/setup` if no users exist).
 
 ### 2. `wsgi.py`
-- Exponiert die WSGI-Instanz `application = create_app()`.
-- Ermöglicht Direktstart via `python wsgi.py` auf Port 5000 (`host="0.0.0.0"`).
+- Exposes WSGI instance `application = create_app()`.
+- Allows direct start via `python wsgi.py` on port 5000 (`host="0.0.0.0"`).
 
 ### 3. `Containerfile`
-- Rootless User-Space Podman Container:
+- Rootless user-space Podman container:
   - Base Image: `python:3.12-slim`.
-  - Non-Root Benutzer `aimo` (UID 1000).
-  - Installiert Abhängigkeiten aus `requirements.txt`.
-  - Mounts für persistente Daten: Volume `/app/data` und `/app/uploads`.
-  - Exponiert Port 5000.
+  - Non-root user `aimo` (UID 1000).
+  - Installs dependencies from `requirements.txt`.
+  - Mounts for persistent data: volumes `/app/data` and `/app/uploads`.
+  - Exposes port 5000.
   - `CMD ["python", "wsgi.py"]`.
 
-## ✅ Akzeptanzkriterien
-- [x] `create_app()` startet sauber und bindet alle Blueprints ein.
-- [x] Automatische Weiterleitung auf `/setup` beim Erststart ohne Benutzer.
-- [x] Rootless Podman Containerfile baut fehlerfrei und startet ohne Root-Rechte.
-- [x] Gesamtsystem arbeitet als in sich geschlossener, modularer Monolith mit getrennter REST-API.
+## ✅ Acceptance Criteria
+- [x] `create_app()` boots cleanly and registers all blueprints.
+- [x] Automatic redirection to `/setup` on initial launch when no users exist.
+- [x] Rootless Podman Containerfile builds cleanly and runs without root privileges.
+- [x] Overall system operates as a self-contained, modular monolith with separated REST API.

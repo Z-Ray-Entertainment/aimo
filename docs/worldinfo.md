@@ -1,53 +1,53 @@
-# 🌍 Welten, Orte & Ereignisse (WorldInfo)
+# 🌍 Worlds, Places & Events (WorldInfo)
 
-[← Zurück zur Übersicht](README.md) | [← Lorebooks](lorebooks.md) | [Das Chat-Interface →](chat.md)
+[← Back to Overview](README.md) | [← Lorebooks](lorebooks.md) | [The Chat Interface →](chat.md)
 
-Eine **WorldInfo** fasst die Geografie, Szenerien und zufälligen Ereignisse einer Spielwelt zusammen. Sie bestimmt die visuellen 16:9-Hintergründe im Chat und ermöglicht überraschende Zufallsbegegnungen.
-
----
-
-## 🏛️ WorldInfo-Editor (`templates/worldinfo/detail.html`)
-
-- **Name der Welt:** Bezeichnung des Settings (z. B. *"Königreich Acheron"*).
-- **WorldInfo-Icon (`icon`):** Ein prägnantes Symbol oder Bild, das im Header und in der Chat-Sidebar angezeigt wird.
-
-Der Editor teilt sich in zwei funktionale Reiter:
+A **WorldInfo** encapsulates the geography, scenes, and random events of a roleplay setting. It defines the visual 16:9 backgrounds in chat and enables spontaneous random encounters.
 
 ---
 
-## 📍 Tab 1: Places (Orte)
+## 🏛️ WorldInfo Editor (`templates/worldinfo/detail.html`)
 
-Eine Galerie aller Schauplätze dieser Welt:
-- Erste Kachel (`+`) zum Anlegen eines neuen Ortes.
-- **Orts-Overlay (Modal):**
-  - **Name:** Z. B. *"Die Taverne zum Trunkenen Troll"*, *"Vergessener Wald"*.
-  - **Tags:** Schlagwörter zur Umgebungsidentifikation.
-  - **Beschreibung:** Atmosphärische Beschreibung der Umgebung, Gerüche, Lichtverhältnisse und Stimmung.
-  - **16:9-Hintergrundbild:** Bildupload im Querformat (PNG, JPG, WEBP). Dieses Bild dient im Chat als stimmungsvoller Hintergrund und wird an ComfyUI für konsistente Bildgenerierungen übergeben.
-  - **Vision-ALT-Tag & Interaktive Text-Erweiterung:** Beim Bildupload generiert ein Vision-Modell automatisch eine Bildbeschreibung. Das System fragt dich anschließend interaktiv: *"Möchtest du die Ortsbeschreibung um diese KI-Bildbeschreibung erweitern?"*.
-  - **Event-Zuordnung:** Liste aller Ereignisse, die speziell an diesem Ort auftreten können.
+- **World Name:** Setting title (e.g., *"Kingdom of Acheron"*).
+- **WorldInfo Icon (`icon`):** A representative icon or graphic shown in headers and chat sidebars.
+
+The editor is divided into two functional tabs:
 
 ---
 
-## ⚡ Tab 2: Events (Zufallsereignisse)
+## 📍 Tab 1: Places (Locations)
 
-Events hauchen der Welt unvorhersehbares Leben ein (z. B. ein plötzlicher Sturm, ein Straßenräuber, ein Festzug).
-- Erste Kachel (`+`) zum Erstellen eines neuen Events.
-- **Event-Kacheln:** Zeigen Titel, Wahrscheinlichkeit (`0 - 100%`), One-Shot-Status und ein klares **Zugehörigkeits-Badge** (verknüpfter Ort oder *"Gesamte Welt"*).
-- **Event-Overlay (Modal):**
-  - **Titel:** Z. B. *"Plötzlicher Platzregen"*.
-  - **Zugehörigkeit:** Wähle aus, ob das Event überall auf der Welt auftreten kann (*"Gesamte Welt"*) oder nur an einem spezifischen Ort.
-  - **Wahrscheinlichkeit (0–100%):** Relative Chance bei der Auslosung.
-  - **One-Shot:** Wenn aktiviert, feuert das Ereignis in einer Chat-Sitzung genau ein einziges Mal.
-  - **Szenische Beschreibung:** Der Fließtext, der bei Triggerung in den Prompt injiziert wird, damit die KI atmosphärisch darauf reagiert.
+A gallery of all locales in this world:
+- First tile (`+`) to register a new place.
+- **Location Overlay (Modal):**
+  - **Name:** E.g., *"The Drunken Troll Tavern"*, *"Forgotten Glade"*.
+  - **Tags:** Keywords for environment matching.
+  - **Description:** Atmospheric prose describing sensory details, sounds, lighting, and mood.
+  - **16:9 Background Image:** Landscape image upload (PNG, JPG, WEBP). Serves as the atmospheric chat background and is passed to ComfyUI for consistent image generation.
+  - **Vision-ALT Tag & Interactive Text Expansion:** Upon image upload, a Vision model generates a visual scene description. The system then prompts interactively: *"Would you like to expand the location description with this AI image description?"*.
+  - **Event Assignment:** List of events tied specifically to this location.
 
 ---
 
-## 🔄 Die Cooldown- & Trigger-Mechanik im Chat
+## ⚡ Tab 2: Events (Random Encounters)
 
-- **Einheitlicher Pool:** Welt-Events und Orts-Events des aktuellen Chat-Orts bilden einen gemeinsamen Ziehungspool.
-- **Nachrichten-Zähler (10–100):** Zu Chat-Beginn wird eine Zahl zwischen 10 und 100 gewürfelt. Jede gesendete Nachricht (Spieler oder KI) zählt den Wert um 1 herunter.
-- **Ziehung bei 0:** Sobald der Zähler 0 erreicht, wird genau ein Event gewichtet ausgelöst. Danach wird sofort eine neue Zahl zwischen 10 und 100 gewürfelt.
-- **Opt-Out:** In der Chat-Sidebar kannst du Events jederzeit über eine Checkbox deaktivieren, wenn du eine ruhige Szene bevorzugst.
+Events inject unexpected life into the world (e.g., sudden storm, wandering bandit, royal procession).
+- First tile (`+`) to author a new event.
+- **Event Tiles:** Display title, probability (`0 - 100%`), one-shot indicator, and a clear **scope badge** (tied location or *"Entire World"*).
+- **Event Overlay (Modal):**
+  - **Title:** E.g., *"Sudden Downpour"*.
+  - **Scope:** Choose whether the event can occur anywhere (*"Entire World"*) or only at a specific place.
+  - **Probability (0–100%):** Relative weight during random draws.
+  - **One-Shot:** When checked, the event triggers at most once per chat session.
+  - **Scenic Description:** The prose injected into the prompt when triggered so the AI reacts dynamically.
 
-Weiter zu: [**Das Chat- & Rollenspiel-Interface →**](chat.md)
+---
+
+## 🔄 In-Chat Cooldown & Trigger Mechanics
+
+- **Unified Pool:** World events and location events for the current venue form a single combined pool.
+- **Message Counter (10–100):** When a chat starts, a random integer between 10 and 100 is rolled. Each message sent (by user or AI) decrements the counter by 1.
+- **Trigger at 0:** When the counter reaches 0, exactly one eligible event is drawn weighted by probability. Immediately afterward, a new counter is rolled (10–100).
+- **Opt-Out:** A toggle checkbox in the chat sidebar allows you to disable events at any time if you prefer uninterrupted scenes.
+
+Continue to: [**The Chat & Roleplay Interface →**](chat.md)

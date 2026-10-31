@@ -1,28 +1,28 @@
-# Task 010: Übersetzungsschicht & Englischer Kanon
+# Task 010: Translation Layer & English Canon
 
-## 🎯 Ziel & Umfang
-Sicherstellung des englischen LLM-Kanons: Alle Daten werden im Hintergrund primär auf Englisch geführt und gecacht. Die Web-UI zeigt Texte in der Nutzersprache an. Bei Benutzer-Edits wird das englische Original aktualisiert und der Übersetzungs-Cache synchronisiert.
+## 🎯 Goal & Scope
+Enforce canonical English LLM context: All background data is maintained and cached primarily in English. The web UI displays text in the user's localized language. When users make edits, the English canonical text is updated and the translation cache is synchronized.
 
-## 📂 Betroffene Schicht & Dateien
-- **Schicht:** `domain/translation/`, `infrastructure/translation/`
-- **Dateien:**
+## 📂 Affected Layer & Files
+- **Layer:** `domain/translation/`, `infrastructure/translation/`
+- **Files:**
   - `domain/translation/models.py`
   - `domain/translation/services.py`
   - `domain/translation/exceptions.py`
   - `infrastructure/translation/adapter.py`
 
-## 🔗 Abhängigkeiten
+## 🔗 Dependencies
 - `tasks/001_foundation_config_and_shared_utils.md`
 - `tasks/005_infrastructure_provider_interfaces_and_adapters.md`
 
-## 📝 Fachliche Vorgaben & Spezifikation
+## 📝 Functional Specifications & Requirements
 
 ### 1. `domain/translation/models.py`
 - **`Language` (Enum / Value Object):** `EN = "en"`, `DE = "de"`, etc.
 - **`TranslationRecord` (Entity):**
   - `id: int | None`
-  - `source_hash: str` (SHA-256 Hash des englischen Originaltextes)
-  - `english_text: str` (Kanonischer Text)
+  - `source_hash: str` (SHA-256 hash of original canonical English text)
+  - `english_text: str` (canonical text)
   - `target_language: str`
   - `translated_text: str`
   - `updated_at: datetime`
@@ -30,18 +30,18 @@ Sicherstellung des englischen LLM-Kanons: Alle Daten werden im Hintergrund prim�
 ### 2. `domain/translation/services.py`
 - **`TranslationService`:**
   - `translate_to_english(text: str, source_language: str, llm_provider: LLMProvider, model: str) -> str`:
-    - Übersetzt Benutzereingaben oder Entitäten ins Englische, falls sie nicht bereits auf Englisch vorliegen.
+    - Translates user inputs or entities into English if not already in English.
   - `get_localized_text(english_text: str, target_language: str, cache_records: dict[str, str], llm_provider: LLMProvider, model: str) -> str`:
-    - Prüft zuerst den Cache (`source_hash`).
-    - Falls kein Treffer: Führt Übersetzung durch und legt neuen `TranslationRecord` an.
+    - Checks cache first (`source_hash`).
+    - If cache miss: executes translation and stores new `TranslationRecord`.
   - `sync_text_update(old_english_text: str, new_user_text: str, user_language: str, llm_provider: LLMProvider, model: str) -> tuple[str, str]`:
-    - Aktualisiert bei Benutzer-Edits das englische Original.
-    - Invalidiert veraltete Cache-Einträge für `old_english_text`.
+    - Updates canonical English original on user edits.
+    - Invalidates stale cache entries for `old_english_text`.
 
 ### 3. `infrastructure/translation/adapter.py`
-- Nutzt `LLMProvider.generate()` mit einem spezialisierten Übersetzungs-Prompt zur präzisen Übersetzung zwischen Englisch und Nutzersprache.
+- Utilizes `LLMProvider.generate()` with a specialized translation prompt for precise translation between English and the user's language.
 
-## ✅ Akzeptanzkriterien
-- [x] LLM-Kontext bleibt kanonisch auf Englisch.
-- [x] Übersetzungs-Cache in SQLite (`TranslationRecord`) verhindert doppelte API-Calls.
-- [x] Edits aktualisieren das englische Original und invalidieren abhängige Cache-Einträge.
+## ✅ Acceptance Criteria
+- [x] LLM context remains canonically in English.
+- [x] SQLite translation cache (`TranslationRecord`) avoids redundant API calls.
+- [x] Edits refresh the canonical English original and invalidate dependent cache records.
