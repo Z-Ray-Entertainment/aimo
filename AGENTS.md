@@ -72,7 +72,7 @@ Every coding assistant must follow these core rules without exception:
 - **Autonomous post-streaming classification:** After English streaming completes and before translation, a separate downstream classification call (using the same model) scans the text to extract the most likely emotion and narrative location change suggestions in isolation.
 - **No UI data in LLM context:** System messages (*"You travelled to {location}"*, *"Generating image..."*), URLs, or technical IDs must **never** enter the chat history fed to the LLM.
 
-### 2. Mandatory 7-Stage Prompt Layout
+### 2. Mandatory Assembled Prompt Layout
 The prompt for the roleplay model must strictly be assembled in this exact order using closed delimiters:
 ```text
 [SYSTEM_PROMPT]
@@ -82,14 +82,6 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 [CHARACTER_DEFINITION]
 {character_definition}
 [/CHARACTER_DEFINITION]
-
-[USER_PERSONA]
-{user_persona}
-[/USER_PERSONA]
-
-[WORLD_INFO]
-{world_info_and_location_and_triggered_event}
-[/WORLD_INFO]
 
 [CHAT_HISTORY]
 {last_10_messages}
@@ -102,6 +94,18 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 [RELEVANT_LOREBOOKS]
 {matched_lorebooks}
 [/RELEVANT_LOREBOOKS]
+
+[WORLD_INFO]
+{world_info_and_location_and_triggered_event}
+[/WORLD_INFO]
+
+[USER_PERSONA]
+{user_persona}
+[/USER_PERSONA]
+
+[DIALOGUE_EXAMPLES]
+{dialogue_examples}
+[/DIALOGUE_EXAMPLES]
 ```
 - **Prompt discipline:** The roleplay model must **never** speak for the user or dictate their actions, thoughts, or responses!
 

@@ -303,9 +303,28 @@ def _start_background_turn(
                 w_character.description = w_trans_repo.get_localized_field(
                     "character", w_character.id, "description", "en", w_character.description
                 )
-                w_character.dialogue_examples = w_trans_repo.get_localized_field(
-                    "character", w_character.id, "dialogue_examples", "en", w_character.dialogue_examples
+                raw_default_examples = (
+                    "\n".join(w_character.dialogue_examples)
+                    if isinstance(w_character.dialogue_examples, list)
+                    else str(w_character.dialogue_examples or "")
                 )
+                localized_dialogue = w_trans_repo.get_localized_field(
+                    "character",
+                    w_character.id,
+                    "dialogue_examples",
+                    "en",
+                    raw_default_examples,
+                )
+                if isinstance(localized_dialogue, str):
+                    w_character.dialogue_examples = [
+                        line.strip()
+                        for line in localized_dialogue.splitlines()
+                        if line.strip()
+                    ]
+                elif isinstance(localized_dialogue, list):
+                    w_character.dialogue_examples = [
+                        str(x).strip() for x in localized_dialogue if str(x).strip()
+                    ]
 
             if w_persona.id is not None:
                 w_persona.description = w_trans_repo.get_localized_field(
@@ -391,6 +410,8 @@ def _start_background_turn(
                 f"\n[{w_persona.name}]:",
                 "\n[USER_PERSONA]",
                 "\n[CHAT_HISTORY]",
+                "\n[DIALOGUE_EXAMPLES]",
+                "\n[WORLD_INFO]",
             ]
 
             full_english_chunks: list[str] = []

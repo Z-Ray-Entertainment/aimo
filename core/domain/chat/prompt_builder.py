@@ -27,14 +27,6 @@ class PromptBuilder:
             character=character,
             relationship_value=relationship_value,
         )
-        persona_section = self._format_user_persona(persona=persona)
-        world_section = self._format_world_info(
-            worldinfo=worldinfo,
-            current_location=current_location,
-            triggered_event=triggered_event,
-            available_locations=available_locations or [],
-            character=character,
-        )
         history_section = self._format_chat_history(
             messages=recent_messages,
             character_name=character.name,
@@ -42,16 +34,31 @@ class PromptBuilder:
         )
         memories_section = self._format_memories(memories=matched_memories)
         lorebooks_section = self._format_lorebooks(entries=matched_lorebooks)
-
-        assembled = (
-            f"[SYSTEM_PROMPT]\n{system_section}\n[/SYSTEM_PROMPT]\n\n"
-            f"[CHARACTER_DEFINITION]\n{character_section}\n[/CHARACTER_DEFINITION]\n\n"
-            f"[USER_PERSONA]\n{persona_section}\n[/USER_PERSONA]\n\n"
-            f"[WORLD_INFO]\n{world_section}\n[/WORLD_INFO]\n\n"
-            f"[CHAT_HISTORY]\n{history_section}\n[/CHAT_HISTORY]\n\n"
-            f"[RELEVANT_MEMORIES]\n{memories_section}\n[/RELEVANT_MEMORIES]\n\n"
-            f"[RELEVANT_LOREBOOKS]\n{lorebooks_section}\n[/RELEVANT_LOREBOOKS]"
+        world_section = self._format_world_info(
+            worldinfo=worldinfo,
+            current_location=current_location,
+            triggered_event=triggered_event,
+            available_locations=available_locations or [],
+            character=character,
         )
+        persona_section = self._format_user_persona(persona=persona)
+        dialogue_examples_section = self._format_dialogue_examples(
+            dialogue_examples=character.dialogue_examples,
+        )
+
+        parts: list[str] = []
+        if system_section:
+            parts.append(f"[SYSTEM_PROMPT]\n{system_section}\n[/SYSTEM_PROMPT]")
+        parts.extend([
+            f"[CHARACTER_DEFINITION]\n{character_section}\n[/CHARACTER_DEFINITION]",
+            f"[CHAT_HISTORY]\n{history_section}\n[/CHAT_HISTORY]",
+            f"[RELEVANT_MEMORIES]\n{memories_section}\n[/RELEVANT_MEMORIES]",
+            f"[RELEVANT_LOREBOOKS]\n{lorebooks_section}\n[/RELEVANT_LOREBOOKS]",
+            f"[WORLD_INFO]\n{world_section}\n[/WORLD_INFO]",
+            f"[USER_PERSONA]\n{persona_section}\n[/USER_PERSONA]",
+            f"[DIALOGUE_EXAMPLES]\n{dialogue_examples_section}\n[/DIALOGUE_EXAMPLES]",
+        ])
+        assembled = "\n\n".join(parts)
         return replace_roleplay_placeholders(
             assembled,
             character.name,
@@ -73,10 +80,38 @@ class PromptBuilder:
             f"Current Affection / Relationship Score (-100 to +100): {relationship_value:.1f}",
             f"Description & Personality:\n{character.description.strip()}",
         ]
-        if character.dialogue_examples:
-            examples_text = "\n".join(f"- {ex}" for ex in character.dialogue_examples)
-            lines.append(f"Dialogue Examples:\n{examples_text}")
         return "\n".join(lines)
+
+    @staticmethod
+    def _format_dialogue_examples(dialogue_examples: list[str] | str) -> str:
+        raw_items: list[str] = []
+        if isinstance(dialogue_examples, str):
+            for part in dialogue_examples.splitlines():
+                cleaned = part.strip()
+                if cleaned:
+                    raw_items.append(cleaned)
+        elif isinstance(dialogue_examples, list):
+            for item in dialogue_examples:
+                if isinstance(item, str):
+                    for sub in item.splitlines():
+                        cleaned = sub.strip()
+                        if cleaned:
+                            raw_items.append(cleaned)
+                elif item is not None:
+                    cleaned = str(item).strip()
+                    if cleaned:
+                        raw_items.append(cleaned)
+
+        if not raw_items:
+            return "None."
+
+        formatted_lines: list[str] = []
+        for line in raw_items:
+            clean_line = line.lstrip("-* ").strip()
+            if clean_line:
+                formatted_lines.append(f"- {clean_line}")
+
+        return "\n".join(formatted_lines) if formatted_lines else "None."
 
     @staticmethod
     def _format_user_persona(persona: UserPersona) -> str:
