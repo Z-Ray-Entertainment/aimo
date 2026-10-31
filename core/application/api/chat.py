@@ -32,7 +32,7 @@ from infrastructure.repositories.translation_repository import TranslationReposi
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
-from shared.utils import parse_tags, replace_roleplay_placeholders
+from shared.utils import filter_stopwords, parse_tags, replace_roleplay_placeholders
 
 api_chat_bp = Blueprint("api_chat", __name__, url_prefix="/api/chat")
 
@@ -87,7 +87,8 @@ def _record_admin_prompt(session_id: int, message_idx: int, prompt: str) -> None
 
 def _extract_active_tags(text: str) -> list[str]:
     words = re.findall(r"[a-zA-Z0-9äöüÄÖÜß_-]{3,}", text.lower())
-    return parse_tags(words)
+    clean_words = filter_stopwords(words)
+    return parse_tags(clean_words)
 
 
 def _run_async_memory_extraction(session_id: int) -> None:

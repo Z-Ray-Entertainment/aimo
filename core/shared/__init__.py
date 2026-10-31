@@ -6,6 +6,8 @@ from shared.exceptions import (
     InfrastructureError,
 )
 from shared.utils import (
+    STOPWORDS,
+    filter_stopwords,
     hash_password,
     parse_tags,
     sanitize_filename,
@@ -21,7 +23,9 @@ __all__ = [
     "DATA_DIR",
     "DomainError",
     "InfrastructureError",
+    "STOPWORDS",
     "UPLOAD_DIR",
+    "filter_stopwords",
     "hash_password",
     "parse_tags",
     "sanitize_filename",

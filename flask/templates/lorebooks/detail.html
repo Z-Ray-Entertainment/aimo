@@ -90,14 +90,19 @@
               Titel *
               <span class="field-help-btn" title="Eintrag-Titel:&#10;Die prägnante Bezeichnung des Wissensartikels (z. B. 'Der Orden der Dämmerung').">?</span>
             </label>
-            <input type="text" name="title" value="{{ entry.title }}" required>
+            <input type="text" id="title-input-{{ entry.id }}" name="title" value="{{ entry.title }}" required>
           </div>
           <div>
-            <label>
-              Tags (Kommagetrennt für vektorloses RAG) *
-              <span class="field-help-btn" title="Tags (vektorloses RAG):&#10;Kommagetrennte Stichwörter (z. B. orden, dämmerung, zauberer). Sobald ein Wort im Chat fällt, wird dieser Eintrag automatisch in [RELEVANT_LOREBOOKS] geladen.">?</span>
-            </label>
-            <input type="text" name="tags" value="{{ entry.tags|join(', ') }}" required>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+              <label style="margin: 0;">
+                Tags (Kommagetrennt für vektorloses RAG) *
+                <span class="field-help-btn" title="Tags (vektorloses RAG):&#10;Kommagetrennte Stichwörter (z. B. orden, dämmerung, zauberer). Sobald ein Wort im Chat fällt, wird dieser Eintrag automatisch in [RELEVANT_LOREBOOKS] geladen.">?</span>
+              </label>
+              <button type="button" class="btn btn-sparkle suggest-tags-btn" data-tags-id="tags-input-{{ entry.id }}" data-title-id="title-input-{{ entry.id }}" data-content-id="content-input-{{ entry.id }}" style="font-size: 0.76rem; padding: 0.2rem 0.55rem;">
+                <span class="icon-sparkle">✨</span> Tags vorschlagen
+              </button>
+            </div>
+            <input type="text" id="tags-input-{{ entry.id }}" name="tags" value="{{ entry.tags|join(', ') }}" required>
           </div>
           <div>
             <label>
@@ -106,6 +111,7 @@
             </label>
             <input type="hidden" name="i18n_content" id="i18n-lb-entry-{{ entry.id }}" value='{{ (entry_translations.get(entry.id, {}).get("content", {}) if entry_translations is defined else {}) | tojson }}'>
             <textarea
+              id="content-input-{{ entry.id }}"
               name="content"
               rows="6"
               required
@@ -138,14 +144,19 @@
           Titel *
           <span class="field-help-btn" title="Eintrag-Titel:&#10;Die prägnante Bezeichnung des Wissensartikels (z. B. 'Der Orden der Dämmerung').">?</span>
         </label>
-        <input type="text" name="title" required>
+        <input type="text" id="new-entry-title" name="title" required>
       </div>
       <div>
-        <label>
-          Tags (Kommagetrennt) *
-          <span class="field-help-btn" title="Tags (vektorloses RAG):&#10;Kommagetrennte Stichwörter (z. B. orden, dämmerung, zauberer). Sobald ein Wort im Chat fällt, wird dieser Eintrag automatisch in [RELEVANT_LOREBOOKS] geladen.">?</span>
-        </label>
-        <input type="text" name="tags" placeholder="magie, gilde, hauptstadt" required>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+          <label style="margin: 0;">
+            Tags (Kommagetrennt) *
+            <span class="field-help-btn" title="Tags (vektorloses RAG):&#10;Kommagetrennte Stichwörter (z. B. orden, dämmerung, zauberer). Sobald ein Wort im Chat fällt, wird dieser Eintrag automatisch in [RELEVANT_LOREBOOKS] geladen.">?</span>
+          </label>
+          <button type="button" class="btn btn-sparkle suggest-tags-btn" data-tags-id="new-entry-tags" data-title-id="new-entry-title" data-content-id="new-entry-content" style="font-size: 0.76rem; padding: 0.2rem 0.55rem;">
+            <span class="icon-sparkle">✨</span> Tags vorschlagen
+          </button>
+        </div>
+        <input type="text" id="new-entry-tags" name="tags" placeholder="magie, gilde, hauptstadt" required>
       </div>
       <div>
         <label>
@@ -154,6 +165,7 @@
         </label>
         <input type="hidden" name="i18n_content" id="i18n-lb-entry-new" value="{}">
         <textarea
+          id="new-entry-content"
           name="content"
           rows="6"
           required
@@ -168,4 +180,58 @@
     </form>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".suggest-tags-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const tagsInput = document.getElementById(btn.getAttribute("data-tags-id"));
+      const titleInput = document.getElementById(btn.getAttribute("data-title-id"));
+      const contentInput = document.getElementById(btn.getAttribute("data-content-id"));
+
+      const title = titleInput ? titleInput.value.trim() : "";
+      const content = contentInput ? contentInput.value.trim() : "";
+
+      if (!title && !content) {
+        alert("Bitte trage zuerst einen Titel oder Fließtext ein, damit der Assistent relevante Tags ableiten kann.");
+        return;
+      }
+
+      const origHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<span class="icon-sparkle">✨</span> Ermittle...`;
+
+      try {
+        const resp = await fetch("/api/lorebooks/suggest-tags", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, content }),
+        });
+        const data = await resp.json();
+        if (resp.ok && data.tags_string) {
+          if (tagsInput) {
+            const current = tagsInput.value.trim();
+            if (current) {
+              const existing = current.split(",").map(t => t.trim().toLowerCase()).filter(Boolean);
+              const combined = Array.from(new Set([...existing, ...data.tags]));
+              tagsInput.value = combined.join(", ");
+            } else {
+              tagsInput.value = data.tags_string;
+            }
+          }
+        } else if (data.error) {
+          alert(`Fehler bei der Tag-Ermittlung: ${data.error}`);
+        }
+      } catch (err) {
+        alert(`Verbindungsfehler: ${err.message}`);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+      }
+    });
+  });
+});
+</script>
 {% endblock %}

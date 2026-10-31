@@ -26,6 +26,49 @@ def verify_password(password: str, hashed_password: str) -> bool:
         return False
 
 
+STOPWORDS: frozenset[str] = frozenset({
+    # German stopwords
+    "aber", "alle", "allem", "allen", "aller", "alles", "als", "also", "am", "an",
+    "andere", "anderem", "anderen", "anderer", "anderes", "anderm", "andern", "anderr", "anders",
+    "auch", "auf", "aus", "bei", "bin", "bis", "bist", "da", "damit", "dann", "das", "dass", "daß",
+    "dasselbe", "dazu", "dein", "deine", "deinem", "deinen", "deiner", "deines", "dem", "demselben",
+    "den", "denn", "denselben", "der", "derer", "derselbe", "derselben", "des", "desselben", "dessen",
+    "dich", "die", "dies", "diese", "dieselbe", "dieselben", "diesem", "diesen", "dieser", "dieses",
+    "dir", "doch", "dort", "du", "durch", "ein", "eine", "einem", "einen", "einer", "eines", "einig",
+    "einige", "einigem", "einigen", "einiger", "einiges", "einmal", "er", "es", "etwas", "euch",
+    "euer", "eure", "eurem", "euren", "eurer", "eures", "für", "gegen", "gewesen", "hab", "habe",
+    "haben", "hat", "hatte", "hatten", "hier", "hin", "hinter", "ich", "ihm", "ihn", "ihnen", "ihr",
+    "ihre", "ihrem", "ihren", "ihrer", "ihres", "im", "immer", "in", "indem", "ins", "ist", "jede",
+    "jedem", "jeden", "jeder", "jedes", "jene", "jenem", "jenen", "jener", "jenes", "jetzt", "kann",
+    "kannst", "können", "könnte", "machen", "man", "manche", "manchem", "manchen", "mancher", "manches",
+    "mein", "meine", "meinem", "meinen", "meiner", "meines", "mich", "mir", "mit", "muss", "musst",
+    "müssen", "nach", "nachdem", "nein", "nicht", "nichts", "noch", "nun", "nur", "ob", "oder", "ohne",
+    "sehr", "sein", "seine", "seinem", "seinen", "seiner", "seines", "selbst", "sich", "sie", "sind",
+    "so", "solche", "solchem", "solchen", "solcher", "solches", "soll", "sollte", "sonst", "über",
+    "um", "und", "uns", "unser", "unsere", "unserem", "unseren", "unserer", "unseres", "unter", "vom",
+    "von", "vor", "während", "war", "waren", "warst", "warum", "was", "weg", "weil", "weiter", "weitere",
+    "welchem", "welchen", "welcher", "welches", "wenn", "wer", "werde", "werden", "werdet", "wie",
+    "wieder", "will", "wir", "wird", "wirst", "wo", "wollen", "wollte", "würde", "würden", "zu",
+    "zum", "zur", "zwar", "zwischen",
+    # English stopwords
+    "about", "above", "after", "again", "against", "all", "and", "any", "are", "aren", "because",
+    "been", "before", "being", "below", "between", "both", "but", "can", "cannot", "could", "did",
+    "didn", "does", "doesn", "doing", "don", "down", "during", "each", "few", "for", "from", "further",
+    "had", "hadn", "has", "hasn", "have", "haven", "having", "her", "here", "hers", "herself",
+    "him", "himself", "his", "how", "into", "its", "itself", "just", "more", "most", "myself", "nor",
+    "not", "now", "off", "once", "only", "other", "our", "ours", "ourselves", "out", "over", "own",
+    "same", "she", "should", "shouldn", "some", "such", "than", "that", "the", "their", "theirs",
+    "them", "themselves", "then", "there", "these", "they", "this", "those", "through", "too", "under",
+    "until", "very", "was", "wasn", "were", "weren", "what", "when", "where", "which", "while",
+    "who", "whom", "why", "will", "with", "won", "would", "wouldn", "you", "your", "yours",
+    "yourself", "yourselves",
+})
+
+
+def filter_stopwords(tags: list[str]) -> list[str]:
+    return [t for t in tags if t.lower() not in STOPWORDS]
+
+
 def parse_tags(raw: str | list[str]) -> list[str]:
     chunks = [raw] if isinstance(raw, str) else raw
     seen: set[str] = set()
