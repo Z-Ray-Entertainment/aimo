@@ -48,10 +48,7 @@
 
     <div class="card-grid">
       {% if has_perm('character_create') %}
-        <a href="{{ url_for('characters.new_character') }}" class="add-card-tile">
-          <div class="plus-symbol">+</div>
-          <div>Neuer Charakter</div>
-        </a>
+        {{ new_button("Neuer Charakter", href=url_for('characters.new_character')) }}
       {% endif %}
 
       {% for item in character_cards %}
@@ -96,10 +93,7 @@
   <section id="tab-lorebooks" class="tab-pane">
     <div class="card-grid">
       {% if has_perm('lorebook_create') %}
-        <button type="button" class="add-card-tile" data-modal-open="new-lorebook-modal">
-          <div class="plus-symbol">+</div>
-          <div>Neues Lorebook</div>
-        </button>
+        {{ new_button("Neues Lorebook", modal="new-lorebook-modal") }}
       {% endif %}
 
       {% for item in lorebook_cards %}
@@ -126,10 +120,7 @@
   <section id="tab-worldinfo" class="tab-pane">
     <div class="card-grid">
       {% if has_perm('worldinfo_create') %}
-        <button type="button" class="add-card-tile" data-modal-open="new-worldinfo-modal">
-          <div class="plus-symbol">+</div>
-          <div>Neue WorldInfo</div>
-        </button>
+        {{ new_button("Neue WorldInfo", modal="new-worldinfo-modal") }}
       {% endif %}
 
       {% for item in worldinfo_cards %}

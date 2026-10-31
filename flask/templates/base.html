@@ -65,10 +65,7 @@
         </div>
 
         <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); margin-bottom: 1.5rem;">
-          <div class="add-card-tile" style="min-height: 200px;" onclick="if (!window.aimoPersonaVisionRunning) openNewPersonaForm()">
-            <div class="plus-symbol">+</div>
-            <div>Neue Persona</div>
-          </div>
+          {{ new_button("Neue Persona", onclick="if (!window.aimoPersonaVisionRunning) openNewPersonaForm()", min_height="200px") }}
 
           {% for p_item in (persona_items if persona_items is defined else g.persona_items) %}
             {% set p = p_item.persona %}

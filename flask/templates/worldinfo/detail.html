@@ -69,10 +69,7 @@
   <section id="tab-places" class="tab-pane active">
     <div class="card-grid">
       {% if has_perm('worldinfo_edit') %}
-        <button type="button" class="add-card-tile" data-modal-open="new-location-modal">
-          <div class="plus-symbol">+</div>
-          <div>Neuer Ort</div>
-        </button>
+        {{ new_button("Neuer Ort", modal="new-location-modal") }}
       {% endif %}
 
       {% for loc in locations %}
@@ -154,10 +151,7 @@
   <section id="tab-events" class="tab-pane">
     <div class="card-grid">
       {% if has_perm('worldinfo_edit') %}
-        <button type="button" class="add-card-tile" data-modal-open="new-event-modal">
-          <div class="plus-symbol">+</div>
-          <div>Neues Event</div>
-        </button>
+        {{ new_button("Neues Event", modal="new-event-modal") }}
       {% endif %}
 
       {% for ev in events %}

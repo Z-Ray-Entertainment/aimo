@@ -219,10 +219,7 @@
           <span class="field-help-btn" title="9:16 Galeriebilder:&#10;Exklusive Hochformat-Grafiken mit Freischalt-Schwellenwert (-100 bis +100). Bei Erreichen des Werts im Chat wird das Bild im Medien-Tab enthüllt.">?</span>
         </h3>
         <div class="card-grid">
-          <button type="button" class="add-card-tile" data-modal-open="add-gallery-modal">
-            <div class="plus-symbol">+</div>
-            <div>9:16 Bild hinzufügen</div>
-          </button>
+          {{ new_button("9:16 Bild hinzufügen", modal="add-gallery-modal") }}
 
           {% for img in character.gallery_images %}
             <div class="card-tile" style="justify-content: space-between;">

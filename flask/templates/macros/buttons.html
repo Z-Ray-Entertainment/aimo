@@ -1,0 +1,14 @@
+{# Reusable "New Button" for Action Cards #}
+{% macro new_button(text, href=none, modal=none, onclick=none, min_height=none, extra_class='', id=none, title=none) %}
+  {% if href %}
+    <a href="{{ href }}" class="add-card-tile {{ extra_class }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if min_height %} style="min-height: {{ min_height }};"{% endif %}>
+      <div class="plus-symbol">+</div>
+      <div class="tile-label">{{ text }}</div>
+    </a>
+  {% else %}
+    <button type="button" class="add-card-tile {{ extra_class }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if modal %} data-modal-open="{{ modal }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{% if min_height %} style="min-height: {{ min_height }};"{% endif %}>
+      <div class="plus-symbol">+</div>
+      <div class="tile-label">{{ text }}</div>
+    </button>
+  {% endif %}
+{% endmacro %}

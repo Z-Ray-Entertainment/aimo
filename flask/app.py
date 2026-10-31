@@ -22,6 +22,7 @@ from application.lorebooks import lorebooks_bp
 from application.overview import overview_bp
 from application.personas import personas_bp
 from application.setup import setup_bp
+from application.ui_helpers import render_new_button
 from application.worldinfo import worldinfo_bp
 from infrastructure.database import init_db
 from infrastructure.repositories.persona_repository import PersonaRepository
@@ -111,6 +112,7 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
     def inject_template_helpers():
         return {
             "has_perm": has_perm,
+            "new_button": render_new_button,
         }
 
     return app

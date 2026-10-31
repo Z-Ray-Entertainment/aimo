@@ -53,10 +53,7 @@
 
 <div class="card-grid">
   {% if has_perm('lorebook_edit') %}
-    <button type="button" class="add-card-tile" data-modal-open="new-entry-modal">
-      <div class="plus-symbol">+</div>
-      <div>Neuer Eintrag</div>
-    </button>
+    {{ new_button("Neuer Eintrag", modal="new-entry-modal") }}
   {% endif %}
 
   {% for entry in entries %}
