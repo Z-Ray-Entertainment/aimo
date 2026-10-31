@@ -152,44 +152,50 @@
         <!-- 60s Countdown Container für Ortswechsel -->
         <div id="location-switch-container"></div>
 
-        <!-- Eingabeleiste unten -->
-        <form id="chat-input-form" style="margin-top: 0.85rem; display: flex; gap: 0.55rem; align-items: flex-end;">
-          <!-- Klammer-Button für Bild-Upload -->
-          <label class="btn" style="padding: 0.6rem 0.8rem; cursor: pointer;" title="Bild anhängen (Vision ALT-Analyse)">
-            <span class="icon-mono">📎</span>
-            <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp" style="display: none;" onchange="document.getElementById('upload-file-indicator').textContent = this.files[0] ? this.files[0].name : '';">
-          </label>
+        <!-- Eingabeleiste unten: Vereinheitlichter Kasten mit Overlay-Buttons -->
+        <form id="chat-input-form" class="chat-input-box">
+          <!-- Links bündig: Attach & optionale ComfyUI-Aktionen -->
+          <div class="chat-input-actions-left">
+            <label class="chat-overlay-btn" title="Bild anhängen (Vision ALT-Analyse)">
+              <span class="icon-mono">📎</span>
+              <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp" style="display: none;" onchange="document.getElementById('upload-file-indicator').textContent = this.files[0] ? this.files[0].name : '';">
+            </label>
 
-          {% if comfyui_available %}
-            <!-- Zauberstab-Button für ComfyUI Szenenbild -->
-            <button type="button" class="btn btn-sparkle" style="padding: 0.6rem 0.8rem;" onclick="window.chatStream.triggerComfyUIGeneration()" title="Szenenbild mit ComfyUI generieren">
-              <span class="icon-sparkle">✨</span>
-            </button>
+            {% if comfyui_available %}
+              <!-- Zauberstab-Button für ComfyUI Szenenbild -->
+              <button type="button" class="chat-overlay-btn" onclick="window.chatStream.triggerComfyUIGeneration()" title="Szenenbild mit ComfyUI generieren">
+                <span class="icon-sparkle">✨</span>
+              </button>
 
-            <!-- Abbrechen-Button während ComfyUI-Bildgenerierung -->
-            <button type="button" id="cancel-image-gen-btn" class="btn btn-danger" style="display: none; padding: 0.6rem 0.85rem;" onclick="window.chatStream.cancelComfyUIGeneration()">
-              ✕ Abbrechen
-            </button>
-          {% endif %}
+              <!-- Abbrechen-Button während ComfyUI-Bildgenerierung -->
+              <button type="button" id="cancel-image-gen-btn" class="chat-overlay-btn btn-abort-turn" style="display: none;" onclick="window.chatStream.cancelComfyUIGeneration()" title="Bildgenerierung abbrechen">
+                <span class="icon-mono">✕</span>
+              </button>
+            {% endif %}
+          </div>
 
-          <div style="flex: 1;">
-            <div id="upload-file-indicator" style="font-size: 0.75rem; color: var(--gold-accent); margin-bottom: 0.2rem;"></div>
+          <!-- Mitte: Textarea ohne eigenen Rahmen & Datei-Indikator -->
+          <div class="chat-input-content">
+            <div id="upload-file-indicator"></div>
             <textarea id="chat-message-textarea" name="message" rows="2" placeholder="Schreibe deine Antwort oder Handlung... (Enter zum Senden, Shift+Enter für Zeilenumbruch)"></textarea>
           </div>
 
-          <!-- Re-Generate Button links vor dem Senden-Button -->
-          <button type="button" id="chat-regenerate-btn" class="btn" style="padding: 0.6rem 0.85rem;" onclick="window.chatStream.regenerateLastTurn()" title="Antwort neu generieren (Re-Generate) – Ersetzt die letzte KI-Antwort bzw. wiederholt die Generierung">
-            <span class="icon-mono">🔄</span>
-          </button>
+          <!-- Rechts: Re-Generate, Abort & Senden als Overlay-Buttons -->
+          <div class="chat-input-actions-right">
+            <!-- Re-Generate Button links vor dem Senden-Button -->
+            <button type="button" id="chat-regenerate-btn" class="chat-overlay-btn" onclick="window.chatStream.regenerateLastTurn()" title="Antwort neu generieren (Re-Generate) – Ersetzt die letzte KI-Antwort bzw. wiederholt die Generierung">
+              <span class="icon-mono">🔄</span>
+            </button>
 
-          <!-- Abbrechen-Button während aktiver Antwort-Generierung -->
-          <button type="button" id="chat-abort-btn" class="btn btn-abort-turn" style="display: none; background: none; border: 1px solid var(--border-wood-dark); color: var(--text-muted); cursor: pointer; padding: 0.6rem 0.85rem; border-radius: var(--radius-btn);" onclick="window.chatStream.abortTurn()" title="Antwort-Generierung abbrechen">
-            <span class="icon-mono">✕</span>
-          </button>
+            <!-- Abbrechen-Button während aktiver Antwort-Generierung -->
+            <button type="button" id="chat-abort-btn" class="chat-overlay-btn btn-abort-turn" style="display: none;" onclick="window.chatStream.abortTurn()" title="Antwort-Generierung abbrechen">
+              <span class="icon-mono">✕</span>
+            </button>
 
-          <button type="submit" id="chat-send-btn" class="btn" style="padding: 0.6rem 0.85rem;" title="Nachricht senden (Enter)">
-            <span class="icon-mono">➤</span>
-          </button>
+            <button type="submit" id="chat-send-btn" class="chat-overlay-btn" title="Nachricht senden (Enter)">
+              <span class="icon-mono">➤</span>
+            </button>
+          </div>
         </form>
       </div>
 
