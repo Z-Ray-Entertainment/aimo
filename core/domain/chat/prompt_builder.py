@@ -22,57 +22,28 @@ class PromptBuilder:
         available_locations: list[Location] | None = None,
         relationship_value: float = 0.0,
     ) -> str:
-        char_name = character.name
-        user_name = persona.name
+        system_section = roleplay_system_prompt.strip()
+        character_section = self._format_character_definition(
+            character=character,
+            relationship_value=relationship_value,
+        )
+        persona_section = self._format_user_persona(persona=persona)
+        world_section = self._format_world_info(
+            worldinfo=worldinfo,
+            current_location=current_location,
+            triggered_event=triggered_event,
+            available_locations=available_locations or [],
+            character=character,
+        )
+        history_section = self._format_chat_history(
+            messages=recent_messages,
+            character_name=character.name,
+            persona_name=persona.name,
+        )
+        memories_section = self._format_memories(memories=matched_memories)
+        lorebooks_section = self._format_lorebooks(entries=matched_lorebooks)
 
-        system_section = replace_roleplay_placeholders(
-            roleplay_system_prompt.strip(), char_name, user_name
-        )
-        character_section = replace_roleplay_placeholders(
-            self._format_character_definition(
-                character=character,
-                relationship_value=relationship_value,
-            ),
-            char_name,
-            user_name,
-        )
-        persona_section = replace_roleplay_placeholders(
-            self._format_user_persona(persona=persona),
-            char_name,
-            user_name,
-        )
-        world_section = replace_roleplay_placeholders(
-            self._format_world_info(
-                worldinfo=worldinfo,
-                current_location=current_location,
-                triggered_event=triggered_event,
-                available_locations=available_locations or [],
-                character=character,
-            ),
-            char_name,
-            user_name,
-        )
-        history_section = replace_roleplay_placeholders(
-            self._format_chat_history(
-                messages=recent_messages,
-                character_name=char_name,
-                persona_name=user_name,
-            ),
-            char_name,
-            user_name,
-        )
-        memories_section = replace_roleplay_placeholders(
-            self._format_memories(memories=matched_memories),
-            char_name,
-            user_name,
-        )
-        lorebooks_section = replace_roleplay_placeholders(
-            self._format_lorebooks(entries=matched_lorebooks),
-            char_name,
-            user_name,
-        )
-
-        return (
+        assembled = (
             f"[SYSTEM_PROMPT]\n{system_section}\n[/SYSTEM_PROMPT]\n\n"
             f"[CHARACTER_DEFINITION]\n{character_section}\n[/CHARACTER_DEFINITION]\n\n"
             f"[USER_PERSONA]\n{persona_section}\n[/USER_PERSONA]\n\n"
@@ -81,6 +52,7 @@ class PromptBuilder:
             f"[RELEVANT_MEMORIES]\n{memories_section}\n[/RELEVANT_MEMORIES]\n\n"
             f"[RELEVANT_LOREBOOKS]\n{lorebooks_section}\n[/RELEVANT_LOREBOOKS]"
         )
+        return replace_roleplay_placeholders(assembled, character.name, persona.name)
 
     @staticmethod
     def _format_character_definition(

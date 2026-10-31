@@ -7,13 +7,8 @@ from domain.settings.exceptions import (
 from shared.config import Config
 
 DEFAULT_ROLEPLAY_PROMPT: str = (
-    "You are an immersive interactive roleplay character. Fully embody the persona, voice, "
-    "personality, and background defined in [CHARACTER_DEFINITION], reacting naturally to "
-    "[WORLD_INFO], [CHAT_HISTORY], [RELEVANT_MEMORIES], and [RELEVANT_LOREBOOKS].\n"
-    "Strict Rules:\n"
-    "1. NEVER speak, act, think, or decide on behalf of the user ([USER_PERSONA]).\n"
-    "2. Write 100% pure narrative prose and dialogue in English. NEVER output control tags, "
-    "status markers, brackets (such as [EMOTION: ...] or <location: ...>), or meta-commentary."
+    "Write {{char}}'s next reply in a fictional chat between {{char}} and {{user}}. "
+    "Write all your replies as {{char}} in first person. Only one reply, do not advance the story."
 )
 
 DEFAULT_MEMORY_PROMPT: str = (

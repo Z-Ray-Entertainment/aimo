@@ -27,7 +27,7 @@ Manage system settings for external AI services (Ollama, ComfyUI, SearXNG, Voice
   - `assistant_model: str`
   - `vision_model: str`
 - **`SystemPrompts` (Entity / Value Object):**
-  - `roleplay_prompt: str`: Core instructions for interactive character roleplay (Strict rule: Never speak or act for the user!).
+  - `roleplay_prompt: str`: Core instruction for interactive character roleplay ("Write {{char}}'s next reply in a fictional chat between {{char}} and {{user}}. Write all your replies as {{char}} in first person. Only one reply, do not advance the story.").
   - `memory_prompt: str`: Extraction prompt for 10-message summaries and tags.
   - `diffuser_prompt: str`: Converts scene context into Stable Diffusion / Flux prompts for ComfyUI.
   - `sparkle_assistant_prompt: str`: AI author for enhancing character descriptions (*"You are a professional author..."*).
