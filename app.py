@@ -82,9 +82,18 @@ def create_app(config_class: type[Config] = Config) -> Flask:
         get_current_permissions()
         if user is not None and user.id is not None:
             persona_repo = PersonaRepository()
-            g.default_persona = persona_repo.get_default_for_user(user.id)
+            personas = persona_repo.list_for_user(user.id)
+            g.default_persona = next((p for p in personas if p.is_default), personas[0] if personas else None)
+            g.persona_items = [
+                {
+                    "persona": p,
+                    "in_use": persona_repo.is_used_in_any_session(p.id) if p.id else False,
+                }
+                for p in personas
+            ]
         else:
             g.default_persona = None
+            g.persona_items = []
         return None
 
     @app.context_processor

@@ -5,9 +5,31 @@
 <div class="wood-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
   <div style="display: flex; align-items: center; gap: 1rem;">
     <a href="{{ url_for('overview.index') }}" class="btn"><span class="icon-mono">←</span> Zurück</a>
-    <form method="POST" action="{{ url_for('lorebooks.detail', lorebook_id=lorebook.id) }}" style="display: flex; align-items: center; gap: 0.75rem;">
-      <input type="text" name="name" value="{{ lorebook.name }}" style="width: 260px; font-weight: 700;">
-      <input type="text" name="description" value="{{ lorebook.description }}" placeholder="Kurzbeschreibung..." style="width: 320px;">
+    <form method="POST" action="{{ url_for('lorebooks.detail', lorebook_id=lorebook.id) }}" style="display: flex; align-items: flex-end; gap: 0.75rem; flex-wrap: wrap;">
+      <div>
+        <label style="font-size: 0.75rem; color: var(--text-muted);">Lorebook-Name</label>
+        <input type="text" name="name" value="{{ lorebook.name }}" style="width: 220px; font-weight: 700;">
+      </div>
+      <div>
+        <label style="font-size: 0.75rem; color: var(--text-muted);">Sichtbarkeit</label>
+        <select name="visibility" style="width: 150px;">
+          <option value="private" {% if lorebook.visibility != 'public' %}selected{% endif %}>Privat</option>
+          <option value="public" {% if lorebook.visibility == 'public' %}selected{% endif %}>Öffentlich</option>
+        </select>
+      </div>
+      <div style="min-width: 340px;">
+        <label style="font-size: 0.75rem; color: var(--text-muted);">Kurzbeschreibung</label>
+        <input type="hidden" name="i18n_description" id="i18n-lb-desc-{{ lorebook.id }}" value='{{ (lb_translations.get("description", {}) if lb_translations is defined else {}) | tojson }}'>
+        <input
+          type="text"
+          name="description"
+          value="{{ lorebook.description }}"
+          placeholder="Kurzbeschreibung..."
+          data-i18n-field="description"
+          data-i18n-entity-type="lorebook"
+          data-i18n-entity-id="{{ lorebook.id }}"
+          data-i18n-hidden="i18n-lb-desc-{{ lorebook.id }}">
+      </div>
       {% if has_perm('lorebook_edit') %}
         <button type="submit" class="btn"><span class="icon-mono">💾</span></button>
       {% endif %}
@@ -64,7 +86,15 @@
           </div>
           <div>
             <label>Fließtext / Wissensinhalt *</label>
-            <textarea name="content" rows="6" required>{{ entry.content }}</textarea>
+            <input type="hidden" name="i18n_content" id="i18n-lb-entry-{{ entry.id }}" value='{{ (entry_translations.get(entry.id, {}).get("content", {}) if entry_translations is defined else {}) | tojson }}'>
+            <textarea
+              name="content"
+              rows="6"
+              required
+              data-i18n-field="content"
+              data-i18n-entity-type="lorebook_entry"
+              data-i18n-entity-id="{{ entry.id }}"
+              data-i18n-hidden="i18n-lb-entry-{{ entry.id }}">{{ entry.content }}</textarea>
           </div>
           <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
             <button type="submit" form="delete-entry-form-{{ entry.id }}" class="btn btn-danger"><span class="icon-mono">🗑️</span> Löschen</button>
@@ -95,7 +125,15 @@
       </div>
       <div>
         <label>Fließtext / Wissensinhalt *</label>
-        <textarea name="content" rows="6" required></textarea>
+        <input type="hidden" name="i18n_content" id="i18n-lb-entry-new" value="{}">
+        <textarea
+          name="content"
+          rows="6"
+          required
+          data-i18n-field="content"
+          data-i18n-entity-type="lorebook_entry"
+          data-i18n-entity-id=""
+          data-i18n-hidden="i18n-lb-entry-new"></textarea>
       </div>
       <div style="text-align: right;">
         <button type="submit" class="btn">Eintrag speichern</button>

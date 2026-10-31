@@ -27,6 +27,9 @@
     <div>
       <label for="ollama_url">Ollama URL (Pflichtfeld) *</label>
       <input type="url" id="ollama_url" name="ollama_url" value="{{ form.ollama_url }}" required>
+      <div style="margin-top: 0.35rem; font-size: 0.8rem; color: var(--text-muted);">
+        💡 Empfohlenes Standard-Modell für Ollama: <code style="color: var(--gold-accent);">hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M</code>
+      </div>
     </div>
     <div>
       <label for="comfyui_url">ComfyUI URL (Optional)</label>

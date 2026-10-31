@@ -13,10 +13,20 @@ from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.chat_repository import ChatRepository
 from infrastructure.repositories.memory_repository import MemoryRepository
 from infrastructure.repositories.persona_repository import PersonaRepository
+from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from shared.exceptions import AimoError
+from shared.utils import replace_roleplay_placeholders
 
 chat_bp = Blueprint("chat", __name__, url_prefix="/chat")
+
+
+def _get_user_system_language() -> str:
+    cookie_lang = request.cookies.get("aimo_sys_lang", "").strip().lower()[:2]
+    if cookie_lang in ("de", "en", "fr", "es", "it", "ja"):
+        return cookie_lang
+    best = request.accept_languages.best_match(["de", "en", "fr", "es", "it", "ja"])
+    return best if best else "de"
 
 
 @chat_bp.route("/character/<int:character_id>", methods=["GET"])
@@ -71,11 +81,17 @@ def new_character_chat(character_id: int):
         )
         personas = [persona_repo.create(fallback_p)]
 
-    worldinfos = wi_repo.list_all()
+    worldinfos = wi_repo.list_all(user.id)
+    trans_repo = TranslationRepository()
+    sys_lang = _get_user_system_language()
 
     if request.method == "POST":
         form = StartChatForm.from_request(request.form)
         selected_persona_id = form.persona_id or (personas[0].id or 0)
+        selected_persona = next((p for p in personas if p.id == selected_persona_id), personas[0])
+        localized_welcome = trans_repo.get_localized_field(
+            "character", character.id, "first_message", sys_lang, character.first_message
+        )
         try:
             session_obj, first_msg = chat_service.create_session(
                 user_id=user.id,
@@ -83,6 +99,8 @@ def new_character_chat(character_id: int):
                 persona_id=selected_persona_id,
                 worldinfo_id=form.worldinfo_id,
                 title=form.title or None,
+                persona_name=selected_persona.name,
+                localized_welcome_text=localized_welcome,
             )
             saved_session = chat_repo.create_session(session_obj)
             assert saved_session.id is not None
@@ -95,11 +113,16 @@ def new_character_chat(character_id: int):
     default_persona = next((p for p in personas if p.is_default), personas[0])
 
     if len(personas) == 1 and not worldinfos and not request.args.get("configure"):
+        localized_welcome = trans_repo.get_localized_field(
+            "character", character.id, "first_message", sys_lang, character.first_message
+        )
         session_obj, first_msg = chat_service.create_session(
             user_id=user.id,
             character=character,
             persona_id=default_persona.id or 0,
             worldinfo_id=None,
+            persona_name=default_persona.name,
+            localized_welcome_text=localized_welcome,
         )
         saved_session = chat_repo.create_session(session_obj)
         assert saved_session.id is not None
@@ -150,6 +173,23 @@ def view_session(session_id: int):
     messages = chat_repo.get_messages(session_id, limit=None)
     memories = mem_repo.list_for_session(session_id)
 
+    trans_repo = TranslationRepository()
+    sys_lang = _get_user_system_language()
+    persona_name = persona.name if persona else user.username
+
+    for msg in messages:
+        if msg.message_idx == 0 and msg.role.value == "character":
+            bg_welcome = trans_repo.get_localized_field(
+                "character", character.id, "first_message", sys_lang, msg.localized_content
+            )
+            msg.localized_content = replace_roleplay_placeholders(
+                bg_welcome, character.name, persona_name
+            )
+        else:
+            msg.localized_content = replace_roleplay_placeholders(
+                msg.localized_content, character.name, persona_name
+            )
+
     worldinfo = (
         wi_repo.get_by_id(chat_session.active_worldinfo_id)
         if chat_session.active_worldinfo_id
@@ -165,7 +205,12 @@ def view_session(session_id: int):
         if worldinfo and worldinfo.id is not None
         else []
     )
-    all_worldinfos = wi_repo.list_all()
+    worldinfo_events = (
+        wi_repo.list_events(worldinfo.id)
+        if worldinfo and worldinfo.id is not None
+        else []
+    )
+    all_worldinfos = wi_repo.list_all(user.id)
 
     last_char_msg = next((m for m in reversed(messages) if m.role.value == "character"), None)
     last_emotion = (
@@ -194,10 +239,12 @@ def view_session(session_id: int):
         worldinfo=worldinfo,
         current_location=current_location,
         worldinfo_locations=worldinfo_locations,
+        worldinfo_events=worldinfo_events,
         all_worldinfos=all_worldinfos,
         active_sprite=active_sprite,
         unlocked_gallery=unlocked_gallery,
         session_media_images=session_media_images,
+        sys_lang=sys_lang,
     )
 
 

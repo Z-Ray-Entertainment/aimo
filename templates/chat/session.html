@@ -64,24 +64,33 @@
       </div>
 
       <!-- TAB 1: Chat-Konversation -->
-      <div id="chat-pane-messages" class="tab-pane active" style="display: flex; flex-direction: column; flex: 1;">
-        <div id="chat-messages-list" class="chat-messages-list">
+      <div id="chat-pane-messages" class="tab-pane active">
+        <div
+          id="chat-messages-list"
+          class="chat-messages-list"
+          data-session-id="{{ chat_session.id }}"
+          data-sys-lang="{{ sys_lang or 'de' }}"
+          data-character-name="{{ character.name }}"
+          data-character-portrait="{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}"
+          data-persona-name="{{ persona.name if persona else 'Du' }}"
+          data-persona-portrait="{{ url_for('uploaded_file', filename=persona.portrait_path) if persona else '/static/img/cover.svg' }}">
           {% for msg in messages %}
             {% if msg.role.value == 'character' %}
               <div class="chat-bubble-row character" data-message-idx="{{ msg.message_idx }}">
-                <img src="{{ url_for('uploaded_file', filename=active_sprite.file_path) }}" alt="{{ character.name }}" class="chat-avatar" onerror="this.src='/static/img/cover.svg'">
+                <img src="{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}" alt="{{ character.name }}" class="chat-avatar" onerror="this.src='/static/img/cover.svg'">
                 <div class="chat-bubble">
                   <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem; font-size: 0.76rem; color: var(--gold-accent);">
                     <strong>{{ character.name }}</strong>
                     <div style="display: flex; gap: 0.4rem;">
-                      <button type="button" onclick="openEditMessageModal({{ msg.message_idx }}, {{ msg.localized_content|tojson }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht bearbeiten"><span class="icon-mono">✏️</span></button>
+                      <button type="button" onclick="window.translateChatMessage({{ msg.message_idx }}, this)" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht übersetzen (On-Demand)"><span class="icon-mono">🌐</span></button>
+                      <button type="button" onclick="openEditMessageModal({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht bearbeiten"><span class="icon-mono">✏️</span></button>
                       <button type="button" onclick="forkChatAt({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Chat ab hier duplizieren (Fork)"><span class="icon-mono">🌿</span></button>
                       {% if msg.message_idx > 0 %}
                         <button type="button" onclick="deleteMessagesFrom({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Ab hier löschen"><span class="icon-mono">🗑️</span></button>
                       {% endif %}
                     </div>
                   </div>
-                  <p id="msg-text-{{ msg.message_idx }}" style="white-space: pre-wrap;">{{ msg.localized_content }}</p>
+                  <div id="msg-text-{{ msg.message_idx }}" class="chat-markdown" data-raw-content="{{ msg.localized_content }}" data-en-content="{{ msg.english_content }}">{{ msg.localized_content }}</div>
                 </div>
               </div>
             {% elif msg.role.value == 'user' %}
@@ -93,17 +102,24 @@
                   <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem; font-size: 0.76rem; color: var(--gold-accent);">
                     <strong>{{ persona.name if persona else 'Du' }}</strong>
                     <div style="display: flex; gap: 0.4rem;">
-                      <button type="button" onclick="openEditMessageModal({{ msg.message_idx }}, {{ msg.localized_content|tojson }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht bearbeiten"><span class="icon-mono">✏️</span></button>
+                      <button type="button" onclick="window.translateChatMessage({{ msg.message_idx }}, this)" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht übersetzen (On-Demand)"><span class="icon-mono">🌐</span></button>
+                      <button type="button" onclick="openEditMessageModal({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht bearbeiten"><span class="icon-mono">✏️</span></button>
                       <button type="button" onclick="forkChatAt({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Chat ab hier duplizieren (Fork)"><span class="icon-mono">🌿</span></button>
                       <button type="button" onclick="deleteMessagesFrom({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Ab hier löschen"><span class="icon-mono">🗑️</span></button>
                     </div>
                   </div>
                   {% if msg.image_path %}
-                    <div style="margin-bottom: 0.45rem;">
-                      <img src="{{ url_for('uploaded_file', filename=msg.image_path) }}" alt="Upload" style="max-width: 220px; border-radius: 8px; border: 1px solid var(--gold-accent);">
+                    <div class="chat-uploaded-image-wrap" style="margin-bottom: 0.45rem;">
+                      <img src="{{ url_for('uploaded_file', filename=msg.image_path) }}" alt="Upload" style="max-width: 220px; border-radius: 8px; border: 1px solid var(--gold-accent); display: block;">
+                      <div style="margin-top: 0.25rem;">
+                        <button type="button" class="btn-eye-alt" onclick="window.toggleImageAltText({{ msg.message_idx }})" title="ALT-Text (Bildbeschreibung) ein-/ausblenden">
+                          <span class="icon-mono">👁️</span>
+                        </button>
+                      </div>
+                      <div id="msg-alt-{{ msg.message_idx }}" class="chat-image-alt-box" style="display: none;">{{ msg.image_alt_text or 'Keine Bildbeschreibung verfügbar.' }}</div>
                     </div>
                   {% endif %}
-                  <p id="msg-text-{{ msg.message_idx }}" style="white-space: pre-wrap;">{{ msg.localized_content }}</p>
+                  <div id="msg-text-{{ msg.message_idx }}" class="chat-markdown" data-raw-content="{{ msg.localized_content }}" data-en-content="{{ msg.english_content }}">{{ msg.localized_content }}</div>
                 </div>
               </div>
             {% endif %}
@@ -133,7 +149,7 @@
 
           <div style="flex: 1;">
             <div id="upload-file-indicator" style="font-size: 0.75rem; color: var(--gold-accent); margin-bottom: 0.2rem;"></div>
-            <textarea name="message" rows="2" placeholder="Schreibe deine Antwort oder Handlung..."></textarea>
+            <textarea id="chat-message-textarea" name="message" rows="2" placeholder="Schreibe deine Antwort oder Handlung... (Enter zum Senden, Shift+Enter für Zeilenumbruch)"></textarea>
           </div>
 
           <button type="submit" class="btn" style="padding: 0.65rem 1.25rem;">
@@ -159,13 +175,13 @@
         </div>
 
         <h3 style="color: var(--gold-accent); margin-bottom: 0.75rem;">In dieser Sitzung geteilte & generierte Bilder</h3>
-        <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));">
+        <div id="session-media-grid" class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));">
           {% for path in session_media_images %}
-            <div class="card-tile" style="min-height: 180px;">
+            <div class="card-tile" style="min-height: 180px;" data-media-path="{{ path }}">
               <img src="{{ url_for('uploaded_file', filename=path) }}" alt="Chat Media" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
           {% else %}
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Noch keine Bilder in diesem Chat hochgeladen.</p>
+            <p id="session-media-empty" style="color: var(--text-muted); font-size: 0.9rem;">Noch keine Bilder in diesem Chat hochgeladen.</p>
           {% endfor %}
         </div>
       </div>
@@ -227,7 +243,24 @@
 
     <!-- Aktive Spieler-Persona (gesperrt nach 1. Nachricht) -->
     <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
-      <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.3rem;">Aktive Persona</div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Aktive Persona</span>
+        {% if persona %}
+          <button
+            type="button"
+            style="background: none; border: none; cursor: pointer; color: var(--gold-accent);"
+            title="Spieler-Persona bearbeiten"
+            data-persona-id="{{ persona.id }}"
+            data-persona-name="{{ persona.name }}"
+            data-persona-gender="{{ persona.gender.value }}"
+            data-persona-description="{{ persona.description }}"
+            data-persona-appearance="{{ persona.appearance }}"
+            data-persona-default="{{ '1' if persona.is_default else '0' }}"
+            onclick="window.AimoModals.open('persona-manager-modal'); openEditPersonaFromBtn(this);">
+            <span class="icon-mono">✏️</span>
+          </button>
+        {% endif %}
+      </div>
       {% if chat_session.persona_locked %}
         <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.45rem 0.65rem; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--border-wood-dark);">
           <span>👤 {{ persona.name if persona else 'Unbekannt' }}</span>
@@ -277,14 +310,16 @@
       </div>
     {% endif %}
 
-    <!-- Checkbox: Zufalls-Events aktivieren/deaktivieren -->
-    <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" style="border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
-      <input type="hidden" name="action" value="toggle_events">
-      <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.86rem; cursor: pointer;">
-        <input type="checkbox" name="events_enabled" value="1" {% if chat_session.events_enabled %}checked{% endif %} onchange="this.form.submit()">
-        <span>🎲 Zufalls-Events aktivieren</span>
-      </label>
-    </form>
+    <!-- Checkbox: Zufalls-Events aktivieren/deaktivieren (nur wenn WorldInfo & Events vorhanden) -->
+    {% if worldinfo and worldinfo_events %}
+      <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" style="border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
+        <input type="hidden" name="action" value="toggle_events">
+        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.86rem; cursor: pointer;">
+          <input type="checkbox" name="events_enabled" value="1" {% if chat_session.events_enabled %}checked{% endif %} onchange="this.form.submit()">
+          <span>🎲 Zufalls-Events aktivieren</span>
+        </label>
+      </form>
+    {% endif %}
   </aside>
 </div>
 
@@ -340,21 +375,80 @@
 <script src="{{ url_for('static', filename='js/stream.js') }}"></script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
+    // Format all initial messages with Markdown
+    document.querySelectorAll(".chat-markdown").forEach((el) => {
+      const raw = el.getAttribute("data-raw-content") ?? el.textContent ?? "";
+      el.innerHTML = window.renderChatMarkdown(raw);
+    });
+
     window.chatStream = new AimoChatStream({{ chat_session.id }});
     const chatForm = document.getElementById("chat-input-form");
+    const chatTextarea = document.getElementById("chat-message-textarea");
+
     if (chatForm) {
       chatForm.addEventListener("submit", (e) => {
         e.preventDefault();
         window.chatStream.sendMessage(chatForm);
       });
     }
+
+    if (chatTextarea && chatForm) {
+      chatTextarea.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          window.chatStream.sendMessage(chatForm);
+        }
+      });
+    }
+
     const list = document.getElementById("chat-messages-list");
     if (list) list.scrollTop = list.scrollHeight;
+
+    window.chatStream.checkPendingGeneration();
   });
 
-  function openEditMessageModal(msgIdx, currentText) {
+  window.toggleImageAltText = function (msgIdx) {
+    const altEl = document.getElementById(`msg-alt-${msgIdx}`);
+    if (!altEl) return;
+    altEl.style.display = altEl.style.display === "none" ? "block" : "none";
+  };
+
+  window.translateChatMessage = async function (msgIdx, btnEl) {
+    const list = document.getElementById("chat-messages-list");
+    const sysLang = list?.getAttribute("data-sys-lang") || (navigator.language || "de").slice(0, 2).toLowerCase();
+    const textEl = document.getElementById(`msg-text-${msgIdx}`);
+    if (!textEl) return;
+
+    if (btnEl) {
+      btnEl.disabled = true;
+      btnEl.style.opacity = "0.5";
+    }
+    try {
+      const resp = await fetch(`/api/chat/{{ chat_session.id }}/messages/${msgIdx}/translate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ target_language: sysLang }),
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.translated_text) {
+          textEl.setAttribute("data-raw-content", data.translated_text);
+          textEl.innerHTML = window.renderChatMarkdown(data.translated_text);
+        }
+      }
+    } finally {
+      if (btnEl) {
+        btnEl.disabled = false;
+        btnEl.style.opacity = "1";
+      }
+    }
+  };
+
+  function openEditMessageModal(msgIdx, fallbackText) {
     document.getElementById("edit-msg-idx").value = msgIdx;
-    document.getElementById("edit-msg-content").value = currentText;
+    const textEl = document.getElementById(`msg-text-${msgIdx}`);
+    const rawText = textEl ? (textEl.getAttribute("data-raw-content") ?? textEl.textContent) : (fallbackText || "");
+    document.getElementById("edit-msg-content").value = rawText;
     window.AimoModals.open("edit-message-modal");
   }
 
@@ -370,7 +464,10 @@
     if (resp.ok) {
       const data = await resp.json();
       const textEl = document.getElementById(`msg-text-${idx}`);
-      if (textEl) textEl.textContent = data.localized_content;
+      if (textEl) {
+        textEl.setAttribute("data-raw-content", data.localized_content);
+        textEl.innerHTML = window.renderChatMarkdown(data.localized_content);
+      }
       window.AimoModals.close("edit-message-modal");
     }
   }

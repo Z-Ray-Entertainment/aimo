@@ -105,6 +105,58 @@ def create_persona():
         return jsonify({"error": str(exc)}), 400
 
 
+@api_personas_bp.route("/<int:persona_id>", methods=["PUT", "POST"])
+@require_permission(FunctionPermission.PERSONA_MANAGE)
+def update_persona(persona_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = PersonaRepository()
+    service = PersonaService()
+    storage = FileStorage()
+
+    persona = repo.get_by_id(persona_id)
+    if persona is None or persona.user_id != user.id:
+        return jsonify({"error": "Persona not found."}), 404
+
+    try:
+        if request.is_json:
+            data = request.get_json(silent=True) or {}
+            portrait_path = data.get("portrait_path", persona.portrait_path)
+        else:
+            data = request.form.to_dict()
+            portrait_file = request.files.get("portrait")
+            if portrait_file and portrait_file.filename:
+                portrait_path = storage.save_portrait(portrait_file.stream, portrait_file.filename)
+            else:
+                portrait_path = data.get("portrait_path", persona.portrait_path)
+
+        service.update_persona(
+            persona=persona,
+            name=data.get("name", persona.name),
+            gender=data.get("gender", persona.gender.value),
+            portrait_path=portrait_path,
+            description=data.get("description", persona.description),
+            appearance=data.get("appearance", persona.appearance),
+        )
+        if data.get("is_default"):
+            persona.is_default = True
+
+        saved = repo.update(persona)
+        return jsonify(
+            {
+                "id": saved.id,
+                "name": saved.name,
+                "gender": saved.gender.value,
+                "portrait_path": saved.portrait_path,
+                "description": saved.description,
+                "appearance": saved.appearance,
+                "is_default": saved.is_default,
+            }
+        )
+    except AimoError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
 @api_personas_bp.route("/<int:persona_id>/analyze", methods=["POST"])
 @require_permission(FunctionPermission.PERSONA_MANAGE)
 def analyze_persona_portrait(persona_id: int):

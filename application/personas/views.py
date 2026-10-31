@@ -94,6 +94,22 @@ def edit_persona(persona_id: int):
             description=request.form.get("description", persona.description),
             appearance=request.form.get("appearance", persona.appearance),
         )
+        if request.form.get("vision_analyze"):
+            settings = SettingsRepository().get_settings()
+            llm = get_llm_provider(settings)
+            try:
+                resolved = storage.resolve_path(portrait_path)
+                if resolved.is_file():
+                    service.analyze_appearance(
+                        persona=persona,
+                        vision_provider=llm,
+                        vision_model=settings.tasks.vision_model,
+                        prompt=settings.prompts.vision_persona_prompt,
+                        resolved_image_path=resolved,
+                    )
+            except Exception:
+                pass
+
         if request.form.get("is_default"):
             persona.is_default = True
         repo.update(persona)

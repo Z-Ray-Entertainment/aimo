@@ -15,8 +15,10 @@ api_worldinfo_bp = Blueprint("api_worldinfo", __name__, url_prefix="/api/worldin
 @api_worldinfo_bp.route("", methods=["GET"])
 @require_auth
 def list_worldinfo():
+    user = get_current_user()
+    uid = user.id if user and user.id else None
     repo = WorldInfoRepository()
-    worlds = repo.list_all()
+    worlds = repo.list_all(uid)
     result = []
     for wi in worlds:
         if wi.id is None:
@@ -28,6 +30,7 @@ def list_worldinfo():
                 "id": wi.id,
                 "name": wi.name,
                 "icon": wi.icon,
+                "visibility": wi.visibility,
                 "locations": [
                     {
                         "id": loc.id,
@@ -68,9 +71,17 @@ def create_worldinfo():
             user_id=user.id,
             name=data.get("name", ""),
             icon=data.get("icon", "🌐"),
+            visibility=data.get("visibility", "private"),
         )
         saved = repo.create(wi)
-        return jsonify({"id": saved.id, "name": saved.name, "icon": saved.icon}), 201
+        return jsonify(
+            {
+                "id": saved.id,
+                "name": saved.name,
+                "icon": saved.icon,
+                "visibility": saved.visibility,
+            }
+        ), 201
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 400
 

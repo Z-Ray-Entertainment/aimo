@@ -7,6 +7,7 @@ from domain.characters.services import CharacterService
 from domain.permissions.models import FunctionPermission
 from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.lorebook_repository import LorebookRepository
+from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
@@ -46,10 +47,12 @@ STANDARD_28_EMOTIONS: list[str] = [
 
 
 def _render_creator(character=None, form=None):
+    user = get_current_user()
+    uid = user.id if user and user.id else None
     lb_repo = LorebookRepository()
     wi_repo = WorldInfoRepository()
-    lorebooks = lb_repo.list_for_user()
-    worldinfos = wi_repo.list_all()
+    lorebooks = lb_repo.list_for_user(uid)
+    worldinfos = wi_repo.list_all(uid)
     all_locations = []
     for wi in worldinfos:
         if wi.id is not None:
@@ -60,6 +63,17 @@ def _render_creator(character=None, form=None):
         for sp in character.sprites:
             sprites_by_emotion.setdefault(sp.emotion.value, []).append(sp)
 
+    active_tab = request.args.get("tab", "info")
+    if active_tab not in ("info", "sprites") or character is None:
+        active_tab = "info"
+
+    trans_repo = TranslationRepository()
+    field_translations = (
+        trans_repo.get_entity_translations_map("character", character.id)
+        if character and character.id
+        else {}
+    )
+
     return render_template(
         "characters/creator.html",
         character=character,
@@ -69,6 +83,8 @@ def _render_creator(character=None, form=None):
         all_locations=all_locations,
         emotions=STANDARD_28_EMOTIONS,
         sprites_by_emotion=sprites_by_emotion,
+        active_tab=active_tab,
+        field_translations=field_translations,
     )
 
 
@@ -112,6 +128,11 @@ def new_character():
                 disliked_location_ids=form.disliked_location_ids,
             )
             saved = char_repo.save(character)
+            trans_repo = TranslationRepository()
+            for fname in ("description", "dialogue_examples", "first_message"):
+                trans_repo.save_field_variants_json(
+                    "character", saved.id, fname, request.form.get(f"i18n_{fname}")
+                )
             flash(f"Charakter '{saved.name}' erfolgreich angelegt!", "success")
             return redirect(url_for("characters.edit_character", character_id=saved.id))
         except AimoError as exc:
@@ -163,6 +184,11 @@ def edit_character(character_id: int):
                 disliked_location_ids=form.disliked_location_ids,
             )
             character = char_repo.save(character)
+            trans_repo = TranslationRepository()
+            for fname in ("description", "dialogue_examples", "first_message"):
+                trans_repo.save_field_variants_json(
+                    "character", character.id, fname, request.form.get(f"i18n_{fname}")
+                )
             flash(f"Charakter '{character.name}' gespeichert.", "success")
         except AimoError as exc:
             flash(str(exc), "error")
@@ -277,7 +303,7 @@ def upload_sprite(character_id: int):
         except AimoError as exc:
             flash(str(exc), "error")
 
-    return redirect(url_for("characters.edit_character", character_id=character_id))
+    return redirect(url_for("characters.edit_character", character_id=character_id, tab="sprites"))
 
 
 @characters_bp.route("/<int:character_id>/sprites/<string:emotion>/<int:variant>/delete", methods=["POST"])
@@ -286,4 +312,4 @@ def delete_sprite(character_id: int, emotion: str, variant: int):
     char_repo = CharacterRepository()
     char_repo.delete_sprite(character_id, emotion, variant)
     flash(f"Sprite {emotion}_{variant} gelöscht.", "success")
-    return redirect(url_for("characters.edit_character", character_id=character_id))
+    return redirect(url_for("characters.edit_character", character_id=character_id, tab="sprites"))

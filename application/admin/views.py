@@ -243,6 +243,7 @@ def services_config():
             installed_models = []
 
     for assigned in (
+        "hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M",
         settings.tasks.roleplay_model,
         settings.tasks.memory_model,
         settings.tasks.assistant_model,

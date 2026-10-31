@@ -7,7 +7,21 @@ from infrastructure.repositories.orm_models import format_datetime, parse_dateti
 
 
 class WorldInfoRepository:
-    def list_all(self) -> list[WorldInfo]:
+    def list_visible(self, user_id: int) -> list[WorldInfo]:
+        with get_db_session() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM worldinfos
+                WHERE visibility = 'public' OR user_id = ?
+                ORDER BY id ASC
+                """,
+                (user_id,),
+            ).fetchall()
+            return [self._to_entity(row) for row in rows]
+
+    def list_all(self, user_id: int | None = None) -> list[WorldInfo]:
+        if user_id is not None:
+            return self.list_visible(user_id)
         with get_db_session() as conn:
             rows = conn.execute(
                 "SELECT * FROM worldinfos ORDER BY id ASC",
@@ -29,13 +43,14 @@ class WorldInfoRepository:
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO worldinfos (user_id, name, icon, created_at)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO worldinfos (user_id, name, icon, visibility, created_at)
+                VALUES (?, ?, ?, ?, ?)
                 """,
                 (
                     worldinfo.user_id,
                     worldinfo.name,
                     worldinfo.icon,
+                    worldinfo.visibility,
                     created_str,
                 ),
             )
@@ -59,10 +74,10 @@ class WorldInfoRepository:
             conn.execute(
                 """
                 UPDATE worldinfos
-                SET name = ?, icon = ?
+                SET name = ?, icon = ?, visibility = ?
                 WHERE id = ?
                 """,
-                (worldinfo.name, worldinfo.icon, worldinfo.id),
+                (worldinfo.name, worldinfo.icon, worldinfo.visibility, worldinfo.id),
             )
             row = conn.execute(
                 "SELECT * FROM worldinfos WHERE id = ?",
@@ -261,11 +276,14 @@ class WorldInfoRepository:
 
     @staticmethod
     def _to_entity(row: sqlite3.Row) -> WorldInfo:
+        keys = row.keys()
+        vis = str(row["visibility"]) if "visibility" in keys and row["visibility"] else "private"
         return WorldInfo(
             id=int(row["id"]),
             user_id=int(row["user_id"]),
             name=str(row["name"]),
             icon=row["icon"] if row["icon"] is not None else None,
+            visibility=vis,
             created_at=parse_datetime(row["created_at"]),
         )
 

@@ -12,6 +12,7 @@ class WorldInfoService:
         user_id: int,
         name: str,
         icon: str | None = None,
+        visibility: str = "private",
     ) -> WorldInfo:
         if isinstance(user_id, bool) or not isinstance(user_id, int) or user_id <= 0:
             raise InvalidWorldInfoDataError("A valid positive user_id is required.")
@@ -21,12 +22,14 @@ class WorldInfoService:
             raise InvalidWorldInfoDataError("WorldInfo name must not be empty.")
 
         cleaned_icon = icon.strip() if isinstance(icon, str) and icon.strip() else None
+        cleaned_vis = "public" if isinstance(visibility, str) and visibility.strip().lower() == "public" else "private"
 
         return WorldInfo(
             id=None,
             user_id=user_id,
             name=cleaned_name,
             icon=cleaned_icon,
+            visibility=cleaned_vis,
             created_at=datetime.now(timezone.utc),
         )
 
@@ -35,6 +38,7 @@ class WorldInfoService:
         worldinfo: WorldInfo,
         name: str,
         icon: str | None = None,
+        visibility: str | None = None,
     ) -> WorldInfo:
         cleaned_name = name.strip() if isinstance(name, str) else ""
         if not cleaned_name:
@@ -42,6 +46,10 @@ class WorldInfoService:
 
         worldinfo.name = cleaned_name
         worldinfo.icon = icon.strip() if isinstance(icon, str) and icon.strip() else None
+        if visibility is not None:
+            worldinfo.visibility = (
+                "public" if isinstance(visibility, str) and visibility.strip().lower() == "public" else "private"
+            )
         return worldinfo
 
     def add_location(

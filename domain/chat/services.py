@@ -4,6 +4,7 @@ import random
 from domain.characters.models import Character, Emotion
 from domain.chat.exceptions import InvalidChatDataError, PersonaLockedError
 from domain.chat.models import ChatSession, Message, MessageRole
+from shared.utils import replace_roleplay_placeholders
 
 MIN_RELATIONSHIP: float = -100.0
 MAX_RELATIONSHIP: float = 100.0
@@ -49,6 +50,8 @@ class ChatService:
         persona_id: int,
         worldinfo_id: int | None = None,
         title: str | None = None,
+        persona_name: str = "User",
+        localized_welcome_text: str | None = None,
     ) -> tuple[ChatSession, Message]:
         if isinstance(user_id, bool) or not isinstance(user_id, int) or user_id <= 0:
             raise InvalidChatDataError("A valid positive user_id is required.")
@@ -78,18 +81,24 @@ class ChatService:
             created_at=now,
         )
 
-        welcome_text = (
+        raw_welcome = (
             character.first_message.strip()
             if character.first_message.strip()
             else f"*{character.name} looks at you.*"
+        )
+        welcome_en = replace_roleplay_placeholders(raw_welcome, character.name, persona_name)
+        welcome_loc = replace_roleplay_placeholders(
+            (localized_welcome_text.strip() if localized_welcome_text and localized_welcome_text.strip() else raw_welcome),
+            character.name,
+            persona_name,
         )
         first_msg = Message(
             id=None,
             session_id=0,
             message_idx=0,
             role=MessageRole.CHARACTER,
-            english_content=welcome_text,
-            localized_content=welcome_text,
+            english_content=welcome_en,
+            localized_content=welcome_loc,
             emotion_tag=Emotion.NEUTRAL.value,
             created_at=now,
         )

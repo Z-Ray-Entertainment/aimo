@@ -12,8 +12,10 @@ api_lorebooks_bp = Blueprint("api_lorebooks", __name__, url_prefix="/api/loreboo
 @api_lorebooks_bp.route("", methods=["GET"])
 @require_auth
 def list_lorebooks():
+    user = get_current_user()
+    uid = user.id if user and user.id else None
     repo = LorebookRepository()
-    lorebooks = repo.list_for_user()
+    lorebooks = repo.list_for_user(uid)
     result = []
     for lb in lorebooks:
         if lb.id is None:
@@ -24,6 +26,7 @@ def list_lorebooks():
                 "id": lb.id,
                 "name": lb.name,
                 "description": lb.description,
+                "visibility": lb.visibility,
                 "entries": [
                     {
                         "id": e.id,
@@ -51,9 +54,17 @@ def create_lorebook():
             user_id=user.id,
             name=data.get("name", ""),
             description=data.get("description", ""),
+            visibility=data.get("visibility", "private"),
         )
         saved = repo.create(lb)
-        return jsonify({"id": saved.id, "name": saved.name, "description": saved.description}), 201
+        return jsonify(
+            {
+                "id": saved.id,
+                "name": saved.name,
+                "description": saved.description,
+                "visibility": saved.visibility,
+            }
+        ), 201
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 400
 

@@ -7,7 +7,21 @@ from infrastructure.repositories.orm_models import format_datetime, parse_dateti
 
 
 class LorebookRepository:
+    def list_visible(self, user_id: int) -> list[Lorebook]:
+        with get_db_session() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM lorebooks
+                WHERE visibility = 'public' OR user_id = ?
+                ORDER BY id ASC
+                """,
+                (user_id,),
+            ).fetchall()
+            return [self._to_entity(row) for row in rows]
+
     def list_for_user(self, user_id: int | None = None) -> list[Lorebook]:
+        if user_id is not None:
+            return self.list_visible(user_id)
         with get_db_session() as conn:
             rows = conn.execute(
                 "SELECT * FROM lorebooks ORDER BY id ASC",
@@ -29,13 +43,14 @@ class LorebookRepository:
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO lorebooks (user_id, name, description, created_at)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO lorebooks (user_id, name, description, visibility, created_at)
+                VALUES (?, ?, ?, ?, ?)
                 """,
                 (
                     lorebook.user_id,
                     lorebook.name,
                     lorebook.description,
+                    lorebook.visibility,
                     created_str,
                 ),
             )
@@ -59,10 +74,10 @@ class LorebookRepository:
             conn.execute(
                 """
                 UPDATE lorebooks
-                SET name = ?, description = ?
+                SET name = ?, description = ?, visibility = ?
                 WHERE id = ?
                 """,
-                (lorebook.name, lorebook.description, lorebook.id),
+                (lorebook.name, lorebook.description, lorebook.visibility, lorebook.id),
             )
             row = conn.execute(
                 "SELECT * FROM lorebooks WHERE id = ?",
@@ -187,11 +202,14 @@ class LorebookRepository:
 
     @staticmethod
     def _to_entity(row: sqlite3.Row) -> Lorebook:
+        keys = row.keys()
+        vis = str(row["visibility"]) if "visibility" in keys and row["visibility"] else "private"
         return Lorebook(
             id=int(row["id"]),
             user_id=int(row["user_id"]),
             name=str(row["name"]),
             description=str(row["description"]),
+            visibility=vis,
             created_at=parse_datetime(row["created_at"]),
         )
 

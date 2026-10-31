@@ -90,11 +90,14 @@ class ModelParameters:
         self.repeat_penalty = float(self.repeat_penalty)
 
 
+RECOMMENDED_DEFAULT_MODEL: str = "hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M"
+
+
 @dataclass
 class TaskAssignment:
-    roleplay_model: str = "llama3:8b"
-    memory_model: str = "llama3:8b"
-    assistant_model: str = "llama3:8b"
+    roleplay_model: str = RECOMMENDED_DEFAULT_MODEL
+    memory_model: str = RECOMMENDED_DEFAULT_MODEL
+    assistant_model: str = RECOMMENDED_DEFAULT_MODEL
     vision_model: str = "llava:latest"
 
 

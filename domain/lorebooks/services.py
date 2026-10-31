@@ -11,6 +11,7 @@ class LorebookService:
         user_id: int,
         name: str,
         description: str = "",
+        visibility: str = "private",
     ) -> Lorebook:
         if isinstance(user_id, bool) or not isinstance(user_id, int) or user_id <= 0:
             raise InvalidLorebookDataError("A valid positive user_id is required.")
@@ -20,12 +21,14 @@ class LorebookService:
             raise InvalidLorebookDataError("Lorebook name must not be empty.")
 
         cleaned_desc = description.strip() if isinstance(description, str) else ""
+        cleaned_vis = "public" if isinstance(visibility, str) and visibility.strip().lower() == "public" else "private"
 
         return Lorebook(
             id=None,
             user_id=user_id,
             name=cleaned_name,
             description=cleaned_desc,
+            visibility=cleaned_vis,
             created_at=datetime.now(timezone.utc),
         )
 
@@ -34,6 +37,7 @@ class LorebookService:
         lorebook: Lorebook,
         name: str,
         description: str,
+        visibility: str | None = None,
     ) -> Lorebook:
         cleaned_name = name.strip() if isinstance(name, str) else ""
         if not cleaned_name:
@@ -41,6 +45,10 @@ class LorebookService:
 
         lorebook.name = cleaned_name
         lorebook.description = description.strip() if isinstance(description, str) else ""
+        if visibility is not None:
+            lorebook.visibility = (
+                "public" if isinstance(visibility, str) and visibility.strip().lower() == "public" else "private"
+            )
         return lorebook
 
     def add_entry(

@@ -2,6 +2,9 @@ window.AimoModals = {
   open(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
+      if (modal.parentElement !== document.body) {
+        document.body.appendChild(modal);
+      }
       modal.classList.add("open");
       modal.setAttribute("aria-hidden", "false");
     }
@@ -16,6 +19,11 @@ window.AimoModals = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".modal-backdrop").forEach((backdrop) => {
+    if (backdrop.parentElement !== document.body) {
+      document.body.appendChild(backdrop);
+    }
+  });
   document.querySelectorAll("[data-modal-open]").forEach((trigger) => {
     trigger.addEventListener("click", (e) => {
       e.preventDefault();

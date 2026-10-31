@@ -32,12 +32,44 @@ from infrastructure.repositories.translation_repository import TranslationReposi
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
-from shared.utils import parse_tags
+from shared.utils import parse_tags, replace_roleplay_placeholders
 
 api_chat_bp = Blueprint("api_chat", __name__, url_prefix="/api/chat")
 
 _ACTIVE_IMAGE_TASKS: dict[int, str] = {}
 _PENDING_PROMPTS: dict[int, dict] = {}
+
+
+class _BackgroundTurnTask:
+    def __init__(
+        self,
+        session_id: int,
+        user_id: int,
+        user_language: str = "de",
+        has_image: bool = False,
+        user_message_idx: int = 0,
+    ) -> None:
+        self.task_id: str = uuid.uuid4().hex
+        self.session_id: int = session_id
+        self.user_id: int = user_id
+        self.user_language: str = user_language
+        self.has_image: bool = has_image
+        self.user_message_idx: int = user_message_idx
+        self.image_analyzed: bool = False
+        self.image_alt_text: str | None = None
+        self.condition: threading.Condition = threading.Condition()
+        self.status: str = "analyzing_image" if has_image else "thinking"
+        self.tokens: list[dict] = []
+        self.english_reply: str = ""
+        self.generation_done: bool = False
+        self.result_payload: dict | None = None
+        self.error_message: str | None = None
+        self.delivered_via_stream: bool = False
+
+
+_TASKS_LOCK = threading.Lock()
+_BACKGROUND_TASKS: dict[int, _BackgroundTurnTask] = {}
+_USER_NOTIFICATIONS: dict[int, list[dict]] = {}
 
 
 def _extract_active_tags(text: str) -> list[str]:
@@ -104,27 +136,18 @@ def _run_async_memory_extraction(session_id: int) -> None:
     thread.start()
 
 
-def _prepare_turn_context(
+def _start_background_turn(
     session_id: int,
     user_text: str,
     user_language: str,
     uploaded_image_file=None,
-) -> dict:
+) -> tuple[_BackgroundTurnTask, Message, dict | None]:
     chat_repo = ChatRepository()
     char_repo = CharacterRepository()
     persona_repo = PersonaRepository()
     wi_repo = WorldInfoRepository()
-    lb_repo = LorebookRepository()
-    mem_repo = MemoryRepository()
-    trans_repo = TranslationRepository()
-    settings_repo = SettingsRepository()
-
     chat_service = ChatService()
     wi_service = WorldInfoService()
-    lb_service = LorebookService()
-    mem_service = MemoryService()
-    trans_service = TranslationService()
-    prompt_builder = PromptBuilder()
     storage = FileStorage()
 
     chat_session = chat_repo.get_session(session_id)
@@ -139,53 +162,27 @@ def _prepare_turn_context(
     if persona is None:
         raise AimoError("Persona not found.")
 
-    settings = settings_repo.get_settings()
-    llm = get_llm_provider(settings)
-
     image_path: str | None = None
-    image_alt_text: str | None = None
     if uploaded_image_file and uploaded_image_file.filename:
         image_path = storage.save_generated_image(
             uploaded_image_file.stream, uploaded_image_file.filename
         )
-        try:
-            resolved_img = storage.resolve_path(image_path)
-            image_alt_text = llm.analyze_image(
-                image_path=resolved_img,
-                prompt="Describe what is shown in this image concisely in English for a roleplay conversation.",
-                model=settings.tasks.vision_model,
-            ).strip()
-        except Exception:
-            image_alt_text = "An uploaded image."
-
-    english_user_text = trans_service.translate_to_english(
-        text=user_text,
-        source_language=user_language,
-        llm_provider=llm,
-        model=settings.tasks.assistant_model,
-    )
-    if english_user_text and user_text.strip():
-        rec = trans_service.create_record(
-            english_text=english_user_text,
-            target_language=user_language,
-            translated_text=user_text.strip(),
-        )
-        trans_repo.save_translation(rec)
 
     chat_service.apply_time_decay(chat_session)
     chat_service.apply_user_message_affection(chat_session)
     chat_service.lock_persona(chat_session)
 
+    cleaned_user_text = user_text.strip()
     next_idx = chat_repo.get_next_message_idx(session_id)
     user_msg = Message(
         id=None,
         session_id=session_id,
         message_idx=next_idx,
         role=MessageRole.USER,
-        english_content=english_user_text,
-        localized_content=user_text.strip(),
+        english_content=cleaned_user_text or "An uploaded image.",
+        localized_content=cleaned_user_text,
         image_path=image_path,
-        image_alt_text=image_alt_text,
+        image_alt_text=None,
         created_at=datetime.now(timezone.utc),
     )
     saved_user_msg = chat_repo.add_message(user_msg)
@@ -195,17 +192,6 @@ def _prepare_turn_context(
         if chat_session.active_worldinfo_id
         else None
     )
-    available_locations = (
-        wi_repo.list_locations(worldinfo.id)
-        if worldinfo and worldinfo.id is not None
-        else []
-    )
-    current_location = (
-        wi_repo.get_location(chat_session.current_location_id)
-        if chat_session.current_location_id
-        else None
-    )
-
     triggered_event = None
     if worldinfo and worldinfo.id is not None and chat_session.events_enabled:
         cooldown_state = EventCooldownState(
@@ -224,188 +210,359 @@ def _prepare_turn_context(
 
     chat_repo.update_session(chat_session)
 
-    recent_messages = chat_repo.get_messages(session_id, limit=10)
-    combined_context_text = " ".join(
-        m.english_content for m in recent_messages[-3:]
+    task = _BackgroundTurnTask(
+        session_id=session_id,
+        user_id=chat_session.user_id,
+        user_language=user_language,
+        has_image=bool(image_path),
+        user_message_idx=saved_user_msg.message_idx,
     )
-    active_tags = _extract_active_tags(combined_context_text)
+    with _TASKS_LOCK:
+        _BACKGROUND_TASKS[session_id] = task
 
-    all_memories = mem_repo.list_for_session(session_id)
-    matched_memories = mem_service.search_memories_by_tags(all_memories, active_tags)
+    def _worker() -> None:
+        w_chat_repo = ChatRepository()
+        w_char_repo = CharacterRepository()
+        w_persona_repo = PersonaRepository()
+        w_wi_repo = WorldInfoRepository()
+        w_lb_repo = LorebookRepository()
+        w_mem_repo = MemoryRepository()
+        w_trans_repo = TranslationRepository()
+        w_settings_repo = SettingsRepository()
 
-    all_lorebook_entries = lb_repo.list_entries_for_lorebooks(character.linked_lorebook_ids)
-    matched_lorebooks = lb_service.search_entries_by_tags(all_lorebook_entries, active_tags)
+        w_char_service = CharacterService()
+        w_wi_service = WorldInfoService()
+        w_lb_service = LorebookService()
+        w_mem_service = MemoryService()
+        w_trans_service = TranslationService()
+        w_prompt_builder = PromptBuilder()
+        w_storage = FileStorage()
 
-    assembled_prompt = prompt_builder.build_roleplay_prompt(
-        roleplay_system_prompt=settings.prompts.roleplay_prompt,
-        character=character,
-        persona=persona,
-        worldinfo=worldinfo,
-        current_location=current_location,
-        triggered_event=triggered_event,
-        recent_messages=recent_messages,
-        matched_memories=matched_memories,
-        matched_lorebooks=matched_lorebooks,
-        available_locations=available_locations,
-        relationship_value=chat_session.relationship_value,
-    )
+        try:
+            w_session = w_chat_repo.get_session(session_id)
+            if w_session is None:
+                with task.condition:
+                    task.error_message = "Session not found"
+                    task.status = "error"
+                    task.condition.notify_all()
+                return
 
-    return {
-        "session_id": session_id,
-        "user_message": saved_user_msg,
-        "assembled_prompt": assembled_prompt,
-        "user_language": user_language,
-        "triggered_event": (
-            {"id": triggered_event.id, "title": triggered_event.title}
-            if triggered_event
-            else None
-        ),
-    }
+            w_character = w_char_repo.get_by_id(w_session.character_id)
+            w_persona = w_persona_repo.get_by_id(w_session.persona_id)
+            if w_character is None or w_persona is None:
+                with task.condition:
+                    task.error_message = "Character or Persona not found"
+                    task.status = "error"
+                    task.condition.notify_all()
+                return
 
+            settings = w_settings_repo.get_settings()
+            llm = get_llm_provider(settings)
 
-def _stream_roleplay_response(
-    session_id: int,
-    assembled_prompt: str,
-    user_language: str = "de",
-):
-    chat_repo = ChatRepository()
-    char_repo = CharacterRepository()
-    wi_repo = WorldInfoRepository()
-    trans_repo = TranslationRepository()
-    settings_repo = SettingsRepository()
+            image_alt_text: str | None = None
+            if image_path:
+                try:
+                    resolved_img = w_storage.resolve_path(image_path)
+                    image_alt_text = llm.analyze_image(
+                        image_path=resolved_img,
+                        prompt="Describe what is shown in this image concisely in English for a roleplay conversation.",
+                        model=settings.tasks.vision_model,
+                    ).strip()
+                except Exception:
+                    image_alt_text = "An uploaded image."
 
-    char_service = CharacterService()
-    trans_service = TranslationService()
-    wi_service = WorldInfoService()
+                saved_user_msg.image_alt_text = image_alt_text
+                saved_user_msg.english_content = cleaned_user_text or (image_alt_text or "")
+                w_chat_repo.update_message(saved_user_msg)
 
-    chat_session = chat_repo.get_session(session_id)
-    if chat_session is None:
-        yield f"event: error\ndata: {json.dumps({'error': 'Session not found'})}\n\n"
-        return
+                with task.condition:
+                    task.image_alt_text = image_alt_text
+                    task.image_analyzed = True
+                    task.status = "thinking"
+                    task.condition.notify_all()
+            else:
+                saved_user_msg.english_content = cleaned_user_text
+                w_chat_repo.update_message(saved_user_msg)
 
-    character = char_repo.get_by_id(chat_session.character_id)
-    if character is None:
-        yield f"event: error\ndata: {json.dumps({'error': 'Character not found'})}\n\n"
-        return
+            if w_character.id is not None:
+                w_character.description = w_trans_repo.get_localized_field(
+                    "character", w_character.id, "description", "en", w_character.description
+                )
+                w_character.dialogue_examples = w_trans_repo.get_localized_field(
+                    "character", w_character.id, "dialogue_examples", "en", w_character.dialogue_examples
+                )
 
-    settings = settings_repo.get_settings()
-    llm = get_llm_provider(settings)
+            w_worldinfo = (
+                w_wi_repo.get_by_id(w_session.active_worldinfo_id)
+                if w_session.active_worldinfo_id
+                else None
+            )
+            available_locations = (
+                w_wi_repo.list_locations(w_worldinfo.id)
+                if w_worldinfo and w_worldinfo.id is not None
+                else []
+            )
+            current_location = (
+                w_wi_repo.get_location(w_session.current_location_id)
+                if w_session.current_location_id
+                else None
+            )
+            if current_location and current_location.id is not None:
+                current_location.description = w_trans_repo.get_localized_field(
+                    "worldinfo_location",
+                    current_location.id,
+                    "description",
+                    "en",
+                    current_location.description,
+                )
 
-    full_english_chunks: list[str] = []
-    try:
-        for token in llm.generate_stream(
-            prompt=assembled_prompt,
-            model=settings.tasks.roleplay_model,
-            params=settings.params,
-        ):
-            full_english_chunks.append(token)
-            yield f"event: token\ndata: {json.dumps({'token': token})}\n\n"
-    except Exception as exc:
-        if not full_english_chunks:
-            fallback_en = f"*{character.name} pauses thoughtfully and looks at you.*"
-            full_english_chunks.append(fallback_en)
-            yield f"event: token\ndata: {json.dumps({'token': fallback_en, 'fallback': str(exc)})}\n\n"
+            if triggered_event and triggered_event.id is not None:
+                triggered_event.description = w_trans_repo.get_localized_field(
+                    "worldinfo_event",
+                    triggered_event.id,
+                    "description",
+                    "en",
+                    triggered_event.description,
+                )
 
-    english_reply = "".join(full_english_chunks).strip()
-    yield f"event: generation_done\ndata: {json.dumps({'english_content': english_reply})}\n\n"
+            recent_messages = w_chat_repo.get_messages(session_id, limit=10)
+            combined_context_text = " ".join(
+                m.english_content for m in recent_messages[-3:]
+            )
+            active_tags = _extract_active_tags(combined_context_text)
 
-    emotion_candidates = [
-        e.value
-        for e in Emotion
-        if e.name not in ("EMBERASSED", "RELIFE", "SUPRISE")
-    ]
-    detected_emotion_str = Emotion.NEUTRAL.value
-    try:
-        detected_emotion_str = llm.classify(
-            text=english_reply,
-            candidates=emotion_candidates,
-            model=settings.tasks.roleplay_model,
-        )
-    except Exception:
-        detected_emotion_str = Emotion.NEUTRAL.value
+            all_memories = w_mem_repo.list_for_session(session_id)
+            matched_memories = w_mem_service.search_memories_by_tags(all_memories, active_tags)
 
-    detected_emotion = Emotion.resolve(detected_emotion_str)
-    selected_sprite = char_service.select_sprite_for_emotion(character, detected_emotion)
+            all_lorebook_entries = w_lb_repo.list_entries_for_lorebooks(w_character.linked_lorebook_ids)
+            matched_lorebooks = w_lb_service.search_entries_by_tags(all_lorebook_entries, active_tags)
+            for lb_entry in matched_lorebooks:
+                if lb_entry.id is not None:
+                    lb_entry.content = w_trans_repo.get_localized_field(
+                        "lorebook_entry", lb_entry.id, "content", "en", lb_entry.content
+                    )
 
-    suggested_location = None
-    if chat_session.active_worldinfo_id is not None:
-        locations = wi_repo.list_locations(chat_session.active_worldinfo_id)
-        other_locations = [
-            loc for loc in locations if loc.id != chat_session.current_location_id
-        ]
-        if other_locations:
-            loc_candidates = ["stay_here"] + [loc.name for loc in other_locations]
+            assembled_prompt = w_prompt_builder.build_roleplay_prompt(
+                roleplay_system_prompt=settings.prompts.roleplay_prompt,
+                character=w_character,
+                persona=w_persona,
+                worldinfo=w_worldinfo,
+                current_location=current_location,
+                triggered_event=triggered_event,
+                recent_messages=recent_messages,
+                matched_memories=matched_memories,
+                matched_lorebooks=matched_lorebooks,
+                available_locations=available_locations,
+                relationship_value=w_session.relationship_value,
+            )
+
+            with task.condition:
+                task.status = "streaming"
+                task.condition.notify_all()
+
+            full_english_chunks: list[str] = []
             try:
-                loc_choice = llm.classify(
-                    text=(
-                        "Based on this dialogue, did the characters explicitly decide or propose "
-                        f"to move to a new location? Text: {english_reply}"
-                    ),
-                    candidates=loc_candidates,
+                for token in llm.generate_stream(
+                    prompt=assembled_prompt,
+                    model=settings.tasks.roleplay_model,
+                    params=settings.params,
+                ):
+                    full_english_chunks.append(token)
+                    with task.condition:
+                        task.tokens.append({"token": token})
+                        task.condition.notify_all()
+            except Exception as exc:
+                if not full_english_chunks:
+                    fallback_en = f"*{w_character.name} pauses thoughtfully and looks at you.*"
+                    full_english_chunks.append(fallback_en)
+                    with task.condition:
+                        task.tokens.append({"token": fallback_en, "fallback": str(exc)})
+                        task.condition.notify_all()
+
+            raw_reply = "".join(full_english_chunks).strip()
+            english_reply = replace_roleplay_placeholders(
+                raw_reply, w_character.name, w_persona.name
+            )
+            with task.condition:
+                task.english_reply = english_reply
+                task.generation_done = True
+                task.status = "translating"
+                task.condition.notify_all()
+
+            emotion_candidates = [
+                e.value
+                for e in Emotion
+                if e.name not in ("EMBERASSED", "RELIFE", "SUPRISE")
+            ]
+            detected_emotion_str = Emotion.NEUTRAL.value
+            try:
+                detected_emotion_str = llm.classify(
+                    text=english_reply,
+                    candidates=emotion_candidates,
                     model=settings.tasks.roleplay_model,
                 )
-                for loc in other_locations:
-                    if loc.name.lower() == loc_choice.strip().lower():
-                        suggested_location = {
-                            "id": loc.id,
-                            "name": loc.name,
-                            "background_image_path": loc.background_image_path,
-                        }
-                        break
             except Exception:
-                pass
+                detected_emotion_str = Emotion.NEUTRAL.value
 
-    cache_dict = trans_repo.get_cache_dict(user_language)
-    localized_reply = trans_service.get_localized_text(
-        english_text=english_reply,
-        target_language=user_language,
-        cache_records=cache_dict,
-        llm_provider=llm,
-        model=settings.tasks.assistant_model,
+            detected_emotion = Emotion.resolve(detected_emotion_str)
+            selected_sprite = w_char_service.select_sprite_for_emotion(w_character, detected_emotion)
+
+            suggested_location = None
+            if w_session.active_worldinfo_id is not None:
+                locations = w_wi_repo.list_locations(w_session.active_worldinfo_id)
+                other_locations = [
+                    loc for loc in locations if loc.id != w_session.current_location_id
+                ]
+                if other_locations:
+                    loc_candidates = ["stay_here"] + [loc.name for loc in other_locations]
+                    try:
+                        loc_choice = llm.classify(
+                            text=(
+                                "Based on this dialogue, did the characters explicitly decide or propose "
+                                f"to move to a new location? Text: {english_reply}"
+                            ),
+                            candidates=loc_candidates,
+                            model=settings.tasks.roleplay_model,
+                        )
+                        for loc in other_locations:
+                            if loc.name.lower() == loc_choice.strip().lower():
+                                suggested_location = {
+                                    "id": loc.id,
+                                    "name": loc.name,
+                                    "background_image_path": loc.background_image_path,
+                                }
+                                break
+                    except Exception:
+                        pass
+
+            source_hash = w_trans_service.compute_source_hash(english_reply)
+            cached_rec = w_trans_repo.get_translation(source_hash, user_language)
+            localized_reply = cached_rec.translated_text if cached_rec else english_reply
+
+            ai_next_idx = w_chat_repo.get_next_message_idx(session_id)
+            ai_msg = Message(
+                id=None,
+                session_id=session_id,
+                message_idx=ai_next_idx,
+                role=MessageRole.CHARACTER,
+                english_content=english_reply,
+                localized_content=localized_reply,
+                emotion_tag=detected_emotion.value,
+                created_at=datetime.now(timezone.utc),
+            )
+            saved_ai_msg = w_chat_repo.add_message(ai_msg)
+
+            latest_session = w_chat_repo.get_session(session_id) or w_session
+            if latest_session.active_worldinfo_id and latest_session.events_enabled:
+                cooldown_state = EventCooldownState(
+                    current_counter=latest_session.cooldown_counter,
+                    triggered_event_ids=set(latest_session.triggered_event_ids),
+                )
+                w_wi_service.decrement_cooldown(cooldown_state)
+                latest_session.cooldown_counter = max(1, cooldown_state.current_counter)
+                w_chat_repo.update_session(latest_session)
+
+            _run_async_memory_extraction(session_id)
+
+            payload = {
+                "notification_id": task.task_id,
+                "message_id": saved_ai_msg.id,
+                "message_idx": saved_ai_msg.message_idx,
+                "english_content": english_reply,
+                "localized_content": localized_reply,
+                "emotion": detected_emotion.value,
+                "sprite_path": selected_sprite.file_path,
+                "relationship_value": latest_session.relationship_value,
+                "suggested_location": suggested_location,
+            }
+
+            with _TASKS_LOCK:
+                user_notifs = _USER_NOTIFICATIONS.setdefault(w_session.user_id, [])
+                user_notifs.append(
+                    {
+                        "id": task.task_id,
+                        "session_id": session_id,
+                        "session_title": latest_session.title,
+                        "character_id": w_character.id,
+                        "character_name": w_character.name,
+                        "character_portrait": w_character.primary_portrait_path,
+                        "message_id": saved_ai_msg.id,
+                        "message_idx": saved_ai_msg.message_idx,
+                        "localized_content": localized_reply,
+                        "emotion": detected_emotion.value,
+                        "created_at": datetime.now(timezone.utc).isoformat(),
+                    }
+                )
+
+            with task.condition:
+                task.result_payload = payload
+                task.status = "completed"
+                task.condition.notify_all()
+        except Exception as exc:
+            with task.condition:
+                task.error_message = str(exc)
+                task.status = "error"
+                task.condition.notify_all()
+
+    thread = threading.Thread(target=_worker, daemon=True)
+    thread.start()
+
+    triggered_event_dict = (
+        {"id": triggered_event.id, "title": triggered_event.title}
+        if triggered_event
+        else None
     )
-    if english_reply and localized_reply:
-        trans_rec = trans_service.create_record(
-            english_text=english_reply,
-            target_language=user_language,
-            translated_text=localized_reply,
-        )
-        trans_repo.save_translation(trans_rec)
+    return task, saved_user_msg, triggered_event_dict
 
-    next_idx = chat_repo.get_next_message_idx(session_id)
-    ai_msg = Message(
-        id=None,
-        session_id=session_id,
-        message_idx=next_idx,
-        role=MessageRole.CHARACTER,
-        english_content=english_reply,
-        localized_content=localized_reply,
-        emotion_tag=detected_emotion.value,
-        created_at=datetime.now(timezone.utc),
-    )
-    saved_ai_msg = chat_repo.add_message(ai_msg)
 
-    if chat_session.active_worldinfo_id and chat_session.events_enabled:
-        cooldown_state = EventCooldownState(
-            current_counter=chat_session.cooldown_counter,
-            triggered_event_ids=set(chat_session.triggered_event_ids),
-        )
-        wi_service.decrement_cooldown(cooldown_state)
-        chat_session.cooldown_counter = max(1, cooldown_state.current_counter)
-        chat_repo.update_session(chat_session)
+def _stream_from_task(task: _BackgroundTurnTask):
+    sent_tokens = 0
+    sent_gen_done = False
+    sent_image_analyzed = False
 
-    _run_async_memory_extraction(session_id)
+    while True:
+        with task.condition:
+            while (
+                sent_tokens >= len(task.tokens)
+                and (sent_gen_done or not task.generation_done)
+                and (sent_image_analyzed or not task.image_analyzed)
+                and task.status not in ("completed", "error")
+            ):
+                task.condition.wait(timeout=15.0)
 
-    payload = {
-        "message_id": saved_ai_msg.id,
-        "message_idx": saved_ai_msg.message_idx,
-        "english_content": english_reply,
-        "localized_content": localized_reply,
-        "emotion": detected_emotion.value,
-        "sprite_path": selected_sprite.file_path,
-        "relationship_value": chat_session.relationship_value,
-        "suggested_location": suggested_location,
-    }
-    yield f"event: message_complete\ndata: {json.dumps(payload)}\n\n"
+            emit_image_analyzed = task.image_analyzed and not sent_image_analyzed
+            if emit_image_analyzed:
+                sent_image_analyzed = True
+            image_alt_text = task.image_alt_text
+
+            new_tokens = list(task.tokens[sent_tokens:])
+            sent_tokens = len(task.tokens)
+            emit_gen_done = task.generation_done and not sent_gen_done
+            if emit_gen_done:
+                sent_gen_done = True
+            english_reply = task.english_reply
+            current_status = task.status
+            result_payload = task.result_payload
+            error_message = task.error_message
+
+        if emit_image_analyzed:
+            yield f"event: image_analyzed\ndata: {json.dumps({'image_alt_text': image_alt_text or '', 'user_message_idx': task.user_message_idx})}\n\n"
+
+        for tok_data in new_tokens:
+            yield f"event: token\ndata: {json.dumps(tok_data)}\n\n"
+
+        if emit_gen_done:
+            yield f"event: generation_done\ndata: {json.dumps({'english_content': english_reply})}\n\n"
+
+        if current_status == "error":
+            task.delivered_via_stream = True
+            yield f"event: error\ndata: {json.dumps({'error': error_message or 'Generation error'})}\n\n"
+            break
+
+        if current_status == "completed" and result_payload is not None:
+            task.delivered_via_stream = True
+            yield f"event: message_complete\ndata: {json.dumps(result_payload)}\n\n"
+            break
 
 
 @api_chat_bp.route("/<int:session_id>/messages", methods=["POST"])
@@ -429,7 +586,7 @@ def post_message(session_id: int):
         return jsonify({"error": "Message or image is required."}), 400
 
     try:
-        ctx = _prepare_turn_context(
+        task, user_msg, triggered_event = _start_background_turn(
             session_id=session_id,
             user_text=user_text,
             user_language=user_lang,
@@ -439,29 +596,24 @@ def post_message(session_id: int):
         return jsonify({"error": str(exc)}), 400
 
     if not stream_now:
-        _PENDING_PROMPTS[session_id] = ctx
-        user_msg = ctx["user_message"]
         return jsonify(
             {
                 "status": "ready_for_stream",
+                "task_id": task.task_id,
+                "has_image": task.has_image,
                 "user_message": {
                     "id": user_msg.id,
                     "message_idx": user_msg.message_idx,
                     "localized_content": user_msg.localized_content,
                     "image_path": user_msg.image_path,
+                    "image_alt_text": user_msg.image_alt_text,
                 },
-                "triggered_event": ctx["triggered_event"],
+                "triggered_event": triggered_event,
             }
         )
 
     return Response(
-        stream_with_context(
-            _stream_roleplay_response(
-                session_id=session_id,
-                assembled_prompt=ctx["assembled_prompt"],
-                user_language=user_lang,
-            )
-        ),
+        stream_with_context(_stream_from_task(task)),
         mimetype="text/event-stream",
     )
 
@@ -469,31 +621,86 @@ def post_message(session_id: int):
 @api_chat_bp.route("/<int:session_id>/stream", methods=["GET"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def stream_session_response(session_id: int):
-    ctx = _PENDING_PROMPTS.pop(session_id, None)
     user_lang = request.args.get("language", "de")
-    if ctx is None:
-        msg_text = request.args.get("message", "").strip()
-        if not msg_text:
-            return jsonify({"error": "No pending message for stream."}), 400
+    msg_text = request.args.get("message", "").strip()
+
+    if msg_text:
         try:
-            ctx = _prepare_turn_context(
+            task, _, _ = _start_background_turn(
                 session_id=session_id,
                 user_text=msg_text,
                 user_language=user_lang,
             )
         except AimoError as exc:
             return jsonify({"error": str(exc)}), 400
+    else:
+        with _TASKS_LOCK:
+            task = _BACKGROUND_TASKS.get(session_id)
+        if task is None or (task.status in ("completed", "error") and task.delivered_via_stream):
+            return jsonify({"error": "No pending message for stream."}), 400
 
     return Response(
-        stream_with_context(
-            _stream_roleplay_response(
-                session_id=session_id,
-                assembled_prompt=ctx["assembled_prompt"],
-                user_language=ctx["user_language"],
-            )
-        ),
+        stream_with_context(_stream_from_task(task)),
         mimetype="text/event-stream",
     )
+
+
+@api_chat_bp.route("/<int:session_id>/status", methods=["GET"])
+@require_permission(FunctionPermission.CHAT_ACCESS)
+def get_session_generation_status(session_id: int):
+    with _TASKS_LOCK:
+        task = _BACKGROUND_TASKS.get(session_id)
+
+    if task is None:
+        return jsonify({"active": False, "status": "idle"})
+
+    with task.condition:
+        is_active = task.status in ("analyzing_image", "thinking", "streaming", "translating")
+        return jsonify(
+            {
+                "active": is_active,
+                "task_id": task.task_id,
+                "status": task.status,
+                "has_image": task.has_image,
+            }
+        )
+
+
+@api_chat_bp.route("/notifications", methods=["GET"])
+@require_permission(FunctionPermission.CHAT_ACCESS)
+def poll_chat_notifications():
+    user = get_current_user()
+    assert user is not None and user.id is not None
+
+    raw_active = request.args.get("active_session_id", "").strip()
+    active_session_id = int(raw_active) if raw_active.isdigit() else None
+
+    to_deliver: list[dict] = []
+    with _TASKS_LOCK:
+        notifs = _USER_NOTIFICATIONS.get(user.id, [])
+        remaining: list[dict] = []
+        for item in notifs:
+            if active_session_id is not None and item["session_id"] == active_session_id:
+                continue
+            to_deliver.append(item)
+        _USER_NOTIFICATIONS[user.id] = remaining
+
+    return jsonify({"notifications": to_deliver})
+
+
+@api_chat_bp.route("/notifications/<string:notification_id>/ack", methods=["POST"])
+@require_permission(FunctionPermission.CHAT_ACCESS)
+def ack_chat_notification(notification_id: str):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+
+    with _TASKS_LOCK:
+        notifs = _USER_NOTIFICATIONS.get(user.id, [])
+        _USER_NOTIFICATIONS[user.id] = [
+            item for item in notifs if item.get("id") != notification_id
+        ]
+
+    return jsonify({"status": "acknowledged"})
 
 
 @api_chat_bp.route("/<int:session_id>/switch-location", methods=["POST"])
@@ -708,9 +915,39 @@ def delete_messages_from_idx(session_id: int, message_idx: int):
 def edit_message(session_id: int, message_idx: int):
     data = request.get_json(silent=True) or request.form.to_dict()
     new_text = str(data.get("content", "")).strip()
-    user_lang = str(data.get("language", "de")).strip()
     if not new_text:
         return jsonify({"error": "Message content must not be empty."}), 400
+
+    chat_repo = ChatRepository()
+    trans_repo = TranslationRepository()
+    trans_service = TranslationService()
+
+    msg = chat_repo.get_message_by_idx(session_id, message_idx)
+    if msg is None:
+        return jsonify({"error": "Message not found."}), 404
+
+    if msg.english_content:
+        old_hash = trans_service.compute_source_hash(msg.english_content)
+        trans_repo.invalidate(old_hash)
+
+    msg.english_content = new_text
+    msg.localized_content = new_text
+    chat_repo.update_message(msg)
+
+    return jsonify(
+        {
+            "message_idx": msg.message_idx,
+            "english_content": msg.english_content,
+            "localized_content": msg.localized_content,
+        }
+    )
+
+
+@api_chat_bp.route("/<int:session_id>/messages/<int:message_idx>/translate", methods=["POST"])
+@require_permission(FunctionPermission.CHAT_ACCESS)
+def translate_chat_message(session_id: int, message_idx: int):
+    data = request.get_json(silent=True) or request.form.to_dict()
+    target_lang = str(data.get("target_language") or data.get("language") or "de").strip().lower()
 
     chat_repo = ChatRepository()
     trans_repo = TranslationRepository()
@@ -721,34 +958,91 @@ def edit_message(session_id: int, message_idx: int):
     if msg is None:
         return jsonify({"error": "Message not found."}), 404
 
-    settings = settings_repo.get_settings()
-    llm = get_llm_provider(settings)
-    new_english, old_hash = trans_service.sync_text_update(
-        old_english_text=msg.english_content,
-        new_user_text=new_text,
-        user_language=user_lang,
-        llm_provider=llm,
-        model=settings.tasks.assistant_model,
-    )
-    if old_hash:
-        trans_repo.invalidate(old_hash)
+    source_text = (msg.english_content or msg.localized_content or "").strip()
+    if not source_text:
+        return jsonify({"error": "Message has no translatable text."}), 400
 
-    msg.english_content = new_english
-    msg.localized_content = new_text
-    chat_repo.update_message(msg)
-
-    if new_english:
-        rec = trans_service.create_record(
-            english_text=new_english,
-            target_language=user_lang,
-            translated_text=new_text,
+    source_hash = trans_service.compute_source_hash(source_text)
+    cached_rec = trans_repo.get_translation(source_hash, target_lang)
+    if cached_rec:
+        translated = cached_rec.translated_text
+    else:
+        settings = settings_repo.get_settings()
+        llm = get_llm_provider(settings)
+        translated = trans_service.translate_text(
+            text=source_text,
+            target_language=target_lang,
+            llm_provider=llm,
+            model=settings.tasks.assistant_model,
         )
-        trans_repo.save_translation(rec)
+        if translated:
+            rec = trans_service.create_record(
+                english_text=source_text,
+                target_language=target_lang,
+                translated_text=translated,
+            )
+            trans_repo.save_translation(rec)
+
+    msg.localized_content = translated
+    chat_repo.update_message(msg)
 
     return jsonify(
         {
             "message_idx": msg.message_idx,
-            "english_content": msg.english_content,
-            "localized_content": msg.localized_content,
+            "translated_text": translated,
+            "original_text": source_text,
+            "target_language": target_lang,
+        }
+    )
+
+
+@api_chat_bp.route("/translate-text", methods=["POST"])
+@require_permission(FunctionPermission.CHAT_ACCESS)
+def translate_arbitrary_text():
+    data = request.get_json(silent=True) or request.form.to_dict()
+    source_text = str(data.get("text", "")).strip()
+    target_lang = str(data.get("target_language", "de")).strip().lower()
+    entity_type = str(data.get("entity_type", "")).strip()
+    entity_id_raw = data.get("entity_id")
+    field_name = str(data.get("field_name", "")).strip()
+
+    if not source_text:
+        return jsonify({"error": "Text is required."}), 400
+
+    trans_repo = TranslationRepository()
+    settings_repo = SettingsRepository()
+    trans_service = TranslationService()
+
+    settings = settings_repo.get_settings()
+    llm = get_llm_provider(settings)
+    translated = trans_service.translate_text(
+        text=source_text,
+        target_language=target_lang,
+        llm_provider=llm,
+        model=settings.tasks.assistant_model,
+    )
+
+    if translated:
+        rec = trans_service.create_record(
+            english_text=source_text,
+            target_language=target_lang,
+            translated_text=translated,
+        )
+        trans_repo.save_translation(rec)
+
+        if entity_type and field_name and entity_id_raw is not None and str(entity_id_raw).isdigit():
+            trans_repo.save_field_translation(
+                entity_type=entity_type,
+                entity_id=int(entity_id_raw),
+                field_name=field_name,
+                language=target_lang,
+                text_content=translated,
+                is_outdated=False,
+            )
+
+    return jsonify(
+        {
+            "translated_text": translated,
+            "target_language": target_lang,
         }
     )

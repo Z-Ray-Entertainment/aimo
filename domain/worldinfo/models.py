@@ -8,6 +8,7 @@ class WorldInfo:
     user_id: int
     name: str
     icon: str | None = None
+    visibility: str = "private"
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
 

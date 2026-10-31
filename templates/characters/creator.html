@@ -27,16 +27,16 @@
 
   <!-- Designer Tabs -->
   <div class="rpg-tabs">
-    <button type="button" class="rpg-tab-btn active" data-tab-target="tab-char-info">
+    <button type="button" class="rpg-tab-btn {% if active_tab != 'sprites' %}active{% endif %}" data-tab-target="tab-char-info">
       <span class="icon-mono">📋</span> Tab 1: Hauptinformationen & Galerie
     </button>
-    <button type="button" class="rpg-tab-btn" data-tab-target="tab-char-sprites" {% if not character %}disabled title="Bitte zuerst Grunddaten speichern"{% endif %}>
+    <button type="button" class="rpg-tab-btn {% if active_tab == 'sprites' %}active{% endif %}" data-tab-target="tab-char-sprites" {% if not character %}disabled title="Bitte zuerst Grunddaten speichern"{% endif %}>
       <span class="icon-mono">🎭</span> Tab 2: Emotionale Sprites (28 Emotionen)
     </button>
   </div>
 
   <!-- TAB 1: Hauptinformationen -->
-  <section id="tab-char-info" class="tab-pane active">
+  <section id="tab-char-info" class="tab-pane {% if active_tab != 'sprites' %}active{% endif %}">
     <form id="character-main-form" method="POST" action="{% if character %}{{ url_for('characters.edit_character', character_id=character.id) }}{% else %}{{ url_for('characters.new_character') }}{% endif %}" enctype="multipart/form-data" class="wood-frame" style="padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
       <div>
         <label>Name des Charakters *</label>
@@ -62,7 +62,20 @@
 
       <div>
         <label>Primary Portrait (Pflicht-Upload) {% if not character %}*{% endif %}</label>
-        <input type="file" name="primary_portrait" accept=".png,.jpg,.jpeg,.webp" {% if not character %}required{% endif %}>
+        <div style="display: flex; gap: 0.85rem; align-items: center; margin-top: 0.35rem;">
+          <div id="portrait-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 68px; height: 86px; border-radius: 8px; border: 2px solid var(--gold-accent); overflow: hidden; flex-shrink: 0; background: rgba(15, 11, 8, 0.9);">
+            <img id="portrait-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}{% endif %}" alt="Portrait Preview" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 0.45rem;">
+            <input type="file" id="primary-portrait-input" name="primary_portrait" accept=".png,.jpg,.jpeg,.webp" {% if not character %}required{% endif %}>
+            <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+              <button type="button" id="open-crop-btn" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.82rem;" {% if not character %}disabled{% endif %}>
+                <span class="icon-mono">✂️</span> Ausschnitt festlegen (Crop)
+              </button>
+              <span id="crop-status-badge" style="display: none; font-size: 0.8rem; color: #4CAF50; font-weight: 600;">✓ Ausschnitt aktiv</span>
+            </div>
+          </div>
+        </div>
       </div>
       <div>
         <label>Initialer Beziehungswert (-100 bis +100)</label>
@@ -76,16 +89,40 @@
             <span class="icon-sparkle">✨</span> KI-Autor Optimierung
           </button>
         </div>
-        <textarea id="char-description-textarea" name="description" rows="6" required>{{ form.description }}</textarea>
+        <input type="hidden" name="i18n_description" id="i18n-input-char-desc" value='{{ (field_translations.get("description", {}) if field_translations is defined else {}) | tojson }}'>
+        <textarea
+          id="char-description-textarea"
+          name="description"
+          rows="6"
+          required
+          data-i18n-field="description"
+          data-i18n-entity-type="character"
+          data-i18n-entity-id="{{ character.id if character else '' }}"
+          data-i18n-hidden="i18n-input-char-desc">{{ form.description }}</textarea>
       </div>
 
       <div>
         <label>Gesprächsbeispiele (Ein Beispiel pro Zeile)</label>
-        <textarea name="dialogue_examples" rows="4">{{ form.dialogue_examples_text }}</textarea>
+        <input type="hidden" name="i18n_dialogue_examples" id="i18n-input-char-dialogue" value='{{ (field_translations.get("dialogue_examples", {}) if field_translations is defined else {}) | tojson }}'>
+        <textarea
+          name="dialogue_examples"
+          rows="4"
+          data-i18n-field="dialogue_examples"
+          data-i18n-entity-type="character"
+          data-i18n-entity-id="{{ character.id if character else '' }}"
+          data-i18n-hidden="i18n-input-char-dialogue">{{ form.dialogue_examples_text }}</textarea>
       </div>
       <div>
         <label>First Message (Welcome Message beim ersten Chat) *</label>
-        <textarea name="first_message" rows="4" required>{{ form.first_message }}</textarea>
+        <input type="hidden" name="i18n_first_message" id="i18n-input-char-first-msg" value='{{ (field_translations.get("first_message", {}) if field_translations is defined else {}) | tojson }}'>
+        <textarea
+          name="first_message"
+          rows="4"
+          required
+          data-i18n-field="first_message"
+          data-i18n-entity-type="character"
+          data-i18n-entity-id="{{ character.id if character else '' }}"
+          data-i18n-hidden="i18n-input-char-first-msg">{{ form.first_message }}</textarea>
       </div>
 
       <div>
@@ -164,7 +201,7 @@
 
   <!-- TAB 2: Emotionale Sprites -->
   {% if character %}
-    <section id="tab-char-sprites" class="tab-pane">
+    <section id="tab-char-sprites" class="tab-pane {% if active_tab == 'sprites' %}active{% endif %}">
       <div class="wood-frame" style="padding: 1.5rem;">
         <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">🎭 Emotionale Sprites (28 Emotionen mit Varianten-Stackview)</h3>
         <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
@@ -181,7 +218,7 @@
                   <label style="cursor: pointer; text-align: center; color: var(--text-muted);">
                     <div style="font-size: 2rem; margin-bottom: 0.3rem;">➕</div>
                     <div style="font-size: 0.8rem;">PNG/WEBP wählen</div>
-                    <input type="file" name="sprite_file" accept=".png,.webp" style="display: none;" onchange="this.form.submit()">
+                    <input type="file" name="sprite_file" accept=".png,.webp" style="display: none;" onchange="window.saveSpriteScrollAndSubmit(this.form)">
                   </label>
                 </form>
               {% else %}
@@ -193,7 +230,7 @@
                       <input type="hidden" name="emotion" value="{{ emotion }}">
                       <label class="btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" title="Weitere Variante hochladen">
                         <span class="icon-mono">📄➕</span>
-                        <input type="file" name="sprite_file" accept=".png,.webp" style="display: none;" onchange="this.form.submit()">
+                        <input type="file" name="sprite_file" accept=".png,.webp" style="display: none;" onchange="window.saveSpriteScrollAndSubmit(this.form)">
                       </label>
                     </form>
 
@@ -204,7 +241,7 @@
                       </button>
                     {% else %}
                       <!-- Einzelnes Sprite direkt löschen -->
-                      <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp_list[0].variant) }}">
+                      <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp_list[0].variant) }}" onsubmit="window.saveSpriteScrollPos()">
                         <button type="submit" class="btn btn-danger" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" title="Sprite löschen">
                           <span class="icon-mono">🗑️</span>
                         </button>
@@ -231,7 +268,7 @@
                     {% for sp in sp_list %}
                       <div class="card-tile" style="min-height: 200px; position: relative;">
                         <img src="{{ url_for('uploaded_file', filename=sp.file_path) }}" alt="{{ emotion }}_{{ sp.variant }}" style="width: 100%; height: 160px; object-fit: contain;">
-                        <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp.variant) }}" style="position: absolute; top: 0.4rem; right: 0.4rem;">
+                        <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp.variant) }}" style="position: absolute; top: 0.4rem; right: 0.4rem;" onsubmit="window.saveSpriteScrollPos()">
                           <button type="submit" class="btn btn-danger" style="padding: 0.25rem 0.5rem;"><span class="icon-mono">🗑️</span></button>
                         </form>
                         <div style="text-align: center; padding: 0.35rem; font-size: 0.8rem;">
@@ -271,11 +308,90 @@
       </div>
     </div>
   {% endif %}
+
+  <!-- Modal: Profile Image Cropper -->
+  <div class="modal-backdrop" id="portrait-crop-modal" aria-hidden="true">
+    <div class="modal-frame" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3 style="color: var(--gold-accent);"><span class="icon-mono">✂️</span> Profilbild-Ausschnitt festlegen</h3>
+        <button type="button" class="btn" data-modal-close="portrait-crop-modal">✕</button>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.85rem;">
+        <div style="display: flex; gap: 0.45rem; align-items: center;">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Seitenverhältnis:</span>
+          <button type="button" class="btn crop-ratio-btn active" data-ratio="0.75" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;">3:4 (Karte)</button>
+          <button type="button" class="btn crop-ratio-btn" data-ratio="1" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;">1:1 (Avatar)</button>
+          <button type="button" class="btn crop-ratio-btn" data-ratio="0" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;">Frei</button>
+        </div>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Ziehen zum Verschieben • Ecke unten rechts zum Skalieren</span>
+      </div>
+
+      <div style="display: flex; gap: 1.25rem; align-items: flex-start; flex-wrap: wrap;">
+        <!-- Crop Stage -->
+        <div id="crop-stage-wrap" style="flex: 1; min-width: 280px; display: flex; justify-content: center; align-items: center; background: rgba(10, 7, 5, 0.92); border: 2px solid var(--border-wood-dark); border-radius: 10px; padding: 0.75rem; overflow: hidden; user-select: none;">
+          <div id="crop-image-container" style="position: relative; display: inline-block; line-height: 0;">
+            <img id="crop-source-img" src="" alt="Crop Source" style="max-width: 420px; max-height: 420px; display: block; pointer-events: none;" crossorigin="anonymous">
+            <div id="crop-selection-box" class="crop-selection-box">
+              <div id="crop-resize-handle" class="crop-resize-handle" title="Größe ändern"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Mini-Vorschau -->
+        <div style="width: 140px; display: flex; flex-direction: column; gap: 0.85rem; align-items: center;">
+          <div style="text-align: center;">
+            <div style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0.3rem;">Karten-Vorschau</div>
+            <canvas id="crop-preview-card" width="108" height="144" style="border: 2px solid var(--border-wood); border-radius: 8px; background: #14100C;"></canvas>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0.3rem;">Chat-Icon</div>
+            <canvas id="crop-preview-avatar" width="64" height="64" style="border: 2px solid var(--gold-accent); border-radius: 10px; background: #14100C;"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1.2rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
+        <button type="button" class="btn" data-modal-close="portrait-crop-modal">Abbrechen</button>
+        <button type="button" id="apply-crop-btn" class="btn"><span class="icon-mono">✂️</span> Ausschnitt übernehmen</button>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
+window.saveSpriteScrollPos = function () {
+  try {
+    sessionStorage.setItem("aimo_sprite_scroll_y", String(window.scrollY || window.pageYOffset || 0));
+  } catch (_) {}
+};
+
+window.saveSpriteScrollAndSubmit = function (formEl) {
+  window.saveSpriteScrollPos();
+  if (formEl) formEl.submit();
+};
+
+(() => {
+  try {
+    const savedY = sessionStorage.getItem("aimo_sprite_scroll_y");
+    if (savedY !== null) {
+      sessionStorage.removeItem("aimo_sprite_scroll_y");
+      const targetY = parseInt(savedY, 10);
+      if (!Number.isNaN(targetY) && targetY > 0) {
+        if ("scrollRestoration" in history) {
+          history.scrollRestoration = "manual";
+        }
+        const restoreScroll = () => window.scrollTo({ top: targetY, behavior: "instant" });
+        restoreScroll();
+        requestAnimationFrame(restoreScroll);
+        window.addEventListener("load", restoreScroll, { once: true });
+      }
+    }
+  } catch (_) {}
+})();
+
 document.getElementById("sparkle-improve-btn")?.addEventListener("click", async () => {
   const btn = document.getElementById("sparkle-improve-btn");
   const textarea = document.getElementById("char-description-textarea");
@@ -298,6 +414,7 @@ document.getElementById("sparkle-improve-btn")?.addEventListener("click", async 
     const data = await resp.json();
     if (resp.ok && data.description) {
       textarea.value = data.description;
+      textarea.dispatchEvent(new Event("input", { bubbles: true }));
     } else {
       alert(data.error || "Konnte Beschreibung nicht generieren.");
     }
@@ -306,5 +423,197 @@ document.getElementById("sparkle-improve-btn")?.addEventListener("click", async 
     btn.innerHTML = origLabel;
   }
 });
+
+// Interactive Profile Image Cropper
+(() => {
+  const fileInput = document.getElementById("primary-portrait-input");
+  const openCropBtn = document.getElementById("open-crop-btn");
+  const applyCropBtn = document.getElementById("apply-crop-btn");
+  const previewWrap = document.getElementById("portrait-preview-wrap");
+  const previewImg = document.getElementById("portrait-preview-img");
+  const statusBadge = document.getElementById("crop-status-badge");
+
+  const cropImg = document.getElementById("crop-source-img");
+  const cropBox = document.getElementById("crop-selection-box");
+  const resizeHandle = document.getElementById("crop-resize-handle");
+  const cardCanvas = document.getElementById("crop-preview-card");
+  const avatarCanvas = document.getElementById("crop-preview-avatar");
+  const ratioBtns = document.querySelectorAll(".crop-ratio-btn");
+
+  if (!fileInput || !cropImg || !cropBox) return;
+
+  let currentRatio = 0.75; // 3:4 default
+  let boxState = { x: 10, y: 10, w: 120, h: 160 };
+  let dragMode = null; // 'move' | 'resize' | null
+  let startMouse = { x: 0, y: 0 };
+  let startBox = { x: 0, y: 0, w: 0, h: 0 };
+  let currentSourceDataUrl = previewImg && previewImg.getAttribute("src") ? previewImg.getAttribute("src") : "";
+
+  function initCropBox() {
+    const dispW = cropImg.clientWidth || 300;
+    const dispH = cropImg.clientHeight || 300;
+    let w = dispW * 0.8;
+    let h = currentRatio > 0 ? w / currentRatio : dispH * 0.8;
+    if (h > dispH * 0.9) {
+      h = dispH * 0.9;
+      if (currentRatio > 0) w = h * currentRatio;
+    }
+    if (w > dispW * 0.9) {
+      w = dispW * 0.9;
+      if (currentRatio > 0) h = w / currentRatio;
+    }
+    boxState.w = Math.max(40, Math.round(w));
+    boxState.h = Math.max(40, Math.round(h));
+    boxState.x = Math.max(0, Math.round((dispW - boxState.w) / 2));
+    boxState.y = Math.max(0, Math.round((dispH - boxState.h) / 2));
+    renderCropBox();
+  }
+
+  function clampBox() {
+    const dispW = cropImg.clientWidth || 1;
+    const dispH = cropImg.clientHeight || 1;
+    boxState.w = Math.max(36, Math.min(dispW, boxState.w));
+    if (currentRatio > 0) {
+      boxState.h = boxState.w / currentRatio;
+      if (boxState.h > dispH) {
+        boxState.h = dispH;
+        boxState.w = boxState.h * currentRatio;
+      }
+    } else {
+      boxState.h = Math.max(36, Math.min(dispH, boxState.h));
+    }
+    boxState.x = Math.max(0, Math.min(dispW - boxState.w, boxState.x));
+    boxState.y = Math.max(0, Math.min(dispH - boxState.h, boxState.y));
+  }
+
+  function renderCropBox() {
+    clampBox();
+    cropBox.style.left = `${boxState.x}px`;
+    cropBox.style.top = `${boxState.y}px`;
+    cropBox.style.width = `${boxState.w}px`;
+    cropBox.style.height = `${boxState.h}px`;
+    updateMiniPreviews();
+  }
+
+  function getNaturalCropRect() {
+    const dispW = cropImg.clientWidth || 1;
+    const dispH = cropImg.clientHeight || 1;
+    const natW = cropImg.naturalWidth || dispW;
+    const natH = cropImg.naturalHeight || dispH;
+    const scaleX = natW / dispW;
+    const scaleY = natH / dispH;
+    return {
+      sx: Math.max(0, Math.round(boxState.x * scaleX)),
+      sy: Math.max(0, Math.round(boxState.y * scaleY)),
+      sw: Math.max(1, Math.round(boxState.w * scaleX)),
+      sh: Math.max(1, Math.round(boxState.h * scaleY)),
+    };
+  }
+
+  function updateMiniPreviews() {
+    if (!cropImg.complete || !cropImg.naturalWidth) return;
+    const { sx, sy, sw, sh } = getNaturalCropRect();
+    if (cardCanvas) {
+      const ctx = cardCanvas.getContext("2d");
+      ctx.clearRect(0, 0, cardCanvas.width, cardCanvas.height);
+      ctx.drawImage(cropImg, sx, sy, sw, sh, 0, 0, cardCanvas.width, cardCanvas.height);
+    }
+    if (avatarCanvas) {
+      const ctx = avatarCanvas.getContext("2d");
+      ctx.clearRect(0, 0, avatarCanvas.width, avatarCanvas.height);
+      ctx.drawImage(cropImg, sx, sy, sw, sh, 0, 0, avatarCanvas.width, avatarCanvas.height);
+    }
+  }
+
+  function openCropModalWithSrc(src) {
+    if (!src) return;
+    cropImg.onload = () => {
+      window.AimoModals.open("portrait-crop-modal");
+      requestAnimationFrame(() => initCropBox());
+    };
+    cropImg.src = src;
+  }
+
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      currentSourceDataUrl = ev.target.result;
+      if (previewImg) previewImg.src = currentSourceDataUrl;
+      if (previewWrap) previewWrap.style.display = "block";
+      if (openCropBtn) openCropBtn.disabled = false;
+      openCropModalWithSrc(currentSourceDataUrl);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  openCropBtn?.addEventListener("click", () => {
+    const src = currentSourceDataUrl || (previewImg ? previewImg.src : "");
+    if (src) openCropModalWithSrc(src);
+  });
+
+  ratioBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      ratioBtns.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentRatio = parseFloat(btn.getAttribute("data-ratio") || "0");
+      initCropBox();
+    });
+  });
+
+  cropBox.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    dragMode = e.target === resizeHandle ? "resize" : "move";
+    startMouse = { x: e.clientX, y: e.clientY };
+    startBox = { ...boxState };
+  });
+
+  window.addEventListener("mousemove", (e) => {
+    if (!dragMode) return;
+    const dx = e.clientX - startMouse.x;
+    const dy = e.clientY - startMouse.y;
+    if (dragMode === "move") {
+      boxState.x = startBox.x + dx;
+      boxState.y = startBox.y + dy;
+    } else if (dragMode === "resize") {
+      boxState.w = startBox.w + dx;
+      if (currentRatio > 0) {
+        boxState.h = boxState.w / currentRatio;
+      } else {
+        boxState.h = startBox.h + dy;
+      }
+    }
+    renderCropBox();
+  });
+
+  window.addEventListener("mouseup", () => {
+    dragMode = null;
+  });
+
+  applyCropBtn?.addEventListener("click", () => {
+    if (!cropImg.complete || !cropImg.naturalWidth) return;
+    const { sx, sy, sw, sh } = getNaturalCropRect();
+    const outCanvas = document.createElement("canvas");
+    outCanvas.width = sw;
+    outCanvas.height = sh;
+    const ctx = outCanvas.getContext("2d");
+    ctx.drawImage(cropImg, sx, sy, sw, sh, 0, 0, sw, sh);
+
+    outCanvas.toBlob((blob) => {
+      if (!blob) return;
+      const croppedFile = new File([blob], "portrait_cropped.png", { type: "image/png" });
+      const dt = new DataTransfer();
+      dt.items.add(croppedFile);
+      fileInput.files = dt.files;
+
+      const croppedUrl = URL.createObjectURL(blob);
+      if (previewImg) previewImg.src = croppedUrl;
+      if (previewWrap) previewWrap.style.display = "block";
+      if (statusBadge) statusBadge.style.display = "inline-block";
+      window.AimoModals.close("portrait-crop-modal");
+    }, "image/png");
+  });
+})();
 </script>
 {% endblock %}

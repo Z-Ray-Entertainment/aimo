@@ -56,3 +56,18 @@ def sanitize_filename(filename: str) -> str:
     )
     sanitized = re.sub(r"[^A-Za-z0-9._-]+", "_", normalized).strip("._-")
     return sanitized or "unnamed_file"
+
+
+_CHAR_PLACEHOLDER_RE = re.compile(r"\{\{\s*char\s*\}\}", re.IGNORECASE)
+_USER_PLACEHOLDER_RE = re.compile(r"\{\{\s*user\s*\}\}", re.IGNORECASE)
+
+
+def replace_roleplay_placeholders(
+    text: str,
+    character_name: str,
+    persona_name: str,
+) -> str:
+    if not text:
+        return ""
+    result = _CHAR_PLACEHOLDER_RE.sub(character_name, text)
+    return _USER_PLACEHOLDER_RE.sub(persona_name, result)

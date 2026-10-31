@@ -148,8 +148,11 @@
     <div>
       <label style="display: block; margin-bottom: 0.4rem; font-size: 0.88rem;">Neues Modell installieren (Pull)</label>
       <div style="display: flex; gap: 0.5rem;">
-        <input type="text" id="pull-model-name" placeholder="z. B. llama3:8b oder llava:latest">
+        <input type="text" id="pull-model-name" value="hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M" placeholder="z. B. hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M">
         <button type="button" class="btn" id="pull-model-btn" onclick="pullOllamaModel()">Pull</button>
+      </div>
+      <div style="margin-top: 0.35rem; font-size: 0.78rem; color: var(--text-muted);">
+        💡 Empfohlener Default: <code style="color: var(--gold-accent); cursor: pointer;" onclick="document.getElementById('pull-model-name').value='hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M'">hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M</code>
       </div>
       <div id="pull-progress-box" style="display: none; margin-top: 0.65rem; padding: 0.6rem; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--gold-accent); font-size: 0.8rem; color: var(--gold-accent);">
         Starte Download...

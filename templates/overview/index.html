@@ -149,109 +149,37 @@
   </section>
 </div>
 
-<!-- Modal: Persona-Manager -->
-<div class="modal-backdrop" id="persona-manager-modal" aria-hidden="true">
-  <div class="modal-frame">
-    <div class="modal-header">
-      <h2 style="color: var(--gold-accent);"><span class="icon-mono">👤</span> Spieler-Personas verwalten</h2>
-      <button type="button" class="btn" data-modal-close="persona-manager-modal">✕</button>
-    </div>
-
-    <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin-bottom: 1.5rem;">
-      <div class="add-card-tile" style="min-height: 200px;" onclick="document.getElementById('new-persona-form-box').style.display='block'">
-        <div class="plus-symbol">+</div>
-        <div>Neue Persona</div>
-      </div>
-
-      {% for p_item in persona_items %}
-        {% set p = p_item.persona %}
-        <div class="card-tile" style="min-height: 200px; padding: 0.85rem; justify-content: space-between;">
-          <div>
-            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
-              <img src="{{ url_for('uploaded_file', filename=p.portrait_path) }}" alt="{{ p.name }}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid var(--gold-accent);" onerror="this.src='/static/img/cover.svg'">
-              <div>
-                <strong>{{ p.name }}</strong>
-                <div style="font-size: 0.75rem; color: var(--text-muted);">{{ p.gender.value }}</div>
-              </div>
-            </div>
-            <p style="font-size: 0.8rem; color: var(--text-muted);">{{ p.appearance or p.description }}</p>
-          </div>
-
-          <div style="display: flex; gap: 0.4rem; margin-top: 0.75rem; flex-wrap: wrap;">
-            {% if not p.is_default %}
-              <form method="POST" action="{{ url_for('personas.set_default', persona_id=p.id) }}">
-                <button type="submit" class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.78rem;">Als Standard</button>
-              </form>
-            {% else %}
-              <span style="font-size: 0.78rem; color: var(--gold-accent); font-weight: 700;">★ Standard</span>
-            {% endif %}
-
-            {% if p_item.in_use %}
-              <button type="button" class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.78rem;" disabled title="Wird in aktiven Chats verwendet (Lösch-Schutz)">🔒 In Chat aktiv</button>
-            {% else %}
-              <form method="POST" action="{{ url_for('personas.delete_persona', persona_id=p.id) }}">
-                <button type="submit" class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.78rem;"><span class="icon-mono">🗑️</span></button>
-              </form>
-            {% endif %}
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-
-    <div id="new-persona-form-box" style="display: none; border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
-      <h3 style="color: var(--gold-accent); margin-bottom: 0.75rem;">Neue Persona anlegen</h3>
-      <form method="POST" action="{{ url_for('personas.create_persona') }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.75rem;">
-        <div>
-          <label>Name *</label>
-          <input type="text" name="name" required>
-        </div>
-        <div>
-          <label>Geschlecht *</label>
-          <select name="gender">
-            <option value="female">Weiblich (female)</option>
-            <option value="male">Männlich (male)</option>
-            <option value="non-binary">Nicht-Binär (non-binary)</option>
-          </select>
-        </div>
-        <div>
-          <label>Porträtbild (PNG/JPG/WEBP)</label>
-          <input type="file" name="portrait" accept=".png,.jpg,.jpeg,.webp">
-        </div>
-        <div>
-          <label>Hintergrund / Persönlichkeit</label>
-          <textarea name="description" rows="2"></textarea>
-        </div>
-        <div>
-          <label>Physisches Aussehen (leer lassen für Vision-Extraktion)</label>
-          <textarea name="appearance" rows="2"></textarea>
-        </div>
-        <div style="display: flex; gap: 1rem; align-items: center;">
-          <label><input type="checkbox" name="vision_analyze" value="1" checked> Aussehen via Vision-Modell aus Porträt extrahieren</label>
-          <label><input type="checkbox" name="is_default" value="1"> Als Standard-Persona setzen</label>
-        </div>
-        <div style="text-align: right;">
-          <button type="submit" class="btn">Persona speichern</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
 <!-- Modal: Neues Lorebook -->
 <div class="modal-backdrop" id="new-lorebook-modal" aria-hidden="true">
-  <div class="modal-frame" style="max-width: 480px;">
+  <div class="modal-frame" style="max-width: 540px;">
     <div class="modal-header">
       <h3 style="color: var(--gold-accent);">Neues Lorebook erstellen</h3>
       <button type="button" class="btn" data-modal-close="new-lorebook-modal">✕</button>
     </div>
     <form method="POST" action="{{ url_for('lorebooks.create_lorebook') }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
-      <div>
-        <label>Name des Lorebooks *</label>
-        <input type="text" name="name" required>
+      <div style="display: flex; gap: 0.75rem;">
+        <div style="flex: 1;">
+          <label>Name des Lorebooks *</label>
+          <input type="text" name="name" required>
+        </div>
+        <div style="width: 150px;">
+          <label>Sichtbarkeit</label>
+          <select name="visibility">
+            <option value="private" selected>Privat</option>
+            <option value="public">Öffentlich</option>
+          </select>
+        </div>
       </div>
       <div>
         <label>Kurzbeschreibung</label>
-        <textarea name="description" rows="3"></textarea>
+        <input type="hidden" name="i18n_description" id="i18n-lb-desc-new" value="{}">
+        <textarea
+          name="description"
+          rows="3"
+          data-i18n-field="description"
+          data-i18n-entity-type="lorebook"
+          data-i18n-entity-id=""
+          data-i18n-hidden="i18n-lb-desc-new"></textarea>
       </div>
       <div style="text-align: right;">
         <button type="submit" class="btn">Anlegen</button>
@@ -272,9 +200,18 @@
         <label>Name der Welt *</label>
         <input type="text" name="name" required>
       </div>
-      <div>
-        <label>Symbol / Icon</label>
-        <input type="text" name="icon" value="🌐">
+      <div style="display: flex; gap: 0.75rem;">
+        <div style="flex: 1;">
+          <label>Symbol / Icon</label>
+          <input type="text" name="icon" value="🌐">
+        </div>
+        <div style="flex: 1;">
+          <label>Sichtbarkeit</label>
+          <select name="visibility">
+            <option value="private" selected>Privat</option>
+            <option value="public">Öffentlich</option>
+          </select>
+        </div>
       </div>
       <div style="text-align: right;">
         <button type="submit" class="btn">Anlegen</button>

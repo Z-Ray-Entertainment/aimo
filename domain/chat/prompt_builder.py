@@ -4,6 +4,7 @@ from domain.lorebooks.models import LorebookEntry
 from domain.memories.models import Memory
 from domain.personas.models import UserPersona
 from domain.worldinfo.models import Event, Location, WorldInfo
+from shared.utils import replace_roleplay_placeholders
 
 
 class PromptBuilder:
@@ -21,26 +22,55 @@ class PromptBuilder:
         available_locations: list[Location] | None = None,
         relationship_value: float = 0.0,
     ) -> str:
-        system_section = roleplay_system_prompt.strip()
-        character_section = self._format_character_definition(
-            character=character,
-            relationship_value=relationship_value,
+        char_name = character.name
+        user_name = persona.name
+
+        system_section = replace_roleplay_placeholders(
+            roleplay_system_prompt.strip(), char_name, user_name
         )
-        persona_section = self._format_user_persona(persona=persona)
-        world_section = self._format_world_info(
-            worldinfo=worldinfo,
-            current_location=current_location,
-            triggered_event=triggered_event,
-            available_locations=available_locations or [],
-            character=character,
+        character_section = replace_roleplay_placeholders(
+            self._format_character_definition(
+                character=character,
+                relationship_value=relationship_value,
+            ),
+            char_name,
+            user_name,
         )
-        history_section = self._format_chat_history(
-            messages=recent_messages,
-            character_name=character.name,
-            persona_name=persona.name,
+        persona_section = replace_roleplay_placeholders(
+            self._format_user_persona(persona=persona),
+            char_name,
+            user_name,
         )
-        memories_section = self._format_memories(memories=matched_memories)
-        lorebooks_section = self._format_lorebooks(entries=matched_lorebooks)
+        world_section = replace_roleplay_placeholders(
+            self._format_world_info(
+                worldinfo=worldinfo,
+                current_location=current_location,
+                triggered_event=triggered_event,
+                available_locations=available_locations or [],
+                character=character,
+            ),
+            char_name,
+            user_name,
+        )
+        history_section = replace_roleplay_placeholders(
+            self._format_chat_history(
+                messages=recent_messages,
+                character_name=char_name,
+                persona_name=user_name,
+            ),
+            char_name,
+            user_name,
+        )
+        memories_section = replace_roleplay_placeholders(
+            self._format_memories(memories=matched_memories),
+            char_name,
+            user_name,
+        )
+        lorebooks_section = replace_roleplay_placeholders(
+            self._format_lorebooks(entries=matched_lorebooks),
+            char_name,
+            user_name,
+        )
 
         return (
             f"[SYSTEM_PROMPT]\n{system_section}\n[/SYSTEM_PROMPT]\n\n"

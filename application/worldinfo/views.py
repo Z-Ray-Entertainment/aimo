@@ -4,6 +4,7 @@ from application.auth.decorators import get_current_user, require_auth, require_
 from application.worldinfo.forms import EventForm, LocationForm
 from domain.permissions.models import FunctionPermission
 from domain.worldinfo.services import WorldInfoService
+from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
@@ -23,6 +24,7 @@ def create_worldinfo():
             user_id=user.id,
             name=request.form.get("name", ""),
             icon=request.form.get("icon", "🌐"),
+            visibility=request.form.get("visibility", "private"),
         )
         saved = repo.create(wi)
         flash(f"WorldInfo '{saved.name}' erstellt.", "success")
@@ -48,6 +50,7 @@ def detail(worldinfo_id: int):
                 worldinfo=worldinfo,
                 name=request.form.get("name", worldinfo.name),
                 icon=request.form.get("icon", worldinfo.icon),
+                visibility=request.form.get("visibility", worldinfo.visibility),
             )
             worldinfo = repo.update(worldinfo)
             flash("WorldInfo gespeichert.", "success")
@@ -58,12 +61,34 @@ def detail(worldinfo_id: int):
     events = repo.list_events(worldinfo_id)
     loc_map = {loc.id: loc for loc in locations if loc.id is not None}
 
+    trans_repo = TranslationRepository()
+    location_translations = {
+        loc.id: (
+            trans_repo.get_entity_translations_map("worldinfo_location", loc.id)
+            or trans_repo.get_entity_translations_map("location", loc.id)
+        )
+        for loc in locations
+        if loc.id is not None
+    }
+    event_translations = {
+        ev.id: (
+            trans_repo.get_entity_translations_map("worldinfo_event", ev.id)
+            or trans_repo.get_entity_translations_map("event", ev.id)
+        )
+        for ev in events
+        if ev.id is not None
+    }
+
     return render_template(
         "worldinfo/detail.html",
         worldinfo=worldinfo,
         locations=locations,
         events=events,
         loc_map=loc_map,
+        loc_translations=location_translations,
+        ev_translations=event_translations,
+        location_translations=location_translations,
+        event_translations=event_translations,
     )
 
 
@@ -98,7 +123,10 @@ def add_location(worldinfo_id: int):
             bg_path=bg_path,
             vision_alt_text=form.vision_alt_text or None,
         )
-        repo.add_location(loc)
+        saved_loc = repo.add_location(loc)
+        TranslationRepository().save_field_variants_json(
+            "worldinfo_location", saved_loc.id, "description", request.form.get("i18n_description")
+        )
         flash(f"Ort '{loc.name}' angelegt.", "success")
     except AimoError as exc:
         flash(str(exc), "error")
@@ -131,6 +159,9 @@ def edit_location(worldinfo_id: int, location_id: int):
                 vision_alt_text=form.vision_alt_text or loc.vision_alt_text,
             )
             repo.update_location(loc)
+            TranslationRepository().save_field_variants_json(
+                "worldinfo_location", loc.id, "description", request.form.get("i18n_description")
+            )
             flash("Ort aktualisiert.", "success")
         except AimoError as exc:
             flash(str(exc), "error")
@@ -162,7 +193,10 @@ def add_event(worldinfo_id: int):
             one_shot=form.one_shot,
             location_id=form.location_id,
         )
-        repo.add_event(ev)
+        saved_ev = repo.add_event(ev)
+        TranslationRepository().save_field_variants_json(
+            "worldinfo_event", saved_ev.id, "description", request.form.get("i18n_description")
+        )
         flash(f"Event '{ev.title}' hinzugefügt.", "success")
     except AimoError as exc:
         flash(str(exc), "error")
@@ -187,6 +221,9 @@ def edit_event(worldinfo_id: int, event_id: int):
                 location_id=form.location_id,
             )
             repo.update_event(ev)
+            TranslationRepository().save_field_variants_json(
+                "worldinfo_event", ev.id, "description", request.form.get("i18n_description")
+            )
             flash("Event aktualisiert.", "success")
         except AimoError as exc:
             flash(str(exc), "error")

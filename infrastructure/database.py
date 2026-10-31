@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS lorebooks (
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     description TEXT NOT NULL DEFAULT '',
+    visibility TEXT NOT NULL DEFAULT 'private',
     created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_lorebooks_user_id ON lorebooks (user_id);
@@ -63,6 +64,7 @@ CREATE TABLE IF NOT EXISTS worldinfos (
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     icon TEXT,
+    visibility TEXT NOT NULL DEFAULT 'private',
     created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_worldinfos_user_id ON worldinfos (user_id);
@@ -184,15 +186,29 @@ CREATE TABLE IF NOT EXISTS translations (
 CREATE INDEX IF NOT EXISTS ix_translations_source_hash ON translations (source_hash);
 CREATE INDEX IF NOT EXISTS ix_translations_target_language ON translations (target_language);
 
+CREATE TABLE IF NOT EXISTS entity_field_translations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    entity_type TEXT NOT NULL,
+    entity_id INTEGER NOT NULL,
+    field_name TEXT NOT NULL,
+    language TEXT NOT NULL,
+    text_content TEXT NOT NULL,
+    is_outdated INTEGER NOT NULL DEFAULT 0,
+    updated_at TEXT NOT NULL,
+    UNIQUE(entity_type, entity_id, field_name, language)
+);
+CREATE INDEX IF NOT EXISTS ix_entity_field_trans_lookup
+    ON entity_field_translations (entity_type, entity_id, field_name);
+
 CREATE TABLE IF NOT EXISTS system_settings (
     id INTEGER PRIMARY KEY DEFAULT 1,
     ollama_url TEXT NOT NULL,
     comfyui_url TEXT NOT NULL,
     searxng_url TEXT NOT NULL,
     searxng_enabled INTEGER NOT NULL DEFAULT 0,
-    roleplay_model TEXT NOT NULL DEFAULT 'llama3:8b',
-    memory_model TEXT NOT NULL DEFAULT 'llama3:8b',
-    assistant_model TEXT NOT NULL DEFAULT 'llama3:8b',
+    roleplay_model TEXT NOT NULL DEFAULT 'hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M',
+    memory_model TEXT NOT NULL DEFAULT 'hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M',
+    assistant_model TEXT NOT NULL DEFAULT 'hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M',
     vision_model TEXT NOT NULL DEFAULT 'llava:latest',
     num_ctx INTEGER NOT NULL DEFAULT 4096,
     temperature REAL NOT NULL DEFAULT 0.7,
@@ -299,11 +315,48 @@ def create_connection(db_path: Path | str | None = None) -> sqlite3.Connection:
     return conn
 
 
+_MIGRATED_PATHS: set[str] = set()
+
+
+def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS entity_field_translations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            entity_type TEXT NOT NULL,
+            entity_id INTEGER NOT NULL,
+            field_name TEXT NOT NULL,
+            language TEXT NOT NULL,
+            text_content TEXT NOT NULL,
+            is_outdated INTEGER NOT NULL DEFAULT 0,
+            updated_at TEXT NOT NULL,
+            UNIQUE(entity_type, entity_id, field_name, language)
+        )
+        """
+    )
+    for stmt in (
+        "ALTER TABLE lorebooks ADD COLUMN visibility TEXT NOT NULL DEFAULT 'private'",
+        "ALTER TABLE worldinfos ADD COLUMN visibility TEXT NOT NULL DEFAULT 'private'",
+    ):
+        try:
+            conn.execute(stmt)
+        except sqlite3.OperationalError:
+            pass
+
+
 @contextmanager
 def get_db_session(
     db_path: Path | str | None = None,
 ) -> Generator[sqlite3.Connection, None, None]:
     conn = create_connection(db_path)
+    resolved_key = str(_resolve_db_path(db_path))
+    if resolved_key not in _MIGRATED_PATHS:
+        try:
+            _ensure_incremental_migrations(conn)
+            conn.commit()
+            _MIGRATED_PATHS.add(resolved_key)
+        except sqlite3.OperationalError:
+            pass
     try:
         yield conn
         conn.commit()
@@ -317,4 +370,5 @@ def get_db_session(
 def init_db(db_path: Path | str | None = None) -> None:
     with get_db_session(db_path) as conn:
         conn.executescript(SCHEMA_DDL)
+        _ensure_incremental_migrations(conn)
         configure_sqlite_pragmas(conn)

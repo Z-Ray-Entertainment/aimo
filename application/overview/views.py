@@ -55,7 +55,7 @@ def index():
     else:
         character_cards.sort(key=lambda c: c["character"].id or 0, reverse=True)
 
-    lorebooks = lb_repo.list_for_user()
+    lorebooks = lb_repo.list_visible(user.id)
     lorebook_cards = []
     for lb in lorebooks:
         if lb.id is None:
@@ -74,7 +74,7 @@ def index():
             }
         )
 
-    worldinfos = wi_repo.list_all()
+    worldinfos = wi_repo.list_visible(user.id)
     worldinfo_cards = []
     for wi in worldinfos:
         if wi.id is None:

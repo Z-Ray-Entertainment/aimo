@@ -1,7 +1,8 @@
 from datetime import datetime, timezone
+import json
 import sqlite3
 
-from domain.translation.models import TranslationRecord
+from domain.translation.models import TranslationRecord, compute_source_hash
 from infrastructure.database import get_db_session
 from infrastructure.repositories.orm_models import format_datetime, parse_datetime
 
@@ -100,6 +101,156 @@ class TranslationRepository:
                 (source_hash,),
             )
             return int(cursor.rowcount or 0)
+
+    def get_field_translations(
+        self,
+        entity_type: str,
+        entity_id: int,
+        field_name: str,
+    ) -> dict[str, dict]:
+        if not entity_id:
+            return {}
+        with get_db_session() as conn:
+            rows = conn.execute(
+                """
+                SELECT language, text_content, is_outdated
+                FROM entity_field_translations
+                WHERE entity_type = ? AND entity_id = ? AND field_name = ?
+                ORDER BY id ASC
+                """,
+                (entity_type, entity_id, field_name),
+            ).fetchall()
+            result: dict[str, dict] = {}
+            for row in rows:
+                lang = str(row["language"]).strip().lower()[:2]
+                txt = str(row["text_content"])
+                outdated = bool(row["is_outdated"])
+                result[lang] = {
+                    "text": txt,
+                    "content": txt,
+                    "outdated": outdated,
+                    "is_outdated": outdated,
+                }
+            return result
+
+    def get_entity_translations_map(
+        self,
+        entity_type: str,
+        entity_id: int | None,
+    ) -> dict[str, dict[str, dict]]:
+        if not entity_id:
+            return {}
+        with get_db_session() as conn:
+            rows = conn.execute(
+                """
+                SELECT field_name, language, text_content, is_outdated
+                FROM entity_field_translations
+                WHERE entity_type = ? AND entity_id = ?
+                ORDER BY id ASC
+                """,
+                (entity_type, entity_id),
+            ).fetchall()
+            mapping: dict[str, dict[str, dict]] = {}
+            for row in rows:
+                fname = str(row["field_name"])
+                lang = str(row["language"]).strip().lower()[:2]
+                txt = str(row["text_content"])
+                outdated = bool(row["is_outdated"])
+                mapping.setdefault(fname, {})[lang] = {
+                    "text": txt,
+                    "content": txt,
+                    "outdated": outdated,
+                    "is_outdated": outdated,
+                }
+            return mapping
+
+    def save_field_translation(
+        self,
+        entity_type: str,
+        entity_id: int,
+        field_name: str,
+        language: str,
+        text_content: str = "",
+        is_outdated: bool = False,
+        content: str | None = None,
+    ) -> None:
+        final_text = (content if content is not None else text_content).strip()
+        if not entity_id or not final_text:
+            return
+        cleaned_lang = language.strip().lower()[:2]
+        now_str = format_datetime(datetime.now(timezone.utc))
+        with get_db_session() as conn:
+            conn.execute(
+                """
+                INSERT INTO entity_field_translations (
+                    entity_type, entity_id, field_name, language, text_content, is_outdated, updated_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(entity_type, entity_id, field_name, language) DO UPDATE SET
+                    text_content = excluded.text_content,
+                    is_outdated = excluded.is_outdated,
+                    updated_at = excluded.updated_at
+                """,
+                (
+                    entity_type,
+                    entity_id,
+                    field_name,
+                    cleaned_lang,
+                    final_text,
+                    1 if is_outdated else 0,
+                    now_str,
+                ),
+            )
+
+    def save_field_variants_json(
+        self,
+        entity_type: str,
+        entity_id: int | None,
+        field_name: str,
+        raw_json: str | None,
+    ) -> None:
+        if not entity_id or not raw_json:
+            return
+        try:
+            parsed = json.loads(raw_json)
+        except (json.JSONDecodeError, TypeError):
+            return
+        if not isinstance(parsed, dict):
+            return
+        variants = parsed.get("variants") if isinstance(parsed.get("variants"), dict) else parsed
+        for lang, info in variants.items():
+            if not isinstance(info, dict):
+                continue
+            txt = str(info.get("content") or info.get("text") or "").strip()
+            outdated = bool(info.get("is_outdated") if "is_outdated" in info else info.get("outdated", False))
+            if txt:
+                self.save_field_translation(
+                    entity_type=entity_type,
+                    entity_id=entity_id,
+                    field_name=field_name,
+                    language=str(lang),
+                    text_content=txt,
+                    is_outdated=outdated,
+                )
+
+    def get_localized_field(
+        self,
+        entity_type: str,
+        entity_id: int | None,
+        field_name: str,
+        target_lang: str,
+        default_text: str,
+    ) -> str:
+        cleaned_lang = target_lang.strip().lower()[:2] if target_lang else "de"
+        if entity_id:
+            variants = self.get_field_translations(entity_type, entity_id, field_name)
+            if cleaned_lang in variants and variants[cleaned_lang].get("text", "").strip():
+                return str(variants[cleaned_lang]["text"]).strip()
+        if default_text and default_text.strip():
+            rec = self.get_translation(compute_source_hash(default_text), cleaned_lang)
+            if rec is not None and rec.translated_text.strip():
+                return rec.translated_text.strip()
+        return default_text
 
     @staticmethod
     def _to_entity(row: sqlite3.Row) -> TranslationRecord:

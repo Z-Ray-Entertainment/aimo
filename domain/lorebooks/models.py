@@ -8,6 +8,7 @@ class Lorebook:
     user_id: int
     name: str
     description: str = ""
+    visibility: str = "private"
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
 

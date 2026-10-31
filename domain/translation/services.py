@@ -4,6 +4,7 @@ from typing import Protocol
 from domain.settings.models import ModelParameters
 from domain.translation.exceptions import InvalidTranslationDataError
 from domain.translation.models import (
+    LANGUAGE_METADATA,
     Language,
     TranslationRecord,
     compute_source_hash,
@@ -23,6 +24,10 @@ class TranslationService:
             top_p=0.9,
             repeat_penalty=1.05,
         )
+
+    @staticmethod
+    def compute_source_hash(text: str) -> str:
+        return compute_source_hash(text)
 
     def translate_to_english(
         self,
@@ -94,6 +99,36 @@ class TranslationService:
         cache_records[source_hash] = result
         cache_records[cache_key] = result
         return result
+
+    def translate_text(
+        self,
+        text: str,
+        target_language: str,
+        llm_provider: TranslationLLMProvider,
+        model: str,
+    ) -> str:
+        if not isinstance(text, str) or not text.strip():
+            return ""
+        cleaned = text.strip()
+        lang = target_language.strip().lower()[:2] if isinstance(target_language, str) else "de"
+        lang_label = LANGUAGE_METADATA.get(lang, {}).get("label", lang)
+
+        prompt = (
+            f"Translate the following roleplay text accurately and naturally into {lang_label} ('{lang}').\n"
+            "Preserve the narrative tone, character voice, Markdown formatting, and keep any "
+            "{{char}} or {{user}} placeholders completely unchanged.\n"
+            "Output ONLY the translated text without quotes, explanations, or commentary.\n\n"
+            f"Text:\n{cleaned}"
+        )
+        try:
+            translated = llm_provider.generate(
+                prompt=prompt,
+                model=model,
+                params=self._default_params,
+            ).strip()
+            return translated or cleaned
+        except Exception:
+            return cleaned
 
     def create_record(
         self,

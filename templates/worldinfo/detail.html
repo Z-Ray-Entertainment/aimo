@@ -6,9 +6,22 @@
   <div class="wood-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
     <div style="display: flex; align-items: center; gap: 1rem;">
       <a href="{{ url_for('overview.index') }}" class="btn"><span class="icon-mono">←</span> Zurück</a>
-      <form method="POST" action="{{ url_for('worldinfo.detail', worldinfo_id=worldinfo.id) }}" style="display: flex; align-items: center; gap: 0.6rem;">
-        <input type="text" name="icon" value="{{ worldinfo.icon or '🌐' }}" style="width: 64px; text-align: center;">
-        <input type="text" name="name" value="{{ worldinfo.name }}" style="width: 280px; font-weight: 700;">
+      <form method="POST" action="{{ url_for('worldinfo.detail', worldinfo_id=worldinfo.id) }}" style="display: flex; align-items: flex-end; gap: 0.75rem; flex-wrap: wrap;">
+        <div>
+          <label style="font-size: 0.75rem; color: var(--text-muted);">Symbol</label>
+          <input type="text" name="icon" value="{{ worldinfo.icon or '🌐' }}" style="width: 64px; text-align: center;">
+        </div>
+        <div>
+          <label style="font-size: 0.75rem; color: var(--text-muted);">Welt-Name</label>
+          <input type="text" name="name" value="{{ worldinfo.name }}" style="width: 260px; font-weight: 700;">
+        </div>
+        <div>
+          <label style="font-size: 0.75rem; color: var(--text-muted);">Sichtbarkeit</label>
+          <select name="visibility" style="width: 150px;">
+            <option value="private" {% if worldinfo.visibility != 'public' %}selected{% endif %}>Privat</option>
+            <option value="public" {% if worldinfo.visibility == 'public' %}selected{% endif %}>Öffentlich</option>
+          </select>
+        </div>
         {% if has_perm('worldinfo_edit') %}
           <button type="submit" class="btn"><span class="icon-mono">💾</span></button>
         {% endif %}
@@ -72,7 +85,15 @@
               </div>
               <div>
                 <label>Ortsbeschreibung *</label>
-                <textarea name="description" rows="4" required>{{ loc.description }}</textarea>
+                <input type="hidden" name="i18n_description" id="i18n-wi-loc-{{ loc.id }}" value='{{ (loc_translations.get(loc.id, {}).get("description", {}) if loc_translations is defined else {}) | tojson }}'>
+                <textarea
+                  name="description"
+                  rows="4"
+                  required
+                  data-i18n-field="description"
+                  data-i18n-entity-type="worldinfo_location"
+                  data-i18n-entity-id="{{ loc.id }}"
+                  data-i18n-hidden="i18n-wi-loc-{{ loc.id }}">{{ loc.description }}</textarea>
               </div>
               <div>
                 <label>Zugeordnete Orts-Events:</label>
@@ -163,7 +184,15 @@
               </div>
               <div>
                 <label>Szenische Beschreibung des Ereignisses *</label>
-                <textarea name="description" rows="5" required>{{ ev.description }}</textarea>
+                <input type="hidden" name="i18n_description" id="i18n-wi-ev-{{ ev.id }}" value='{{ (ev_translations.get(ev.id, {}).get("description", {}) if ev_translations is defined else {}) | tojson }}'>
+                <textarea
+                  name="description"
+                  rows="5"
+                  required
+                  data-i18n-field="description"
+                  data-i18n-entity-type="worldinfo_event"
+                  data-i18n-entity-id="{{ ev.id }}"
+                  data-i18n-hidden="i18n-wi-ev-{{ ev.id }}">{{ ev.description }}</textarea>
               </div>
               <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
                 <button type="submit" form="delete-ev-form-{{ ev.id }}" class="btn btn-danger"><span class="icon-mono">🗑️</span> Löschen</button>
@@ -202,7 +231,16 @@
       </div>
       <div>
         <label>Ortsbeschreibung *</label>
-        <textarea id="new-loc-desc" name="description" rows="4" required></textarea>
+        <input type="hidden" name="i18n_description" id="i18n-wi-loc-new" value="{}">
+        <textarea
+          id="new-loc-desc"
+          name="description"
+          rows="4"
+          required
+          data-i18n-field="description"
+          data-i18n-entity-type="worldinfo_location"
+          data-i18n-entity-id=""
+          data-i18n-hidden="i18n-wi-loc-new"></textarea>
       </div>
       <div style="text-align: right;">
         <button type="submit" class="btn">Ort speichern</button>
@@ -243,7 +281,15 @@
       </div>
       <div>
         <label>Szenische Beschreibung des Ereignisses *</label>
-        <textarea name="description" rows="5" required></textarea>
+        <input type="hidden" name="i18n_description" id="i18n-wi-ev-new" value="{}">
+        <textarea
+          name="description"
+          rows="5"
+          required
+          data-i18n-field="description"
+          data-i18n-entity-type="worldinfo_event"
+          data-i18n-entity-id=""
+          data-i18n-hidden="i18n-wi-ev-new"></textarea>
       </div>
       <div style="text-align: right;">
         <button type="submit" class="btn">Event speichern</button>
