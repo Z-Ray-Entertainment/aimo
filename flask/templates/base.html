@@ -135,7 +135,11 @@
       {% endif %}
     </header>
 
-    {% block page_backdrop %}{% endblock %}
+    {% block page_backdrop %}
+      {% if system_backdrop_url %}
+        <div class="system-default-backdrop" style="background-image: url('{{ system_backdrop_url }}');"></div>
+      {% endif %}
+    {% endblock %}
 
     <main class="main-container">
       {% with messages = get_flashed_messages(with_categories=true) %}

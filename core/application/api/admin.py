@@ -4,9 +4,11 @@ from flask import Blueprint, Response, jsonify, request, stream_with_context
 
 from application.api.auth import require_permission
 from domain.permissions.models import FunctionPermission
+from domain.settings.services import SettingsService
 from infrastructure.image_gen.factory import get_image_gen_provider
 from infrastructure.llm.factory import get_llm_provider
 from infrastructure.repositories.settings_repository import SettingsRepository
+from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
 
 api_admin_bp = Blueprint("api_admin", __name__, url_prefix="/api/admin")
@@ -70,3 +72,63 @@ def check_services_health():
             "comfyui": img_gen.check_health(),
         }
     )
+
+
+@api_admin_bp.route("/backdrop", methods=["GET"])
+@require_permission(FunctionPermission.ADMIN_ACCESS)
+def get_backdrop():
+    settings = SettingsRepository().get_settings()
+    return jsonify(
+        {
+            "default_backdrop_path": settings.default_backdrop_path,
+            "has_backdrop": bool(settings.default_backdrop_path),
+        }
+    )
+
+
+@api_admin_bp.route("/backdrop", methods=["POST"])
+@require_permission(FunctionPermission.ADMIN_ACCESS)
+def update_backdrop():
+    settings_repo = SettingsRepository()
+    settings_service = SettingsService()
+    settings = settings_repo.get_settings()
+    storage = FileStorage()
+
+    file_obj = request.files.get("backdrop")
+    if file_obj and file_obj.filename:
+        try:
+            rel_path = storage.save_background(file_obj.stream, file_obj.filename)
+            settings = settings_service.update_default_backdrop(settings, rel_path)
+            settings_repo.save_settings(settings)
+            return jsonify(
+                {
+                    "success": True,
+                    "default_backdrop_path": settings.default_backdrop_path,
+                }
+            )
+        except AimoError as exc:
+            return jsonify({"error": str(exc)}), 400
+
+    data = request.get_json(silent=True) or request.form.to_dict()
+    if data.get("clear"):
+        settings = settings_service.update_default_backdrop(settings, None)
+        settings_repo.save_settings(settings)
+        return jsonify(
+            {
+                "success": True,
+                "default_backdrop_path": None,
+            }
+        )
+
+    if "backdrop_path" in data:
+        new_path = data.get("backdrop_path")
+        settings = settings_service.update_default_backdrop(settings, new_path)
+        settings_repo.save_settings(settings)
+        return jsonify(
+            {
+                "success": True,
+                "default_backdrop_path": settings.default_backdrop_path,
+            }
+        )
+
+    return jsonify({"error": "No backdrop file or path provided."}), 400

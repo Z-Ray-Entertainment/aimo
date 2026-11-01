@@ -44,9 +44,9 @@ class SettingsRepository:
                 roleplay_model, memory_model, assistant_model, vision_model, classification_model,
                 num_ctx, temperature, top_p, repeat_penalty,
                 roleplay_prompt, memory_prompt, diffuser_prompt,
-                sparkle_assistant_prompt, vision_persona_prompt
+                sparkle_assistant_prompt, vision_persona_prompt, default_backdrop_path
             )
-            VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(id) DO UPDATE SET
                 ollama_url = excluded.ollama_url,
                 comfyui_url = excluded.comfyui_url,
@@ -65,7 +65,8 @@ class SettingsRepository:
                 memory_prompt = excluded.memory_prompt,
                 diffuser_prompt = excluded.diffuser_prompt,
                 sparkle_assistant_prompt = excluded.sparkle_assistant_prompt,
-                vision_persona_prompt = excluded.vision_persona_prompt
+                vision_persona_prompt = excluded.vision_persona_prompt,
+                default_backdrop_path = excluded.default_backdrop_path
             """,
             (
                 settings.ollama_url,
@@ -86,6 +87,7 @@ class SettingsRepository:
                 settings.prompts.diffuser_prompt,
                 settings.prompts.sparkle_assistant_prompt,
                 settings.prompts.vision_persona_prompt,
+                settings.default_backdrop_path,
             ),
         )
 
@@ -96,6 +98,11 @@ class SettingsRepository:
             str(row["classification_model"])
             if "classification_model" in keys
             else str(row["roleplay_model"])
+        )
+        default_backdrop = (
+            str(row["default_backdrop_path"])
+            if ("default_backdrop_path" in keys and row["default_backdrop_path"] is not None)
+            else None
         )
         return ServiceSettings(
             id=int(row["id"]),
@@ -123,4 +130,5 @@ class SettingsRepository:
                 sparkle_assistant_prompt=str(row["sparkle_assistant_prompt"]),
                 vision_persona_prompt=str(row["vision_persona_prompt"]),
             ),
+            default_backdrop_path=default_backdrop,
         )

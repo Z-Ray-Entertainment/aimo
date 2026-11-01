@@ -26,6 +26,7 @@ from application.ui_helpers import render_new_button
 from application.worldinfo import worldinfo_bp
 from infrastructure.database import init_db
 from infrastructure.repositories.persona_repository import PersonaRepository
+from infrastructure.repositories.settings_repository import SettingsRepository
 from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.storage.file_storage import FileStorage
@@ -110,9 +111,19 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
 
     @app.context_processor
     def inject_template_helpers():
+        settings = getattr(g, "system_settings", None)
+        if settings is None:
+            try:
+                settings = SettingsRepository().get_settings()
+                g.system_settings = settings
+            except Exception:
+                settings = None
+        default_bg = settings.default_backdrop_path if settings else None
         return {
             "has_perm": has_perm,
             "new_button": render_new_button,
+            "system_backdrop_path": default_bg,
+            "system_backdrop_url": url_for("uploaded_file", filename=default_bg) if default_bg else None,
         }
 
     return app

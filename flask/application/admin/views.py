@@ -18,6 +18,8 @@ from infrastructure.llm.factory import get_llm_provider
 from infrastructure.repositories.persona_repository import PersonaRepository
 from infrastructure.repositories.settings_repository import SettingsRepository
 from infrastructure.repositories.user_repository import UserRepository
+from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
+from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
@@ -260,4 +262,71 @@ def services_config():
         installed_models=installed_models,
         ollama_healthy=ollama_healthy,
         comfy_healthy=comfy_healthy,
+    )
+
+
+@admin_bp.route("/backdrop", methods=["GET", "POST"])
+@require_permission(FunctionPermission.ADMIN_ACCESS)
+def backdrop_config():
+    settings_repo = SettingsRepository()
+    settings_service = SettingsService()
+    settings = settings_repo.get_settings()
+    storage = FileStorage()
+    worldinfo_repo = WorldInfoRepository()
+
+    if request.method == "POST":
+        action = request.form.get("action", "")
+        if action == "clear" or "clear" in request.form:
+            try:
+                settings = settings_service.update_default_backdrop(settings, None)
+                settings_repo.save_settings(settings)
+                flash("Systemweiter Standard-Backdrop zurückgesetzt (Standard-Design aktiv).", "success")
+                return redirect(url_for("admin.backdrop_config"))
+            except AimoError as exc:
+                flash(str(exc), "error")
+
+        elif action == "upload" or "backdrop_file" in request.files:
+            file_obj = request.files.get("backdrop_file")
+            if file_obj and file_obj.filename:
+                try:
+                    rel_path = storage.save_background(file_obj.stream, file_obj.filename)
+                    settings = settings_service.update_default_backdrop(settings, rel_path)
+                    settings_repo.save_settings(settings)
+                    flash("Neuer systemweiter Standard-Backdrop erfolgreich gespeichert.", "success")
+                    return redirect(url_for("admin.backdrop_config"))
+                except AimoError as exc:
+                    flash(str(exc), "error")
+            else:
+                flash("Bitte wählen Sie eine Bilddatei (PNG, JPG, WEBP) zum Hochladen aus.", "error")
+
+        elif action == "select":
+            selected_path = request.form.get("selected_backdrop_path", "").strip()
+            if selected_path:
+                try:
+                    settings = settings_service.update_default_backdrop(settings, selected_path)
+                    settings_repo.save_settings(settings)
+                    flash("Systemweiter Standard-Backdrop erfolgreich zugewiesen.", "success")
+                    return redirect(url_for("admin.backdrop_config"))
+                except AimoError as exc:
+                    flash(str(exc), "error")
+
+    existing_locations_with_bg = []
+    seen_paths = set()
+    for wi in worldinfo_repo.list_all():
+        if wi.id is not None:
+            for loc in worldinfo_repo.list_locations(wi.id):
+                if loc.background_image_path and loc.background_image_path not in seen_paths:
+                    seen_paths.add(loc.background_image_path)
+                    existing_locations_with_bg.append(
+                        {
+                            "worldinfo_name": wi.name,
+                            "location_name": loc.name,
+                            "path": loc.background_image_path,
+                        }
+                    )
+
+    return render_template(
+        "admin/backdrop.html",
+        settings=settings,
+        existing_locations_with_bg=existing_locations_with_bg,
     )

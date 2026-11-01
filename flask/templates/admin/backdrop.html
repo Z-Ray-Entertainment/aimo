@@ -1,0 +1,128 @@
+{% extends "admin/layout.html" %}
+
+{% block admin_content %}
+<div class="backdrop-manager-grid">
+  <!-- Linke Spalte: Aktuelle Vorschau & Status -->
+  <div class="wood-frame backdrop-preview-stage" style="padding: 1.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.75rem;">
+      <div>
+        <h2 style="color: var(--gold-accent); margin-bottom: 0.25rem;">Systemweiter Standard-Backdrop</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+          Globaler atmosphärischer Hintergrund für alle Seiten und Basis-Fallback für Rollenspiel-Chats.
+        </p>
+      </div>
+      <div>
+        {% if settings.default_backdrop_path %}
+          <span class="backdrop-meta-badge" title="Eigener Backdrop ist aktiv">
+            <span style="color: #4CAF50;">●</span> Eigener Backdrop aktiv
+          </span>
+        {% else %}
+          <span class="backdrop-meta-badge" title="Standard RPG-Theme Cover ist aktiv" style="color: var(--text-muted); border-color: var(--border-wood-dark);">
+            <span>🕯️</span> Standard-Thema (Cover)
+          </span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- 16:9 Vorschau-Bühne mit CSS-Hover und Aspect Ratio -->
+    <div class="backdrop-preview-container"
+         {% if settings.default_backdrop_path %}
+           style="background-image: url('{{ url_for('uploaded_file', filename=settings.default_backdrop_path) }}');"
+         {% endif %}>
+      {% if not settings.default_backdrop_path %}
+        <div class="backdrop-preview-placeholder">
+          <span style="font-size: 2.2rem; opacity: 0.85;">🏰</span>
+          <strong style="color: var(--gold-accent); font-size: 1.05rem;">Kein benutzerdefinierter Backdrop festgelegt</strong>
+          <p style="font-size: 0.82rem; max-width: 420px; line-height: 1.45; color: var(--text-muted);">
+            Aktuell wird das dunkle RPG-Standard-Cover verwendet. Lade rechts ein 16:9 Bild hoch oder wähle einen bestehenden Schauplatz.
+          </p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Info-Notiz zur Hierarchie & Location-Überschreibung -->
+    <div class="system-ui-notice" style="margin: 0; padding: 0.85rem 1rem; border-left: 3px solid var(--gold-accent);">
+      <div style="font-weight: 700; color: var(--gold-accent); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+        <span class="icon-mono">ℹ️</span> <span>Regelwerk: Priorität im Chat</span>
+      </div>
+      <p style="font-size: 0.84rem; line-height: 1.5; color: var(--text-color); opacity: 0.95;">
+        Dieser Standard-Backdrop bildet das fundamentale Fundament. Im Chat wird er <strong>nur dann überschrieben</strong>, wenn der aktuelle Schauplatz (Location) ein eigenes Hintergrundbild hinterlegt hat. Besitzt ein Ort kein eigenes Bild oder wechselt das Rollenspiel zu einem neutralen Schauplatz, schlägt automatisch wieder dieser System-Standard durch.
+      </p>
+    </div>
+
+    {% if settings.default_backdrop_path %}
+      <div style="display: flex; justify-content: flex-end; align-items: center; gap: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
+        <form method="POST" action="{{ url_for('admin.backdrop_config') }}" onsubmit="return confirm('Möchtest du den benutzerdefinierten Standard-Backdrop wirklich entfernen und auf das Standard-Theme zurücksetzen?');">
+          <input type="hidden" name="action" value="clear">
+          <button type="submit" class="btn btn-danger" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+            <span class="icon-mono">🗑️</span> Backdrop entfernen (Auf Standard zurücksetzen)
+          </button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Rechte Spalte: Upload & Schnellauswahl aus Schauplätzen -->
+  <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+    <!-- 1. Datei-Upload Formular -->
+    <form method="POST" action="{{ url_for('admin.backdrop_config') }}" enctype="multipart/form-data" class="wood-frame backdrop-upload-box">
+      <input type="hidden" name="action" value="upload">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span style="font-size: 1.25rem;">📤</span>
+        <h3 style="color: var(--gold-accent); font-size: 1.05rem; margin: 0;">Neues Hintergrundbild hochladen</h3>
+      </div>
+      <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;">
+        Empfohlen: 16:9 Breitbild (z. B. 1920×1080 oder 2560×1440). Unterstützte Formate: PNG, JPG, WEBP.
+      </p>
+
+      <div>
+        <label for="backdrop_file" style="display: block; font-size: 0.85rem; margin-bottom: 0.4rem; color: var(--gold-accent);">
+          Bilddatei auswählen:
+        </label>
+        <input type="file" id="backdrop_file" name="backdrop_file" accept=".png,.jpg,.jpeg,.webp" required style="width: 100%;">
+      </div>
+
+      <div style="text-align: right; margin-top: 0.25rem;">
+        <button type="submit" class="btn" style="width: 100%;">
+          <span class="icon-mono">💾</span> Als System-Backdrop speichern
+        </button>
+      </div>
+    </form>
+
+    <!-- 2. Auswahl aus bestehenden WorldInfo-Schauplätzen -->
+    <div class="wood-frame" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 0.85rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 1.15rem;">🗺️</span>
+          <h3 style="color: var(--gold-accent); font-size: 0.95rem; margin: 0;">Aus vorhandenen Schauplätzen wählen</h3>
+        </div>
+        <span style="font-size: 0.78rem; color: var(--text-muted);">{{ existing_locations_with_bg|length }} verfügbar</span>
+      </div>
+
+      {% if existing_locations_with_bg %}
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">
+          Klicke auf einen vorhandenen Ort, um dessen Hintergrundbild als System-Standard zu übernehmen:
+        </p>
+
+        <div class="backdrop-preset-grid">
+          {% for item in existing_locations_with_bg %}
+            <form method="POST" action="{{ url_for('admin.backdrop_config') }}" style="margin: 0;">
+              <input type="hidden" name="action" value="select">
+              <input type="hidden" name="selected_backdrop_path" value="{{ item.path }}">
+              <button type="submit" class="backdrop-preset-card" style="width: 100%; border: 1px solid var(--border-wood-dark); background: var(--bg-input);" title="{{ item.location_name }} ({{ item.worldinfo_name }})">
+                <div class="backdrop-preset-thumb" style="background-image: url('{{ url_for('uploaded_file', filename=item.path) }}');"></div>
+                <div class="backdrop-preset-name">{{ item.location_name }}</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.worldinfo_name }}</div>
+              </button>
+            </form>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div style="font-size: 0.82rem; color: var(--text-muted); padding: 0.75rem; text-align: center; background: rgba(20, 16, 12, 0.4); border-radius: 6px;">
+          Bisher keine Schauplätze mit Hintergrundbild in den WorldInfos hinterlegt.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

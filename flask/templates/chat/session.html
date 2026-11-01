@@ -2,10 +2,14 @@
 {% block title %}AIMO — {{ chat_session.title }} ({{ character.name }}){% endblock %}
 
 {% block page_backdrop %}
-  <div id="chat-location-backdrop" class="chat-location-backdrop{% if current_location and current_location.background_image_path %} has-image{% endif %}"
-    {% if current_location and current_location.background_image_path %}
-      style="background-image: url('{{ url_for('uploaded_file', filename=current_location.background_image_path) }}');"
-    {% endif %}>
+  {% set has_loc_bg = current_location and current_location.background_image_path %}
+  {% set active_bg_url = url_for('uploaded_file', filename=current_location.background_image_path) if has_loc_bg else system_backdrop_url %}
+  <div id="chat-location-backdrop"
+       class="chat-location-backdrop{% if active_bg_url %} has-image{% endif %}"
+       data-default-backdrop="{{ system_backdrop_url or '' }}"
+       {% if active_bg_url %}
+         style="background-image: url('{{ active_bg_url }}');"
+       {% endif %}>
   </div>
 {% endblock %}
 
@@ -587,9 +591,20 @@
         messagesList.scrollTop = messagesList.scrollHeight;
       }
       const backdrop = document.getElementById("chat-location-backdrop");
-      if (backdrop && resData.location?.background_image_path) {
-        backdrop.style.backgroundImage = `url('/uploads/${resData.location.background_image_path}')`;
-        backdrop.classList.add("has-image");
+      if (backdrop) {
+        if (resData.location?.background_image_path) {
+          backdrop.style.backgroundImage = `url('/uploads/${resData.location.background_image_path}')`;
+          backdrop.classList.add("has-image");
+        } else {
+          const defaultBackdrop = backdrop.getAttribute("data-default-backdrop");
+          if (defaultBackdrop) {
+            backdrop.style.backgroundImage = `url('${defaultBackdrop}')`;
+            backdrop.classList.add("has-image");
+          } else {
+            backdrop.style.backgroundImage = "";
+            backdrop.classList.remove("has-image");
+          }
+        }
       }
       const locIndicator = document.getElementById("chat-location-indicator");
       if (locIndicator && resData.location?.name) {

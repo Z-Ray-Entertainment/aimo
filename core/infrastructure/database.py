@@ -220,7 +220,8 @@ CREATE TABLE IF NOT EXISTS system_settings (
     memory_prompt TEXT NOT NULL,
     diffuser_prompt TEXT NOT NULL,
     sparkle_assistant_prompt TEXT NOT NULL,
-    vision_persona_prompt TEXT NOT NULL
+    vision_persona_prompt TEXT NOT NULL,
+    default_backdrop_path TEXT
 );
 """
 
@@ -341,6 +342,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE worldinfos ADD COLUMN visibility TEXT NOT NULL DEFAULT 'private'",
         "ALTER TABLE worldinfos ADD COLUMN initial_location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL",
         "ALTER TABLE system_settings ADD COLUMN classification_model TEXT NOT NULL DEFAULT 'hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M'",
+        "ALTER TABLE system_settings ADD COLUMN default_backdrop_path TEXT",
     ):
         try:
             conn.execute(stmt)

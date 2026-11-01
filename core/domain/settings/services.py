@@ -24,6 +24,7 @@ class SettingsService:
             tasks=TaskAssignment(),
             params=ModelParameters(),
             prompts=SystemPrompts(),
+            default_backdrop_path=None,
         )
 
     def update_service_urls(
@@ -108,6 +109,19 @@ class SettingsService:
             ),
             vision_persona_prompt=resolved_vision_prompt,
         )
+        return settings
+
+    def update_default_backdrop(
+        self,
+        settings: ServiceSettings,
+        backdrop_path: str | None,
+    ) -> ServiceSettings:
+        cleaned = (
+            backdrop_path.strip()
+            if isinstance(backdrop_path, str) and backdrop_path.strip()
+            else None
+        )
+        settings.default_backdrop_path = cleaned
         return settings
 
     @staticmethod

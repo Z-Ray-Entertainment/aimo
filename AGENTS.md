@@ -185,6 +185,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 - **Confidentiality:** Never hardcode secrets or API keys; everything is retrieved via `shared/config.py` from environment variables.
 - **Testing Policy:** Automated tests are **written only when explicitly requested by the user**.
 - **PyPI Minimalism:** Favor the Python standard library. External packages only when strictly necessary (`Flask`, `SQLAlchemy`, `bcrypt`, `requests`, `python-dotenv`).
+- **CSS-First for Layout & Animations:** Layout wrapping (`flex-wrap: wrap`, CSS Grid with `repeat(auto-fit, minmax(...))`, media queries) and visual animations (transitions, `@keyframes`, opacity, transforms, hover states) **must strictly be implemented with pure CSS**. JavaScript must only be used if a layout or animation behavior is technically impossible to achieve via CSS alone.
 
 ---
 
@@ -203,6 +204,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 - ❌ Allow any REST call to reach the core without a valid CLIENT_KEY in the request header, or accept client keys passed via URL query parameters.
 - ❌ Execute SQL queries directly inside `domain/` or `application/` (only via repositories).
 - ❌ Import web framework code (`flask`, `render_template`, `request`) into `domain/` or `infrastructure/`.
+- ❌ Use JavaScript for layout wrapping, element dimensions, or animations when CSS (Flexbox, Grid, `@keyframes`, transitions) can achieve the result.
 - ❌ Create unsolicited automated tests.
 - ❌ Configure any external database (strictly SQLite).
 

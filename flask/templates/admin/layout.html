@@ -10,6 +10,9 @@
     <a href="{{ url_for('admin.services_config') }}" class="rpg-tab-btn {% if request.endpoint == 'admin.services_config' %}active{% endif %}">
       <span class="icon-mono">⚙️</span> Services, Modelle & Prompts
     </a>
+    <a href="{{ url_for('admin.backdrop_config') }}" class="rpg-tab-btn {% if request.endpoint == 'admin.backdrop_config' %}active{% endif %}">
+      <span class="icon-mono">🖼️</span> System-Backdrop
+    </a>
   </div>
   <a href="{{ url_for('overview.index') }}" class="btn">← Zurück zum Hub</a>
 </div>

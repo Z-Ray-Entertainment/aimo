@@ -138,3 +138,4 @@ class ServiceSettings:
     tasks: TaskAssignment = field(default_factory=TaskAssignment)
     params: ModelParameters = field(default_factory=ModelParameters)
     prompts: SystemPrompts = field(default_factory=SystemPrompts)
+    default_backdrop_path: str | None = None

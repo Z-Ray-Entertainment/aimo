@@ -698,9 +698,20 @@ class AimoChatStream {
           messagesList.scrollTop = messagesList.scrollHeight;
         }
         const backdrop = document.getElementById("chat-location-backdrop");
-        if (backdrop && resData.location?.background_image_path) {
-          backdrop.style.backgroundImage = `url('/uploads/${resData.location.background_image_path}')`;
-          backdrop.classList.add("has-image");
+        if (backdrop) {
+          if (resData.location?.background_image_path) {
+            backdrop.style.backgroundImage = `url('/uploads/${resData.location.background_image_path}')`;
+            backdrop.classList.add("has-image");
+          } else {
+            const defaultBackdrop = backdrop.getAttribute("data-default-backdrop");
+            if (defaultBackdrop) {
+              backdrop.style.backgroundImage = `url('${defaultBackdrop}')`;
+              backdrop.classList.add("has-image");
+            } else {
+              backdrop.style.backgroundImage = "";
+              backdrop.classList.remove("has-image");
+            }
+          }
         }
         const locIndicator = document.getElementById("chat-location-indicator");
         if (locIndicator && resData.location?.name) {
