@@ -12,3 +12,20 @@
     </button>
   {% endif %}
 {% endmacro %}
+
+{# Reusable Menu Dropdown Item Component #}
+{% macro menu_item(text, icon=none, href=none, modal=none, onclick=none, danger=false, id=none, title=none, extra_class='') %}
+  {% set danger_class = ' danger' if danger else '' %}
+  {% set classes = 'chat-menu-dropdown-item' ~ danger_class ~ (' ' ~ extra_class if extra_class else '') %}
+  {% if href %}
+    <a href="{{ href }}" class="{{ classes }}" role="menuitem"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}>
+      {% if icon %}<span class="icon-mono">{{ icon }}</span>{% endif %}
+      <span>{{ text }}</span>
+    </a>
+  {% else %}
+    <button type="button" class="{{ classes }}" role="menuitem"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if modal %} data-modal-open="{{ modal }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}>
+      {% if icon %}<span class="icon-mono">{{ icon }}</span>{% endif %}
+      <span>{{ text }}</span>
+    </button>
+  {% endif %}
+{% endmacro %}

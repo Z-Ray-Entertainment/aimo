@@ -1366,6 +1366,33 @@ def translate_arbitrary_text():
     )
 
 
+@api_chat_bp.route("/<int:session_id>/memories", methods=["GET"])
+@require_permission(FunctionPermission.CHAT_ACCESS)
+def list_session_memories(session_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
+    mem_repo = MemoryRepository()
+    memories = mem_repo.list_for_session(session_id)
+    return jsonify(
+        {
+            "memories": [
+                {
+                    "id": m.id,
+                    "message_idx": m.message_idx,
+                    "title": m.title,
+                    "tags": m.tags,
+                    "summary": m.summary,
+                }
+                for m in memories
+            ]
+        }
+    )
+
+
 @api_chat_bp.route("/<int:session_id>/memories/<int:memory_id>/recalculate", methods=["POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def recalculate_memory(session_id: int, memory_id: int):

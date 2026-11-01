@@ -345,12 +345,25 @@ def delete_session(session_id: int):
     chat_repo = ChatRepository()
     chat_session = chat_repo.get_session(session_id)
     if chat_session is None or chat_session.user_id != user.id:
-        return redirect(url_for("overview.index"))
+        return redirect(url_for("overview.index", tab="characters"))
 
     char_id = chat_session.character_id
     chat_repo.delete_session(session_id)
     flash("Chat-Session gelöscht.", "success")
-    return redirect(url_for("chat.open_character_chat", character_id=char_id))
+
+    redirect_to = request.form.get("redirect_to") or request.args.get("redirect_to")
+    current_session_id = request.form.get("current_session_id")
+    if redirect_to == "session" and current_session_id:
+        try:
+            curr_id = int(current_session_id)
+            if curr_id != session_id:
+                curr_session = chat_repo.get_session(curr_id)
+                if curr_session and curr_session.user_id == user.id:
+                    return redirect(url_for("chat.view_session", session_id=curr_id))
+        except ValueError:
+            pass
+
+    return redirect(url_for("overview.index", tab="characters"))
 
 
 @chat_bp.route("/session/<int:session_id>/memories/<int:memory_id>/edit", methods=["POST"])

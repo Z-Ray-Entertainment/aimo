@@ -104,11 +104,11 @@
     </div>
   </section>
 
-  <!-- TAB 3: WorldInfo -->
+  <!-- TAB 3: Worlds -->
   <section id="tab-worldinfo" class="tab-pane{% if (active_tab|default('')) == 'worldinfo' %} active{% endif %}">
     <div class="card-grid">
       {% if has_perm('worldinfo_create') %}
-        {{ new_button("Neue WorldInfo", modal="new-worldinfo-modal") }}
+        {{ new_button("Neue Welt", modal="new-worldinfo-modal") }}
       {% endif %}
 
       {% for item in worldinfo_cards %}
@@ -167,11 +167,11 @@
   </div>
 </div>
 
-<!-- Modal: Neue WorldInfo -->
+<!-- Modal: Neue Welt -->
 <div class="modal-backdrop" id="new-worldinfo-modal" aria-hidden="true">
   <div class="modal-frame" style="max-width: 480px;">
     <div class="modal-header">
-      <h3 style="color: var(--gold-accent);">Neue WorldInfo erstellen</h3>
+      <h3 style="color: var(--gold-accent);">Neue Welt erstellen</h3>
       <button type="button" class="btn" data-modal-close="new-worldinfo-modal">✕</button>
     </div>
     <form method="POST" action="{{ url_for('worldinfo.create_worldinfo') }}" style="display: flex; flex-direction: column; gap: 0.85rem;">

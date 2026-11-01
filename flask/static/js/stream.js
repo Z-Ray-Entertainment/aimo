@@ -444,7 +444,7 @@ class AimoChatStream {
     header.className = "chat-bubble-header";
     header.style.cssText =
       "display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem; font-size: 0.76rem; color: var(--gold-accent);";
-    header.innerHTML = `<strong>${escapeHtml(meta.characterName)}</strong><div class="chat-bubble-actions" style="display: flex; gap: 0.4rem;"><button type="button" class="btn-abort-turn" onclick="window.chatStream.abortTurn()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.85rem;" title="Antwort-Generierung abbrechen">✕</button></div>`;
+    header.innerHTML = `<strong>${escapeHtml(meta.characterName)}</strong><div class="chat-bubble-actions" style="display: flex; gap: 0.4rem;"></div>`;
     bubble.appendChild(header);
 
     const initialLabel = isAnalyzingImage
@@ -621,6 +621,12 @@ class AimoChatStream {
           this.showLocationSwitchCountdown(data.suggested_location);
         }
 
+        setTimeout(() => {
+          if (typeof window.refreshSessionMemories === "function") {
+            window.refreshSessionMemories();
+          }
+        }, 3500);
+
         isCompleted = true;
         es.close();
         if (this.eventSource === es) {
@@ -646,7 +652,7 @@ class AimoChatStream {
     }
 
     bannerContainer.innerHTML = `
-      <div class="location-prompt-banner">
+      <div class="location-prompt-banner" id="loc-prompt-banner">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem;">
           <span>Zu <strong>${escapeHtml(locationObj.name)}</strong> wechseln?</span>
           <div style="display:flex; gap:0.5rem;">
@@ -661,9 +667,21 @@ class AimoChatStream {
     `;
 
     let remaining = 60;
+    let isPaused = false;
     const fillEl = document.getElementById("loc-countdown-fill");
+    const bannerEl = document.getElementById("loc-prompt-banner");
+
+    if (bannerEl) {
+      bannerEl.addEventListener("mouseenter", () => {
+        isPaused = true;
+      });
+      bannerEl.addEventListener("mouseleave", () => {
+        isPaused = false;
+      });
+    }
 
     this.countdownTimer = setInterval(() => {
+      if (isPaused) return;
       remaining -= 1;
       if (fillEl) {
         fillEl.style.width = `${(remaining / 60) * 100}%`;
@@ -716,6 +734,10 @@ class AimoChatStream {
         const locIndicator = document.getElementById("chat-location-indicator");
         if (locIndicator && resData.location?.name) {
           locIndicator.innerHTML = `📍 Ort: <strong>${escapeHtml(resData.location.name)}</strong>`;
+        }
+        const locSelect = document.getElementById("chat-location-select");
+        if (locSelect) {
+          locSelect.value = String(locationObj.id || resData.location?.id || "");
         }
       }
     });

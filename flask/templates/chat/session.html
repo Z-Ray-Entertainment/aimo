@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "macros/buttons.html" import menu_item %}
 {% block title %}AIMO — {{ chat_session.title }} ({{ character.name }}){% endblock %}
 
 {% block page_backdrop %}
@@ -15,50 +16,41 @@
 
 {% block content %}
 <div class="chat-layout">
-  <!-- Linke Seitenleiste: Multi-Chat-Sessions -->
-  <aside class="wood-frame chat-glass-panel" style="padding: 1rem; display: flex; flex-direction: column; justify-content: space-between;">
-    <div>
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-wood-dark);">
-        <h3 style="color: var(--gold-accent); font-size: 1rem;"><span class="icon-mono">💬</span> Sitzungen</h3>
-        <a href="{{ url_for('chat.new_character_chat', character_id=character.id, configure=1) }}" class="btn" style="padding: 0.25rem 0.6rem; font-size: 0.8rem;" title="Neuen Chat starten">+ Neu</a>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 65vh; overflow-y: auto;">
-        {% for sess in all_sessions %}
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; padding: 0.55rem 0.65rem; border-radius: 8px; border: 1px solid {% if sess.id == chat_session.id %}var(--gold-accent){% else %}var(--border-wood-dark){% endif %}; background: {% if sess.id == chat_session.id %}rgba(65, 42, 25, 0.9){% else %}rgba(24, 17, 12, 0.7){% endif %};">
-            <a href="{{ url_for('chat.view_session', session_id=sess.id) }}" style="color: var(--text-main); font-size: 0.86rem; font-weight: {% if sess.id == chat_session.id %}700{% else %}400{% endif %}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
-              {{ sess.title }}
-            </a>
-            {% if all_sessions|length > 1 %}
-              <form method="POST" action="{{ url_for('chat.delete_session', session_id=sess.id) }}" onsubmit="return confirm('Diese Chat-Session wirklich löschen?');">
-                <button type="submit" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem;" title="Session löschen">✕</button>
-              </form>
-            {% endif %}
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-
-    <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
-      <a href="{{ url_for('overview.index') }}" class="btn" style="width: 100%; font-size: 0.85rem;">← Zurück zur Übersicht</a>
-    </div>
-  </aside>
-
   <!-- Mittlere Hauptbühne: 3-Reiter-Navigation (Chat, Medien, Erinnerungen) -->
   <section id="chat-main-stage" class="wood-frame chat-main-stage chat-glass-panel">
     <div class="chat-stage-overlay" data-tab-group>
-      <!-- Top Bar mit 3 Reitern -->
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem; border-bottom: 2px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
-        <div class="rpg-tabs" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
-          <button type="button" class="rpg-tab-btn active" data-tab-target="chat-pane-messages">
-            <span class="icon-mono">💬</span> Chat
-          </button>
-          <button type="button" class="rpg-tab-btn" data-tab-target="chat-pane-media">
-            <span class="icon-mono">🖼️</span> Medien
-          </button>
-          <button type="button" class="rpg-tab-btn" data-tab-target="chat-pane-memories">
-            <span class="icon-mono">🧠</span> Erinnerungen ({{ memories|length }})
-          </button>
+      <!-- Top Bar mit Zurück-Button & Reitern (nutzen dieselbe Basisklasse .header-btn wie im Seitenheader) -->
+      <div class="chat-stage-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem; border-bottom: 2px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <!-- Zurück zur Übersicht (nur Pfeil-Icon, kein Text) -->
+          <a href="{{ url_for('overview.index', tab='characters') }}"
+             class="header-btn"
+             style="padding: 0.38rem 0.65rem;"
+             title="Zurück zur Übersicht"
+             aria-label="Zurück zur Übersicht">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+          </a>
+
+          <!-- Vertikaler Trennstrich -->
+          <div class="chat-header-vdivider"></div>
+
+          <!-- Reiter-Leiste mit .header-btn Basisklasse -->
+          <div class="rpg-tabs" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0; gap: 0.5rem;">
+            <button type="button" class="header-btn header-nav-btn active" data-tab-target="chat-pane-messages">
+              <span class="icon-mono">💬</span>
+              <span>Chat</span>
+            </button>
+            <button type="button" class="header-btn header-nav-btn" data-tab-target="chat-pane-media">
+              <span class="icon-mono">🖼️</span>
+              <span>Medien</span>
+            </button>
+            <button type="button" class="header-btn header-nav-btn" data-tab-target="chat-pane-memories">
+              <span class="icon-mono">🧠</span>
+              <span>Erinnerungen (<span id="memories-count">{{ memories|length }}</span>)</span>
+            </button>
+          </div>
         </div>
 
         <div id="chat-location-indicator" style="font-size: 0.85rem; color: var(--gold-accent);">
@@ -158,22 +150,42 @@
 
         <!-- Eingabeleiste unten: Vereinheitlichter Kasten mit Overlay-Buttons -->
         <form id="chat-input-form" class="chat-input-box">
-          <!-- Links bündig: Attach & optionale ComfyUI-Aktionen -->
+          <!-- Links bündig: Hamburger-Menü (Sitzungen, Neuer Chat, Löschen), Attach & ComfyUI -->
           <div class="chat-input-actions-left">
-            <label class="chat-overlay-btn" title="Bild anhängen (Vision ALT-Analyse)">
-              <span class="icon-mono">📎</span>
+            <div class="chat-menu-dropdown-wrapper" id="chat-menu-dropdown-wrapper">
+              <button type="button" class="chat-input-btn" id="chat-menu-toggle-btn" title="Chat-Optionen & Sitzungen" aria-label="Chat-Optionen" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                  <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                </svg>
+              </button>
+              <div class="chat-menu-dropdown" id="chat-menu-dropdown" role="menu">
+                {{ menu_item('Sitzungen', icon='💬', modal='chat-sessions-modal') }}
+                {{ menu_item('Neuer Chat starten', icon='➕', href=url_for('chat.new_character_chat', character_id=character.id, configure=1)) }}
+                <div class="chat-menu-dropdown-divider"></div>
+                {{ menu_item('Chat löschen', icon='🗑️', danger=true, onclick="if (confirm('Wollen Sie diesen Chat wirklich unwiderruflich löschen?')) { document.getElementById('delete-current-chat-form').submit(); }") }}
+              </div>
+            </div>
+
+            <label class="chat-input-btn chat-overlay-btn" title="Bild anhängen (Vision ALT-Analyse)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5a2.5 2.5 0 0 1 5 0v10.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5V6H9v9.5a3 3 0 0 0 6 0V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/>
+              </svg>
               <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp" style="display: none;" onchange="document.getElementById('upload-file-indicator').textContent = this.files[0] ? this.files[0].name : '';">
             </label>
 
             {% if comfyui_available %}
               <!-- Zauberstab-Button für ComfyUI Szenenbild -->
-              <button type="button" class="chat-overlay-btn" onclick="window.chatStream.triggerComfyUIGeneration()" title="Szenenbild mit ComfyUI generieren">
-                <span class="icon-sparkle">✨</span>
+              <button type="button" class="chat-input-btn chat-overlay-btn" onclick="window.chatStream.triggerComfyUIGeneration()" title="Szenenbild mit ComfyUI generieren">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                  <path d="m19 9 1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/>
+                </svg>
               </button>
 
               <!-- Abbrechen-Button während ComfyUI-Bildgenerierung -->
-              <button type="button" id="cancel-image-gen-btn" class="chat-overlay-btn btn-abort-turn" style="display: none;" onclick="window.chatStream.cancelComfyUIGeneration()" title="Bildgenerierung abbrechen">
-                <span class="icon-mono">✕</span>
+              <button type="button" id="cancel-image-gen-btn" class="chat-input-btn chat-overlay-btn btn-abort-turn" style="display: none;" onclick="window.chatStream.cancelComfyUIGeneration()" title="Bildgenerierung abbrechen">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+                </svg>
               </button>
             {% endif %}
           </div>
@@ -186,22 +198,31 @@
 
           <!-- Rechts: Re-Generate, Abort & Senden als Overlay-Buttons -->
           <div class="chat-input-actions-right">
-            <!-- Re-Generate Button links vor dem Senden-Button: Nur die Pfeile des 🔄 Emojis ohne Hintergrund -->
-            <button type="button" id="chat-regenerate-btn" class="chat-overlay-btn btn-regenerate-icon" onclick="window.chatStream.regenerateLastTurn()" title="Antwort neu generieren (Re-Generate) – Ersetzt die letzte KI-Antwort bzw. wiederholt die Generierung">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="icon-regenerate" aria-hidden="true">
+            <!-- Re-Generate Button -->
+            <button type="button" id="chat-regenerate-btn" class="chat-input-btn chat-overlay-btn btn-regenerate-icon" onclick="window.chatStream.regenerateLastTurn()" title="Antwort neu generieren (Re-Generate) – Ersetzt die letzte KI-Antwort bzw. wiederholt die Generierung">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" class="icon-regenerate" aria-hidden="true">
                 <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
               </svg>
             </button>
 
             <!-- Abbrechen-Button während aktiver Antwort-Generierung -->
-            <button type="button" id="chat-abort-btn" class="chat-overlay-btn btn-abort-turn" style="display: none;" onclick="window.chatStream.abortTurn()" title="Antwort-Generierung abbrechen">
-              <span class="icon-mono">✕</span>
+            <button type="button" id="chat-abort-btn" class="chat-input-btn chat-overlay-btn btn-abort-turn" style="display: none;" onclick="window.chatStream.abortTurn()" title="Antwort-Generierung abbrechen">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+              </svg>
             </button>
 
-            <button type="submit" id="chat-send-btn" class="chat-overlay-btn" title="Nachricht senden (Enter)">
-              <span class="icon-mono">➤</span>
+            <button type="submit" id="chat-send-btn" class="chat-input-btn chat-overlay-btn" title="Nachricht senden (Enter)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              </svg>
             </button>
           </div>
+        </form>
+
+        <!-- Separates Formular für Chat löschen (verhindert invalides verschachteltes <form>) -->
+        <form id="delete-current-chat-form" method="POST" action="{{ url_for('chat.delete_session', session_id=chat_session.id) }}" style="display: none;">
+          <input type="hidden" name="redirect_to" value="overview">
         </form>
       </div>
 
@@ -240,7 +261,7 @@
           <p style="font-size: 0.85rem; color: var(--text-muted);">Erinnerungen werden automatisch im Hintergrund zusammengefasst und über Keyword-Tags in den Prompt eingebunden.</p>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 0.85rem; max-height: 60vh; overflow-y: auto;">
+        <div id="chat-memories-list" class="chat-memories-scroll-list">
           {% for mem in memories %}
             <form id="memory-form-{{ mem.id }}" method="POST" action="{{ url_for('chat.edit_memory', session_id=chat_session.id, memory_id=mem.id) }}" class="wood-frame" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem;">
               <div style="display: flex; gap: 0.75rem; align-items: center;">
@@ -262,20 +283,19 @@
                 <button type="submit" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Speichern</button>
               </div>
             </form>
-          {% else %}
-            <p style="color: var(--text-muted);">Noch keine Erinnerungen generiert (entstehen automatisch alle 10 Nachrichten).</p>
           {% endfor %}
         </div>
+        <p id="chat-memories-empty" style="color: var(--text-muted);{% if memories %} display: none;{% endif %}">Noch keine Erinnerungen generiert (entstehen automatisch alle 10 Nachrichten).</p>
       </div>
     </div>
   </section>
 
-  <!-- Rechte Info-Box: Sprite, Beziehungsbalken, WorldInfo, Persona, Events -->
+  <!-- Rechte Info-Box: Sprite (2/3 Höhe), Beziehungsbalken, Persona, Welt & Aktueller Ort, Events -->
   <aside class="wood-frame chat-glass-panel" style="padding: 1rem; display: flex; flex-direction: column; gap: 1rem; overflow-y: auto;">
-    <!-- Aktives Charakter-Sprite -->
-    <div class="portrait-frame chat-glass-panel" style="overflow: hidden; text-align: center;">
-      <img id="active-character-sprite" src="{{ url_for('uploaded_file', filename=active_sprite.file_path) }}" alt="{{ character.name }}" style="width: 100%; height: 260px; object-fit: contain;" onerror="this.src='/static/img/cover.svg'">
-      <div style="padding: 0.45rem; border-top: 1px solid var(--border-wood-dark); font-weight: 700; color: var(--gold-accent);">
+    <!-- Aktives Charakter-Sprite (2/3 der Seitenleistenhöhe, Seitenverhältnisse beibehalten) -->
+    <div class="portrait-frame chat-glass-panel chat-character-portrait-frame">
+      <img id="active-character-sprite" src="{{ url_for('uploaded_file', filename=active_sprite.file_path) }}" alt="{{ character.name }}" onerror="this.src='/static/img/cover.svg'">
+      <div class="chat-character-portrait-name">
         {{ character.name }}
       </div>
     </div>
@@ -330,37 +350,41 @@
       {% endif %}
     </div>
 
-    <!-- WorldInfo mit Stift-Symbol zum Wechseln -->
-    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
-        <span style="font-size: 0.8rem; color: var(--text-muted);">WorldInfo</span>
-        <button type="button" style="background: none; border: none; cursor: pointer; color: var(--gold-accent);" data-modal-open="switch-worldinfo-modal" title="WorldInfo wechseln">
-          <span class="icon-mono">✏️</span>
-        </button>
+    <!-- Welt & Aktueller Ort (Gemeinsamer Block ohne Trennstrich) -->
+    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem; display: flex; flex-direction: column; gap: 0.6rem;">
+      <div>
+        <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem;">Welt</span>
+        <div class="chat-field-box">
+          <div class="chat-field-content">
+            {% if worldinfo %}
+              {{ worldinfo.icon or '🌐' }} {{ worldinfo.name }}
+            {% else %}
+              Ohne Welt (Neutral)
+            {% endif %}
+          </div>
+          <button type="button" class="chat-input-btn" data-modal-open="switch-worldinfo-modal" title="Welt wechseln" aria-label="Welt wechseln">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+            </svg>
+          </button>
+        </div>
       </div>
-      <div style="padding: 0.45rem 0.65rem; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--border-wood-dark); font-size: 0.88rem;">
-        {% if worldinfo %}
-          {{ worldinfo.icon or '🌐' }} {{ worldinfo.name }}
-        {% else %}
-          Ohne WorldInfo (Neutral)
-        {% endif %}
-      </div>
-    </div>
 
-    <!-- Manuelle Ortswahl (falls WorldInfo aktiv) -->
-    {% if worldinfo and worldinfo_locations %}
-      <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
-        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem;">Aktueller Ort</label>
-        <select onchange="manualSwitchLocation(this.value)" style="padding: 0.4rem;">
-          <option value="">-- Ort wählen --</option>
-          {% for loc in worldinfo_locations %}
-            <option value="{{ loc.id }}" {% if current_location and loc.id == current_location.id %}selected{% endif %}>
-              📍 {{ loc.name }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-    {% endif %}
+      <!-- Aktueller Ort (Direkt unter Welt ohne Trennstrich) -->
+      {% if worldinfo and worldinfo_locations %}
+        <div>
+          <label for="chat-location-select" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem;">Aktueller Ort</label>
+          <select id="chat-location-select" onchange="manualSwitchLocation(this.value)" style="padding: 0.4rem; width: 100%;">
+            <option value="">-- Ort wählen --</option>
+            {% for loc in worldinfo_locations %}
+              <option value="{{ loc.id }}" {% if current_location and loc.id == current_location.id %}selected{% endif %}>
+                📍 {{ loc.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      {% endif %}
+    </div>
 
     <!-- Checkbox: Zufalls-Events aktivieren/deaktivieren (nur wenn WorldInfo & Events vorhanden) -->
     {% if worldinfo and worldinfo_events %}
@@ -375,22 +399,22 @@
   </aside>
 </div>
 
-<!-- Modal: WorldInfo wechseln mit Inkonsistenz-Warnung -->
+<!-- Modal: Welt wechseln mit Inkonsistenz-Warnung -->
 <div class="modal-backdrop" id="switch-worldinfo-modal" aria-hidden="true">
   <div class="modal-frame" style="max-width: 480px;">
     <div class="modal-header">
-      <h3 style="color: var(--gold-accent);">WorldInfo wechseln</h3>
+      <h3 style="color: var(--gold-accent);">Welt wechseln</h3>
       <button type="button" class="btn" data-modal-close="switch-worldinfo-modal">✕</button>
     </div>
     <div style="padding: 0.75rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid #E74C3C; background: rgba(100, 30, 22, 0.35); font-size: 0.86rem;">
-      ⚠️ <strong>Warnung:</strong> Ein Wechsel der WorldInfo während eines laufenden Chats kann zu Inkonsistenzen bei früheren Erinnerungen führen.
+      ⚠️ <strong>Warnung:</strong> Ein Wechsel der Welt während eines laufenden Chats kann zu Inkonsistenzen bei früheren Erinnerungen führen.
     </div>
     <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" style="display: flex; flex-direction: column; gap: 1rem;">
       <input type="hidden" name="action" value="switch_worldinfo">
       <div>
-        <label>Neue WorldInfo wählen</label>
+        <label>Neue Welt wählen</label>
         <select name="worldinfo_id">
-          <option value="none" {% if not chat_session.active_worldinfo_id %}selected{% endif %}>Ohne WorldInfo (Neutral)</option>
+          <option value="none" {% if not chat_session.active_worldinfo_id %}selected{% endif %}>Ohne Welt (Neutral)</option>
           {% for wi in all_worldinfos %}
             <option value="{{ wi.id }}" {% if chat_session.active_worldinfo_id == wi.id %}selected{% endif %}>
               {{ wi.icon or '🌐' }} {{ wi.name }}
@@ -399,9 +423,61 @@
         </select>
       </div>
       <div style="text-align: right;">
-        <button type="submit" class="btn">WorldInfo umschalten</button>
+        <button type="submit" class="btn">Welt umschalten</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Modal: Sitzungen-Übersicht -->
+<div class="modal-backdrop" id="chat-sessions-modal" aria-hidden="true">
+  <div class="modal-frame" style="max-width: 580px; width: 92%; max-height: 85vh; display: flex; flex-direction: column;">
+    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.6rem; margin-bottom: 0.75rem;">
+      <h3 style="color: var(--gold-accent); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+        <span class="icon-mono">💬</span> Sitzungen mit {{ character.name }}
+      </h3>
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <a href="{{ url_for('chat.new_character_chat', character_id=character.id, configure=1) }}" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;">
+          ➕ Neuer Chat
+        </a>
+        <button type="button" class="btn" data-modal-close="chat-sessions-modal" style="padding: 0.35rem 0.65rem; font-size: 0.85rem;">✕</button>
+      </div>
+    </div>
+    <div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; padding-right: 0.25rem;">
+      {% for s in all_sessions %}
+        <div class="wood-frame chat-glass-panel" style="padding: 0.65rem 0.85rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; border-color: {% if s.id == chat_session.id %}var(--gold-accent){% else %}var(--border-wood-dark){% endif %};">
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem;">
+              <a href="{{ url_for('chat.view_session', session_id=s.id) }}" style="font-weight: 700; color: {% if s.id == chat_session.id %}var(--gold-accent){% else %}var(--text-color){% endif %}; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ s.title or 'Unbenannter Chat' }}
+              </a>
+              {% if s.id == chat_session.id %}
+                <span class="badge" style="font-size: 0.7rem; padding: 0.15rem 0.4rem; background: var(--gold-accent); color: #000; border-radius: 4px; font-weight: bold;">Aktiv</span>
+              {% endif %}
+            </div>
+            <div style="font-size: 0.76rem; color: var(--text-muted);">
+              Erstellt: {{ s.created_at.strftime('%d.%m.%Y %H:%M') if s.created_at else '' }}
+              {% if s.persona %} · Persona: {{ s.persona.name }}{% endif %}
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.4rem; align-items: center;">
+            {% if s.id != chat_session.id %}
+              <a href="{{ url_for('chat.view_session', session_id=s.id) }}" class="btn" style="padding: 0.25rem 0.6rem; font-size: 0.8rem;">
+                Wechseln
+              </a>
+            {% endif %}
+            <form method="POST" action="{{ url_for('chat.delete_session', session_id=s.id) }}" onsubmit="return confirm('Wollen Sie diese Sitzung wirklich löschen?');" style="margin: 0;">
+              <input type="hidden" name="redirect_to" value="{% if s.id == chat_session.id %}overview{% else %}session{% endif %}">
+              <button type="submit" class="btn" style="padding: 0.25rem 0.55rem; font-size: 0.8rem; color: #E74C3C; border-color: rgba(231,76,60,0.4);" title="Sitzung löschen">
+                🗑️
+              </button>
+            </form>
+          </div>
+        </div>
+      {% else %}
+        <p style="color: var(--text-muted); font-size: 0.88rem;">Keine weiteren Sitzungen vorhanden.</p>
+      {% endfor %}
+    </div>
   </div>
 </div>
 
@@ -482,6 +558,39 @@
 
     const list = document.getElementById("chat-messages-list");
     if (list) list.scrollTop = list.scrollHeight;
+
+    // Hamburger-Menü Toggle & Close bei Klick außerhalb / Escape
+    const menuToggle = document.getElementById("chat-menu-toggle-btn");
+    const menuWrapper = document.getElementById("chat-menu-dropdown-wrapper");
+    if (menuToggle && menuWrapper) {
+      menuToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isExpanded = menuWrapper.classList.toggle("open");
+        menuToggle.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+      });
+      document.addEventListener("click", (e) => {
+        if (!menuWrapper.contains(e.target)) {
+          menuWrapper.classList.remove("open");
+          menuToggle.setAttribute("aria-expanded", "false");
+        }
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && menuWrapper.classList.contains("open")) {
+          menuWrapper.classList.remove("open");
+          menuToggle.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+
+    // Reiter "Erinnerungen": Beim Klick stets aktuelle Erinnerungen vom Server abrufen
+    const memTabBtn = document.querySelector('[data-tab-target="chat-pane-memories"]');
+    if (memTabBtn) {
+      memTabBtn.addEventListener("click", () => {
+        if (typeof window.refreshSessionMemories === "function") {
+          window.refreshSessionMemories();
+        }
+      });
+    }
 
     window.chatStream.checkPendingGeneration();
   });
@@ -610,8 +719,66 @@
       if (locIndicator && resData.location?.name) {
         locIndicator.innerHTML = `📍 Ort: <strong>${escapeHtml(resData.location.name)}</strong>`;
       }
+      const locSelect = document.getElementById("chat-location-select");
+      if (locSelect) {
+        locSelect.value = String(locationId);
+      }
     }
   }
+
+  window.refreshSessionMemories = async function() {
+    try {
+      const resp = await fetch(`/api/chat/{{ chat_session.id }}/memories`);
+      if (!resp.ok) return;
+      const data = await resp.json();
+      const memories = data.memories || [];
+
+      const countEl = document.getElementById("memories-count");
+      if (countEl) countEl.textContent = String(memories.length);
+
+      const listEl = document.getElementById("chat-memories-list");
+      const emptyEl = document.getElementById("chat-memories-empty");
+      if (!listEl) return;
+
+      if (memories.length === 0) {
+        listEl.innerHTML = "";
+        if (emptyEl) emptyEl.style.display = "block";
+        return;
+      }
+
+      if (emptyEl) emptyEl.style.display = "none";
+
+      let html = "";
+      for (const mem of memories) {
+        const tagsStr = (mem.tags || []).join(", ");
+        html += `
+          <form id="memory-form-${mem.id}" method="POST" action="/chat/session/{{ chat_session.id }}/memories/${mem.id}/edit" class="wood-frame" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem;">
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+              <input type="text" name="title" value="${escapeHtml(mem.title || '')}" required style="font-weight: 700;">
+              <span style="font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;">Nachricht #${mem.message_idx}</span>
+            </div>
+            <div>
+              <label style="font-size: 0.78rem; color: var(--text-muted);">Tags (kommagetrennt für RAG)</label>
+              <input type="text" name="tags" value="${escapeHtml(tagsStr)}">
+            </div>
+            <div>
+              <label style="font-size: 0.78rem; color: var(--text-muted);">Zusammenfassung (Englischer Kanon)</label>
+              <textarea name="summary" rows="3" required>${escapeHtml(mem.summary || '')}</textarea>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+              <button type="button" class="btn btn-secondary" onclick="window.recalculateMemory({{ chat_session.id }}, ${mem.id}, this)" title="Erinnerung aus den zugehörigen Episoden-Nachrichten neu berechnen" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
+                <span class="icon-mono">🔄</span> Neu berechnen
+              </button>
+              <button type="submit" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Speichern</button>
+            </div>
+          </form>
+        `;
+      }
+      listEl.innerHTML = html;
+    } catch (err) {
+      console.error("Fehler beim Aktualisieren der Erinnerungen:", err);
+    }
+  };
 
   window._adminPromptCache = window._adminPromptCache || {};
 

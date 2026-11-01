@@ -186,6 +186,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 - **Testing Policy:** Automated tests are **written only when explicitly requested by the user**.
 - **PyPI Minimalism:** Favor the Python standard library. External packages only when strictly necessary (`Flask`, `SQLAlchemy`, `bcrypt`, `requests`, `python-dotenv`).
 - **CSS-First for Layout & Animations:** Layout wrapping (`flex-wrap: wrap`, CSS Grid with `repeat(auto-fit, minmax(...))`, media queries) and visual animations (transitions, `@keyframes`, opacity, transforms, hover states) **must strictly be implemented with pure CSS**. JavaScript must only be used if a layout or animation behavior is technically impossible to achieve via CSS alone.
+- **Reusable UI Components First:** Für JEDES UI-Element (Buttons, Modals, Badges, Dropdowns, Cards, Formularfelder, Icons etc.) müssen immer nach Möglichkeit wiederverwendbare, einheitliche Komponenten (gemeinsame CSS-Klassen, Jinja2-Macros wie in `templates/macros/`, standardisierte HTML/SVG-Snippets) geschrieben und konsequent wiederverwendet werden, statt ad-hoc Insellösungen oder duplizierte Stile neu zu implementieren. Bestehende Basis-Komponenten (z. B. `.header-btn`, `.chat-input-btn`, `.modal-backdrop`, `.card-tile`) müssen stets bevorzugt und erweitert werden.
 
 ---
 
@@ -205,6 +206,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 - ❌ Execute SQL queries directly inside `domain/` or `application/` (only via repositories).
 - ❌ Import web framework code (`flask`, `render_template`, `request`) into `domain/` or `infrastructure/`.
 - ❌ Use JavaScript for layout wrapping, element dimensions, or animations when CSS (Flexbox, Grid, `@keyframes`, transitions) can achieve the result.
+- ❌ Ad-hoc duplizierte UI-Elemente oder inline neu erfundene Buttons/Komponenten bauen, statt auf bestehende, wiederverwendbare UI-Klassen und Macros zurückzugreifen.
 - ❌ Create unsolicited automated tests.
 - ❌ Configure any external database (strictly SQLite).
 
