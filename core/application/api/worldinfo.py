@@ -31,7 +31,7 @@ def list_worldinfo():
                 "name": wi.name,
                 "icon": wi.icon,
                 "visibility": wi.visibility,
-                "initial_location_id": wi.initial_location_id,
+                "cover_image_path": wi.cover_image_path,
                 "locations": [
                     {
                         "id": loc.id,
@@ -68,14 +68,12 @@ def create_worldinfo():
     service = WorldInfoService()
     repo = WorldInfoRepository()
     try:
-        init_loc_raw = data.get("initial_location_id")
-        init_loc_id = int(init_loc_raw) if init_loc_raw and str(init_loc_raw).isdigit() else None
         wi = service.create_worldinfo(
             user_id=user.id,
             name=data.get("name", ""),
             icon=data.get("icon", "🌐"),
             visibility=data.get("visibility", "private"),
-            initial_location_id=init_loc_id,
+            cover_image_path=data.get("cover_image_path"),
         )
         saved = repo.create(wi)
         return jsonify(
@@ -84,7 +82,7 @@ def create_worldinfo():
                 "name": saved.name,
                 "icon": saved.icon,
                 "visibility": saved.visibility,
-                "initial_location_id": saved.initial_location_id,
+                "cover_image_path": saved.cover_image_path,
             }
         ), 201
     except AimoError as exc:
@@ -135,15 +133,21 @@ def create_event():
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def analyze_location_background():
     bg_file = request.files.get("background")
-    if bg_file is None or not bg_file.filename:
-        return jsonify({"error": "No background image uploaded."}), 400
+    existing_bg_path = (request.form.get("background_image_path") or (request.get_json(silent=True) or {}).get("background_image_path") or "").strip()
+
+    if (bg_file is None or not bg_file.filename) and not existing_bg_path:
+        return jsonify({"error": "No background image provided."}), 400
 
     storage = FileStorage()
     settings = SettingsRepository().get_settings()
     llm = get_llm_provider(settings)
 
     try:
-        bg_path = storage.save_background(bg_file.stream, bg_file.filename)
+        if bg_file and bg_file.filename:
+            bg_path = storage.save_background(bg_file.stream, bg_file.filename)
+        else:
+            bg_path = existing_bg_path
+
         resolved = storage.resolve_path(bg_path)
         alt_text = llm.analyze_image(
             image_path=resolved,
@@ -157,5 +161,27 @@ def analyze_location_background():
                 "prompt_question": "Möchtest du die Ortsbeschreibung um die KI-generierte Bildbeschreibung erweitern?",
             }
         )
+    except AimoError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@api_worldinfo_bp.route("/locations/extract-tags", methods=["POST"])
+@require_permission(FunctionPermission.WORLDINFO_EDIT)
+def extract_location_tags():
+    data = request.get_json(silent=True) or request.form.to_dict()
+    description = (data.get("description") or "").strip()
+    if not description:
+        return jsonify({"error": "Keine Ortsbeschreibung übergeben."}), 400
+
+    settings = SettingsRepository().get_settings()
+    llm = get_llm_provider(settings)
+    service = WorldInfoService()
+    try:
+        tags = service.extract_tags_from_description(
+            description=description,
+            llm_provider=llm,
+            model=settings.tasks.roleplay_model,
+        )
+        return jsonify({"tags": tags, "tags_string": ", ".join(tags)})
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 400

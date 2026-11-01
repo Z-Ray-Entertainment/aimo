@@ -115,7 +115,11 @@
         {% set wi = item.worldinfo %}
         <a href="{{ url_for('worldinfo.detail', worldinfo_id=wi.id) }}" class="card-tile" style="padding: 1.25rem; justify-content: space-between; text-decoration: none;">
           <div>
-            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">{{ wi.icon or '🌐' }}</div>
+            {% if wi.cover_image_path %}
+              <img src="{{ url_for('uploaded_file', filename=wi.cover_image_path) }}" alt="{{ wi.name }}" style="width: 56px; height: 56px; border-radius: 10px; object-fit: cover; border: 1.5px solid var(--gold-accent); margin-bottom: 0.5rem; display: block;" onerror="this.style.display='none';">
+            {% else %}
+              <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">{{ wi.icon or '🌐' }}</div>
+            {% endif %}
             <h3 style="color: var(--gold-accent); margin-bottom: 0.4rem;">{{ wi.name }}</h3>
           </div>
           <div style="font-size: 0.85rem; color: var(--text-muted);">
@@ -172,28 +176,23 @@
   <div class="modal-frame" style="max-width: 480px;">
     <div class="modal-header">
       <h3 style="color: var(--gold-accent);">Neue Welt erstellen</h3>
-      <button type="button" class="btn" data-modal-close="new-worldinfo-modal">✕</button>
+      <button type="button" class="header-btn" data-modal-close="new-worldinfo-modal">✕</button>
     </div>
     <form method="POST" action="{{ url_for('worldinfo.create_worldinfo') }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
       <div>
         <label>Name der Welt *</label>
         <input type="text" name="name" required>
       </div>
-      <div style="display: flex; gap: 0.75rem;">
-        <div style="flex: 1;">
-          <label>Symbol / Icon</label>
-          <input type="text" name="icon" value="🌐">
-        </div>
-        <div style="flex: 1;">
-          <label>Sichtbarkeit</label>
-          <select name="visibility">
-            <option value="private" selected>Privat</option>
-            <option value="public">Öffentlich</option>
-          </select>
-        </div>
+      <div>
+        <label>Sichtbarkeit</label>
+        <select name="visibility">
+          <option value="private" selected>Privat</option>
+          <option value="public">Öffentlich</option>
+        </select>
       </div>
-      <div style="text-align: right;">
-        <button type="submit" class="btn">Anlegen</button>
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+        <button type="button" class="header-btn" data-modal-close="new-worldinfo-modal">Abbrechen</button>
+        <button type="submit" class="header-btn primary">Anlegen</button>
       </div>
     </form>
   </div>

@@ -1,0 +1,56 @@
+{# Reusable Image Cropper Modal Macro for 1:1, 9:16 or multi-target cropping #}
+{% macro image_cropper_modal(modal_id, title="Bild-Ausschnitt festlegen", targets=[]) %}
+<div class="modal-backdrop" id="{{ modal_id }}" aria-hidden="true">
+  <div class="modal-frame" style="max-width: 680px;">
+    <div class="modal-header">
+      <h3 style="color: var(--gold-accent);"><span class="icon-mono">✂️</span> {{ title }}</h3>
+      <button type="button" class="header-btn" data-modal-close="{{ modal_id }}">✕</button>
+    </div>
+
+    {% if targets|length > 1 %}
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.85rem;">
+      <div style="display: flex; gap: 0.45rem; align-items: center; flex-wrap: wrap;">
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Ziel-Ausschnitt:</span>
+        {% for target in targets %}
+        <button type="button" class="header-btn crop-target-btn {% if loop.first %}active{% endif %}" data-crop-target="{{ target.id }}" id="{{ modal_id }}-target-btn-{{ target.id }}">
+          {% if target.icon %}<span class="icon-mono">{{ target.icon }}</span> {% endif %}{{ target.label }}
+        </button>
+        {% endfor %}
+      </div>
+      <span style="font-size: 0.8rem; color: var(--text-muted);">Verschieben &amp; Skalieren</span>
+    </div>
+    {% endif %}
+
+    <div style="display: flex; gap: 1.25rem; align-items: flex-start; flex-wrap: wrap;">
+      <!-- Crop Stage -->
+      <div id="{{ modal_id }}-stage-wrap" style="flex: 1; min-width: 280px; display: flex; justify-content: center; align-items: center; background: rgba(10, 7, 5, 0.92); border: 2px solid var(--border-wood-dark); border-radius: 10px; padding: 0.75rem; overflow: hidden; user-select: none;">
+        <div id="{{ modal_id }}-image-container" style="position: relative; display: inline-block; line-height: 0;">
+          <img id="{{ modal_id }}-source-img" src="" alt="Crop Source" style="max-width: 420px; max-height: 420px; display: block; pointer-events: none;" crossorigin="anonymous">
+          <div id="{{ modal_id }}-selection-box" class="crop-selection-box" data-target="{{ targets[0].id if targets else 'cover' }}">
+            <div id="{{ modal_id }}-resize-handle" class="crop-resize-handle" title="Größe ändern"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Mini-Vorschau -->
+      <div style="width: 140px; display: flex; flex-direction: column; gap: 0.85rem; align-items: center;">
+        {% for target in targets %}
+        <div style="text-align: center; cursor: pointer;" id="{{ modal_id }}-preview-tab-{{ target.id }}" data-crop-target="{{ target.id }}" title="Klicken, um {{ target.label }} anzupassen">
+          <div style="font-size: 0.74rem; color: {{ target.accent_color or 'var(--gold-accent)' }}; font-weight: 600; margin-bottom: 0.25rem;">
+            {% if target.icon %}{{ target.icon }} {% endif %}{{ target.short_label or target.label }}
+          </div>
+          <canvas id="{{ modal_id }}-preview-canvas-{{ target.id }}" width="{{ target.preview_width or 72 }}" height="{{ target.preview_height or 72 }}" style="border: 2px solid {{ target.accent_color or 'var(--gold-accent)' }}; border-radius: 6px; background: #14100C;"></canvas>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1.2rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
+      <button type="button" class="header-btn" data-modal-close="{{ modal_id }}">Abbrechen</button>
+      <button type="button" id="{{ modal_id }}-apply-btn" class="header-btn primary">
+        <span class="icon-mono">✂️</span> {{ "Ausschnitte" if targets|length > 1 else "Ausschnitt" }} übernehmen
+      </button>
+    </div>
+  </div>
+</div>
+{% endmacro %}

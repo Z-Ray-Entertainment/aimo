@@ -97,12 +97,10 @@ def new_character_chat(character_id: int):
             "character", character.id, "first_message", sys_lang, character.first_message
         )
         initial_loc = None
-        if form.worldinfo_id:
-            wi = wi_repo.get_by_id(form.worldinfo_id)
-            if wi and wi.initial_location_id:
-                initial_loc = wi.initial_location_id
-        if initial_loc is None and character.initial_location_id and form.worldinfo_id:
-            initial_loc = character.initial_location_id
+        if character.initial_location_id and form.worldinfo_id:
+            loc = wi_repo.get_location(character.initial_location_id)
+            if loc and loc.worldinfo_id == form.worldinfo_id:
+                initial_loc = character.initial_location_id
         try:
             session_obj, first_msg = chat_service.create_session(
                 user_id=user.id,
@@ -313,11 +311,11 @@ def update_session_settings(session_id: int):
                 if wi is None or not wi.is_visible_to_user(user.id, user.is_initial_admin):
                     flash("Ungültige WorldInfo.", "error")
                     return redirect(url_for("chat.view_session", session_id=session_id))
-                if wi.initial_location_id:
-                    init_loc = wi.initial_location_id
-            if init_loc is None and new_wi_id:
                 char = char_repo.get_by_id(chat_session.character_id)
-                init_loc = char.initial_location_id if char else None
+                if char and char.initial_location_id:
+                    loc = wi_repo.get_location(char.initial_location_id)
+                    if loc and loc.worldinfo_id == new_wi_id:
+                        init_loc = char.initial_location_id
             chat_service.switch_worldinfo(chat_session, new_wi_id, init_loc)
             flash("WorldInfo für diesen Chat gewechselt.", "success")
         elif action == "toggle_events":

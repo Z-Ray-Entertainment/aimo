@@ -1,29 +1,46 @@
 {% extends "base.html" %}
-{% from "macros/buttons.html" import action_button %}
+{% from "macros/buttons.html" import action_button, new_button %}
+{% from "macros/image_cropper.html" import image_cropper_modal %}
 {% block title %}AIMO — WorldInfo: {{ worldinfo.name }}{% endblock %}
 
 {% block content %}
 <div data-tab-group>
   <div class="wood-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-    <div style="display: flex; align-items: center; gap: 1rem;">
+    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
       {{ action_button("Zurück", href=url_for('overview.index'), arrow="left") }}
-      <form method="POST" action="{{ url_for('worldinfo.detail', worldinfo_id=worldinfo.id) }}" style="display: flex; align-items: flex-end; gap: 0.75rem; flex-wrap: wrap;">
-        <div>
-          <label style="font-size: 0.75rem; color: var(--text-muted);">
-            Symbol
-            <span class="field-help-btn" title="Symbol:&#10;Ein Emoji oder Symbol als visuelles Erkennungszeichen der Welt in Auswahlfeldern und Menüs.">?</span>
-          </label>
-          <input type="text" name="icon" value="{{ worldinfo.icon or '🌐' }}" style="width: 64px; text-align: center;">
+
+      <form method="POST" action="{{ url_for('worldinfo.detail', worldinfo_id=worldinfo.id) }}" enctype="multipart/form-data" style="display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
+        <!-- 1:1 Cover Image & Preview -->
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div id="worldinfo-cover-preview-wrap" style="width: 72px; height: 72px; border-radius: 12px; border: 2px solid var(--gold-accent); overflow: hidden; background: rgba(15, 11, 8, 0.9); display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="1:1 Welt-Cover">
+            <img id="worldinfo-cover-preview-img" src="{% if worldinfo.cover_image_path %}{{ url_for('uploaded_file', filename=worldinfo.cover_image_path) }}{% endif %}" alt="Cover" style="{% if not worldinfo.cover_image_path %}display: none;{% endif %} width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; document.getElementById('worldinfo-cover-placeholder-icon').style.display='flex';">
+            <div id="worldinfo-cover-placeholder-icon" style="{% if worldinfo.cover_image_path %}display: none;{% else %}display: flex;{% endif %} align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 2.2rem; user-select: none;">
+              {{ worldinfo.icon or '🌐' }}
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+            <input type="file" id="worldinfo-cover-input" name="cover_file" accept=".png,.jpg,.jpeg,.webp" style="display: none;">
+            <label for="worldinfo-cover-input" class="header-btn" style="padding: 0.28rem 0.6rem; font-size: 0.78rem; cursor: pointer; margin-bottom: 0; text-align: center;">
+              <span class="icon-mono">📷</span> Cover wählen
+            </label>
+            <button type="button" id="open-worldinfo-crop-btn" class="header-btn" style="padding: 0.28rem 0.6rem; font-size: 0.78rem;" {% if not worldinfo.cover_image_path %}disabled{% endif %}>
+              <span class="icon-mono">✂️</span> Zuschneiden
+            </button>
+            <span id="worldinfo-cover-crop-badge" style="display: none; font-size: 0.72rem; color: #4CAF50; font-weight: 600;">✓ 1:1 Cover aktiv</span>
+          </div>
         </div>
+
         <div>
-          <label style="font-size: 0.75rem; color: var(--text-muted);">
+          <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">
             Welt-Name
             <span class="field-help-btn" title="Welt-Name:&#10;Der Name des Universums oder Schauplatzes. Wird als Primärwelt in den Prompt-Kontext eingebunden.">?</span>
           </label>
-          <input type="text" name="name" value="{{ worldinfo.name }}" style="width: 240px; font-weight: 700;">
+          <input type="text" name="name" value="{{ worldinfo.name }}" style="width: 240px; font-weight: 700;" required>
         </div>
+
         <div>
-          <label style="font-size: 0.75rem; color: var(--text-muted);">
+          <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">
             Sichtbarkeit
             <span class="field-help-btn" title="Sichtbarkeit:&#10;Privat = Nur dir zugänglich.&#10;Öffentlich = Allen Benutzern für Chats zugänglich.">?</span>
           </label>
@@ -32,37 +49,29 @@
             <option value="public" {% if worldinfo.visibility == 'public' %}selected{% endif %}>Öffentlich</option>
           </select>
         </div>
-        <div>
-          <label style="font-size: 0.75rem; color: var(--text-muted);">
-            Initialer Ort (Startszene)
-            <span class="field-help-btn" title="Initialer Ort (Startszene):&#10;Der narrative Startpunkt: Ort dieser Welt, an dem neue Chats standardmäßig beginnen. Die Ortsbeschreibung wird als System-Text angezeigt und in [WORLD_INFO] bereitgestellt.">?</span>
-          </label>
-          <select name="initial_location_id" style="width: 200px;">
-            <option value="">-- Kein Startort --</option>
-            {% for loc in locations %}
-              <option value="{{ loc.id }}" {% if worldinfo.initial_location_id == loc.id %}selected{% endif %}>📍 {{ loc.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
+
         {% if has_perm('worldinfo_edit') %}
-          <button type="submit" class="btn"><span class="icon-mono">💾</span></button>
+          <div style="padding-top: 1.1rem;">
+            <button type="submit" class="header-btn primary"><span class="icon-mono">💾</span> Speichern</button>
+          </div>
         {% endif %}
       </form>
     </div>
+
     {% if has_perm('worldinfo_delete') %}
       <form method="POST" action="{{ url_for('worldinfo.delete_worldinfo', worldinfo_id=worldinfo.id) }}" onsubmit="return confirm('WorldInfo wirklich löschen?');">
-        <button type="submit" class="btn btn-danger"><span class="icon-mono">🗑️</span> Welt löschen</button>
+        <button type="submit" class="header-btn danger"><span class="icon-mono">🗑️</span> Welt löschen</button>
       </form>
     {% endif %}
   </div>
 
-  <!-- Tabs: Places & Events -->
+  <!-- Tabs: Places & Events (Consistent with System-wide Header & Nav Button Design) -->
   <div class="rpg-tabs">
-    <button type="button" class="rpg-tab-btn active" data-tab-target="tab-places">
-      <span class="icon-mono">📍</span> Tab 1: Places (Orte & 16:9-Hintergründe)
+    <button type="button" class="header-btn header-nav-btn active" data-tab-target="tab-places">
+      <span class="icon-mono">📍</span> <span>Orte &amp; Hintergründe ({{ locations|length }})</span>
     </button>
-    <button type="button" class="rpg-tab-btn" data-tab-target="tab-events">
-      <span class="icon-mono">🎲</span> Tab 2: Events (Zufalls-Ereignisse)
+    <button type="button" class="header-btn header-nav-btn" data-tab-target="tab-events">
+      <span class="icon-mono">🎲</span> <span>Zufalls-Events ({{ events|length }})</span>
     </button>
   </div>
 
@@ -87,7 +96,7 @@
           <div class="modal-frame">
             <div class="modal-header">
               <h3 style="color: var(--gold-accent);">Ort bearbeiten: {{ loc.name }}</h3>
-              <button type="button" class="btn" data-modal-close="edit-location-modal-{{ loc.id }}">✕</button>
+              <button type="button" class="header-btn" data-modal-close="edit-location-modal-{{ loc.id }}">✕</button>
             </div>
             <form method="POST" action="{{ url_for('worldinfo.edit_location', worldinfo_id=worldinfo.id, location_id=loc.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
               <div>
@@ -97,20 +106,37 @@
                 </label>
                 <input type="text" name="name" value="{{ loc.name }}" required>
               </div>
+
               <div>
-                <label>
-                  Tags (Kommagetrennt)
-                  <span class="field-help-btn" title="Orts-Tags:&#10;Kommagetrennte Schlagwörter zur Charakterisierung der Umgebung (z. B. drinnen, gemütlich, bücher, ruhig).">?</span>
-                </label>
-                <input type="text" name="tags" value="{{ loc.tags|join(', ') }}">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                  <label style="margin-bottom: 0;">
+                    Tags (Kommagetrennt)
+                    <span class="field-help-btn" title="Orts-Tags:&#10;Kommagetrennte Schlagwörter zur Charakterisierung der Umgebung (z. B. drinnen, gemütlich, bücher, ruhig).">?</span>
+                  </label>
+                  <button type="button" class="header-btn extract-tags-btn" data-desc-id="edit-loc-desc-{{ loc.id }}" data-tags-id="edit-loc-tags-{{ loc.id }}" data-status-id="edit-loc-tags-status-{{ loc.id }}" style="padding: 0.2rem 0.55rem; font-size: 0.75rem;">
+                    <span class="icon-mono">🏷️</span> Tags extrahieren
+                  </button>
+                </div>
+                <input type="text" id="edit-loc-tags-{{ loc.id }}" name="tags" value="{{ loc.tags|join(', ') }}">
+                <span id="edit-loc-tags-status-{{ loc.id }}" style="display: none; font-size: 0.75rem; color: #4CAF50; font-weight: 600; margin-top: 0.2rem;"></span>
               </div>
+
               <div>
                 <label>
                   16:9-Hintergrundbild (PNG, JPG, WEBP)
                   <span class="field-help-btn" title="16:9 Hintergrundbild:&#10;Querformat-Bild (16:9) als Kulisse für die Chat-Bühne und Referenzbild für ComfyUI-Szenengenerierungen.">?</span>
                 </label>
-                <input type="file" name="background_file" accept=".png,.jpg,.jpeg,.webp">
+                <input type="file" id="edit-loc-bg-input-{{ loc.id }}" name="background_file" accept=".png,.jpg,.jpeg,.webp">
+                <input type="hidden" id="edit-loc-bg-path-{{ loc.id }}" name="background_image_path" value="{{ loc.background_image_path or '' }}">
+                <input type="hidden" id="edit-loc-vision-alt-{{ loc.id }}" name="vision_alt_text" value="{{ loc.vision_alt_text or '' }}">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.35rem;">
+                  <button type="button" class="header-btn edit-loc-analyze-btn" data-loc-id="{{ loc.id }}" data-input-id="edit-loc-bg-input-{{ loc.id }}" data-path-id="edit-loc-bg-path-{{ loc.id }}" data-alt-id="edit-loc-vision-alt-{{ loc.id }}" data-desc-id="edit-loc-desc-{{ loc.id }}" data-status-id="edit-loc-analyze-status-{{ loc.id }}" style="padding: 0.28rem 0.65rem; font-size: 0.78rem;" {% if not loc.background_image_path %}disabled{% endif %}>
+                    <span class="icon-mono">👁️</span> Bild analysieren &amp; beschreiben
+                  </button>
+                  <span id="edit-loc-analyze-status-{{ loc.id }}" style="font-size: 0.75rem; color: var(--text-muted);"></span>
+                </div>
               </div>
+
               <div>
                 <label>
                   Ortsbeschreibung *
@@ -118,6 +144,7 @@
                 </label>
                 <input type="hidden" name="i18n_description" id="i18n-wi-loc-{{ loc.id }}" value='{{ (loc_translations.get(loc.id, {}).get("description", {}) if loc_translations is defined else {}) | tojson }}'>
                 <textarea
+                  id="edit-loc-desc-{{ loc.id }}"
                   name="description"
                   rows="4"
                   required
@@ -126,6 +153,7 @@
                   data-i18n-entity-id="{{ loc.id }}"
                   data-i18n-hidden="i18n-wi-loc-{{ loc.id }}">{{ loc.description }}</textarea>
               </div>
+
               <div>
                 <label>Zugeordnete Orts-Events:</label>
                 <ul style="margin-left: 1.2rem; font-size: 0.85rem; color: var(--text-muted);">
@@ -136,9 +164,13 @@
                   {% endfor %}
                 </ul>
               </div>
-              <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
-                <button type="submit" form="delete-loc-form-{{ loc.id }}" class="btn btn-danger"><span class="icon-mono">🗑️</span> Löschen</button>
-                <button type="submit" class="btn"><span class="icon-mono">💾</span> Speichern</button>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
+                <button type="submit" form="delete-loc-form-{{ loc.id }}" class="header-btn danger"><span class="icon-mono">🗑️</span> Löschen</button>
+                <div style="display: flex; gap: 0.5rem;">
+                  <button type="button" class="header-btn" data-modal-close="edit-location-modal-{{ loc.id }}">Abbrechen</button>
+                  <button type="submit" class="header-btn primary"><span class="icon-mono">💾</span> Speichern</button>
+                </div>
               </div>
             </form>
             <form id="delete-loc-form-{{ loc.id }}" method="POST" action="{{ url_for('worldinfo.delete_location', worldinfo_id=worldinfo.id, location_id=loc.id) }}" style="display: none;"></form>
@@ -185,7 +217,7 @@
           <div class="modal-frame">
             <div class="modal-header">
               <h3 style="color: var(--gold-accent);">Event bearbeiten: {{ ev.title }}</h3>
-              <button type="button" class="btn" data-modal-close="edit-event-modal-{{ ev.id }}">✕</button>
+              <button type="button" class="header-btn" data-modal-close="edit-event-modal-{{ ev.id }}">✕</button>
             </div>
             <form method="POST" action="{{ url_for('worldinfo.edit_event', worldinfo_id=worldinfo.id, event_id=ev.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
               <div>
@@ -237,9 +269,12 @@
                   data-i18n-entity-id="{{ ev.id }}"
                   data-i18n-hidden="i18n-wi-ev-{{ ev.id }}">{{ ev.description }}</textarea>
               </div>
-              <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
-                <button type="submit" form="delete-ev-form-{{ ev.id }}" class="btn btn-danger"><span class="icon-mono">🗑️</span> Löschen</button>
-                <button type="submit" class="btn"><span class="icon-mono">💾</span> Speichern</button>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
+                <button type="submit" form="delete-ev-form-{{ ev.id }}" class="header-btn danger"><span class="icon-mono">🗑️</span> Löschen</button>
+                <div style="display: flex; gap: 0.5rem;">
+                  <button type="button" class="header-btn" data-modal-close="edit-event-modal-{{ ev.id }}">Abbrechen</button>
+                  <button type="submit" class="header-btn primary"><span class="icon-mono">💾</span> Speichern</button>
+                </div>
               </div>
             </form>
             <form id="delete-ev-form-{{ ev.id }}" method="POST" action="{{ url_for('worldinfo.delete_event', worldinfo_id=worldinfo.id, event_id=ev.id) }}" style="display: none;"></form>
@@ -250,12 +285,12 @@
   </section>
 </div>
 
-<!-- Modal: Neuer Ort mit Vision-ALT-Abfrage -->
+<!-- Modal: Neuer Ort -->
 <div class="modal-backdrop" id="new-location-modal" aria-hidden="true">
   <div class="modal-frame">
     <div class="modal-header">
       <h3 style="color: var(--gold-accent);">Neuen Ort anlegen</h3>
-      <button type="button" class="btn" data-modal-close="new-location-modal">✕</button>
+      <button type="button" class="header-btn" data-modal-close="new-location-modal">✕</button>
     </div>
     <form method="POST" action="{{ url_for('worldinfo.add_location', worldinfo_id=worldinfo.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
       <div>
@@ -265,13 +300,21 @@
         </label>
         <input type="text" name="name" required>
       </div>
+
       <div>
-        <label>
-          Tags (Kommagetrennt)
-          <span class="field-help-btn" title="Orts-Tags:&#10;Kommagetrennte Schlagwörter zur Charakterisierung der Umgebung (z. B. drinnen, gemütlich, bücher, ruhig).">?</span>
-        </label>
-        <input type="text" name="tags" placeholder="taverne, wald, schloss">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+          <label style="margin-bottom: 0;">
+            Tags (Kommagetrennt)
+            <span class="field-help-btn" title="Orts-Tags:&#10;Kommagetrennte Schlagwörter zur Charakterisierung der Umgebung (z. B. drinnen, gemütlich, bücher, ruhig).">?</span>
+          </label>
+          <button type="button" class="header-btn extract-tags-btn" data-desc-id="new-loc-desc" data-tags-id="new-loc-tags" data-status-id="new-loc-tags-status" style="padding: 0.2rem 0.55rem; font-size: 0.75rem;">
+            <span class="icon-mono">🏷️</span> Tags extrahieren
+          </button>
+        </div>
+        <input type="text" id="new-loc-tags" name="tags" placeholder="taverne, wald, schloss">
+        <span id="new-loc-tags-status" style="display: none; font-size: 0.75rem; color: #4CAF50; font-weight: 600; margin-top: 0.2rem;"></span>
       </div>
+
       <div>
         <label>
           16:9-Hintergrundbild (PNG, JPG, WEBP)
@@ -280,7 +323,14 @@
         <input type="file" id="new-loc-bg-input" name="background_file" accept=".png,.jpg,.jpeg,.webp">
         <input type="hidden" id="new-loc-bg-path" name="background_image_path">
         <input type="hidden" id="new-loc-vision-alt" name="vision_alt_text">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.35rem;">
+          <button type="button" id="new-loc-analyze-btn" class="header-btn" style="padding: 0.28rem 0.65rem; font-size: 0.78rem;" disabled>
+            <span class="icon-mono">👁️</span> Bild analysieren &amp; beschreiben
+          </button>
+          <span id="new-loc-analyze-status" style="font-size: 0.75rem; color: var(--text-muted);"></span>
+        </div>
       </div>
+
       <div>
         <label>
           Ortsbeschreibung *
@@ -297,8 +347,10 @@
           data-i18n-entity-id=""
           data-i18n-hidden="i18n-wi-loc-new"></textarea>
       </div>
-      <div style="text-align: right;">
-        <button type="submit" class="btn">Ort speichern</button>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
+        <button type="button" class="header-btn" data-modal-close="new-location-modal">Abbrechen</button>
+        <button type="submit" class="header-btn primary"><span class="icon-mono">💾</span> Ort speichern</button>
       </div>
     </form>
   </div>
@@ -309,7 +361,7 @@
   <div class="modal-frame">
     <div class="modal-header">
       <h3 style="color: var(--gold-accent);">Neues Event anlegen</h3>
-      <button type="button" class="btn" data-modal-close="new-event-modal">✕</button>
+      <button type="button" class="header-btn" data-modal-close="new-event-modal">✕</button>
     </div>
     <form method="POST" action="{{ url_for('worldinfo.add_event', worldinfo_id=worldinfo.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
       <div>
@@ -361,40 +413,247 @@
           data-i18n-entity-id=""
           data-i18n-hidden="i18n-wi-ev-new"></textarea>
       </div>
-      <div style="text-align: right;">
-        <button type="submit" class="btn">Event speichern</button>
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
+        <button type="button" class="header-btn" data-modal-close="new-event-modal">Abbrechen</button>
+        <button type="submit" class="header-btn primary"><span class="icon-mono">💾</span> Event speichern</button>
       </div>
     </form>
   </div>
 </div>
+
+<!-- Reusable Image Crop Modal for 1:1 World Cover -->
+{{ image_cropper_modal("worldinfo-cover-crop-modal", title="1:1 Welt-Cover festlegen", targets=[{"id": "cover", "label": "1:1 Cover", "icon": "🌐", "ratio": 1.0, "preview_width": 80, "preview_height": 80}]) }}
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
-document.getElementById("new-loc-bg-input")?.addEventListener("change", async (e) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. Setup 1:1 Cover Cropper
+  window.AimoImageCropper?.setup({
+    modalId: "worldinfo-cover-crop-modal",
+    fileInputId: "worldinfo-cover-input",
+    openBtnId: "open-worldinfo-crop-btn",
+    statusBadgeId: "worldinfo-cover-crop-badge",
+    targets: [
+      {
+        id: "cover",
+        ratio: 1.0,
+        inputElement: document.getElementById("worldinfo-cover-input"),
+        previewImgElement: document.getElementById("worldinfo-cover-preview-img"),
+        previewWrapElement: document.getElementById("worldinfo-cover-preview-wrap"),
+        outputFilename: "cover_1_1.png",
+      },
+    ],
+    onApplied(results) {
+      const placeholder = document.getElementById("worldinfo-cover-placeholder-icon");
+      if (placeholder) placeholder.style.display = "none";
+      const img = document.getElementById("worldinfo-cover-preview-img");
+      if (img) img.style.display = "block";
+    },
+  });
 
-  const formData = new FormData();
-  formData.append("background", file);
-
-  try {
-    const resp = await fetch("/api/worldinfo/locations/analyze-bg", {
-      method: "POST",
-      body: formData,
+  // Enable / disable new location image analyze button on file pick
+  const newLocFileInput = document.getElementById("new-loc-bg-input");
+  const newLocAnalyzeBtn = document.getElementById("new-loc-analyze-btn");
+  if (newLocFileInput && newLocAnalyzeBtn) {
+    newLocFileInput.addEventListener("change", () => {
+      newLocAnalyzeBtn.disabled = !newLocFileInput.files || !newLocFileInput.files[0];
     });
-    const data = await resp.json();
-    if (resp.ok && data.vision_alt_text) {
-      document.getElementById("new-loc-bg-path").value = data.background_image_path || "";
-      document.getElementById("new-loc-vision-alt").value = data.vision_alt_text;
-      if (confirm(data.prompt_question || "Möchtest du die Ortsbeschreibung um die KI-generierte Bildbeschreibung erweitern?")) {
+  }
+
+  // 2. On-Demand Location Background Image Recognition (New Location)
+  newLocAnalyzeBtn?.addEventListener("click", async () => {
+    const file = newLocFileInput?.files?.[0];
+    if (!file) return;
+
+    const statusEl = document.getElementById("new-loc-analyze-status");
+    newLocAnalyzeBtn.disabled = true;
+    newLocAnalyzeBtn.innerHTML = '<span class="icon-mono">⏳</span> Analysiere...';
+    if (statusEl) statusEl.textContent = "KI-Vision läuft...";
+
+    const formData = new FormData();
+    formData.append("background", file);
+
+    try {
+      const resp = await fetch("/api/worldinfo/locations/analyze-bg", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await resp.json();
+      if (resp.ok && data.vision_alt_text) {
+        document.getElementById("new-loc-bg-path").value = data.background_image_path || "";
+        document.getElementById("new-loc-vision-alt").value = data.vision_alt_text;
         const descEl = document.getElementById("new-loc-desc");
-        descEl.value = descEl.value
-          ? `${descEl.value.trim()}\n\n${data.vision_alt_text}`
-          : data.vision_alt_text;
+        if (descEl) {
+          descEl.value = descEl.value.trim()
+            ? `${descEl.value.trim()}\n\n${data.vision_alt_text}`
+            : data.vision_alt_text;
+        }
+        if (statusEl) {
+          statusEl.style.color = "#4CAF50";
+          statusEl.textContent = "✓ Bildbeschreibung eingefügt";
+        }
+      } else {
+        if (statusEl) {
+          statusEl.style.color = "#E57373";
+          statusEl.textContent = data.error || "Fehler bei der Analyse";
+        }
       }
+    } catch (err) {
+      if (statusEl) {
+        statusEl.style.color = "#E57373";
+        statusEl.textContent = "Netzwerkfehler";
+      }
+    } finally {
+      newLocAnalyzeBtn.disabled = false;
+      newLocAnalyzeBtn.innerHTML = '<span class="icon-mono">🔄</span> Erneut analysieren';
     }
-  } catch (_) {}
+  });
+
+  // 3. On-Demand Location Background Image Recognition (Edit Location Modals)
+  document.querySelectorAll(".edit-loc-analyze-btn").forEach((btn) => {
+    const locId = btn.getAttribute("data-loc-id");
+    const inputId = btn.getAttribute("data-input-id");
+    const fileInputEl = document.getElementById(inputId);
+
+    if (fileInputEl) {
+      fileInputEl.addEventListener("change", () => {
+        if (fileInputEl.files && fileInputEl.files[0]) {
+          btn.disabled = false;
+        }
+      });
+    }
+
+    btn.addEventListener("click", async () => {
+      const pathId = btn.getAttribute("data-path-id");
+      const altId = btn.getAttribute("data-alt-id");
+      const descId = btn.getAttribute("data-desc-id");
+      const statusId = btn.getAttribute("data-status-id");
+
+      const file = fileInputEl?.files?.[0];
+      const existingPath = document.getElementById(pathId)?.value || "";
+      const statusEl = document.getElementById(statusId);
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="icon-mono">⏳</span> Analysiere...';
+      if (statusEl) statusEl.textContent = "KI-Vision läuft...";
+
+      const formData = new FormData();
+      if (file) {
+        formData.append("background", file);
+      } else if (existingPath) {
+        formData.append("background_image_path", existingPath);
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="icon-mono">👁️</span> Bild analysieren &amp; beschreiben';
+        if (statusEl) statusEl.textContent = "Kein Bild gewählt";
+        return;
+      }
+
+      try {
+        const resp = await fetch("/api/worldinfo/locations/analyze-bg", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await resp.json();
+        if (resp.ok && data.vision_alt_text) {
+          if (data.background_image_path && document.getElementById(pathId)) {
+            document.getElementById(pathId).value = data.background_image_path;
+          }
+          if (document.getElementById(altId)) {
+            document.getElementById(altId).value = data.vision_alt_text;
+          }
+          const descEl = document.getElementById(descId);
+          if (descEl) {
+            descEl.value = descEl.value.trim()
+              ? `${descEl.value.trim()}\n\n${data.vision_alt_text}`
+              : data.vision_alt_text;
+          }
+          if (statusEl) {
+            statusEl.style.color = "#4CAF50";
+            statusEl.textContent = "✓ Bildbeschreibung eingefügt";
+          }
+        } else {
+          if (statusEl) {
+            statusEl.style.color = "#E57373";
+            statusEl.textContent = data.error || "Fehler bei der Analyse";
+          }
+        }
+      } catch (err) {
+        if (statusEl) {
+          statusEl.style.color = "#E57373";
+          statusEl.textContent = "Netzwerkfehler";
+        }
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="icon-mono">🔄</span> Erneut analysieren';
+      }
+    });
+  });
+
+  // 4. On-Demand LLM Tag Extraction from Location Description
+  document.querySelectorAll(".extract-tags-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const descId = btn.getAttribute("data-desc-id");
+      const tagsId = btn.getAttribute("data-tags-id");
+      const statusId = btn.getAttribute("data-status-id");
+
+      const descEl = document.getElementById(descId);
+      const tagsEl = document.getElementById(tagsId);
+      const statusEl = document.getElementById(statusId);
+
+      const description = descEl ? descEl.value.trim() : "";
+      if (!description) {
+        if (statusEl) {
+          statusEl.style.display = "inline-block";
+          statusEl.style.color = "#E57373";
+          statusEl.textContent = "Bitte zuerst eine Ortsbeschreibung eingeben";
+        }
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="icon-mono">⏳</span> Extrahiere...';
+      if (statusEl) {
+        statusEl.style.display = "inline-block";
+        statusEl.style.color = "var(--text-muted)";
+        statusEl.textContent = "Tags werden generiert...";
+      }
+
+      try {
+        const resp = await fetch("/api/worldinfo/locations/extract-tags", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ description }),
+        });
+        const data = await resp.json();
+        if (resp.ok && data.tags_string) {
+          if (tagsEl) {
+            tagsEl.value = tagsEl.value.trim()
+              ? `${tagsEl.value.trim()}, ${data.tags_string}`
+              : data.tags_string;
+          }
+          if (statusEl) {
+            statusEl.style.color = "#4CAF50";
+            statusEl.textContent = `✓ ${data.tags.length} Tags übernommen`;
+          }
+        } else {
+          if (statusEl) {
+            statusEl.style.color = "#E57373";
+            statusEl.textContent = data.error || "Keine Tags extrahiert";
+          }
+        }
+      } catch (err) {
+        if (statusEl) {
+          statusEl.style.color = "#E57373";
+          statusEl.textContent = "Netzwerkfehler";
+        }
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="icon-mono">🏷️</span> Tags extrahieren';
+      }
+    });
+  });
 });
 </script>
 {% endblock %}

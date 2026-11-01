@@ -24,7 +24,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO worldinfos (user_id, name, icon, visibility, initial_location_id, created_at)
+                INSERT INTO worldinfos (user_id, name, icon, visibility, cover_image_path, created_at)
                 VALUES (?, ?, ?, ?, ?, ?)
                 """,
                 (
@@ -32,7 +32,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     worldinfo.name,
                     worldinfo.icon,
                     worldinfo.visibility,
-                    worldinfo.initial_location_id,
+                    worldinfo.cover_image_path,
                     created_str,
                 ),
             )
@@ -56,14 +56,14 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             conn.execute(
                 """
                 UPDATE worldinfos
-                SET name = ?, icon = ?, visibility = ?, initial_location_id = ?
+                SET name = ?, icon = ?, visibility = ?, cover_image_path = ?
                 WHERE id = ?
                 """,
                 (
                     worldinfo.name,
                     worldinfo.icon,
                     worldinfo.visibility,
-                    worldinfo.initial_location_id,
+                    worldinfo.cover_image_path,
                     worldinfo.id,
                 ),
             )
@@ -150,10 +150,13 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             ).fetchone()
             if existing is None:
                 return False
-            conn.execute(
-                "UPDATE worldinfos SET initial_location_id = NULL WHERE initial_location_id = ?",
-                (location_id,),
-            )
+            try:
+                conn.execute(
+                    "UPDATE worldinfos SET initial_location_id = NULL WHERE initial_location_id = ?",
+                    (location_id,),
+                )
+            except sqlite3.OperationalError:
+                pass
             conn.execute("DELETE FROM locations WHERE id = ?", (location_id,))
             return True
 
@@ -230,18 +233,19 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
     def _to_entity(row: sqlite3.Row) -> WorldInfo:
         keys = row.keys()
         vis = str(row["visibility"]) if "visibility" in keys and row["visibility"] else "private"
-        init_loc = (
-            int(row["initial_location_id"])
-            if "initial_location_id" in keys and row["initial_location_id"] is not None
+        cover_path = (
+            str(row["cover_image_path"])
+            if "cover_image_path" in keys and row["cover_image_path"] is not None
             else None
         )
+        icon_val = str(row["icon"]) if "icon" in keys and row["icon"] is not None else "🌐"
         return WorldInfo(
             id=int(row["id"]),
             user_id=int(row["user_id"]),
             name=str(row["name"]),
-            icon=row["icon"] if row["icon"] is not None else None,
+            icon=icon_val,
             visibility=vis,
-            initial_location_id=init_loc,
+            cover_image_path=cover_path,
             created_at=parse_datetime(row["created_at"]),
         )
 

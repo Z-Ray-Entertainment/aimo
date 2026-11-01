@@ -23,7 +23,7 @@ def create_worldinfo():
         wi = service.create_worldinfo(
             user_id=user.id,
             name=request.form.get("name", ""),
-            icon=request.form.get("icon", "🌐"),
+            icon="🌐",
             visibility=request.form.get("visibility", "private"),
         )
         saved = repo.create(wi)
@@ -52,18 +52,18 @@ def detail(worldinfo_id: int):
             flash("Zugriff verweigert: Du kannst nur deine eigenen WorldInfos bearbeiten.", "error")
             return redirect(url_for("overview.index"))
         try:
-            init_loc_raw = request.form.get("initial_location_id")
-            init_loc_id = (
-                int(init_loc_raw)
-                if init_loc_raw and init_loc_raw.strip() and init_loc_raw.strip().isdigit()
-                else None
-            )
+            storage = FileStorage()
+            cover_path = worldinfo.cover_image_path
+            cover_file = request.files.get("cover_file")
+            if cover_file and cover_file.filename:
+                cover_path = storage.save_cover(cover_file.stream, cover_file.filename)
+
             service.update_worldinfo(
                 worldinfo=worldinfo,
                 name=request.form.get("name", worldinfo.name),
-                icon=request.form.get("icon", worldinfo.icon),
+                icon=worldinfo.icon or "🌐",
                 visibility=request.form.get("visibility", worldinfo.visibility),
-                initial_location_id=init_loc_id,
+                cover_image_path=cover_path,
             )
             worldinfo = repo.update(worldinfo)
             flash("WorldInfo gespeichert.", "success")

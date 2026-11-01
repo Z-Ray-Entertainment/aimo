@@ -27,6 +27,7 @@ class FileStorage:
             Path(base_upload_dir).resolve(), "uploads"
         )
         self.portraits_dir: Path = self.base_upload_dir / "portraits"
+        self.covers_dir: Path = self.base_upload_dir / "covers"
         self.sprites_dir: Path = self.base_upload_dir / "sprites"
         self.backgrounds_dir: Path = self.base_upload_dir / "backgrounds"
         self.generated_dir: Path = self.base_upload_dir / "generated"
@@ -34,6 +35,7 @@ class FileStorage:
         for directory in (
             self.base_upload_dir,
             self.portraits_dir,
+            self.covers_dir,
             self.sprites_dir,
             self.backgrounds_dir,
             self.generated_dir,
@@ -51,6 +53,14 @@ class FileStorage:
     def save_portrait(self, content: bytes | BinaryIO, filename: str) -> str:
         return self._save_to_directory(
             target_dir=self.portraits_dir,
+            content=content,
+            filename=filename,
+            unique_prefix=True,
+        )
+
+    def save_cover(self, content: bytes | BinaryIO, filename: str) -> str:
+        return self._save_to_directory(
+            target_dir=self.covers_dir,
             content=content,
             filename=filename,
             unique_prefix=True,

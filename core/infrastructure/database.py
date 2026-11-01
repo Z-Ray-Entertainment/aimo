@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS worldinfos (
     name TEXT NOT NULL,
     icon TEXT,
     visibility TEXT NOT NULL DEFAULT 'private',
-    initial_location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL,
+    cover_image_path TEXT,
     created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_worldinfos_user_id ON worldinfos (user_id);
@@ -347,6 +347,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE lorebooks ADD COLUMN visibility TEXT NOT NULL DEFAULT 'private'",
         "ALTER TABLE worldinfos ADD COLUMN visibility TEXT NOT NULL DEFAULT 'private'",
         "ALTER TABLE worldinfos ADD COLUMN initial_location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL",
+        "ALTER TABLE worldinfos ADD COLUMN cover_image_path TEXT",
         "ALTER TABLE system_settings ADD COLUMN classification_model TEXT NOT NULL DEFAULT 'hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M'",
         "ALTER TABLE system_settings ADD COLUMN default_backdrop_path TEXT",
     ):

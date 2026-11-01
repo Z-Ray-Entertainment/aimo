@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button, new_button %}
+{% from "macros/image_cropper.html" import image_cropper_modal %}
 {% block title %}AIMO — Character Designer{% endblock %}
 
 {% block content %}
@@ -282,7 +283,7 @@
               <span class="field-help-btn" title="Initialort:&#10;Konkreter Startort für das Gespräch innerhalb der verknüpften Welt.">?</span>
             </label>
             <select name="initial_location_id" id="char-initial-location-select">
-              <option value="">-- Kein fester Startort (Standard der WorldInfo) --</option>
+              <option value="">-- Kein fester Startort --</option>
               {% for loc in all_locations %}
                 {% if form.suggested_worldinfo_id and loc.worldinfo_id == form.suggested_worldinfo_id %}
                   <option value="{{ loc.id }}" {% if form.initial_location_id == loc.id %}selected{% endif %}>{{ loc.name }}</option>
@@ -607,57 +608,11 @@
     </div>
   </div>
 
-  <!-- MODAL: Dual-Crop Profile (9:16 Porträt & 1:1 Avatar) -->
-  <div class="modal-backdrop" id="portrait-crop-modal" aria-hidden="true">
-    <div class="modal-frame" style="max-width: 680px;">
-      <div class="modal-header">
-        <h3 style="color: var(--gold-accent);"><span class="icon-mono">✂️</span> Bild-Ausschnitte festlegen (9:16 Porträt &amp; 1:1 Avatar)</h3>
-        <button type="button" class="header-btn" data-modal-close="portrait-crop-modal">✕</button>
-      </div>
-
-      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.85rem;">
-        <div style="display: flex; gap: 0.45rem; align-items: center; flex-wrap: wrap;">
-          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Ziel-Ausschnitt:</span>
-          <button type="button" class="header-btn crop-target-btn active" data-crop-target="portrait" id="crop-target-portrait-btn">
-            <span class="icon-mono">📱</span> 9:16 Porträt (Chat &amp; Voll)
-          </button>
-          <button type="button" class="header-btn crop-target-btn" data-crop-target="avatar" id="crop-target-avatar-btn">
-            <span class="icon-mono">👤</span> 1:1 Avatar (Übersicht &amp; Bubble)
-          </button>
-        </div>
-        <span style="font-size: 0.8rem; color: var(--text-muted);">Verschieben &amp; Skalieren</span>
-      </div>
-
-      <div style="display: flex; gap: 1.25rem; align-items: flex-start; flex-wrap: wrap;">
-        <!-- Crop Stage -->
-        <div id="crop-stage-wrap" style="flex: 1; min-width: 280px; display: flex; justify-content: center; align-items: center; background: rgba(10, 7, 5, 0.92); border: 2px solid var(--border-wood-dark); border-radius: 10px; padding: 0.75rem; overflow: hidden; user-select: none;">
-          <div id="crop-image-container" style="position: relative; display: inline-block; line-height: 0;">
-            <img id="crop-source-img" src="" alt="Crop Source" style="max-width: 420px; max-height: 420px; display: block; pointer-events: none;" crossorigin="anonymous">
-            <div id="crop-selection-box" class="crop-selection-box" data-target="portrait">
-              <div id="crop-resize-handle" class="crop-resize-handle" title="Größe ändern"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Live Mini-Vorschau -->
-        <div style="width: 140px; display: flex; flex-direction: column; gap: 0.85rem; align-items: center;">
-          <div style="text-align: center; cursor: pointer;" id="preview-tab-portrait" title="Klicken, um 9:16 Porträt anzupassen">
-            <div style="font-size: 0.74rem; color: var(--gold-accent); font-weight: 600; margin-bottom: 0.25rem;">📱 9:16 Porträt</div>
-            <canvas id="crop-preview-portrait" width="72" height="128" style="border: 2px solid var(--gold-accent); border-radius: 6px; background: #14100C;"></canvas>
-          </div>
-          <div style="text-align: center; cursor: pointer;" id="preview-tab-avatar" title="Klicken, um 1:1 Avatar anzupassen">
-            <div style="font-size: 0.74rem; color: #64B5F6; font-weight: 600; margin-bottom: 0.25rem;">👤 1:1 Avatar</div>
-            <canvas id="crop-preview-avatar" width="64" height="64" style="border: 2px solid #64B5F6; border-radius: 8px; background: #14100C;"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <div style="display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1.2rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
-        <button type="button" class="header-btn" data-modal-close="portrait-crop-modal">Abbrechen</button>
-        <button type="button" id="apply-crop-btn" class="header-btn primary"><span class="icon-mono">✂️</span> Ausschnitte übernehmen</button>
-      </div>
-    </div>
-  </div>
+  <!-- MODAL: Dual-Crop Profile (9:16 Porträt & 1:1 Avatar) via Reusable Macro -->
+  {{ image_cropper_modal("portrait-crop-modal", title="Bild-Ausschnitte festlegen (9:16 Porträt & 1:1 Avatar)", targets=[
+    {"id": "portrait", "label": "9:16 Porträt (Chat & Voll)", "short_label": "9:16 Porträt", "icon": "📱", "ratio": 0.5625, "preview_width": 72, "preview_height": 128, "accent_color": "var(--gold-accent)"},
+    {"id": "avatar", "label": "1:1 Avatar (Übersicht & Bubble)", "short_label": "1:1 Avatar", "icon": "👤", "ratio": 1.0, "preview_width": 64, "preview_height": 64, "accent_color": "#64B5F6"}
+  ]) }}
 </div>
 {% endblock %}
 
@@ -1141,332 +1096,33 @@ document.getElementById("extract-appearance-btn")?.addEventListener("click", asy
   });
 })();
 
-// Interactive Dual-Crop Profile & Avatar Cropper (Preserved 100%)
-(() => {
-  const fileInput = document.getElementById("primary-portrait-input");
-  const cardFileInput = document.getElementById("card-portrait-input");
-  const avatarFileInput = document.getElementById("avatar-portrait-input");
-  const openCropBtn = document.getElementById("open-crop-btn");
-  const applyCropBtn = document.getElementById("apply-crop-btn");
-  const previewWrap = document.getElementById("portrait-preview-wrap");
-  const previewImg = document.getElementById("portrait-preview-img");
-  const avatarPreviewWrap = document.getElementById("avatar-preview-wrap");
-  const avatarPreviewImg = document.getElementById("avatar-preview-img");
-  const statusBadge = document.getElementById("crop-status-badge");
-
-  const cropImg = document.getElementById("crop-source-img");
-  const cropBox = document.getElementById("crop-selection-box");
-  const resizeHandle = document.getElementById("crop-resize-handle");
-  const portraitCanvas = document.getElementById("crop-preview-portrait");
-  const avatarCanvas = document.getElementById("crop-preview-avatar");
-  const targetBtns = document.querySelectorAll(".crop-target-btn");
-  const tabPortrait = document.getElementById("preview-tab-portrait");
-  const tabAvatar = document.getElementById("preview-tab-avatar");
-
-  if (!fileInput || !cropImg || !cropBox) return;
-
-  let activeTarget = "portrait"; // "portrait" (9:16) | "avatar" (1:1)
-  const ratios = {
-    portrait: 9 / 16,
-    avatar: 1.0,
-  };
-  const boxes = {
-    portrait: { x: 0, y: 0, w: 0, h: 0 },
-    avatar: { x: 0, y: 0, w: 0, h: 0 },
-  };
-
-  let dragMode = null; // 'move' | 'resize' | null
-  let startMouse = { x: 0, y: 0 };
-  let startBox = { x: 0, y: 0, w: 0, h: 0 };
-  let currentSourceDataUrl = previewImg && previewImg.getAttribute("src") ? previewImg.getAttribute("src") : "";
-  let isInternalFileUpdate = false;
-
-  function initCropBoxes() {
-    const dispW = cropImg.clientWidth || 300;
-    const dispH = cropImg.clientHeight || 300;
-    if (dispW < 10 || dispH < 10) return;
-
-    // 1. Portrait 9:16
-    const pRatio = ratios.portrait;
-    let ph = dispH * 0.94;
-    let pw = ph * pRatio;
-    if (pw > dispW * 0.94) {
-      pw = dispW * 0.94;
-      ph = pw / pRatio;
-    }
-    boxes.portrait = {
-      w: Math.max(36, Math.round(pw)),
-      h: Math.max(36, Math.round(ph)),
-      x: Math.max(0, Math.round((dispW - pw) / 2)),
-      y: Math.max(0, Math.round((dispH - ph) / 2)),
-    };
-
-    // 2. Avatar 1:1
-    const aSize = Math.max(36, Math.round(Math.min(dispW, dispH) * 0.62));
-    boxes.avatar = {
-      w: aSize,
-      h: aSize,
-      x: Math.max(0, Math.round((dispW - aSize) / 2)),
-      y: Math.max(0, Math.round(dispH * 0.05)),
-    };
-
-    renderCropBox();
-  }
-
-  function clampActiveBox() {
-    const dispW = cropImg.clientWidth || 300;
-    const dispH = cropImg.clientHeight || 300;
-    if (dispW < 10 || dispH < 10) return;
-    const ratio = ratios[activeTarget];
-    const box = boxes[activeTarget];
-
-    box.w = Math.max(32, Math.min(dispW, box.w));
-    box.h = Math.round(box.w / ratio);
-    if (box.h > dispH) {
-      box.h = dispH;
-      box.w = Math.round(box.h * ratio);
-    }
-    box.x = Math.max(0, Math.min(dispW - box.w, box.x));
-    box.y = Math.max(0, Math.min(dispH - box.h, box.y));
-  }
-
-  function renderCropBox() {
-    clampActiveBox();
-    const box = boxes[activeTarget];
-    cropBox.style.left = `${box.x}px`;
-    cropBox.style.top = `${box.y}px`;
-    cropBox.style.width = `${box.w}px`;
-    cropBox.style.height = `${box.h}px`;
-    cropBox.setAttribute("data-target", activeTarget);
-    updateMiniPreviews();
-  }
-
-  function getNaturalCropRect(box) {
-    const dispW = cropImg.clientWidth || 1;
-    const dispH = cropImg.clientHeight || 1;
-    const natW = cropImg.naturalWidth || dispW;
-    const natH = cropImg.naturalHeight || dispH;
-    const scaleX = natW / dispW;
-    const scaleY = natH / dispH;
-    return {
-      sx: Math.max(0, Math.round(box.x * scaleX)),
-      sy: Math.max(0, Math.round(box.y * scaleY)),
-      sw: Math.max(1, Math.min(natW, Math.round(box.w * scaleX))),
-      sh: Math.max(1, Math.min(natH, Math.round(box.h * scaleY))),
-    };
-  }
-
-  function updateMiniPreviews() {
-    if (!cropImg.complete || !cropImg.naturalWidth) return;
-    if (portraitCanvas) {
-      const rect = getNaturalCropRect(boxes.portrait);
-      const ctx = portraitCanvas.getContext("2d");
-      ctx.clearRect(0, 0, portraitCanvas.width, portraitCanvas.height);
-      ctx.drawImage(cropImg, rect.sx, rect.sy, rect.sw, rect.sh, 0, 0, portraitCanvas.width, portraitCanvas.height);
-    }
-    if (avatarCanvas) {
-      const rect = getNaturalCropRect(boxes.avatar);
-      const ctx = avatarCanvas.getContext("2d");
-      ctx.clearRect(0, 0, avatarCanvas.width, avatarCanvas.height);
-      ctx.drawImage(cropImg, rect.sx, rect.sy, rect.sw, rect.sh, 0, 0, avatarCanvas.width, avatarCanvas.height);
-    }
-  }
-
-  function setTarget(target) {
-    activeTarget = target;
-    targetBtns.forEach((btn) => {
-      btn.classList.toggle("active", btn.getAttribute("data-crop-target") === target);
-    });
-    renderCropBox();
-  }
-
-  function openCropModalWithSrc(src) {
-    if (!src) return;
-
-    if (window.AimoModals && typeof window.AimoModals.open === "function") {
-      window.AimoModals.open("portrait-crop-modal");
-    } else {
-      const modal = document.getElementById("portrait-crop-modal");
-      if (modal) {
-        modal.classList.add("open");
-        modal.setAttribute("aria-hidden", "false");
-      }
-    }
-
-    const onImageReady = () => {
-      setTimeout(() => {
-        initCropBoxes();
-        setTarget(activeTarget);
-      }, 70);
-    };
-
-    if (cropImg.src === src && cropImg.complete && cropImg.naturalWidth) {
-      onImageReady();
-    } else {
-      cropImg.onload = () => onImageReady();
-      cropImg.src = src;
-    }
-  }
-
-  fileInput.addEventListener("change", () => {
-    if (isInternalFileUpdate) return;
-    const file = fileInput.files && fileInput.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      currentSourceDataUrl = ev.target.result;
-      if (previewImg) previewImg.src = currentSourceDataUrl;
-      if (previewWrap) previewWrap.style.display = "block";
-      if (avatarPreviewImg) avatarPreviewImg.src = currentSourceDataUrl;
-      if (avatarPreviewWrap) avatarPreviewWrap.style.display = "block";
-      if (openCropBtn) openCropBtn.disabled = false;
-      openCropModalWithSrc(currentSourceDataUrl);
-    };
-    reader.readAsDataURL(file);
+// Setup Reusable Dual-Crop Component (9:16 Porträt & 1:1 Avatar)
+document.addEventListener("DOMContentLoaded", () => {
+  window.AimoImageCropper?.setup({
+    modalId: "portrait-crop-modal",
+    fileInputId: "primary-portrait-input",
+    openBtnId: "open-crop-btn",
+    statusBadgeId: "crop-status-badge",
+    targets: [
+      {
+        id: "portrait",
+        ratio: 9 / 16,
+        inputElement: document.getElementById("primary-portrait-input"),
+        previewImgElement: document.getElementById("portrait-preview-img"),
+        previewWrapElement: document.getElementById("portrait-preview-wrap"),
+        outputFilename: "portrait_9_16.png",
+      },
+      {
+        id: "avatar",
+        ratio: 1.0,
+        inputElement: document.getElementById("avatar-portrait-input"),
+        linkedInputElements: [document.getElementById("card-portrait-input")],
+        previewImgElement: document.getElementById("avatar-preview-img"),
+        previewWrapElement: document.getElementById("avatar-preview-wrap"),
+        outputFilename: "avatar_1_1.png",
+      },
+    ],
   });
-
-  openCropBtn?.addEventListener("click", () => {
-    const src = currentSourceDataUrl || (previewImg ? previewImg.getAttribute("src") : "");
-    if (src) openCropModalWithSrc(src);
-  });
-
-  targetBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const target = btn.getAttribute("data-crop-target") || "portrait";
-      setTarget(target);
-    });
-  });
-
-  tabPortrait?.addEventListener("click", () => setTarget("portrait"));
-  tabAvatar?.addEventListener("click", () => setTarget("avatar"));
-
-  function startDrag(clientX, clientY, target) {
-    dragMode = target === resizeHandle ? "resize" : "move";
-    startMouse = { x: clientX, y: clientY };
-    startBox = { ...boxes[activeTarget] };
-    document.body.style.userSelect = "none";
-  }
-
-  function moveDrag(clientX, clientY) {
-    if (!dragMode) return;
-    const dx = clientX - startMouse.x;
-    const dy = clientY - startMouse.y;
-    const box = boxes[activeTarget];
-    if (dragMode === "move") {
-      box.x = startBox.x + dx;
-      box.y = startBox.y + dy;
-    } else if (dragMode === "resize") {
-      box.w = Math.max(32, startBox.w + dx);
-      box.h = Math.round(box.w / ratios[activeTarget]);
-    }
-    renderCropBox();
-  }
-
-  function endDrag() {
-    dragMode = null;
-    document.body.style.userSelect = "";
-  }
-
-  cropBox.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    startDrag(e.clientX, e.clientY, e.target);
-  });
-
-  window.addEventListener("mousemove", (e) => {
-    moveDrag(e.clientX, e.clientY);
-  });
-
-  window.addEventListener("mouseup", endDrag);
-
-  cropBox.addEventListener("touchstart", (e) => {
-    if (e.touches && e.touches.length === 1) {
-      e.preventDefault();
-      startDrag(e.touches[0].clientX, e.touches[0].clientY, e.target);
-    }
-  }, { passive: false });
-
-  window.addEventListener("touchmove", (e) => {
-    if (dragMode && e.touches && e.touches.length === 1) {
-      e.preventDefault();
-      moveDrag(e.touches[0].clientX, e.touches[0].clientY);
-    }
-  }, { passive: false });
-
-  window.addEventListener("touchend", endDrag);
-  window.addEventListener("touchcancel", endDrag);
-
-  applyCropBtn?.addEventListener("click", () => {
-    if (!cropImg.complete || !cropImg.naturalWidth) return;
-
-    // 1. Portrait 9:16
-    const rectP = getNaturalCropRect(boxes.portrait);
-    const canvasP = document.createElement("canvas");
-    canvasP.width = rectP.sw;
-    canvasP.height = rectP.sh;
-    canvasP.getContext("2d").drawImage(cropImg, rectP.sx, rectP.sy, rectP.sw, rectP.sh, 0, 0, rectP.sw, rectP.sh);
-
-    // 2. Avatar 1:1
-    const rectA = getNaturalCropRect(boxes.avatar);
-    const canvasA = document.createElement("canvas");
-    canvasA.width = rectA.sw;
-    canvasA.height = rectA.sh;
-    canvasA.getContext("2d").drawImage(cropImg, rectA.sx, rectA.sy, rectA.sw, rectA.sh, 0, 0, rectA.sw, rectA.sh);
-
-    canvasP.toBlob((blobP) => {
-      if (!blobP) return;
-      canvasA.toBlob((blobA) => {
-        if (!blobA) return;
-
-        isInternalFileUpdate = true;
-        try {
-          const fileP = new File([blobP], "portrait_9_16.png", { type: "image/png" });
-          const dtP = new DataTransfer();
-          dtP.items.add(fileP);
-          fileInput.files = dtP.files;
-
-          const fileA = new File([blobA], "avatar_1_1.png", { type: "image/png" });
-          const dtA = new DataTransfer();
-          dtA.items.add(fileA);
-
-          if (avatarFileInput) {
-            avatarFileInput.files = dtA.files;
-          }
-          if (cardFileInput) {
-            const dtC = new DataTransfer();
-            dtC.items.add(new File([blobA], "card_avatar.png", { type: "image/png" }));
-            cardFileInput.files = dtC.files;
-          }
-        } catch (e) {
-          console.warn("Could not construct DataTransfer/File:", e);
-        } finally {
-          isInternalFileUpdate = false;
-        }
-
-        const urlP = URL.createObjectURL(blobP);
-        const urlA = URL.createObjectURL(blobA);
-
-        if (previewImg) previewImg.src = urlP;
-        if (previewWrap) previewWrap.style.display = "block";
-        if (avatarPreviewImg) avatarPreviewImg.src = urlA;
-        if (avatarPreviewWrap) avatarPreviewWrap.style.display = "block";
-        if (statusBadge) {
-          statusBadge.textContent = "✓ 9:16 Porträt & 1:1 Avatar aktiv";
-          statusBadge.style.display = "inline-block";
-        }
-
-        if (window.AimoModals && typeof window.AimoModals.close === "function") {
-          window.AimoModals.close("portrait-crop-modal");
-        } else {
-          const modal = document.getElementById("portrait-crop-modal");
-          if (modal) {
-            modal.classList.remove("open");
-            modal.setAttribute("aria-hidden", "true");
-          }
-        }
-      }, "image/png");
-    }, "image/png");
-  });
-})();
+});
 </script>
 {% endblock %}

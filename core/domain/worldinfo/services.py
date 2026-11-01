@@ -1,5 +1,8 @@
 from datetime import datetime, timezone
+import json
 import random
+import re
+from typing import Any
 
 from domain.validation import DomainValidator
 from domain.worldinfo.exceptions import InvalidWorldInfoDataError
@@ -12,15 +15,15 @@ class WorldInfoService:
         self,
         user_id: int,
         name: str,
-        icon: str | None = None,
+        icon: str | None = "🌐",
         visibility: str = "private",
-        initial_location_id: int | None = None,
+        cover_image_path: str | None = None,
     ) -> WorldInfo:
         DomainValidator.validate_positive_user_id(user_id, InvalidWorldInfoDataError)
         cleaned_name = DomainValidator.validate_required_string(name, "WorldInfo name", InvalidWorldInfoDataError)
-        cleaned_icon = icon.strip() if isinstance(icon, str) and icon.strip() else None
+        cleaned_icon = icon.strip() if isinstance(icon, str) and icon.strip() else "🌐"
         cleaned_vis = DomainValidator.normalize_visibility(visibility)
-        cleaned_init_loc = DomainValidator.normalize_optional_id(initial_location_id)
+        cleaned_cover = cover_image_path.strip() if isinstance(cover_image_path, str) and cover_image_path.strip() else None
 
         return WorldInfo(
             id=None,
@@ -28,7 +31,7 @@ class WorldInfoService:
             name=cleaned_name,
             icon=cleaned_icon,
             visibility=cleaned_vis,
-            initial_location_id=cleaned_init_loc,
+            cover_image_path=cleaned_cover,
             created_at=datetime.now(timezone.utc),
         )
 
@@ -36,17 +39,64 @@ class WorldInfoService:
         self,
         worldinfo: WorldInfo,
         name: str,
-        icon: str | None = None,
+        icon: str | None | object = ...,
         visibility: str | None = None,
-        initial_location_id: int | None | object = ...,
+        cover_image_path: str | None | object = ...,
     ) -> WorldInfo:
         worldinfo.name = DomainValidator.validate_required_string(name, "WorldInfo name", InvalidWorldInfoDataError)
-        worldinfo.icon = icon.strip() if isinstance(icon, str) and icon.strip() else None
+        if icon is not ...:
+            worldinfo.icon = icon.strip() if isinstance(icon, str) and icon.strip() else (worldinfo.icon or "🌐")
         if visibility is not None:
             worldinfo.visibility = DomainValidator.normalize_visibility(visibility)
-        if initial_location_id is not ...:
-            worldinfo.initial_location_id = DomainValidator.normalize_optional_id(initial_location_id)
+        if cover_image_path is not ...:
+            worldinfo.cover_image_path = (
+                cover_image_path.strip()
+                if isinstance(cover_image_path, str) and cover_image_path.strip()
+                else None
+            )
         return worldinfo
+
+    def extract_tags_from_description(
+        self,
+        description: str,
+        llm_provider: Any,
+        model: str,
+    ) -> list[str]:
+        cleaned_desc = description.strip()
+        if not cleaned_desc:
+            return []
+
+        prompt = (
+            "Analyze the following location description for a roleplay setting.\n"
+            "Extract 3 to 8 concise, relevant keyword tags characterizing the environment, "
+            "architecture, mood, lighting, and setting (e.g. tavern, forest, cozy, dark, quiet).\n"
+            "Return strictly a comma-separated list or JSON array of lowercase tags without extra explanation.\n\n"
+            f"Description:\n{cleaned_desc}"
+        )
+        try:
+            raw_output = llm_provider.generate(
+                prompt=prompt,
+                model=model,
+            ).strip()
+        except Exception:
+            return []
+
+        cleaned_output = re.sub(r"<think>.*?</think>", "", raw_output, flags=re.DOTALL).strip()
+        if not cleaned_output and raw_output:
+            cleaned_output = re.sub(r"<think>.*", "", raw_output, flags=re.DOTALL).strip() or raw_output
+        cleaned_output = re.sub(r"^```(?:json)?\s*", "", cleaned_output, flags=re.MULTILINE)
+        cleaned_output = re.sub(r"\s*```$", "", cleaned_output, flags=re.MULTILINE).strip()
+
+        json_match = re.search(r"\[.*\]", cleaned_output, re.DOTALL)
+        if json_match:
+            try:
+                parsed = json.loads(json_match.group(0))
+                if isinstance(parsed, list):
+                    return parse_tags(parsed)
+            except json.JSONDecodeError:
+                pass
+
+        return parse_tags(cleaned_output)
 
     def add_location(
         self,

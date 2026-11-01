@@ -7,9 +7,9 @@ class WorldInfo:
     id: int | None
     user_id: int
     name: str
-    icon: str | None = None
+    icon: str | None = "🌐"
     visibility: str = "private"
-    initial_location_id: int | None = None
+    cover_image_path: str | None = None
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def is_visible_to_user(self, user_id: int, is_admin: bool = False) -> bool:

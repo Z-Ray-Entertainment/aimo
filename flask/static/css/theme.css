@@ -1462,6 +1462,15 @@ body.chat-page {
   background: #64B5F6;
 }
 
+.crop-selection-box[data-target="cover"] {
+  border-color: var(--gold-accent);
+  border-radius: 10px;
+}
+
+.crop-selection-box[data-target="cover"] .crop-resize-handle {
+  background: var(--gold-accent);
+}
+
 .crop-resize-handle {
   position: absolute;
   right: -8px;
