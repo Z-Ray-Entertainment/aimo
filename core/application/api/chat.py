@@ -7,10 +7,10 @@ import uuid
 
 from flask import Blueprint, Response, jsonify, request, stream_with_context
 
-from application.api.auth import get_current_user, require_permission
+from application.api.auth import get_current_user, has_perm, require_permission
 from domain.characters.models import Emotion
 from domain.characters.services import CharacterService
-from domain.chat.models import Message, MessageRole
+from domain.chat.models import ChatSession, Message, MessageRole
 from domain.chat.prompt_builder import PromptBuilder
 from domain.chat.services import ChatService
 from domain.lorebooks.services import LorebookService
@@ -147,6 +147,23 @@ def _run_async_memory_extraction(session_id: int) -> None:
     thread.start()
 
 
+def _get_authorized_session(session_id: int, user) -> tuple[ChatSession | None, bool]:
+    if user is None or user.id is None:
+        return None, False
+    chat_repo = ChatRepository()
+    chat_session = chat_repo.get_session(session_id)
+    if chat_session is None:
+        return None, False
+    is_admin = bool(user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS))
+    if chat_session.user_id != user.id and not is_admin:
+        return None, False
+    char_repo = CharacterRepository()
+    character = char_repo.get_by_id(chat_session.character_id)
+    if character is None or not character.is_visible_to_user(user.id, is_admin):
+        return None, False
+    return chat_session, is_admin
+
+
 def _start_background_turn(
     session_id: int,
     user_text: str,
@@ -168,7 +185,7 @@ def _start_background_turn(
         raise AimoError("Chat session not found.")
 
     character = char_repo.get_by_id(chat_session.character_id)
-    if character is None:
+    if character is None or not character.is_visible_to_user(chat_session.user_id, is_admin):
         raise AimoError("Character not found.")
 
     persona = persona_repo.get_by_id(chat_session.persona_id)
@@ -696,8 +713,11 @@ def _stream_from_task(task: _BackgroundTurnTask):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def post_message(session_id: int):
     user = get_current_user()
-    assert user is not None
-    is_admin = bool(user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS))
+    assert user is not None and user.id is not None
+    chat_session, is_admin = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
     if request.is_json:
         data = request.get_json(silent=True) or {}
         user_text = str(data.get("message", "")).strip()
@@ -751,7 +771,11 @@ def post_message(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def stream_session_response(session_id: int):
     user = get_current_user()
-    is_admin = bool(user and (user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS)))
+    assert user is not None and user.id is not None
+    chat_session, is_admin = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
     user_lang = request.args.get("language", "de")
     msg_text = request.args.get("message", "").strip()
 
@@ -780,6 +804,12 @@ def stream_session_response(session_id: int):
 @api_chat_bp.route("/<int:session_id>/status", methods=["GET"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def get_session_generation_status(session_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
     with _TASKS_LOCK:
         task = _BACKGROUND_TASKS.get(session_id)
 
@@ -801,6 +831,12 @@ def get_session_generation_status(session_id: int):
 @api_chat_bp.route("/<int:session_id>/abort", methods=["POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def abort_generation(session_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
     with _TASKS_LOCK:
         task = _BACKGROUND_TASKS.get(session_id)
 
@@ -822,8 +858,10 @@ def abort_generation(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def regenerate_turn(session_id: int):
     user = get_current_user()
-    assert user is not None
-    is_admin = bool(user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS))
+    assert user is not None and user.id is not None
+    chat_session, is_admin = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
 
     data = request.get_json(silent=True) or {}
     user_lang = str(data.get("language", "de")).strip()
@@ -936,18 +974,24 @@ def ack_chat_notification(notification_id: str):
 @api_chat_bp.route("/<int:session_id>/switch-location", methods=["POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def switch_location(session_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, is_admin = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Chat session not found."}), 404
+
     data = request.get_json(silent=True) or request.form.to_dict()
     location_id = int(data.get("location_id", 0))
 
     chat_repo = ChatRepository()
     wi_repo = WorldInfoRepository()
 
-    chat_session = chat_repo.get_session(session_id)
-    if chat_session is None:
-        return jsonify({"error": "Chat session not found."}), 404
-
     location = wi_repo.get_location(location_id)
     if location is None:
+        return jsonify({"error": "Location not found."}), 404
+
+    wi = wi_repo.get_by_id(location.worldinfo_id)
+    if wi and not wi.is_visible_to_user(user.id, is_admin):
         return jsonify({"error": "Location not found."}), 404
 
     chat_session.current_location_id = location.id
@@ -971,16 +1015,18 @@ def switch_location(session_id: int):
 @api_chat_bp.route("/<int:session_id>/generate-image", methods=["POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def generate_scene_image(session_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
     chat_repo = ChatRepository()
     char_repo = CharacterRepository()
     persona_repo = PersonaRepository()
     wi_repo = WorldInfoRepository()
     settings_repo = SettingsRepository()
     storage = FileStorage()
-
-    chat_session = chat_repo.get_session(session_id)
-    if chat_session is None:
-        return jsonify({"error": "Session not found."}), 404
 
     character = char_repo.get_by_id(chat_session.character_id)
     persona = persona_repo.get_by_id(chat_session.persona_id)
@@ -1079,6 +1125,12 @@ def generate_scene_image(session_id: int):
 @api_chat_bp.route("/<int:session_id>/cancel-image", methods=["POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def cancel_image(session_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
     task_id = _ACTIVE_IMAGE_TASKS.pop(session_id, "current")
     settings = SettingsRepository().get_settings()
     img_gen = get_image_gen_provider(settings)
@@ -1092,6 +1144,12 @@ def cancel_image(session_id: int):
 @api_chat_bp.route("/<int:session_id>/fork", methods=["POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def fork_chat_session(session_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    orig_session, _ = _get_authorized_session(session_id, user)
+    if orig_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
     data = request.get_json(silent=True) or request.form.to_dict()
     fork_point_idx = int(data.get("fork_point_idx", 0))
 
@@ -1100,16 +1158,13 @@ def fork_chat_session(session_id: int):
     chat_service = ChatService()
     mem_service = MemoryService()
 
-    orig_session = chat_repo.get_session(session_id)
-    if orig_session is None:
-        return jsonify({"error": "Session not found."}), 404
-
     all_messages = chat_repo.get_messages(session_id, limit=None)
     forked_session, filtered_messages = chat_service.fork_session(
         session=orig_session,
         messages=all_messages,
         fork_point_idx=fork_point_idx,
     )
+    forked_session.user_id = user.id
     saved_fork = chat_repo.create_session(forked_session)
     assert saved_fork.id is not None
 
@@ -1135,6 +1190,12 @@ def fork_chat_session(session_id: int):
 @api_chat_bp.route("/<int:session_id>/messages/<int:message_idx>", methods=["DELETE"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def delete_messages_from_idx(session_id: int, message_idx: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
     chat_repo = ChatRepository()
     mem_repo = MemoryRepository()
 
@@ -1158,6 +1219,12 @@ def delete_messages_from_idx(session_id: int, message_idx: int):
 @api_chat_bp.route("/<int:session_id>/messages/<int:message_idx>", methods=["PUT"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def edit_message(session_id: int, message_idx: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
     data = request.get_json(silent=True) or request.form.to_dict()
     new_text = str(data.get("content", "")).strip()
     if not new_text:
@@ -1191,6 +1258,12 @@ def edit_message(session_id: int, message_idx: int):
 @api_chat_bp.route("/<int:session_id>/messages/<int:message_idx>/translate", methods=["POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def translate_chat_message(session_id: int, message_idx: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
     data = request.get_json(silent=True) or request.form.to_dict()
     target_lang = str(data.get("target_language") or data.get("language") or "de").strip().lower()
 
@@ -1296,14 +1369,16 @@ def translate_arbitrary_text():
 @api_chat_bp.route("/<int:session_id>/memories/<int:memory_id>/recalculate", methods=["POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def recalculate_memory(session_id: int, memory_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
     chat_repo = ChatRepository()
     mem_repo = MemoryRepository()
     settings_repo = SettingsRepository()
     mem_service = MemoryService()
-
-    chat_session = chat_repo.get_session(session_id)
-    if chat_session is None:
-        return jsonify({"error": "Session not found."}), 404
 
     target_memory = mem_repo.get_by_id(memory_id)
     if target_memory is None or target_memory.chat_session_id != session_id:

@@ -37,14 +37,20 @@ def create_worldinfo():
 @worldinfo_bp.route("/<int:worldinfo_id>", methods=["GET", "POST"])
 @require_auth
 def detail(worldinfo_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+
     repo = WorldInfoRepository()
     service = WorldInfoService()
     worldinfo = repo.get_by_id(worldinfo_id)
-    if worldinfo is None:
+    if worldinfo is None or not worldinfo.is_visible_to_user(user.id, user.is_initial_admin):
         flash("WorldInfo nicht gefunden.", "error")
         return redirect(url_for("overview.index"))
 
     if request.method == "POST":
+        if not worldinfo.is_editable_by_user(user.id, user.is_initial_admin):
+            flash("Zugriff verweigert: Du kannst nur deine eigenen WorldInfos bearbeiten.", "error")
+            return redirect(url_for("overview.index"))
         try:
             init_loc_raw = request.form.get("initial_location_id")
             init_loc_id = (
@@ -102,7 +108,13 @@ def detail(worldinfo_id: int):
 @worldinfo_bp.route("/<int:worldinfo_id>/delete", methods=["POST"])
 @require_permission(FunctionPermission.WORLDINFO_DELETE)
 def delete_worldinfo(worldinfo_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
     repo = WorldInfoRepository()
+    worldinfo = repo.get_by_id(worldinfo_id)
+    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
     repo.delete(worldinfo_id)
     flash("WorldInfo gelöscht.", "success")
     return redirect(url_for("overview.index"))
@@ -111,9 +123,16 @@ def delete_worldinfo(worldinfo_id: int):
 @worldinfo_bp.route("/<int:worldinfo_id>/locations/add", methods=["POST"])
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def add_location(worldinfo_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = WorldInfoRepository()
+    worldinfo = repo.get_by_id(worldinfo_id)
+    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
     form = LocationForm.from_request(request.form)
     service = WorldInfoService()
-    repo = WorldInfoRepository()
     storage = FileStorage()
 
     try:
@@ -144,13 +163,20 @@ def add_location(worldinfo_id: int):
 @worldinfo_bp.route("/<int:worldinfo_id>/locations/<int:location_id>/edit", methods=["POST"])
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def edit_location(worldinfo_id: int, location_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = WorldInfoRepository()
+    worldinfo = repo.get_by_id(worldinfo_id)
+    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
     form = LocationForm.from_request(request.form)
     service = WorldInfoService()
-    repo = WorldInfoRepository()
     storage = FileStorage()
 
     loc = repo.get_location(location_id)
-    if loc is not None:
+    if loc is not None and loc.worldinfo_id == worldinfo_id:
         try:
             bg_path = form.background_image_path or loc.background_image_path
             bg_file = request.files.get("background_file")
@@ -179,7 +205,14 @@ def edit_location(worldinfo_id: int, location_id: int):
 @worldinfo_bp.route("/<int:worldinfo_id>/locations/<int:location_id>/delete", methods=["POST"])
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def delete_location(worldinfo_id: int, location_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
     repo = WorldInfoRepository()
+    worldinfo = repo.get_by_id(worldinfo_id)
+    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
     repo.delete_location(location_id)
     flash("Ort gelöscht.", "success")
     return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id))
@@ -188,9 +221,16 @@ def delete_location(worldinfo_id: int, location_id: int):
 @worldinfo_bp.route("/<int:worldinfo_id>/events/add", methods=["POST"])
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def add_event(worldinfo_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = WorldInfoRepository()
+    worldinfo = repo.get_by_id(worldinfo_id)
+    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
     form = EventForm.from_request(request.form)
     service = WorldInfoService()
-    repo = WorldInfoRepository()
     try:
         ev = service.add_event(
             worldinfo_id=worldinfo_id,
@@ -213,11 +253,18 @@ def add_event(worldinfo_id: int):
 @worldinfo_bp.route("/<int:worldinfo_id>/events/<int:event_id>/edit", methods=["POST"])
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def edit_event(worldinfo_id: int, event_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = WorldInfoRepository()
+    worldinfo = repo.get_by_id(worldinfo_id)
+    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
     form = EventForm.from_request(request.form)
     service = WorldInfoService()
-    repo = WorldInfoRepository()
     ev = repo.get_event(event_id)
-    if ev is not None:
+    if ev is not None and ev.worldinfo_id == worldinfo_id:
         try:
             service.update_event(
                 event=ev,
@@ -240,7 +287,14 @@ def edit_event(worldinfo_id: int, event_id: int):
 @worldinfo_bp.route("/<int:worldinfo_id>/events/<int:event_id>/delete", methods=["POST"])
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def delete_event(worldinfo_id: int, event_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
     repo = WorldInfoRepository()
+    worldinfo = repo.get_by_id(worldinfo_id)
+    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
     repo.delete_event(event_id)
     flash("Event gelöscht.", "success")
     return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id))

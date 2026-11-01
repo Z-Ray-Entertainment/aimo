@@ -76,9 +76,15 @@ def create_lorebook():
 @api_lorebooks_bp.route("/<int:lorebook_id>/entries", methods=["POST"])
 @require_permission(FunctionPermission.LOREBOOK_EDIT)
 def add_lorebook_entry(lorebook_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = LorebookRepository()
+    lb = repo.get_by_id(lorebook_id)
+    if lb is None or not lb.is_editable_by_user(user.id, user.is_initial_admin):
+        return jsonify({"error": "Lorebook not found."}), 404
+
     data = request.get_json(silent=True) or request.form.to_dict()
     service = LorebookService()
-    repo = LorebookRepository()
     try:
         entry = service.add_entry(
             lorebook_id=lorebook_id,
@@ -103,7 +109,15 @@ def add_lorebook_entry(lorebook_id: int):
 @api_lorebooks_bp.route("/entries/<int:entry_id>", methods=["DELETE"])
 @require_permission(FunctionPermission.LOREBOOK_EDIT)
 def delete_lorebook_entry(entry_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
     repo = LorebookRepository()
+    entry = repo.get_entry(entry_id)
+    if entry is None:
+        return jsonify({"error": "Entry not found."}), 404
+    lb = repo.get_by_id(entry.lorebook_id)
+    if lb is None or not lb.is_editable_by_user(user.id, user.is_initial_admin):
+        return jsonify({"error": "Lorebook not found."}), 404
     deleted = repo.delete_entry(entry_id)
     return jsonify({"deleted": deleted})
 

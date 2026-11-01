@@ -169,12 +169,15 @@ def sparkle_description():
 @api_characters_bp.route("/<int:character_id>/sprites", methods=["POST"])
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def upload_sprite(character_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+
     char_repo = CharacterRepository()
     char_service = CharacterService()
     storage = FileStorage()
 
     character = char_repo.get_by_id(character_id)
-    if character is None:
+    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin):
         return jsonify({"error": "Character not found."}), 404
 
     emotion_raw = request.form.get("emotion", Emotion.NEUTRAL.value)
@@ -208,6 +211,11 @@ def upload_sprite(character_id: int):
 @api_characters_bp.route("/<int:character_id>/sprites/<string:emotion>/<int:variant>", methods=["DELETE"])
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def delete_sprite(character_id: int, emotion: str, variant: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
+    character = char_repo.get_by_id(character_id)
+    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin):
+        return jsonify({"error": "Character not found."}), 404
     deleted = char_repo.delete_sprite(character_id, emotion, variant)
     return jsonify({"deleted": deleted})

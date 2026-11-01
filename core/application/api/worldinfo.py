@@ -94,11 +94,17 @@ def create_worldinfo():
 @api_worldinfo_bp.route("/events", methods=["POST"])
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def create_event():
+    user = get_current_user()
+    assert user is not None and user.id is not None
     data = request.get_json(silent=True) or request.form.to_dict()
     service = WorldInfoService()
     repo = WorldInfoRepository()
     try:
         worldinfo_id = int(data.get("worldinfo_id", 0))
+        wi = repo.get_by_id(worldinfo_id)
+        if wi is None or not wi.is_editable_by_user(user.id, user.is_initial_admin):
+            return jsonify({"error": "WorldInfo not found."}), 404
+
         loc_raw = data.get("location_id")
         location_id = int(loc_raw) if loc_raw not in (None, "", "world", "0", 0) else None
         event = service.add_event(

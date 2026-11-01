@@ -39,14 +39,20 @@ def create_lorebook():
 @lorebooks_bp.route("/<int:lorebook_id>", methods=["GET", "POST"])
 @require_auth
 def detail(lorebook_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+
     repo = LorebookRepository()
     service = LorebookService()
     lorebook = repo.get_by_id(lorebook_id)
-    if lorebook is None:
+    if lorebook is None or not lorebook.is_visible_to_user(user.id, user.is_initial_admin):
         flash("Lorebook nicht gefunden.", "error")
         return redirect(url_for("overview.index"))
 
     if request.method == "POST":
+        if not lorebook.is_editable_by_user(user.id, user.is_initial_admin):
+            flash("Zugriff verweigert: Du kannst nur deine eigenen Lorebooks bearbeiten.", "error")
+            return redirect(url_for("overview.index"))
         try:
             service.update_lorebook(
                 lorebook=lorebook,
@@ -83,7 +89,13 @@ def detail(lorebook_id: int):
 @lorebooks_bp.route("/<int:lorebook_id>/delete", methods=["POST"])
 @require_permission(FunctionPermission.LOREBOOK_DELETE)
 def delete_lorebook(lorebook_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
     repo = LorebookRepository()
+    lorebook = repo.get_by_id(lorebook_id)
+    if lorebook is None or not lorebook.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("Lorebook nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
     repo.delete(lorebook_id)
     flash("Lorebook gelöscht.", "success")
     return redirect(url_for("overview.index"))
@@ -92,9 +104,16 @@ def delete_lorebook(lorebook_id: int):
 @lorebooks_bp.route("/<int:lorebook_id>/entries/add", methods=["POST"])
 @require_permission(FunctionPermission.LOREBOOK_EDIT)
 def add_entry(lorebook_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = LorebookRepository()
+    lorebook = repo.get_by_id(lorebook_id)
+    if lorebook is None or not lorebook.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("Lorebook nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
     form = LorebookEntryForm.from_request(request.form)
     service = LorebookService()
-    repo = LorebookRepository()
     try:
         entry = service.add_entry(
             lorebook_id=lorebook_id,
@@ -115,11 +134,18 @@ def add_entry(lorebook_id: int):
 @lorebooks_bp.route("/<int:lorebook_id>/entries/<int:entry_id>/edit", methods=["POST"])
 @require_permission(FunctionPermission.LOREBOOK_EDIT)
 def edit_entry(lorebook_id: int, entry_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = LorebookRepository()
+    lorebook = repo.get_by_id(lorebook_id)
+    if lorebook is None or not lorebook.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("Lorebook nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
     form = LorebookEntryForm.from_request(request.form)
     service = LorebookService()
-    repo = LorebookRepository()
     entry = repo.get_entry(entry_id)
-    if entry is not None:
+    if entry is not None and entry.lorebook_id == lorebook_id:
         try:
             service.update_entry(entry, form.title, form.tags, form.content)
             repo.update_entry(entry)
@@ -135,7 +161,14 @@ def edit_entry(lorebook_id: int, entry_id: int):
 @lorebooks_bp.route("/<int:lorebook_id>/entries/<int:entry_id>/delete", methods=["POST"])
 @require_permission(FunctionPermission.LOREBOOK_EDIT)
 def delete_entry(lorebook_id: int, entry_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
     repo = LorebookRepository()
+    lorebook = repo.get_by_id(lorebook_id)
+    if lorebook is None or not lorebook.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("Lorebook nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
     repo.delete_entry(entry_id)
     flash("Eintrag gelöscht.", "success")
     return redirect(url_for("lorebooks.detail", lorebook_id=lorebook_id))

@@ -146,13 +146,20 @@ def new_character():
 @characters_bp.route("/<int:character_id>/edit", methods=["GET", "POST"])
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def edit_character(character_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+
     char_repo = CharacterRepository()
     char_service = CharacterService()
     storage = FileStorage()
 
     character = char_repo.get_by_id(character_id)
-    if character is None:
+    if character is None or not character.is_visible_to_user(user.id, user.is_initial_admin):
         flash("Charakter nicht gefunden.", "error")
+        return redirect(url_for("overview.index"))
+
+    if not character.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("Zugriff verweigert: Du kannst nur deine eigenen Charaktere bearbeiten.", "error")
         return redirect(url_for("overview.index"))
 
     if request.method == "POST":
@@ -219,7 +226,7 @@ def copy_character(character_id: int):
     assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     orig = char_repo.get_by_id(character_id)
-    if orig is None:
+    if orig is None or not orig.is_visible_to_user(user.id, user.is_initial_admin):
         flash("Charakter nicht gefunden.", "error")
         return redirect(url_for("overview.index"))
 
@@ -235,7 +242,14 @@ def copy_character(character_id: int):
 @characters_bp.route("/<int:character_id>/delete", methods=["POST"])
 @require_permission(FunctionPermission.CHARACTER_DELETE)
 def delete_character(character_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
+    char = char_repo.get_by_id(character_id)
+    if char is None or not char.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
     char_repo.delete(character_id)
     flash("Charakter gelöscht.", "success")
     return redirect(url_for("overview.index"))
@@ -244,12 +258,15 @@ def delete_character(character_id: int):
 @characters_bp.route("/<int:character_id>/gallery/add", methods=["POST"])
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def add_gallery_image(character_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     char_service = CharacterService()
     storage = FileStorage()
 
     character = char_repo.get_by_id(character_id)
-    if character is None:
+    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 
     img_file = request.files.get("gallery_image")
@@ -269,7 +286,14 @@ def add_gallery_image(character_id: int):
 @characters_bp.route("/<int:character_id>/gallery/<int:image_id>/delete", methods=["POST"])
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def delete_gallery_image(character_id: int, image_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
+    char = char_repo.get_by_id(character_id)
+    if char is None or not char.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
     char_repo.delete_gallery_image(image_id)
     flash("Galeriebild entfernt.", "success")
     return redirect(url_for("characters.edit_character", character_id=character_id))
@@ -278,12 +302,15 @@ def delete_gallery_image(character_id: int, image_id: int):
 @characters_bp.route("/<int:character_id>/sprites/upload", methods=["POST"])
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def upload_sprite(character_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     char_service = CharacterService()
     storage = FileStorage()
 
     character = char_repo.get_by_id(character_id)
-    if character is None:
+    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 
     emotion = Emotion.resolve(request.form.get("emotion", "neutral"))
@@ -309,7 +336,14 @@ def upload_sprite(character_id: int):
 @characters_bp.route("/<int:character_id>/sprites/<string:emotion>/<int:variant>/delete", methods=["POST"])
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def delete_sprite(character_id: int, emotion: str, variant: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
+    char = char_repo.get_by_id(character_id)
+    if char is None or not char.is_editable_by_user(user.id, user.is_initial_admin):
+        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
     char_repo.delete_sprite(character_id, emotion, variant)
     flash(f"Sprite {emotion}_{variant} gelöscht.", "success")
     return redirect(url_for("characters.edit_character", character_id=character_id, tab="sprites"))

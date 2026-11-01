@@ -43,7 +43,7 @@ def open_character_chat(character_id: int):
     char_repo = CharacterRepository()
 
     character = char_repo.get_by_id(character_id)
-    if character is None:
+    if character is None or not character.is_visible_to_user(user.id, user.is_initial_admin):
         flash("Charakter nicht gefunden.", "error")
         return redirect(url_for("overview.index"))
 
@@ -67,7 +67,7 @@ def new_character_chat(character_id: int):
     chat_service = ChatService()
 
     character = char_repo.get_by_id(character_id)
-    if character is None:
+    if character is None or not character.is_visible_to_user(user.id, user.is_initial_admin):
         flash("Charakter nicht gefunden.", "error")
         return redirect(url_for("overview.index"))
 
@@ -175,7 +175,7 @@ def view_session(session_id: int):
     chat_repo.update_session(chat_session)
 
     character = char_repo.get_by_id(chat_session.character_id)
-    if character is None:
+    if character is None or not character.is_visible_to_user(user.id, user.is_initial_admin):
         flash("Zugehöriger Charakter nicht gefunden.", "error")
         return redirect(url_for("overview.index"))
 
@@ -285,6 +285,8 @@ def update_session_settings(session_id: int):
 
     chat_repo = ChatRepository()
     char_repo = CharacterRepository()
+    persona_repo = PersonaRepository()
+    wi_repo = WorldInfoRepository()
     chat_service = ChatService()
 
     chat_session = chat_repo.get_session(session_id)
@@ -296,6 +298,10 @@ def update_session_settings(session_id: int):
     try:
         if action == "change_persona":
             new_persona_id = int(request.form.get("persona_id", 0))
+            new_persona = persona_repo.get_by_id(new_persona_id)
+            if new_persona is None or (new_persona.user_id != user.id and not user.is_initial_admin):
+                flash("Ungültige Persona.", "error")
+                return redirect(url_for("chat.view_session", session_id=session_id))
             chat_service.change_persona(chat_session, new_persona_id)
             flash("Persona für diese Session aktualisiert.", "success")
         elif action == "switch_worldinfo":
@@ -304,7 +310,10 @@ def update_session_settings(session_id: int):
             init_loc = None
             if new_wi_id:
                 wi = wi_repo.get_by_id(new_wi_id)
-                if wi and wi.initial_location_id:
+                if wi is None or not wi.is_visible_to_user(user.id, user.is_initial_admin):
+                    flash("Ungültige WorldInfo.", "error")
+                    return redirect(url_for("chat.view_session", session_id=session_id))
+                if wi.initial_location_id:
                     init_loc = wi.initial_location_id
             if init_loc is None and new_wi_id:
                 char = char_repo.get_by_id(chat_session.character_id)
@@ -347,6 +356,14 @@ def delete_session(session_id: int):
 @chat_bp.route("/session/<int:session_id>/memories/<int:memory_id>/edit", methods=["POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def edit_memory(session_id: int, memory_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+
+    chat_repo = ChatRepository()
+    chat_session = chat_repo.get_session(session_id)
+    if chat_session is None or (chat_session.user_id != user.id and not user.is_initial_admin):
+        return redirect(url_for("overview.index"))
+
     mem_repo = MemoryRepository()
     mem_service = MemoryService()
     form = MemoryEditForm.from_request(request.form)
@@ -371,6 +388,14 @@ def edit_memory(session_id: int, memory_id: int):
 @chat_bp.route("/session/<int:session_id>/memories/<int:memory_id>/delete", methods=["POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def delete_memory(session_id: int, memory_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+
+    chat_repo = ChatRepository()
+    chat_session = chat_repo.get_session(session_id)
+    if chat_session is None or (chat_session.user_id != user.id and not user.is_initial_admin):
+        return redirect(url_for("overview.index"))
+
     mem_repo = MemoryRepository()
     mem = mem_repo.get_by_id(memory_id)
     if mem is not None and mem.chat_session_id == session_id:
@@ -382,17 +407,20 @@ def delete_memory(session_id: int, memory_id: int):
 @chat_bp.route("/session/<int:session_id>/memories/<int:memory_id>/recalculate", methods=["POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def recalculate_memory(session_id: int, memory_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+
     chat_repo = ChatRepository()
     mem_repo = MemoryRepository()
     settings_repo = SettingsRepository()
     mem_service = MemoryService()
 
     chat_session = chat_repo.get_session(session_id)
-    if chat_session is None:
+    if chat_session is None or (chat_session.user_id != user.id and not user.is_initial_admin):
         if request.is_json or request.headers.get("Accept") == "application/json":
             return {"error": "Session not found."}, 404
         flash("Chat-Session nicht gefunden.", "error")
-        return redirect(url_for("chat.open_character_chat", character_id=1))
+        return redirect(url_for("overview.index"))
 
     target_memory = mem_repo.get_by_id(memory_id)
     if target_memory is None or target_memory.chat_session_id != session_id:
