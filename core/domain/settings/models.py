@@ -90,16 +90,54 @@ class ModelParameters:
         self.repeat_penalty = float(self.repeat_penalty)
 
 
-RECOMMENDED_DEFAULT_MODEL: str = "hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M"
+RECOMMENDED_ROLEPLAY_MODEL: str = (
+    "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest"
+)
+RECOMMENDED_MEMORY_MODEL: str = (
+    "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest"
+)
+RECOMMENDED_ASSISTANT_MODEL: str = "gemma4:e4b"
+RECOMMENDED_VISION_MODEL: str = "gemma4:e4b"
+RECOMMENDED_CLASSIFICATION_MODEL: str = "llama3.2:1b"
+
+RECOMMENDED_DEFAULT_MODEL: str = RECOMMENDED_ROLEPLAY_MODEL
+
+RECOMMENDED_MODELS: dict[str, dict[str, str]] = {
+    "roleplay": {
+        "role_name": "Roleplay",
+        "model": RECOMMENDED_ROLEPLAY_MODEL,
+        "description": "Narrative Dialog-Generierung und Rollenspiel im Chat.",
+    },
+    "memory": {
+        "role_name": "Memory",
+        "model": RECOMMENDED_MEMORY_MODEL,
+        "description": "Erstellt alle 10 Nachrichten episodische Zusammenfassungen und aktualisiert den Chat-Titel.",
+    },
+    "assistant": {
+        "role_name": "Assistant",
+        "model": RECOMMENDED_ASSISTANT_MODEL,
+        "description": "Zuständig für Sparkle-Optimierung (✨), Übersetzungen und Diffuser-Prompts.",
+    },
+    "vision": {
+        "role_name": "Vision",
+        "model": RECOMMENDED_VISION_MODEL,
+        "description": "Optische Analyse von Porträts, Schauplatz-Hintergründen und Chat-Bildern.",
+    },
+    "classification": {
+        "role_name": "Classification",
+        "model": RECOMMENDED_CLASSIFICATION_MODEL,
+        "description": "Schnelle Erkennung von Emotionen (Avatar-Sprites) und Ortswechsel-Vorschlägen.",
+    },
+}
 
 
 @dataclass
 class TaskAssignment:
-    roleplay_model: str = RECOMMENDED_DEFAULT_MODEL
-    memory_model: str = RECOMMENDED_DEFAULT_MODEL
-    assistant_model: str = RECOMMENDED_DEFAULT_MODEL
-    classification_model: str = RECOMMENDED_DEFAULT_MODEL
-    vision_model: str = "llava:latest"
+    roleplay_model: str = RECOMMENDED_ROLEPLAY_MODEL
+    memory_model: str = RECOMMENDED_MEMORY_MODEL
+    assistant_model: str = RECOMMENDED_ASSISTANT_MODEL
+    classification_model: str = RECOMMENDED_CLASSIFICATION_MODEL
+    vision_model: str = RECOMMENDED_VISION_MODEL
 
 
 @dataclass

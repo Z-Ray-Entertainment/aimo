@@ -19,6 +19,19 @@ Before the system is made accessible for regular users, exactly one initial admi
 ### 2. Service Connections
 - **Ollama URL (Mandatory):**  
   The network address of your Ollama server (default: `http://localhost:11434`). Ollama is strictly required for text generation, roleplay dialogue, and Vision image analysis.
+- **Ollama Setup-Helper (Recommended Models per Role):**
+  - **🎭 Roleplay:** `igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest`
+  - **🧠 Memory:** `igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest`
+  - **✨ Assistant:** `gemma4:e4b`
+  - **👁️ Vision:** `gemma4:e4b`
+  - **🏷️ Classification:** `llama3.2:1b`
+  
+  Pull all 3 unique models via Ollama terminal:
+  ```bash
+  ollama pull igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest
+  ollama pull gemma4:e4b
+  ollama pull llama3.2:1b
+  ```
 - **SearXNG URL (Optional):**  
   Address for web search via tool-calling (currently disabled / TODO).
 - **ComfyUI URL (Optional):**  

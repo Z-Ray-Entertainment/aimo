@@ -624,7 +624,7 @@ def _start_background_turn(
                         "session_title": latest_session.title,
                         "character_id": w_character.id,
                         "character_name": w_character.name,
-                        "character_portrait": w_character.primary_portrait_path,
+                        "character_portrait": w_character.avatar_path or w_character.primary_portrait_path,
                         "message_id": saved_ai_msg.id,
                         "message_idx": saved_ai_msg.message_idx,
                         "localized_content": localized_reply,

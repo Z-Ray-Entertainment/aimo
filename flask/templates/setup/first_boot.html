@@ -27,8 +27,43 @@
     <div>
       <label for="ollama_url">Ollama URL (Pflichtfeld) *</label>
       <input type="url" id="ollama_url" name="ollama_url" value="{{ form.ollama_url }}" required>
-      <div style="margin-top: 0.35rem; font-size: 0.8rem; color: var(--text-muted);">
-        💡 Empfohlenes Standard-Modell für Ollama: <code style="color: var(--gold-accent);">hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M</code>
+
+      <!-- Setup-Helper für Ollama: Vorgeschlagene Modelle pro Rolle -->
+      <div style="margin-top: 0.75rem; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border-wood-dark); border-radius: 8px; padding: 0.85rem;">
+        <div style="color: var(--gold-accent); font-size: 0.9rem; font-weight: bold; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+          <span class="icon-mono">🧙‍♂️</span> Setup-Helper für Ollama: Vorgeschlagene Modelle pro Rolle
+        </div>
+        <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.65rem;">
+          AIMO weist jedem Aufgabenbereich das am besten geeignete Modell zu:
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.8rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.6rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 6px;">
+            <span><strong>🎭 Roleplay</strong></span>
+            <code style="color: var(--gold-accent); font-size: 0.75rem;">igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest</code>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.6rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 6px;">
+            <span><strong>🧠 Memory</strong></span>
+            <code style="color: var(--gold-accent); font-size: 0.75rem;">igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest</code>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.6rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 6px;">
+            <span><strong>✨ Assistant</strong></span>
+            <code style="color: var(--gold-accent); font-size: 0.75rem;">gemma4:e4b</code>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.6rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 6px;">
+            <span><strong>👁️ Vision</strong></span>
+            <code style="color: var(--gold-accent); font-size: 0.75rem;">gemma4:e4b</code>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.6rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 6px;">
+            <span><strong>🏷️ Classification</strong></span>
+            <code style="color: var(--gold-accent); font-size: 0.75rem;">llama3.2:1b</code>
+          </div>
+        </div>
+        <div style="margin-top: 0.65rem; font-size: 0.76rem; color: var(--text-muted);">
+          💡 <em>Tipp: Lade diese 3 Modelle vor dem Start auf deinen Ollama-Server:</em>
+          <pre style="margin-top: 0.35rem; padding: 0.5rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 4px; font-size: 0.74rem; overflow-x: auto; color: var(--gold-accent); line-height: 1.4;">ollama pull igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest
+ollama pull gemma4:e4b
+ollama pull llama3.2:1b</pre>
+        </div>
       </div>
     </div>
     <div>

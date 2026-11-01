@@ -72,20 +72,40 @@
 
       <div>
         <label>
-          Primary Portrait (Pflicht-Upload) {% if not character %}*{% endif %}
-          <span class="field-help-btn" title="Primary Portrait (Haupt-Avatar):&#10;Das repräsentative Porträt des Charakters für den Chat und die Hub-Übersicht.">?</span>
+          Primary Portrait (9:16) &amp; Avatar (1:1) (Pflicht-Upload) {% if not character %}*{% endif %}
+          <span class="field-help-btn" title="Charakterbilder:&#10;• 9:16 Porträt: Chat-Seitenleiste &amp; Vollbild-Ansicht&#10;• 1:1 Avatar: Charakterkarten im Hub &amp; Chat-Bubbles">?</span>
         </label>
-        <div style="display: flex; gap: 0.85rem; align-items: center; margin-top: 0.35rem;">
-          <div id="portrait-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 68px; height: 86px; border-radius: 8px; border: 2px solid var(--gold-accent); overflow: hidden; flex-shrink: 0; background: rgba(15, 11, 8, 0.9);">
-            <img id="portrait-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}{% endif %}" alt="Portrait Preview" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
+        <div style="display: flex; gap: 1rem; align-items: flex-start; margin-top: 0.35rem; flex-wrap: wrap;">
+          <div style="display: flex; gap: 0.85rem; align-items: center; flex-wrap: wrap;">
+            <!-- 9:16 Portrait Preview -->
+            <div style="text-align: center;">
+              <div id="portrait-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 54px; height: 96px; border-radius: 8px; border: 2px solid var(--gold-accent); overflow: hidden; background: rgba(15, 11, 8, 0.9); margin-bottom: 0.25rem;" title="9:16 Porträt (Chat-Seitenleiste &amp; Vollbild)">
+                <img id="portrait-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}{% endif %}" alt="9:16 Porträt" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
+              </div>
+              <span style="font-size: 0.7rem; color: var(--gold-accent); font-weight: 600;">9:16 Chat/Voll</span>
+            </div>
+
+            <!-- 1:1 Avatar Preview -->
+            <div style="text-align: center;">
+              <div id="avatar-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 64px; height: 64px; border-radius: 10px; border: 2px solid #64B5F6; overflow: hidden; background: rgba(15, 11, 8, 0.9); margin-bottom: 0.25rem;" title="1:1 Avatar (Übersichtskarte &amp; Chat-Bubble)">
+                <img id="avatar-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.avatar_path or character.primary_portrait_path) }}{% endif %}" alt="1:1 Avatar" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
+              </div>
+              <span style="font-size: 0.7rem; color: #64B5F6; font-weight: 600;">1:1 Übersicht/Bubble</span>
+            </div>
           </div>
-          <div style="flex: 1; display: flex; flex-direction: column; gap: 0.45rem;">
+
+          <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 0.45rem;">
             <input type="file" id="primary-portrait-input" name="primary_portrait" accept=".png,.jpg,.jpeg,.webp" {% if not character %}required{% endif %}>
+            <input type="file" id="avatar-portrait-input" name="avatar_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
+            <input type="file" id="card-portrait-input" name="card_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
             <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-              <button type="button" id="open-crop-btn" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.82rem;" {% if not character %}disabled{% endif %}>
-                <span class="icon-mono">✂️</span> Ausschnitt festlegen (Crop)
+              <button type="button" id="open-crop-btn" class="header-btn" style="padding: 0.35rem 0.75rem; font-size: 0.82rem;" {% if not character %}disabled{% endif %}>
+                <span class="icon-mono">✂️</span> Ausschnitte anpassen (9:16 &amp; 1:1)
               </button>
-              <span id="crop-status-badge" style="display: none; font-size: 0.8rem; color: #4CAF50; font-weight: 600;">✓ Ausschnitt aktiv</span>
+              <span id="crop-status-badge" style="display: none; font-size: 0.8rem; color: #4CAF50; font-weight: 600;">✓ Ausschnitte aktiv</span>
+            </div>
+            <div style="font-size: 0.76rem; color: var(--text-muted);">
+              Tipp: <strong>9:16</strong> für das Chat-Porträt und <strong>1:1</strong> für die Übersichtskarte &amp; Chat-Bubbles.
             </div>
           </div>
         </div>
@@ -358,22 +378,25 @@
     </div>
   {% endif %}
 
-  <!-- Modal: Profile Image Cropper -->
+  <!-- Modal: Profile Image Cropper (Dual: 9:16 Porträt & 1:1 Avatar) -->
   <div class="modal-backdrop" id="portrait-crop-modal" aria-hidden="true">
     <div class="modal-frame" style="max-width: 680px;">
       <div class="modal-header">
-        <h3 style="color: var(--gold-accent);"><span class="icon-mono">✂️</span> Profilbild-Ausschnitt festlegen</h3>
+        <h3 style="color: var(--gold-accent);"><span class="icon-mono">✂️</span> Bild-Ausschnitte festlegen (9:16 Porträt &amp; 1:1 Avatar)</h3>
         <button type="button" class="btn" data-modal-close="portrait-crop-modal">✕</button>
       </div>
 
       <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.85rem;">
-        <div style="display: flex; gap: 0.45rem; align-items: center;">
-          <span style="font-size: 0.85rem; color: var(--text-muted);">Seitenverhältnis:</span>
-          <button type="button" class="btn crop-ratio-btn active" data-ratio="0.75" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;">3:4 (Karte)</button>
-          <button type="button" class="btn crop-ratio-btn" data-ratio="1" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;">1:1 (Avatar)</button>
-          <button type="button" class="btn crop-ratio-btn" data-ratio="0" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;">Frei</button>
+        <div style="display: flex; gap: 0.45rem; align-items: center; flex-wrap: wrap;">
+          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Ziel-Ausschnitt:</span>
+          <button type="button" class="header-btn crop-target-btn active" data-crop-target="portrait" id="crop-target-portrait-btn">
+            <span class="icon-mono">📱</span> 9:16 Porträt (Chat &amp; Voll)
+          </button>
+          <button type="button" class="header-btn crop-target-btn" data-crop-target="avatar" id="crop-target-avatar-btn">
+            <span class="icon-mono">👤</span> 1:1 Avatar (Übersicht &amp; Bubble)
+          </button>
         </div>
-        <span style="font-size: 0.8rem; color: var(--text-muted);">Ziehen zum Verschieben • Ecke unten rechts zum Skalieren</span>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Verschieben &amp; Skalieren</span>
       </div>
 
       <div style="display: flex; gap: 1.25rem; align-items: flex-start; flex-wrap: wrap;">
@@ -381,7 +404,7 @@
         <div id="crop-stage-wrap" style="flex: 1; min-width: 280px; display: flex; justify-content: center; align-items: center; background: rgba(10, 7, 5, 0.92); border: 2px solid var(--border-wood-dark); border-radius: 10px; padding: 0.75rem; overflow: hidden; user-select: none;">
           <div id="crop-image-container" style="position: relative; display: inline-block; line-height: 0;">
             <img id="crop-source-img" src="" alt="Crop Source" style="max-width: 420px; max-height: 420px; display: block; pointer-events: none;" crossorigin="anonymous">
-            <div id="crop-selection-box" class="crop-selection-box">
+            <div id="crop-selection-box" class="crop-selection-box" data-target="portrait">
               <div id="crop-resize-handle" class="crop-resize-handle" title="Größe ändern"></div>
             </div>
           </div>
@@ -389,20 +412,20 @@
 
         <!-- Live Mini-Vorschau -->
         <div style="width: 140px; display: flex; flex-direction: column; gap: 0.85rem; align-items: center;">
-          <div style="text-align: center;">
-            <div style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0.3rem;">Karten-Vorschau</div>
-            <canvas id="crop-preview-card" width="108" height="144" style="border: 2px solid var(--border-wood); border-radius: 8px; background: #14100C;"></canvas>
+          <div style="text-align: center; cursor: pointer;" id="preview-tab-portrait" title="Klicken, um 9:16 Porträt anzupassen">
+            <div style="font-size: 0.74rem; color: var(--gold-accent); font-weight: 600; margin-bottom: 0.25rem;">📱 9:16 Porträt</div>
+            <canvas id="crop-preview-portrait" width="72" height="128" style="border: 2px solid var(--gold-accent); border-radius: 6px; background: #14100C;"></canvas>
           </div>
-          <div style="text-align: center;">
-            <div style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0.3rem;">Chat-Icon</div>
-            <canvas id="crop-preview-avatar" width="64" height="64" style="border: 2px solid var(--gold-accent); border-radius: 10px; background: #14100C;"></canvas>
+          <div style="text-align: center; cursor: pointer;" id="preview-tab-avatar" title="Klicken, um 1:1 Avatar anzupassen">
+            <div style="font-size: 0.74rem; color: #64B5F6; font-weight: 600; margin-bottom: 0.25rem;">👤 1:1 Avatar</div>
+            <canvas id="crop-preview-avatar" width="64" height="64" style="border: 2px solid #64B5F6; border-radius: 8px; background: #14100C;"></canvas>
           </div>
         </div>
       </div>
 
       <div style="display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1.2rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
-        <button type="button" class="btn" data-modal-close="portrait-crop-modal">Abbrechen</button>
-        <button type="button" id="apply-crop-btn" class="btn"><span class="icon-mono">✂️</span> Ausschnitt übernehmen</button>
+        <button type="button" class="header-btn" data-modal-close="portrait-crop-modal">Abbrechen</button>
+        <button type="button" id="apply-crop-btn" class="header-btn primary"><span class="icon-mono">✂️</span> Ausschnitte übernehmen</button>
       </div>
     </div>
   </div>
@@ -473,78 +496,107 @@ document.getElementById("sparkle-improve-btn")?.addEventListener("click", async 
   }
 });
 
-// Interactive Profile Image Cropper
+// Interactive Dual-Crop Profile & Avatar Cropper
 (() => {
   const fileInput = document.getElementById("primary-portrait-input");
+  const cardFileInput = document.getElementById("card-portrait-input");
+  const avatarFileInput = document.getElementById("avatar-portrait-input");
   const openCropBtn = document.getElementById("open-crop-btn");
   const applyCropBtn = document.getElementById("apply-crop-btn");
   const previewWrap = document.getElementById("portrait-preview-wrap");
   const previewImg = document.getElementById("portrait-preview-img");
+  const avatarPreviewWrap = document.getElementById("avatar-preview-wrap");
+  const avatarPreviewImg = document.getElementById("avatar-preview-img");
   const statusBadge = document.getElementById("crop-status-badge");
 
   const cropImg = document.getElementById("crop-source-img");
   const cropBox = document.getElementById("crop-selection-box");
   const resizeHandle = document.getElementById("crop-resize-handle");
-  const cardCanvas = document.getElementById("crop-preview-card");
+  const portraitCanvas = document.getElementById("crop-preview-portrait");
   const avatarCanvas = document.getElementById("crop-preview-avatar");
-  const ratioBtns = document.querySelectorAll(".crop-ratio-btn");
+  const targetBtns = document.querySelectorAll(".crop-target-btn");
+  const tabPortrait = document.getElementById("preview-tab-portrait");
+  const tabAvatar = document.getElementById("preview-tab-avatar");
 
   if (!fileInput || !cropImg || !cropBox) return;
 
-  let currentRatio = 0.75; // 3:4 default
-  let boxState = { x: 10, y: 10, w: 120, h: 160 };
+  let activeTarget = "portrait"; // "portrait" (9:16) | "avatar" (1:1)
+  const ratios = {
+    portrait: 9 / 16,
+    avatar: 1.0,
+  };
+  const boxes = {
+    portrait: { x: 0, y: 0, w: 0, h: 0 },
+    avatar: { x: 0, y: 0, w: 0, h: 0 },
+  };
+
   let dragMode = null; // 'move' | 'resize' | null
   let startMouse = { x: 0, y: 0 };
   let startBox = { x: 0, y: 0, w: 0, h: 0 };
   let currentSourceDataUrl = previewImg && previewImg.getAttribute("src") ? previewImg.getAttribute("src") : "";
+  let isInternalFileUpdate = false;
 
-  function initCropBox() {
+  function initCropBoxes() {
     const dispW = cropImg.clientWidth || 300;
     const dispH = cropImg.clientHeight || 300;
-    let w = dispW * 0.8;
-    let h = currentRatio > 0 ? w / currentRatio : dispH * 0.8;
-    if (h > dispH * 0.9) {
-      h = dispH * 0.9;
-      if (currentRatio > 0) w = h * currentRatio;
+    if (dispW < 10 || dispH < 10) return;
+
+    // 1. Portrait 9:16: Fill almost full height, center horizontally
+    const pRatio = ratios.portrait;
+    let ph = dispH * 0.94;
+    let pw = ph * pRatio;
+    if (pw > dispW * 0.94) {
+      pw = dispW * 0.94;
+      ph = pw / pRatio;
     }
-    if (w > dispW * 0.9) {
-      w = dispW * 0.9;
-      if (currentRatio > 0) h = w / currentRatio;
-    }
-    boxState.w = Math.max(40, Math.round(w));
-    boxState.h = Math.max(40, Math.round(h));
-    boxState.x = Math.max(0, Math.round((dispW - boxState.w) / 2));
-    boxState.y = Math.max(0, Math.round((dispH - boxState.h) / 2));
+    boxes.portrait = {
+      w: Math.max(36, Math.round(pw)),
+      h: Math.max(36, Math.round(ph)),
+      x: Math.max(0, Math.round((dispW - pw) / 2)),
+      y: Math.max(0, Math.round((dispH - ph) / 2)),
+    };
+
+    // 2. Avatar 1:1: Focused on head / upper portion (typical face location)
+    const aSize = Math.max(36, Math.round(Math.min(dispW, dispH) * 0.62));
+    boxes.avatar = {
+      w: aSize,
+      h: aSize,
+      x: Math.max(0, Math.round((dispW - aSize) / 2)),
+      y: Math.max(0, Math.round(dispH * 0.05)),
+    };
+
     renderCropBox();
   }
 
-  function clampBox() {
-    const dispW = cropImg.clientWidth || 1;
-    const dispH = cropImg.clientHeight || 1;
-    boxState.w = Math.max(36, Math.min(dispW, boxState.w));
-    if (currentRatio > 0) {
-      boxState.h = boxState.w / currentRatio;
-      if (boxState.h > dispH) {
-        boxState.h = dispH;
-        boxState.w = boxState.h * currentRatio;
-      }
-    } else {
-      boxState.h = Math.max(36, Math.min(dispH, boxState.h));
+  function clampActiveBox() {
+    const dispW = cropImg.clientWidth || 300;
+    const dispH = cropImg.clientHeight || 300;
+    if (dispW < 10 || dispH < 10) return;
+    const ratio = ratios[activeTarget];
+    const box = boxes[activeTarget];
+
+    box.w = Math.max(32, Math.min(dispW, box.w));
+    box.h = Math.round(box.w / ratio);
+    if (box.h > dispH) {
+      box.h = dispH;
+      box.w = Math.round(box.h * ratio);
     }
-    boxState.x = Math.max(0, Math.min(dispW - boxState.w, boxState.x));
-    boxState.y = Math.max(0, Math.min(dispH - boxState.h, boxState.y));
+    box.x = Math.max(0, Math.min(dispW - box.w, box.x));
+    box.y = Math.max(0, Math.min(dispH - box.h, box.y));
   }
 
   function renderCropBox() {
-    clampBox();
-    cropBox.style.left = `${boxState.x}px`;
-    cropBox.style.top = `${boxState.y}px`;
-    cropBox.style.width = `${boxState.w}px`;
-    cropBox.style.height = `${boxState.h}px`;
+    clampActiveBox();
+    const box = boxes[activeTarget];
+    cropBox.style.left = `${box.x}px`;
+    cropBox.style.top = `${box.y}px`;
+    cropBox.style.width = `${box.w}px`;
+    cropBox.style.height = `${box.h}px`;
+    cropBox.setAttribute("data-target", activeTarget);
     updateMiniPreviews();
   }
 
-  function getNaturalCropRect() {
+  function getNaturalCropRect(box) {
     const dispW = cropImg.clientWidth || 1;
     const dispH = cropImg.clientHeight || 1;
     const natW = cropImg.naturalWidth || dispW;
@@ -552,45 +604,77 @@ document.getElementById("sparkle-improve-btn")?.addEventListener("click", async 
     const scaleX = natW / dispW;
     const scaleY = natH / dispH;
     return {
-      sx: Math.max(0, Math.round(boxState.x * scaleX)),
-      sy: Math.max(0, Math.round(boxState.y * scaleY)),
-      sw: Math.max(1, Math.round(boxState.w * scaleX)),
-      sh: Math.max(1, Math.round(boxState.h * scaleY)),
+      sx: Math.max(0, Math.round(box.x * scaleX)),
+      sy: Math.max(0, Math.round(box.y * scaleY)),
+      sw: Math.max(1, Math.min(natW, Math.round(box.w * scaleX))),
+      sh: Math.max(1, Math.min(natH, Math.round(box.h * scaleY))),
     };
   }
 
   function updateMiniPreviews() {
     if (!cropImg.complete || !cropImg.naturalWidth) return;
-    const { sx, sy, sw, sh } = getNaturalCropRect();
-    if (cardCanvas) {
-      const ctx = cardCanvas.getContext("2d");
-      ctx.clearRect(0, 0, cardCanvas.width, cardCanvas.height);
-      ctx.drawImage(cropImg, sx, sy, sw, sh, 0, 0, cardCanvas.width, cardCanvas.height);
+    if (portraitCanvas) {
+      const rect = getNaturalCropRect(boxes.portrait);
+      const ctx = portraitCanvas.getContext("2d");
+      ctx.clearRect(0, 0, portraitCanvas.width, portraitCanvas.height);
+      ctx.drawImage(cropImg, rect.sx, rect.sy, rect.sw, rect.sh, 0, 0, portraitCanvas.width, portraitCanvas.height);
     }
     if (avatarCanvas) {
+      const rect = getNaturalCropRect(boxes.avatar);
       const ctx = avatarCanvas.getContext("2d");
       ctx.clearRect(0, 0, avatarCanvas.width, avatarCanvas.height);
-      ctx.drawImage(cropImg, sx, sy, sw, sh, 0, 0, avatarCanvas.width, avatarCanvas.height);
+      ctx.drawImage(cropImg, rect.sx, rect.sy, rect.sw, rect.sh, 0, 0, avatarCanvas.width, avatarCanvas.height);
     }
+  }
+
+  function setTarget(target) {
+    activeTarget = target;
+    targetBtns.forEach((btn) => {
+      btn.classList.toggle("active", btn.getAttribute("data-crop-target") === target);
+    });
+    renderCropBox();
   }
 
   function openCropModalWithSrc(src) {
     if (!src) return;
-    cropImg.onload = () => {
+
+    if (window.AimoModals && typeof window.AimoModals.open === "function") {
       window.AimoModals.open("portrait-crop-modal");
-      requestAnimationFrame(() => initCropBox());
+    } else {
+      const modal = document.getElementById("portrait-crop-modal");
+      if (modal) {
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+      }
+    }
+
+    const onImageReady = () => {
+      setTimeout(() => {
+        initCropBoxes();
+        setTarget(activeTarget);
+      }, 70);
     };
-    cropImg.src = src;
+
+    if (cropImg.src === src && cropImg.complete && cropImg.naturalWidth) {
+      onImageReady();
+    } else {
+      cropImg.onload = () => onImageReady();
+      cropImg.src = src;
+    }
   }
 
   fileInput.addEventListener("change", () => {
+    if (isInternalFileUpdate) return;
     const file = fileInput.files && fileInput.files[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onload = (ev) => {
       currentSourceDataUrl = ev.target.result;
       if (previewImg) previewImg.src = currentSourceDataUrl;
       if (previewWrap) previewWrap.style.display = "block";
+      if (avatarPreviewImg) avatarPreviewImg.src = currentSourceDataUrl;
+      if (avatarPreviewWrap) avatarPreviewWrap.style.display = "block";
       if (openCropBtn) openCropBtn.disabled = false;
       openCropModalWithSrc(currentSourceDataUrl);
     };
@@ -598,69 +682,144 @@ document.getElementById("sparkle-improve-btn")?.addEventListener("click", async 
   });
 
   openCropBtn?.addEventListener("click", () => {
-    const src = currentSourceDataUrl || (previewImg ? previewImg.src : "");
+    const src = currentSourceDataUrl || (previewImg ? previewImg.getAttribute("src") : "");
     if (src) openCropModalWithSrc(src);
   });
 
-  ratioBtns.forEach((btn) => {
+  targetBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
-      ratioBtns.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      currentRatio = parseFloat(btn.getAttribute("data-ratio") || "0");
-      initCropBox();
+      const target = btn.getAttribute("data-crop-target") || "portrait";
+      setTarget(target);
     });
   });
 
+  tabPortrait?.addEventListener("click", () => setTarget("portrait"));
+  tabAvatar?.addEventListener("click", () => setTarget("avatar"));
+
+  function startDrag(clientX, clientY, target) {
+    dragMode = target === resizeHandle ? "resize" : "move";
+    startMouse = { x: clientX, y: clientY };
+    startBox = { ...boxes[activeTarget] };
+    document.body.style.userSelect = "none";
+  }
+
+  function moveDrag(clientX, clientY) {
+    if (!dragMode) return;
+    const dx = clientX - startMouse.x;
+    const dy = clientY - startMouse.y;
+    const box = boxes[activeTarget];
+    if (dragMode === "move") {
+      box.x = startBox.x + dx;
+      box.y = startBox.y + dy;
+    } else if (dragMode === "resize") {
+      box.w = Math.max(32, startBox.w + dx);
+      box.h = Math.round(box.w / ratios[activeTarget]);
+    }
+    renderCropBox();
+  }
+
+  function endDrag() {
+    dragMode = null;
+    document.body.style.userSelect = "";
+  }
+
   cropBox.addEventListener("mousedown", (e) => {
     e.preventDefault();
-    dragMode = e.target === resizeHandle ? "resize" : "move";
-    startMouse = { x: e.clientX, y: e.clientY };
-    startBox = { ...boxState };
+    startDrag(e.clientX, e.clientY, e.target);
   });
 
   window.addEventListener("mousemove", (e) => {
-    if (!dragMode) return;
-    const dx = e.clientX - startMouse.x;
-    const dy = e.clientY - startMouse.y;
-    if (dragMode === "move") {
-      boxState.x = startBox.x + dx;
-      boxState.y = startBox.y + dy;
-    } else if (dragMode === "resize") {
-      boxState.w = startBox.w + dx;
-      if (currentRatio > 0) {
-        boxState.h = boxState.w / currentRatio;
-      } else {
-        boxState.h = startBox.h + dy;
-      }
-    }
-    renderCropBox();
+    moveDrag(e.clientX, e.clientY);
   });
 
-  window.addEventListener("mouseup", () => {
-    dragMode = null;
-  });
+  window.addEventListener("mouseup", endDrag);
+
+  cropBox.addEventListener("touchstart", (e) => {
+    if (e.touches && e.touches.length === 1) {
+      e.preventDefault();
+      startDrag(e.touches[0].clientX, e.touches[0].clientY, e.target);
+    }
+  }, { passive: false });
+
+  window.addEventListener("touchmove", (e) => {
+    if (dragMode && e.touches && e.touches.length === 1) {
+      e.preventDefault();
+      moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: false });
+
+  window.addEventListener("touchend", endDrag);
+  window.addEventListener("touchcancel", endDrag);
 
   applyCropBtn?.addEventListener("click", () => {
     if (!cropImg.complete || !cropImg.naturalWidth) return;
-    const { sx, sy, sw, sh } = getNaturalCropRect();
-    const outCanvas = document.createElement("canvas");
-    outCanvas.width = sw;
-    outCanvas.height = sh;
-    const ctx = outCanvas.getContext("2d");
-    ctx.drawImage(cropImg, sx, sy, sw, sh, 0, 0, sw, sh);
 
-    outCanvas.toBlob((blob) => {
-      if (!blob) return;
-      const croppedFile = new File([blob], "portrait_cropped.png", { type: "image/png" });
-      const dt = new DataTransfer();
-      dt.items.add(croppedFile);
-      fileInput.files = dt.files;
+    // 1. Portrait 9:16
+    const rectP = getNaturalCropRect(boxes.portrait);
+    const canvasP = document.createElement("canvas");
+    canvasP.width = rectP.sw;
+    canvasP.height = rectP.sh;
+    canvasP.getContext("2d").drawImage(cropImg, rectP.sx, rectP.sy, rectP.sw, rectP.sh, 0, 0, rectP.sw, rectP.sh);
 
-      const croppedUrl = URL.createObjectURL(blob);
-      if (previewImg) previewImg.src = croppedUrl;
-      if (previewWrap) previewWrap.style.display = "block";
-      if (statusBadge) statusBadge.style.display = "inline-block";
-      window.AimoModals.close("portrait-crop-modal");
+    // 2. Avatar 1:1
+    const rectA = getNaturalCropRect(boxes.avatar);
+    const canvasA = document.createElement("canvas");
+    canvasA.width = rectA.sw;
+    canvasA.height = rectA.sh;
+    canvasA.getContext("2d").drawImage(cropImg, rectA.sx, rectA.sy, rectA.sw, rectA.sh, 0, 0, rectA.sw, rectA.sh);
+
+    canvasP.toBlob((blobP) => {
+      if (!blobP) return;
+      canvasA.toBlob((blobA) => {
+        if (!blobA) return;
+
+        isInternalFileUpdate = true;
+        try {
+          const fileP = new File([blobP], "portrait_9_16.png", { type: "image/png" });
+          const dtP = new DataTransfer();
+          dtP.items.add(fileP);
+          fileInput.files = dtP.files;
+
+          const fileA = new File([blobA], "avatar_1_1.png", { type: "image/png" });
+          const dtA = new DataTransfer();
+          dtA.items.add(fileA);
+
+          if (avatarFileInput) {
+            avatarFileInput.files = dtA.files;
+          }
+          if (cardFileInput) {
+            const dtC = new DataTransfer();
+            dtC.items.add(new File([blobA], "card_avatar.png", { type: "image/png" }));
+            cardFileInput.files = dtC.files;
+          }
+        } catch (e) {
+          console.warn("Could not construct DataTransfer/File:", e);
+        } finally {
+          isInternalFileUpdate = false;
+        }
+
+        const urlP = URL.createObjectURL(blobP);
+        const urlA = URL.createObjectURL(blobA);
+
+        if (previewImg) previewImg.src = urlP;
+        if (previewWrap) previewWrap.style.display = "block";
+        if (avatarPreviewImg) avatarPreviewImg.src = urlA;
+        if (avatarPreviewWrap) avatarPreviewWrap.style.display = "block";
+        if (statusBadge) {
+          statusBadge.textContent = "✓ 9:16 Porträt & 1:1 Avatar aktiv";
+          statusBadge.style.display = "inline-block";
+        }
+
+        if (window.AimoModals && typeof window.AimoModals.close === "function") {
+          window.AimoModals.close("portrait-crop-modal");
+        } else {
+          const modal = document.getElementById("portrait-crop-modal");
+          if (modal) {
+            modal.classList.remove("open");
+            modal.setAttribute("aria-hidden", "true");
+          }
+        }
+      }, "image/png");
     }, "image/png");
   });
 })();

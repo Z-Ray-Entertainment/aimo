@@ -44,7 +44,12 @@
 
     <!-- 2. Task-spezifische Modell-Zuweisung -->
     <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
-      <h3 style="color: var(--gold-accent); font-size: 1rem; margin-bottom: 0.75rem;">2. Task-spezifische Modell-Zuweisung</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+        <h3 style="color: var(--gold-accent); font-size: 1rem; margin: 0;">2. Task-spezifische Modell-Zuweisung</h3>
+        <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.82rem;" onclick="applyRecommendedModels()" title="Setzt alle 5 Dropdowns auf die vorgeschlagenen Standard-Modelle">
+          ✨ Vorgeschlagene Modelle zuweisen
+        </button>
+      </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
         <div>
           <label>
@@ -168,14 +173,104 @@
       <span class="icon-mono">📦</span> Ollama Modell-Manager
     </h3>
 
+    <!-- Setup-Helper: Vorgeschlagene Modelle pro Rolle -->
+    <div style="background: rgba(0,0,0,0.22); border: 1px solid var(--border-wood-dark); border-radius: 8px; padding: 0.85rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.4rem;">
+        <h4 style="color: var(--gold-accent); font-size: 0.92rem; margin: 0; display: flex; align-items: center; gap: 0.4rem;">
+          <span class="icon-mono">🧙‍♂️</span> Setup-Helper für Ollama
+        </h4>
+        <button type="button" class="btn" id="pull-all-missing-btn" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;" onclick="pullAllMissingRecommended()">
+          ⚡ Fehlende installieren
+        </button>
+      </div>
+      <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        Empfohlene Modelle pro Rolle:
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.55rem;">
+        <!-- Modell 1: igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest -->
+        <div style="padding: 0.55rem 0.65rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 6px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
+            <div style="min-width: 0; flex: 1;">
+              <div style="font-family: monospace; font-size: 0.79rem; word-break: break-all; color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest')" title="Klicken zum Übernehmen in die Pull-Eingabe">
+                igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest
+              </div>
+              <div style="display: flex; gap: 0.35rem; margin-top: 0.35rem; flex-wrap: wrap;">
+                <span style="font-size: 0.68rem; padding: 0.12rem 0.4rem; background: var(--border-wood-dark); border-radius: 4px; color: var(--text-main);">Roleplay</span>
+                <span style="font-size: 0.68rem; padding: 0.12rem 0.4rem; background: var(--border-wood-dark); border-radius: 4px; color: var(--text-main);">Memory</span>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0;">
+              {% if 'igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest' in installed_models and ollama_healthy %}
+                <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ Bereit</span>
+              {% else %}
+                <span style="color: #E67E22; font-size: 0.74rem;">⏳ Fehlt</span>
+                <button type="button" class="btn" style="padding: 0.2rem 0.45rem; font-size: 0.72rem;" onclick="pullSpecificModel('igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest')">📥 Pull</button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Modell 2: gemma4:e4b -->
+        <div style="padding: 0.55rem 0.65rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 6px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
+            <div style="min-width: 0; flex: 1;">
+              <div style="font-family: monospace; font-size: 0.79rem; word-break: break-all; color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('gemma4:e4b')" title="Klicken zum Übernehmen in die Pull-Eingabe">
+                gemma4:e4b
+              </div>
+              <div style="display: flex; gap: 0.35rem; margin-top: 0.35rem; flex-wrap: wrap;">
+                <span style="font-size: 0.68rem; padding: 0.12rem 0.4rem; background: var(--border-wood-dark); border-radius: 4px; color: var(--text-main);">Assistant</span>
+                <span style="font-size: 0.68rem; padding: 0.12rem 0.4rem; background: var(--border-wood-dark); border-radius: 4px; color: var(--text-main);">Vision</span>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0;">
+              {% if 'gemma4:e4b' in installed_models and ollama_healthy %}
+                <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ Bereit</span>
+              {% else %}
+                <span style="color: #E67E22; font-size: 0.74rem;">⏳ Fehlt</span>
+                <button type="button" class="btn" style="padding: 0.2rem 0.45rem; font-size: 0.72rem;" onclick="pullSpecificModel('gemma4:e4b')">📥 Pull</button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Modell 3: llama3.2:1b -->
+        <div style="padding: 0.55rem 0.65rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 6px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
+            <div style="min-width: 0; flex: 1;">
+              <div style="font-family: monospace; font-size: 0.79rem; word-break: break-all; color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('llama3.2:1b')" title="Klicken zum Übernehmen in die Pull-Eingabe">
+                llama3.2:1b
+              </div>
+              <div style="display: flex; gap: 0.35rem; margin-top: 0.35rem; flex-wrap: wrap;">
+                <span style="font-size: 0.68rem; padding: 0.12rem 0.4rem; background: var(--border-wood-dark); border-radius: 4px; color: var(--text-main);">Classification</span>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0;">
+              {% if 'llama3.2:1b' in installed_models and ollama_healthy %}
+                <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ Bereit</span>
+              {% else %}
+                <span style="color: #E67E22; font-size: 0.74rem;">⏳ Fehlt</span>
+                <button type="button" class="btn" style="padding: 0.2rem 0.45rem; font-size: 0.72rem;" onclick="pullSpecificModel('llama3.2:1b')">📥 Pull</button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div>
       <label style="display: block; margin-bottom: 0.4rem; font-size: 0.88rem;">Neues Modell installieren (Pull)</label>
       <div style="display: flex; gap: 0.5rem;">
-        <input type="text" id="pull-model-name" value="hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M" placeholder="z. B. hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M">
+        <input type="text" id="pull-model-name" value="igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest" placeholder="z. B. igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest">
         <button type="button" class="btn" id="pull-model-btn" onclick="pullOllamaModel()">Pull</button>
       </div>
-      <div style="margin-top: 0.35rem; font-size: 0.78rem; color: var(--text-muted);">
-        💡 Empfohlener Default: <code style="color: var(--gold-accent); cursor: pointer;" onclick="document.getElementById('pull-model-name').value='hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M'">hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M</code>
+      <div style="margin-top: 0.35rem; font-size: 0.76rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center;">
+        <span>💡 Schnellwahl:</span>
+        <code style="color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest')" title="Roleplay & Memory">Gemma-4-12B</code>
+        <span>·</span>
+        <code style="color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('gemma4:e4b')" title="Assistant & Vision">Gemma4-4B</code>
+        <span>·</span>
+        <code style="color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('llama3.2:1b')" title="Classification">Llama-3.2-1B</code>
       </div>
       <div id="pull-progress-box" style="display: none; margin-top: 0.65rem; padding: 0.6rem; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--gold-accent); font-size: 0.8rem; color: var(--gold-accent);">
         Starte Download...
@@ -203,12 +298,89 @@
 
 {% block extra_scripts %}
 <script>
-  async function pullOllamaModel() {
+  const RECOMMENDED_MODELS_MAP = {
+    roleplay: "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest",
+    memory: "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest",
+    assistant: "gemma4:e4b",
+    vision: "gemma4:e4b",
+    classification: "llama3.2:1b"
+  };
+
+  function setPullModel(modelName) {
+    const input = document.getElementById("pull-model-name");
+    if (input) {
+      input.value = modelName;
+      input.focus();
+    }
+  }
+
+  function applyRecommendedModels() {
+    for (const [role, modelName] of Object.entries(RECOMMENDED_MODELS_MAP)) {
+      const select = document.querySelector(`select[name="${role}_model"]`);
+      if (select) {
+        let found = false;
+        for (let i = 0; i < select.options.length; i++) {
+          if (select.options[i].value === modelName) {
+            select.selectedIndex = i;
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          const opt = document.createElement("option");
+          opt.value = modelName;
+          opt.textContent = modelName;
+          opt.selected = true;
+          select.appendChild(opt);
+        }
+        select.style.boxShadow = "0 0 8px var(--gold-accent)";
+        setTimeout(() => { select.style.boxShadow = ""; }, 1800);
+      }
+    }
+  }
+
+  async function pullSpecificModel(modelName) {
+    setPullModel(modelName);
+    await pullOllamaModel(true);
+  }
+
+  async function pullAllMissingRecommended() {
+    const installed = {{ installed_models|tojson }};
+    const targets = [
+      "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest",
+      "gemma4:e4b",
+      "llama3.2:1b"
+    ];
+    const missing = targets.filter(m => !installed.includes(m));
+
+    if (missing.length === 0) {
+      alert("Alle empfohlenen Modelle sind bereits auf dem Ollama-Server installiert!");
+      return;
+    }
+
+    if (!confirm(`Folgende ${missing.length} empfohlene(n) Modell(e) nacheinander herunterladen?\n\n- ` + missing.join("\n- "))) {
+      return;
+    }
+
+    for (let i = 0; i < missing.length; i++) {
+      const model = missing[i];
+      setPullModel(model);
+      const isLast = (i === missing.length - 1);
+      const success = await pullOllamaModel(isLast);
+      if (!success && !isLast) {
+        if (!confirm(`Download von '${model}' fehlgeschlagen. Trotzdem mit dem nächsten Modell fortfahren?`)) {
+          break;
+        }
+      }
+    }
+  }
+
+  async function pullOllamaModel(autoReload = true) {
     const input = document.getElementById("pull-model-name");
     const btn = document.getElementById("pull-model-btn");
     const box = document.getElementById("pull-progress-box");
     const name = input.value.trim();
-    if (!name) return;
+    if (!name) return false;
 
     btn.disabled = true;
     box.style.display = "block";
@@ -223,6 +395,8 @@
 
       const reader = resp.body.getReader();
       const decoder = new TextDecoder();
+      let hasError = false;
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -233,20 +407,30 @@
             try {
               const payload = JSON.parse(line.slice(6));
               if (payload.error) {
+                hasError = true;
                 box.textContent = "Fehler: " + payload.error;
               } else if (payload.completed && payload.total) {
                 const pct = Math.round((payload.completed / payload.total) * 100);
-                box.textContent = `${payload.status || 'Downloading'}: ${pct}%`;
+                box.textContent = `${payload.status || 'Downloading'} '${name}': ${pct}%`;
               } else if (payload.status) {
-                box.textContent = payload.status;
+                box.textContent = `${name}: ${payload.status}`;
               }
             } catch (err) {}
           }
         }
       }
-      window.location.reload();
+
+      if (!hasError) {
+        box.textContent = `Modell '${name}' erfolgreich installiert!`;
+        if (autoReload) {
+          setTimeout(() => { window.location.reload(); }, 900);
+        }
+        return true;
+      }
+      return false;
     } catch (e) {
-      box.textContent = "Verbindungsfehler beim Modell-Download.";
+      box.textContent = `Verbindungsfehler beim Download von '${name}'.`;
+      return false;
     } finally {
       btn.disabled = false;
     }

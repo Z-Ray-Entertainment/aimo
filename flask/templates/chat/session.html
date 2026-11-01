@@ -80,7 +80,7 @@
           data-session-id="{{ chat_session.id }}"
           data-sys-lang="{{ sys_lang or 'de' }}"
           data-character-name="{{ character.name }}"
-          data-character-portrait="{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}"
+          data-character-portrait="{{ url_for('uploaded_file', filename=character.avatar_path or character.primary_portrait_path) }}"
           data-persona-name="{{ persona.name if persona else 'Du' }}"
           data-persona-portrait="{{ url_for('uploaded_file', filename=persona.portrait_path) if persona else '/static/img/cover.svg' }}"
           data-is-admin="{{ 'true' if is_admin else 'false' }}">
@@ -97,7 +97,7 @@
           {% for msg in messages %}
             {% if msg.role.value == 'character' %}
               <div class="chat-bubble-row character" data-message-idx="{{ msg.message_idx }}">
-                <img src="{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}" alt="{{ character.name }}" class="chat-avatar" onerror="this.src='/static/img/cover.svg'">
+                <img src="{{ url_for('uploaded_file', filename=character.avatar_path or character.primary_portrait_path) }}" alt="{{ character.name }}" class="chat-avatar" onerror="this.src='/static/img/cover.svg'">
                 <div class="chat-bubble">
                   <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem; font-size: 0.76rem; color: var(--gold-accent);">
                     <strong>{{ character.name }}</strong>

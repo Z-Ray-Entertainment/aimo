@@ -107,6 +107,16 @@ def new_character():
             else:
                 raise AimoError("Primary Portrait ist ein Pflichtfeld beim Erstellen eines Charakters.")
 
+            avatar_file = request.files.get("avatar_portrait")
+            avatar_path = None
+            if avatar_file and avatar_file.filename:
+                avatar_path = storage.save_portrait(avatar_file.stream, avatar_file.filename)
+
+            card_file = request.files.get("card_portrait")
+            card_image_path = None
+            if card_file and card_file.filename:
+                card_image_path = storage.save_portrait(card_file.stream, card_file.filename)
+
             examples = [
                 line.strip()
                 for line in form.dialogue_examples_text.splitlines()
@@ -117,6 +127,8 @@ def new_character():
                 name=form.name,
                 gender=form.gender,
                 primary_portrait_path=portrait_path,
+                avatar_path=avatar_path,
+                card_image_path=card_image_path,
                 description=form.description,
                 first_message=form.first_message,
                 visibility=form.visibility,
@@ -170,6 +182,16 @@ def edit_character(character_id: int):
             if portrait_file and portrait_file.filename:
                 portrait_path = storage.save_portrait(portrait_file.stream, portrait_file.filename)
 
+            avatar_path = character.avatar_path
+            avatar_file = request.files.get("avatar_portrait")
+            if avatar_file and avatar_file.filename:
+                avatar_path = storage.save_portrait(avatar_file.stream, avatar_file.filename)
+
+            card_image_path = character.card_image_path
+            card_file = request.files.get("card_portrait")
+            if card_file and card_file.filename:
+                card_image_path = storage.save_portrait(card_file.stream, card_file.filename)
+
             examples = [
                 line.strip()
                 for line in form.dialogue_examples_text.splitlines()
@@ -180,6 +202,8 @@ def edit_character(character_id: int):
                 name=form.name,
                 gender=form.gender,
                 primary_portrait_path=portrait_path,
+                avatar_path=avatar_path,
+                card_image_path=card_image_path,
                 description=form.description,
                 first_message=form.first_message,
                 visibility=form.visibility,

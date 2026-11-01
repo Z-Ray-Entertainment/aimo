@@ -44,12 +44,12 @@ class CharacterRepository(BaseRepository[Character]):
                     """
                     INSERT INTO characters (
                         user_id, name, gender, visibility, primary_portrait_path,
-                        description, dialogue_examples_json, linked_lorebook_ids_json,
+                        avatar_path, card_image_path, description, dialogue_examples_json, linked_lorebook_ids_json,
                         suggested_worldinfo_id, first_message, initial_location_id,
                         initial_relationship, preferred_location_ids_json,
                         disliked_location_ids_json, created_at
                     )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         character.user_id,
@@ -57,6 +57,8 @@ class CharacterRepository(BaseRepository[Character]):
                         character.gender.value,
                         character.visibility,
                         character.primary_portrait_path,
+                        character.avatar_path,
+                        character.card_image_path,
                         character.description,
                         json.dumps(character.dialogue_examples),
                         json.dumps(character.linked_lorebook_ids),
@@ -82,7 +84,7 @@ class CharacterRepository(BaseRepository[Character]):
                     """
                     UPDATE characters
                     SET name = ?, gender = ?, visibility = ?, primary_portrait_path = ?,
-                        description = ?, dialogue_examples_json = ?, linked_lorebook_ids_json = ?,
+                        avatar_path = ?, card_image_path = ?, description = ?, dialogue_examples_json = ?, linked_lorebook_ids_json = ?,
                         suggested_worldinfo_id = ?, first_message = ?, initial_location_id = ?,
                         initial_relationship = ?, preferred_location_ids_json = ?,
                         disliked_location_ids_json = ?
@@ -93,6 +95,8 @@ class CharacterRepository(BaseRepository[Character]):
                         character.gender.value,
                         character.visibility,
                         character.primary_portrait_path,
+                        character.avatar_path,
+                        character.card_image_path,
                         character.description,
                         json.dumps(character.dialogue_examples),
                         json.dumps(character.linked_lorebook_ids),
@@ -272,6 +276,16 @@ class CharacterRepository(BaseRepository[Character]):
             gender=Gender.resolve(str(row["gender"])),
             visibility=str(row["visibility"]),
             primary_portrait_path=str(row["primary_portrait_path"]),
+            avatar_path=(
+                str(row["avatar_path"])
+                if ("avatar_path" in row.keys() and row["avatar_path"])
+                else None
+            ),
+            card_image_path=(
+                str(row["card_image_path"])
+                if ("card_image_path" in row.keys() and row["card_image_path"])
+                else None
+            ),
             description=str(row["description"]),
             dialogue_examples=[str(x) for x in _load_list(str(row["dialogue_examples_json"]))],
             linked_lorebook_ids=[int(x) for x in _load_list(str(row["linked_lorebook_ids_json"]))],

@@ -12,6 +12,14 @@ from domain.permissions.models import (
 from domain.permissions.services import PermissionService
 from domain.personas.models import Gender
 from domain.personas.services import PersonaService
+from domain.settings.models import (
+    RECOMMENDED_ASSISTANT_MODEL,
+    RECOMMENDED_CLASSIFICATION_MODEL,
+    RECOMMENDED_MEMORY_MODEL,
+    RECOMMENDED_MODELS,
+    RECOMMENDED_ROLEPLAY_MODEL,
+    RECOMMENDED_VISION_MODEL,
+)
 from domain.settings.services import SettingsService
 from infrastructure.image_gen.factory import get_image_gen_provider
 from infrastructure.llm.factory import get_llm_provider
@@ -196,42 +204,54 @@ def services_config():
     settings = settings_repo.get_settings()
 
     if request.method == "POST":
-        form = AdminServicesForm.from_request(request.form)
-        try:
-            settings_service.update_service_urls(
-                settings=settings,
-                ollama_url=form.ollama_url,
-                comfyui_url=form.comfyui_url,
-                searxng_url=form.searxng_url,
-                searxng_enabled=form.searxng_enabled,
-            )
-            settings_service.update_task_models(
-                settings=settings,
-                roleplay_model=form.roleplay_model,
-                memory_model=form.memory_model,
-                assistant_model=form.assistant_model,
-                vision_model=form.vision_model,
-                classification_model=form.classification_model,
-            )
-            settings_service.update_parameters(
-                settings=settings,
-                num_ctx=form.num_ctx,
-                temperature=form.temperature,
-                top_p=form.top_p,
-                repeat_penalty=form.repeat_penalty,
-            )
-            settings_service.update_system_prompts(
-                settings=settings,
-                roleplay_prompt=form.roleplay_prompt,
-                memory_prompt=form.memory_prompt,
-                diffuser_prompt=form.diffuser_prompt,
-                sparkle_assistant_prompt=form.sparkle_assistant_prompt,
-                vision_persona_prompt=form.vision_persona_prompt,
-            )
-            settings = settings_repo.save_settings(settings)
-            flash("Service-Einstellungen, Modelle und System-Prompts gespeichert.", "success")
-        except AimoError as exc:
-            flash(str(exc), "error")
+        action = request.form.get("action")
+        if action == "apply_recommended":
+            try:
+                settings = settings_service.apply_recommended_task_models(settings)
+                settings = settings_repo.save_settings(settings)
+                flash(
+                    "Vorgeschlagene Modelle für alle 5 Rollen erfolgreich zugewiesen!",
+                    "success",
+                )
+            except AimoError as exc:
+                flash(str(exc), "error")
+        else:
+            form = AdminServicesForm.from_request(request.form)
+            try:
+                settings_service.update_service_urls(
+                    settings=settings,
+                    ollama_url=form.ollama_url,
+                    comfyui_url=form.comfyui_url,
+                    searxng_url=form.searxng_url,
+                    searxng_enabled=form.searxng_enabled,
+                )
+                settings_service.update_task_models(
+                    settings=settings,
+                    roleplay_model=form.roleplay_model,
+                    memory_model=form.memory_model,
+                    assistant_model=form.assistant_model,
+                    vision_model=form.vision_model,
+                    classification_model=form.classification_model,
+                )
+                settings_service.update_parameters(
+                    settings=settings,
+                    num_ctx=form.num_ctx,
+                    temperature=form.temperature,
+                    top_p=form.top_p,
+                    repeat_penalty=form.repeat_penalty,
+                )
+                settings_service.update_system_prompts(
+                    settings=settings,
+                    roleplay_prompt=form.roleplay_prompt,
+                    memory_prompt=form.memory_prompt,
+                    diffuser_prompt=form.diffuser_prompt,
+                    sparkle_assistant_prompt=form.sparkle_assistant_prompt,
+                    vision_persona_prompt=form.vision_persona_prompt,
+                )
+                settings = settings_repo.save_settings(settings)
+                flash("Service-Einstellungen, Modelle und System-Prompts gespeichert.", "success")
+            except AimoError as exc:
+                flash(str(exc), "error")
 
     llm = get_llm_provider(settings)
     img_gen = get_image_gen_provider(settings)
@@ -245,8 +265,14 @@ def services_config():
         except AimoError:
             installed_models = []
 
+    unique_recommended = [
+        RECOMMENDED_ROLEPLAY_MODEL,
+        RECOMMENDED_ASSISTANT_MODEL,
+        RECOMMENDED_CLASSIFICATION_MODEL,
+    ]
+
     for assigned in (
-        "hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M",
+        *unique_recommended,
         settings.tasks.roleplay_model,
         settings.tasks.memory_model,
         settings.tasks.assistant_model,
@@ -260,6 +286,8 @@ def services_config():
         "admin/services.html",
         settings=settings,
         installed_models=installed_models,
+        recommended_models=RECOMMENDED_MODELS,
+        unique_recommended=unique_recommended,
         ollama_healthy=ollama_healthy,
         comfy_healthy=comfy_healthy,
     )

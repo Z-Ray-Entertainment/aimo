@@ -42,7 +42,7 @@
       {% for item in character_cards %}
         {% set char = item.character %}
         <div class="card-tile">
-          <a href="{{ url_for('chat.open_character_chat', character_id=char.id) }}" class="char-card-bg" style="background-image: url('{{ url_for('uploaded_file', filename=char.primary_portrait_path) }}'), url('/static/img/cover.svg');">
+          <a href="{{ url_for('chat.open_character_chat', character_id=char.id) }}" class="char-card-bg" style="background-image: url('{{ url_for('uploaded_file', filename=char.avatar_path or char.primary_portrait_path) }}'), url('/static/img/cover.svg');">
             <div class="char-scroll-overlay">
               <strong style="color: var(--gold-accent); display: block; margin-bottom: 0.35rem;">{{ char.name }} ({{ char.gender.value }})</strong>
               <p>{{ char.description }}</p>

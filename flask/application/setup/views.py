@@ -52,6 +52,7 @@ def first_boot():
                 searxng_url=form.searxng_url,
                 searxng_enabled=False,
             )
+            settings_service.apply_recommended_task_models(settings)
             settings_repo.save_settings(settings)
 
             default_persona = persona_service.create_persona(

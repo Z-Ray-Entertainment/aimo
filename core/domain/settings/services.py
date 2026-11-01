@@ -5,6 +5,11 @@ from domain.settings.exceptions import (
     InvalidTaskModelError,
 )
 from domain.settings.models import (
+    RECOMMENDED_ASSISTANT_MODEL,
+    RECOMMENDED_CLASSIFICATION_MODEL,
+    RECOMMENDED_MEMORY_MODEL,
+    RECOMMENDED_ROLEPLAY_MODEL,
+    RECOMMENDED_VISION_MODEL,
     ModelParameters,
     ServiceSettings,
     SystemPrompts,
@@ -67,6 +72,16 @@ class SettingsService:
             classification_model=cleaned_classification,
         )
         return settings
+
+    def apply_recommended_task_models(self, settings: ServiceSettings) -> ServiceSettings:
+        return self.update_task_models(
+            settings=settings,
+            roleplay_model=RECOMMENDED_ROLEPLAY_MODEL,
+            memory_model=RECOMMENDED_MEMORY_MODEL,
+            assistant_model=RECOMMENDED_ASSISTANT_MODEL,
+            vision_model=RECOMMENDED_VISION_MODEL,
+            classification_model=RECOMMENDED_CLASSIFICATION_MODEL,
+        )
 
     def update_parameters(
         self,

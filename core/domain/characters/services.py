@@ -29,6 +29,8 @@ class CharacterService:
         initial_relationship: int = 0,
         preferred_location_ids: list[int] | None = None,
         disliked_location_ids: list[int] | None = None,
+        avatar_path: str | None = None,
+        card_image_path: str | None = None,
     ) -> Character:
         DomainValidator.validate_positive_user_id(user_id, InvalidCharacterDataError)
         cleaned_name = DomainValidator.validate_required_string(name, "Character name", InvalidCharacterDataError)
@@ -53,6 +55,9 @@ class CharacterService:
                 "initial_relationship must be an integer between -100 and 100."
             )
 
+        cleaned_avatar = avatar_path.strip() if isinstance(avatar_path, str) and avatar_path.strip() else None
+        cleaned_card = card_image_path.strip() if isinstance(card_image_path, str) and card_image_path.strip() else None
+
         return Character(
             id=None,
             user_id=user_id,
@@ -61,10 +66,9 @@ class CharacterService:
             visibility=cleaned_vis,
             primary_portrait_path=cleaned_portrait,
             description=cleaned_desc,
-            dialogue_examples=[ex.strip() for ex in (dialogue_examples or []) if ex.strip()],
-            linked_lorebook_ids=list(linked_lorebook_ids or []),
-            suggested_worldinfo_id=suggested_worldinfo_id,
             first_message=cleaned_first_msg,
+            avatar_path=cleaned_avatar,
+            card_image_path=cleaned_card,
             initial_location_id=initial_location_id,
             initial_relationship=initial_relationship,
             preferred_location_ids=list(preferred_location_ids or []),
@@ -90,6 +94,8 @@ class CharacterService:
         initial_relationship: int = 0,
         preferred_location_ids: list[int] | None = None,
         disliked_location_ids: list[int] | None = None,
+        avatar_path: str | None = None,
+        card_image_path: str | None = None,
     ) -> Character:
         cleaned_name = name.strip() if isinstance(name, str) else ""
         if not cleaned_name:
@@ -120,6 +126,10 @@ class CharacterService:
         character.name = cleaned_name
         character.gender = resolved_gender
         character.primary_portrait_path = cleaned_portrait
+        if avatar_path is not None:
+            character.avatar_path = avatar_path.strip() if avatar_path.strip() else None
+        if card_image_path is not None:
+            character.card_image_path = card_image_path.strip() if card_image_path.strip() else None
         character.description = description.strip() if isinstance(description, str) else ""
         character.first_message = (
             first_message.strip() if isinstance(first_message, str) else ""

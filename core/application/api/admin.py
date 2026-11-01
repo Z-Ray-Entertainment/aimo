@@ -4,6 +4,14 @@ from flask import Blueprint, Response, jsonify, request, stream_with_context
 
 from application.api.auth import require_permission
 from domain.permissions.models import FunctionPermission
+from domain.settings.models import (
+    RECOMMENDED_ASSISTANT_MODEL,
+    RECOMMENDED_CLASSIFICATION_MODEL,
+    RECOMMENDED_MEMORY_MODEL,
+    RECOMMENDED_MODELS,
+    RECOMMENDED_ROLEPLAY_MODEL,
+    RECOMMENDED_VISION_MODEL,
+)
 from domain.settings.services import SettingsService
 from infrastructure.image_gen.factory import get_image_gen_provider
 from infrastructure.llm.factory import get_llm_provider
@@ -24,6 +32,64 @@ def list_models():
         return jsonify({"models": models, "healthy": True})
     except AimoError as exc:
         return jsonify({"models": [], "healthy": False, "error": str(exc)})
+
+
+@api_admin_bp.route("/models/recommended", methods=["GET"])
+@require_permission(FunctionPermission.ADMIN_ACCESS)
+def get_recommended_models():
+    settings = SettingsRepository().get_settings()
+    llm = get_llm_provider(settings)
+    installed: list[str] = []
+    healthy = False
+    try:
+        installed = llm.list_models()
+        healthy = True
+    except AimoError:
+        installed = []
+
+    unique_models = [
+        RECOMMENDED_ROLEPLAY_MODEL,
+        RECOMMENDED_ASSISTANT_MODEL,
+        RECOMMENDED_CLASSIFICATION_MODEL,
+    ]
+    model_statuses = {m: (m in installed) for m in unique_models}
+
+    return jsonify(
+        {
+            "recommended_by_role": {
+                "roleplay": RECOMMENDED_ROLEPLAY_MODEL,
+                "memory": RECOMMENDED_MEMORY_MODEL,
+                "assistant": RECOMMENDED_ASSISTANT_MODEL,
+                "vision": RECOMMENDED_VISION_MODEL,
+                "classification": RECOMMENDED_CLASSIFICATION_MODEL,
+            },
+            "roles_detail": RECOMMENDED_MODELS,
+            "unique_models": unique_models,
+            "model_statuses": model_statuses,
+            "ollama_healthy": healthy,
+        }
+    )
+
+
+@api_admin_bp.route("/models/apply-recommended", methods=["POST"])
+@require_permission(FunctionPermission.ADMIN_ACCESS)
+def apply_recommended_models_endpoint():
+    settings_repo = SettingsRepository()
+    settings = settings_repo.get_settings()
+    settings = SettingsService().apply_recommended_task_models(settings)
+    settings_repo.save_settings(settings)
+    return jsonify(
+        {
+            "status": "success",
+            "tasks": {
+                "roleplay_model": settings.tasks.roleplay_model,
+                "memory_model": settings.tasks.memory_model,
+                "assistant_model": settings.tasks.assistant_model,
+                "vision_model": settings.tasks.vision_model,
+                "classification_model": settings.tasks.classification_model,
+            },
+        }
+    )
 
 
 @api_admin_bp.route("/models/pull", methods=["POST"])

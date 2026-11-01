@@ -88,6 +88,8 @@ class Character:
     primary_portrait_path: str
     description: str
     first_message: str
+    avatar_path: str | None = None
+    card_image_path: str | None = None
     visibility: str = "private"
     dialogue_examples: list[str] = field(default_factory=list)
     linked_lorebook_ids: list[int] = field(default_factory=list)

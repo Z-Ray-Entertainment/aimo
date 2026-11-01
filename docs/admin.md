@@ -21,17 +21,27 @@ aimo avoids rigid role hierarchies in favor of a **functional permission model**
 
 ## 🔌 Service & Model Management (`/admin/services`)
 
-### 1. Ollama Model Management
+### 1. Ollama Model Management & Setup-Helper
+- **Setup-Helper:** Quick overview of the recommended model suite for optimal performance:
+  - **Roleplay:** `igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest` (deep conversational nuance and roleplay fidelity)
+  - **Memory:** `igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest` (10-message episodic memory and chat title generation)
+  - **Assistant:** `gemma4:e4b` (Sparkle writing assistant, translation, ComfyUI image prompts)
+  - **Vision:** `gemma4:e4b` (Multimodal vision analysis for portraits and 16:9 backgrounds)
+  - **Classification:** `llama3.2:1b` (Ultra-fast post-streaming emotion classification and location change suggestions)
+- **One-Click Actions:**
+  - `✨ Vorgeschlagene Modelle zuweisen`: Automatically binds the recommended models to all 5 tasks.
+  - `⚡ Fehlende installieren`: Sequentially pulls missing recommended models with live download progress.
 - **Installed Models:** View all models currently hosted on your Ollama server.
-- **Install New Model (Pull):** Enter a model tag (e.g., `llama3:8b`, `qwen2.5:7b`) to download it directly through the web UI onto your Ollama server.
+- **Install New Model (Pull):** Enter any model tag or choose a quick shortcut to download it directly onto your Ollama server.
 - **Delete Model:** Remove unused models to reclaim disk storage.
 
 ### 2. Task-Specific Model Assignments
 Route specific duties to specialized models:
-- **Roleplay:** Your premier model for dialogue, character depiction, and narrative nuance.
-- **Memory:** A fast, efficient model for 10-message event summaries and tag extraction.
-- **Assistant:** Model for tool calling, translation, and coordination.
-- **Vision:** Multimodal model (e.g., `llava`, `llama3.2-vision`) for image analysis and persona appearance scans.
+- **Roleplay:** Primary model for dialogue, character depiction, and narrative nuance.
+- **Classification:** Fast, lightweight model for autonomous post-streaming emotion and location detection.
+- **Memory:** Efficient model for 10-message event summaries and tag extraction.
+- **Assistant:** Dedicated model for Sparkle assistant, translation, and diffuser prompts.
+- **Vision:** Multimodal model for image analysis and persona appearance scans.
 
 ### 3. Inference Parameters & System Prompts
 - Fine-tune generation hyperparameters:

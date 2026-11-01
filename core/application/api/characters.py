@@ -48,6 +48,8 @@ def list_characters():
                 "gender": char.gender.value,
                 "visibility": char.visibility,
                 "primary_portrait_path": char.primary_portrait_path,
+                "avatar_path": char.avatar_path,
+                "card_image_path": char.card_image_path,
                 "description": char.description,
                 "first_message": char.first_message,
                 "suggested_worldinfo_id": char.suggested_worldinfo_id,
@@ -90,6 +92,8 @@ def create_character():
         if request.is_json:
             data = request.get_json(silent=True) or {}
             portrait_path = data.get("primary_portrait_path", "portraits/default.png")
+            avatar_path = data.get("avatar_path")
+            card_image_path = data.get("card_image_path")
         else:
             data = request.form.to_dict()
             portrait_file = request.files.get("primary_portrait")
@@ -98,11 +102,25 @@ def create_character():
             else:
                 portrait_path = data.get("primary_portrait_path", "portraits/default.png")
 
+            avatar_file = request.files.get("avatar_portrait")
+            if avatar_file and avatar_file.filename:
+                avatar_path = storage.save_portrait(avatar_file.stream, avatar_file.filename)
+            else:
+                avatar_path = data.get("avatar_path")
+
+            card_file = request.files.get("card_portrait")
+            if card_file and card_file.filename:
+                card_image_path = storage.save_portrait(card_file.stream, card_file.filename)
+            else:
+                card_image_path = data.get("card_image_path")
+
         character = char_service.create_character(
             user_id=user.id,
             name=data.get("name", ""),
             gender=data.get("gender", Gender.FEMALE.value),
             primary_portrait_path=portrait_path,
+            avatar_path=avatar_path,
+            card_image_path=card_image_path,
             description=data.get("description", ""),
             first_message=data.get("first_message", ""),
             visibility=data.get("visibility", "private"),
