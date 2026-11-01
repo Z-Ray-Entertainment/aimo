@@ -7,8 +7,14 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
   {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body class="{% if system_backdrop_url %}has-system-backdrop{% endif %}">
   <div class="app-overlay">
+    {% block page_backdrop %}
+      {% if system_backdrop_url %}
+        <div class="system-default-backdrop" style="background-image: url('{{ system_backdrop_url }}');"></div>
+      {% endif %}
+    {% endblock %}
+
     <header class="top-header">
       <div class="header-left">
         <a href="{{ url_for('overview.index') }}" class="brand-title">
@@ -134,12 +140,6 @@
         </div>
       {% endif %}
     </header>
-
-    {% block page_backdrop %}
-      {% if system_backdrop_url %}
-        <div class="system-default-backdrop" style="background-image: url('{{ system_backdrop_url }}');"></div>
-      {% endif %}
-    {% endblock %}
 
     <main class="main-container">
       {% with messages = get_flashed_messages(with_categories=true) %}

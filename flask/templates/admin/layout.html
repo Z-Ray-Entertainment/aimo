@@ -2,20 +2,48 @@
 {% block title %}AIMO — Administration{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-  <div class="rpg-tabs" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
-    <a href="{{ url_for('admin.users_list') }}" class="rpg-tab-btn {% if request.endpoint in ('admin.users_list', 'admin.create_user', 'admin.edit_user') %}active{% endif %}">
-      <span class="icon-mono">👥</span> Benutzerverwaltung
-    </a>
-    <a href="{{ url_for('admin.services_config') }}" class="rpg-tab-btn {% if request.endpoint == 'admin.services_config' %}active{% endif %}">
-      <span class="icon-mono">⚙️</span> Services, Modelle & Prompts
-    </a>
-    <a href="{{ url_for('admin.backdrop_config') }}" class="rpg-tab-btn {% if request.endpoint == 'admin.backdrop_config' %}active{% endif %}">
-      <span class="icon-mono">🖼️</span> System-Backdrop
-    </a>
-  </div>
-  <a href="{{ url_for('overview.index') }}" class="btn">← Zurück zum Hub</a>
-</div>
+<div class="admin-layout">
+  <!-- Vertikale Seitenleiste links -->
+  <aside class="wood-frame admin-sidebar">
+    <div class="admin-sidebar-header">
+      <div class="admin-sidebar-title">
+        <span class="icon-mono">⚙️</span>
+        <span>Administration</span>
+      </div>
+      <p class="admin-sidebar-subtitle">System & Konfiguration</p>
+    </div>
 
-{% block admin_content %}{% endblock %}
+    <nav class="admin-nav-menu">
+      <a href="{{ url_for('admin.users_list') }}"
+         class="admin-nav-item {% if request.endpoint in ('admin.users_list', 'admin.create_user', 'admin.edit_user') %}active{% endif %}">
+        <span class="icon-mono">👥</span>
+        <span class="admin-nav-text">Benutzerverwaltung</span>
+      </a>
+
+      <a href="{{ url_for('admin.services_config') }}"
+         class="admin-nav-item {% if request.endpoint == 'admin.services_config' %}active{% endif %}">
+        <span class="icon-mono">⚙️</span>
+        <span class="admin-nav-text">Services, Modelle & Prompts</span>
+      </a>
+
+      <a href="{{ url_for('admin.backdrop_config') }}"
+         class="admin-nav-item {% if request.endpoint == 'admin.backdrop_config' %}active{% endif %}">
+        <span class="icon-mono">🖼️</span>
+        <span class="admin-nav-text">System-Backdrop</span>
+      </a>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <a href="{{ url_for('overview.index') }}" class="btn admin-back-btn">
+        <span class="icon-mono">←</span>
+        <span>Zurück zum Hub</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Rechter Hauptbereich für Inhalte -->
+  <section class="admin-main-stage">
+    {% block admin_content %}{% endblock %}
+  </section>
+</div>
 {% endblock %}

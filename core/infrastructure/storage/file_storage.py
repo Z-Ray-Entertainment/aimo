@@ -1,6 +1,9 @@
+import io
 import uuid
 from pathlib import Path
 from typing import BinaryIO
+
+from PIL import Image, ImageOps
 
 from shared.config import Config, _resolve_writable_dir
 from shared.exceptions import InfrastructureError
@@ -9,6 +12,8 @@ from shared.utils import sanitize_filename
 ALLOWED_IMAGE_EXTENSIONS: frozenset[str] = frozenset(
     {".png", ".jpg", ".jpeg", ".webp"}
 )
+
+DEFAULT_WEBP_LOSSLESS: bool = True
 
 _PNG_SIGNATURE: bytes = b"\x89PNG\r\n\x1a\n"
 _JPEG_SIGNATURE: bytes = b"\xff\xd8\xff"
@@ -64,17 +69,16 @@ class FileStorage:
         raw_bytes = self._extract_bytes(content)
         self.validate_image_bytes(raw_bytes, extension)
 
+        webp_bytes = self.convert_to_webp(raw_bytes, lossless=DEFAULT_WEBP_LOSSLESS)
+
         if emotion is not None and variant is not None:
             safe_emotion = sanitize_filename(emotion).lower()
-            target_filename = f"{safe_emotion}_{int(variant)}{extension}"
-            return self._write_bytes(target_dir / target_filename, raw_bytes)
+            target_filename = f"{safe_emotion}_{int(variant)}.webp"
+            return self._write_bytes(target_dir / target_filename, webp_bytes)
 
-        return self._save_to_directory(
-            target_dir=target_dir,
-            content=raw_bytes,
-            filename=filename,
-            unique_prefix=False,
-        )
+        safe_stem = sanitize_filename(Path(filename).stem)
+        target_filename = f"{safe_stem}.webp"
+        return self._write_bytes(target_dir / target_filename, webp_bytes)
 
     def save_background(self, content: bytes | BinaryIO, filename: str) -> str:
         return self._save_to_directory(
@@ -174,6 +178,22 @@ class FileStorage:
                     "File extension '.webp' does not match binary image header."
                 )
 
+    @staticmethod
+    def convert_to_webp(data: bytes, lossless: bool = DEFAULT_WEBP_LOSSLESS) -> bytes:
+        try:
+            with Image.open(io.BytesIO(data)) as img:
+                img = ImageOps.exif_transpose(img)
+                if img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info):
+                    target_img = img.convert("RGBA")
+                else:
+                    target_img = img.convert("RGB")
+
+                buffer = io.BytesIO()
+                target_img.save(buffer, format="WEBP", lossless=lossless)
+                return buffer.getvalue()
+        except Exception as exc:
+            raise InfrastructureError(f"Failed to convert image to lossless WebP: {exc}") from exc
+
     def _save_to_directory(
         self,
         target_dir: Path,
@@ -185,14 +205,16 @@ class FileStorage:
         raw_bytes = self._extract_bytes(content)
         self.validate_image_bytes(raw_bytes, extension)
 
+        webp_bytes = self.convert_to_webp(raw_bytes, lossless=DEFAULT_WEBP_LOSSLESS)
+
         safe_stem = sanitize_filename(Path(filename).stem)
         if unique_prefix:
-            final_name = f"{uuid.uuid4().hex[:12]}_{safe_stem}{extension}"
+            final_name = f"{uuid.uuid4().hex[:12]}_{safe_stem}.webp"
         else:
-            final_name = f"{safe_stem}{extension}"
+            final_name = f"{safe_stem}.webp"
 
         target_path = (target_dir / final_name).resolve()
-        return self._write_bytes(target_path, raw_bytes)
+        return self._write_bytes(target_path, webp_bytes)
 
     def _write_bytes(self, target_path: Path, data: bytes) -> str:
         resolved = target_path.resolve()

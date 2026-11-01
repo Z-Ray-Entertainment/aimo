@@ -1,7 +1,7 @@
 {% extends "admin/layout.html" %}
 
 {% block admin_content %}
-<div style="display: grid; grid-template-columns: 1fr 380px; gap: 1.5rem; align-items: start;">
+<div class="admin-services-grid">
   <!-- Linke Spalte: Hauptformular für URLs, Task-Zuweisung, Inferenz-Parameter & System-Prompts -->
   <form method="POST" action="{{ url_for('admin.services_config') }}" class="wood-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
     <h2 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
