@@ -16,13 +16,17 @@ def get_expected_client_key() -> str:
 
 
 def extract_request_client_key() -> str:
-    header_key = (request.headers.get("X-Client-Key") or "").strip()
+    header_key = (
+        request.headers.get("X-Client-Key")
+        or request.headers.get("X-API-Key")
+        or ""
+    ).strip()
     if header_key:
         return header_key
     auth_header = (request.headers.get("Authorization") or "").strip()
     if auth_header.lower().startswith("bearer "):
         return auth_header[7:].strip()
-    return (request.args.get("client_key") or "").strip()
+    return ""
 
 
 def verify_client_key() -> tuple[bool, Any | None]:
@@ -35,7 +39,7 @@ def verify_client_key() -> tuple[bool, Any | None]:
     provided = extract_request_client_key()
     if not provided or not hmac.compare_digest(provided, expected):
         return False, (
-            jsonify({"error": "Invalid or missing CLIENT_KEY."}),
+            jsonify({"error": "Invalid or missing CLIENT_KEY in request header."}),
             401,
         )
     return True, None

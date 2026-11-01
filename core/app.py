@@ -45,10 +45,11 @@ def create_core_app(config_class: type[Config] = Config) -> Flask:
 
     @app.before_request
     def enforce_client_key_on_rest():
-        if request.path.startswith("/api/"):
-            ok, err_resp = verify_client_key()
-            if not ok:
-                return err_resp
+        if request.method == "OPTIONS":
+            return None
+        ok, err_resp = verify_client_key()
+        if not ok:
+            return err_resp
         return None
 
     @app.route("/api/ping", methods=["GET"])

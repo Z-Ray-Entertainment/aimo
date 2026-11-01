@@ -160,6 +160,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 ### 13. Headless Core & REST API (`application/api/`)
 - The core runs as a full-fledged background service with a complete REST API.
 - Both the Web UI and alternative clients (e.g., a native **GTK4/Libadwaita app for Flathub**) consume the same endpoints.
+- **Mandatory CLIENT_KEY in Request Header:** The core service strictly requires a valid `CLIENT_KEY` passed exclusively via HTTP request headers (`X-Client-Key`, `X-API-Key`, or `Authorization: Bearer <key>`) for all REST calls. Calls without a valid header key must be rejected immediately with HTTP 401. Passing client keys via query parameters is strictly forbidden.
 
 ### 14. SQLite Concurrency & WAL Mode
 - The SQLite connection in `infrastructure/database.py` must be initialized with the following pragmas:
@@ -167,6 +168,12 @@ The prompt for the roleplay model must strictly be assembled in this exact order
   - `PRAGMA busy_timeout=30000;` (30 seconds)
   - `PRAGMA synchronous=NORMAL;`
   - `PRAGMA foreign_keys=ON;`
+
+### 15. Mandatory Access Control (MAC) & Default-Deny Discipline
+- **Default-Deny Policy (Zero Trust):** The absolute baseline across the entire application is **zero access to anything by default** ("Kein Zugriff auf nichts"). No user has implicit permission to access, view, modify, or delete any entity or resource. Access must be granted explicitly.
+- **Consistent Application-Wide Enforcement:** Every single controller route (`flask/application/`), REST API endpoint (`core/application/api/`), SSE stream, background worker, and action handler that takes an ID or accesses a resource **must strictly enforce access control without exception**.
+- **Domain-Encapsulated Authorization Logic:** Business rules governing visibility and editability (`is_visible_to_user`, `is_editable_by_user`) belong strictly to domain entities (`Character`, `Lorebook`, `WorldInfo`, etc.). Controllers in `application/` are obligated to call these domain methods before performing any operation.
+- **Zero Tolerance for IDOR (Insecure Direct Object References):** Merely changing or guessing a numeric ID or URL path (e.g. `/characters/<id>`, `/chat/session/<id>`, `/api/chat/<session_id>/...`) must never grant access to private resources of another user. Unauthorized attempts must be blocked immediately (redirecting or returning HTTP 404/403).
 
 ---
 
@@ -191,6 +198,9 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 - ❌ Pass non-English prompts/contexts directly to the LLM without routing through the translation layer.
 - ❌ Wire external AI services (Ollama, ComfyUI, TTS) directly into domain or application services (always use the respective provider interface).
 - ❌ Ever allow the initial administrator to lose permissions or revoke their own permissions.
+- ❌ Expose or implement any route, view, or API endpoint without explicit access control and authorization checks (violating Mandatory Access Control and Default-Deny).
+- ❌ Allow unauthorized access, viewing, editing, copying, streaming, or deletion of private entities (characters, chat sessions, personas, lorebooks, worldinfos) via manipulated IDs or URLs (IDOR).
+- ❌ Allow any REST call to reach the core without a valid CLIENT_KEY in the request header, or accept client keys passed via URL query parameters.
 - ❌ Execute SQL queries directly inside `domain/` or `application/` (only via repositories).
 - ❌ Import web framework code (`flask`, `render_template`, `request`) into `domain/` or `infrastructure/`.
 - ❌ Create unsolicited automated tests.
