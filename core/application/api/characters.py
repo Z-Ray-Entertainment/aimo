@@ -50,6 +50,7 @@ def list_characters():
                 "primary_portrait_path": char.primary_portrait_path,
                 "avatar_path": char.avatar_path,
                 "card_image_path": char.card_image_path,
+                "appearance": getattr(char, "appearance", ""),
                 "description": char.description,
                 "first_message": char.first_message,
                 "suggested_worldinfo_id": char.suggested_worldinfo_id,
@@ -121,6 +122,7 @@ def create_character():
             primary_portrait_path=portrait_path,
             avatar_path=avatar_path,
             card_image_path=card_image_path,
+            appearance=data.get("appearance", ""),
             description=data.get("description", ""),
             first_message=data.get("first_message", ""),
             visibility=data.get("visibility", "private"),
@@ -182,6 +184,63 @@ def sparkle_description():
         return jsonify({"description": improved})
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 502
+
+
+@api_characters_bp.route("/extract-appearance", methods=["POST"])
+@require_permission(FunctionPermission.CHARACTER_EDIT)
+def extract_appearance():
+    storage = FileStorage()
+    portrait_path = None
+
+    if "primary_portrait" in request.files and request.files["primary_portrait"].filename:
+        file = request.files["primary_portrait"]
+        portrait_path = storage.save_portrait(file.stream, file.filename)
+    elif "portrait" in request.files and request.files["portrait"].filename:
+        file = request.files["portrait"]
+        portrait_path = storage.save_portrait(file.stream, file.filename)
+    elif request.is_json:
+        data = request.get_json(silent=True) or {}
+        char_id = data.get("character_id")
+        if char_id:
+            char = CharacterRepository().get_by_id(int(char_id))
+            if char:
+                portrait_path = char.primary_portrait_path
+        if not portrait_path:
+            portrait_path = data.get("portrait_path")
+    else:
+        char_id = request.form.get("character_id")
+        if char_id:
+            char = CharacterRepository().get_by_id(int(char_id))
+            if char:
+                portrait_path = char.primary_portrait_path
+        if not portrait_path:
+            portrait_path = request.form.get("portrait_path")
+
+    if not portrait_path:
+        return jsonify({"error": "Bitte lade zuerst ein Porträtbild hoch."}), 400
+
+    resolved_path = storage.resolve_path(portrait_path)
+    if not resolved_path.is_file():
+        return jsonify({"error": "Kein gültiges Porträtbild zum Analysieren vorhanden."}), 400
+
+    settings = SettingsRepository().get_settings()
+    llm = get_llm_provider(settings)
+    prompt = (
+        f"{settings.prompts.vision_persona_prompt.strip()}\n"
+        "Focus strictly on physical traits: face, eyes, hair, skin tone, clothing, and physique. "
+        "Keep it concise and descriptive."
+    )
+    try:
+        appearance = llm.analyze_image(
+            image_path=resolved_path,
+            prompt=prompt,
+            model=settings.tasks.vision_model,
+        ).strip()
+        return jsonify({"appearance": appearance, "portrait_path": portrait_path})
+    except AimoError as exc:
+        return jsonify({"error": str(exc)}), 502
+    except Exception as exc:
+        return jsonify({"error": f"Bildanalyse fehlgeschlagen: {exc}"}), 502
 
 
 @api_characters_bp.route("/<int:character_id>/sprites", methods=["POST"])

@@ -723,9 +723,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (pane) {
         pane.classList.add("active");
       }
-      if (targetId === "tab-char-sprites" || targetId === "tab-char-info") {
+      if (targetId.startsWith("tab-char-")) {
+        const tabKey = targetId.replace("tab-char-", "");
         const url = new URL(window.location.href);
-        url.searchParams.set("tab", targetId === "tab-char-sprites" ? "sprites" : "info");
+        url.searchParams.set("tab", tabKey);
         window.history.replaceState({}, "", url.toString());
       }
     });

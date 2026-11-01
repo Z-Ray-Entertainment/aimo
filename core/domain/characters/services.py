@@ -22,7 +22,7 @@ class CharacterService:
         description: str,
         first_message: str,
         visibility: str = "private",
-        dialogue_examples: list[str] | None = None,
+        dialogue_examples: list | None = None,
         linked_lorebook_ids: list[int] | None = None,
         suggested_worldinfo_id: int | None = None,
         initial_location_id: int | None = None,
@@ -31,6 +31,7 @@ class CharacterService:
         disliked_location_ids: list[int] | None = None,
         avatar_path: str | None = None,
         card_image_path: str | None = None,
+        appearance: str = "",
     ) -> Character:
         DomainValidator.validate_positive_user_id(user_id, InvalidCharacterDataError)
         cleaned_name = DomainValidator.validate_required_string(name, "Character name", InvalidCharacterDataError)
@@ -45,6 +46,7 @@ class CharacterService:
         cleaned_first_msg = (
             first_message.strip() if isinstance(first_message, str) else ""
         )
+        cleaned_appearance = appearance.strip() if isinstance(appearance, str) else ""
 
         cleaned_vis = visibility.strip().lower() if isinstance(visibility, str) else "private"
         if cleaned_vis not in ("private", "public"):
@@ -58,6 +60,11 @@ class CharacterService:
         cleaned_avatar = avatar_path.strip() if isinstance(avatar_path, str) and avatar_path.strip() else None
         cleaned_card = card_image_path.strip() if isinstance(card_image_path, str) and card_image_path.strip() else None
 
+        if suggested_worldinfo_id is None:
+            initial_location_id = None
+            preferred_location_ids = []
+            disliked_location_ids = []
+
         return Character(
             id=None,
             user_id=user_id,
@@ -69,6 +76,10 @@ class CharacterService:
             first_message=cleaned_first_msg,
             avatar_path=cleaned_avatar,
             card_image_path=cleaned_card,
+            appearance=cleaned_appearance,
+            dialogue_examples=list(dialogue_examples or []),
+            linked_lorebook_ids=list(linked_lorebook_ids or []),
+            suggested_worldinfo_id=suggested_worldinfo_id,
             initial_location_id=initial_location_id,
             initial_relationship=initial_relationship,
             preferred_location_ids=list(preferred_location_ids or []),
@@ -87,7 +98,7 @@ class CharacterService:
         description: str,
         first_message: str,
         visibility: str = "private",
-        dialogue_examples: list[str] | None = None,
+        dialogue_examples: list | None = None,
         linked_lorebook_ids: list[int] | None = None,
         suggested_worldinfo_id: int | None = None,
         initial_location_id: int | None = None,
@@ -96,6 +107,7 @@ class CharacterService:
         disliked_location_ids: list[int] | None = None,
         avatar_path: str | None = None,
         card_image_path: str | None = None,
+        appearance: str | None = None,
     ) -> Character:
         cleaned_name = name.strip() if isinstance(name, str) else ""
         if not cleaned_name:
@@ -130,23 +142,32 @@ class CharacterService:
             character.avatar_path = avatar_path.strip() if avatar_path.strip() else None
         if card_image_path is not None:
             character.card_image_path = card_image_path.strip() if card_image_path.strip() else None
+        if appearance is not None:
+            character.appearance = appearance.strip() if isinstance(appearance, str) else ""
         character.description = description.strip() if isinstance(description, str) else ""
         character.first_message = (
             first_message.strip() if isinstance(first_message, str) else ""
         )
         character.visibility = cleaned_vis
         if dialogue_examples is not None:
-            character.dialogue_examples = [ex.strip() for ex in dialogue_examples if ex.strip()]
+            character.dialogue_examples = list(dialogue_examples)
         if linked_lorebook_ids is not None:
             character.linked_lorebook_ids = list(linked_lorebook_ids)
-        character.suggested_worldinfo_id = suggested_worldinfo_id
-        character.initial_location_id = initial_location_id
-        character.initial_relationship = initial_relationship
-        if preferred_location_ids is not None:
-            character.preferred_location_ids = list(preferred_location_ids)
-        if disliked_location_ids is not None:
-            character.disliked_location_ids = list(disliked_location_ids)
 
+        if suggested_worldinfo_id is None:
+            character.suggested_worldinfo_id = None
+            character.initial_location_id = None
+            character.preferred_location_ids = []
+            character.disliked_location_ids = []
+        else:
+            character.suggested_worldinfo_id = suggested_worldinfo_id
+            character.initial_location_id = initial_location_id
+            if preferred_location_ids is not None:
+                character.preferred_location_ids = list(preferred_location_ids)
+            if disliked_location_ids is not None:
+                character.disliked_location_ids = list(disliked_location_ids)
+
+        character.initial_relationship = initial_relationship
         return character
 
     def add_gallery_image(

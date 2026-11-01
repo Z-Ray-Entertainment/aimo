@@ -90,8 +90,9 @@ class Character:
     first_message: str
     avatar_path: str | None = None
     card_image_path: str | None = None
+    appearance: str = ""
     visibility: str = "private"
-    dialogue_examples: list[str] = field(default_factory=list)
+    dialogue_examples: list[dict[str, str]] = field(default_factory=list)
     linked_lorebook_ids: list[int] = field(default_factory=list)
     suggested_worldinfo_id: int | None = None
     initial_location_id: int | None = None

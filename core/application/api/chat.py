@@ -332,7 +332,10 @@ def _start_background_turn(
                     "character", w_character.id, "description", "en", w_character.description
                 )
                 raw_default_examples = (
-                    "\n".join(w_character.dialogue_examples)
+                    "\n".join([
+                        f"<START>\n{ex['trigger']}\n{ex['response']}" if isinstance(ex, dict) else str(ex)
+                        for ex in w_character.dialogue_examples
+                    ])
                     if isinstance(w_character.dialogue_examples, list)
                     else str(w_character.dialogue_examples or "")
                 )
@@ -1083,7 +1086,7 @@ def generate_scene_image(session_id: int):
 
     diffuser_instruction = (
         f"{settings.prompts.diffuser_prompt}\n\n"
-        f"Character: {character.name} ({character.description})\n"
+        f"Character: {character.name} ({getattr(character, 'appearance', '') or character.description})\n"
         f"Player Persona Appearance: {persona.appearance or persona.description}\n"
         f"Location: {location_desc}\n"
         f"Recent Scene:\n{scene_text}"

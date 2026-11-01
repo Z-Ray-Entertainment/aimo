@@ -55,25 +55,25 @@ def _render_creator(character=None, form=None):
     lorebooks = lb_repo.list_for_user(uid)
     worldinfos = wi_repo.list_all(uid)
     all_locations = []
+    locations_by_world = {}
     for wi in worldinfos:
         if wi.id is not None:
-            all_locations.extend(wi_repo.list_locations(wi.id))
+            locs = wi_repo.list_locations(wi.id)
+            locations_by_world[wi.id] = [
+                {"id": loc.id, "name": loc.name, "worldinfo_id": loc.worldinfo_id}
+                for loc in locs
+            ]
+            all_locations.extend(locs)
 
     sprites_by_emotion: dict[str, list] = {em: [] for em in STANDARD_28_EMOTIONS}
     if character is not None:
         for sp in character.sprites:
             sprites_by_emotion.setdefault(sp.emotion.value, []).append(sp)
 
+    valid_tabs = ("info", "gallery", "sprites", "dialogue", "world", "lorebooks")
     active_tab = request.args.get("tab", "info")
-    if active_tab not in ("info", "sprites") or character is None:
+    if active_tab not in valid_tabs:
         active_tab = "info"
-
-    trans_repo = TranslationRepository()
-    field_translations = (
-        trans_repo.get_entity_translations_map("character", character.id)
-        if character and character.id
-        else {}
-    )
 
     return render_template(
         "characters/creator.html",
@@ -82,10 +82,10 @@ def _render_creator(character=None, form=None):
         lorebooks=lorebooks,
         worldinfos=worldinfos,
         all_locations=all_locations,
+        locations_by_world=locations_by_world,
         emotions=STANDARD_28_EMOTIONS,
         sprites_by_emotion=sprites_by_emotion,
         active_tab=active_tab,
-        field_translations=field_translations,
     )
 
 
@@ -117,11 +117,6 @@ def new_character():
             if card_file and card_file.filename:
                 card_image_path = storage.save_portrait(card_file.stream, card_file.filename)
 
-            examples = [
-                line.strip()
-                for line in form.dialogue_examples_text.splitlines()
-                if line.strip()
-            ]
             character = char_service.create_character(
                 user_id=user.id,
                 name=form.name,
@@ -129,10 +124,11 @@ def new_character():
                 primary_portrait_path=portrait_path,
                 avatar_path=avatar_path,
                 card_image_path=card_image_path,
+                appearance=form.appearance,
                 description=form.description,
                 first_message=form.first_message,
                 visibility=form.visibility,
-                dialogue_examples=examples,
+                dialogue_examples=form.dialogue_examples,
                 linked_lorebook_ids=form.linked_lorebook_ids,
                 suggested_worldinfo_id=form.suggested_worldinfo_id,
                 initial_location_id=form.initial_location_id,
@@ -141,11 +137,6 @@ def new_character():
                 disliked_location_ids=form.disliked_location_ids,
             )
             saved = char_repo.save(character)
-            trans_repo = TranslationRepository()
-            for fname in ("description", "dialogue_examples", "first_message"):
-                trans_repo.save_field_variants_json(
-                    "character", saved.id, fname, request.form.get(f"i18n_{fname}")
-                )
             flash(f"Charakter '{saved.name}' erfolgreich angelegt!", "success")
             return redirect(url_for("characters.edit_character", character_id=saved.id))
         except AimoError as exc:
@@ -192,11 +183,6 @@ def edit_character(character_id: int):
             if card_file and card_file.filename:
                 card_image_path = storage.save_portrait(card_file.stream, card_file.filename)
 
-            examples = [
-                line.strip()
-                for line in form.dialogue_examples_text.splitlines()
-                if line.strip()
-            ]
             char_service.update_character(
                 character=character,
                 name=form.name,
@@ -204,10 +190,11 @@ def edit_character(character_id: int):
                 primary_portrait_path=portrait_path,
                 avatar_path=avatar_path,
                 card_image_path=card_image_path,
+                appearance=form.appearance,
                 description=form.description,
                 first_message=form.first_message,
                 visibility=form.visibility,
-                dialogue_examples=examples,
+                dialogue_examples=form.dialogue_examples,
                 linked_lorebook_ids=form.linked_lorebook_ids,
                 suggested_worldinfo_id=form.suggested_worldinfo_id,
                 initial_location_id=form.initial_location_id,
@@ -216,11 +203,6 @@ def edit_character(character_id: int):
                 disliked_location_ids=form.disliked_location_ids,
             )
             character = char_repo.save(character)
-            trans_repo = TranslationRepository()
-            for fname in ("description", "dialogue_examples", "first_message"):
-                trans_repo.save_field_variants_json(
-                    "character", character.id, fname, request.form.get(f"i18n_{fname}")
-                )
             flash(f"Charakter '{character.name}' gespeichert.", "success")
         except AimoError as exc:
             flash(str(exc), "error")
@@ -229,8 +211,13 @@ def edit_character(character_id: int):
             name=character.name,
             gender=character.gender.value,
             visibility=character.visibility,
+            appearance=getattr(character, "appearance", "") or "",
             description=character.description,
-            dialogue_examples_text="\n".join(character.dialogue_examples),
+            dialogue_examples=character.dialogue_examples,
+            dialogue_examples_text="\n".join([
+                ex["response"] if isinstance(ex, dict) else str(ex)
+                for ex in character.dialogue_examples
+            ]),
             first_message=character.first_message,
             suggested_worldinfo_id=character.suggested_worldinfo_id,
             initial_location_id=character.initial_location_id,

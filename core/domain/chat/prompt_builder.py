@@ -73,45 +73,51 @@ class PromptBuilder:
         relationship_value: float,
     ) -> str:
         c_forms = get_gender_forms(character.gender.value)
+        desc_block = character.description.strip()
+        if hasattr(character, "appearance") and character.appearance and character.appearance.strip():
+            desc_block = f"{desc_block}\n\n{character.appearance.strip()}"
+
         lines = [
             f"Role: You play this character ({character.name}). Embody these traits and voice exclusively:",
             f"Name: {character.name}",
             f"Gender: {character.gender.value} ({c_forms['pronouns']})",
             f"Current Affection / Relationship Score (-100 to +100): {relationship_value:.1f}",
-            f"Description & Personality:\n{character.description.strip()}",
+            f"Description & Personality:\n{desc_block}",
         ]
         return "\n".join(lines)
 
     @staticmethod
-    def _format_dialogue_examples(dialogue_examples: list[str] | str) -> str:
-        raw_items: list[str] = []
+    def _format_dialogue_examples(dialogue_examples: list | str) -> str:
+        blocks: list[str] = []
+
         if isinstance(dialogue_examples, str):
-            for part in dialogue_examples.splitlines():
-                cleaned = part.strip()
-                if cleaned:
-                    raw_items.append(cleaned)
-        elif isinstance(dialogue_examples, list):
+            raw_text = dialogue_examples.strip()
+            if not raw_text:
+                return "None."
+            return raw_text
+
+        if isinstance(dialogue_examples, list):
             for item in dialogue_examples:
-                if isinstance(item, str):
-                    for sub in item.splitlines():
-                        cleaned = sub.strip()
-                        if cleaned:
-                            raw_items.append(cleaned)
-                elif item is not None:
-                    cleaned = str(item).strip()
-                    if cleaned:
-                        raw_items.append(cleaned)
+                if isinstance(item, dict):
+                    t = str(item.get("trigger", "")).strip()
+                    r = str(item.get("response", "")).strip()
+                    if not t and not r:
+                        continue
+                    if not t.lower().startswith("{{user}}:"):
+                        t = f"{{{{user}}}}: {t}" if t else "{{user}}:"
+                    if not r.lower().startswith("{{char}}:"):
+                        r = f"{{{{char}}}}: {r}" if r else "{{char}}:"
+                    blocks.append(f"<START>\n{t}\n{r}")
+                elif isinstance(item, str):
+                    s = item.strip()
+                    if not s:
+                        continue
+                    if "<START>" in s:
+                        blocks.append(s)
+                    else:
+                        blocks.append(f"<START>\n{{{{user}}}}:\n{{{{char}}}}: {s}")
 
-        if not raw_items:
-            return "None."
-
-        formatted_lines: list[str] = []
-        for line in raw_items:
-            clean_line = line.lstrip("-* ").strip()
-            if clean_line:
-                formatted_lines.append(f"- {clean_line}")
-
-        return "\n".join(formatted_lines) if formatted_lines else "None."
+        return "\n\n".join(blocks) if blocks else "None."
 
     @staticmethod
     def _format_user_persona(persona: UserPersona) -> str:

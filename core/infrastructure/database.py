@@ -101,6 +101,7 @@ CREATE TABLE IF NOT EXISTS characters (
     primary_portrait_path TEXT NOT NULL,
     avatar_path TEXT,
     card_image_path TEXT,
+    appearance TEXT NOT NULL DEFAULT '',
     description TEXT NOT NULL DEFAULT '',
     dialogue_examples_json TEXT NOT NULL DEFAULT '[]',
     linked_lorebook_ids_json TEXT NOT NULL DEFAULT '[]',
@@ -342,6 +343,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
     for stmt in (
         "ALTER TABLE characters ADD COLUMN avatar_path TEXT",
         "ALTER TABLE characters ADD COLUMN card_image_path TEXT",
+        "ALTER TABLE characters ADD COLUMN appearance TEXT NOT NULL DEFAULT ''",
         "ALTER TABLE lorebooks ADD COLUMN visibility TEXT NOT NULL DEFAULT 'private'",
         "ALTER TABLE worldinfos ADD COLUMN visibility TEXT NOT NULL DEFAULT 'private'",
         "ALTER TABLE worldinfos ADD COLUMN initial_location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL",

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros/buttons.html" import action_button %}
+{% from "macros/buttons.html" import action_button, new_button %}
 {% block title %}AIMO — Character Designer{% endblock %}
 
 {% block content %}
@@ -14,231 +14,378 @@
     </div>
 
     <div style="display: flex; align-items: center; gap: 0.65rem;">
-      <button type="submit" form="character-main-form" class="btn"><span class="icon-mono">💾</span> Speichern</button>
+      <button type="submit" form="character-main-form" class="header-btn primary"><span class="icon-mono">💾</span> Speichern</button>
       {% if character %}
         <form method="POST" action="{{ url_for('characters.copy_character', character_id=character.id) }}" style="display: inline;">
-          <button type="submit" class="btn"><span class="icon-mono">📄</span> Kopieren</button>
+          <button type="submit" class="header-btn"><span class="icon-mono">📄</span> Kopieren</button>
         </form>
         <form method="POST" action="{{ url_for('characters.delete_character', character_id=character.id) }}" style="display: inline;" onsubmit="return confirm('Charakter wirklich unwiderruflich löschen?');">
-          <button type="submit" class="btn btn-danger"><span class="icon-mono">🗑️</span> Löschen</button>
+          <button type="submit" class="header-btn danger"><span class="icon-mono">🗑️</span> Löschen</button>
         </form>
       {% endif %}
     </div>
   </div>
 
-  <!-- Designer Tabs -->
+  <!-- Designer Tabs (Consistent with Header & Chat Nav Buttons) -->
   <div class="rpg-tabs">
-    <button type="button" class="rpg-tab-btn {% if active_tab != 'sprites' %}active{% endif %}" data-tab-target="tab-char-info">
-      <span class="icon-mono">📋</span> Tab 1: Hauptinformationen & Galerie
+    <button type="button" class="header-btn header-nav-btn {% if active_tab == 'info' %}active{% endif %}" data-tab-target="tab-char-info">
+      <span class="icon-mono">📋</span>
+      <span>Hauptinformationen</span>
     </button>
-    <button type="button" class="rpg-tab-btn {% if active_tab == 'sprites' %}active{% endif %}" data-tab-target="tab-char-sprites" {% if not character %}disabled title="Bitte zuerst Grunddaten speichern"{% endif %}>
-      <span class="icon-mono">🎭</span> Tab 2: Emotionale Sprites (28 Emotionen)
+    <button type="button" class="header-btn header-nav-btn {% if active_tab == 'gallery' %}active{% endif %}" data-tab-target="tab-char-gallery" {% if not character %}disabled title="Bitte zuerst Grunddaten speichern"{% endif %}>
+      <span class="icon-mono">🖼️</span>
+      <span>Galeriebilder</span>
+    </button>
+    <button type="button" class="header-btn header-nav-btn {% if active_tab == 'sprites' %}active{% endif %}" data-tab-target="tab-char-sprites" {% if not character %}disabled title="Bitte zuerst Grunddaten speichern"{% endif %}>
+      <span class="icon-mono">🎭</span>
+      <span>Emotionale Sprites</span>
+    </button>
+    <button type="button" class="header-btn header-nav-btn {% if active_tab == 'dialogue' %}active{% endif %}" data-tab-target="tab-char-dialogue">
+      <span class="icon-mono">💬</span>
+      <span>Gesprächsstile</span>
+    </button>
+    <button type="button" class="header-btn header-nav-btn {% if active_tab == 'world' %}active{% endif %}" data-tab-target="tab-char-world">
+      <span class="icon-mono">🗺️</span>
+      <span>World</span>
+    </button>
+    <button type="button" class="header-btn header-nav-btn {% if active_tab == 'lorebooks' %}active{% endif %}" data-tab-target="tab-char-lorebooks">
+      <span class="icon-mono">📖</span>
+      <span>Lorebooks</span>
     </button>
   </div>
 
-  <!-- TAB 1: Hauptinformationen -->
-  <section id="tab-char-info" class="tab-pane {% if active_tab != 'sprites' %}active{% endif %}">
-    <form id="character-main-form" method="POST" action="{% if character %}{{ url_for('characters.edit_character', character_id=character.id) }}{% else %}{{ url_for('characters.new_character') }}{% endif %}" enctype="multipart/form-data" class="wood-frame" style="padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
-      <div>
-        <label>
-          Name des Charakters *
-          <span class="field-help-btn" title="Name des Charakters:&#10;Der eindeutige Rufname deiner KI-Figur. Dieser Name wird im Chat als Sprecher angezeigt und ersetzt {{char}} in allen System- und Rollenspiel-Prompts.">?</span>
-        </label>
-        <input type="text" id="char-name-input" name="name" value="{{ form.name }}" required>
-      </div>
-      <div style="display: flex; gap: 1rem;">
-        <div style="flex: 1;">
-          <label>
-            Geschlecht *
-            <span class="field-help-btn" title="Geschlecht &amp; Pronomen:&#10;Legt das Geschlecht fest. Passende Pronomen (she/her, he/him, they/them) werden abgeleitet und in den System-Prompt injiziert.">?</span>
-          </label>
-          <select name="gender">
-            <option value="female" {% if form.gender == 'female' %}selected{% endif %}>Weiblich (female)</option>
-            <option value="male" {% if form.gender == 'male' %}selected{% endif %}>Männlich (male)</option>
-            <option value="non-binary" {% if form.gender == 'non-binary' %}selected{% endif %}>Nicht-Binär (non-binary)</option>
-          </select>
-        </div>
-        <div style="flex: 1;">
-          <label>
-            Sichtbarkeit
-            <span class="field-help-btn" title="Sichtbarkeit:&#10;Privat = Nur in deinem Account sichtbar und spielbar.&#10;Öffentlich = Alle Benutzer im Hub können diesen Charakter sehen und Chats starten.">?</span>
-          </label>
-          <select name="visibility">
-            <option value="private" {% if form.visibility == 'private' %}selected{% endif %}>Privat</option>
-            <option value="public" {% if form.visibility == 'public' %}selected{% endif %}>Öffentlich</option>
-          </select>
-        </div>
-      </div>
+  <!-- MAIN CHARACTER FORM (Encloses Tabs 1, 4, 5, 6 for safe single-submit) -->
+  <form id="character-main-form" method="POST" action="{% if character %}{{ url_for('characters.edit_character', character_id=character.id) }}{% else %}{{ url_for('characters.new_character') }}{% endif %}" enctype="multipart/form-data">
+    <input type="hidden" name="dialogue_examples_json" id="dialogue-examples-json" value='{{ form.dialogue_examples | tojson }}'>
 
-      <div>
-        <label>
-          Primary Portrait (9:16) &amp; Avatar (1:1) (Pflicht-Upload) {% if not character %}*{% endif %}
-          <span class="field-help-btn" title="Charakterbilder:&#10;• 9:16 Porträt: Chat-Seitenleiste &amp; Vollbild-Ansicht&#10;• 1:1 Avatar: Charakterkarten im Hub &amp; Chat-Bubbles">?</span>
-        </label>
-        <div style="display: flex; gap: 1rem; align-items: flex-start; margin-top: 0.35rem; flex-wrap: wrap;">
-          <div style="display: flex; gap: 0.85rem; align-items: center; flex-wrap: wrap;">
-            <!-- 9:16 Portrait Preview -->
-            <div style="text-align: center;">
-              <div id="portrait-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 54px; height: 96px; border-radius: 8px; border: 2px solid var(--gold-accent); overflow: hidden; background: rgba(15, 11, 8, 0.9); margin-bottom: 0.25rem;" title="9:16 Porträt (Chat-Seitenleiste &amp; Vollbild)">
-                <img id="portrait-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}{% endif %}" alt="9:16 Porträt" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
-              </div>
-              <span style="font-size: 0.7rem; color: var(--gold-accent); font-weight: 600;">9:16 Chat/Voll</span>
-            </div>
-
-            <!-- 1:1 Avatar Preview -->
-            <div style="text-align: center;">
-              <div id="avatar-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 64px; height: 64px; border-radius: 10px; border: 2px solid #64B5F6; overflow: hidden; background: rgba(15, 11, 8, 0.9); margin-bottom: 0.25rem;" title="1:1 Avatar (Übersichtskarte &amp; Chat-Bubble)">
-                <img id="avatar-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.avatar_path or character.primary_portrait_path) }}{% endif %}" alt="1:1 Avatar" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
-              </div>
-              <span style="font-size: 0.7rem; color: #64B5F6; font-weight: 600;">1:1 Übersicht/Bubble</span>
-            </div>
+    <!-- TAB 1: Hauptinformationen -->
+    <section id="tab-char-info" class="tab-pane {% if active_tab == 'info' %}active{% endif %}">
+      <div class="wood-frame" style="padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+        <div>
+          <label>
+            Name des Charakters *
+            <span class="field-help-btn" title="Name des Charakters:&#10;Der eindeutige Rufname deiner KI-Figur. Dieser Name wird im Chat als Sprecher angezeigt und ersetzt {{char}} in allen Prompts.">?</span>
+          </label>
+          <input type="text" id="char-name-input" name="name" value="{{ form.name }}" required>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <div style="flex: 1;">
+            <label>
+              Geschlecht *
+              <span class="field-help-btn" title="Geschlecht &amp; Pronomen:&#10;Legt das Geschlecht fest. Passende Pronomen werden abgeleitet und in den System-Prompt injiziert.">?</span>
+            </label>
+            <select name="gender" required>
+              <option value="female" {% if form.gender == 'female' %}selected{% endif %}>Weiblich (female)</option>
+              <option value="male" {% if form.gender == 'male' %}selected{% endif %}>Männlich (male)</option>
+              <option value="non-binary" {% if form.gender == 'non-binary' %}selected{% endif %}>Nicht-Binär (non-binary)</option>
+            </select>
           </div>
-
-          <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 0.45rem;">
-            <input type="file" id="primary-portrait-input" name="primary_portrait" accept=".png,.jpg,.jpeg,.webp" {% if not character %}required{% endif %}>
-            <input type="file" id="avatar-portrait-input" name="avatar_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
-            <input type="file" id="card-portrait-input" name="card_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
-            <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-              <button type="button" id="open-crop-btn" class="header-btn" style="padding: 0.35rem 0.75rem; font-size: 0.82rem;" {% if not character %}disabled{% endif %}>
-                <span class="icon-mono">✂️</span> Ausschnitte anpassen (9:16 &amp; 1:1)
-              </button>
-              <span id="crop-status-badge" style="display: none; font-size: 0.8rem; color: #4CAF50; font-weight: 600;">✓ Ausschnitte aktiv</span>
-            </div>
-            <div style="font-size: 0.76rem; color: var(--text-muted);">
-              Tipp: <strong>9:16</strong> für das Chat-Porträt und <strong>1:1</strong> für die Übersichtskarte &amp; Chat-Bubbles.
-            </div>
+          <div style="flex: 1;">
+            <label>
+              Sichtbarkeit *
+              <span class="field-help-btn" title="Sichtbarkeit:&#10;Privat = Nur in deinem Account spielbar.&#10;Öffentlich = Alle Benutzer im Hub können diesen Charakter sehen und spielen.">?</span>
+            </label>
+            <select name="visibility" required>
+              <option value="private" {% if form.visibility == 'private' %}selected{% endif %}>Privat</option>
+              <option value="public" {% if form.visibility == 'public' %}selected{% endif %}>Öffentlich</option>
+            </select>
           </div>
         </div>
-      </div>
-      <div>
-        <label>
-          Initialer Beziehungswert (-100 bis +100)
-          <span class="field-help-btn" title="Initialer Beziehungswert (-100.0 bis +100.0):&#10;Startwert der Zuneigung (-100 = tiefe Feindschaft, +100 = höchstes Vertrauen/Liebe). Jede Spielernachricht erhöht den Wert um +0.1; bei Inaktivität sinkt er um -0.1 pro Tag. Höhere Werte schalten Galeriebilder frei.">?</span>
-        </label>
-        <input type="number" name="initial_relationship" min="-100" max="100" value="{{ form.initial_relationship }}">
-      </div>
 
-      <div style="grid-column: 1 / -1;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+        <div>
           <label>
-            Charakterbeschreibung & Persönlichkeit *
-            <span class="field-help-btn" title="Charakterbeschreibung &amp; Persönlichkeit:&#10;Kernidentität der Figur (Wesen, Aussehen, Eigenarten, Hintergrundgeschichte, Ängste, Motivationen). Tipp: Nutze '✨ KI-Autor Optimierung'.">?</span>
+            Primary Portrait (9:16) &amp; Avatar (1:1) (Pflicht-Upload) *
+            <span class="field-help-btn" title="Charakterbilder:&#10;• 9:16 Porträt: Chat-Seitenleiste &amp; Vollbild-Ansicht&#10;• 1:1 Avatar: Charakterkarten im Hub &amp; Chat-Bubbles">?</span>
           </label>
-          <button type="button" id="sparkle-improve-btn" class="btn btn-sparkle">
-            <span class="icon-sparkle">✨</span> KI-Autor Optimierung
+          <div style="display: flex; gap: 1rem; align-items: flex-start; margin-top: 0.35rem; flex-wrap: wrap;">
+            <div style="display: flex; gap: 0.85rem; align-items: center; flex-wrap: wrap;">
+              <!-- 9:16 Portrait Preview -->
+              <div style="text-align: center;">
+                <div id="portrait-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 54px; height: 96px; border-radius: 8px; border: 2px solid var(--gold-accent); overflow: hidden; background: rgba(15, 11, 8, 0.9); margin-bottom: 0.25rem;" title="9:16 Porträt (Chat-Seitenleiste &amp; Vollbild)">
+                  <img id="portrait-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}{% endif %}" alt="9:16 Porträt" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
+                </div>
+                <span style="font-size: 0.7rem; color: var(--gold-accent); font-weight: 600;">9:16 Chat/Voll</span>
+              </div>
+
+              <!-- 1:1 Avatar Preview -->
+              <div style="text-align: center;">
+                <div id="avatar-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 64px; height: 64px; border-radius: 10px; border: 2px solid #64B5F6; overflow: hidden; background: rgba(15, 11, 8, 0.9); margin-bottom: 0.25rem;" title="1:1 Avatar (Übersichtskarte &amp; Chat-Bubble)">
+                  <img id="avatar-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.avatar_path or character.primary_portrait_path) }}{% endif %}" alt="1:1 Avatar" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
+                </div>
+                <span style="font-size: 0.7rem; color: #64B5F6; font-weight: 600;">1:1 Übersicht/Bubble</span>
+              </div>
+            </div>
+
+            <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 0.45rem;">
+              <input type="file" id="primary-portrait-input" name="primary_portrait" accept=".png,.jpg,.jpeg,.webp" {% if not character %}required{% endif %}>
+              <input type="file" id="avatar-portrait-input" name="avatar_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
+              <input type="file" id="card-portrait-input" name="card_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
+              <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+                <button type="button" id="open-crop-btn" class="header-btn" style="padding: 0.35rem 0.75rem; font-size: 0.82rem;" {% if not character %}disabled{% endif %}>
+                  <span class="icon-mono">✂️</span> Ausschnitte anpassen (9:16 &amp; 1:1)
+                </button>
+                <span id="crop-status-badge" style="display: none; font-size: 0.8rem; color: #4CAF50; font-weight: 600;">✓ Ausschnitte aktiv</span>
+              </div>
+              <div style="font-size: 0.76rem; color: var(--text-muted);">
+                Tipp: <strong>9:16</strong> für das Chat-Porträt und <strong>1:1</strong> für die Übersichtskarte &amp; Chat-Bubbles.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label>
+            Initialer Beziehungswert (-100 bis +100) *
+            <span class="field-help-btn" title="Initialer Beziehungswert (-100 bis +100):&#10;Startwert der Zuneigung (-100 = tiefe Feindschaft, +100 = höchstes Vertrauen/Liebe). Jede Spielernachricht erhöht den Wert um +0.1; bei Inaktivität sinkt er um -0.1 pro Tag.">?</span>
+          </label>
+          <input type="number" name="initial_relationship" min="-100" max="100" value="{{ form.initial_relationship }}" required>
+        </div>
+
+        <!-- Charakterbeschreibung -->
+        <div style="grid-column: 1 / -1;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <label>
+              Charakterbeschreibung &amp; Persönlichkeit *
+              <span class="field-help-btn" title="Charakterbeschreibung &amp; Persönlichkeit:&#10;Kernidentität der Figur (Wesen, Eigenarten, Hintergrundgeschichte, Ängste, Motivationen). Tipp: Nutze '✨ KI-Autor Optimierung'.">?</span>
+            </label>
+            <button type="button" id="sparkle-improve-btn" class="header-btn btn-sparkle">
+              <span class="icon-sparkle">✨</span> KI-Autor Optimierung
+            </button>
+          </div>
+          <textarea
+            id="char-description-textarea"
+            name="description"
+            rows="6"
+            required>{{ form.description }}</textarea>
+        </div>
+
+        <!-- Aussehen des Charakters mit Vision-AI Extraktion -->
+        <div style="grid-column: 1 / -1;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <label>
+              Aussehen des Charakters (Physical Appearance)
+              <span class="field-help-btn" title="Aussehen des Charakters:&#10;Detaillierte visuelle Beschreibung (Augenfarbe, Frisur, Hautton, Statur, Kleidung). Fließt direkt in den [CHARACTER_DEFINITION]-Prompt ein und steuert KI-Bildgenerierungen.">?</span>
+            </label>
+            <button type="button" id="extract-appearance-btn" class="header-btn btn-sparkle" title="Analysiert das Porträtbild mit einem Vision-LLM">
+              <span class="icon-sparkle">👁️</span> Aussehen aus Bild extrahieren
+            </button>
+          </div>
+          <textarea
+            id="char-appearance-textarea"
+            name="appearance"
+            rows="4"
+            placeholder="Körperliches Aussehen (z. B. smaragdgrüne Augen, schulterlanges schwarzes Haar, silberne Rüstung)...">{{ form.appearance }}</textarea>
+        </div>
+
+        <!-- Erste Nachricht -->
+        <div style="grid-column: 1 / -1;">
+          <label>
+            Erste Nachricht (Welcome Message beim ersten Chat) *
+            <span class="field-help-btn" title="First Message (Begrüßung):&#10;Die direkte erste Begrüßung des Charakters an den Spieler.&#10;WICHTIG: Keine Raumszene, Wetter oder Umgebung in der 3. Person beschreiben (das verleitet die KI zur Erzählerrolle). Schauplätze gehören in die WorldInfo!">?</span>
+          </label>
+          <textarea
+            name="first_message"
+            rows="4"
+            required>{{ form.first_message }}</textarea>
+        </div>
+
+        <!-- Bottom Save Action Row -->
+        <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-wood-dark);">
+          <button type="submit" class="header-btn primary"><span class="icon-mono">💾</span> Speichern</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: Gesprächsstile -->
+    <section id="tab-char-dialogue" class="tab-pane {% if active_tab == 'dialogue' %}active{% endif %}">
+      <div class="wood-frame" style="padding: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h3 style="color: var(--gold-accent); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              💬 Gesprächsstile (Few-Shot Dialogbeispiele)
+              <span class="field-help-btn" title="Gesprächsstile:&#10;Typische Dialog-Paare aus Spieler-Trigger und Charakter-Antwort. Werden im Format &lt;START&gt;\n{{user}}: ...\n{{char}}: ... in den Prompt injiziert.">?</span>
+            </h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
+              Definiere typische Trigger-Response-Beispiele, an denen sich die KI für Tonalität, Dialekt und Reaktionen orientiert.
+            </p>
+          </div>
+          <button type="button" class="header-btn primary" data-modal-open="add-dialogue-modal">
+            <span class="icon-mono">➕</span> Gesprächsstil hinzufügen
           </button>
         </div>
-        <input type="hidden" name="i18n_description" id="i18n-input-char-desc" value='{{ (field_translations.get("description", {}) if field_translations is defined else {}) | tojson }}'>
-        <textarea
-          id="char-description-textarea"
-          name="description"
-          rows="6"
-          required
-          data-i18n-field="description"
-          data-i18n-entity-type="character"
-          data-i18n-entity-id="{{ character.id if character else '' }}"
-          data-i18n-hidden="i18n-input-char-desc">{{ form.description }}</textarea>
-      </div>
 
-      <div>
-        <label>
-          Gesprächsbeispiele (Ein Beispiel pro Zeile)
-          <span class="field-help-btn" title="Gesprächsbeispiele (Few-Shot):&#10;Typische Zitate oder kurze Dialogbeispiele (eines pro Zeile). Die KI orientiert sich an diesen Beispielen für Tonfall, Dialekt und sprachliche Eigenheiten.">?</span>
-        </label>
-        <input type="hidden" name="i18n_dialogue_examples" id="i18n-input-char-dialogue" value='{{ (field_translations.get("dialogue_examples", {}) if field_translations is defined else {}) | tojson }}'>
-        <textarea
-          name="dialogue_examples"
-          rows="4"
-          data-i18n-field="dialogue_examples"
-          data-i18n-entity-type="character"
-          data-i18n-entity-id="{{ character.id if character else '' }}"
-          data-i18n-hidden="i18n-input-char-dialogue">{{ form.dialogue_examples_text }}</textarea>
-      </div>
-      <div>
-        <label>
-          First Message (Welcome Message beim ersten Chat) *
-          <span class="field-help-btn" title="First Message (Begrüßung):&#10;Die direkte erste Begrüßung des Charakters an den Spieler.&#10;WICHTIG: Keine Raumszene, Wetter oder Umgebung in der 3. Person beschreiben (das verleitet die KI zur Erzählerrolle). Ausgangsszenen und Orte gehören in die WorldInfo!">?</span>
-        </label>
-        <input type="hidden" name="i18n_first_message" id="i18n-input-char-first-msg" value='{{ (field_translations.get("first_message", {}) if field_translations is defined else {}) | tojson }}'>
-        <textarea
-          name="first_message"
-          rows="4"
-          required
-          data-i18n-field="first_message"
-          data-i18n-entity-type="character"
-          data-i18n-entity-id="{{ character.id if character else '' }}"
-          data-i18n-hidden="i18n-input-char-first-msg">{{ form.first_message }}</textarea>
-      </div>
-
-      <div>
-        <label>
-          Empfohlene WorldInfo
-          <span class="field-help-btn" title="Empfohlene WorldInfo:&#10;Verknüpft die passende Spielwelt für diesen Charakter. Beim Starten eines neuen Chats wird diese WorldInfo automatisch vorausgewählt.">?</span>
-        </label>
-        <select name="suggested_worldinfo_id">
-          <option value="">-- Keine WorldInfo --</option>
-          {% for wi in worldinfos %}
-            <option value="{{ wi.id }}" {% if form.suggested_worldinfo_id == wi.id %}selected{% endif %}>{{ wi.name }}</option>
+        <div id="dialogue-examples-list" class="dialogue-examples-list">
+          {% for ex in form.dialogue_examples %}
+            <div class="dialogue-example-item" data-index="{{ loop.index0 }}">
+              <div class="dialogue-item-header">
+                <span class="dialogue-index-label"><span class="icon-mono">💬</span> Beispiel {{ loop.index }}</span>
+                <div class="dialogue-item-actions">
+                  <button type="button" class="header-btn edit-dialogue-btn dialogue-action-btn" data-index="{{ loop.index0 }}" title="Beispiel bearbeiten">
+                    <span class="icon-mono">✏️</span>
+                  </button>
+                  <button type="button" class="header-btn danger delete-dialogue-btn dialogue-action-btn" data-index="{{ loop.index0 }}" title="Beispiel löschen">
+                    <span class="icon-mono">🗑️</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Trigger: Rechtsbündig, {{text}} {{user}} -->
+              <div class="dialogue-entry-trigger">
+                <div class="dialogue-text">{{ ex.trigger | replace('{{user}}', g.default_persona.name if g.default_persona else 'Du') | replace('{{char}}', character.name if character else (form.name or 'Charakter')) }}</div>
+                <span class="role-badge user-badge" title="{{ '{{user}}' }}">{{ g.default_persona.name if g.default_persona else 'Du' }}</span>
+              </div>
+              <!-- Response: Linksbündig, {{char}} {{text}} -->
+              <div class="dialogue-entry-response">
+                <span class="role-badge char-badge" title="{{ '{{char}}' }}">{{ character.name if character else (form.name or 'Charakter') }}</span>
+                <div class="dialogue-text">{{ ex.response | replace('{{user}}', g.default_persona.name if g.default_persona else 'Du') | replace('{{char}}', character.name if character else (form.name or 'Charakter')) }}</div>
+              </div>
+            </div>
           {% endfor %}
-        </select>
-      </div>
-      <div>
-        <label>
-          Initialort der First Message
-          <span class="field-help-btn" title="Initialort der First Message:&#10;Spezifischer Schauplatz, an dem das Gespräch startet. Falls leer gelassen, wird der Initiale Ort der WorldInfo verwendet.">?</span>
-        </label>
-        <select name="initial_location_id">
-          <option value="">-- Kein fester Startort --</option>
-          {% for loc in all_locations %}
-            <option value="{{ loc.id }}" {% if form.initial_location_id == loc.id %}selected{% endif %}>{{ loc.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
+        </div>
 
-      <div>
-        <label>
-          Verknüpfte Lorebooks (Mehrfachauswahl)
-          <span class="field-help-btn" title="Verknüpfte Lorebooks:&#10;Wissenskompendien für diesen Charakter. Sobald passende Schlagworte (Tags) im Chat fallen, werden Einträge automatisch ohne Vektordatenbank in den Prompt geladen.">?</span>
-        </label>
-        <select name="linked_lorebook_ids" multiple size="4">
+        <div id="dialogue-empty-notice" class="wood-frame" style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.9rem; {% if form.dialogue_examples|length > 0 %}display: none;{% endif %}">
+          Noch keine Gesprächsstile angelegt. Klicke auf <strong>„Gesprächsstil hinzufügen“</strong>, um Dialogbeispiele zu hinterlegen.
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: World -->
+    <section id="tab-char-world" class="tab-pane {% if active_tab == 'world' %}active{% endif %}">
+      <div class="wood-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+        <div>
+          <h3 style="color: var(--gold-accent); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
+            🗺️ Spielwelt &amp; Schauplätze
+            <span class="field-help-btn" title="World &amp; Orte:&#10;Verknüpft eine empfohlene Spielwelt. Sobald eine Welt gewählt ist, können Startort, bevorzugte und gemiedene Orte aus dieser Welt bestimmt werden.">?</span>
+          </h3>
+          <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">
+            Wähle eine empfohlene Welt für diesen Charakter. Beim Start eines neuen Spiels wird diese Welt vorausgewählt.
+          </p>
+
+          <div>
+            <label>
+              Empfohlene WorldInfo
+              <span class="field-help-btn" title="Empfohlene Welt:&#10;Orte und Ereignisse dieser Welt fließen in das Rollenspiel ein.">?</span>
+            </label>
+            <select name="suggested_worldinfo_id" id="char-worldinfo-select">
+              <option value="">-- Keine WorldInfo verknüpft --</option>
+              {% for wi in worldinfos %}
+                <option value="{{ wi.id }}" {% if form.suggested_worldinfo_id == wi.id %}selected{% endif %}>{{ wi.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <!-- Conditional Container: Nur sichtbar, wenn eine Welt ausgewählt ist -->
+        <div id="worldinfo-locations-container" style="{% if not form.suggested_worldinfo_id %}display: none;{% endif %} display: flex; flex-direction: column; gap: 1.25rem; border-top: 1px solid var(--border-wood-dark); padding-top: 1.25rem;">
+          <div>
+            <label>
+              Initialort der First Message
+              <span class="field-help-btn" title="Initialort:&#10;Konkreter Startort für das Gespräch innerhalb der verknüpften Welt.">?</span>
+            </label>
+            <select name="initial_location_id" id="char-initial-location-select">
+              <option value="">-- Kein fester Startort (Standard der WorldInfo) --</option>
+              {% for loc in all_locations %}
+                {% if form.suggested_worldinfo_id and loc.worldinfo_id == form.suggested_worldinfo_id %}
+                  <option value="{{ loc.id }}" {% if form.initial_location_id == loc.id %}selected{% endif %}>{{ loc.name }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+            <div>
+              <label>
+                Bevorzugte Orte (Nur Orte der verknüpften Welt)
+                <span class="field-help-btn" title="Bevorzugte Orte:&#10;Orte, an denen sich der Charakter besonders wohlfühlt oder gern aufhält. Fließen in [WORLD_INFO] ein.">?</span>
+              </label>
+              <select name="preferred_location_ids" id="char-preferred-locations-select" multiple size="5">
+                {% for loc in all_locations %}
+                  {% if form.suggested_worldinfo_id and loc.worldinfo_id == form.suggested_worldinfo_id %}
+                    <option value="{{ loc.id }}" {% if loc.id in form.preferred_location_ids %}selected{% endif %}>{{ loc.name }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.25rem;">
+                Tipp: Halte Strg/Cmd gedrückt für Mehrfachauswahl.
+              </div>
+            </div>
+
+            <div>
+              <label>
+                Gemiedene Orte (Nur Orte der verknüpften Welt)
+                <span class="field-help-btn" title="Gemiedene Orte:&#10;Orte, die der Charakter meidet, fürchtet oder verabscheut. Fließen ebenfalls in [WORLD_INFO] ein.">?</span>
+              </label>
+              <select name="disliked_location_ids" id="char-disliked-locations-select" multiple size="5">
+                {% for loc in all_locations %}
+                  {% if form.suggested_worldinfo_id and loc.worldinfo_id == form.suggested_worldinfo_id %}
+                    <option value="{{ loc.id }}" {% if loc.id in form.disliked_location_ids %}selected{% endif %}>{{ loc.name }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.25rem;">
+                Tipp: Halte Strg/Cmd gedrückt für Mehrfachauswahl.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: Lorebooks -->
+    <section id="tab-char-lorebooks" class="tab-pane {% if active_tab == 'lorebooks' %}active{% endif %}">
+      <div class="wood-frame" style="padding: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h3 style="color: var(--gold-accent); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              📖 Verknüpfte Lorebooks (Wissenskompendien)
+              <span class="field-help-btn" title="Verknüpfte Lorebooks:&#10;Wissenskompendien für diesen Charakter. Sobald passende Schlagworte (Tags) im Chat fallen, werden Einträge automatisch ohne Vektordatenbank in den Prompt geladen.">?</span>
+            </h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
+              Füge Wissenskompendien an. Relevante Einträge werden nach dem Tag-Matching-Verfahren automatisch injiziert.
+            </p>
+          </div>
+          <button type="button" class="header-btn primary" data-modal-open="add-lorebook-modal">
+            <span class="icon-mono">➕</span> Lorebook hinzufügen
+          </button>
+        </div>
+
+        <div id="linked-lorebooks-list" class="lorebook-list">
           {% for lb in lorebooks %}
-            <option value="{{ lb.id }}" {% if lb.id in form.linked_lorebook_ids %}selected{% endif %}>{{ lb.name }}</option>
+            {% if lb.id in form.linked_lorebook_ids %}
+              <div class="lorebook-list-item" data-lorebook-id="{{ lb.id }}">
+                <input type="hidden" name="linked_lorebook_ids" value="{{ lb.id }}">
+                <div>
+                  <div style="font-weight: 700; color: var(--gold-accent); font-size: 0.95rem;">{{ lb.name }}</div>
+                  {% if lb.description %}
+                    <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.15rem;">{{ lb.description }}</div>
+                  {% endif %}
+                </div>
+                <button type="button" class="header-btn danger remove-lorebook-btn" data-id="{{ lb.id }}" title="Lorebook entkoppeln">
+                  <span class="icon-mono">🗑️</span>
+                </button>
+              </div>
+            {% endif %}
           {% endfor %}
-        </select>
-      </div>
-      <div style="display: flex; gap: 0.75rem;">
-        <div style="flex: 1;">
-          <label>
-            Bevorzugte Orte
-            <span class="field-help-btn" title="Bevorzugte Orte:&#10;Orte, an denen sich der Charakter besonders wohlfühlt oder gern aufhält. Fließen in [WORLD_INFO] ein und beeinflussen Dialoge.">?</span>
-          </label>
-          <select name="preferred_location_ids" multiple size="4">
-            {% for loc in all_locations %}
-              <option value="{{ loc.id }}" {% if loc.id in form.preferred_location_ids %}selected{% endif %}>{{ loc.name }}</option>
-            {% endfor %}
-          </select>
         </div>
-        <div style="flex: 1;">
-          <label>
-            Gemiedene Orte
-            <span class="field-help-btn" title="Gemiedene Orte:&#10;Orte, die der Charakter meidet, fürchtet oder verabscheut. Fließen ebenfalls in [WORLD_INFO] ein.">?</span>
-          </label>
-          <select name="disliked_location_ids" multiple size="4">
-            {% for loc in all_locations %}
-              <option value="{{ loc.id }}" {% if loc.id in form.disliked_location_ids %}selected{% endif %}>{{ loc.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
-    </form>
 
+        <div id="lorebook-empty-notice" class="wood-frame" style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.9rem; {% if form.linked_lorebook_ids|length > 0 %}display: none;{% endif %}">
+          Keine Lorebooks verknüpft. Klicke auf <strong>„Lorebook hinzufügen“</strong>, um Kompendien auszuwählen.
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <!-- TAB 2: Galeriebilder (Separater Frame & Forms außerhalb von character-main-form) -->
+  <section id="tab-char-gallery" class="tab-pane {% if active_tab == 'gallery' %}active{% endif %}">
     {% if character %}
-      <!-- Freischaltbare 9:16 Galeriebilder -->
-      <div class="wood-frame" style="padding: 1.5rem; margin-top: 1.5rem;">
-        <h3 style="color: var(--gold-accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+      <div class="wood-frame" style="padding: 1.5rem;">
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
           🖼️ Freischaltbare 9:16-Galeriebilder (Schwellenwert -100 bis +100)
           <span class="field-help-btn" title="9:16 Galeriebilder:&#10;Exklusive Hochformat-Grafiken mit Freischalt-Schwellenwert (-100 bis +100). Bei Erreichen des Werts im Chat wird das Bild im Medien-Tab enthüllt.">?</span>
         </h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">
+          Belohne den Spieler mit exklusiven Charakter-Grafiken, wenn das Beziehungsverhältnis im Chat wächst.
+        </p>
+
         <div class="card-grid">
           {{ new_button("9:16 Bild hinzufügen", modal="add-gallery-modal") }}
 
@@ -246,7 +393,7 @@
             <div class="card-tile" style="justify-content: space-between;">
               <div style="flex: 1; background-image: url('{{ url_for('uploaded_file', filename=img.file_path) }}'); background-size: cover; background-position: center; min-height: 240px; position: relative;">
                 <form method="POST" action="{{ url_for('characters.delete_gallery_image', character_id=character.id, image_id=img.id) }}" style="position: absolute; top: 0.5rem; right: 0.5rem;">
-                  <button type="submit" class="btn btn-danger" style="padding: 0.3rem 0.55rem;"><span class="icon-mono">🗑️</span></button>
+                  <button type="submit" class="header-btn danger" style="padding: 0.28rem 0.5rem; font-size: 0.82rem;" title="Bild löschen"><span class="icon-mono">🗑️</span></button>
                 </form>
               </div>
               <div style="padding: 0.6rem; text-align: center; font-size: 0.85rem;">
@@ -256,12 +403,20 @@
           {% endfor %}
         </div>
       </div>
+    {% else %}
+      <div class="wood-frame" style="padding: 2.5rem; text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🖼️</div>
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">Galeriebilder</h3>
+        <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
+          Bitte speichere die Grunddaten des Charakters zuerst ab, um 9:16-Galeriebilder hochladen und verwalten zu können.
+        </p>
+      </div>
     {% endif %}
   </section>
 
-  <!-- TAB 2: Emotionale Sprites -->
-  {% if character %}
-    <section id="tab-char-sprites" class="tab-pane {% if active_tab == 'sprites' %}active{% endif %}">
+  <!-- TAB 3: Emotionale Sprites -->
+  <section id="tab-char-sprites" class="tab-pane {% if active_tab == 'sprites' %}active{% endif %}">
+    {% if character %}
       <div class="wood-frame" style="padding: 1.5rem;">
         <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
           🎭 Emotionale Sprites (28 Emotionen mit Varianten-Stackview)
@@ -288,24 +443,21 @@
                 <div style="flex: 1; background-image: url('{{ url_for('uploaded_file', filename=sp_list[0].file_path) }}'); background-size: contain; background-repeat: no-repeat; background-position: center; position: relative; min-height: 185px;">
                   <!-- Top Right Action Overlay -->
                   <div style="position: absolute; top: 0.4rem; right: 0.4rem; display: flex; gap: 0.35rem;">
-                    <!-- Papier-Plus für weitere Variante -->
                     <form method="POST" action="{{ url_for('characters.upload_sprite', character_id=character.id) }}" enctype="multipart/form-data">
                       <input type="hidden" name="emotion" value="{{ emotion }}">
-                      <label class="btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" title="Weitere Variante hochladen">
+                      <label class="header-btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem; cursor: pointer;" title="Weitere Variante hochladen">
                         <span class="icon-mono">📄➕</span>
                         <input type="file" name="sprite_file" accept=".png,.webp" style="display: none;" onchange="window.saveSpriteScrollAndSubmit(this.form)">
                       </label>
                     </form>
 
                     {% if sp_list|length > 1 %}
-                      <!-- Augen-Button für Stackview Modal -->
-                      <button type="button" class="btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" data-modal-open="sprite-modal-{{ emotion }}" title="Alle {{ sp_list|length }} Varianten ansehen">
+                      <button type="button" class="header-btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" data-modal-open="sprite-modal-{{ emotion }}" title="Alle {{ sp_list|length }} Varianten ansehen">
                         <span class="icon-mono">👁️</span> {{ sp_list|length }}
                       </button>
                     {% else %}
-                      <!-- Einzelnes Sprite direkt löschen -->
                       <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp_list[0].variant) }}" onsubmit="window.saveSpriteScrollPos()">
-                        <button type="submit" class="btn btn-danger" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" title="Sprite löschen">
+                        <button type="submit" class="header-btn danger" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" title="Sprite löschen">
                           <span class="icon-mono">🗑️</span>
                         </button>
                       </form>
@@ -325,14 +477,14 @@
                 <div class="modal-frame">
                   <div class="modal-header">
                     <h3 style="color: var(--gold-accent);">Varianten für Emotion: {{ emotion }}</h3>
-                    <button type="button" class="btn" data-modal-close="sprite-modal-{{ emotion }}">✕</button>
+                    <button type="button" class="header-btn" data-modal-close="sprite-modal-{{ emotion }}">✕</button>
                   </div>
                   <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));">
                     {% for sp in sp_list %}
                       <div class="card-tile" style="min-height: 200px; position: relative;">
                         <img src="{{ url_for('uploaded_file', filename=sp.file_path) }}" alt="{{ emotion }}_{{ sp.variant }}" style="width: 100%; height: 160px; object-fit: contain;">
                         <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp.variant) }}" style="position: absolute; top: 0.4rem; right: 0.4rem;" onsubmit="window.saveSpriteScrollPos()">
-                          <button type="submit" class="btn btn-danger" style="padding: 0.25rem 0.5rem;"><span class="icon-mono">🗑️</span></button>
+                          <button type="submit" class="header-btn danger" style="padding: 0.25rem 0.5rem; font-size: 0.82rem;" title="Variante löschen"><span class="icon-mono">🗑️</span></button>
                         </form>
                         <div style="text-align: center; padding: 0.35rem; font-size: 0.8rem;">
                           {{ emotion }}_{{ sp.variant }}
@@ -346,14 +498,24 @@
           {% endfor %}
         </div>
       </div>
-    </section>
+    {% else %}
+      <div class="wood-frame" style="padding: 2.5rem; text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎭</div>
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">Emotionale Sprites</h3>
+        <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
+          Bitte speichere die Grunddaten des Charakters zuerst ab, um Sprites für die 28 Emotionen hochzuladen.
+        </p>
+      </div>
+    {% endif %}
+  </section>
 
-    <!-- Modal: 9:16 Galeriebild hinzufügen -->
+  <!-- MODAL: 9:16 Galeriebild hinzufügen -->
+  {% if character %}
     <div class="modal-backdrop" id="add-gallery-modal" aria-hidden="true">
       <div class="modal-frame" style="max-width: 440px;">
         <div class="modal-header">
           <h3 style="color: var(--gold-accent);">9:16-Galeriebild hochladen</h3>
-          <button type="button" class="btn" data-modal-close="add-gallery-modal">✕</button>
+          <button type="button" class="header-btn" data-modal-close="add-gallery-modal">✕</button>
         </div>
         <form method="POST" action="{{ url_for('characters.add_gallery_image', character_id=character.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
           <div>
@@ -366,24 +528,91 @@
           <div>
             <label>
               Freischalt-Schwellenwert (-100 bis +100) *
-              <span class="field-help-btn" title="Schwellenwert:&#10;Erforderlicher Beziehungswert (-100 bis +100), ab dem dieses Galeriebild für den Spieler freigeschaltet wird.">?</span>
+              <span class="field-help-btn" title="Schwellenwert:&#10;Erforderlicher Beziehungswert (-100 bis +100), ab dem dieses Galeriebild freigeschaltet wird.">?</span>
             </label>
             <input type="number" name="unlock_threshold" min="-100" max="100" value="20" required>
           </div>
-          <div style="text-align: right;">
-            <button type="submit" class="btn">Hochladen</button>
+          <div style="text-align: right; display: flex; justify-content: flex-end; gap: 0.5rem;">
+            <button type="button" class="header-btn" data-modal-close="add-gallery-modal">Abbrechen</button>
+            <button type="submit" class="header-btn primary">Hochladen</button>
           </div>
         </form>
       </div>
     </div>
   {% endif %}
 
-  <!-- Modal: Profile Image Cropper (Dual: 9:16 Porträt & 1:1 Avatar) -->
+  <!-- MODAL: Gesprächsstil hinzufügen (Overlay Frame) -->
+  <div class="modal-backdrop" id="add-dialogue-modal" aria-hidden="true">
+    <div class="modal-frame" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 style="color: var(--gold-accent);" id="dialogue-modal-title"><span class="icon-mono">💬</span> Neuen Gesprächsstil hinzufügen</h3>
+        <button type="button" class="header-btn" data-modal-close="add-dialogue-modal">✕</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 1rem; padding: 0.5rem 0;">
+        <div>
+          <label style="display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.35rem;">
+            <span class="role-badge user-badge modal-badge-user" title="{{ '{{user}}' }}">{{ g.default_persona.name if g.default_persona else 'Du' }}</span>
+            <span>Trigger (Spieler-Eingabe) *</span>
+          </label>
+          <textarea id="modal-dialogue-trigger" rows="3" placeholder="z. B. Hallo! Was machst du hier draußen so spät?" style="width: 100%;"></textarea>
+        </div>
+        <div>
+          <label style="display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.35rem;">
+            <span class="role-badge char-badge modal-badge-char" title="{{ '{{char}}' }}">{{ character.name if character else (form.name or 'Charakter') }}</span>
+            <span>Response (Charakter-Antwort) *</span>
+          </label>
+          <textarea id="modal-dialogue-response" rows="3" placeholder="z. B. Sey gegrüßt, Wanderer. Die Wälder bergen nachts Geheimnisse, die nicht für jedes Ohr bestimmt sind..." style="width: 100%;"></textarea>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1rem; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
+        <button type="button" class="header-btn" data-modal-close="add-dialogue-modal">Abbrechen</button>
+        <button type="button" id="confirm-add-dialogue-btn" class="header-btn primary">
+          <span class="icon-mono">➕</span> Hinzufügen
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Lorebook verknüpfen (Overlay Frame mit Suchfilter) -->
+  <div class="modal-backdrop" id="add-lorebook-modal" aria-hidden="true">
+    <div class="modal-frame" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 style="color: var(--gold-accent);"><span class="icon-mono">📖</span> Lorebook verknüpfen</h3>
+        <button type="button" class="header-btn" data-modal-close="add-lorebook-modal">✕</button>
+      </div>
+      <div style="padding: 0.5rem 0 1rem 0;">
+        <input type="text" id="lorebook-filter-input" placeholder="Nach Lorebook-Name filtern..." class="search-input" style="width: 100%; margin-bottom: 0.85rem;" autocomplete="off">
+        <div id="lorebook-picker-list" class="lorebook-picker-list">
+          {% for lb in lorebooks %}
+            <div class="lorebook-picker-item {% if lb.id in form.linked_lorebook_ids %}already-added{% endif %}" data-id="{{ lb.id }}" data-name="{{ lb.name|lower }}" data-fullname="{{ lb.name }}" data-desc="{{ lb.description or '' }}">
+              <div>
+                <div style="font-weight: 700; color: var(--gold-accent);">
+                  {{ lb.name }}
+                  <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: normal; margin-left: 0.4rem;">({{ lb.visibility }})</span>
+                </div>
+                {% if lb.description %}
+                  <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem;">{{ lb.description }}</div>
+                {% endif %}
+              </div>
+              <span class="picker-status-badge" style="font-size: 0.8rem; color: var(--text-muted);">
+                {% if lb.id in form.linked_lorebook_ids %}✓ Verknüpft{% else %}+ Hinzufügen{% endif %}
+              </span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
+        <button type="button" class="header-btn" data-modal-close="add-lorebook-modal">Abbrechen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Dual-Crop Profile (9:16 Porträt & 1:1 Avatar) -->
   <div class="modal-backdrop" id="portrait-crop-modal" aria-hidden="true">
     <div class="modal-frame" style="max-width: 680px;">
       <div class="modal-header">
         <h3 style="color: var(--gold-accent);"><span class="icon-mono">✂️</span> Bild-Ausschnitte festlegen (9:16 Porträt &amp; 1:1 Avatar)</h3>
-        <button type="button" class="btn" data-modal-close="portrait-crop-modal">✕</button>
+        <button type="button" class="header-btn" data-modal-close="portrait-crop-modal">✕</button>
       </div>
 
       <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.85rem;">
@@ -434,6 +663,10 @@
 
 {% block extra_scripts %}
 <script>
+// Locations grouped by WorldInfo ID for instant client-side filtering
+const LOCATIONS_BY_WORLD = {{ locations_by_world | tojson }};
+
+// Helper: Sprite scroll position preservation
 window.saveSpriteScrollPos = function () {
   try {
     sessionStorage.setItem("aimo_sprite_scroll_y", String(window.scrollY || window.pageYOffset || 0));
@@ -464,6 +697,7 @@ window.saveSpriteScrollAndSubmit = function (formEl) {
   } catch (_) {}
 })();
 
+// Sparkle KI-Autor Description Improver
 document.getElementById("sparkle-improve-btn")?.addEventListener("click", async () => {
   const btn = document.getElementById("sparkle-improve-btn");
   const textarea = document.getElementById("char-description-textarea");
@@ -496,7 +730,418 @@ document.getElementById("sparkle-improve-btn")?.addEventListener("click", async 
   }
 });
 
-// Interactive Dual-Crop Profile & Avatar Cropper
+// Vision-AI: Aussehen des Charakters aus Porträt extrahieren
+document.getElementById("extract-appearance-btn")?.addEventListener("click", async () => {
+  const btn = document.getElementById("extract-appearance-btn");
+  const textarea = document.getElementById("char-appearance-textarea");
+  const fileInput = document.getElementById("primary-portrait-input");
+  if (!btn || !textarea) return;
+
+  const origHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="icon-sparkle">👁️</span> Analysiere Bild...';
+
+  try {
+    let resp;
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+      const fd = new FormData();
+      fd.append("primary_portrait", fileInput.files[0]);
+      resp = await fetch("/api/characters/extract-appearance", {
+        method: "POST",
+        body: fd,
+      });
+    } else {
+      {% if character %}
+        resp = await fetch("/api/characters/extract-appearance", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ character_id: {{ character.id }} }),
+        });
+      {% else %}
+        alert("Bitte wähle zuerst ein Porträtbild aus.");
+        return;
+      {% endif %}
+    }
+
+    const data = await resp.json();
+    if (resp.ok && data.appearance) {
+      textarea.value = data.appearance;
+      textarea.dispatchEvent(new Event("input", { bubbles: true }));
+    } else {
+      alert(data.error || "Aussehen konnte nicht extrahiert werden.");
+    }
+  } catch (err) {
+    alert("Fehler bei der Bildanalyse: " + err);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = origHtml;
+  }
+});
+
+// Tab 4: Dynamic World & Locations Filter
+(() => {
+  const worldSelect = document.getElementById("char-worldinfo-select");
+  const container = document.getElementById("worldinfo-locations-container");
+  const initialSelect = document.getElementById("char-initial-location-select");
+  const preferredSelect = document.getElementById("char-preferred-locations-select");
+  const dislikedSelect = document.getElementById("char-disliked-locations-select");
+
+  if (!worldSelect || !container) return;
+
+  function updateLocationsForWorld(worldId, preserveSelected = true) {
+    if (!worldId) {
+      container.style.display = "none";
+      if (initialSelect) initialSelect.value = "";
+      if (preferredSelect) Array.from(preferredSelect.options).forEach(o => o.selected = false);
+      if (dislikedSelect) Array.from(dislikedSelect.options).forEach(o => o.selected = false);
+      return;
+    }
+
+    container.style.display = "flex";
+    const locs = LOCATIONS_BY_WORLD[worldId] || [];
+
+    // Save previous selections
+    const prevInitial = preserveSelected && initialSelect ? initialSelect.value : "";
+    const prevPreferred = preserveSelected && preferredSelect ? Array.from(preferredSelect.selectedOptions).map(o => o.value) : [];
+    const prevDisliked = preserveSelected && dislikedSelect ? Array.from(dislikedSelect.selectedOptions).map(o => o.value) : [];
+
+    // Update Initial Location Dropdown
+    if (initialSelect) {
+      initialSelect.innerHTML = '<option value="">-- Kein fester Startort (Standard der WorldInfo) --</option>';
+      locs.forEach(loc => {
+        const opt = document.createElement("option");
+        opt.value = loc.id;
+        opt.textContent = loc.name;
+        if (String(loc.id) === String(prevInitial)) opt.selected = true;
+        initialSelect.appendChild(opt);
+      });
+    }
+
+    // Update Preferred Locations
+    if (preferredSelect) {
+      preferredSelect.innerHTML = "";
+      locs.forEach(loc => {
+        const opt = document.createElement("option");
+        opt.value = loc.id;
+        opt.textContent = loc.name;
+        if (prevPreferred.includes(String(loc.id))) opt.selected = true;
+        preferredSelect.appendChild(opt);
+      });
+    }
+
+    // Update Disliked Locations
+    if (dislikedSelect) {
+      dislikedSelect.innerHTML = "";
+      locs.forEach(loc => {
+        const opt = document.createElement("option");
+        opt.value = loc.id;
+        opt.textContent = loc.name;
+        if (prevDisliked.includes(String(loc.id))) opt.selected = true;
+        dislikedSelect.appendChild(opt);
+      });
+    }
+  }
+
+  worldSelect.addEventListener("change", () => {
+    updateLocationsForWorld(worldSelect.value, false);
+  });
+})();
+
+// Tab 4: Gesprächsstile (Few-Shot Dialogbeispiele) Manager
+(() => {
+  const hiddenInput = document.getElementById("dialogue-examples-json");
+  const listContainer = document.getElementById("dialogue-examples-list");
+  const emptyNotice = document.getElementById("dialogue-empty-notice");
+  const confirmBtn = document.getElementById("confirm-add-dialogue-btn");
+  const triggerInput = document.getElementById("modal-dialogue-trigger");
+  const responseInput = document.getElementById("modal-dialogue-response");
+  const modalTitle = document.getElementById("dialogue-modal-title");
+  const openAddBtn = document.querySelector('[data-modal-open="add-dialogue-modal"]');
+  const nameInput = document.getElementById("char-name-input");
+
+  if (!hiddenInput || !listContainer) return;
+
+  const ACTIVE_PERSONA_NAME = {{ (g.default_persona.name if g.default_persona else 'Du') | tojson }};
+
+  function getCharacterName() {
+    const val = (nameInput ? nameInput.value : "").trim();
+    return val || {% if character %}{{ character.name|tojson }}{% else %}"Charakter"{% endif %};
+  }
+
+  function formatDisplayText(raw) {
+    if (!raw) return "";
+    const charName = getCharacterName();
+    return raw
+      .replace(/\{\{user\}\}/g, ACTIVE_PERSONA_NAME)
+      .replace(/\{\{char\}\}/g, charName);
+  }
+
+  function updateModalBadges() {
+    document.querySelectorAll(".modal-badge-user").forEach(b => {
+      b.textContent = ACTIVE_PERSONA_NAME;
+    });
+    document.querySelectorAll(".modal-badge-char").forEach(b => {
+      b.textContent = getCharacterName();
+    });
+  }
+
+  let examples = [];
+  let editingIndex = null;
+
+  try {
+    examples = JSON.parse(hiddenInput.value || "[]");
+  } catch (_) {
+    examples = [];
+  }
+
+  function syncData() {
+    hiddenInput.value = JSON.stringify(examples);
+    if (emptyNotice) {
+      emptyNotice.style.display = examples.length === 0 ? "block" : "none";
+    }
+  }
+
+  function openEditModal(idx) {
+    if (idx < 0 || idx >= examples.length) return;
+    editingIndex = idx;
+    if (modalTitle) modalTitle.innerHTML = '<span class="icon-mono">✏️</span> Gesprächsstil bearbeiten';
+    if (confirmBtn) confirmBtn.innerHTML = '<span class="icon-mono">💾</span> Speichern';
+    updateModalBadges();
+    triggerInput.value = examples[idx].trigger || "";
+    responseInput.value = examples[idx].response || "";
+
+    if (window.AimoModals && typeof window.AimoModals.open === "function") {
+      window.AimoModals.open("add-dialogue-modal");
+    } else {
+      document.getElementById("add-dialogue-modal")?.classList.add("open");
+    }
+  }
+
+  openAddBtn?.addEventListener("click", () => {
+    editingIndex = null;
+    if (modalTitle) modalTitle.innerHTML = '<span class="icon-mono">💬</span> Neuen Gesprächsstil hinzufügen';
+    if (confirmBtn) confirmBtn.innerHTML = '<span class="icon-mono">➕</span> Hinzufügen';
+    updateModalBadges();
+    triggerInput.value = "";
+    responseInput.value = "";
+  });
+
+  function renderList() {
+    listContainer.innerHTML = "";
+    examples.forEach((ex, idx) => {
+      const item = document.createElement("div");
+      item.className = "dialogue-example-item";
+      item.setAttribute("data-index", idx);
+
+      // Header with index label and action buttons
+      const headerDiv = document.createElement("div");
+      headerDiv.className = "dialogue-item-header";
+
+      const indexLabel = document.createElement("span");
+      indexLabel.className = "dialogue-index-label";
+      indexLabel.innerHTML = `<span class="icon-mono">💬</span> Beispiel ${idx + 1}`;
+      headerDiv.appendChild(indexLabel);
+
+      const actionsDiv = document.createElement("div");
+      actionsDiv.className = "dialogue-item-actions";
+
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.className = "header-btn edit-dialogue-btn dialogue-action-btn";
+      editBtn.title = "Beispiel bearbeiten";
+      editBtn.innerHTML = '<span class="icon-mono">✏️</span>';
+      editBtn.addEventListener("click", () => openEditModal(idx));
+
+      const delBtn = document.createElement("button");
+      delBtn.type = "button";
+      delBtn.className = "header-btn danger delete-dialogue-btn dialogue-action-btn";
+      delBtn.title = "Beispiel löschen";
+      delBtn.innerHTML = '<span class="icon-mono">🗑️</span>';
+      delBtn.addEventListener("click", () => {
+        examples.splice(idx, 1);
+        syncData();
+        renderList();
+      });
+
+      actionsDiv.appendChild(editBtn);
+      actionsDiv.appendChild(delBtn);
+      headerDiv.appendChild(actionsDiv);
+      item.appendChild(headerDiv);
+
+      // Trigger: Rechtsbündig, {{text}} {{user}}
+      const trigDiv = document.createElement("div");
+      trigDiv.className = "dialogue-entry-trigger";
+
+      const trigSpan = document.createElement("div");
+      trigSpan.className = "dialogue-text";
+      trigSpan.textContent = formatDisplayText(ex.trigger || "");
+      trigDiv.appendChild(trigSpan);
+
+      const userBadge = document.createElement("span");
+      userBadge.className = "role-badge user-badge";
+      userBadge.title = "{{user}}";
+      userBadge.textContent = ACTIVE_PERSONA_NAME;
+      trigDiv.appendChild(userBadge);
+
+      item.appendChild(trigDiv);
+
+      // Response: Linksbündig, {{char}} {{text}}
+      const respDiv = document.createElement("div");
+      respDiv.className = "dialogue-entry-response";
+
+      const charBadge = document.createElement("span");
+      charBadge.className = "role-badge char-badge";
+      charBadge.title = "{{char}}";
+      charBadge.textContent = getCharacterName();
+      respDiv.appendChild(charBadge);
+
+      const respSpan = document.createElement("div");
+      respSpan.className = "dialogue-text";
+      respSpan.textContent = formatDisplayText(ex.response || "");
+      respDiv.appendChild(respSpan);
+
+      item.appendChild(respDiv);
+      listContainer.appendChild(item);
+    });
+    syncData();
+  }
+
+  // Live update of character badges and text when character name changes
+  nameInput?.addEventListener("input", () => {
+    updateModalBadges();
+    renderList();
+  });
+
+  // Render initially to activate dynamic persona & character bindings
+  renderList();
+
+  confirmBtn?.addEventListener("click", () => {
+    const trig = (triggerInput.value || "").trim();
+    const resp = (responseInput.value || "").trim();
+    if (!trig && !resp) {
+      alert("Bitte gib mindestens einen Trigger oder eine Response ein.");
+      return;
+    }
+
+    if (editingIndex !== null && editingIndex >= 0 && editingIndex < examples.length) {
+      examples[editingIndex] = { trigger: trig, response: resp };
+    } else {
+      examples.push({ trigger: trig, response: resp });
+    }
+
+    editingIndex = null;
+    syncData();
+    renderList();
+
+    triggerInput.value = "";
+    responseInput.value = "";
+
+    if (window.AimoModals && typeof window.AimoModals.close === "function") {
+      window.AimoModals.close("add-dialogue-modal");
+    } else {
+      document.getElementById("add-dialogue-modal")?.classList.remove("open");
+    }
+  });
+})();
+
+// Tab 5: Lorebooks Manager & Search Filter
+(() => {
+  const filterInput = document.getElementById("lorebook-filter-input");
+  const pickerList = document.getElementById("lorebook-picker-list");
+  const linkedList = document.getElementById("linked-lorebooks-list");
+  const emptyNotice = document.getElementById("lorebook-empty-notice");
+
+  if (!pickerList || !linkedList) return;
+
+  function updateEmptyNotice() {
+    if (emptyNotice) {
+      const count = linkedList.querySelectorAll(".lorebook-list-item").length;
+      emptyNotice.style.display = count === 0 ? "block" : "none";
+    }
+  }
+
+  filterInput?.addEventListener("input", () => {
+    const query = filterInput.value.toLowerCase().trim();
+    pickerList.querySelectorAll(".lorebook-picker-item").forEach(item => {
+      const name = item.getAttribute("data-name") || "";
+      const desc = (item.getAttribute("data-desc") || "").toLowerCase();
+      item.style.display = (name.includes(query) || desc.includes(query)) ? "flex" : "none";
+    });
+  });
+
+  pickerList.querySelectorAll(".lorebook-picker-item").forEach(item => {
+    item.addEventListener("click", () => {
+      if (item.classList.contains("already-added")) return;
+
+      const lbId = item.getAttribute("data-id");
+      const lbName = item.getAttribute("data-fullname");
+      const lbDesc = item.getAttribute("data-desc");
+
+      // Append to linked list
+      const row = document.createElement("div");
+      row.className = "lorebook-list-item";
+      row.setAttribute("data-lorebook-id", lbId);
+
+      const hidden = document.createElement("input");
+      hidden.type = "hidden";
+      hidden.name = "linked_lorebook_ids";
+      hidden.value = lbId;
+      row.appendChild(hidden);
+
+      const info = document.createElement("div");
+      info.innerHTML = `<div style="font-weight: 700; color: var(--gold-accent); font-size: 0.95rem;">${lbName}</div>` +
+        (lbDesc ? `<div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.15rem;">${lbDesc}</div>` : "");
+      row.appendChild(info);
+
+      const delBtn = document.createElement("button");
+      delBtn.type = "button";
+      delBtn.className = "header-btn danger remove-lorebook-btn";
+      delBtn.title = "Lorebook entkoppeln";
+      delBtn.innerHTML = '<span class="icon-mono">🗑️</span>';
+      delBtn.addEventListener("click", () => {
+        row.remove();
+        item.classList.remove("already-added");
+        item.querySelector(".picker-status-badge").textContent = "+ Hinzufügen";
+        updateEmptyNotice();
+      });
+      row.appendChild(delBtn);
+
+      linkedList.appendChild(row);
+
+      // Update picker item state
+      item.classList.add("already-added");
+      item.querySelector(".picker-status-badge").textContent = "✓ Verknüpft";
+      updateEmptyNotice();
+
+      // Close modal
+      if (window.AimoModals && typeof window.AimoModals.close === "function") {
+        window.AimoModals.close("add-lorebook-modal");
+      } else {
+        document.getElementById("add-lorebook-modal")?.classList.remove("open");
+      }
+    });
+  });
+
+  // Attach delete handlers for already rendered lorebooks
+  linkedList.querySelectorAll(".remove-lorebook-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const row = btn.closest(".lorebook-list-item");
+      const lbId = btn.getAttribute("data-id");
+      if (row) row.remove();
+      if (lbId) {
+        const pickerItem = pickerList.querySelector(`.lorebook-picker-item[data-id="${lbId}"]`);
+        if (pickerItem) {
+          pickerItem.classList.remove("already-added");
+          const badge = pickerItem.querySelector(".picker-status-badge");
+          if (badge) badge.textContent = "+ Hinzufügen";
+        }
+      }
+      updateEmptyNotice();
+    });
+  });
+})();
+
+// Interactive Dual-Crop Profile & Avatar Cropper (Preserved 100%)
 (() => {
   const fileInput = document.getElementById("primary-portrait-input");
   const cardFileInput = document.getElementById("card-portrait-input");
@@ -541,7 +1186,7 @@ document.getElementById("sparkle-improve-btn")?.addEventListener("click", async 
     const dispH = cropImg.clientHeight || 300;
     if (dispW < 10 || dispH < 10) return;
 
-    // 1. Portrait 9:16: Fill almost full height, center horizontally
+    // 1. Portrait 9:16
     const pRatio = ratios.portrait;
     let ph = dispH * 0.94;
     let pw = ph * pRatio;
@@ -556,7 +1201,7 @@ document.getElementById("sparkle-improve-btn")?.addEventListener("click", async 
       y: Math.max(0, Math.round((dispH - ph) / 2)),
     };
 
-    // 2. Avatar 1:1: Focused on head / upper portion (typical face location)
+    // 2. Avatar 1:1
     const aSize = Math.max(36, Math.round(Math.min(dispW, dispH) * 0.62));
     boxes.avatar = {
       w: aSize,
