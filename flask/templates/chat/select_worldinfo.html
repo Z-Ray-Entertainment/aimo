@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "macros/buttons.html" import action_button %}
 {% block title %}AIMO — Neues Abenteuer mit {{ character.name }}{% endblock %}
 
 {% block content %}
@@ -57,8 +58,8 @@
     </div>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
-      <a href="{{ url_for('overview.index') }}" class="btn">← Zurück zum Hub</a>
-      <button type="submit" class="btn">Abenteuer starten →</button>
+      {{ action_button("Zurück zum Hub", href=url_for('overview.index'), arrow="left", size="lg") }}
+      {{ action_button("Abenteuer starten", type="submit", arrow="right", variant="primary", size="lg") }}
     </div>
   </form>
 </div>

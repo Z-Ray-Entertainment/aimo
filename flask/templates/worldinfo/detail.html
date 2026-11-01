@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% from "macros/buttons.html" import action_button %}
 {% block title %}AIMO — WorldInfo: {{ worldinfo.name }}{% endblock %}
 
 {% block content %}
 <div data-tab-group>
   <div class="wood-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
     <div style="display: flex; align-items: center; gap: 1rem;">
-      <a href="{{ url_for('overview.index') }}" class="btn"><span class="icon-mono">←</span> Zurück</a>
+      {{ action_button("Zurück", href=url_for('overview.index'), arrow="left") }}
       <form method="POST" action="{{ url_for('worldinfo.detail', worldinfo_id=worldinfo.id) }}" style="display: flex; align-items: flex-end; gap: 0.75rem; flex-wrap: wrap;">
         <div>
           <label style="font-size: 0.75rem; color: var(--text-muted);">

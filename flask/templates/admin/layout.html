@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "macros/buttons.html" import action_button %}
 {% block title %}AIMO — Administration{% endblock %}
 
 {% block content %}
@@ -34,10 +35,7 @@
     </nav>
 
     <div class="admin-sidebar-footer">
-      <a href="{{ url_for('overview.index') }}" class="btn admin-back-btn">
-        <span class="icon-mono">←</span>
-        <span>Zurück zum Hub</span>
-      </a>
+      {{ action_button("Zurück zum Hub", href=url_for('overview.index'), arrow="left", extra_class="admin-back-btn") }}
     </div>
   </aside>
 

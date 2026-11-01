@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "macros/buttons.html" import action_button %}
 {% block title %}AIMO — Character Designer{% endblock %}
 
 {% block content %}
@@ -6,7 +7,7 @@
   <!-- Top Action Bar -->
   <div class="wood-frame" style="padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
     <div style="display: flex; align-items: center; gap: 1rem;">
-      <a href="{{ url_for('overview.index') }}" class="btn"><span class="icon-mono">←</span> Zurück</a>
+      {{ action_button("Zurück", href=url_for('overview.index'), arrow="left") }}
       <h2 style="color: var(--gold-accent);">
         {% if character %}Charakter bearbeiten: {{ character.name }}{% else %}Neuen Charakter erschaffen{% endif %}
       </h2>
