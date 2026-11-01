@@ -10,10 +10,37 @@
 <body>
   <div class="app-overlay">
     <header class="top-header">
-      <a href="{{ url_for('overview.index') }}" class="brand-title">
-        <span class="icon-mono">⚔️</span>
-        <span>AIMO</span>
-      </a>
+      <div class="header-left">
+        <a href="{{ url_for('overview.index') }}" class="brand-title">
+          <span class="icon-mono">⚔️</span>
+          <span>AIMO</span>
+        </a>
+        {% if g.current_user %}
+          <nav class="header-nav" id="header-hub-nav">
+            <a href="{{ url_for('overview.index', tab='characters') }}"
+               class="header-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters' %} active{% endif %}"
+               data-hub-tab="tab-characters"
+               title="KI-Charaktere">
+              <span class="icon-mono">👤</span>
+              <span>KI-Charaktere</span>
+            </a>
+            <a href="{{ url_for('overview.index', tab='lorebooks') }}"
+               class="header-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks' %} active{% endif %}"
+               data-hub-tab="tab-lorebooks"
+               title="Lorebooks">
+              <span class="icon-mono">📜</span>
+              <span>Lorebooks</span>
+            </a>
+            <a href="{{ url_for('overview.index', tab='worldinfo') }}"
+               class="header-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo' %} active{% endif %}"
+               data-hub-tab="tab-worldinfo"
+               title="WorldInfo">
+              <span class="icon-mono">🌐</span>
+              <span>WorldInfo</span>
+            </a>
+          </nav>
+        {% endif %}
+      </div>
       <div class="header-actions">
         {% block header_actions %}
           {% if g.current_user %}

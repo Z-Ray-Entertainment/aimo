@@ -25,6 +25,9 @@ def index():
     gender_filter = request.args.get("gender", "").strip().lower()
     chat_filter = request.args.get("chatted", "").strip().lower()
     sort_by = request.args.get("sort", "newest").strip().lower()
+    active_tab = request.args.get("tab", "characters").strip().lower()
+    if active_tab not in ("characters", "lorebooks", "worldinfo"):
+        active_tab = "characters"
 
     raw_characters = char_repo.list_visible(user.id)
     character_cards = []
@@ -113,4 +116,5 @@ def index():
         gender_filter=gender_filter,
         chat_filter=chat_filter,
         sort_by=sort_by,
+        active_tab=active_tab,
     )

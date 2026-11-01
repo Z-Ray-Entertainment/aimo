@@ -2,23 +2,11 @@
 {% block title %}AIMO — Hub-Dashboard{% endblock %}
 
 {% block content %}
-<div data-tab-group>
-  <!-- 3-Tab Navigation -->
-  <div class="rpg-tabs">
-    <button type="button" class="rpg-tab-btn active" data-tab-target="tab-characters">
-      <span class="icon-mono">👤</span> KI-Charaktere
-    </button>
-    <button type="button" class="rpg-tab-btn" data-tab-target="tab-lorebooks">
-      <span class="icon-mono">📜</span> Lorebooks
-    </button>
-    <button type="button" class="rpg-tab-btn" data-tab-target="tab-worldinfo">
-      <span class="icon-mono">🌐</span> WorldInfo
-    </button>
-  </div>
-
+<div data-tab-group id="overview-tabs-group">
   <!-- TAB 1: KI-Charaktere -->
-  <section id="tab-characters" class="tab-pane active">
+  <section id="tab-characters" class="tab-pane{% if (active_tab|default('characters')) == 'characters' %} active{% endif %}">
     <form method="GET" action="{{ url_for('overview.index') }}" class="wood-frame" style="padding: 0.85rem 1.2rem; margin-bottom: 1.25rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+      <input type="hidden" name="tab" value="characters">
       <div style="flex: 1; min-width: 160px;">
         <label style="font-size: 0.8rem; color: var(--text-muted);">Geschlecht</label>
         <select name="gender" onchange="this.form.submit()">
@@ -90,7 +78,7 @@
   </section>
 
   <!-- TAB 2: Lorebooks -->
-  <section id="tab-lorebooks" class="tab-pane">
+  <section id="tab-lorebooks" class="tab-pane{% if (active_tab|default('')) == 'lorebooks' %} active{% endif %}">
     <div class="card-grid">
       {% if has_perm('lorebook_create') %}
         {{ new_button("Neues Lorebook", modal="new-lorebook-modal") }}
@@ -117,7 +105,7 @@
   </section>
 
   <!-- TAB 3: WorldInfo -->
-  <section id="tab-worldinfo" class="tab-pane">
+  <section id="tab-worldinfo" class="tab-pane{% if (active_tab|default('')) == 'worldinfo' %} active{% endif %}">
     <div class="card-grid">
       {% if has_perm('worldinfo_create') %}
         {{ new_button("Neue WorldInfo", modal="new-worldinfo-modal") }}

@@ -731,6 +731,41 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Hub Header Nav Tab Switcher (instant switch when on overview page)
+  document.querySelectorAll("#header-hub-nav [data-hub-tab]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const targetId = btn.getAttribute("data-hub-tab");
+      const targetPane = document.getElementById(targetId);
+      if (targetPane) {
+        e.preventDefault();
+        document.querySelectorAll("#header-hub-nav [data-hub-tab]").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const group = targetPane.closest("[data-tab-group]") || document;
+        group.querySelectorAll(".tab-pane").forEach((pane) => pane.classList.remove("active"));
+        targetPane.classList.add("active");
+
+        const tabParam = targetId.replace("tab-", "");
+        const url = new URL(window.location.href);
+        url.searchParams.set("tab", tabParam);
+        window.history.replaceState({}, "", url.toString());
+      }
+    });
+  });
+
+  // Sync tab with URL search parameter on overview page if present
+  const currentTabParam = new URLSearchParams(window.location.search).get("tab");
+  if (currentTabParam) {
+    const pane = document.getElementById(`tab-${currentTabParam}`);
+    const navBtn = document.querySelector(`#header-hub-nav [data-hub-tab="tab-${currentTabParam}"]`);
+    if (pane && navBtn) {
+      document.querySelectorAll("#header-hub-nav [data-hub-tab]").forEach((b) => b.classList.remove("active"));
+      navBtn.classList.add("active");
+      const group = pane.closest("[data-tab-group]") || document;
+      group.querySelectorAll(".tab-pane").forEach((p) => p.classList.remove("active"));
+      pane.classList.add("active");
+    }
+  }
+
   // Dynamic Heart Icon & Color helper for relationship bars
   document.querySelectorAll("[data-relationship-score]").forEach((el) => {
     const score = parseFloat(el.getAttribute("data-relationship-score") || "0");

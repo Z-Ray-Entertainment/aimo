@@ -181,6 +181,15 @@ button.btn:hover {
   background: rgba(24, 17, 12, 0.94);
   position: relative;
   z-index: 10;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .brand-title {
@@ -191,12 +200,52 @@ button.btn:hover {
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  text-decoration: none;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.header-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.38rem 0.85rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(40, 28, 19, 0.75);
+  border: 1px solid var(--border-wood-dark);
+  border-radius: var(--radius-btn);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.header-nav-btn:hover {
+  color: var(--text-main);
+  border-color: var(--gold-accent);
+  background: var(--bg-leather);
+  box-shadow: 0 0 8px var(--gold-glow);
+}
+
+.header-nav-btn.active {
+  background: var(--bg-leather);
+  color: var(--gold-accent);
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 10px var(--gold-glow);
+  font-weight: 700;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
   gap: 0.85rem;
+  flex-wrap: wrap;
 }
 
 .persona-avatar-btn {
