@@ -731,15 +731,86 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Hub Header Nav Tab Switcher (instant switch when on overview page)
-  document.querySelectorAll("#header-hub-nav [data-hub-tab]").forEach((btn) => {
+  // Mobile Hamburger Menu Toggle & Interactions
+  const mobileToggle = document.getElementById("mobile-menu-toggle");
+  const mobileMenu = document.getElementById("mobile-dropdown-menu");
+
+  const closeMobileMenu = () => {
+    if (mobileMenu && mobileMenu.classList.contains("open")) {
+      mobileMenu.classList.remove("open");
+      mobileMenu.setAttribute("aria-hidden", "true");
+      if (mobileToggle) {
+        mobileToggle.classList.remove("open");
+        mobileToggle.setAttribute("aria-expanded", "false");
+        mobileToggle.setAttribute("aria-label", "Menü öffnen");
+      }
+    }
+  };
+
+  const toggleMobileMenu = () => {
+    if (!mobileMenu || !mobileToggle) return;
+    const willOpen = !mobileMenu.classList.contains("open");
+    if (willOpen) {
+      mobileMenu.classList.add("open");
+      mobileMenu.setAttribute("aria-hidden", "false");
+      mobileToggle.classList.add("open");
+      mobileToggle.setAttribute("aria-expanded", "true");
+      mobileToggle.setAttribute("aria-label", "Menü schließen");
+    } else {
+      closeMobileMenu();
+    }
+  };
+
+  if (mobileToggle && mobileMenu) {
+    mobileToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleMobileMenu();
+    });
+
+    // Close when clicking outside of mobile menu and toggle button
+    document.addEventListener("click", (e) => {
+      if (!mobileMenu.contains(e.target) && !mobileToggle.contains(e.target)) {
+        closeMobileMenu();
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && mobileMenu.classList.contains("open")) {
+        closeMobileMenu();
+        mobileToggle.focus();
+      }
+    });
+
+    // Close dropdown when a modal trigger inside the menu is clicked (e.g. Persona Manager)
+    mobileMenu.querySelectorAll("[data-modal-open]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        closeMobileMenu();
+      });
+    });
+
+    // Automatically close when window is resized to desktop width
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 992) {
+        closeMobileMenu();
+      }
+    });
+  }
+
+  // Hub Header Nav Tab Switcher (instant switch when on overview page, works for desktop and mobile)
+  document.querySelectorAll("[data-hub-tab]").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const targetId = btn.getAttribute("data-hub-tab");
       const targetPane = document.getElementById(targetId);
       if (targetPane) {
         e.preventDefault();
-        document.querySelectorAll("#header-hub-nav [data-hub-tab]").forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
+        document.querySelectorAll("[data-hub-tab]").forEach((b) => {
+          if (b.getAttribute("data-hub-tab") === targetId) {
+            b.classList.add("active");
+          } else {
+            b.classList.remove("active");
+          }
+        });
         const group = targetPane.closest("[data-tab-group]") || document;
         group.querySelectorAll(".tab-pane").forEach((pane) => pane.classList.remove("active"));
         targetPane.classList.add("active");
@@ -748,6 +819,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const url = new URL(window.location.href);
         url.searchParams.set("tab", tabParam);
         window.history.replaceState({}, "", url.toString());
+
+        closeMobileMenu();
       }
     });
   });
@@ -756,10 +829,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const currentTabParam = new URLSearchParams(window.location.search).get("tab");
   if (currentTabParam) {
     const pane = document.getElementById(`tab-${currentTabParam}`);
-    const navBtn = document.querySelector(`#header-hub-nav [data-hub-tab="tab-${currentTabParam}"]`);
+    const navBtn = document.querySelector(`[data-hub-tab="tab-${currentTabParam}"]`);
     if (pane && navBtn) {
-      document.querySelectorAll("#header-hub-nav [data-hub-tab]").forEach((b) => b.classList.remove("active"));
-      navBtn.classList.add("active");
+      document.querySelectorAll("[data-hub-tab]").forEach((b) => {
+        if (b.getAttribute("data-hub-tab") === `tab-${currentTabParam}`) {
+          b.classList.add("active");
+        } else {
+          b.classList.remove("active");
+        }
+      });
       const group = pane.closest("[data-tab-group]") || document;
       group.querySelectorAll(".tab-pane").forEach((p) => p.classList.remove("active"));
       pane.classList.add("active");
