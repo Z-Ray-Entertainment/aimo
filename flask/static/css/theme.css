@@ -37,6 +37,7 @@ body {
   background-position: center;
   background-attachment: fixed;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 body.has-system-backdrop {
@@ -524,6 +525,12 @@ a.mobile-nav-btn.active {
   z-index: 1;
 }
 
+@media (max-width: 991px) {
+  .main-container {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
 .rpg-tabs {
   display: flex;
   flex-wrap: wrap;
@@ -785,7 +792,11 @@ a.add-card-tile:active {
   border-bottom: 1px solid var(--border-wood-dark);
 }
 
-/* Chat Interface */
+/* Chat Viewport Locking & Interface (Pinned layout on mobile prevents address-bar collapse, jumps and dvh lag) */
+body.chat-page {
+  overflow: hidden;
+}
+
 .chat-layout {
   display: grid;
   grid-template-columns: 1fr minmax(320px, max-content);
@@ -795,10 +806,58 @@ a.add-card-tile:active {
 }
 
 @media (max-width: 991px) {
-  .chat-layout {
-    grid-template-columns: 1fr;
+  html:has(body.chat-page),
+  body.chat-page {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+  }
+
+  body.chat-page .app-overlay {
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  body.chat-page .top-header {
+    flex-shrink: 0;
+  }
+
+  body.chat-page .main-container {
+    flex: 1;
+    min-height: 0;
     height: auto;
-    min-height: calc(100vh - var(--header-height, 64px) - 2rem);
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    overflow: hidden;
+  }
+
+  body.chat-page .chat-layout {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    max-height: 100%;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  body.chat-page .chat-main-stage {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+  }
+
+  body.chat-page .chat-stage-overlay {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
   }
 }
 
@@ -808,6 +867,55 @@ a.add-card-tile:active {
   background: var(--border-wood-dark);
   margin: 0 0.2rem;
   align-self: center;
+}
+
+/* Sidebar Pane (Desktop: Column 2, Mobile: Inside Stage as Tab-Pane) */
+.chat-sidebar-pane {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+}
+
+.mobile-tab-only {
+  display: none !important;
+}
+
+@media (min-width: 992px) {
+  .mobile-tab-only {
+    display: none !important;
+  }
+
+  .chat-sidebar-pane {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .mobile-tab-only.chat-header-vdivider {
+    display: block !important;
+  }
+
+  .mobile-tab-only.header-btn {
+    display: inline-flex !important;
+  }
+
+  .chat-stage-overlay .chat-sidebar-pane.tab-pane {
+    display: none;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0.5rem 0.25rem;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .chat-stage-overlay .chat-sidebar-pane.tab-pane.active {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 /* ==========================================================================
@@ -878,6 +986,7 @@ a.add-card-tile:active {
   position: relative;
   overflow: hidden;
   min-height: 0;
+  height: 100%;
 }
 
 .chat-stage-overlay {
@@ -887,6 +996,17 @@ a.add-card-tile:active {
   flex-direction: column;
   padding: 1rem;
   min-height: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 991px) {
+  .chat-stage-overlay {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+.chat-stage-header {
+  flex-shrink: 0;
 }
 
 .chat-messages-list {
@@ -898,6 +1018,8 @@ a.add-card-tile:active {
   gap: 0.9rem;
   padding-right: 0.4rem;
   padding-bottom: 0.5rem;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .chat-bubble-row {
@@ -931,6 +1053,30 @@ a.add-card-tile:active {
 .chat-bubble-row.user .chat-bubble {
   background: rgba(65, 42, 25, 0.92);
   border-color: var(--gold-accent);
+}
+
+/* Mobile: Zweizeiliges Layout (Portrait oben, Nachricht darunter) verhindert gestauchte Bubbles */
+@media (max-width: 991px) {
+  .chat-bubble-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .chat-bubble-row.user {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .chat-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+  }
+
+  .chat-bubble {
+    max-width: 95%;
+  }
 }
 
 .raw-stream-preview {
@@ -1412,6 +1558,7 @@ a.add-card-tile:active {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   padding: 0;
   overflow: visible;
+  flex-shrink: 0;
 }
 
 .chat-input-box:focus-within {
@@ -1481,6 +1628,14 @@ a.add-card-tile:active {
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
+}
+
+@media (max-width: 991px) {
+  .chat-input-box textarea#chat-message-textarea {
+    height: 5.25rem !important;
+    min-height: 4.5rem !important;
+    resize: none !important;
+  }
 }
 
 /* Unified Chat Input Button Class (.chat-input-btn & .chat-overlay-btn) */

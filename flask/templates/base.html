@@ -2,12 +2,12 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
   <title>{% block title %}AIMO — Immersive Roleplay Hub{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
   {% block extra_head %}{% endblock %}
 </head>
-<body class="{% if system_backdrop_url %}has-system-backdrop{% endif %}">
+<body class="{% if system_backdrop_url %}has-system-backdrop{% endif %}{% block body_class %}{% endblock %}">
   <div class="app-overlay">
     {% block page_backdrop %}
       {% if system_backdrop_url %}
