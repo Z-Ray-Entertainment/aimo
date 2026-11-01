@@ -4,12 +4,14 @@ from application.auth.decorators import get_current_user, require_permission
 from application.chat.forms import MemoryEditForm, StartChatForm
 from domain.characters.models import Emotion
 from domain.characters.services import CharacterService
+from domain.chat.models import MessageRole
 from domain.chat.services import ChatService
 from domain.memories.services import MemoryService
 from domain.permissions.models import FunctionPermission
 from domain.personas.models import Gender
 from domain.personas.services import PersonaService
 from infrastructure.image_gen.factory import get_image_gen_provider
+from infrastructure.llm.factory import get_llm_provider
 from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.chat_repository import ChatRepository
 from infrastructure.repositories.memory_repository import MemoryRepository
@@ -375,3 +377,80 @@ def delete_memory(session_id: int, memory_id: int):
         mem_repo.delete_memory(memory_id)
         flash("Erinnerung gelöscht.", "success")
     return redirect(url_for("chat.view_session", session_id=session_id))
+
+
+@chat_bp.route("/session/<int:session_id>/memories/<int:memory_id>/recalculate", methods=["POST"])
+@require_permission(FunctionPermission.CHAT_ACCESS)
+def recalculate_memory(session_id: int, memory_id: int):
+    chat_repo = ChatRepository()
+    mem_repo = MemoryRepository()
+    settings_repo = SettingsRepository()
+    mem_service = MemoryService()
+
+    chat_session = chat_repo.get_session(session_id)
+    if chat_session is None:
+        if request.is_json or request.headers.get("Accept") == "application/json":
+            return {"error": "Session not found."}, 404
+        flash("Chat-Session nicht gefunden.", "error")
+        return redirect(url_for("chat.open_character_chat", character_id=1))
+
+    target_memory = mem_repo.get_by_id(memory_id)
+    if target_memory is None or target_memory.chat_session_id != session_id:
+        if request.is_json or request.headers.get("Accept") == "application/json":
+            return {"error": "Memory not found."}, 404
+        flash("Erinnerung nicht gefunden.", "error")
+        return redirect(url_for("chat.view_session", session_id=session_id))
+
+    all_messages = chat_repo.get_messages(session_id, limit=None)
+    narrative_msgs = [
+        m for m in all_messages if m.role in (MessageRole.USER, MessageRole.CHARACTER)
+    ]
+    all_memories = mem_repo.list_for_session(session_id)
+
+    chunk = mem_service.extract_messages_for_memory(
+        memories=all_memories,
+        target_memory=target_memory,
+        all_narrative_messages=narrative_msgs,
+        chunk_size=10,
+    )
+    if not chunk:
+        if request.is_json or request.headers.get("Accept") == "application/json":
+            return {"error": "No narrative messages found for this memory episode."}, 400
+        flash("Keine Nachrichten für diese Erinnerungsepisode gefunden.", "error")
+        return redirect(url_for("chat.view_session", session_id=session_id))
+
+    try:
+        settings = settings_repo.get_settings()
+        llm = get_llm_provider(settings)
+        msg_dicts = [
+            {"role": m.role.value, "content": m.english_content or m.localized_content or ""}
+            for m in chunk
+        ]
+        title, tags, summary, _ = mem_service.extract_memory_and_title(
+            last_10_messages=msg_dicts,
+            memory_prompt=settings.prompts.memory_prompt,
+            llm_provider=llm,
+            model=settings.tasks.memory_model,
+        )
+        mem_service.update_memory(
+            memory=target_memory,
+            title=title,
+            tags=tags,
+            summary=summary,
+        )
+        mem_repo.update_memory(target_memory)
+        if request.is_json or request.headers.get("Accept") == "application/json":
+            return {
+                "id": target_memory.id,
+                "title": target_memory.title,
+                "tags": target_memory.tags,
+                "summary": target_memory.summary,
+            }
+        flash("Erinnerung erfolgreich neu berechnet.", "success")
+    except Exception as exc:
+        if request.is_json or request.headers.get("Accept") == "application/json":
+            return {"error": str(exc)}, 500
+        flash(f"Fehler bei der Neuberechnung: {exc}", "error")
+
+    return redirect(url_for("chat.view_session", session_id=session_id))
+

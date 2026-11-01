@@ -238,7 +238,7 @@
 
         <div style="display: flex; flex-direction: column; gap: 0.85rem; max-height: 60vh; overflow-y: auto;">
           {% for mem in memories %}
-            <form method="POST" action="{{ url_for('chat.edit_memory', session_id=chat_session.id, memory_id=mem.id) }}" class="wood-frame" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem;">
+            <form id="memory-form-{{ mem.id }}" method="POST" action="{{ url_for('chat.edit_memory', session_id=chat_session.id, memory_id=mem.id) }}" class="wood-frame" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem;">
               <div style="display: flex; gap: 0.75rem; align-items: center;">
                 <input type="text" name="title" value="{{ mem.title }}" required style="font-weight: 700;">
                 <span style="font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;">Nachricht #{{ mem.message_idx }}</span>
@@ -251,7 +251,10 @@
                 <label style="font-size: 0.78rem; color: var(--text-muted);">Zusammenfassung (Englischer Kanon)</label>
                 <textarea name="summary" rows="3" required>{{ mem.summary }}</textarea>
               </div>
-              <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                <button type="button" class="btn btn-secondary" onclick="window.recalculateMemory({{ chat_session.id }}, {{ mem.id }}, this)" title="Erinnerung aus den zugehörigen Episoden-Nachrichten neu berechnen" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
+                  <span class="icon-mono">🔄</span> Neu berechnen
+                </button>
                 <button type="submit" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Speichern</button>
               </div>
             </form>
@@ -652,6 +655,56 @@
         setTimeout(() => { btn.textContent = orig; }, 1800);
       }
     });
+  };
+
+  window.recalculateMemory = async function(sessionId, memoryId, btnEl) {
+    if (!sessionId || !memoryId) return;
+    const form = document.getElementById(`memory-form-${memoryId}`) || (btnEl ? btnEl.closest("form") : null);
+    if (!form) return;
+
+    const originalBtnHtml = btnEl.innerHTML;
+    btnEl.disabled = true;
+    btnEl.innerHTML = '<span class="icon-mono">⏳</span> Berechne...';
+
+    const titleInput = form.querySelector('input[name="title"]');
+    const tagsInput = form.querySelector('input[name="tags"]');
+    const summaryInput = form.querySelector('textarea[name="summary"]');
+
+    try {
+      const resp = await fetch(`/api/chat/${sessionId}/memories/${memoryId}/recalculate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        throw new Error(data.error || `HTTP ${resp.status}`);
+      }
+
+      if (titleInput && data.title) titleInput.value = data.title;
+      if (tagsInput && data.tags) {
+        tagsInput.value = Array.isArray(data.tags) ? data.tags.join(", ") : data.tags;
+      }
+      if (summaryInput && data.summary) summaryInput.value = data.summary;
+
+      btnEl.innerHTML = '<span class="icon-mono">✓</span> Neu berechnet!';
+      btnEl.style.borderColor = "var(--gold-accent)";
+      btnEl.style.color = "var(--gold-accent)";
+
+      setTimeout(() => {
+        btnEl.disabled = false;
+        btnEl.innerHTML = originalBtnHtml;
+        btnEl.style.borderColor = "";
+        btnEl.style.color = "";
+      }, 3000);
+    } catch (err) {
+      if (window.showToastError) {
+        window.showToastError(err.message, "Fehler bei Neuberechnung");
+      } else {
+        alert("Fehler bei Neuberechnung: " + err.message);
+      }
+      btnEl.disabled = false;
+      btnEl.innerHTML = originalBtnHtml;
+    }
   };
 </script>
 {% endblock %}

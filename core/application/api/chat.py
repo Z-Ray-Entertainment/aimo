@@ -1295,3 +1295,80 @@ def translate_arbitrary_text():
             "target_language": target_lang,
         }
     )
+
+
+@api_chat_bp.route("/<int:session_id>/memories/<int:memory_id>/recalculate", methods=["POST"])
+@require_permission(FunctionPermission.CHAT_ACCESS)
+def recalculate_memory(session_id: int, memory_id: int):
+    chat_repo = ChatRepository()
+    mem_repo = MemoryRepository()
+    settings_repo = SettingsRepository()
+    mem_service = MemoryService()
+
+    chat_session = chat_repo.get_session(session_id)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
+    target_memory = mem_repo.get_by_id(memory_id)
+    if target_memory is None or target_memory.chat_session_id != session_id:
+        return jsonify({"error": "Memory not found."}), 404
+
+    all_messages = chat_repo.get_messages(session_id, limit=None)
+    narrative_msgs = [
+        m
+        for m in all_messages
+        if m.role in (MessageRole.USER, MessageRole.CHARACTER)
+    ]
+    all_memories = mem_repo.list_for_session(session_id)
+
+    chunk = mem_service.extract_messages_for_memory(
+        memories=all_memories,
+        target_memory=target_memory,
+        all_narrative_messages=narrative_msgs,
+        chunk_size=10,
+    )
+
+    if not chunk:
+        return jsonify({"error": "No narrative messages found for this memory episode."}), 400
+
+    settings = settings_repo.get_settings()
+    llm = get_llm_provider(settings)
+
+    msg_dicts = [
+        {"role": m.role.value, "content": m.english_content or m.localized_content or ""}
+        for m in chunk
+    ]
+
+    try:
+        title, tags, summary, _ = mem_service.extract_memory_and_title(
+            last_10_messages=msg_dicts,
+            memory_prompt=settings.prompts.memory_prompt,
+            llm_provider=llm,
+            model=settings.tasks.memory_model,
+        )
+    except Exception as exc:
+        return jsonify({"error": f"LLM memory generation failed: {exc}"}), 502
+
+    try:
+        mem_service.update_memory(
+            memory=target_memory,
+            title=title,
+            tags=tags,
+            summary=summary,
+        )
+        mem_repo.update_memory(target_memory)
+    except AimoError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+    return jsonify(
+        {
+            "id": target_memory.id,
+            "chat_session_id": target_memory.chat_session_id,
+            "message_idx": target_memory.message_idx,
+            "title": target_memory.title,
+            "tags": target_memory.tags,
+            "summary": target_memory.summary,
+            "messages_count": len(chunk),
+        }
+    )
+

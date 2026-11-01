@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 import json
 import re
-from typing import Protocol
+from typing import Any, Protocol
 
 from domain.memories.exceptions import InvalidMemoryDataError
 from domain.memories.models import Memory
@@ -10,7 +10,14 @@ from shared.utils import parse_tags, tags_overlap
 
 
 class MemoryLLMProvider(Protocol):
-    def generate(self, prompt: str, model: str, params: ModelParameters) -> str:
+    def generate(
+        self,
+        prompt: str,
+        model: str,
+        params: ModelParameters,
+        stop: list[str] | None = None,
+        format: str | None = None,
+    ) -> str:
         ...
 
 
@@ -97,14 +104,30 @@ class MemoryService:
             top_p=0.9,
             repeat_penalty=1.05,
         )
-        raw_output = llm_provider.generate(prompt=prompt, model=model, params=params).strip()
+        try:
+            raw_output = llm_provider.generate(
+                prompt=prompt, model=model, params=params, format="json"
+            ).strip()
+        except TypeError:
+            raw_output = llm_provider.generate(
+                prompt=prompt, model=model, params=params
+            ).strip()
+
+        # Discard reasoning/thinking blocks (e.g. from DeepSeek-R1, QwQ)
+        cleaned_output = re.sub(r"<think>.*?</think>", "", raw_output, flags=re.DOTALL).strip()
+        if not cleaned_output and raw_output:
+            cleaned_output = re.sub(r"<think>.*", "", raw_output, flags=re.DOTALL).strip() or raw_output
+
+        # Clean markdown code fences if wrapped in ```json ... ```
+        cleaned_output = re.sub(r"^```(?:json)?\s*", "", cleaned_output, flags=re.MULTILINE)
+        cleaned_output = re.sub(r"\s*```$", "", cleaned_output, flags=re.MULTILINE).strip()
 
         title = "Roleplay Episode"
         tags: list[str] = ["roleplay", "memory"]
         summary = ""
         chat_title = "Roleplay Session"
 
-        json_match = re.search(r"\{.*\}", raw_output, re.DOTALL)
+        json_match = re.search(r"\{.*\}", cleaned_output, re.DOTALL)
         if json_match:
             try:
                 parsed = json.loads(json_match.group(0))
@@ -123,9 +146,37 @@ class MemoryService:
                 pass
 
         if not summary:
-            summary = raw_output[:500] if raw_output else "Summary of recent events."
+            summary = cleaned_output[:500] if cleaned_output else "Summary of recent events."
 
         return title, tags, summary, chat_title
+
+    def extract_messages_for_memory(
+        self,
+        memories: list[Memory],
+        target_memory: Memory,
+        all_narrative_messages: list[Any],
+        chunk_size: int = 10,
+    ) -> list[Any]:
+        if not all_narrative_messages:
+            return []
+
+        prev_memories = [m for m in memories if m.message_idx < target_memory.message_idx]
+        prev_idx = max((m.message_idx for m in prev_memories), default=-1)
+
+        block = [
+            m
+            for m in all_narrative_messages
+            if prev_idx < m.message_idx <= target_memory.message_idx
+        ]
+
+        if not block:
+            block = [
+                m
+                for m in all_narrative_messages
+                if m.message_idx <= target_memory.message_idx
+            ][-chunk_size:]
+
+        return block[-chunk_size:] if len(block) > chunk_size else block
 
     def search_memories_by_tags(
         self,
