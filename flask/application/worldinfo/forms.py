@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from shared.request_parsers import RequestDataParser
+
 
 @dataclass
 class LocationForm:
@@ -10,13 +12,14 @@ class LocationForm:
     vision_alt_text: str = ""
 
     @classmethod
-    def from_request(cls, form_data: dict) -> "LocationForm":
+    def from_request(cls, form_data) -> "LocationForm":
+        p = RequestDataParser
         return cls(
-            name=str(form_data.get("name", "")).strip(),
-            tags=str(form_data.get("tags", "")).strip(),
-            description=str(form_data.get("description", "")).strip(),
-            background_image_path=str(form_data.get("background_image_path", "")).strip(),
-            vision_alt_text=str(form_data.get("vision_alt_text", "")).strip(),
+            name=p.to_str(form_data, "name"),
+            tags=p.to_str(form_data, "tags"),
+            description=p.to_str(form_data, "description"),
+            background_image_path=p.to_str(form_data, "background_image_path"),
+            vision_alt_text=p.to_str(form_data, "vision_alt_text"),
         )
 
 
@@ -29,22 +32,12 @@ class EventForm:
     description: str = ""
 
     @classmethod
-    def from_request(cls, form_data: dict) -> "EventForm":
-        loc_raw = form_data.get("location_id")
-        loc_id = None
-        if loc_raw not in (None, "", "world", "0", 0):
-            try:
-                loc_id = int(loc_raw)
-            except (ValueError, TypeError):
-                loc_id = None
-        try:
-            prob = int(form_data.get("probability", 50))
-        except (ValueError, TypeError):
-            prob = 50
+    def from_request(cls, form_data) -> "EventForm":
+        p = RequestDataParser
         return cls(
-            title=str(form_data.get("title", "")).strip(),
-            probability=max(0, min(100, prob)),
-            one_shot=bool(form_data.get("one_shot")),
-            location_id=loc_id,
-            description=str(form_data.get("description", "")).strip(),
+            title=p.to_str(form_data, "title"),
+            probability=p.to_int(form_data, "probability", default=50, min_val=0, max_val=100),
+            one_shot=p.to_bool(form_data, "one_shot"),
+            location_id=p.to_opt_int(form_data, "location_id"),
+            description=p.to_str(form_data, "description"),
         )

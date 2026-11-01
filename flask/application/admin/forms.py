@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Any
 
+from shared.request_parsers import RequestDataParser
+
 
 @dataclass
 class AdminUserForm:
@@ -12,17 +14,13 @@ class AdminUserForm:
 
     @classmethod
     def from_request(cls, form_data: Any) -> "AdminUserForm":
-        perms = (
-            form_data.getlist("permissions")
-            if hasattr(form_data, "getlist")
-            else []
-        )
+        p = RequestDataParser
         return cls(
-            username=str(form_data.get("username", "")).strip(),
-            email=str(form_data.get("email", "")).strip().lower(),
-            password=str(form_data.get("password", "")),
-            preset=str(form_data.get("preset", "")).strip(),
-            permissions=[str(p).strip() for p in perms if str(p).strip()],
+            username=p.to_str(form_data, "username"),
+            email=p.to_str(form_data, "email").lower(),
+            password=p.to_str(form_data, "password", strip=False),
+            preset=p.to_str(form_data, "preset"),
+            permissions=p.to_str_list(form_data, "permissions"),
         )
 
 
@@ -49,39 +47,24 @@ class AdminServicesForm:
 
     @classmethod
     def from_request(cls, form_data: Any) -> "AdminServicesForm":
-        def _int(key: str, default: int) -> int:
-            try:
-                return int(str(form_data.get(key, default)).strip())
-            except ValueError:
-                return default
-
-        def _float(key: str, default: float) -> float:
-            try:
-                return float(str(form_data.get(key, default)).strip())
-            except ValueError:
-                return default
-
+        p = RequestDataParser
         return cls(
-            ollama_url=str(form_data.get("ollama_url", "")).strip(),
-            comfyui_url=str(form_data.get("comfyui_url", "")).strip(),
-            searxng_url=str(form_data.get("searxng_url", "")).strip(),
-            searxng_enabled=bool(form_data.get("searxng_enabled")),
-            roleplay_model=str(form_data.get("roleplay_model", "")).strip(),
-            memory_model=str(form_data.get("memory_model", "")).strip(),
-            assistant_model=str(form_data.get("assistant_model", "")).strip(),
-            classification_model=str(form_data.get("classification_model", "")).strip(),
-            vision_model=str(form_data.get("vision_model", "")).strip(),
-            num_ctx=_int("num_ctx", 4096),
-            temperature=_float("temperature", 0.7),
-            top_p=_float("top_p", 0.9),
-            repeat_penalty=_float("repeat_penalty", 1.1),
-            roleplay_prompt=str(form_data.get("roleplay_prompt", "")).strip(),
-            memory_prompt=str(form_data.get("memory_prompt", "")).strip(),
-            diffuser_prompt=str(form_data.get("diffuser_prompt", "")).strip(),
-            sparkle_assistant_prompt=str(
-                form_data.get("sparkle_assistant_prompt", "")
-            ).strip(),
-            vision_persona_prompt=str(
-                form_data.get("vision_persona_prompt", "")
-            ).strip(),
+            ollama_url=p.to_str(form_data, "ollama_url"),
+            comfyui_url=p.to_str(form_data, "comfyui_url"),
+            searxng_url=p.to_str(form_data, "searxng_url"),
+            searxng_enabled=p.to_bool(form_data, "searxng_enabled"),
+            roleplay_model=p.to_str(form_data, "roleplay_model"),
+            memory_model=p.to_str(form_data, "memory_model"),
+            assistant_model=p.to_str(form_data, "assistant_model"),
+            classification_model=p.to_str(form_data, "classification_model"),
+            vision_model=p.to_str(form_data, "vision_model"),
+            num_ctx=p.to_int(form_data, "num_ctx", 4096),
+            temperature=p.to_float(form_data, "temperature", 0.7),
+            top_p=p.to_float(form_data, "top_p", 0.9),
+            repeat_penalty=p.to_float(form_data, "repeat_penalty", 1.1),
+            roleplay_prompt=p.to_str(form_data, "roleplay_prompt"),
+            memory_prompt=p.to_str(form_data, "memory_prompt"),
+            diffuser_prompt=p.to_str(form_data, "diffuser_prompt"),
+            sparkle_assistant_prompt=p.to_str(form_data, "sparkle_assistant_prompt"),
+            vision_persona_prompt=p.to_str(form_data, "vision_persona_prompt"),
         )

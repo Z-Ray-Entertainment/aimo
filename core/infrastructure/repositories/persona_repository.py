@@ -2,31 +2,20 @@ import sqlite3
 
 from domain.personas.models import Gender, UserPersona
 from infrastructure.database import get_db_session
+from infrastructure.repositories.base import BaseRepository
 from infrastructure.repositories.orm_models import format_datetime, parse_datetime
 
 
-class PersonaRepository:
+class PersonaRepository(BaseRepository[UserPersona]):
     def list_for_user(self, user_id: int) -> list[UserPersona]:
-        with get_db_session() as conn:
-            rows = conn.execute(
-                """
-                SELECT * FROM personas
-                WHERE user_id = ?
-                ORDER BY is_default DESC, id ASC
-                """,
-                (user_id,),
-            ).fetchall()
-            return [self._to_entity(row) for row in rows]
+        return self._fetch_all(
+            "SELECT * FROM personas WHERE user_id = ? ORDER BY is_default DESC, id ASC",
+            (user_id,),
+            self._to_entity,
+        )
 
     def get_by_id(self, persona_id: int) -> UserPersona | None:
-        with get_db_session() as conn:
-            row = conn.execute(
-                "SELECT * FROM personas WHERE id = ?",
-                (persona_id,),
-            ).fetchone()
-            if row is None:
-                return None
-            return self._to_entity(row)
+        return self._get_by_id("personas", persona_id, self._to_entity)
 
     def get_default_for_user(self, user_id: int) -> UserPersona | None:
         personas = self.list_for_user(user_id)
@@ -119,23 +108,10 @@ class PersonaRepository:
             )
 
     def delete(self, persona_id: int) -> bool:
-        with get_db_session() as conn:
-            existing = conn.execute(
-                "SELECT id FROM personas WHERE id = ?",
-                (persona_id,),
-            ).fetchone()
-            if existing is None:
-                return False
-            conn.execute("DELETE FROM personas WHERE id = ?", (persona_id,))
-            return True
+        return self._delete_by_id("personas", persona_id)
 
     def is_used_in_any_session(self, persona_id: int) -> bool:
-        with get_db_session() as conn:
-            row = conn.execute(
-                "SELECT COUNT(*) AS cnt FROM chat_sessions WHERE persona_id = ?",
-                (persona_id,),
-            ).fetchone()
-            return int(row["cnt"] if row is not None else 0) > 0
+        return self._count("chat_sessions", "persona_id = ?", (persona_id,)) > 0
 
     @staticmethod
     def _to_entity(row: sqlite3.Row) -> UserPersona:

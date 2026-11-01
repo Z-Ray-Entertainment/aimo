@@ -3,40 +3,21 @@ import sqlite3
 
 from domain.worldinfo.models import Event, Location, WorldInfo
 from infrastructure.database import get_db_session
+from infrastructure.repositories.base import BaseRepository
 from infrastructure.repositories.orm_models import format_datetime, parse_datetime
 
 
-class WorldInfoRepository:
+class WorldInfoRepository(BaseRepository[WorldInfo]):
     def list_visible(self, user_id: int) -> list[WorldInfo]:
-        with get_db_session() as conn:
-            rows = conn.execute(
-                """
-                SELECT * FROM worldinfos
-                WHERE visibility = 'public' OR user_id = ?
-                ORDER BY id ASC
-                """,
-                (user_id,),
-            ).fetchall()
-            return [self._to_entity(row) for row in rows]
+        return self._list_visible("worldinfos", user_id, self._to_entity)
 
     def list_all(self, user_id: int | None = None) -> list[WorldInfo]:
         if user_id is not None:
             return self.list_visible(user_id)
-        with get_db_session() as conn:
-            rows = conn.execute(
-                "SELECT * FROM worldinfos ORDER BY id ASC",
-            ).fetchall()
-            return [self._to_entity(row) for row in rows]
+        return self._list_all("worldinfos", self._to_entity)
 
     def get_by_id(self, worldinfo_id: int) -> WorldInfo | None:
-        with get_db_session() as conn:
-            row = conn.execute(
-                "SELECT * FROM worldinfos WHERE id = ?",
-                (worldinfo_id,),
-            ).fetchone()
-            if row is None:
-                return None
-            return self._to_entity(row)
+        return self._get_by_id("worldinfos", worldinfo_id, self._to_entity)
 
     def create(self, worldinfo: WorldInfo) -> WorldInfo:
         created_str = format_datetime(worldinfo.created_at)
@@ -93,15 +74,7 @@ class WorldInfoRepository:
             return self._to_entity(row)
 
     def delete(self, worldinfo_id: int) -> bool:
-        with get_db_session() as conn:
-            existing = conn.execute(
-                "SELECT id FROM worldinfos WHERE id = ?",
-                (worldinfo_id,),
-            ).fetchone()
-            if existing is None:
-                return False
-            conn.execute("DELETE FROM worldinfos WHERE id = ?", (worldinfo_id,))
-            return True
+        return self._delete_by_id("worldinfos", worldinfo_id)
 
     def add_location(self, location: Location) -> Location:
         with get_db_session() as conn:
@@ -160,26 +133,14 @@ class WorldInfoRepository:
             return self._loc_to_entity(row)
 
     def get_location(self, location_id: int) -> Location | None:
-        with get_db_session() as conn:
-            row = conn.execute(
-                "SELECT * FROM locations WHERE id = ?",
-                (location_id,),
-            ).fetchone()
-            if row is None:
-                return None
-            return self._loc_to_entity(row)
+        return self._get_by_id("locations", location_id, self._loc_to_entity)
 
     def list_locations(self, worldinfo_id: int) -> list[Location]:
-        with get_db_session() as conn:
-            rows = conn.execute(
-                """
-                SELECT * FROM locations
-                WHERE worldinfo_id = ?
-                ORDER BY id ASC
-                """,
-                (worldinfo_id,),
-            ).fetchall()
-            return [self._loc_to_entity(row) for row in rows]
+        return self._fetch_all(
+            "SELECT * FROM locations WHERE worldinfo_id = ? ORDER BY id ASC",
+            (worldinfo_id,),
+            self._loc_to_entity,
+        )
 
     def delete_location(self, location_id: int) -> bool:
         with get_db_session() as conn:
@@ -253,37 +214,17 @@ class WorldInfoRepository:
             return self._ev_to_entity(row)
 
     def get_event(self, event_id: int) -> Event | None:
-        with get_db_session() as conn:
-            row = conn.execute(
-                "SELECT * FROM events WHERE id = ?",
-                (event_id,),
-            ).fetchone()
-            if row is None:
-                return None
-            return self._ev_to_entity(row)
+        return self._get_by_id("events", event_id, self._ev_to_entity)
 
     def list_events(self, worldinfo_id: int) -> list[Event]:
-        with get_db_session() as conn:
-            rows = conn.execute(
-                """
-                SELECT * FROM events
-                WHERE worldinfo_id = ?
-                ORDER BY id ASC
-                """,
-                (worldinfo_id,),
-            ).fetchall()
-            return [self._ev_to_entity(row) for row in rows]
+        return self._fetch_all(
+            "SELECT * FROM events WHERE worldinfo_id = ? ORDER BY id ASC",
+            (worldinfo_id,),
+            self._ev_to_entity,
+        )
 
     def delete_event(self, event_id: int) -> bool:
-        with get_db_session() as conn:
-            existing = conn.execute(
-                "SELECT id FROM events WHERE id = ?",
-                (event_id,),
-            ).fetchone()
-            if existing is None:
-                return False
-            conn.execute("DELETE FROM events WHERE id = ?", (event_id,))
-            return True
+        return self._delete_by_id("events", event_id)
 
     @staticmethod
     def _to_entity(row: sqlite3.Row) -> WorldInfo:

@@ -7,37 +7,23 @@ from domain.permissions.models import (
     UserPermissions,
 )
 from infrastructure.database import get_db_session
+from infrastructure.repositories.base import BaseRepository
 from infrastructure.repositories.orm_models import format_datetime, parse_datetime
 
 
-class UserRepository:
+class UserRepository(BaseRepository[User]):
     def get_by_id(self, user_id: int) -> User | None:
-        with get_db_session() as conn:
-            row = conn.execute(
-                "SELECT * FROM users WHERE id = ?",
-                (user_id,),
-            ).fetchone()
-            if row is None:
-                return None
-            return self._to_entity(row)
+        return self._get_by_id("users", user_id, self._to_entity)
 
     def get_by_email(self, email: str) -> User | None:
-        cleaned = email.strip().lower()
-        with get_db_session() as conn:
-            row = conn.execute(
-                "SELECT * FROM users WHERE email = ?",
-                (cleaned,),
-            ).fetchone()
-            if row is None:
-                return None
-            return self._to_entity(row)
+        return self._fetch_one(
+            "SELECT * FROM users WHERE email = ?",
+            (email.strip().lower(),),
+            self._to_entity,
+        )
 
     def list_all(self) -> list[User]:
-        with get_db_session() as conn:
-            rows = conn.execute(
-                "SELECT * FROM users ORDER BY id ASC",
-            ).fetchall()
-            return [self._to_entity(row) for row in rows]
+        return self._list_all("users", self._to_entity)
 
     def create(self, user: User) -> User:
         created_str = format_datetime(user.created_at)
@@ -110,9 +96,7 @@ class UserRepository:
             return True
 
     def count_users(self) -> int:
-        with get_db_session() as conn:
-            row = conn.execute("SELECT COUNT(*) AS cnt FROM users").fetchone()
-            return int(row["cnt"] if row is not None else 0)
+        return self._count("users")
 
     def get_permissions(self, user_id: int) -> UserPermissions:
         with get_db_session() as conn:

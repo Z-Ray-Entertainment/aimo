@@ -9,6 +9,7 @@ from domain.characters.models import (
     EmotionalSprite,
     Gender,
 )
+from domain.validation import DomainValidator
 
 
 class CharacterService:
@@ -29,26 +30,15 @@ class CharacterService:
         preferred_location_ids: list[int] | None = None,
         disliked_location_ids: list[int] | None = None,
     ) -> Character:
-        if isinstance(user_id, bool) or not isinstance(user_id, int) or user_id <= 0:
-            raise InvalidCharacterDataError("A valid positive user_id is required.")
-
-        cleaned_name = name.strip() if isinstance(name, str) else ""
-        if not cleaned_name:
-            raise InvalidCharacterDataError("Character name must not be empty.")
+        DomainValidator.validate_positive_user_id(user_id, InvalidCharacterDataError)
+        cleaned_name = DomainValidator.validate_required_string(name, "Character name", InvalidCharacterDataError)
 
         try:
             resolved_gender = Gender.resolve(gender)
         except ValueError as exc:
             raise InvalidCharacterDataError(str(exc)) from exc
 
-        cleaned_portrait = (
-            primary_portrait_path.strip()
-            if isinstance(primary_portrait_path, str)
-            else ""
-        )
-        if not cleaned_portrait:
-            raise InvalidCharacterDataError("primary_portrait_path must not be empty.")
-
+        cleaned_portrait = DomainValidator.validate_required_string(primary_portrait_path, "primary_portrait_path", InvalidCharacterDataError)
         cleaned_desc = description.strip() if isinstance(description, str) else ""
         cleaned_first_msg = (
             first_message.strip() if isinstance(first_message, str) else ""

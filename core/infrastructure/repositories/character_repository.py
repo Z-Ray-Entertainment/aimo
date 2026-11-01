@@ -9,10 +9,11 @@ from domain.characters.models import (
     Gender,
 )
 from infrastructure.database import get_db_session
+from infrastructure.repositories.base import BaseRepository
 from infrastructure.repositories.orm_models import format_datetime, parse_datetime
 
 
-class CharacterRepository:
+class CharacterRepository(BaseRepository[Character]):
     def list_visible(self, user_id: int) -> list[Character]:
         with get_db_session() as conn:
             rows = conn.execute(
@@ -111,15 +112,7 @@ class CharacterRepository:
             return self._to_entity(conn, row)
 
     def delete(self, character_id: int) -> bool:
-        with get_db_session() as conn:
-            existing = conn.execute(
-                "SELECT id FROM characters WHERE id = ?",
-                (character_id,),
-            ).fetchone()
-            if existing is None:
-                return False
-            conn.execute("DELETE FROM characters WHERE id = ?", (character_id,))
-            return True
+        return self._delete_by_id("characters", character_id)
 
     def add_sprite(self, character_id: int, sprite: EmotionalSprite) -> EmotionalSprite:
         with get_db_session() as conn:
@@ -199,15 +192,7 @@ class CharacterRepository:
             return True
 
     def delete_gallery_image(self, image_id: int) -> bool:
-        with get_db_session() as conn:
-            existing = conn.execute(
-                "SELECT id FROM character_images WHERE id = ?",
-                (image_id,),
-            ).fetchone()
-            if existing is None:
-                return False
-            conn.execute("DELETE FROM character_images WHERE id = ?", (image_id,))
-            return True
+        return self._delete_by_id("character_images", image_id)
 
     def get_best_relationship_for_user(
         self,

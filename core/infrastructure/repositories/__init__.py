@@ -1,3 +1,4 @@
+from infrastructure.repositories.base import BaseRepository
 from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.chat_repository import ChatRepository
 from infrastructure.repositories.lorebook_repository import LorebookRepository
@@ -9,6 +10,7 @@ from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 
 __all__ = [
+    "BaseRepository",
     "CharacterRepository",
     "ChatRepository",
     "LorebookRepository",

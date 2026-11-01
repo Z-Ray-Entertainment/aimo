@@ -3,40 +3,21 @@ import sqlite3
 
 from domain.lorebooks.models import Lorebook, LorebookEntry
 from infrastructure.database import get_db_session
+from infrastructure.repositories.base import BaseRepository
 from infrastructure.repositories.orm_models import format_datetime, parse_datetime
 
 
-class LorebookRepository:
+class LorebookRepository(BaseRepository[Lorebook]):
     def list_visible(self, user_id: int) -> list[Lorebook]:
-        with get_db_session() as conn:
-            rows = conn.execute(
-                """
-                SELECT * FROM lorebooks
-                WHERE visibility = 'public' OR user_id = ?
-                ORDER BY id ASC
-                """,
-                (user_id,),
-            ).fetchall()
-            return [self._to_entity(row) for row in rows]
+        return self._list_visible("lorebooks", user_id, self._to_entity)
 
     def list_for_user(self, user_id: int | None = None) -> list[Lorebook]:
         if user_id is not None:
             return self.list_visible(user_id)
-        with get_db_session() as conn:
-            rows = conn.execute(
-                "SELECT * FROM lorebooks ORDER BY id ASC",
-            ).fetchall()
-            return [self._to_entity(row) for row in rows]
+        return self._list_all("lorebooks", self._to_entity)
 
     def get_by_id(self, lorebook_id: int) -> Lorebook | None:
-        with get_db_session() as conn:
-            row = conn.execute(
-                "SELECT * FROM lorebooks WHERE id = ?",
-                (lorebook_id,),
-            ).fetchone()
-            if row is None:
-                return None
-            return self._to_entity(row)
+        return self._get_by_id("lorebooks", lorebook_id, self._to_entity)
 
     def create(self, lorebook: Lorebook) -> Lorebook:
         created_str = format_datetime(lorebook.created_at)
@@ -86,15 +67,7 @@ class LorebookRepository:
             return self._to_entity(row)
 
     def delete(self, lorebook_id: int) -> bool:
-        with get_db_session() as conn:
-            existing = conn.execute(
-                "SELECT id FROM lorebooks WHERE id = ?",
-                (lorebook_id,),
-            ).fetchone()
-            if existing is None:
-                return False
-            conn.execute("DELETE FROM lorebooks WHERE id = ?", (lorebook_id,))
-            return True
+        return self._delete_by_id("lorebooks", lorebook_id)
 
     def add_entry(self, entry: LorebookEntry) -> LorebookEntry:
         created_str = format_datetime(entry.created_at)
@@ -153,52 +126,27 @@ class LorebookRepository:
             return self._entry_to_entity(row)
 
     def get_entry(self, entry_id: int) -> LorebookEntry | None:
-        with get_db_session() as conn:
-            row = conn.execute(
-                "SELECT * FROM lorebook_entries WHERE id = ?",
-                (entry_id,),
-            ).fetchone()
-            if row is None:
-                return None
-            return self._entry_to_entity(row)
+        return self._get_by_id("lorebook_entries", entry_id, self._entry_to_entity)
 
     def list_entries(self, lorebook_id: int) -> list[LorebookEntry]:
-        with get_db_session() as conn:
-            rows = conn.execute(
-                """
-                SELECT * FROM lorebook_entries
-                WHERE lorebook_id = ?
-                ORDER BY id ASC
-                """,
-                (lorebook_id,),
-            ).fetchall()
-            return [self._entry_to_entity(row) for row in rows]
+        return self._fetch_all(
+            "SELECT * FROM lorebook_entries WHERE lorebook_id = ? ORDER BY id ASC",
+            (lorebook_id,),
+            self._entry_to_entity,
+        )
 
     def list_entries_for_lorebooks(self, lorebook_ids: list[int]) -> list[LorebookEntry]:
         if not lorebook_ids:
             return []
         placeholders = ",".join("?" for _ in lorebook_ids)
-        with get_db_session() as conn:
-            rows = conn.execute(
-                f"""
-                SELECT * FROM lorebook_entries
-                WHERE lorebook_id IN ({placeholders})
-                ORDER BY id ASC
-                """,
-                tuple(lorebook_ids),
-            ).fetchall()
-            return [self._entry_to_entity(row) for row in rows]
+        return self._fetch_all(
+            f"SELECT * FROM lorebook_entries WHERE lorebook_id IN ({placeholders}) ORDER BY id ASC",
+            tuple(lorebook_ids),
+            self._entry_to_entity,
+        )
 
     def delete_entry(self, entry_id: int) -> bool:
-        with get_db_session() as conn:
-            existing = conn.execute(
-                "SELECT id FROM lorebook_entries WHERE id = ?",
-                (entry_id,),
-            ).fetchone()
-            if existing is None:
-                return False
-            conn.execute("DELETE FROM lorebook_entries WHERE id = ?", (entry_id,))
-            return True
+        return self._delete_by_id("lorebook_entries", entry_id)
 
     @staticmethod
     def _to_entity(row: sqlite3.Row) -> Lorebook:

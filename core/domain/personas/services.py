@@ -4,6 +4,7 @@ from typing import Protocol
 
 from domain.personas.exceptions import InvalidPersonaDataError, PersonaInUseError
 from domain.personas.models import Gender, UserPersona
+from domain.validation import DomainValidator
 
 
 class VisionAnalysisProvider(Protocol):
@@ -22,22 +23,15 @@ class PersonaService:
         appearance: str = "",
         is_default: bool = False,
     ) -> UserPersona:
-        if isinstance(user_id, bool) or not isinstance(user_id, int) or user_id <= 0:
-            raise InvalidPersonaDataError("A valid positive user_id is required.")
-
-        cleaned_name = name.strip() if isinstance(name, str) else ""
-        if not cleaned_name:
-            raise InvalidPersonaDataError("Persona name must not be empty.")
+        DomainValidator.validate_positive_user_id(user_id, InvalidPersonaDataError)
+        cleaned_name = DomainValidator.validate_required_string(name, "Persona name", InvalidPersonaDataError)
 
         try:
             resolved_gender = Gender.resolve(gender)
         except ValueError as exc:
             raise InvalidPersonaDataError(str(exc)) from exc
 
-        cleaned_portrait = portrait_path.strip() if isinstance(portrait_path, str) else ""
-        if not cleaned_portrait:
-            raise InvalidPersonaDataError("Persona portrait_path must not be empty.")
-
+        cleaned_portrait = DomainValidator.validate_required_string(portrait_path, "Persona portrait_path", InvalidPersonaDataError)
         cleaned_desc = description.strip() if isinstance(description, str) else ""
         cleaned_appearance = appearance.strip() if isinstance(appearance, str) else ""
 

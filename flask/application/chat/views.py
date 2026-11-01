@@ -402,9 +402,7 @@ def recalculate_memory(session_id: int, memory_id: int):
         return redirect(url_for("chat.view_session", session_id=session_id))
 
     all_messages = chat_repo.get_messages(session_id, limit=None)
-    narrative_msgs = [
-        m for m in all_messages if m.role in (MessageRole.USER, MessageRole.CHARACTER)
-    ]
+    narrative_msgs = mem_service.filter_narrative_messages(all_messages)
     all_memories = mem_repo.list_for_session(session_id)
 
     chunk = mem_service.extract_messages_for_memory(

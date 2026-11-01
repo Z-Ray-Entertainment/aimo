@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from domain.lorebooks.exceptions import InvalidLorebookDataError
 from domain.lorebooks.models import Lorebook, LorebookEntry
+from domain.validation import DomainValidator
 from shared.utils import parse_tags, tags_overlap
 
 
@@ -13,15 +14,10 @@ class LorebookService:
         description: str = "",
         visibility: str = "private",
     ) -> Lorebook:
-        if isinstance(user_id, bool) or not isinstance(user_id, int) or user_id <= 0:
-            raise InvalidLorebookDataError("A valid positive user_id is required.")
-
-        cleaned_name = name.strip() if isinstance(name, str) else ""
-        if not cleaned_name:
-            raise InvalidLorebookDataError("Lorebook name must not be empty.")
-
+        DomainValidator.validate_positive_user_id(user_id, InvalidLorebookDataError)
+        cleaned_name = DomainValidator.validate_required_string(name, "Lorebook name", InvalidLorebookDataError)
         cleaned_desc = description.strip() if isinstance(description, str) else ""
-        cleaned_vis = "public" if isinstance(visibility, str) and visibility.strip().lower() == "public" else "private"
+        cleaned_vis = DomainValidator.normalize_visibility(visibility)
 
         return Lorebook(
             id=None,
@@ -39,16 +35,10 @@ class LorebookService:
         description: str,
         visibility: str | None = None,
     ) -> Lorebook:
-        cleaned_name = name.strip() if isinstance(name, str) else ""
-        if not cleaned_name:
-            raise InvalidLorebookDataError("Lorebook name must not be empty.")
-
-        lorebook.name = cleaned_name
+        lorebook.name = DomainValidator.validate_required_string(name, "Lorebook name", InvalidLorebookDataError)
         lorebook.description = description.strip() if isinstance(description, str) else ""
         if visibility is not None:
-            lorebook.visibility = (
-                "public" if isinstance(visibility, str) and visibility.strip().lower() == "public" else "private"
-            )
+            lorebook.visibility = DomainValidator.normalize_visibility(visibility)
         return lorebook
 
     def add_entry(

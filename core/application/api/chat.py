@@ -105,11 +105,7 @@ def _run_async_memory_extraction(session_id: int) -> None:
                 return
 
             all_messages = chat_repo.get_messages(session_id, limit=None)
-            narrative_msgs = [
-                m
-                for m in all_messages
-                if m.role in (MessageRole.USER, MessageRole.CHARACTER)
-            ]
+            narrative_msgs = mem_service.filter_narrative_messages(all_messages)
             existing_memories = mem_repo.list_for_session(session_id)
             last_mem_idx = max((m.message_idx for m in existing_memories), default=0)
             unsummarized = [m for m in narrative_msgs if m.message_idx > last_mem_idx]
@@ -1314,11 +1310,7 @@ def recalculate_memory(session_id: int, memory_id: int):
         return jsonify({"error": "Memory not found."}), 404
 
     all_messages = chat_repo.get_messages(session_id, limit=None)
-    narrative_msgs = [
-        m
-        for m in all_messages
-        if m.role in (MessageRole.USER, MessageRole.CHARACTER)
-    ]
+    narrative_msgs = mem_service.filter_narrative_messages(all_messages)
     all_memories = mem_repo.list_for_session(session_id)
 
     chunk = mem_service.extract_messages_for_memory(

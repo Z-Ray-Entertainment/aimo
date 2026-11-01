@@ -150,6 +150,16 @@ class MemoryService:
 
         return title, tags, summary, chat_title
 
+    @staticmethod
+    def filter_narrative_messages(messages: list[Any]) -> list[Any]:
+        """Extract narrative messages (USER and CHARACTER), filtering out system/metadata messages."""
+        return [
+            m
+            for m in messages
+            if getattr(m, "role", None) in ("user", "character")
+            or getattr(getattr(m, "role", None), "value", None) in ("user", "character")
+        ]
+
     def extract_messages_for_memory(
         self,
         memories: list[Memory],

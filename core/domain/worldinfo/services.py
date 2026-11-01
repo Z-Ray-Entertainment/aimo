@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 import random
 
+from domain.validation import DomainValidator
 from domain.worldinfo.exceptions import InvalidWorldInfoDataError
 from domain.worldinfo.models import Event, EventCooldownState, Location, WorldInfo
 from shared.utils import parse_tags
@@ -15,20 +16,11 @@ class WorldInfoService:
         visibility: str = "private",
         initial_location_id: int | None = None,
     ) -> WorldInfo:
-        if isinstance(user_id, bool) or not isinstance(user_id, int) or user_id <= 0:
-            raise InvalidWorldInfoDataError("A valid positive user_id is required.")
-
-        cleaned_name = name.strip() if isinstance(name, str) else ""
-        if not cleaned_name:
-            raise InvalidWorldInfoDataError("WorldInfo name must not be empty.")
-
+        DomainValidator.validate_positive_user_id(user_id, InvalidWorldInfoDataError)
+        cleaned_name = DomainValidator.validate_required_string(name, "WorldInfo name", InvalidWorldInfoDataError)
         cleaned_icon = icon.strip() if isinstance(icon, str) and icon.strip() else None
-        cleaned_vis = "public" if isinstance(visibility, str) and visibility.strip().lower() == "public" else "private"
-        cleaned_init_loc = (
-            initial_location_id
-            if isinstance(initial_location_id, int) and initial_location_id > 0
-            else None
-        )
+        cleaned_vis = DomainValidator.normalize_visibility(visibility)
+        cleaned_init_loc = DomainValidator.normalize_optional_id(initial_location_id)
 
         return WorldInfo(
             id=None,
@@ -48,22 +40,12 @@ class WorldInfoService:
         visibility: str | None = None,
         initial_location_id: int | None | object = ...,
     ) -> WorldInfo:
-        cleaned_name = name.strip() if isinstance(name, str) else ""
-        if not cleaned_name:
-            raise InvalidWorldInfoDataError("WorldInfo name must not be empty.")
-
-        worldinfo.name = cleaned_name
+        worldinfo.name = DomainValidator.validate_required_string(name, "WorldInfo name", InvalidWorldInfoDataError)
         worldinfo.icon = icon.strip() if isinstance(icon, str) and icon.strip() else None
         if visibility is not None:
-            worldinfo.visibility = (
-                "public" if isinstance(visibility, str) and visibility.strip().lower() == "public" else "private"
-            )
+            worldinfo.visibility = DomainValidator.normalize_visibility(visibility)
         if initial_location_id is not ...:
-            worldinfo.initial_location_id = (
-                initial_location_id
-                if isinstance(initial_location_id, int) and initial_location_id > 0
-                else None
-            )
+            worldinfo.initial_location_id = DomainValidator.normalize_optional_id(initial_location_id)
         return worldinfo
 
     def add_location(

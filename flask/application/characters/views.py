@@ -1,6 +1,7 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from application.auth.decorators import get_current_user, require_permission
+from application.character_helpers import save_and_persist_sprite
 from application.characters.forms import CharacterForm
 from domain.characters.models import Emotion
 from domain.characters.services import CharacterService
@@ -289,17 +290,16 @@ def upload_sprite(character_id: int):
     sprite_file = request.files.get("sprite_file")
     if sprite_file and sprite_file.filename:
         try:
-            temp_sp = char_service.add_sprite(character, emotion, "pending")
-            saved_path = storage.save_sprite(
-                character_id=character_id,
-                content=sprite_file.stream,
+            persisted = save_and_persist_sprite(
+                character=character,
+                emotion=emotion,
+                file_stream=sprite_file.stream,
                 filename=sprite_file.filename,
-                emotion=emotion.value,
-                variant=temp_sp.variant,
+                char_service=char_service,
+                char_repo=char_repo,
+                storage=storage,
             )
-            temp_sp.file_path = saved_path
-            char_repo.add_sprite(character_id, temp_sp)
-            flash(f"Sprite '{emotion.value}_{temp_sp.variant}' hochgeladen.", "success")
+            flash(f"Sprite '{emotion.value}_{persisted.variant}' hochgeladen.", "success")
         except AimoError as exc:
             flash(str(exc), "error")
 

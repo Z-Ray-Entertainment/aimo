@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
 
+from shared.request_parsers import RequestDataParser
+
 
 @dataclass
 class CharacterForm:
@@ -18,40 +20,18 @@ class CharacterForm:
 
     @classmethod
     def from_request(cls, form_data) -> "CharacterForm":
-        def _opt_int(val) -> int | None:
-            if val in (None, "", "0", 0):
-                return None
-            try:
-                return int(val)
-            except (ValueError, TypeError):
-                return None
-
-        def _int_list(key: str) -> list[int]:
-            raw_list = form_data.getlist(key) if hasattr(form_data, "getlist") else []
-            out = []
-            for x in raw_list:
-                try:
-                    out.append(int(x))
-                except (ValueError, TypeError):
-                    pass
-            return out
-
-        try:
-            init_rel = int(form_data.get("initial_relationship", 0))
-        except (ValueError, TypeError):
-            init_rel = 0
-
+        p = RequestDataParser
         return cls(
-            name=str(form_data.get("name", "")).strip(),
-            gender=str(form_data.get("gender", "female")).strip(),
-            visibility=str(form_data.get("visibility", "private")).strip(),
-            description=str(form_data.get("description", "")).strip(),
-            dialogue_examples_text=str(form_data.get("dialogue_examples", "")).strip(),
-            first_message=str(form_data.get("first_message", "")).strip(),
-            suggested_worldinfo_id=_opt_int(form_data.get("suggested_worldinfo_id")),
-            initial_location_id=_opt_int(form_data.get("initial_location_id")),
-            initial_relationship=max(-100, min(100, init_rel)),
-            linked_lorebook_ids=_int_list("linked_lorebook_ids"),
-            preferred_location_ids=_int_list("preferred_location_ids"),
-            disliked_location_ids=_int_list("disliked_location_ids"),
+            name=p.to_str(form_data, "name"),
+            gender=p.to_str(form_data, "gender", "female"),
+            visibility=p.to_str(form_data, "visibility", "private"),
+            description=p.to_str(form_data, "description"),
+            dialogue_examples_text=p.to_str(form_data, "dialogue_examples"),
+            first_message=p.to_str(form_data, "first_message"),
+            suggested_worldinfo_id=p.to_opt_int(form_data, "suggested_worldinfo_id"),
+            initial_location_id=p.to_opt_int(form_data, "initial_location_id"),
+            initial_relationship=p.to_int(form_data, "initial_relationship", default=0, min_val=-100, max_val=100),
+            linked_lorebook_ids=p.to_int_list(form_data, "linked_lorebook_ids"),
+            preferred_location_ids=p.to_int_list(form_data, "preferred_location_ids"),
+            disliked_location_ids=p.to_int_list(form_data, "disliked_location_ids"),
         )

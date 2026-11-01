@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from shared.request_parsers import RequestDataParser
+
 
 @dataclass
 class LorebookEntryForm:
@@ -8,9 +10,10 @@ class LorebookEntryForm:
     content: str = ""
 
     @classmethod
-    def from_request(cls, form_data: dict) -> "LorebookEntryForm":
+    def from_request(cls, form_data) -> "LorebookEntryForm":
+        p = RequestDataParser
         return cls(
-            title=str(form_data.get("title", "")).strip(),
-            tags=str(form_data.get("tags", "")).strip(),
-            content=str(form_data.get("content", "")).strip(),
+            title=p.to_str(form_data, "title"),
+            tags=p.to_str(form_data, "tags"),
+            content=p.to_str(form_data, "content"),
         )

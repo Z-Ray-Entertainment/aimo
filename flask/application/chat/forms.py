@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Any
 
+from shared.request_parsers import RequestDataParser
+
 
 @dataclass
 class StartChatForm:
@@ -10,22 +12,11 @@ class StartChatForm:
 
     @classmethod
     def from_request(cls, form_data: Any) -> "StartChatForm":
-        def _opt_int(key: str) -> int | None:
-            val = str(form_data.get(key, "")).strip()
-            if not val or val == "none":
-                return None
-            try:
-                return int(val)
-            except ValueError:
-                return None
-
-        persona_id = _opt_int("persona_id") or 0
-        worldinfo_id = _opt_int("worldinfo_id")
-        title = str(form_data.get("title", "")).strip()
+        p = RequestDataParser
         return cls(
-            persona_id=persona_id,
-            worldinfo_id=worldinfo_id,
-            title=title,
+            persona_id=p.to_opt_int(form_data, "persona_id") or 0,
+            worldinfo_id=p.to_opt_int(form_data, "worldinfo_id"),
+            title=p.to_str(form_data, "title"),
         )
 
 
@@ -37,8 +28,9 @@ class MemoryEditForm:
 
     @classmethod
     def from_request(cls, form_data: Any) -> "MemoryEditForm":
+        p = RequestDataParser
         return cls(
-            title=str(form_data.get("title", "")).strip(),
-            tags=str(form_data.get("tags", "")).strip(),
-            summary=str(form_data.get("summary", "")).strip(),
+            title=p.to_str(form_data, "title"),
+            tags=p.to_str(form_data, "tags"),
+            summary=p.to_str(form_data, "summary"),
         )

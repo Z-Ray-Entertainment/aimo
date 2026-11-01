@@ -5,6 +5,7 @@ from shared.exceptions import (
     DomainError,
     InfrastructureError,
 )
+from shared.request_parsers import RequestDataParser
 from shared.utils import (
     STOPWORDS,
     filter_stopwords,
@@ -23,6 +24,7 @@ __all__ = [
     "DATA_DIR",
     "DomainError",
     "InfrastructureError",
+    "RequestDataParser",
     "STOPWORDS",
     "UPLOAD_DIR",
     "filter_stopwords",

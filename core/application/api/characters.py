@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 from application.api.auth import get_current_user, require_auth, require_permission
+from application.character_helpers import save_and_persist_sprite
 from domain.characters.models import Emotion, Gender
 from domain.characters.services import CharacterService
 from domain.permissions.models import FunctionPermission
@@ -183,16 +184,15 @@ def upload_sprite(character_id: int):
         return jsonify({"error": "No sprite file provided."}), 400
 
     try:
-        temp_sprite = char_service.add_sprite(character, emotion, "pending")
-        saved_path = storage.save_sprite(
-            character_id=character_id,
-            content=sprite_file.stream,
+        persisted = save_and_persist_sprite(
+            character=character,
+            emotion=emotion,
+            file_stream=sprite_file.stream,
             filename=sprite_file.filename,
-            emotion=emotion.value,
-            variant=temp_sprite.variant,
+            char_service=char_service,
+            char_repo=char_repo,
+            storage=storage,
         )
-        temp_sprite.file_path = saved_path
-        persisted = char_repo.add_sprite(character_id, temp_sprite)
         return jsonify(
             {
                 "id": persisted.id,

@@ -3,31 +3,20 @@ import sqlite3
 
 from domain.memories.models import Memory
 from infrastructure.database import get_db_session
+from infrastructure.repositories.base import BaseRepository
 from infrastructure.repositories.orm_models import format_datetime, parse_datetime
 
 
-class MemoryRepository:
+class MemoryRepository(BaseRepository[Memory]):
     def list_for_session(self, session_id: int) -> list[Memory]:
-        with get_db_session() as conn:
-            rows = conn.execute(
-                """
-                SELECT * FROM memories
-                WHERE chat_session_id = ?
-                ORDER BY message_idx ASC, id ASC
-                """,
-                (session_id,),
-            ).fetchall()
-            return [self._to_entity(row) for row in rows]
+        return self._fetch_all(
+            "SELECT * FROM memories WHERE chat_session_id = ? ORDER BY message_idx ASC, id ASC",
+            (session_id,),
+            self._to_entity,
+        )
 
     def get_by_id(self, memory_id: int) -> Memory | None:
-        with get_db_session() as conn:
-            row = conn.execute(
-                "SELECT * FROM memories WHERE id = ?",
-                (memory_id,),
-            ).fetchone()
-            if row is None:
-                return None
-            return self._to_entity(row)
+        return self._get_by_id("memories", memory_id, self._to_entity)
 
     def add_memory(self, memory: Memory) -> Memory:
         created_str = format_datetime(memory.created_at)
@@ -89,15 +78,7 @@ class MemoryRepository:
             return self._to_entity(row)
 
     def delete_memory(self, memory_id: int) -> bool:
-        with get_db_session() as conn:
-            existing = conn.execute(
-                "SELECT id FROM memories WHERE id = ?",
-                (memory_id,),
-            ).fetchone()
-            if existing is None:
-                return False
-            conn.execute("DELETE FROM memories WHERE id = ?", (memory_id,))
-            return True
+        return self._delete_by_id("memories", memory_id)
 
     def delete_after_idx(self, session_id: int, message_idx: int) -> int:
         with get_db_session() as conn:
