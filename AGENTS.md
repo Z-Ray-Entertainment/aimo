@@ -188,6 +188,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 - **CSS-First for Layout & Animations:** Layout wrapping (`flex-wrap: wrap`, CSS Grid with `repeat(auto-fit, minmax(...))`, media queries) and visual animations (transitions, `@keyframes`, opacity, transforms, hover states) **must strictly be implemented with pure CSS**. JavaScript must only be used if a layout or animation behavior is technically impossible to achieve via CSS alone.
 - **Reusable UI Components First:** Für JEDES UI-Element (Buttons, Modals, Badges, Dropdowns, Cards, Formularfelder, Icons etc.) müssen immer nach Möglichkeit wiederverwendbare, einheitliche Komponenten (gemeinsame CSS-Klassen, Jinja2-Macros wie in `templates/macros/`, standardisierte HTML/SVG-Snippets) geschrieben und konsequent wiederverwendet werden, statt ad-hoc Insellösungen oder duplizierte Stile neu zu implementieren. Bestehende Basis-Komponenten (z. B. `.aimo-btn`, `.chat-input-btn`, `.modal-backdrop`, `.aimo-card-tile`) müssen stets bevorzugt und erweitert werden.
 - **Synchronous Documentation Maintenance (IST-Zustand):** Bei JEDEM neuen Feature und bei JEDER Änderung bestehender Features oder UI-Abläufe **muss** die Endanwender-Dokumentation in `docs/` (z. B. `README.md`, `lorebooks.md`, `characters.md`, `worldinfo.md`, `hub.md`, `chat.md` etc.) im selben Arbeitsschritt mitgeführt und aktualisiert werden. Die Dokumentation beschreibt dabei **immer ausschließlich den aktuellen IST-Zustand** (keine Changelogs, keine Vorher-/Nachher-Vergleiche und keine Erläuterungen darüber, was früher einmal war).
+- **Benutzerorientiertes Handbuch (Keine Entwickler-Details):** Die Dokumentation in `docs/` dient als reines **Benutzer-Handbuch für Endanwender der Software**, die im Zweifel keinerlei technisches Hintergrundwissen besitzen. Technische Implementierungsdetails (wie CSS-Keyframes, Klassennamen, HTTP-Statuscodes, interne API-Endpunkte, Dateipfade oder Architekturkonzepte) gehören **nicht** in die Benutzerdokumentation. Beschrieben wird ausschließlich das Verhalten aus Anwendersicht: Was sieht der Benutzer, was bedeuten Anzeigen und Farben, welche Aktionen kann er ausführen und wie bedient er die Oberfläche.
 
 ---
 
@@ -209,6 +210,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 - ❌ Use JavaScript for layout wrapping, element dimensions, or animations when CSS (Flexbox, Grid, `@keyframes`, transitions) can achieve the result.
 - ❌ Ad-hoc duplizierte UI-Elemente oder inline neu erfundene Buttons/Komponenten bauen, statt auf bestehende, wiederverwendbare UI-Klassen und Macros zurückzugreifen.
 - ❌ Leave documentation in `docs/` outdated when modifying or adding features, or add historical changelogs into `docs/` instead of maintaining the pure current state ("IST-Zustand").
+- ❌ Overload end-user documentation in `docs/` with developer implementation details, CSS keyframes, HTTP status codes, or internal backend architecture concepts (docs/ serves strictly as an accessible user manual for non-technical users).
 - ❌ Create unsolicited automated tests.
 - ❌ Configure any external database (strictly SQLite).
 

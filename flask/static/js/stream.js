@@ -304,10 +304,16 @@ class AimoChatStream {
         if (thinkingUI?.row) thinkingUI.row.remove();
         if (userRow) userRow.remove();
         if (tempGalleryTile) tempGalleryTile.remove();
-        if (window.showToastError) {
-          window.showToastError(prepData.error || "Fehler beim Senden der Nachricht.", "Ollama-Fehler");
+        
+        const errStr = String(prepData.error || "");
+        if (prepResp.status === 504 || prepData.is_timeout || /timeout|zeitüberschreitung/i.test(errStr)) {
+          window.showToastWarning ? window.showToastWarning(errStr || "Zeitüberschreitung beim Senden.", "Timeout") : alert(errStr);
+        } else if (prepResp.status === 502 || prepData.is_backend_down || /core service unreachable|backend/i.test(errStr)) {
+          window.showToastError ? window.showToastError("Verbindung zum Backend (aimo-core) verloren.", "Backend-Verbindungsfehler") : alert("Verbindung zum Backend verloren.");
+        } else if (/ollama|llm|provider/i.test(errStr)) {
+          window.showToastError ? window.showToastError(errStr || "Verbindung zu Ollama (bzw. LLMProvider) verloren.", "Ollama-Verbindungsfehler") : alert(errStr);
         } else {
-          alert(prepData.error || "Fehler beim Senden der Nachricht.");
+          window.showToastError ? window.showToastError(errStr || "Fehler beim Senden der Nachricht.", "Fehler") : alert(errStr);
         }
         return;
       }
@@ -317,6 +323,15 @@ class AimoChatStream {
       }
 
       await this.startSSEStream(messagesList, thinkingUI);
+    } catch (fetchErr) {
+      if (thinkingUI?.row) thinkingUI.row.remove();
+      if (userRow) userRow.remove();
+      if (tempGalleryTile) tempGalleryTile.remove();
+      if (window.showToastError) {
+        window.showToastError("Verbindung zum Backend (aimo-core) verloren.", "Backend-Verbindungsfehler");
+      } else {
+        alert("Verbindung zum Backend verloren: " + fetchErr.message);
+      }
     } finally {
       this.isSending = false;
       this.activeThinkingUI = null;
@@ -495,10 +510,26 @@ class AimoChatStream {
           ui.row.remove();
         }
         this.activeThinkingUI = null;
-        if (window.showToastError) {
-          window.showToastError(errMsg || "Verbindung zu Ollama unterbrochen.", title || "Ollama-Verbindungsfehler");
+
+        const errStr = String(errMsg || "");
+        if (/timeout|zeitüberschreitung/i.test(errStr)) {
+          if (window.showToastWarning) {
+            window.showToastWarning(errStr, "Timeout");
+          } else {
+            alert("Timeout: " + errStr);
+          }
+        } else if (/core service unreachable|backend/i.test(errStr)) {
+          if (window.showToastError) {
+            window.showToastError("Verbindung zum Backend (aimo-core) verloren.", "Backend-Verbindungsfehler");
+          } else {
+            alert("Backend-Verbindungsfehler");
+          }
         } else {
-          alert(`Ollama-Verbindungsfehler: ${errMsg}`);
+          if (window.showToastError) {
+            window.showToastError(errStr || "Verbindung zu Ollama (bzw. LLMProvider) verloren.", title || "Ollama-Verbindungsfehler");
+          } else {
+            alert(`Ollama-Verbindungsfehler: ${errStr}`);
+          }
         }
         resolve();
       };
@@ -854,10 +885,13 @@ class AimoChatStream {
       });
       const data = await resp.json();
       if (!resp.ok) {
-        if (window.showToastError) {
-          window.showToastError(data.error || "Fehler beim Neu-Generieren.", "Ollama-Fehler");
+        const errStr = String(data.error || "");
+        if (resp.status === 504 || data.is_timeout || /timeout|zeitüberschreitung/i.test(errStr)) {
+          window.showToastWarning ? window.showToastWarning(errStr || "Zeitüberschreitung beim Neu-Generieren.", "Timeout") : alert(errStr);
+        } else if (resp.status === 502 || data.is_backend_down || /core service unreachable|backend/i.test(errStr)) {
+          window.showToastError ? window.showToastError("Verbindung zum Backend (aimo-core) verloren.", "Backend-Verbindungsfehler") : alert("Backend-Verbindungsfehler");
         } else {
-          alert(data.error || "Fehler beim Neu-Generieren.");
+          window.showToastError ? window.showToastError(errStr || "Fehler beim Neu-Generieren.", "Ollama-Fehler") : alert(errStr);
         }
         return;
       }
@@ -873,10 +907,10 @@ class AimoChatStream {
       await this.startSSEStream(messagesList, thinkingUI);
     } catch (err) {
       if (thinkingUI?.row) thinkingUI.row.remove();
-      if (window.showToastError) {
-        window.showToastError(`Verbindungsfehler: ${err.message}`, "Ollama-Verbindungsfehler");
+      if (/failed to fetch|network/i.test(err.message)) {
+        window.showToastError ? window.showToastError("Verbindung zum Backend (aimo-core) verloren.", "Backend-Verbindungsfehler") : alert("Backend-Verbindungsfehler");
       } else {
-        alert(`Verbindungsfehler: ${err.message}`);
+        window.showToastError ? window.showToastError(`Verbindungsfehler: ${err.message}`, "Ollama-Verbindungsfehler") : alert(`Verbindungsfehler: ${err.message}`);
       }
     } finally {
       this.isSending = false;

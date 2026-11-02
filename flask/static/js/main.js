@@ -32,7 +32,7 @@ window.extractPersonaVisionFeatures = async function extractPersonaVisionFeature
   const hasPersonaId = isEdit && personaIdInput && personaIdInput.value.trim() !== "";
 
   if (!hasFile && !hasPreuploaded && !hasPersonaId) {
-    alert("Bitte wähle zuerst ein Porträtbild aus, um die Bild-Features zu extrahieren.");
+    window.showToastWarning("Bitte wähle zuerst ein Porträtbild aus, um die Bild-Features zu extrahieren.");
     return;
   }
 
@@ -81,7 +81,7 @@ window.extractPersonaVisionFeatures = async function extractPersonaVisionFeature
         statusEl.style.color = "#E74C3C";
         statusEl.textContent = `⚠️ ${errMsg}`;
       } else {
-        alert(errMsg);
+        window.showToastError(errMsg, "Bildanalyse-Fehler");
       }
     }
   } catch (_) {
@@ -89,7 +89,7 @@ window.extractPersonaVisionFeatures = async function extractPersonaVisionFeature
       statusEl.style.color = "#E74C3C";
       statusEl.textContent = "⚠️ Verbindungsfehler bei der Bildanalyse.";
     } else {
-      alert("Verbindungsfehler bei der Bildanalyse.");
+      window.showToastError("Verbindungsfehler bei der Bildanalyse.", "Verbindungsfehler");
     }
   } finally {
     window.setPersonaEditorLocked(false);
@@ -165,75 +165,182 @@ window.openEditPersonaFromBtn = function openEditPersonaFromBtn(btn) {
   editBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
 };
 
-window.showAimoToast = function showAimoToast(notif) {
+window.showToast = function showToast(options) {
   const container = document.getElementById("aimo-toast-container");
-  if (!container || !notif) return;
+  if (!container || !options) return null;
+
+  const config = typeof options === "string" ? { message: options } : options;
+  let type = String(config.type || "info").toLowerCase();
+  if (type === "danger") type = "error";
+
+  const defaultTitles = {
+    success: "Erfolg",
+    warning: "Warnung",
+    error: "Fehler",
+    info: "Hinweis",
+  };
+
+  const defaultIcons = {
+    success: "✓",
+    warning: "⚠️",
+    error: "✕",
+    info: "ℹ️",
+  };
 
   const toast = document.createElement("div");
-  toast.className = "aimo-toast aimo-frame";
+  toast.className = `aimo-toast toast-${type} aimo-frame`;
+  toast.setAttribute("role", type === "error" ? "alert" : "status");
 
+  // Media element: image takes precedence over icon
+  let mediaHtml = "";
+  if (config.image) {
+    mediaHtml = `<img src="${config.image}" alt="" class="aimo-toast-image" onerror="this.src='/static/img/cover.svg'">`;
+  } else {
+    const iconText = config.icon !== undefined ? config.icon : (defaultIcons[type] || "ℹ️");
+    if (iconText) {
+      mediaHtml = `<div class="aimo-toast-icon" aria-hidden="true">${iconText}</div>`;
+    }
+  }
+
+  const titleText = config.title !== undefined ? config.title : (defaultTitles[type] || "");
+  const messageText = config.message || "";
+
+  // Support single 'button' or array of 'buttons'
+  const buttonConfigs = [];
+  if (config.button) buttonConfigs.push(config.button);
+  if (Array.isArray(config.buttons)) buttonConfigs.push(...config.buttons);
+
+  let actionsHtml = "";
+  if (buttonConfigs.length > 0) {
+    actionsHtml = `<div class="aimo-toast-actions"></div>`;
+  }
+
+  toast.innerHTML = `
+    ${mediaHtml}
+    <div class="aimo-toast-body">
+      ${titleText ? `<div class="aimo-toast-title"></div>` : ""}
+      <div class="aimo-toast-message"></div>
+      ${actionsHtml}
+    </div>
+    <button type="button" class="aimo-toast-close" title="Schließen" aria-label="Schließen">✕</button>
+  `;
+
+  if (titleText) {
+    const titleEl = toast.querySelector(".aimo-toast-title");
+    if (titleEl) titleEl.textContent = titleText;
+  }
+
+  const msgEl = toast.querySelector(".aimo-toast-message");
+  if (msgEl) msgEl.textContent = messageText;
+
+  let isClosing = false;
+  const removeToast = () => {
+    if (isClosing) return;
+    isClosing = true;
+    toast.classList.add("closing");
+    setTimeout(() => {
+      try {
+        toast.remove();
+      } catch (_) {}
+    }, 240);
+  };
+
+  if (buttonConfigs.length > 0) {
+    const actionsContainer = toast.querySelector(".aimo-toast-actions");
+    buttonConfigs.forEach((btnCfg) => {
+      if (!btnCfg || !btnCfg.text) return;
+      const btnEl = document.createElement(btnCfg.href ? "a" : "button");
+      btnEl.className = `aimo-btn btn aimo-toast-btn ${btnCfg.className || ""}`;
+      btnEl.textContent = btnCfg.text;
+      if (btnCfg.href) {
+        btnEl.setAttribute("href", btnCfg.href);
+      } else {
+        btnEl.setAttribute("type", "button");
+      }
+      btnEl.addEventListener("click", (evt) => {
+        if (typeof btnCfg.onClick === "function") {
+          btnCfg.onClick(toast, evt);
+        }
+        if (btnCfg.autoClose !== false && !btnCfg.href) {
+          removeToast();
+        }
+      });
+      actionsContainer.appendChild(btnEl);
+    });
+  }
+
+  toast.querySelector(".aimo-toast-close")?.addEventListener("click", removeToast);
+  container.appendChild(toast);
+
+  const duration = config.duration !== undefined
+    ? config.duration
+    : (type === "error" ? 9000 : type === "warning" ? 7000 : 5000);
+
+  if (duration > 0) {
+    setTimeout(removeToast, duration);
+  }
+
+  return toast;
+};
+
+window.showToastSuccess = function showToastSuccess(message, title = "Erfolg", duration = 5000) {
+  return window.showToast({ type: "success", title, message, duration });
+};
+
+window.showToastWarning = function showToastWarning(message, title = "Warnung", duration = 7000) {
+  return window.showToast({ type: "warning", title, message, duration });
+};
+
+window.showToastError = function showToastError(message, title = "Fehler", duration = 9000) {
+  return window.showToast({ type: "error", title, message, duration });
+};
+
+window.showToastInfo = function showToastInfo(message, title = "Hinweis", duration = 6000) {
+  return window.showToast({ type: "info", title, message, duration });
+};
+
+window.showAimoToast = function showAimoToast(notif) {
+  if (!notif) return;
   const portraitUrl = notif.character_portrait ? `/uploads/${notif.character_portrait}` : "/static/img/cover.svg";
   const rawPreview = String(notif.localized_content || "").replace(/\s+/g, " ").trim();
   const preview = rawPreview.length > 110 ? `${rawPreview.slice(0, 110)}…` : rawPreview;
 
-  toast.innerHTML = `
-    <img src="${portraitUrl}" alt="" class="aimo-toast-avatar" onerror="this.src='/static/img/cover.svg'">
-    <div class="aimo-toast-body">
-      <div class="aimo-toast-title">💬 ${notif.character_name || "Charakter"} hat geantwortet</div>
-      <div class="aimo-toast-preview"></div>
-      <div class="aimo-toast-actions">
-        <a href="/chat/session/${notif.session_id}" class="btn" style="padding: 0.25rem 0.65rem; font-size: 0.78rem;">Zum Chat →</a>
-      </div>
-    </div>
-    <button type="button" class="aimo-toast-close" title="Schließen">✕</button>
-  `;
-
-  const previewEl = toast.querySelector(".aimo-toast-preview");
-  if (previewEl) previewEl.textContent = preview;
-
-  const removeToast = () => {
-    toast.classList.add("closing");
-    setTimeout(() => toast.remove(), 220);
-  };
-
-  toast.querySelector(".aimo-toast-close")?.addEventListener("click", removeToast);
-  container.appendChild(toast);
-
-  setTimeout(removeToast, 9000);
+  return window.showToast({
+    type: "info",
+    title: `💬 ${notif.character_name || "Charakter"} hat geantwortet`,
+    message: preview,
+    image: portraitUrl,
+    button: {
+      text: "Zum Chat →",
+      href: `/chat/session/${notif.session_id}`,
+    },
+    duration: 9000,
+  });
 };
 
-window.showToastError = function showToastError(message, title) {
-  const container = document.getElementById("aimo-toast-container");
-  if (!container) return;
+function triggerFlashedMessages() {
+  const flashedDataEl = document.getElementById("aimo-flashed-data");
+  if (!flashedDataEl) return;
+  try {
+    const flashedMessages = JSON.parse(flashedDataEl.textContent || "[]");
+    if (Array.isArray(flashedMessages)) {
+      flashedMessages.forEach(([category, message]) => {
+        window.showToast({
+          type: category || "info",
+          message: message,
+        });
+      });
+    }
+  } catch (e) {
+    console.error("Failed to parse flashed messages:", e);
+  }
+}
 
-  const toast = document.createElement("div");
-  toast.className = "aimo-toast toast-error aimo-frame";
-
-  toast.innerHTML = `
-    <div style="font-size: 1.4rem; line-height: 1; flex-shrink: 0; padding-top: 0.15rem;" aria-hidden="true">⚠️</div>
-    <div class="aimo-toast-body">
-      <div class="aimo-toast-title"></div>
-      <div class="aimo-toast-preview" style="-webkit-line-clamp: 4;"></div>
-    </div>
-    <button type="button" class="aimo-toast-close" title="Schließen">✕</button>
-  `;
-
-  const titleEl = toast.querySelector(".aimo-toast-title");
-  if (titleEl) titleEl.textContent = title || "Ollama-Verbindungsfehler";
-
-  const previewEl = toast.querySelector(".aimo-toast-preview");
-  if (previewEl) previewEl.textContent = message || "Verbindung zu Ollama unterbrochen.";
-
-  const removeToast = () => {
-    toast.classList.add("closing");
-    setTimeout(() => toast.remove(), 220);
-  };
-
-  toast.querySelector(".aimo-toast-close")?.addEventListener("click", removeToast);
-  container.appendChild(toast);
-
-  setTimeout(removeToast, 9000);
-};
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", triggerFlashedMessages);
+} else {
+  triggerFlashedMessages();
+}
 
 const AIMO_LANGUAGES = [
   { code: "de", flag: "🇩🇪", label: "Deutsch" },
@@ -551,7 +658,7 @@ function initEditorI18nFields() {
     translateBtn.addEventListener("click", async () => {
       const sourceText = (inputEl.value || variants[originLang]?.content || "").trim();
       if (!sourceText) {
-        alert("Bitte zuerst einen Text eingeben, der übersetzt werden soll.");
+        window.showToastWarning("Bitte zuerst einen Text eingeben, der übersetzt werden soll.");
         return;
       }
       const targetLang = langSelect.value;
@@ -593,10 +700,10 @@ function initEditorI18nFields() {
           syncHiddenJson();
           renderFlags();
         } else {
-          alert(data.error || "Übersetzung fehlgeschlagen.");
+          window.showToastError(data.error || "Übersetzung fehlgeschlagen.", "Übersetzungsfehler");
         }
       } catch (_) {
-        alert("Fehler bei der Verbindung zum Übersetzungsdienst.");
+        window.showToastError("Fehler bei der Verbindung zum Übersetzungsdienst.", "Verbindungsfehler");
       } finally {
         translateBtn.disabled = false;
         translateBtn.innerHTML = origHtml;

@@ -1447,20 +1447,7 @@ body.chat-page {
   z-index: 0;
 }
 
-/* Flash messages */
-.flash-list {
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
 
-.flash-msg {
-  padding: 0.65rem 1rem;
-  border-radius: 8px;
-  border: 1px solid var(--gold-accent);
-  background: rgba(55, 36, 22, 0.95);
-}
 
 /* Chat Markdown Formatting */
 .chat-markdown {
@@ -1576,7 +1563,7 @@ body.chat-page {
   }
 }
 
-/* On-Site Toast Notifications */
+/* Unified Toast Notifications (Rechteckige schwebende Banderolen) */
 .toast-container {
   position: fixed;
   bottom: 1.5rem;
@@ -1585,47 +1572,106 @@ body.chat-page {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  max-width: 370px;
-  width: calc(100vw - 2rem);
+  max-width: 420px;
+  width: calc(100vw - 3rem);
   pointer-events: none;
 }
 
 .aimo-toast {
   pointer-events: auto;
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  padding: 0.85rem 1rem;
-  border: 2px solid var(--gold-accent);
-  background: rgba(26, 18, 13, 0.97);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.8), 0 0 14px var(--gold-glow);
-  animation: aimoToastSlideIn 0.25s ease-out;
-  transition: opacity 0.2s, transform 0.2s;
+  padding: 0.85rem 1rem 0.85rem 1.25rem;
+  border-radius: 3px;
+  background: rgba(22, 15, 10, 0.98);
+  border: 1px solid var(--border-wood-dark);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.85), 0 0 14px rgba(0, 0, 0, 0.5);
+  animation: aimoToastSlideInFromRight 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+/* Senkrechter Farbbalken am LINKEN Rand */
+.aimo-toast::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 6px;
+  background-color: var(--toast-stripe-color, var(--gold-accent));
+  box-shadow: 1px 0 6px var(--toast-stripe-glow, rgba(0, 0, 0, 0.4));
+  border-radius: 2px 0 0 2px;
 }
 
 .aimo-toast.closing {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateX(calc(100% + 2rem));
+}
+
+/* Farbvarianten */
+.aimo-toast.toast-success {
+  --toast-stripe-color: #2ECC71;
+  --toast-stripe-glow: rgba(46, 204, 113, 0.45);
+  border-color: rgba(46, 204, 113, 0.35);
+}
+
+.aimo-toast.toast-success .aimo-toast-title {
+  color: #2ECC71;
+}
+
+.aimo-toast.toast-warning {
+  --toast-stripe-color: #F1C40F;
+  --toast-stripe-glow: rgba(241, 196, 15, 0.45);
+  border-color: rgba(241, 196, 15, 0.35);
+}
+
+.aimo-toast.toast-warning .aimo-toast-title {
+  color: #F1C40F;
 }
 
 .aimo-toast.toast-error {
-  border-color: #E74C3C;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.8), 0 0 14px rgba(231, 76, 60, 0.45);
+  --toast-stripe-color: #E74C3C;
+  --toast-stripe-glow: rgba(231, 76, 60, 0.45);
+  border-color: rgba(231, 76, 60, 0.35);
 }
 
 .aimo-toast.toast-error .aimo-toast-title {
   color: #E74C3C;
 }
 
+.aimo-toast.toast-info {
+  --toast-stripe-color: var(--gold-accent);
+  --toast-stripe-glow: var(--gold-glow);
+  border-color: var(--gold-accent);
+}
+
+.aimo-toast.toast-info .aimo-toast-title {
+  color: var(--gold-accent);
+}
+
+/* Banderolen-Komponenten: Bild / Avatar */
+.aimo-toast-image,
 .aimo-toast-avatar {
   width: 48px;
   height: 48px;
-  border-radius: 10px;
+  border-radius: 4px;
   object-fit: cover;
-  border: 1px solid var(--gold-accent);
+  border: 1px solid var(--border-wood-dark);
   flex-shrink: 0;
 }
 
+/* Icon (wenn kein Bild vorhanden) */
+.aimo-toast-icon {
+  font-size: 1.3rem;
+  line-height: 1.1;
+  flex-shrink: 0;
+  padding-top: 0.1rem;
+}
+
+/* Body */
 .aimo-toast-body {
   flex: 1;
   min-width: 0;
@@ -1634,21 +1680,41 @@ body.chat-page {
 .aimo-toast-title {
   font-size: 0.88rem;
   font-weight: 700;
-  color: var(--gold-accent);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
+  color: var(--toast-title-color, var(--gold-accent));
 }
 
+.aimo-toast-message,
 .aimo-toast-preview {
   font-size: 0.82rem;
   color: var(--text-main);
-  margin-bottom: 0.5rem;
   line-height: 1.35;
+  word-break: break-word;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
+/* Actions / Buttons */
+.aimo-toast-actions {
+  margin-top: 0.45rem;
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.aimo-toast-btn {
+  padding: 0.25rem 0.65rem;
+  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* Close Button */
 .aimo-toast-close {
   background: none;
   border: none;
@@ -1656,21 +1722,25 @@ body.chat-page {
   cursor: pointer;
   font-size: 0.95rem;
   line-height: 1;
-  padding: 0.1rem 0.25rem;
+  padding: 0.15rem 0.3rem;
+  margin-left: 0.25rem;
+  flex-shrink: 0;
+  transition: color 0.15s;
 }
 
 .aimo-toast-close:hover {
-  color: var(--gold-accent);
+  color: #fff;
 }
 
-@keyframes aimoToastSlideIn {
+/* Animation: Schwebt von RECHTS in das Bild */
+@keyframes aimoToastSlideInFromRight {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateX(calc(100% + 2rem));
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 

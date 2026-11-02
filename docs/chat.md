@@ -94,4 +94,14 @@ Because modern LLMs write with the greatest depth and nuance in English while th
   - **Fork Chat:** Clones the conversation from this exact point forward into a branching timeline.
   - **Read Aloud:** Synthesizes and plays back the message via Voice AI.
 
+---
+
+## 📡 Connection Status & Notifications
+
+While you chat, floating notification banderoles in the bottom-right corner keep you informed about system status without disrupting your roleplay:
+- **Connection Issues:** If the connection to the application server is lost, a red-striped banderole informs you (*„Verbindung zum Backend verloren“*).
+- **AI Service Issues:** If the AI text model is unreachable or paused, a red-striped banderole alerts you (*„Verbindung zu Ollama verloren“*).
+- **Timeouts:** If a reply takes unusually long, a yellow-striped warning banderole indicates a timeout.
+- **Replies from Other Chats:** When another character finishes generating a response while you are looking at a different chat, a notification banderole slides in with their portrait and a *„Zum Chat →“* button to switch over immediately.
+
 Continue to: [**Administration & Settings →**](admin.md)

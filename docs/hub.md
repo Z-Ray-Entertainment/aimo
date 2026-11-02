@@ -47,4 +47,18 @@ Overview of all world settings.
 - First tile (`+`) to create a new world.
 - Tiles display an icon symbol (`icon`), title, and count of included locations. Clicking a tile opens the [WorldInfo Editor](worldinfo.md).
 
+---
+
+## 🔔 System Notifications & Floating Banderoles
+
+System notifications, confirmations, and alerts appear as floating rectangular banderoles in the bottom-right corner of the screen:
+- **Appearance:** New notices slide smoothly into view from the right side and stay parked in the lower-right area with comfortable spacing from the edge of the screen.
+- **Color Stripe on the Left:** A vertical colored stripe on the left edge of each banderole immediately indicates the type of notification:
+  - 🟢 **Green (Success):** Confirms that an action was successful — such as saving or updating a character, world, place, or lorebook.
+  - 🟡 **Yellow (Warning):** Alerts you to timeouts, missing inputs, or temporary delays.
+  - 🔴 **Red (Error):** Informs you when a connection problem occurred (e.g. if the server or AI service is unreachable) or an action failed.
+  - 🟡/Gold **Gold (Info & Replies):** Shows general information or lets you know that a character has replied to you in another conversation.
+- **Portraits & Action Buttons:** Character notifications can include the character's portrait image and a direct *„Zum Chat →“* button to jump straight into the dialogue.
+- **Closing:** Banderoles close automatically after a few seconds, or you can dismiss them immediately by clicking the close button (`✕`) in the upper-right corner.
+
 Continue to: [**Player Personas →**](personas.md)

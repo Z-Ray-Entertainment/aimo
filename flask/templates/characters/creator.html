@@ -687,8 +687,9 @@ document.getElementById("sparkle-improve-btn")?.addEventListener("click", async 
     if (resp.ok && data.description) {
       textarea.value = data.description;
       textarea.dispatchEvent(new Event("input", { bubbles: true }));
+      if (window.showToastSuccess) window.showToastSuccess("Beschreibung erfolgreich generiert.");
     } else {
-      alert(data.error || "Konnte Beschreibung nicht generieren.");
+      if (window.showToastError) window.showToastError(data.error || "Konnte Beschreibung nicht generieren."); else alert(data.error || "Konnte Beschreibung nicht generieren.");
     }
   } finally {
     btn.disabled = false;
@@ -724,7 +725,7 @@ document.getElementById("extract-appearance-btn")?.addEventListener("click", asy
           body: JSON.stringify({ character_id: {{ character.id }} }),
         });
       {% else %}
-        alert("Bitte wähle zuerst ein Porträtbild aus.");
+        if (window.showToastWarning) window.showToastWarning("Bitte wähle zuerst ein Porträtbild aus."); else alert("Bitte wähle zuerst ein Porträtbild aus.");
         return;
       {% endif %}
     }
@@ -733,11 +734,12 @@ document.getElementById("extract-appearance-btn")?.addEventListener("click", asy
     if (resp.ok && data.appearance) {
       textarea.value = data.appearance;
       textarea.dispatchEvent(new Event("input", { bubbles: true }));
+      if (window.showToastSuccess) window.showToastSuccess("Aussehen erfolgreich aus Bild extrahiert.");
     } else {
-      alert(data.error || "Aussehen konnte nicht extrahiert werden.");
+      if (window.showToastError) window.showToastError(data.error || "Aussehen konnte nicht extrahiert werden."); else alert(data.error || "Aussehen konnte nicht extrahiert werden.");
     }
   } catch (err) {
-    alert("Fehler bei der Bildanalyse: " + err);
+    if (window.showToastError) window.showToastError("Fehler bei der Bildanalyse: " + err); else alert("Fehler bei der Bildanalyse: " + err);
   } finally {
     btn.disabled = false;
     btn.innerHTML = origHtml;
@@ -985,7 +987,7 @@ document.getElementById("extract-appearance-btn")?.addEventListener("click", asy
     const trig = (triggerInput.value || "").trim();
     const resp = (responseInput.value || "").trim();
     if (!trig && !resp) {
-      alert("Bitte gib mindestens einen Trigger oder eine Response ein.");
+      if (window.showToastWarning) window.showToastWarning("Bitte gib mindestens einen Trigger oder eine Response ein."); else alert("Bitte gib mindestens einen Trigger oder eine Response ein.");
       return;
     }
 

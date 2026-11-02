@@ -60,8 +60,10 @@ def proxy_to_core(subpath: str) -> Any:
             stream=is_sse,
             timeout=(10, 600) if is_sse else (10, 300),
         )
+    except requests.exceptions.Timeout as exc:
+        return jsonify({"error": f"Core service timeout: {exc}", "is_timeout": True}), 504
     except requests.RequestException as exc:
-        return jsonify({"error": f"Core service unreachable: {exc}"}), 502
+        return jsonify({"error": f"Core service unreachable: {exc}", "is_backend_down": True}), 502
 
     content_type = upstream.headers.get("Content-Type", "application/json")
     if is_sse or "text/event-stream" in content_type:

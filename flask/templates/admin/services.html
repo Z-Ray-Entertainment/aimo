@@ -354,7 +354,11 @@
     const missing = targets.filter(m => !installed.includes(m));
 
     if (missing.length === 0) {
-      alert("Alle empfohlenen Modelle sind bereits auf dem Ollama-Server installiert!");
+      if (window.showToastInfo) {
+        window.showToastInfo("Alle empfohlenen Modelle sind bereits auf dem Ollama-Server installiert!");
+      } else {
+        alert("Alle empfohlenen Modelle sind bereits auf dem Ollama-Server installiert!");
+      }
       return;
     }
 
@@ -445,7 +449,11 @@
       window.location.reload();
     } else {
       const data = await resp.json();
-      alert(data.error || "Löschen fehlgeschlagen.");
+      if (window.showToastError) {
+        window.showToastError(data.error || "Löschen fehlgeschlagen.");
+      } else {
+        alert(data.error || "Löschen fehlgeschlagen.");
+      }
     }
   }
 </script>

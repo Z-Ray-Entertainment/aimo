@@ -268,7 +268,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const content = contentInput ? contentInput.value.trim() : "";
 
       if (!title && !content) {
-        alert("Bitte trage zuerst einen Titel oder Fließtext ein, damit der Assistent relevante Tags ableiten kann.");
+        if (window.showToastWarning) {
+          window.showToastWarning("Bitte trage zuerst einen Titel oder Fließtext ein, damit der Assistent relevante Tags ableiten kann.");
+        } else {
+          alert("Bitte trage zuerst einen Titel oder Fließtext ein, damit der Assistent relevante Tags ableiten kann.");
+        }
         return;
       }
 
@@ -294,11 +298,22 @@ document.addEventListener("DOMContentLoaded", () => {
               tagsInput.value = data.tags_string;
             }
           }
+          if (window.showToastSuccess) {
+            window.showToastSuccess("Relevante Tags erfolgreich ermittelt.");
+          }
         } else if (data.error) {
-          alert(`Fehler bei der Tag-Ermittlung: ${data.error}`);
+          if (window.showToastError) {
+            window.showToastError(`Fehler bei der Tag-Ermittlung: ${data.error}`);
+          } else {
+            alert(`Fehler bei der Tag-Ermittlung: ${data.error}`);
+          }
         }
       } catch (err) {
-        alert(`Verbindungsfehler: ${err.message}`);
+        if (window.showToastError) {
+          window.showToastError(`Verbindungsfehler: ${err.message}`);
+        } else {
+          alert(`Verbindungsfehler: ${err.message}`);
+        }
       } finally {
         btn.disabled = false;
         btn.innerHTML = origHtml;

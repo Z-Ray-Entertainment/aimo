@@ -192,7 +192,11 @@
             });
             if (!res.ok) {
               const errData = await res.json().catch(() => ({}));
-              alert(errData.error || "Fehler beim Hinzufügen des Lorebooks.");
+              if (window.showToastError) {
+                window.showToastError(errData.error || "Fehler beim Hinzufügen des Lorebooks.");
+              } else {
+                alert(errData.error || "Fehler beim Hinzufügen des Lorebooks.");
+              }
               return;
             }
             const data = await res.json();
@@ -217,8 +221,15 @@
             } else {
               modalEl.classList.remove("open");
             }
+            if (window.showToastSuccess) {
+              window.showToastSuccess(`Lorebook '${(data.lorebook && data.lorebook.title) || lb.title || "Lorebook"}' aktiviert.`);
+            }
           } catch (err) {
-            alert("Netzwerkfehler beim Hinzufügen des Lorebooks.");
+            if (window.showToastError) {
+              window.showToastError("Netzwerkfehler beim Hinzufügen des Lorebooks.");
+            } else {
+              alert("Netzwerkfehler beim Hinzufügen des Lorebooks.");
+            }
           }
         }
       });
@@ -261,13 +272,21 @@
           if (!res.ok) {
             toggle.checked = !active;
             const errData = await res.json().catch(() => ({}));
-            alert(errData.error || "Fehler beim Umschalten des Lorebooks.");
+            if (window.showToastError) {
+              window.showToastError(errData.error || "Fehler beim Umschalten des Lorebooks.");
+            } else {
+              alert(errData.error || "Fehler beim Umschalten des Lorebooks.");
+            }
             return;
           }
           updateCountBadge(root, countBadgeSelector);
         } catch (err) {
           toggle.checked = !active;
-          alert("Netzwerkfehler beim Umschalten des Lorebooks.");
+          if (window.showToastError) {
+            window.showToastError("Netzwerkfehler beim Umschalten des Lorebooks.");
+          } else {
+            alert("Netzwerkfehler beim Umschalten des Lorebooks.");
+          }
         }
       }
     });
@@ -310,7 +329,11 @@
           });
           if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
-            alert(errData.error || "Fehler beim Entfernen des Lorebooks.");
+            if (window.showToastError) {
+              window.showToastError(errData.error || "Fehler beim Entfernen des Lorebooks.");
+            } else {
+              alert(errData.error || "Fehler beim Entfernen des Lorebooks.");
+            }
             return;
           }
           row.remove();
@@ -330,7 +353,11 @@
           updateEmptyNotices(root);
           updateCountBadge(root, countBadgeSelector);
         } catch (err) {
-          alert("Netzwerkfehler beim Entfernen des Lorebooks.");
+          if (window.showToastError) {
+            window.showToastError("Netzwerkfehler beim Entfernen des Lorebooks.");
+          } else {
+            alert("Netzwerkfehler beim Entfernen des Lorebooks.");
+          }
         }
       }
     });
