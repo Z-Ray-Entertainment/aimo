@@ -150,8 +150,14 @@
         <!-- 60s Countdown Container für Ortswechsel -->
         <div id="location-switch-container"></div>
 
-        <!-- Eingabeleiste unten: Vereinheitlichter Kasten mit Overlay-Buttons -->
-        <form id="chat-input-form" class="chat-input-box">
+        <!-- Eingabeleiste unten: Angedockter KI-Systemhinweis + Vereinheitlichter Kasten mit Overlay-Buttons -->
+        <div class="chat-input-wrapper">
+          <div class="chat-input-disclaimer" role="note" aria-label="KI-Systemhinweis">
+            <span class="chat-input-disclaimer-icon">ℹ️</span>
+            <span class="chat-input-disclaimer-text">Dies ist ein KI-Chatbot. Antworten werden automatisiert durch lokale oder externe Sprachmodelle generiert und können unvollständig oder fehlerhaft sein.</span>
+          </div>
+
+          <form id="chat-input-form" class="chat-input-box">
           <!-- Links bündig: Hamburger-Menü (Sitzungen, Neuer Chat, Löschen), Attach & ComfyUI -->
           <div class="chat-input-actions-left">
             <div class="chat-menu-dropdown-wrapper" id="chat-menu-dropdown-wrapper">
@@ -221,6 +227,7 @@
             </button>
           </div>
         </form>
+        </div>
 
         <!-- Separates Formular für Chat löschen (verhindert invalides verschachteltes <form>) -->
         <form id="delete-current-chat-form" method="POST" action="{{ url_for('chat.delete_session', session_id=chat_session.id) }}" style="display: none;">

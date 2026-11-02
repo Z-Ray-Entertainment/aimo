@@ -82,6 +82,7 @@ Because modern LLMs write with the greatest depth and nuance in English while th
 
 ## 🎨 Multimodal Features & Input Bar
 
+- **Persistent AI System Notice:** Directly attached to the top of the chat input box, a small persistent notice reminds you that you are conversing with an AI chatbot: *"Dies ist ein KI-Chatbot. Antworten werden automatisiert durch lokale oder externe Sprachmodelle generiert und können unvollständig oder fehlerhaft sein."*
 - **Paperclip Icon (Image Upload):** Attach any image to your message. A Vision model generates a concise ALT description in the background, providing the AI with situational awareness of what you showed it.
 - **Magic Wand with Sparkles ✨ (ComfyUI Image Generation):**
   - Generates a scene illustration via ComfyUI based on current narrative context.
