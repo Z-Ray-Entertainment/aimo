@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import menu_item %}
+{% from "macros/lorebook_manager.html" import lorebook_manager, lorebook_picker_modal %}
 {% block title %}AIMO — {{ chat_session.title }} ({{ character.name }}){% endblock %}
 {% block body_class %} chat-page{% endblock %}
 
@@ -40,6 +41,10 @@
             <button type="button" class="aimo-btn" data-tab-target="chat-pane-memories">
               <span class="icon-mono">🧠</span>
               <span>Erinnerungen (<span id="memories-count">{{ memories|length }}</span>)</span>
+            </button>
+            <button type="button" class="aimo-btn" data-tab-target="chat-pane-lorebooks">
+              <span class="icon-mono">📜</span>
+              <span>Lorebooks (<span id="session-lorebooks-count">{{ lorebook_data.active_count }}</span>)</span>
             </button>
 
             <!-- Mobil: Seitenleiste als Tab rechts von Erinnerungen mit vertikalem Trennstrich davor -->
@@ -284,6 +289,11 @@
           {% endfor %}
         </div>
         <p id="chat-memories-empty" style="color: var(--text-muted);{% if memories %} display: none;{% endif %}">Noch keine Erinnerungen generiert (entstehen automatisch alle 10 Nachrichten).</p>
+      </div>
+
+      <!-- TAB 4: Lorebooks -->
+      <div id="chat-pane-lorebooks" class="tab-pane" style="padding: 1rem 0;">
+        {{ lorebook_manager(lorebook_data, is_new_chat=false, session_id=chat_session.id, modal_id="session-add-lorebook-modal") }}
       </div>
     </div>
   </section>
@@ -921,5 +931,23 @@
       btnEl.innerHTML = originalBtnHtml;
     }
   };
+</script>
+
+<!-- Modal: Lorebook zum Chat hinzufügen -->
+{{ lorebook_picker_modal("session-add-lorebook-modal", lorebook_data.available_lorebooks) }}
+
+<script src="{{ url_for('static', filename='js/lorebook_manager.js') }}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof window.initLorebookManager === "function") {
+      window.initLorebookManager({
+        rootSelector: ".lorebook-manager-root",
+        isNewChat: false,
+        sessionId: {{ chat_session.id }},
+        modalId: "session-add-lorebook-modal",
+        countBadgeSelector: "#session-lorebooks-count",
+      });
+    }
+  });
 </script>
 {% endblock %}

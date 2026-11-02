@@ -47,6 +47,7 @@ class LorebookService:
         title: str,
         tags: list[str] | str,
         content: str,
+        visibility: str = "public",
     ) -> LorebookEntry:
         if isinstance(lorebook_id, bool) or not isinstance(lorebook_id, int) or lorebook_id <= 0:
             raise InvalidLorebookDataError("A valid positive lorebook_id is required.")
@@ -63,6 +64,8 @@ class LorebookService:
         if not cleaned_content:
             raise InvalidLorebookDataError("Lorebook entry content must not be empty.")
 
+        cleaned_vis = DomainValidator.normalize_visibility(visibility)
+
         now = datetime.now(timezone.utc)
         return LorebookEntry(
             id=None,
@@ -70,6 +73,7 @@ class LorebookService:
             title=cleaned_title,
             tags=normalized_tags,
             content=cleaned_content,
+            visibility=cleaned_vis,
             created_at=now,
             updated_at=now,
         )
@@ -80,6 +84,7 @@ class LorebookService:
         title: str,
         tags: list[str] | str,
         content: str,
+        visibility: str | None = None,
     ) -> LorebookEntry:
         cleaned_title = title.strip() if isinstance(title, str) else ""
         if not cleaned_title:
@@ -96,6 +101,8 @@ class LorebookService:
         entry.title = cleaned_title
         entry.tags = normalized_tags
         entry.content = cleaned_content
+        if visibility is not None:
+            entry.visibility = DomainValidator.normalize_visibility(visibility)
         entry.updated_at = datetime.now(timezone.utc)
         return entry
 

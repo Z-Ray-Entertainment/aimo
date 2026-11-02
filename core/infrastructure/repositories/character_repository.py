@@ -45,11 +45,11 @@ class CharacterRepository(BaseRepository[Character]):
                     INSERT INTO characters (
                         user_id, name, gender, visibility, primary_portrait_path,
                         avatar_path, card_image_path, appearance, description, dialogue_examples_json, linked_lorebook_ids_json,
-                        suggested_worldinfo_id, first_message, initial_location_id,
+                        lorebook_world_conditions_json, suggested_worldinfo_id, first_message, initial_location_id,
                         initial_relationship, preferred_location_ids_json,
                         disliked_location_ids_json, created_at
                     )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         character.user_id,
@@ -63,6 +63,7 @@ class CharacterRepository(BaseRepository[Character]):
                         character.description,
                         json.dumps(character.dialogue_examples),
                         json.dumps(character.linked_lorebook_ids),
+                        json.dumps(getattr(character, "lorebook_world_conditions", {}) or {}),
                         character.suggested_worldinfo_id,
                         character.first_message,
                         character.initial_location_id,
@@ -86,7 +87,7 @@ class CharacterRepository(BaseRepository[Character]):
                     UPDATE characters
                     SET name = ?, gender = ?, visibility = ?, primary_portrait_path = ?,
                         avatar_path = ?, card_image_path = ?, appearance = ?, description = ?, dialogue_examples_json = ?, linked_lorebook_ids_json = ?,
-                        suggested_worldinfo_id = ?, first_message = ?, initial_location_id = ?,
+                        lorebook_world_conditions_json = ?, suggested_worldinfo_id = ?, first_message = ?, initial_location_id = ?,
                         initial_relationship = ?, preferred_location_ids_json = ?,
                         disliked_location_ids_json = ?
                     WHERE id = ?
@@ -102,6 +103,7 @@ class CharacterRepository(BaseRepository[Character]):
                         character.description,
                         json.dumps(character.dialogue_examples),
                         json.dumps(character.linked_lorebook_ids),
+                        json.dumps(getattr(character, "lorebook_world_conditions", {}) or {}),
                         character.suggested_worldinfo_id,
                         character.first_message,
                         character.initial_location_id,
@@ -241,6 +243,15 @@ class CharacterRepository(BaseRepository[Character]):
             except json.JSONDecodeError:
                 return []
 
+        def _load_dict(raw: str) -> dict[int, int]:
+            try:
+                val = json.loads(raw)
+                if isinstance(val, dict):
+                    return {int(k): int(v) for k, v in val.items() if str(k).isdigit() and str(v).isdigit()}
+                return {}
+            except (json.JSONDecodeError, ValueError):
+                return {}
+
         char_id = int(row["id"])
         img_rows = conn.execute(
             "SELECT * FROM character_images WHERE character_id = ? ORDER BY id ASC",
@@ -306,6 +317,7 @@ class CharacterRepository(BaseRepository[Character]):
                 for x in _load_list(str(row["dialogue_examples_json"]))
             ],
             linked_lorebook_ids=[int(x) for x in _load_list(str(row["linked_lorebook_ids_json"]))],
+            lorebook_world_conditions=_load_dict(str(row["lorebook_world_conditions_json"])) if "lorebook_world_conditions_json" in row.keys() and row["lorebook_world_conditions_json"] else {},
             suggested_worldinfo_id=(
                 int(row["suggested_worldinfo_id"])
                 if row["suggested_worldinfo_id"] is not None

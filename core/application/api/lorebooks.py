@@ -18,13 +18,14 @@ api_lorebooks_bp = Blueprint("api_lorebooks", __name__, url_prefix="/api/loreboo
 def list_lorebooks():
     user = get_current_user()
     uid = user.id if user and user.id else None
+    is_admin = user.is_initial_admin if user else False
     repo = LorebookRepository()
     lorebooks = repo.list_for_user(uid)
     result = []
     for lb in lorebooks:
         if lb.id is None:
             continue
-        entries = repo.list_entries(lb.id)
+        entries = repo.list_entries(lb.id, user_id=uid, is_admin=is_admin)
         result.append(
             {
                 "id": lb.id,
@@ -37,6 +38,7 @@ def list_lorebooks():
                         "title": e.title,
                         "tags": e.tags,
                         "content": e.content,
+                        "visibility": getattr(e, "visibility", "public"),
                     }
                     for e in entries
                 ],
@@ -91,6 +93,7 @@ def add_lorebook_entry(lorebook_id: int):
             title=data.get("title", ""),
             tags=data.get("tags", []),
             content=data.get("content", ""),
+            visibility=data.get("visibility", "public"),
         )
         saved = repo.add_entry(entry)
         return jsonify(
@@ -100,6 +103,7 @@ def add_lorebook_entry(lorebook_id: int):
                 "title": saved.title,
                 "tags": saved.tags,
                 "content": saved.content,
+                "visibility": getattr(saved, "visibility", "public"),
             }
         ), 201
     except AimoError as exc:

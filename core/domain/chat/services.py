@@ -53,6 +53,8 @@ class ChatService:
         persona_name: str = "User",
         localized_welcome_text: str | None = None,
         initial_location_id: int | None = None,
+        disabled_lorebook_ids: set[int] | None = None,
+        custom_lorebook_ids: list[int] | None = None,
     ) -> tuple[ChatSession, Message]:
         if isinstance(user_id, bool) or not isinstance(user_id, int) or user_id <= 0:
             raise InvalidChatDataError("A valid positive user_id is required.")
@@ -83,6 +85,9 @@ class ChatService:
             last_message_at=now,
             parent_session_id=None,
             persona_locked=False,
+            triggered_event_ids=set(),
+            disabled_lorebook_ids=set(disabled_lorebook_ids) if disabled_lorebook_ids else set(),
+            custom_lorebook_ids=list(custom_lorebook_ids) if custom_lorebook_ids else [],
             created_at=now,
         )
 
@@ -173,6 +178,45 @@ class ChatService:
             parent_session_id=session.id,
             persona_locked=has_user_msg or session.persona_locked,
             triggered_event_ids=set(session.triggered_event_ids),
+            disabled_lorebook_ids=set(session.disabled_lorebook_ids),
+            custom_lorebook_ids=list(session.custom_lorebook_ids),
             created_at=now,
         )
         return forked_session, filtered_messages
+
+    def toggle_lorebook(self, session: ChatSession, lorebook_id: int, active: bool) -> None:
+        if active:
+            session.disabled_lorebook_ids.discard(lorebook_id)
+        else:
+            session.disabled_lorebook_ids.add(lorebook_id)
+
+    def add_custom_lorebook(self, session: ChatSession, lorebook_id: int) -> None:
+        if lorebook_id not in session.custom_lorebook_ids:
+            session.custom_lorebook_ids.append(lorebook_id)
+        session.disabled_lorebook_ids.discard(lorebook_id)
+
+    def remove_custom_lorebook(self, session: ChatSession, lorebook_id: int) -> None:
+        if lorebook_id in session.custom_lorebook_ids:
+            session.custom_lorebook_ids.remove(lorebook_id)
+        session.disabled_lorebook_ids.discard(lorebook_id)
+
+    def get_effective_lorebook_ids(
+        self,
+        session: ChatSession,
+        character_lorebook_ids: list[int],
+        worldinfo_lorebook_id: int | None,
+        character_world_conditions: dict[int, int] | None = None,
+    ) -> list[int]:
+        candidates: list[int] = []
+        conditions = character_world_conditions or {}
+        for l_id in character_lorebook_ids:
+            if l_id in conditions and conditions[l_id] != session.active_worldinfo_id:
+                continue
+            if l_id not in candidates:
+                candidates.append(l_id)
+        if worldinfo_lorebook_id is not None and worldinfo_lorebook_id not in candidates:
+            candidates.append(worldinfo_lorebook_id)
+        for c_id in session.custom_lorebook_ids:
+            if c_id not in candidates:
+                candidates.append(c_id)
+        return [cid for cid in candidates if cid not in session.disabled_lorebook_ids]

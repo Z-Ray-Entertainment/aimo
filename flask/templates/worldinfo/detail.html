@@ -50,6 +50,21 @@
           </select>
         </div>
 
+        <div>
+          <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">
+            Gebundenes Lorebook (Optional)
+            <span class="field-help-btn" title="Gebundenes Lorebook:&#10;Ein optionales Lorebook, das in allen Chats in dieser Welt automatisch neben dem Charakter-Lorebook für den Rollenspiel-Kontext herangezogen wird.">?</span>
+          </label>
+          <select name="lorebook_id" style="width: 200px;">
+            <option value="">Kein Lorebook gebunden</option>
+            {% for lb in lorebooks %}
+              <option value="{{ lb.id }}" {% if worldinfo.lorebook_id == lb.id %}selected{% endif %}>
+                📜 {{ lb.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
         {% if has_perm('worldinfo_edit') %}
           <div style="padding-top: 1.1rem;">
             <button type="submit" class="aimo-btn primary"><span class="icon-mono">💾</span> Speichern</button>

@@ -24,8 +24,8 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO worldinfos (user_id, name, icon, visibility, cover_image_path, created_at)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO worldinfos (user_id, name, icon, visibility, cover_image_path, lorebook_id, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     worldinfo.user_id,
@@ -33,6 +33,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     worldinfo.icon,
                     worldinfo.visibility,
                     worldinfo.cover_image_path,
+                    worldinfo.lorebook_id,
                     created_str,
                 ),
             )
@@ -56,7 +57,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             conn.execute(
                 """
                 UPDATE worldinfos
-                SET name = ?, icon = ?, visibility = ?, cover_image_path = ?
+                SET name = ?, icon = ?, visibility = ?, cover_image_path = ?, lorebook_id = ?
                 WHERE id = ?
                 """,
                 (
@@ -64,6 +65,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     worldinfo.icon,
                     worldinfo.visibility,
                     worldinfo.cover_image_path,
+                    worldinfo.lorebook_id,
                     worldinfo.id,
                 ),
             )
@@ -239,6 +241,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             else None
         )
         icon_val = str(row["icon"]) if "icon" in keys and row["icon"] is not None else "🌐"
+        lb_id = int(row["lorebook_id"]) if "lorebook_id" in keys and row["lorebook_id"] is not None else None
         return WorldInfo(
             id=int(row["id"]),
             user_id=int(row["user_id"]),
@@ -246,6 +249,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             icon=icon_val,
             visibility=vis,
             cover_image_path=cover_path,
+            lorebook_id=lb_id,
             created_at=parse_datetime(row["created_at"]),
         )
 

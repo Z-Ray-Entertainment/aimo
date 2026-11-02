@@ -129,6 +129,15 @@
           <option value="public">Öffentlich</option>
         </select>
       </div>
+      <div>
+        <label>Gebundenes Lorebook (Optional)</label>
+        <select name="lorebook_id">
+          <option value="" selected>Kein Lorebook gebunden</option>
+          {% for lb in lorebooks|default([]) %}
+            <option value="{{ lb.id }}">📜 {{ lb.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
         <button type="button" class="aimo-btn" data-modal-close="new-worldinfo-modal">Abbrechen</button>
         <button type="submit" class="aimo-btn primary">Anlegen</button>

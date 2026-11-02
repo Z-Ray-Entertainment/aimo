@@ -4,6 +4,7 @@ from application.auth.decorators import get_current_user, require_auth, require_
 from application.worldinfo.forms import EventForm, LocationForm
 from domain.permissions.models import FunctionPermission
 from domain.worldinfo.services import WorldInfoService
+from infrastructure.repositories.lorebook_repository import LorebookRepository
 from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from infrastructure.storage.file_storage import FileStorage
@@ -20,11 +21,14 @@ def create_worldinfo():
     service = WorldInfoService()
     repo = WorldInfoRepository()
     try:
+        raw_lb = request.form.get("lorebook_id", "").strip()
+        lb_id = int(raw_lb) if raw_lb and raw_lb.isdigit() and int(raw_lb) > 0 else None
         wi = service.create_worldinfo(
             user_id=user.id,
             name=request.form.get("name", ""),
             icon="🌐",
             visibility=request.form.get("visibility", "private"),
+            lorebook_id=lb_id,
         )
         saved = repo.create(wi)
         flash(f"WorldInfo '{saved.name}' erstellt.", "success")
@@ -58,12 +62,16 @@ def detail(worldinfo_id: int):
             if cover_file and cover_file.filename:
                 cover_path = storage.save_cover(cover_file.stream, cover_file.filename)
 
+            raw_lb = request.form.get("lorebook_id", "").strip()
+            lb_id = int(raw_lb) if raw_lb and raw_lb.isdigit() and int(raw_lb) > 0 else None
+
             service.update_worldinfo(
                 worldinfo=worldinfo,
                 name=request.form.get("name", worldinfo.name),
                 icon=worldinfo.icon or "🌐",
                 visibility=request.form.get("visibility", worldinfo.visibility),
                 cover_image_path=cover_path,
+                lorebook_id=lb_id,
             )
             worldinfo = repo.update(worldinfo)
             flash("WorldInfo gespeichert.", "success")
@@ -73,6 +81,9 @@ def detail(worldinfo_id: int):
     locations = repo.list_locations(worldinfo_id)
     events = repo.list_events(worldinfo_id)
     loc_map = {loc.id: loc for loc in locations if loc.id is not None}
+
+    lb_repo = LorebookRepository()
+    lorebooks = lb_repo.list_visible(user.id)
 
     trans_repo = TranslationRepository()
     location_translations = {
@@ -95,6 +106,7 @@ def detail(worldinfo_id: int):
     return render_template(
         "worldinfo/detail.html",
         worldinfo=worldinfo,
+        lorebooks=lorebooks,
         locations=locations,
         events=events,
         loc_map=loc_map,

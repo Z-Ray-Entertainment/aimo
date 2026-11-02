@@ -53,4 +53,6 @@ class ChatSession:
     parent_session_id: int | None = None
     persona_locked: bool = False
     triggered_event_ids: set[int] = field(default_factory=set)
+    disabled_lorebook_ids: set[int] = field(default_factory=set)
+    custom_lorebook_ids: list[int] = field(default_factory=list)
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))

@@ -1,0 +1,257 @@
+{# =============================================================================
+   AIMO Reusable Lorebook Manager Component
+   Shared component for managing active, disabled and custom chat lorebooks
+   Used in both the New Chat Dialog and the active Chat Session Interface
+   ============================================================================= #}
+{% from "macros/buttons.html" import action_button %}
+
+{% macro lorebook_manager(lorebook_data, is_new_chat=false, session_id=none, modal_id="chat-add-lorebook-modal") %}
+<div class="lorebook-manager-root"
+     data-is-new-chat="{{ 'true' if is_new_chat else 'false' }}"
+     {% if session_id %}data-session-id="{{ session_id }}"{% endif %}
+     data-modal-id="{{ modal_id }}">
+
+  <!-- Header with Info & Add Button -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+    <div>
+      <h3 style="color: var(--gold-accent); margin: 0 0 0.25rem 0;">Aktive Wissensbücher (Lorebooks)</h3>
+      <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">
+        Lorebooks erweitern den Kontext des Modells durch relevantes Welt- und Hintergrundwissen über Keyword-Tags.
+      </p>
+    </div>
+    <div>
+      {{ action_button("Lorebook hinzufügen", icon="➕", variant="primary", modal=modal_id, id="open-lorebook-picker-btn") }}
+    </div>
+  </div>
+
+  <!-- Hidden inputs for new chat form submission -->
+  {% if is_new_chat %}
+    <div id="new-chat-lorebook-hidden-inputs">
+      {% for lb in lorebook_data.default_lorebooks %}
+        {% if not lb.is_active %}
+          <input type="hidden" name="disabled_lorebook_ids" value="{{ lb.id }}" data-default-disabled-id="{{ lb.id }}">
+        {% endif %}
+      {% endfor %}
+      {% for lb in lorebook_data.custom_lorebooks %}
+        <input type="hidden" name="custom_lorebook_ids" value="{{ lb.id }}" data-custom-id="{{ lb.id }}">
+        {% if not lb.is_active %}
+          <input type="hidden" name="disabled_lorebook_ids" value="{{ lb.id }}" data-custom-disabled-id="{{ lb.id }}">
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Section 1: Default Lorebooks (Character & WorldInfo) -->
+  <div class="lorebook-section" style="margin-bottom: 1.5rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.4rem;">
+      <span style="font-weight: 700; font-size: 0.9rem; color: var(--gold-accent);">
+        Standard-Lorebooks (Charakter & Welt)
+      </span>
+      <span style="font-size: 0.8rem; color: var(--text-muted);">
+        Sitzungs-Toggle (Slider)
+      </span>
+    </div>
+
+    <div id="default-lorebooks-list" class="lorebook-list" style="display: flex; flex-direction: column; gap: 0.6rem;">
+      {% for lb in lorebook_data.default_lorebooks %}
+        <div class="lorebook-list-item"
+             data-lorebook-id="{{ lb.id }}"
+             data-name="{{ lb.name|lower }}"
+             data-source="{{ lb.source }}">
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+              <span style="font-weight: 700; color: var(--text-color); font-size: 0.95rem;">
+                <span class="icon-mono">📜</span> {{ lb.name }}
+              </span>
+              <span class="aimo-card-badge" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;" title="Herkunft des Lorebooks">
+                {{ lb.source }}
+              </span>
+              {% if lb.is_private_to_user %}
+                <span class="aimo-card-badge danger" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;" title="Ersteller-Wissen: Inhalt ist vor anderen Spielern verborgen, wird aber von der KI im Chat genutzt.">
+                  🔒 Ersteller-Wissen
+                </span>
+              {% endif %}
+            </div>
+            {% if lb.description %}
+              <p style="margin: 0.2rem 0 0.4rem 0; font-size: 0.84rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ lb.description }}
+              </p>
+            {% endif %}
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <span style="font-size: 0.75rem; color: var(--gold-accent);">{{ lb.entry_count }} Einträge</span>
+              {% for tag in lb.tags[:4] %}
+                <span style="font-size: 0.72rem; padding: 0.1rem 0.4rem; border: 1px solid var(--border-wood); border-radius: 8px; color: var(--text-muted);">#{{ tag }}</span>
+              {% endfor %}
+              {% if lb.tags|length > 4 %}
+                <span style="font-size: 0.72rem; color: var(--text-muted);">+{{ lb.tags|length - 4 }}</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Rechtsbündiges, vertikal zentriertes Overlay -->
+          <div class="lorebook-item-actions-overlay">
+            {% if lb.is_locked %}
+              <span class="aimo-card-badge danger lorebook-condition-badge" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" title="Dieses Lorebook erfordert die Welt '{{ lb.required_worldinfo_name }}' und kann in dieser Welt nicht aktiviert werden.">
+                🔒 Inaktiv — Benötigt Welt: {{ lb.required_worldinfo_name }}
+              </span>
+              <label class="aimo-switch disabled" title="Gesperrt: Passende Welt '{{ lb.required_worldinfo_name }}' ist nicht aktiv.">
+                <input type="checkbox"
+                       class="lorebook-toggle-input"
+                       data-lorebook-id="{{ lb.id }}"
+                       data-required-worldinfo-id="{{ lb.required_worldinfo_id }}"
+                       disabled>
+                <span class="aimo-switch-slider"></span>
+              </label>
+            {% else %}
+              <label class="aimo-switch" title="Lorebook {% if lb.is_active %}deaktivieren{% else %}aktivieren{% endif %}">
+                <input type="checkbox"
+                       class="lorebook-toggle-input"
+                       data-lorebook-id="{{ lb.id }}"
+                       {% if lb.is_active %}checked{% endif %}>
+                <span class="aimo-switch-slider"></span>
+              </label>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+      <div id="default-lorebooks-empty" class="aimo-frame" style="text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.88rem; {% if lorebook_data.default_lorebooks|length > 0 %}display: none;{% endif %}">
+        Keine Standard-Lorebooks für diese Sitzung zugewiesen.
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Custom Lorebooks (User-added) -->
+  <div class="lorebook-section">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.4rem;">
+      <span style="font-weight: 700; font-size: 0.9rem; color: var(--gold-accent);">
+        Benutzerdefinierte Lorebooks (Chat-spezifisch)
+      </span>
+      <span style="font-size: 0.8rem; color: var(--text-muted);">
+        Aktionen (Slider & Löschen)
+      </span>
+    </div>
+
+    <div id="custom-lorebooks-list" class="lorebook-list" style="display: flex; flex-direction: column; gap: 0.6rem;">
+      {% for lb in lorebook_data.custom_lorebooks %}
+        <div class="lorebook-list-item"
+             data-lorebook-id="{{ lb.id }}"
+             data-name="{{ lb.name|lower }}"
+             data-source="Benutzerdefiniert">
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+              <span style="font-weight: 700; color: var(--text-color); font-size: 0.95rem;">
+                <span class="icon-mono">📜</span> {{ lb.name }}
+              </span>
+              <span class="aimo-card-badge" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;">
+                Benutzerdefiniert
+              </span>
+              {% if lb.is_private_to_user %}
+                <span class="aimo-card-badge danger" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;" title="Ersteller-Wissen: Inhalt ist vor anderen Spielern verborgen, wird aber von der KI im Chat genutzt.">
+                  🔒 Ersteller-Wissen
+                </span>
+              {% endif %}
+            </div>
+            {% if lb.description %}
+              <p style="margin: 0.2rem 0 0.4rem 0; font-size: 0.84rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ lb.description }}
+              </p>
+            {% endif %}
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <span style="font-size: 0.75rem; color: var(--gold-accent);">{{ lb.entry_count }} Einträge</span>
+              {% for tag in lb.tags[:4] %}
+                <span style="font-size: 0.72rem; padding: 0.1rem 0.4rem; border: 1px solid var(--border-wood); border-radius: 8px; color: var(--text-muted);">#{{ tag }}</span>
+              {% endfor %}
+              {% if lb.tags|length > 4 %}
+                <span style="font-size: 0.72rem; color: var(--text-muted);">+{{ lb.tags|length - 4 }}</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Rechtsbündiges, vertikal zentriertes Overlay: Toggle Slider UND Mülleimer -->
+          <div class="lorebook-item-actions-overlay">
+            <label class="aimo-switch" title="Lorebook {% if lb.is_active %}deaktivieren{% else %}aktivieren{% endif %}">
+              <input type="checkbox"
+                     class="lorebook-toggle-input"
+                     data-lorebook-id="{{ lb.id }}"
+                     {% if lb.is_active %}checked{% endif %}>
+              <span class="aimo-switch-slider"></span>
+            </label>
+            <button type="button"
+                    class="aimo-btn danger remove-custom-lorebook-btn"
+                    data-lorebook-id="{{ lb.id }}"
+                    title="Lorebook aus Chat entfernen">
+              <span class="icon-mono">🗑️</span>
+            </button>
+          </div>
+        </div>
+      {% endfor %}
+      <div id="custom-lorebooks-empty" class="aimo-frame" style="text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.88rem; {% if lorebook_data.custom_lorebooks|length > 0 %}display: none;{% endif %}">
+        Keine zusätzlichen benutzerdefinierten Lorebooks hinzugefügt. Klicke auf „Lorebook hinzufügen“, um Wissen zu ergänzen.
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+
+{# Reusable Modal for Picking & Adding a Lorebook to Chat #}
+{% macro lorebook_picker_modal(modal_id, available_lorebooks) %}
+<div class="modal-backdrop" id="{{ modal_id }}" aria-hidden="true">
+  <div class="modal-frame" style="max-width: 820px; max-height: 85vh; display: flex; flex-direction: column;">
+    <div class="modal-header">
+      <h3 style="color: var(--gold-accent); margin: 0;"><span class="icon-mono">📜</span> Lorebook zum Chat hinzufügen</h3>
+      <button type="button" class="aimo-btn" data-modal-close="{{ modal_id }}">✕</button>
+    </div>
+
+    <!-- Suchleiste nach Lorebook-Name -->
+    <div style="padding: 1rem 0 0.5rem 0;">
+      <input type="text"
+             id="{{ modal_id }}-search"
+             class="search-input"
+             placeholder="Nach Lorebook-Name filtern..."
+             style="width: 100%;"
+             autocomplete="off">
+    </div>
+
+    <!-- Lorebook Grid View (Exakt selbes Grid-Layout wie in Übersicht, Klick fügt direkt hinzu) -->
+    <div style="overflow-y: auto; flex: 1; padding: 0.5rem 0 1rem 0;">
+      <div class="card-grid" id="{{ modal_id }}-grid">
+        {% for lb in available_lorebooks %}
+          <div class="card-tile lorebook-picker-card {% if lb.is_added %}already-added{% endif %}"
+               data-lorebook-id="{{ lb.id }}"
+               data-lorebook-name="{{ lb.name|lower }}"
+               data-lorebook-fullname="{{ lb.name }}"
+               data-lorebook-desc="{{ lb.description or '' }}"
+               data-lorebook-tags="{{ lb.tags|join(',') }}"
+               data-lorebook-entries="{{ lb.entry_count }}"
+               style="padding: 1.25rem; justify-content: space-between;">
+            <div>
+              <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;"><span class="icon-mono">📜</span> {{ lb.name }}</h3>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">{{ lb.description }}</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
+                {% for tag in lb.tags %}
+                  <span style="font-size: 0.75rem; padding: 0.15rem 0.5rem; border: 1px solid var(--border-wood); border-radius: 10px; color: var(--text-main);">#{{ tag }}</span>
+                {% endfor %}
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; font-size: 0.85rem;">
+              <span style="color: var(--text-muted);">{{ lb.entry_count }} Einträge</span>
+              <span class="lorebook-picker-action-label" style="color: {% if lb.is_added %}var(--text-muted){% else %}var(--gold-accent){% endif %}; font-weight: 600;">
+                {% if lb.is_added %}✓ Bereits aktiv{% else %}+ Hinzufügen{% endif %}
+              </span>
+            </div>
+          </div>
+        {% else %}
+          <div class="aimo-frame" style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--text-muted);">
+            Keine Lorebooks verfügbar.
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
+      <button type="button" class="aimo-btn" data-modal-close="{{ modal_id }}">Schließen</button>
+    </div>
+  </div>
+</div>
+{% endmacro %}

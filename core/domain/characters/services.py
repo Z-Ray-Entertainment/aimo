@@ -24,6 +24,7 @@ class CharacterService:
         visibility: str = "private",
         dialogue_examples: list | None = None,
         linked_lorebook_ids: list[int] | None = None,
+        lorebook_world_conditions: dict[int, int] | None = None,
         suggested_worldinfo_id: int | None = None,
         initial_location_id: int | None = None,
         initial_relationship: int = 0,
@@ -79,6 +80,7 @@ class CharacterService:
             appearance=cleaned_appearance,
             dialogue_examples=list(dialogue_examples or []),
             linked_lorebook_ids=list(linked_lorebook_ids or []),
+            lorebook_world_conditions=dict(lorebook_world_conditions or {}),
             suggested_worldinfo_id=suggested_worldinfo_id,
             initial_location_id=initial_location_id,
             initial_relationship=initial_relationship,
@@ -100,6 +102,7 @@ class CharacterService:
         visibility: str = "private",
         dialogue_examples: list | None = None,
         linked_lorebook_ids: list[int] | None = None,
+        lorebook_world_conditions: dict[int, int] | None = None,
         suggested_worldinfo_id: int | None = None,
         initial_location_id: int | None = None,
         initial_relationship: int = 0,
@@ -153,6 +156,8 @@ class CharacterService:
             character.dialogue_examples = list(dialogue_examples)
         if linked_lorebook_ids is not None:
             character.linked_lorebook_ids = list(linked_lorebook_ids)
+        if lorebook_world_conditions is not None:
+            character.lorebook_world_conditions = dict(lorebook_world_conditions)
 
         if suggested_worldinfo_id is None:
             character.suggested_worldinfo_id = None

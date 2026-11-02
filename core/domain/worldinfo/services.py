@@ -18,12 +18,14 @@ class WorldInfoService:
         icon: str | None = "🌐",
         visibility: str = "private",
         cover_image_path: str | None = None,
+        lorebook_id: int | None = None,
     ) -> WorldInfo:
         DomainValidator.validate_positive_user_id(user_id, InvalidWorldInfoDataError)
         cleaned_name = DomainValidator.validate_required_string(name, "WorldInfo name", InvalidWorldInfoDataError)
         cleaned_icon = icon.strip() if isinstance(icon, str) and icon.strip() else "🌐"
         cleaned_vis = DomainValidator.normalize_visibility(visibility)
         cleaned_cover = cover_image_path.strip() if isinstance(cover_image_path, str) and cover_image_path.strip() else None
+        valid_lb_id = int(lorebook_id) if lorebook_id is not None and int(lorebook_id) > 0 else None
 
         return WorldInfo(
             id=None,
@@ -32,6 +34,7 @@ class WorldInfoService:
             icon=cleaned_icon,
             visibility=cleaned_vis,
             cover_image_path=cleaned_cover,
+            lorebook_id=valid_lb_id,
             created_at=datetime.now(timezone.utc),
         )
 
@@ -42,6 +45,7 @@ class WorldInfoService:
         icon: str | None | object = ...,
         visibility: str | None = None,
         cover_image_path: str | None | object = ...,
+        lorebook_id: int | None | object = ...,
     ) -> WorldInfo:
         worldinfo.name = DomainValidator.validate_required_string(name, "WorldInfo name", InvalidWorldInfoDataError)
         if icon is not ...:
@@ -54,6 +58,8 @@ class WorldInfoService:
                 if isinstance(cover_image_path, str) and cover_image_path.strip()
                 else None
             )
+        if lorebook_id is not ...:
+            worldinfo.lorebook_id = int(lorebook_id) if lorebook_id is not None and int(lorebook_id) > 0 else None
         return worldinfo
 
     def extract_tags_from_description(

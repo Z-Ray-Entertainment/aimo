@@ -68,7 +68,7 @@ def detail(lorebook_id: int):
         except AimoError as exc:
             flash(str(exc), "error")
 
-    entries = repo.list_entries(lorebook_id)
+    entries = repo.list_entries(lorebook_id, user_id=user.id, is_admin=user.is_initial_admin)
     trans_repo = TranslationRepository()
     lorebook_translations = trans_repo.get_entity_translations_map("lorebook", lorebook.id)
     entry_translations = {
@@ -120,6 +120,7 @@ def add_entry(lorebook_id: int):
             title=form.title,
             tags=form.tags,
             content=form.content,
+            visibility=form.visibility,
         )
         saved_entry = repo.add_entry(entry)
         TranslationRepository().save_field_variants_json(
@@ -147,7 +148,7 @@ def edit_entry(lorebook_id: int, entry_id: int):
     entry = repo.get_entry(entry_id)
     if entry is not None and entry.lorebook_id == lorebook_id:
         try:
-            service.update_entry(entry, form.title, form.tags, form.content)
+            service.update_entry(entry, form.title, form.tags, form.content, visibility=form.visibility)
             repo.update_entry(entry)
             TranslationRepository().save_field_variants_json(
                 "lorebook_entry", entry.id, "content", request.form.get("i18n_content")

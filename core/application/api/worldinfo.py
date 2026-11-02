@@ -32,6 +32,7 @@ def list_worldinfo():
                 "icon": wi.icon,
                 "visibility": wi.visibility,
                 "cover_image_path": wi.cover_image_path,
+                "lorebook_id": wi.lorebook_id,
                 "locations": [
                     {
                         "id": loc.id,
@@ -68,12 +69,15 @@ def create_worldinfo():
     service = WorldInfoService()
     repo = WorldInfoRepository()
     try:
+        raw_lb = data.get("lorebook_id")
+        lb_id = int(raw_lb) if raw_lb not in (None, "", "0", 0) else None
         wi = service.create_worldinfo(
             user_id=user.id,
             name=data.get("name", ""),
             icon=data.get("icon", "🌐"),
             visibility=data.get("visibility", "private"),
             cover_image_path=data.get("cover_image_path"),
+            lorebook_id=lb_id,
         )
         saved = repo.create(wi)
         return jsonify(
@@ -83,6 +87,7 @@ def create_worldinfo():
                 "icon": saved.icon,
                 "visibility": saved.visibility,
                 "cover_image_path": saved.cover_image_path,
+                "lorebook_id": saved.lorebook_id,
             }
         ), 201
     except AimoError as exc:

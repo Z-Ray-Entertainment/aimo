@@ -94,6 +94,7 @@ class Character:
     visibility: str = "private"
     dialogue_examples: list[dict[str, str]] = field(default_factory=list)
     linked_lorebook_ids: list[int] = field(default_factory=list)
+    lorebook_world_conditions: dict[int, int] = field(default_factory=dict)
     suggested_worldinfo_id: int | None = None
     initial_location_id: int | None = None
     initial_relationship: int = 0

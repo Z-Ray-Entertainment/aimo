@@ -60,7 +60,14 @@
   {% for entry in entries %}
     <div class="card-tile" style="padding: 1.25rem; justify-content: space-between; cursor: pointer;" data-modal-open="edit-entry-modal-{{ entry.id }}">
       <div>
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">{{ entry.title }}</h3>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.4rem;">
+          <h3 style="color: var(--gold-accent); margin: 0;">{{ entry.title }}</h3>
+          {% if entry.visibility == 'private' %}
+            <span class="aimo-card-badge danger" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;" title="Privater Eintrag: Nur für den Ersteller sichtbar. Wird im Rollenspiel über RAG injiziert.">
+              🔒 Privat (Geheimwissen)
+            </span>
+          {% endif %}
+        </div>
         <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.75rem;">
           {% for tag in entry.tags %}
             <span style="font-size: 0.75rem; padding: 0.15rem 0.5rem; border: 1px solid var(--border-wood); border-radius: 10px;">#{{ tag }}</span>
@@ -89,6 +96,16 @@
               <span class="field-help-btn" title="Eintrag-Titel:&#10;Die prägnante Bezeichnung des Wissensartikels (z. B. 'Der Orden der Dämmerung').">?</span>
             </label>
             <input type="text" id="title-input-{{ entry.id }}" name="title" value="{{ entry.title }}" required>
+          </div>
+          <div>
+            <label>
+              Sichtbarkeit
+              <span class="field-help-btn" title="Sichtbarkeit des Eintrags:&#10;Öffentlich: In der Lorebook-Übersicht für alle Spieler sichtbar.&#10;Privat (Geheimwissen): In der Übersicht für andere Spieler verborgen, wird aber bei verknüpften Charakteren/Welten im Rollenspiel via RAG injiziert.">?</span>
+            </label>
+            <select name="visibility">
+              <option value="public" {% if entry.visibility != 'private' %}selected{% endif %}>🌍 Öffentlich (In Übersicht lesbar)</option>
+              <option value="private" {% if entry.visibility == 'private' %}selected{% endif %}>🔒 Privat (Geheimwissen / Spoiler-Schutz)</option>
+            </select>
           </div>
           <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
@@ -143,6 +160,16 @@
           <span class="field-help-btn" title="Eintrag-Titel:&#10;Die prägnante Bezeichnung des Wissensartikels (z. B. 'Der Orden der Dämmerung').">?</span>
         </label>
         <input type="text" id="new-entry-title" name="title" required>
+      </div>
+      <div>
+        <label>
+          Sichtbarkeit
+          <span class="field-help-btn" title="Sichtbarkeit des Eintrags:&#10;Öffentlich: In der Lorebook-Übersicht für alle Spieler sichtbar.&#10;Privat (Geheimwissen): In der Übersicht für andere Spieler verborgen, wird aber bei verknüpften Charakteren/Welten im Rollenspiel via RAG injiziert.">?</span>
+        </label>
+        <select name="visibility">
+          <option value="public" selected>🌍 Öffentlich (In Übersicht lesbar)</option>
+          <option value="private">🔒 Privat (Geheimwissen / Spoiler-Schutz)</option>
+        </select>
       </div>
       <div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">

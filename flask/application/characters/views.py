@@ -130,6 +130,7 @@ def new_character():
                 visibility=form.visibility,
                 dialogue_examples=form.dialogue_examples,
                 linked_lorebook_ids=form.linked_lorebook_ids,
+                lorebook_world_conditions=form.lorebook_world_conditions,
                 suggested_worldinfo_id=form.suggested_worldinfo_id,
                 initial_location_id=form.initial_location_id,
                 initial_relationship=form.initial_relationship,
@@ -196,6 +197,7 @@ def edit_character(character_id: int):
                 visibility=form.visibility,
                 dialogue_examples=form.dialogue_examples,
                 linked_lorebook_ids=form.linked_lorebook_ids,
+                lorebook_world_conditions=form.lorebook_world_conditions,
                 suggested_worldinfo_id=form.suggested_worldinfo_id,
                 initial_location_id=form.initial_location_id,
                 initial_relationship=form.initial_relationship,
@@ -223,6 +225,7 @@ def edit_character(character_id: int):
             initial_location_id=character.initial_location_id,
             initial_relationship=character.initial_relationship,
             linked_lorebook_ids=character.linked_lorebook_ids,
+            lorebook_world_conditions=getattr(character, "lorebook_world_conditions", {}) or {},
             preferred_location_ids=character.preferred_location_ids,
             disliked_location_ids=character.disliked_location_ids,
         )

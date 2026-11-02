@@ -18,6 +18,7 @@ class CharacterForm:
     initial_location_id: int | None = None
     initial_relationship: int = 0
     linked_lorebook_ids: list[int] = field(default_factory=list)
+    lorebook_world_conditions: dict[int, int] = field(default_factory=dict)
     preferred_location_ids: list[int] = field(default_factory=list)
     disliked_location_ids: list[int] = field(default_factory=list)
 
@@ -46,6 +47,25 @@ class CharacterForm:
                     if line.strip():
                         dialogue_examples.append({"trigger": "", "response": line.strip()})
 
+        lorebook_world_conditions: dict[int, int] = {}
+        conditions_json = p.to_str(form_data, "lorebook_world_conditions_json")
+        if conditions_json:
+            try:
+                raw_cond = json.loads(conditions_json)
+                if isinstance(raw_cond, dict):
+                    for k, v in raw_cond.items():
+                        if str(k).isdigit() and str(v).isdigit() and int(v) > 0:
+                            lorebook_world_conditions[int(k)] = int(v)
+            except (json.JSONDecodeError, ValueError):
+                pass
+
+        items_dict = form_data.to_dict() if hasattr(form_data, "to_dict") else dict(form_data)
+        for key, val in items_dict.items():
+            if key.startswith("lorebook_world_condition_"):
+                lb_id_str = key.replace("lorebook_world_condition_", "")
+                if lb_id_str.isdigit() and str(val).isdigit() and int(val) > 0:
+                    lorebook_world_conditions[int(lb_id_str)] = int(val)
+
         return cls(
             name=p.to_str(form_data, "name"),
             gender=p.to_str(form_data, "gender", "female"),
@@ -59,6 +79,7 @@ class CharacterForm:
             initial_location_id=p.to_opt_int(form_data, "initial_location_id"),
             initial_relationship=p.to_int(form_data, "initial_relationship", default=0, min_val=-100, max_val=100),
             linked_lorebook_ids=p.to_int_list(form_data, "linked_lorebook_ids"),
+            lorebook_world_conditions=lorebook_world_conditions,
             preferred_location_ids=p.to_int_list(form_data, "preferred_location_ids"),
             disliked_location_ids=p.to_int_list(form_data, "disliked_location_ids"),
         )

@@ -43,9 +43,10 @@ class ChatRepository:
                     user_id, character_id, persona_id, active_worldinfo_id,
                     current_location_id, title, relationship_value, events_enabled,
                     cooldown_counter, last_message_at, parent_session_id,
-                    persona_locked, triggered_event_ids_json, created_at
+                    persona_locked, triggered_event_ids_json, disabled_lorebook_ids_json,
+                    custom_lorebook_ids_json, created_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     chat_session.user_id,
@@ -61,6 +62,8 @@ class ChatRepository:
                     chat_session.parent_session_id,
                     1 if chat_session.persona_locked else 0,
                     json.dumps(sorted(chat_session.triggered_event_ids)),
+                    json.dumps(sorted(chat_session.disabled_lorebook_ids)),
+                    json.dumps(list(chat_session.custom_lorebook_ids)),
                     created_str,
                 ),
             )
@@ -88,7 +91,8 @@ class ChatRepository:
                 SET persona_id = ?, active_worldinfo_id = ?, current_location_id = ?,
                     title = ?, relationship_value = ?, events_enabled = ?,
                     cooldown_counter = ?, last_message_at = ?, persona_locked = ?,
-                    triggered_event_ids_json = ?
+                    triggered_event_ids_json = ?, disabled_lorebook_ids_json = ?,
+                    custom_lorebook_ids_json = ?
                 WHERE id = ?
                 """,
                 (
@@ -102,6 +106,8 @@ class ChatRepository:
                     last_msg_str,
                     1 if chat_session.persona_locked else 0,
                     json.dumps(sorted(chat_session.triggered_event_ids)),
+                    json.dumps(sorted(chat_session.disabled_lorebook_ids)),
+                    json.dumps(list(chat_session.custom_lorebook_ids)),
                     chat_session.id,
                 ),
             )
@@ -261,8 +267,27 @@ class ChatRepository:
     def _session_to_entity(row: sqlite3.Row) -> ChatSession:
         try:
             trig_ids = set(int(x) for x in json.loads(str(row["triggered_event_ids_json"])))
-        except (json.JSONDecodeError, TypeError, ValueError):
+        except (json.JSONDecodeError, TypeError, ValueError, KeyError):
             trig_ids = set()
+
+        keys = row.keys()
+        try:
+            disabled_lb_ids = (
+                set(int(x) for x in json.loads(str(row["disabled_lorebook_ids_json"])))
+                if "disabled_lorebook_ids_json" in keys and row["disabled_lorebook_ids_json"]
+                else set()
+            )
+        except (json.JSONDecodeError, TypeError, ValueError, KeyError):
+            disabled_lb_ids = set()
+
+        try:
+            custom_lb_ids = (
+                [int(x) for x in json.loads(str(row["custom_lorebook_ids_json"]))]
+                if "custom_lorebook_ids_json" in keys and row["custom_lorebook_ids_json"]
+                else []
+            )
+        except (json.JSONDecodeError, TypeError, ValueError, KeyError):
+            custom_lb_ids = []
 
         return ChatSession(
             id=int(row["id"]),
@@ -291,6 +316,8 @@ class ChatRepository:
             ),
             persona_locked=bool(row["persona_locked"]),
             triggered_event_ids=trig_ids,
+            disabled_lorebook_ids=disabled_lb_ids,
+            custom_lorebook_ids=custom_lb_ids,
             created_at=parse_datetime(row["created_at"]),
         )
 

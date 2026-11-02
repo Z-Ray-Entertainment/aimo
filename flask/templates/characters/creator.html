@@ -352,17 +352,25 @@
         <div id="linked-lorebooks-list" class="lorebook-list">
           {% for lb in lorebooks %}
             {% if lb.id in form.linked_lorebook_ids %}
-              <div class="lorebook-list-item" data-lorebook-id="{{ lb.id }}">
+              <div class="lorebook-list-item" data-lorebook-id="{{ lb.id }}" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
                 <input type="hidden" name="linked_lorebook_ids" value="{{ lb.id }}">
-                <div>
+                <div style="flex: 1; min-width: 200px;">
                   <div style="font-weight: 700; color: var(--gold-accent); font-size: 0.95rem;">{{ lb.name }}</div>
                   {% if lb.description %}
                     <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.15rem;">{{ lb.description }}</div>
                   {% endif %}
                 </div>
-                <button type="button" class="aimo-btn danger remove-lorebook-btn" data-id="{{ lb.id }}" title="Lorebook entkoppeln">
-                  <span class="icon-mono">🗑️</span>
-                </button>
+                <div style="display: flex; align-items: center; gap: 0.65rem;">
+                  <select name="lorebook_world_condition_{{ lb.id }}" style="font-size: 0.82rem; padding: 0.35rem 0.6rem; max-width: 240px;" title="Wann soll dieses Lorebook aktiv sein?">
+                    <option value="" {% if not form.lorebook_world_conditions.get(lb.id) %}selected{% endif %}>🌍 Alle Welten (Immer aktiv)</option>
+                    {% for wi in worldinfos %}
+                      <option value="{{ wi.id }}" {% if form.lorebook_world_conditions.get(lb.id) == wi.id %}selected{% endif %}>🌐 Nur in Welt: {{ wi.name }}</option>
+                    {% endfor %}
+                  </select>
+                  <button type="button" class="aimo-btn danger remove-lorebook-btn" data-id="{{ lb.id }}" title="Lorebook entkoppeln">
+                    <span class="icon-mono">🗑️</span>
+                  </button>
+                </div>
               </div>
             {% endif %}
           {% endfor %}
@@ -1024,6 +1032,12 @@ document.getElementById("extract-appearance-btn")?.addEventListener("click", asy
     });
   });
 
+  const availableWorldinfos = [
+    {% for wi in worldinfos %}
+      { id: {{ wi.id }}, name: {{ wi.name|tojson }} },
+    {% endfor %}
+  ];
+
   pickerList.querySelectorAll(".lorebook-picker-item").forEach(item => {
     item.addEventListener("click", () => {
       if (item.classList.contains("already-added")) return;
@@ -1036,6 +1050,11 @@ document.getElementById("extract-appearance-btn")?.addEventListener("click", asy
       const row = document.createElement("div");
       row.className = "lorebook-list-item";
       row.setAttribute("data-lorebook-id", lbId);
+      row.style.display = "flex";
+      row.style.justifyContent = "space-between";
+      row.style.alignItems = "center";
+      row.style.gap = "1rem";
+      row.style.flexWrap = "wrap";
 
       const hidden = document.createElement("input");
       hidden.type = "hidden";
@@ -1044,9 +1063,30 @@ document.getElementById("extract-appearance-btn")?.addEventListener("click", asy
       row.appendChild(hidden);
 
       const info = document.createElement("div");
+      info.style.flex = "1";
+      info.style.minWidth = "200px";
       info.innerHTML = `<div style="font-weight: 700; color: var(--gold-accent); font-size: 0.95rem;">${lbName}</div>` +
         (lbDesc ? `<div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.15rem;">${lbDesc}</div>` : "");
       row.appendChild(info);
+
+      const actionsDiv = document.createElement("div");
+      actionsDiv.style.display = "flex";
+      actionsDiv.style.alignItems = "center";
+      actionsDiv.style.gap = "0.65rem";
+
+      let optionsHtml = '<option value="">🌍 Alle Welten (Immer aktiv)</option>';
+      availableWorldinfos.forEach(wi => {
+        optionsHtml += `<option value="${wi.id}">🌐 Nur in Welt: ${wi.name}</option>`;
+      });
+
+      const select = document.createElement("select");
+      select.name = `lorebook_world_condition_${lbId}`;
+      select.style.fontSize = "0.82rem";
+      select.style.padding = "0.35rem 0.6rem";
+      select.style.maxWidth = "240px";
+      select.title = "Wann soll dieses Lorebook aktiv sein?";
+      select.innerHTML = optionsHtml;
+      actionsDiv.appendChild(select);
 
       const delBtn = document.createElement("button");
       delBtn.type = "button";
@@ -1059,7 +1099,9 @@ document.getElementById("extract-appearance-btn")?.addEventListener("click", asy
         item.querySelector(".picker-status-badge").textContent = "+ Hinzufügen";
         updateEmptyNotice();
       });
-      row.appendChild(delBtn);
+      actionsDiv.appendChild(delBtn);
+
+      row.appendChild(actionsDiv);
 
       linkedList.appendChild(row);
 

@@ -2688,6 +2688,7 @@ button.chat-menu-dropdown-item.danger:focus {
 }
 
 .lorebook-list-item {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2695,7 +2696,8 @@ button.chat-menu-dropdown-item.danger:focus {
   background: var(--bg-card);
   border: 1px solid var(--border-wood-dark);
   border-radius: var(--radius-card);
-  padding: 0.85rem 1.15rem;
+  padding: 0.85rem 8.5rem 0.85rem 1.15rem;
+  min-height: 58px;
   transition: all 0.2s ease;
 }
 
@@ -2707,6 +2709,101 @@ button.chat-menu-dropdown-item.danger:focus {
   padding: 0.28rem 0.5rem;
   font-size: 0.82rem;
   line-height: 1;
+}
+
+.lorebook-item-actions-overlay {
+  position: absolute;
+  right: 1.15rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  z-index: 2;
+}
+
+/* System-weiter RPG Toggle-Switch (.aimo-switch) */
+.aimo-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.aimo-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.aimo-switch-slider {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  background-color: var(--bg-wood-dark, #1c140e);
+  border: 1px solid var(--border-wood-dark, #3d2a1d);
+  border-radius: 24px;
+  transition: all 0.25s ease;
+}
+
+.aimo-switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--text-muted, #9c8a78);
+  border-radius: 50%;
+  transition: all 0.25s ease;
+}
+
+.aimo-switch input:checked + .aimo-switch-slider {
+  background-color: rgba(212, 163, 89, 0.25);
+  border-color: var(--gold-accent, #d4a359);
+}
+
+.aimo-switch input:checked + .aimo-switch-slider:before {
+  transform: translateX(20px);
+  background-color: var(--gold-accent, #d4a359);
+  box-shadow: 0 0 6px rgba(212, 163, 89, 0.6);
+}
+
+.aimo-switch input:focus-visible + .aimo-switch-slider {
+  outline: 2px solid var(--gold-accent, #d4a359);
+}
+
+.aimo-switch input:disabled + .aimo-switch-slider {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: #4a3a2d;
+}
+
+.aimo-switch.disabled {
+  cursor: not-allowed;
+}
+
+/* Lorebook Picker Cards im Overlay-Modal */
+.lorebook-picker-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.lorebook-picker-card:hover:not(.already-added) {
+  border-color: var(--gold-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.lorebook-picker-card.already-added {
+  opacity: 0.5;
+  cursor: default;
+  border-style: dashed;
 }
 
 .lorebook-picker-list {

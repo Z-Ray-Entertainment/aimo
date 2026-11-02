@@ -26,5 +26,9 @@ class LorebookEntry:
     title: str
     tags: list[str]
     content: str
+    visibility: str = "public"
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+    def is_visible_to_user(self, lorebook_owner_id: int, user_id: int, is_admin: bool = False) -> bool:
+        return self.visibility == "public" or lorebook_owner_id == user_id or is_admin

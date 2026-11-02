@@ -72,17 +72,19 @@ class LorebookRepository(BaseRepository[Lorebook]):
     def add_entry(self, entry: LorebookEntry) -> LorebookEntry:
         created_str = format_datetime(entry.created_at)
         updated_str = format_datetime(entry.updated_at)
+        vis = getattr(entry, "visibility", "public") or "public"
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO lorebook_entries (lorebook_id, title, tags_json, content, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO lorebook_entries (lorebook_id, title, tags_json, content, visibility, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     entry.lorebook_id,
                     entry.title,
                     json.dumps(entry.tags),
                     entry.content,
+                    vis,
                     created_str,
                     updated_str,
                 ),
@@ -98,6 +100,7 @@ class LorebookRepository(BaseRepository[Lorebook]):
         if entry.id is None:
             return self.add_entry(entry)
         updated_str = format_datetime(entry.updated_at)
+        vis = getattr(entry, "visibility", "public") or "public"
         with get_db_session() as conn:
             existing = conn.execute(
                 "SELECT id FROM lorebook_entries WHERE id = ?",
@@ -108,13 +111,14 @@ class LorebookRepository(BaseRepository[Lorebook]):
             conn.execute(
                 """
                 UPDATE lorebook_entries
-                SET title = ?, tags_json = ?, content = ?, updated_at = ?
+                SET title = ?, tags_json = ?, content = ?, visibility = ?, updated_at = ?
                 WHERE id = ?
                 """,
                 (
                     entry.title,
                     json.dumps(entry.tags),
                     entry.content,
+                    vis,
                     updated_str,
                     entry.id,
                 ),
@@ -128,12 +132,27 @@ class LorebookRepository(BaseRepository[Lorebook]):
     def get_entry(self, entry_id: int) -> LorebookEntry | None:
         return self._get_by_id("lorebook_entries", entry_id, self._entry_to_entity)
 
-    def list_entries(self, lorebook_id: int) -> list[LorebookEntry]:
-        return self._fetch_all(
+    def list_entries(
+        self,
+        lorebook_id: int,
+        user_id: int | None = None,
+        is_admin: bool = False,
+    ) -> list[LorebookEntry]:
+        all_entries = self._fetch_all(
             "SELECT * FROM lorebook_entries WHERE lorebook_id = ? ORDER BY id ASC",
             (lorebook_id,),
             self._entry_to_entity,
         )
+        if user_id is None:
+            return all_entries
+        lorebook = self.get_by_id(lorebook_id)
+        if lorebook is None:
+            return []
+        owner_id = lorebook.user_id
+        return [
+            e for e in all_entries
+            if e.is_visible_to_user(owner_id, user_id, is_admin)
+        ]
 
     def list_entries_for_lorebooks(self, lorebook_ids: list[int]) -> list[LorebookEntry]:
         if not lorebook_ids:
@@ -167,12 +186,15 @@ class LorebookRepository(BaseRepository[Lorebook]):
             tags = json.loads(row["tags_json"])
         except json.JSONDecodeError:
             tags = []
+        keys = row.keys()
+        vis = str(row["visibility"]) if ("visibility" in keys and row["visibility"]) else "public"
         return LorebookEntry(
             id=int(row["id"]),
             lorebook_id=int(row["lorebook_id"]),
             title=str(row["title"]),
             tags=list(tags) if isinstance(tags, list) else [],
             content=str(row["content"]),
+            visibility=vis,
             created_at=parse_datetime(row["created_at"]),
             updated_at=parse_datetime(row["updated_at"]),
         )

@@ -64,7 +64,7 @@ def index():
     for lb in lorebooks:
         if lb.id is None:
             continue
-        entries = lb_repo.list_entries(lb.id)
+        entries = lb_repo.list_entries(lb.id, user_id=user.id, is_admin=user.is_initial_admin)
         all_tags = []
         for e in entries:
             for t in e.tags:
@@ -111,6 +111,7 @@ def index():
         "overview/index.html",
         character_cards=character_cards,
         lorebook_cards=lorebook_cards,
+        lorebooks=lorebooks,
         worldinfo_cards=worldinfo_cards,
         persona_items=persona_items,
         gender_filter=gender_filter,

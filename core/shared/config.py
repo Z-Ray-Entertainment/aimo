@@ -56,7 +56,7 @@ class Config:
     CORE_URL: str = os.getenv("AIMO_CORE_URL", f"http://{CORE_HOST}:{CORE_PORT}")
 
     DATABASE_PATH: Path = Path(
-        os.getenv("AIMO_DATABASE_PATH", str(DATA_DIR / "aimo.db"))
+        os.getenv("AIMO_DATABASE_PATH", os.getenv("DATABASE_PATH", str(DATA_DIR / "aimo.db")))
     ).resolve()
     DATABASE_URI: str = os.getenv("AIMO_DATABASE_URI", f"sqlite:///{DATABASE_PATH}")
 

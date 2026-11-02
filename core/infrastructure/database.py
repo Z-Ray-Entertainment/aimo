@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS lorebook_entries (
     title TEXT NOT NULL,
     tags_json TEXT NOT NULL DEFAULT '[]',
     content TEXT NOT NULL DEFAULT '',
+    visibility TEXT NOT NULL DEFAULT 'public',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );
@@ -66,6 +67,7 @@ CREATE TABLE IF NOT EXISTS worldinfos (
     icon TEXT,
     visibility TEXT NOT NULL DEFAULT 'private',
     cover_image_path TEXT,
+    lorebook_id INTEGER REFERENCES lorebooks(id) ON DELETE SET NULL,
     created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_worldinfos_user_id ON worldinfos (user_id);
@@ -105,6 +107,7 @@ CREATE TABLE IF NOT EXISTS characters (
     description TEXT NOT NULL DEFAULT '',
     dialogue_examples_json TEXT NOT NULL DEFAULT '[]',
     linked_lorebook_ids_json TEXT NOT NULL DEFAULT '[]',
+    lorebook_world_conditions_json TEXT NOT NULL DEFAULT '{}',
     suggested_worldinfo_id INTEGER REFERENCES worldinfos(id) ON DELETE SET NULL,
     first_message TEXT NOT NULL DEFAULT '',
     initial_location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL,
@@ -147,6 +150,8 @@ CREATE TABLE IF NOT EXISTS chat_sessions (
     parent_session_id INTEGER REFERENCES chat_sessions(id) ON DELETE SET NULL,
     persona_locked INTEGER NOT NULL DEFAULT 0,
     triggered_event_ids_json TEXT NOT NULL DEFAULT '[]',
+    disabled_lorebook_ids_json TEXT NOT NULL DEFAULT '[]',
+    custom_lorebook_ids_json TEXT NOT NULL DEFAULT '[]',
     created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_chat_sessions_user_id ON chat_sessions (user_id);
@@ -255,12 +260,27 @@ def parse_datetime(raw: str | datetime | None) -> datetime:
         return datetime.now(timezone.utc)
 
 
+def set_db_path(target: Path | str | None) -> None:
+    global _RESOLVED_DB_PATH
+    if target is None:
+        _RESOLVED_DB_PATH = None
+    else:
+        raw = str(target)
+        if raw.startswith("sqlite:///"):
+            raw = raw[len("sqlite:///") :]
+        _RESOLVED_DB_PATH = Path(raw).resolve()
+
+
 def _resolve_db_path(target: Path | str | None = None) -> Path:
     global _RESOLVED_DB_PATH
-    if target is None and _RESOLVED_DB_PATH is not None:
+    if target is not None:
+        raw_target = target
+    elif _RESOLVED_DB_PATH is not None:
         return _RESOLVED_DB_PATH
+    else:
+        env_path = os.getenv("AIMO_DATABASE_PATH") or os.getenv("DATABASE_PATH")
+        raw_target = env_path if env_path else Config.DATABASE_PATH
 
-    raw_target = target if target is not None else Config.DATABASE_PATH
     if isinstance(raw_target, str):
         if raw_target.startswith("sqlite:///"):
             raw_target = raw_target[len("sqlite:///") :]
@@ -272,7 +292,7 @@ def _resolve_db_path(target: Path | str | None = None) -> Path:
     try:
         parent.mkdir(parents=True, exist_ok=True)
         if os.access(parent, os.W_OK):
-            if target is None:
+            if target is None and _RESOLVED_DB_PATH is None:
                 _RESOLVED_DB_PATH = candidate
             return candidate
     except OSError:
@@ -281,7 +301,7 @@ def _resolve_db_path(target: Path | str | None = None) -> Path:
     fallback_dir = Path("/tmp/aimo/data")
     fallback_dir.mkdir(parents=True, exist_ok=True)
     fallback_path = fallback_dir / candidate.name
-    if target is None:
+    if target is None and _RESOLVED_DB_PATH is None:
         _RESOLVED_DB_PATH = fallback_path
     return fallback_path
 
@@ -348,6 +368,11 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE worldinfos ADD COLUMN visibility TEXT NOT NULL DEFAULT 'private'",
         "ALTER TABLE worldinfos ADD COLUMN initial_location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL",
         "ALTER TABLE worldinfos ADD COLUMN cover_image_path TEXT",
+        "ALTER TABLE worldinfos ADD COLUMN lorebook_id INTEGER REFERENCES lorebooks(id) ON DELETE SET NULL",
+        "ALTER TABLE chat_sessions ADD COLUMN disabled_lorebook_ids_json TEXT NOT NULL DEFAULT '[]'",
+        "ALTER TABLE chat_sessions ADD COLUMN custom_lorebook_ids_json TEXT NOT NULL DEFAULT '[]'",
+        "ALTER TABLE lorebook_entries ADD COLUMN visibility TEXT NOT NULL DEFAULT 'public'",
+        "ALTER TABLE characters ADD COLUMN lorebook_world_conditions_json TEXT NOT NULL DEFAULT '{}'",
         "ALTER TABLE system_settings ADD COLUMN classification_model TEXT NOT NULL DEFAULT 'hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M'",
         "ALTER TABLE system_settings ADD COLUMN default_backdrop_path TEXT",
     ):
