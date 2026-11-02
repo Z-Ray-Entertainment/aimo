@@ -56,9 +56,14 @@ def _render_creator(character=None, form=None):
     worldinfos = wi_repo.list_all(uid)
     all_locations = []
     locations_by_world = {}
+    target_char_id = character.id if character and character.id else None
     for wi in worldinfos:
         if wi.id is not None:
-            locs = wi_repo.list_locations(wi.id)
+            raw_locs = wi_repo.list_locations(wi.id)
+            locs = [
+                loc for loc in raw_locs
+                if loc.character_id is None or loc.character_id == target_char_id
+            ]
             locations_by_world[wi.id] = [
                 {"id": loc.id, "name": loc.name, "worldinfo_id": loc.worldinfo_id}
                 for loc in locs

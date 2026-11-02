@@ -35,10 +35,14 @@ The editor is organized into four functional tabs:
 
 A gallery of all locales in this world:
 - First tile (`+`) to register a new place.
+- **Grid Overview & Locked Locations:**
+  - Each place is displayed as an atmospheric card tile (capsule) with its 16:9 preview and description snippet.
+  - **Character Lock (`🔒`):** Locations bound to a specific character display a lock badge in the upper-left corner of the capsule and a character pill next to the title.
+  - **Hover Tooltip:** Hovering the mouse cursor over a locked capsule displays the tooltip: *"Dieser Ort ist an [Name] gebunden"*.
 - **Location Overlay (Modal):**
   - **Name:** E.g., *"The Drunken Troll Tavern"*, *"Forgotten Glade"*.
   - **Tags:** Keywords for environment matching.
-  - **Description:** Atmospheric prose describing sensory details, sounds, lighting, and mood.
+  - **Character Binding (Optional):** Creators can optionally restrict this location to a specific character. Only chats played with this designated character can visit or enter this venue. For all other characters, the location is inaccessible and omitted from their in-chat location options.
   - **16:9 Background Image:** Landscape image upload (PNG, JPG, WEBP). Serves as the atmospheric chat background and is passed to ComfyUI for consistent image generation.
   - **Vision-ALT Tag & Interactive Text Expansion:** Upon image upload, a Vision model generates a visual scene description. The system then prompts interactively: *"Would you like to expand the location description with this AI image description?"*.
   - **Event Assignment:** List of events tied specifically to this location.

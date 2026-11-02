@@ -372,7 +372,10 @@ def _start_background_turn(
                 else None
             )
             available_locations = (
-                w_wi_repo.list_locations(w_worldinfo.id)
+                [
+                    loc for loc in w_wi_repo.list_locations(w_worldinfo.id)
+                    if loc.character_id is None or loc.character_id == w_session.character_id
+                ]
                 if w_worldinfo and w_worldinfo.id is not None
                 else []
             )
@@ -535,7 +538,9 @@ def _start_background_turn(
             if w_session.active_worldinfo_id is not None:
                 locations = w_wi_repo.list_locations(w_session.active_worldinfo_id)
                 other_locations = [
-                    loc for loc in locations if loc.id != w_session.current_location_id
+                    loc for loc in locations
+                    if loc.id != w_session.current_location_id
+                    and (loc.character_id is None or loc.character_id == w_session.character_id)
                 ]
                 if other_locations:
                     loc_candidates = ["stay_here"] + [loc.name for loc in other_locations]
@@ -1003,6 +1008,9 @@ def switch_location(session_id: int):
     wi = wi_repo.get_by_id(location.worldinfo_id)
     if wi and not wi.is_visible_to_user(user.id, is_admin):
         return jsonify({"error": "Location not found."}), 404
+
+    if location.character_id is not None and location.character_id != chat_session.character_id:
+        return jsonify({"error": "Dieser Ort ist an einen anderen Charakter gebunden und kann nicht betreten werden."}), 403
 
     chat_session.current_location_id = location.id
     chat_repo.update_session(chat_session)

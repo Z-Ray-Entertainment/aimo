@@ -84,9 +84,11 @@ CREATE TABLE IF NOT EXISTS locations (
     tags_json TEXT NOT NULL DEFAULT '[]',
     description TEXT NOT NULL DEFAULT '',
     background_image_path TEXT,
-    vision_alt_text TEXT
+    vision_alt_text TEXT,
+    character_id INTEGER REFERENCES characters(id) ON DELETE SET NULL
 );
 CREATE INDEX IF NOT EXISTS ix_locations_worldinfo_id ON locations (worldinfo_id);
+CREATE INDEX IF NOT EXISTS ix_locations_character_id ON locations (character_id);
 
 CREATE TABLE IF NOT EXISTS events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -385,6 +387,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE characters ADD COLUMN collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]'",
         "ALTER TABLE worldinfos ADD COLUMN collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]'",
         "ALTER TABLE lorebooks ADD COLUMN collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]'",
+        "ALTER TABLE locations ADD COLUMN character_id INTEGER REFERENCES characters(id) ON DELETE SET NULL",
     ):
         try:
             conn.execute(stmt)
@@ -392,6 +395,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
             pass
 
     try:
+        conn.execute("CREATE INDEX IF NOT EXISTS ix_locations_character_id ON locations (character_id)")
         conn.execute("CREATE INDEX IF NOT EXISTS ix_users_creator_tag ON users (creator_tag)")
         user_rows = conn.execute("SELECT id FROM users WHERE creator_tag IS NULL OR creator_tag = ''").fetchall()
         for u_row in user_rows:

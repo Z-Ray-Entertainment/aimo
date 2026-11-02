@@ -43,6 +43,12 @@ class Location:
     description: str
     background_image_path: str | None = None
     vision_alt_text: str | None = None
+    character_id: int | None = None
+
+    def is_accessible_by_character(self, character_id: int | None) -> bool:
+        if self.character_id is None:
+            return True
+        return character_id == self.character_id
 
 
 @dataclass

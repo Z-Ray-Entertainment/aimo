@@ -115,6 +115,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                 description=loc.description,
                 background_image_path=loc.background_image_path,
                 vision_alt_text=loc.vision_alt_text,
+                character_id=loc.character_id,
             )
             saved_loc = self.add_location(clone_loc)
             assert saved_loc.id is not None
@@ -144,9 +145,9 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             cursor = conn.execute(
                 """
                 INSERT INTO locations (
-                    worldinfo_id, name, tags_json, description, background_image_path, vision_alt_text
+                    worldinfo_id, name, tags_json, description, background_image_path, vision_alt_text, character_id
                 )
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     location.worldinfo_id,
@@ -155,6 +156,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     location.description,
                     location.background_image_path,
                     location.vision_alt_text,
+                    location.character_id,
                 ),
             )
             new_id = int(cursor.lastrowid or 0)
@@ -177,7 +179,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             conn.execute(
                 """
                 UPDATE locations
-                SET name = ?, tags_json = ?, description = ?, background_image_path = ?, vision_alt_text = ?
+                SET name = ?, tags_json = ?, description = ?, background_image_path = ?, vision_alt_text = ?, character_id = ?
                 WHERE id = ?
                 """,
                 (
@@ -186,6 +188,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     location.description,
                     location.background_image_path,
                     location.vision_alt_text,
+                    location.character_id,
                     location.id,
                 ),
             )
@@ -329,6 +332,10 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             tags = json.loads(row["tags_json"])
         except json.JSONDecodeError:
             tags = []
+        char_id = None
+        if "character_id" in row.keys() and row["character_id"] is not None:
+            char_id = int(row["character_id"])
+
         return Location(
             id=int(row["id"]),
             worldinfo_id=int(row["worldinfo_id"]),
@@ -345,6 +352,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                 if row["vision_alt_text"] is not None
                 else None
             ),
+            character_id=char_id,
         )
 
     @staticmethod

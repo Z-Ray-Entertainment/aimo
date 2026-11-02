@@ -385,9 +385,11 @@
           <select id="chat-location-select" onchange="manualSwitchLocation(this.value)" style="padding: 0.4rem; width: 100%;">
             <option value="">-- Ort wählen --</option>
             {% for loc in worldinfo_locations %}
-              <option value="{{ loc.id }}" {% if current_location and loc.id == current_location.id %}selected{% endif %}>
-                📍 {{ loc.name }}
-              </option>
+              {% if not loc.character_id or loc.character_id == character.id %}
+                <option value="{{ loc.id }}" {% if current_location and loc.id == current_location.id %}selected{% endif %}>
+                  📍 {{ loc.name }}
+                </option>
+              {% endif %}
             {% endfor %}
           </select>
         </div>

@@ -123,6 +123,7 @@ class WorldInfoService:
         description: str,
         bg_path: str | None = None,
         vision_alt_text: str | None = None,
+        character_id: int | None = None,
     ) -> Location:
         if isinstance(worldinfo_id, bool) or not isinstance(worldinfo_id, int) or worldinfo_id <= 0:
             raise InvalidWorldInfoDataError("A valid positive worldinfo_id is required.")
@@ -139,6 +140,11 @@ class WorldInfoService:
             if isinstance(vision_alt_text, str) and vision_alt_text.strip()
             else None
         )
+        valid_char_id = (
+            int(character_id)
+            if character_id is not None and not isinstance(character_id, bool) and int(character_id) > 0
+            else None
+        )
 
         return Location(
             id=None,
@@ -148,6 +154,7 @@ class WorldInfoService:
             description=cleaned_desc,
             background_image_path=cleaned_bg,
             vision_alt_text=cleaned_alt,
+            character_id=valid_char_id,
         )
 
     def update_location(
@@ -158,6 +165,7 @@ class WorldInfoService:
         description: str,
         bg_path: str | None = None,
         vision_alt_text: str | None = None,
+        character_id: int | None | object = ...,
     ) -> Location:
         cleaned_name = name.strip() if isinstance(name, str) else ""
         if not cleaned_name:
@@ -170,6 +178,12 @@ class WorldInfoService:
             location.background_image_path = bg_path.strip() if bg_path.strip() else None
         if vision_alt_text is not None:
             location.vision_alt_text = vision_alt_text.strip() if vision_alt_text.strip() else None
+        if character_id is not ...:
+            location.character_id = (
+                int(character_id)
+                if character_id is not None and not isinstance(character_id, bool) and int(character_id) > 0
+                else None
+            )
         return location
 
     def add_event(

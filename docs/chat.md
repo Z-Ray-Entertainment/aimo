@@ -62,12 +62,14 @@ Because modern LLMs write with the greatest depth and nuance in English while th
 
 ---
 
-## 🧭 Interactive Location Transitions (Text Adventure)
+## 🧭 Interactive Location Transitions & Venue Management (Text Adventure)
 
-When the AI narrative suggests travelling to a new location (e.g., *"Let us set out into the forest"*):
-- A confirmation button appears in chat: *"Would you like to move to [New Location]? [Yes] [No]"*.
-- **60-Second Countdown:** A red progress bar along the bottom edge of the button steadily shrinks over 60 seconds. If ignored, the prompt silently dissolves.
-- **On "Yes":** The location shifts, the 16:9 background image changes, and a discreet centered system notification appears: *"You travelled to {location}"*. This notice is **never** added to the LLM prompt history.
+- **Character-Bound Location Filtering:** Locations bound to another character are completely hidden from the chat's location dropdown and will never be suggested by the AI narrative. Only unrestricted locations and venues bound to the active character are accessible.
+- **Manual Location Selector:** Located in the right sidebar under the active WorldInfo. Players can freely choose between all accessible locations within the world at any time.
+- **Dynamic AI Location Suggestions:** When the AI narrative suggests travelling to an accessible location (e.g., *"Let us set out into the forest"*):
+  - A confirmation button appears in chat: *"Would you like to move to [New Location]? [Yes] [No]"*.
+  - **60-Second Countdown:** A red progress bar along the bottom edge of the button steadily shrinks over 60 seconds. If ignored, the prompt silently dissolves.
+  - **On "Yes":** The location shifts, the 16:9 background image changes, and a discreet centered system notification appears: *"You travelled to {location}"*. This notice is **never** added to the LLM prompt history.
 
 ---
 

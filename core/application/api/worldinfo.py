@@ -41,6 +41,7 @@ def list_worldinfo():
                         "description": loc.description,
                         "background_image_path": loc.background_image_path,
                         "vision_alt_text": loc.vision_alt_text,
+                        "character_id": loc.character_id,
                     }
                     for loc in locations
                 ],

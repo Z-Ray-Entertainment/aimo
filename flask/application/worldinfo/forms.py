@@ -10,6 +10,7 @@ class LocationForm:
     description: str = ""
     background_image_path: str = ""
     vision_alt_text: str = ""
+    character_id: int | None = None
 
     @classmethod
     def from_request(cls, form_data) -> "LocationForm":
@@ -20,6 +21,7 @@ class LocationForm:
             description=p.to_str(form_data, "description"),
             background_image_path=p.to_str(form_data, "background_image_path"),
             vision_alt_text=p.to_str(form_data, "vision_alt_text"),
+            character_id=p.to_opt_int(form_data, "character_id"),
         )
 
 

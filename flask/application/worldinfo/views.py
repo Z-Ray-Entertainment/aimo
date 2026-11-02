@@ -4,6 +4,7 @@ from application.auth.decorators import get_current_user, require_auth, require_
 from application.worldinfo.forms import EventForm, LocationForm
 from domain.permissions.models import FunctionPermission
 from domain.worldinfo.services import WorldInfoService
+from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.lorebook_repository import LorebookRepository
 from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
@@ -94,6 +95,15 @@ def detail(worldinfo_id: int):
     lb_repo = LorebookRepository()
     lorebooks = lb_repo.list_visible(user.id)
 
+    char_repo = CharacterRepository()
+    available_characters = char_repo.list_visible(user.id)
+    character_map = {c.id: c for c in available_characters if c.id is not None}
+    for loc in locations:
+        if loc.character_id and loc.character_id not in character_map:
+            c = char_repo.get_by_id(loc.character_id)
+            if c and c.id is not None:
+                character_map[c.id] = c
+
     trans_repo = TranslationRepository()
     location_translations = {
         loc.id: (
@@ -126,6 +136,8 @@ def detail(worldinfo_id: int):
         lorebooks=lorebooks,
         locations=locations,
         events=events,
+        available_characters=available_characters,
+        character_map=character_map,
         loc_map=loc_map,
         loc_translations=location_translations,
         ev_translations=event_translations,
@@ -192,6 +204,7 @@ def add_location(worldinfo_id: int):
             description=form.description,
             bg_path=bg_path,
             vision_alt_text=form.vision_alt_text or None,
+            character_id=form.character_id,
         )
         saved_loc = repo.add_location(loc)
         TranslationRepository().save_field_variants_json(
@@ -234,6 +247,7 @@ def edit_location(worldinfo_id: int, location_id: int):
                 description=form.description,
                 bg_path=bg_path,
                 vision_alt_text=form.vision_alt_text or loc.vision_alt_text,
+                character_id=form.character_id,
             )
             repo.update_location(loc)
             TranslationRepository().save_field_variants_json(

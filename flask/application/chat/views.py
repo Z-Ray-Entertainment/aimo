@@ -227,7 +227,8 @@ def new_character_chat(character_id: int):
         if character.initial_location_id and form.worldinfo_id:
             loc = wi_repo.get_location(character.initial_location_id)
             if loc and loc.worldinfo_id == form.worldinfo_id:
-                initial_loc = character.initial_location_id
+                if loc.character_id is None or loc.character_id == character.id:
+                    initial_loc = character.initial_location_id
         try:
             disabled_lb_set = set(form.disabled_lorebook_ids)
             session_obj, first_msg = chat_service.create_session(
@@ -373,11 +374,15 @@ def view_session(session_id: int):
         if chat_session.active_worldinfo_id and chat_session.current_location_id
         else None
     )
-    worldinfo_locations = (
+    raw_locations = (
         wi_repo.list_locations(worldinfo.id)
         if worldinfo and worldinfo.id is not None
         else []
     )
+    worldinfo_locations = [
+        loc for loc in raw_locations
+        if loc.character_id is None or loc.character_id == character.id
+    ]
     worldinfo_events = (
         wi_repo.list_events(worldinfo.id)
         if worldinfo and worldinfo.id is not None
@@ -483,7 +488,8 @@ def update_session_settings(session_id: int):
                 if char and char.initial_location_id:
                     loc = wi_repo.get_location(char.initial_location_id)
                     if loc and loc.worldinfo_id == new_wi_id:
-                        init_loc = char.initial_location_id
+                        if loc.character_id is None or loc.character_id == char.id:
+                            init_loc = char.initial_location_id
             chat_service.switch_worldinfo(chat_session, new_wi_id, init_loc)
             flash("WorldInfo für diesen Chat gewechselt.", "success")
         elif action == "toggle_events":

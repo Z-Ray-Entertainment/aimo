@@ -133,11 +133,27 @@
       {% endif %}
 
       {% for loc in locations %}
-        <div class="card-tile" style="{% if is_editable %}cursor: pointer;{% endif %} justify-content: space-between;" {% if is_editable %}data-modal-open="edit-location-modal-{{ loc.id }}"{% endif %}>
+        {% set bound_char = character_map.get(loc.character_id) if loc.character_id and character_map else none %}
+        <div class="card-tile location-card-tile {% if bound_char %}is-locked{% endif %}"
+             style="{% if is_editable %}cursor: pointer;{% endif %} justify-content: space-between;"
+             {% if bound_char %}title="Dieser Ort ist an {{ bound_char.name }} gebunden"{% endif %}
+             {% if is_editable %}data-modal-open="edit-location-modal-{{ loc.id }}"{% endif %}>
+          {% if bound_char %}
+            <div class="location-lock-badge" title="Dieser Ort ist an {{ bound_char.name }} gebunden">
+              <span class="lock-icon">🔒</span>
+            </div>
+          {% endif %}
           <div style="height: 140px; background-image: url('{% if loc.background_image_path %}{{ url_for('uploaded_file', filename=loc.background_image_path) }}{% else %}/static/img/cover.svg{% endif %}'); background-size: cover; background-position: center; border-bottom: 1px solid var(--border-wood-dark);"></div>
           <div style="padding: 1rem; flex: 1;">
-            <h3 style="color: var(--gold-accent); margin-bottom: 0.4rem;">📍 {{ loc.name }}</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">{{ loc.description[:120] }}{% if loc.description|length > 120 %}...{% endif %}</p>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.4rem;">
+              <h3 style="color: var(--gold-accent); margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">📍 {{ loc.name }}</h3>
+              {% if bound_char %}
+                <span class="aimo-card-badge" style="font-size: 0.72rem; padding: 0.15rem 0.45rem; flex-shrink: 0;" title="Dieser Ort ist an {{ bound_char.name }} gebunden">
+                  🔒 {{ bound_char.name }}
+                </span>
+              {% endif %}
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">{{ loc.description[:120] }}{% if loc.description|length > 120 %}...{% endif %}</p>
           </div>
         </div>
 
@@ -202,6 +218,21 @@
                   data-i18n-entity-type="worldinfo_location"
                   data-i18n-entity-id="{{ loc.id }}"
                   data-i18n-hidden="i18n-wi-loc-{{ loc.id }}">{{ loc.description }}</textarea>
+              </div>
+
+              <div>
+                <label>
+                  Charakter-Bindung (Optional)
+                  <span class="field-help-btn" title="Charakter-Bindung:&#10;Wenn ausgewählt, kann diese Location nur betreten werden, wenn der Spieler im Chat mit diesem spezifischen Charakter spielt. Für alle anderen Charaktere ist der Ort gesperrt.">?</span>
+                </label>
+                <select name="character_id">
+                  <option value="">-- Kein Charakter (Frei betretbar) --</option>
+                  {% for char in available_characters %}
+                    <option value="{{ char.id }}" {% if loc.character_id == char.id %}selected{% endif %}>
+                      👤 {{ char.name }}
+                    </option>
+                  {% endfor %}
+                </select>
               </div>
 
               <div>
@@ -403,6 +434,21 @@
           data-i18n-hidden="i18n-wi-loc-new"></textarea>
       </div>
 
+      <div>
+        <label>
+          Charakter-Bindung (Optional)
+          <span class="field-help-btn" title="Charakter-Bindung:&#10;Wenn ausgewählt, kann diese Location nur betreten werden, wenn der Spieler im Chat mit diesem spezifischen Charakter spielt. Für alle anderen Charaktere ist der Ort gesperrt.">?</span>
+        </label>
+        <select name="character_id">
+          <option value="">-- Kein Charakter (Frei betretbar) --</option>
+          {% for char in available_characters %}
+            <option value="{{ char.id }}">
+              👤 {{ char.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
         <button type="button" class="aimo-btn" data-modal-close="new-location-modal">Abbrechen</button>
         <button type="submit" class="aimo-btn primary"><span class="icon-mono">💾</span> Ort speichern</button>
@@ -468,6 +514,7 @@
           data-i18n-entity-id=""
           data-i18n-hidden="i18n-wi-ev-new"></textarea>
       </div>
+
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
         <button type="button" class="aimo-btn" data-modal-close="new-event-modal">Abbrechen</button>
         <button type="submit" class="aimo-btn primary"><span class="icon-mono">💾</span> Event speichern</button>
