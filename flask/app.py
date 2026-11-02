@@ -123,7 +123,7 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
             "has_perm": has_perm,
             "new_button": render_new_button,
             "system_backdrop_path": default_bg,
-            "system_backdrop_url": url_for("uploaded_file", filename=default_bg) if default_bg else None,
+            "system_backdrop_url": url_for("uploaded_file", filename=default_bg) if default_bg else url_for("static", filename="img/cover.svg"),
         }
 
     return app

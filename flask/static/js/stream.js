@@ -715,20 +715,18 @@ class AimoChatStream {
           messagesList.appendChild(notice);
           messagesList.scrollTop = messagesList.scrollHeight;
         }
-        const backdrop = document.getElementById("chat-location-backdrop");
+        const backdrop = document.getElementById("system-default-backdrop") || document.querySelector(".system-default-backdrop");
         if (backdrop) {
-          if (resData.location?.background_image_path) {
-            backdrop.style.backgroundImage = `url('/uploads/${resData.location.background_image_path}')`;
-            backdrop.classList.add("has-image");
+          const bgPath = resData.location?.background_image_path;
+          if (bgPath && bgPath.trim()) {
+            const cleanPath = bgPath.trim();
+            const bgUrl = (cleanPath.startsWith("/") || cleanPath.startsWith("http"))
+              ? cleanPath
+              : `/uploads/${cleanPath}`;
+            backdrop.style.backgroundImage = `url('${bgUrl}')`;
           } else {
-            const defaultBackdrop = backdrop.getAttribute("data-default-backdrop");
-            if (defaultBackdrop) {
-              backdrop.style.backgroundImage = `url('${defaultBackdrop}')`;
-              backdrop.classList.add("has-image");
-            } else {
-              backdrop.style.backgroundImage = "";
-              backdrop.classList.remove("has-image");
-            }
+            const defaultBackdrop = backdrop.getAttribute("data-default-backdrop") || "/static/img/cover.svg";
+            backdrop.style.backgroundImage = `url('${defaultBackdrop}')`;
           }
         }
         const locIndicator = document.getElementById("chat-location-indicator");
