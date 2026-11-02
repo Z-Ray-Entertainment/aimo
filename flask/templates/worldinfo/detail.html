@@ -5,7 +5,7 @@
 
 {% block content %}
 <div data-tab-group>
-  <div class="wood-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+  <div class="aimo-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
     <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
       {{ action_button("Zurück", href=url_for('overview.index'), arrow="left") }}
 
@@ -21,10 +21,10 @@
 
           <div style="display: flex; flex-direction: column; gap: 0.35rem;">
             <input type="file" id="worldinfo-cover-input" name="cover_file" accept=".png,.jpg,.jpeg,.webp" style="display: none;">
-            <label for="worldinfo-cover-input" class="header-btn" style="padding: 0.28rem 0.6rem; font-size: 0.78rem; cursor: pointer; margin-bottom: 0; text-align: center;">
+            <label for="worldinfo-cover-input" class="aimo-btn" style="padding: 0.28rem 0.6rem; font-size: 0.78rem; cursor: pointer; margin-bottom: 0; text-align: center;">
               <span class="icon-mono">📷</span> Cover wählen
             </label>
-            <button type="button" id="open-worldinfo-crop-btn" class="header-btn" style="padding: 0.28rem 0.6rem; font-size: 0.78rem;" {% if not worldinfo.cover_image_path %}disabled{% endif %}>
+            <button type="button" id="open-worldinfo-crop-btn" class="aimo-btn" style="padding: 0.28rem 0.6rem; font-size: 0.78rem;" {% if not worldinfo.cover_image_path %}disabled{% endif %}>
               <span class="icon-mono">✂️</span> Zuschneiden
             </button>
             <span id="worldinfo-cover-crop-badge" style="display: none; font-size: 0.72rem; color: #4CAF50; font-weight: 600;">✓ 1:1 Cover aktiv</span>
@@ -52,7 +52,7 @@
 
         {% if has_perm('worldinfo_edit') %}
           <div style="padding-top: 1.1rem;">
-            <button type="submit" class="header-btn primary"><span class="icon-mono">💾</span> Speichern</button>
+            <button type="submit" class="aimo-btn primary"><span class="icon-mono">💾</span> Speichern</button>
           </div>
         {% endif %}
       </form>
@@ -60,17 +60,17 @@
 
     {% if has_perm('worldinfo_delete') %}
       <form method="POST" action="{{ url_for('worldinfo.delete_worldinfo', worldinfo_id=worldinfo.id) }}" onsubmit="return confirm('WorldInfo wirklich löschen?');">
-        <button type="submit" class="header-btn danger"><span class="icon-mono">🗑️</span> Welt löschen</button>
+        <button type="submit" class="aimo-btn danger"><span class="icon-mono">🗑️</span> Welt löschen</button>
       </form>
     {% endif %}
   </div>
 
   <!-- Tabs: Places & Events (Consistent with System-wide Header & Nav Button Design) -->
   <div class="rpg-tabs">
-    <button type="button" class="header-btn header-nav-btn active" data-tab-target="tab-places">
+    <button type="button" class="aimo-btn active" data-tab-target="tab-places">
       <span class="icon-mono">📍</span> <span>Orte &amp; Hintergründe ({{ locations|length }})</span>
     </button>
-    <button type="button" class="header-btn header-nav-btn" data-tab-target="tab-events">
+    <button type="button" class="aimo-btn" data-tab-target="tab-events">
       <span class="icon-mono">🎲</span> <span>Zufalls-Events ({{ events|length }})</span>
     </button>
   </div>
@@ -96,7 +96,7 @@
           <div class="modal-frame">
             <div class="modal-header">
               <h3 style="color: var(--gold-accent);">Ort bearbeiten: {{ loc.name }}</h3>
-              <button type="button" class="header-btn" data-modal-close="edit-location-modal-{{ loc.id }}">✕</button>
+              <button type="button" class="aimo-btn" data-modal-close="edit-location-modal-{{ loc.id }}">✕</button>
             </div>
             <form method="POST" action="{{ url_for('worldinfo.edit_location', worldinfo_id=worldinfo.id, location_id=loc.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
               <div>
@@ -113,7 +113,7 @@
                     Tags (Kommagetrennt)
                     <span class="field-help-btn" title="Orts-Tags:&#10;Kommagetrennte Schlagwörter zur Charakterisierung der Umgebung (z. B. drinnen, gemütlich, bücher, ruhig).">?</span>
                   </label>
-                  <button type="button" class="header-btn extract-tags-btn" data-desc-id="edit-loc-desc-{{ loc.id }}" data-tags-id="edit-loc-tags-{{ loc.id }}" data-status-id="edit-loc-tags-status-{{ loc.id }}" style="padding: 0.2rem 0.55rem; font-size: 0.75rem;">
+                  <button type="button" class="aimo-btn extract-tags-btn" data-desc-id="edit-loc-desc-{{ loc.id }}" data-tags-id="edit-loc-tags-{{ loc.id }}" data-status-id="edit-loc-tags-status-{{ loc.id }}" style="padding: 0.2rem 0.55rem; font-size: 0.75rem;">
                     <span class="icon-mono">🏷️</span> Tags extrahieren
                   </button>
                 </div>
@@ -130,7 +130,7 @@
                 <input type="hidden" id="edit-loc-bg-path-{{ loc.id }}" name="background_image_path" value="{{ loc.background_image_path or '' }}">
                 <input type="hidden" id="edit-loc-vision-alt-{{ loc.id }}" name="vision_alt_text" value="{{ loc.vision_alt_text or '' }}">
                 <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.35rem;">
-                  <button type="button" class="header-btn edit-loc-analyze-btn" data-loc-id="{{ loc.id }}" data-input-id="edit-loc-bg-input-{{ loc.id }}" data-path-id="edit-loc-bg-path-{{ loc.id }}" data-alt-id="edit-loc-vision-alt-{{ loc.id }}" data-desc-id="edit-loc-desc-{{ loc.id }}" data-status-id="edit-loc-analyze-status-{{ loc.id }}" style="padding: 0.28rem 0.65rem; font-size: 0.78rem;" {% if not loc.background_image_path %}disabled{% endif %}>
+                  <button type="button" class="aimo-btn edit-loc-analyze-btn" data-loc-id="{{ loc.id }}" data-input-id="edit-loc-bg-input-{{ loc.id }}" data-path-id="edit-loc-bg-path-{{ loc.id }}" data-alt-id="edit-loc-vision-alt-{{ loc.id }}" data-desc-id="edit-loc-desc-{{ loc.id }}" data-status-id="edit-loc-analyze-status-{{ loc.id }}" style="padding: 0.28rem 0.65rem; font-size: 0.78rem;" {% if not loc.background_image_path %}disabled{% endif %}>
                     <span class="icon-mono">👁️</span> Bild analysieren &amp; beschreiben
                   </button>
                   <span id="edit-loc-analyze-status-{{ loc.id }}" style="font-size: 0.75rem; color: var(--text-muted);"></span>
@@ -166,10 +166,10 @@
               </div>
 
               <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
-                <button type="submit" form="delete-loc-form-{{ loc.id }}" class="header-btn danger"><span class="icon-mono">🗑️</span> Löschen</button>
+                <button type="submit" form="delete-loc-form-{{ loc.id }}" class="aimo-btn danger"><span class="icon-mono">🗑️</span> Löschen</button>
                 <div style="display: flex; gap: 0.5rem;">
-                  <button type="button" class="header-btn" data-modal-close="edit-location-modal-{{ loc.id }}">Abbrechen</button>
-                  <button type="submit" class="header-btn primary"><span class="icon-mono">💾</span> Speichern</button>
+                  <button type="button" class="aimo-btn" data-modal-close="edit-location-modal-{{ loc.id }}">Abbrechen</button>
+                  <button type="submit" class="aimo-btn primary"><span class="icon-mono">💾</span> Speichern</button>
                 </div>
               </div>
             </form>
@@ -217,7 +217,7 @@
           <div class="modal-frame">
             <div class="modal-header">
               <h3 style="color: var(--gold-accent);">Event bearbeiten: {{ ev.title }}</h3>
-              <button type="button" class="header-btn" data-modal-close="edit-event-modal-{{ ev.id }}">✕</button>
+              <button type="button" class="aimo-btn" data-modal-close="edit-event-modal-{{ ev.id }}">✕</button>
             </div>
             <form method="POST" action="{{ url_for('worldinfo.edit_event', worldinfo_id=worldinfo.id, event_id=ev.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
               <div>
@@ -227,7 +227,7 @@
                 </label>
                 <input type="text" name="title" value="{{ ev.title }}" required>
               </div>
-              <div style="display: flex; gap: 1rem; align-items: center;">
+              <div style="display: gap: 1rem; align-items: center;">
                 <div style="flex: 1;">
                   <label>
                     Wahrscheinlichkeit (0 - 100%) *
@@ -270,10 +270,10 @@
                   data-i18n-hidden="i18n-wi-ev-{{ ev.id }}">{{ ev.description }}</textarea>
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
-                <button type="submit" form="delete-ev-form-{{ ev.id }}" class="header-btn danger"><span class="icon-mono">🗑️</span> Löschen</button>
+                <button type="submit" form="delete-ev-form-{{ ev.id }}" class="aimo-btn danger"><span class="icon-mono">🗑️</span> Löschen</button>
                 <div style="display: flex; gap: 0.5rem;">
-                  <button type="button" class="header-btn" data-modal-close="edit-event-modal-{{ ev.id }}">Abbrechen</button>
-                  <button type="submit" class="header-btn primary"><span class="icon-mono">💾</span> Speichern</button>
+                  <button type="button" class="aimo-btn" data-modal-close="edit-event-modal-{{ ev.id }}">Abbrechen</button>
+                  <button type="submit" class="aimo-btn primary"><span class="icon-mono">💾</span> Speichern</button>
                 </div>
               </div>
             </form>
@@ -290,7 +290,7 @@
   <div class="modal-frame">
     <div class="modal-header">
       <h3 style="color: var(--gold-accent);">Neuen Ort anlegen</h3>
-      <button type="button" class="header-btn" data-modal-close="new-location-modal">✕</button>
+      <button type="button" class="aimo-btn" data-modal-close="new-location-modal">✕</button>
     </div>
     <form method="POST" action="{{ url_for('worldinfo.add_location', worldinfo_id=worldinfo.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
       <div>
@@ -307,7 +307,7 @@
             Tags (Kommagetrennt)
             <span class="field-help-btn" title="Orts-Tags:&#10;Kommagetrennte Schlagwörter zur Charakterisierung der Umgebung (z. B. drinnen, gemütlich, bücher, ruhig).">?</span>
           </label>
-          <button type="button" class="header-btn extract-tags-btn" data-desc-id="new-loc-desc" data-tags-id="new-loc-tags" data-status-id="new-loc-tags-status" style="padding: 0.2rem 0.55rem; font-size: 0.75rem;">
+          <button type="button" class="aimo-btn extract-tags-btn" data-desc-id="new-loc-desc" data-tags-id="new-loc-tags" data-status-id="new-loc-tags-status" style="padding: 0.2rem 0.55rem; font-size: 0.75rem;">
             <span class="icon-mono">🏷️</span> Tags extrahieren
           </button>
         </div>
@@ -324,7 +324,7 @@
         <input type="hidden" id="new-loc-bg-path" name="background_image_path">
         <input type="hidden" id="new-loc-vision-alt" name="vision_alt_text">
         <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.35rem;">
-          <button type="button" id="new-loc-analyze-btn" class="header-btn" style="padding: 0.28rem 0.65rem; font-size: 0.78rem;" disabled>
+          <button type="button" id="new-loc-analyze-btn" class="aimo-btn" style="padding: 0.28rem 0.65rem; font-size: 0.78rem;" disabled>
             <span class="icon-mono">👁️</span> Bild analysieren &amp; beschreiben
           </button>
           <span id="new-loc-analyze-status" style="font-size: 0.75rem; color: var(--text-muted);"></span>
@@ -349,8 +349,8 @@
       </div>
 
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
-        <button type="button" class="header-btn" data-modal-close="new-location-modal">Abbrechen</button>
-        <button type="submit" class="header-btn primary"><span class="icon-mono">💾</span> Ort speichern</button>
+        <button type="button" class="aimo-btn" data-modal-close="new-location-modal">Abbrechen</button>
+        <button type="submit" class="aimo-btn primary"><span class="icon-mono">💾</span> Ort speichern</button>
       </div>
     </form>
   </div>
@@ -361,7 +361,7 @@
   <div class="modal-frame">
     <div class="modal-header">
       <h3 style="color: var(--gold-accent);">Neues Event anlegen</h3>
-      <button type="button" class="header-btn" data-modal-close="new-event-modal">✕</button>
+      <button type="button" class="aimo-btn" data-modal-close="new-event-modal">✕</button>
     </div>
     <form method="POST" action="{{ url_for('worldinfo.add_event', worldinfo_id=worldinfo.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
       <div>
@@ -414,8 +414,8 @@
           data-i18n-hidden="i18n-wi-ev-new"></textarea>
       </div>
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
-        <button type="button" class="header-btn" data-modal-close="new-event-modal">Abbrechen</button>
-        <button type="submit" class="header-btn primary"><span class="icon-mono">💾</span> Event speichern</button>
+        <button type="button" class="aimo-btn" data-modal-close="new-event-modal">Abbrechen</button>
+        <button type="submit" class="aimo-btn primary"><span class="icon-mono">💾</span> Event speichern</button>
       </div>
     </form>
   </div>

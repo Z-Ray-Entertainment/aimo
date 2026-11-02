@@ -1,12 +1,13 @@
 {# Reusable "New Button" for Action Cards #}
 {% macro new_button(text, href=none, modal=none, onclick=none, min_height=none, extra_class='', id=none, title=none) %}
+  {% set classes = 'aimo-add-card-tile' ~ (' ' ~ extra_class if extra_class else '') %}
   {% if href %}
-    <a href="{{ href }}" class="add-card-tile {{ extra_class }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if min_height %} style="min-height: {{ min_height }};"{% endif %}>
+    <a href="{{ href }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if min_height %} style="min-height: {{ min_height }};"{% endif %}>
       <div class="plus-symbol">+</div>
       <div class="tile-label">{{ text }}</div>
     </a>
   {% else %}
-    <button type="button" class="add-card-tile {{ extra_class }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if modal %} data-modal-open="{{ modal }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{% if min_height %} style="min-height: {{ min_height }};"{% endif %}>
+    <button type="button" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if modal %} data-modal-open="{{ modal }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{% if min_height %} style="min-height: {{ min_height }};"{% endif %}>
       <div class="plus-symbol">+</div>
       <div class="tile-label">{{ text }}</div>
     </button>
@@ -30,11 +31,11 @@
   {% endif %}
 {% endmacro %}
 
-{# Reusable Action/Navigation Button Component (erbt von .header-btn Basisklasse) #}
+{# Reusable Action/Navigation Button Component (System-weite .aimo-btn Basisklasse) #}
 {% macro action_button(text, href=none, type="button", icon=none, arrow=none, variant="default", size="default", extra_class="", id=none, title=none, onclick=none) %}
   {% set variant_class = ' primary' if variant == 'primary' else (' danger' if variant == 'danger' else '') %}
-  {% set size_class = ' header-btn-lg' if size == 'lg' else '' %}
-  {% set classes = 'header-btn' ~ variant_class ~ size_class ~ (' ' ~ extra_class if extra_class else '') %}
+  {% set size_class = ' aimo-btn-lg' if size == 'lg' else '' %}
+  {% set classes = 'aimo-btn' ~ variant_class ~ size_class ~ (' ' ~ extra_class if extra_class else '') %}
   {% if href %}
     <a href="{{ href }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}>
       {% if arrow == 'left' %}

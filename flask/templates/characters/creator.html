@@ -6,7 +6,7 @@
 {% block content %}
 <div data-tab-group>
   <!-- Top Action Bar -->
-  <div class="wood-frame" style="padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+  <div class="aimo-frame" style="padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
     <div style="display: flex; align-items: center; gap: 1rem;">
       {{ action_button("Zurück", href=url_for('overview.index'), arrow="left") }}
       <h2 style="color: var(--gold-accent);">
@@ -15,13 +15,13 @@
     </div>
 
     <div style="display: flex; align-items: center; gap: 0.65rem;">
-      <button type="submit" form="character-main-form" class="header-btn primary"><span class="icon-mono">💾</span> Speichern</button>
+      <button type="submit" form="character-main-form" class="aimo-btn primary"><span class="icon-mono">💾</span> Speichern</button>
       {% if character %}
         <form method="POST" action="{{ url_for('characters.copy_character', character_id=character.id) }}" style="display: inline;">
-          <button type="submit" class="header-btn"><span class="icon-mono">📄</span> Kopieren</button>
+          <button type="submit" class="aimo-btn"><span class="icon-mono">📄</span> Kopieren</button>
         </form>
         <form method="POST" action="{{ url_for('characters.delete_character', character_id=character.id) }}" style="display: inline;" onsubmit="return confirm('Charakter wirklich unwiderruflich löschen?');">
-          <button type="submit" class="header-btn danger"><span class="icon-mono">🗑️</span> Löschen</button>
+          <button type="submit" class="aimo-btn danger"><span class="icon-mono">🗑️</span> Löschen</button>
         </form>
       {% endif %}
     </div>
@@ -29,27 +29,27 @@
 
   <!-- Designer Tabs (Consistent with Header & Chat Nav Buttons) -->
   <div class="rpg-tabs">
-    <button type="button" class="header-btn header-nav-btn {% if active_tab == 'info' %}active{% endif %}" data-tab-target="tab-char-info">
+    <button type="button" class="aimo-btn {% if active_tab == 'info' %}active{% endif %}" data-tab-target="tab-char-info">
       <span class="icon-mono">📋</span>
       <span>Hauptinformationen</span>
     </button>
-    <button type="button" class="header-btn header-nav-btn {% if active_tab == 'gallery' %}active{% endif %}" data-tab-target="tab-char-gallery" {% if not character %}disabled title="Bitte zuerst Grunddaten speichern"{% endif %}>
+    <button type="button" class="aimo-btn {% if active_tab == 'gallery' %}active{% endif %}" data-tab-target="tab-char-gallery" {% if not character %}disabled title="Bitte zuerst Grunddaten speichern"{% endif %}>
       <span class="icon-mono">🖼️</span>
       <span>Galeriebilder</span>
     </button>
-    <button type="button" class="header-btn header-nav-btn {% if active_tab == 'sprites' %}active{% endif %}" data-tab-target="tab-char-sprites" {% if not character %}disabled title="Bitte zuerst Grunddaten speichern"{% endif %}>
+    <button type="button" class="aimo-btn {% if active_tab == 'sprites' %}active{% endif %}" data-tab-target="tab-char-sprites" {% if not character %}disabled title="Bitte zuerst Grunddaten speichern"{% endif %}>
       <span class="icon-mono">🎭</span>
       <span>Emotionale Sprites</span>
     </button>
-    <button type="button" class="header-btn header-nav-btn {% if active_tab == 'dialogue' %}active{% endif %}" data-tab-target="tab-char-dialogue">
+    <button type="button" class="aimo-btn {% if active_tab == 'dialogue' %}active{% endif %}" data-tab-target="tab-char-dialogue">
       <span class="icon-mono">💬</span>
       <span>Gesprächsstile</span>
     </button>
-    <button type="button" class="header-btn header-nav-btn {% if active_tab == 'world' %}active{% endif %}" data-tab-target="tab-char-world">
+    <button type="button" class="aimo-btn {% if active_tab == 'world' %}active{% endif %}" data-tab-target="tab-char-world">
       <span class="icon-mono">🗺️</span>
       <span>World</span>
     </button>
-    <button type="button" class="header-btn header-nav-btn {% if active_tab == 'lorebooks' %}active{% endif %}" data-tab-target="tab-char-lorebooks">
+    <button type="button" class="aimo-btn {% if active_tab == 'lorebooks' %}active{% endif %}" data-tab-target="tab-char-lorebooks">
       <span class="icon-mono">📖</span>
       <span>Lorebooks</span>
     </button>
@@ -61,7 +61,7 @@
 
     <!-- TAB 1: Hauptinformationen -->
     <section id="tab-char-info" class="tab-pane {% if active_tab == 'info' %}active{% endif %}">
-      <div class="wood-frame" style="padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+      <div class="aimo-frame" style="padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
         <div>
           <label>
             Name des Charakters *
@@ -122,7 +122,7 @@
               <input type="file" id="avatar-portrait-input" name="avatar_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
               <input type="file" id="card-portrait-input" name="card_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
               <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-                <button type="button" id="open-crop-btn" class="header-btn" style="padding: 0.35rem 0.75rem; font-size: 0.82rem;" {% if not character %}disabled{% endif %}>
+                <button type="button" id="open-crop-btn" class="aimo-btn" style="padding: 0.35rem 0.75rem; font-size: 0.82rem;" {% if not character %}disabled{% endif %}>
                   <span class="icon-mono">✂️</span> Ausschnitte anpassen (9:16 &amp; 1:1)
                 </button>
                 <span id="crop-status-badge" style="display: none; font-size: 0.8rem; color: #4CAF50; font-weight: 600;">✓ Ausschnitte aktiv</span>
@@ -149,7 +149,7 @@
               Charakterbeschreibung &amp; Persönlichkeit *
               <span class="field-help-btn" title="Charakterbeschreibung &amp; Persönlichkeit:&#10;Kernidentität der Figur (Wesen, Eigenarten, Hintergrundgeschichte, Ängste, Motivationen). Tipp: Nutze '✨ KI-Autor Optimierung'.">?</span>
             </label>
-            <button type="button" id="sparkle-improve-btn" class="header-btn btn-sparkle">
+            <button type="button" id="sparkle-improve-btn" class="aimo-btn btn-sparkle">
               <span class="icon-sparkle">✨</span> KI-Autor Optimierung
             </button>
           </div>
@@ -167,7 +167,7 @@
               Aussehen des Charakters (Physical Appearance)
               <span class="field-help-btn" title="Aussehen des Charakters:&#10;Detaillierte visuelle Beschreibung (Augenfarbe, Frisur, Hautton, Statur, Kleidung). Fließt direkt in den [CHARACTER_DEFINITION]-Prompt ein und steuert KI-Bildgenerierungen.">?</span>
             </label>
-            <button type="button" id="extract-appearance-btn" class="header-btn btn-sparkle" title="Analysiert das Porträtbild mit einem Vision-LLM">
+            <button type="button" id="extract-appearance-btn" class="aimo-btn btn-sparkle" title="Analysiert das Porträtbild mit einem Vision-LLM">
               <span class="icon-sparkle">👁️</span> Aussehen aus Bild extrahieren
             </button>
           </div>
@@ -192,14 +192,14 @@
 
         <!-- Bottom Save Action Row -->
         <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-wood-dark);">
-          <button type="submit" class="header-btn primary"><span class="icon-mono">💾</span> Speichern</button>
+          <button type="submit" class="aimo-btn primary"><span class="icon-mono">💾</span> Speichern</button>
         </div>
       </div>
     </section>
 
     <!-- TAB 4: Gesprächsstile -->
     <section id="tab-char-dialogue" class="tab-pane {% if active_tab == 'dialogue' %}active{% endif %}">
-      <div class="wood-frame" style="padding: 1.5rem;">
+      <div class="aimo-frame" style="padding: 1.5rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
           <div>
             <h3 style="color: var(--gold-accent); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
@@ -210,7 +210,7 @@
               Definiere typische Trigger-Response-Beispiele, an denen sich die KI für Tonalität, Dialekt und Reaktionen orientiert.
             </p>
           </div>
-          <button type="button" class="header-btn primary" data-modal-open="add-dialogue-modal">
+          <button type="button" class="aimo-btn primary" data-modal-open="add-dialogue-modal">
             <span class="icon-mono">➕</span> Gesprächsstil hinzufügen
           </button>
         </div>
@@ -221,10 +221,10 @@
               <div class="dialogue-item-header">
                 <span class="dialogue-index-label"><span class="icon-mono">💬</span> Beispiel {{ loop.index }}</span>
                 <div class="dialogue-item-actions">
-                  <button type="button" class="header-btn edit-dialogue-btn dialogue-action-btn" data-index="{{ loop.index0 }}" title="Beispiel bearbeiten">
+                  <button type="button" class="aimo-btn edit-dialogue-btn dialogue-action-btn" data-index="{{ loop.index0 }}" title="Beispiel bearbeiten">
                     <span class="icon-mono">✏️</span>
                   </button>
-                  <button type="button" class="header-btn danger delete-dialogue-btn dialogue-action-btn" data-index="{{ loop.index0 }}" title="Beispiel löschen">
+                  <button type="button" class="aimo-btn danger delete-dialogue-btn dialogue-action-btn" data-index="{{ loop.index0 }}" title="Beispiel löschen">
                     <span class="icon-mono">🗑️</span>
                   </button>
                 </div>
@@ -243,7 +243,7 @@
           {% endfor %}
         </div>
 
-        <div id="dialogue-empty-notice" class="wood-frame" style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.9rem; {% if form.dialogue_examples|length > 0 %}display: none;{% endif %}">
+        <div id="dialogue-empty-notice" class="aimo-frame" style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.9rem; {% if form.dialogue_examples|length > 0 %}display: none;{% endif %}">
           Noch keine Gesprächsstile angelegt. Klicke auf <strong>„Gesprächsstil hinzufügen“</strong>, um Dialogbeispiele zu hinterlegen.
         </div>
       </div>
@@ -251,7 +251,7 @@
 
     <!-- TAB 5: World -->
     <section id="tab-char-world" class="tab-pane {% if active_tab == 'world' %}active{% endif %}">
-      <div class="wood-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+      <div class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
         <div>
           <h3 style="color: var(--gold-accent); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
             🗺️ Spielwelt &amp; Schauplätze
@@ -333,7 +333,7 @@
 
     <!-- TAB 6: Lorebooks -->
     <section id="tab-char-lorebooks" class="tab-pane {% if active_tab == 'lorebooks' %}active{% endif %}">
-      <div class="wood-frame" style="padding: 1.5rem;">
+      <div class="aimo-frame" style="padding: 1.5rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
           <div>
             <h3 style="color: var(--gold-accent); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
@@ -344,7 +344,7 @@
               Füge Wissenskompendien an. Relevante Einträge werden nach dem Tag-Matching-Verfahren automatisch injiziert.
             </p>
           </div>
-          <button type="button" class="header-btn primary" data-modal-open="add-lorebook-modal">
+          <button type="button" class="aimo-btn primary" data-modal-open="add-lorebook-modal">
             <span class="icon-mono">➕</span> Lorebook hinzufügen
           </button>
         </div>
@@ -360,7 +360,7 @@
                     <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.15rem;">{{ lb.description }}</div>
                   {% endif %}
                 </div>
-                <button type="button" class="header-btn danger remove-lorebook-btn" data-id="{{ lb.id }}" title="Lorebook entkoppeln">
+                <button type="button" class="aimo-btn danger remove-lorebook-btn" data-id="{{ lb.id }}" title="Lorebook entkoppeln">
                   <span class="icon-mono">🗑️</span>
                 </button>
               </div>
@@ -368,7 +368,7 @@
           {% endfor %}
         </div>
 
-        <div id="lorebook-empty-notice" class="wood-frame" style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.9rem; {% if form.linked_lorebook_ids|length > 0 %}display: none;{% endif %}">
+        <div id="lorebook-empty-notice" class="aimo-frame" style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.9rem; {% if form.linked_lorebook_ids|length > 0 %}display: none;{% endif %}">
           Keine Lorebooks verknüpft. Klicke auf <strong>„Lorebook hinzufügen“</strong>, um Kompendien auszuwählen.
         </div>
       </div>
@@ -378,7 +378,7 @@
   <!-- TAB 2: Galeriebilder (Separater Frame & Forms außerhalb von character-main-form) -->
   <section id="tab-char-gallery" class="tab-pane {% if active_tab == 'gallery' %}active{% endif %}">
     {% if character %}
-      <div class="wood-frame" style="padding: 1.5rem;">
+      <div class="aimo-frame" style="padding: 1.5rem;">
         <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
           🖼️ Freischaltbare 9:16-Galeriebilder (Schwellenwert -100 bis +100)
           <span class="field-help-btn" title="9:16 Galeriebilder:&#10;Exklusive Hochformat-Grafiken mit Freischalt-Schwellenwert (-100 bis +100). Bei Erreichen des Werts im Chat wird das Bild im Medien-Tab enthüllt.">?</span>
@@ -394,7 +394,7 @@
             <div class="card-tile" style="justify-content: space-between;">
               <div style="flex: 1; background-image: url('{{ url_for('uploaded_file', filename=img.file_path) }}'); background-size: cover; background-position: center; min-height: 240px; position: relative;">
                 <form method="POST" action="{{ url_for('characters.delete_gallery_image', character_id=character.id, image_id=img.id) }}" style="position: absolute; top: 0.5rem; right: 0.5rem;">
-                  <button type="submit" class="header-btn danger" style="padding: 0.28rem 0.5rem; font-size: 0.82rem;" title="Bild löschen"><span class="icon-mono">🗑️</span></button>
+                  <button type="submit" class="aimo-btn danger" style="padding: 0.28rem 0.5rem; font-size: 0.82rem;" title="Bild löschen"><span class="icon-mono">🗑️</span></button>
                 </form>
               </div>
               <div style="padding: 0.6rem; text-align: center; font-size: 0.85rem;">
@@ -405,7 +405,7 @@
         </div>
       </div>
     {% else %}
-      <div class="wood-frame" style="padding: 2.5rem; text-align: center;">
+      <div class="aimo-frame" style="padding: 2.5rem; text-align: center;">
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🖼️</div>
         <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">Galeriebilder</h3>
         <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
@@ -418,7 +418,7 @@
   <!-- TAB 3: Emotionale Sprites -->
   <section id="tab-char-sprites" class="tab-pane {% if active_tab == 'sprites' %}active{% endif %}">
     {% if character %}
-      <div class="wood-frame" style="padding: 1.5rem;">
+      <div class="aimo-frame" style="padding: 1.5rem;">
         <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
           🎭 Emotionale Sprites (28 Emotionen mit Varianten-Stackview)
           <span class="field-help-btn" title="Emotionale Sprites:&#10;Bildvarianten für die 28 Emotionen. Das System klassifiziert nach jeder Antwort autonom die Emotion der KI und aktualisiert das Porträt im Chat.">?</span>
@@ -446,19 +446,19 @@
                   <div style="position: absolute; top: 0.4rem; right: 0.4rem; display: flex; gap: 0.35rem;">
                     <form method="POST" action="{{ url_for('characters.upload_sprite', character_id=character.id) }}" enctype="multipart/form-data">
                       <input type="hidden" name="emotion" value="{{ emotion }}">
-                      <label class="header-btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem; cursor: pointer;" title="Weitere Variante hochladen">
+                      <label class="aimo-btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem; cursor: pointer;" title="Weitere Variante hochladen">
                         <span class="icon-mono">📄➕</span>
                         <input type="file" name="sprite_file" accept=".png,.webp" style="display: none;" onchange="window.saveSpriteScrollAndSubmit(this.form)">
                       </label>
                     </form>
 
                     {% if sp_list|length > 1 %}
-                      <button type="button" class="header-btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" data-modal-open="sprite-modal-{{ emotion }}" title="Alle {{ sp_list|length }} Varianten ansehen">
+                      <button type="button" class="aimo-btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" data-modal-open="sprite-modal-{{ emotion }}" title="Alle {{ sp_list|length }} Varianten ansehen">
                         <span class="icon-mono">👁️</span> {{ sp_list|length }}
                       </button>
                     {% else %}
                       <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp_list[0].variant) }}" onsubmit="window.saveSpriteScrollPos()">
-                        <button type="submit" class="header-btn danger" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" title="Sprite löschen">
+                        <button type="submit" class="aimo-btn danger" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" title="Sprite löschen">
                           <span class="icon-mono">🗑️</span>
                         </button>
                       </form>
@@ -478,14 +478,14 @@
                 <div class="modal-frame">
                   <div class="modal-header">
                     <h3 style="color: var(--gold-accent);">Varianten für Emotion: {{ emotion }}</h3>
-                    <button type="button" class="header-btn" data-modal-close="sprite-modal-{{ emotion }}">✕</button>
+                    <button type="button" class="aimo-btn" data-modal-close="sprite-modal-{{ emotion }}">✕</button>
                   </div>
                   <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));">
                     {% for sp in sp_list %}
                       <div class="card-tile" style="min-height: 200px; position: relative;">
                         <img src="{{ url_for('uploaded_file', filename=sp.file_path) }}" alt="{{ emotion }}_{{ sp.variant }}" style="width: 100%; height: 160px; object-fit: contain;">
                         <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp.variant) }}" style="position: absolute; top: 0.4rem; right: 0.4rem;" onsubmit="window.saveSpriteScrollPos()">
-                          <button type="submit" class="header-btn danger" style="padding: 0.25rem 0.5rem; font-size: 0.82rem;" title="Variante löschen"><span class="icon-mono">🗑️</span></button>
+                          <button type="submit" class="aimo-btn danger" style="padding: 0.25rem 0.5rem; font-size: 0.82rem;" title="Variante löschen"><span class="icon-mono">🗑️</span></button>
                         </form>
                         <div style="text-align: center; padding: 0.35rem; font-size: 0.8rem;">
                           {{ emotion }}_{{ sp.variant }}
@@ -500,7 +500,7 @@
         </div>
       </div>
     {% else %}
-      <div class="wood-frame" style="padding: 2.5rem; text-align: center;">
+      <div class="aimo-frame" style="padding: 2.5rem; text-align: center;">
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎭</div>
         <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">Emotionale Sprites</h3>
         <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
@@ -516,7 +516,7 @@
       <div class="modal-frame" style="max-width: 440px;">
         <div class="modal-header">
           <h3 style="color: var(--gold-accent);">9:16-Galeriebild hochladen</h3>
-          <button type="button" class="header-btn" data-modal-close="add-gallery-modal">✕</button>
+          <button type="button" class="aimo-btn" data-modal-close="add-gallery-modal">✕</button>
         </div>
         <form method="POST" action="{{ url_for('characters.add_gallery_image', character_id=character.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
           <div>
@@ -534,8 +534,8 @@
             <input type="number" name="unlock_threshold" min="-100" max="100" value="20" required>
           </div>
           <div style="text-align: right; display: flex; justify-content: flex-end; gap: 0.5rem;">
-            <button type="button" class="header-btn" data-modal-close="add-gallery-modal">Abbrechen</button>
-            <button type="submit" class="header-btn primary">Hochladen</button>
+            <button type="button" class="aimo-btn" data-modal-close="add-gallery-modal">Abbrechen</button>
+            <button type="submit" class="aimo-btn primary">Hochladen</button>
           </div>
         </form>
       </div>
@@ -547,7 +547,7 @@
     <div class="modal-frame" style="max-width: 580px;">
       <div class="modal-header">
         <h3 style="color: var(--gold-accent);" id="dialogue-modal-title"><span class="icon-mono">💬</span> Neuen Gesprächsstil hinzufügen</h3>
-        <button type="button" class="header-btn" data-modal-close="add-dialogue-modal">✕</button>
+        <button type="button" class="aimo-btn" data-modal-close="add-dialogue-modal">✕</button>
       </div>
       <div style="display: flex; flex-direction: column; gap: 1rem; padding: 0.5rem 0;">
         <div>
@@ -566,8 +566,8 @@
         </div>
       </div>
       <div style="display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1rem; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
-        <button type="button" class="header-btn" data-modal-close="add-dialogue-modal">Abbrechen</button>
-        <button type="button" id="confirm-add-dialogue-btn" class="header-btn primary">
+        <button type="button" class="aimo-btn" data-modal-close="add-dialogue-modal">Abbrechen</button>
+        <button type="button" id="confirm-add-dialogue-btn" class="aimo-btn primary">
           <span class="icon-mono">➕</span> Hinzufügen
         </button>
       </div>
@@ -579,7 +579,7 @@
     <div class="modal-frame" style="max-width: 620px;">
       <div class="modal-header">
         <h3 style="color: var(--gold-accent);"><span class="icon-mono">📖</span> Lorebook verknüpfen</h3>
-        <button type="button" class="header-btn" data-modal-close="add-lorebook-modal">✕</button>
+        <button type="button" class="aimo-btn" data-modal-close="add-lorebook-modal">✕</button>
       </div>
       <div style="padding: 0.5rem 0 1rem 0;">
         <input type="text" id="lorebook-filter-input" placeholder="Nach Lorebook-Name filtern..." class="search-input" style="width: 100%; margin-bottom: 0.85rem;" autocomplete="off">
@@ -603,7 +603,7 @@
         </div>
       </div>
       <div style="display: flex; justify-content: flex-end; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
-        <button type="button" class="header-btn" data-modal-close="add-lorebook-modal">Abbrechen</button>
+        <button type="button" class="aimo-btn" data-modal-close="add-lorebook-modal">Abbrechen</button>
       </div>
     </div>
   </div>
@@ -902,14 +902,14 @@ document.getElementById("extract-appearance-btn")?.addEventListener("click", asy
 
       const editBtn = document.createElement("button");
       editBtn.type = "button";
-      editBtn.className = "header-btn edit-dialogue-btn dialogue-action-btn";
+      editBtn.className = "aimo-btn edit-dialogue-btn dialogue-action-btn";
       editBtn.title = "Beispiel bearbeiten";
       editBtn.innerHTML = '<span class="icon-mono">✏️</span>';
       editBtn.addEventListener("click", () => openEditModal(idx));
 
       const delBtn = document.createElement("button");
       delBtn.type = "button";
-      delBtn.className = "header-btn danger delete-dialogue-btn dialogue-action-btn";
+      delBtn.className = "aimo-btn danger delete-dialogue-btn dialogue-action-btn";
       delBtn.title = "Beispiel löschen";
       delBtn.innerHTML = '<span class="icon-mono">🗑️</span>';
       delBtn.addEventListener("click", () => {
@@ -1050,7 +1050,7 @@ document.getElementById("extract-appearance-btn")?.addEventListener("click", asy
 
       const delBtn = document.createElement("button");
       delBtn.type = "button";
-      delBtn.className = "header-btn danger remove-lorebook-btn";
+      delBtn.className = "aimo-btn danger remove-lorebook-btn";
       delBtn.title = "Lorebook entkoppeln";
       delBtn.innerHTML = '<span class="icon-mono">🗑️</span>';
       delBtn.addEventListener("click", () => {

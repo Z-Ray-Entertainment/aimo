@@ -18,14 +18,14 @@
 {% block content %}
 <div class="chat-layout">
   <!-- Mittlere Hauptbühne: 3-Reiter-Navigation (Chat, Medien, Erinnerungen) -->
-  <section id="chat-main-stage" class="wood-frame chat-main-stage chat-glass-panel">
+  <section id="chat-main-stage" class="aimo-frame chat-main-stage chat-glass-panel">
     <div class="chat-stage-overlay" data-tab-group>
-      <!-- Top Bar mit Zurück-Button & Reitern (nutzen dieselbe Basisklasse .header-btn wie im Seitenheader) -->
+      <!-- Top Bar mit Zurück-Button & Reitern (nutzen dieselbe Basisklasse .aimo-btn wie im Seitenheader) -->
       <div class="chat-stage-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem; border-bottom: 2px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           <!-- Zurück zur Übersicht (nur Pfeil-Icon, kein Text) -->
           <a href="{{ url_for('overview.index', tab='characters') }}"
-             class="header-btn"
+             class="aimo-btn"
              style="padding: 0.38rem 0.65rem;"
              title="Zurück zur Übersicht"
              aria-label="Zurück zur Übersicht">
@@ -37,24 +37,24 @@
           <!-- Vertikaler Trennstrich -->
           <div class="chat-header-vdivider"></div>
 
-          <!-- Reiter-Leiste mit .header-btn Basisklasse -->
+          <!-- Reiter-Leiste mit .aimo-btn Basisklasse -->
           <div class="rpg-tabs" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0; gap: 0.5rem;">
-            <button type="button" class="header-btn header-nav-btn active" data-tab-target="chat-pane-messages">
+            <button type="button" class="aimo-btn active" data-tab-target="chat-pane-messages">
               <span class="icon-mono">💬</span>
               <span>Chat</span>
             </button>
-            <button type="button" class="header-btn header-nav-btn" data-tab-target="chat-pane-media">
+            <button type="button" class="aimo-btn" data-tab-target="chat-pane-media">
               <span class="icon-mono">🖼️</span>
               <span>Medien</span>
             </button>
-            <button type="button" class="header-btn header-nav-btn" data-tab-target="chat-pane-memories">
+            <button type="button" class="aimo-btn" data-tab-target="chat-pane-memories">
               <span class="icon-mono">🧠</span>
               <span>Erinnerungen (<span id="memories-count">{{ memories|length }}</span>)</span>
             </button>
 
             <!-- Mobil: Seitenleiste als Tab rechts von Erinnerungen mit vertikalem Trennstrich davor -->
             <div class="chat-header-vdivider mobile-tab-only"></div>
-            <button type="button" class="header-btn header-nav-btn mobile-tab-only" data-tab-target="chat-pane-sidebar" title="Seitenleiste / Charakterinfo">
+            <button type="button" class="aimo-btn mobile-tab-only" data-tab-target="chat-pane-sidebar" title="Seitenleiste / Charakterinfo">
               <span class="icon-mono">👤</span>
               <span>Info</span>
             </button>
@@ -271,7 +271,7 @@
 
         <div id="chat-memories-list" class="chat-memories-scroll-list">
           {% for mem in memories %}
-            <form id="memory-form-{{ mem.id }}" method="POST" action="{{ url_for('chat.edit_memory', session_id=chat_session.id, memory_id=mem.id) }}" class="wood-frame" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem;">
+            <form id="memory-form-{{ mem.id }}" method="POST" action="{{ url_for('chat.edit_memory', session_id=chat_session.id, memory_id=mem.id) }}" class="aimo-frame" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem;">
               <div style="display: flex; gap: 0.75rem; align-items: center;">
                 <input type="text" name="title" value="{{ mem.title }}" required style="font-weight: 700;">
                 <span style="font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;">Nachricht #{{ mem.message_idx }}</span>
@@ -299,9 +299,9 @@
   </section>
 
   <!-- Rechte Info-Box: Sprite (9:16), Beziehungsbalken, Persona, Welt & Aktueller Ort, Events -->
-  <aside id="chat-pane-sidebar" class="wood-frame chat-glass-panel chat-sidebar-pane">
+  <aside id="chat-pane-sidebar" class="aimo-frame chat-glass-panel chat-sidebar-pane">
     <!-- Aktives Charakter-Sprite (2/3 der Seitenleistenhöhe, Seitenverhältnisse beibehalten) -->
-    <div class="portrait-frame chat-glass-panel chat-character-portrait-frame">
+    <div class="aimo-frame chat-glass-panel chat-character-portrait-frame">
       <img id="active-character-sprite" src="{{ url_for('uploaded_file', filename=active_sprite.file_path) }}" alt="{{ character.name }}" onerror="this.src='/static/img/cover.svg'">
       <div class="chat-character-portrait-name">
         {{ character.name }}
@@ -309,7 +309,7 @@
     </div>
 
     <!-- Beziehungsbalken (-100 bis +100) -->
-    <div class="relationship-bar-wrap wood-frame chat-glass-panel" data-relationship-score="{{ chat_session.relationship_value }}" style="border-radius: 10px; padding: 0.65rem;">
+    <div class="relationship-bar-wrap aimo-frame chat-glass-panel" data-relationship-score="{{ chat_session.relationship_value }}" style="border-radius: 10px; padding: 0.65rem;">
       <div class="relationship-header">
         <span>Zuneigung: <strong id="rel-score-label">{{ "%.1f"|format(chat_session.relationship_value) }}</strong></span>
         <span class="heart-icon">❤️</span>
@@ -453,7 +453,7 @@
     </div>
     <div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; padding-right: 0.25rem;">
       {% for s in all_sessions %}
-        <div class="wood-frame chat-glass-panel" style="padding: 0.65rem 0.85rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; border-color: {% if s.id == chat_session.id %}var(--gold-accent){% else %}var(--border-wood-dark){% endif %};">
+        <div class="aimo-frame chat-glass-panel" style="padding: 0.65rem 0.85rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; border-color: {% if s.id == chat_session.id %}var(--gold-accent){% else %}var(--border-wood-dark){% endif %};">
           <div style="flex: 1; min-width: 0;">
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem;">
               <a href="{{ url_for('chat.view_session', session_id=s.id) }}" style="font-weight: 700; color: {% if s.id == chat_session.id %}var(--gold-accent){% else %}var(--text-color){% endif %}; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
@@ -797,7 +797,7 @@
       for (const mem of memories) {
         const tagsStr = (mem.tags || []).join(", ");
         html += `
-          <form id="memory-form-${mem.id}" method="POST" action="/chat/session/{{ chat_session.id }}/memories/${mem.id}/edit" class="wood-frame" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem;">
+          <form id="memory-form-${mem.id}" method="POST" action="/chat/session/{{ chat_session.id }}/memories/${mem.id}/edit" class="aimo-frame" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem;">
             <div style="display: flex; gap: 0.75rem; align-items: center;">
               <input type="text" name="title" value="${escapeHtml(mem.title || '')}" required style="font-weight: 700;">
               <span style="font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;">Nachricht #${mem.message_idx}</span>

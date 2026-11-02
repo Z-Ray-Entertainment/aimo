@@ -14,7 +14,7 @@ def render_new_button(
     style_attr = f' style="min-height: {escape(min_height)};"' if min_height else ""
     id_attr = f' id="{escape(id)}"' if id else ""
     title_attr = f' title="{escape(title)}"' if title else ""
-    class_attr = f"add-card-tile {escape(extra_class)}".strip()
+    class_attr = f"aimo-add-card-tile {escape(extra_class)}".strip()
 
     if href:
         return Markup(

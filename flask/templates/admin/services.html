@@ -3,7 +3,7 @@
 {% block admin_content %}
 <div class="admin-services-grid">
   <!-- Linke Spalte: Hauptformular für URLs, Task-Zuweisung, Inferenz-Parameter & System-Prompts -->
-  <form method="POST" action="{{ url_for('admin.services_config') }}" class="wood-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
+  <form method="POST" action="{{ url_for('admin.services_config') }}" class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
     <h2 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
       Service-Endpunkte, Modell-Aufgaben & System-Prompts
     </h2>
@@ -168,7 +168,7 @@
   </form>
 
   <!-- Rechte Spalte: Ollama Modell-Management (Install / Pull & Delete) -->
-  <aside class="wood-frame" style="padding: 1.35rem; display: flex; flex-direction: column; gap: 1.1rem;">
+  <aside class="aimo-frame" style="padding: 1.35rem; display: flex; flex-direction: column; gap: 1.1rem;">
     <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
       <span class="icon-mono">📦</span> Ollama Modell-Manager
     </h3>

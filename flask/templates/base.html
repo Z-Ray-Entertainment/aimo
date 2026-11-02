@@ -26,21 +26,21 @@
       {% if g.current_user %}
         <nav class="header-nav header-hub-nav" id="header-hub-nav">
           <a href="{{ url_for('overview.index', tab='characters') }}"
-             class="header-btn header-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters' %} active{% endif %}"
+             class="aimo-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters' %} active{% endif %}"
              data-hub-tab="tab-characters"
              title="KI-Charaktere">
             <span class="icon-mono">👤</span>
             <span>KI-Charaktere</span>
           </a>
           <a href="{{ url_for('overview.index', tab='lorebooks') }}"
-             class="header-btn header-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks' %} active{% endif %}"
+             class="aimo-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks' %} active{% endif %}"
              data-hub-tab="tab-lorebooks"
              title="Lorebooks">
             <span class="icon-mono">📜</span>
             <span>Lorebooks</span>
           </a>
           <a href="{{ url_for('overview.index', tab='worldinfo') }}"
-             class="header-btn header-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo' %} active{% endif %}"
+             class="aimo-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo' %} active{% endif %}"
              data-hub-tab="tab-worldinfo"
              title="Worlds">
             <span class="icon-mono">🌐</span>
@@ -66,9 +66,9 @@
               </button>
             {% endif %}
             {% if has_perm('admin_access') %}
-              <a href="{{ url_for('admin.users_list') }}" class="header-btn"><span class="icon-mono">⚙️</span> Admin</a>
+              <a href="{{ url_for('admin.users_list') }}" class="aimo-btn"><span class="icon-mono">⚙️</span> Admin</a>
             {% endif %}
-            <a href="{{ url_for('auth.logout') }}" class="header-btn"><span class="icon-mono">🚪</span> Logout</a>
+            <a href="{{ url_for('auth.logout') }}" class="aimo-btn"><span class="icon-mono">🚪</span> Logout</a>
           {% endif %}
         {% endblock %}
       </div>
@@ -88,21 +88,21 @@
         <div class="mobile-dropdown-menu" id="mobile-dropdown-menu" aria-hidden="true">
           <div class="mobile-menu-group">
             <a href="{{ url_for('overview.index', tab='characters') }}"
-               class="header-btn mobile-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters' %} active{% endif %}"
+               class="aimo-btn mobile-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters' %} active{% endif %}"
                data-hub-tab="tab-characters"
                title="KI-Charaktere">
               <span class="icon-mono">👤</span>
               <span>KI-Charaktere</span>
             </a>
             <a href="{{ url_for('overview.index', tab='lorebooks') }}"
-               class="header-btn mobile-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks' %} active{% endif %}"
+               class="aimo-btn mobile-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks' %} active{% endif %}"
                data-hub-tab="tab-lorebooks"
                title="Lorebooks">
               <span class="icon-mono">📜</span>
               <span>Lorebooks</span>
             </a>
             <a href="{{ url_for('overview.index', tab='worldinfo') }}"
-               class="header-btn mobile-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo' %} active{% endif %}"
+               class="aimo-btn mobile-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo' %} active{% endif %}"
                data-hub-tab="tab-worldinfo"
                title="Worlds">
               <span class="icon-mono">🌐</span>
@@ -114,25 +114,25 @@
 
           <div class="mobile-menu-group">
             {% if g.default_persona %}
-              <button type="button" class="header-btn mobile-nav-btn mobile-persona-btn" data-modal-open="persona-manager-modal" title="Standard-Persona verwalten">
+              <button type="button" class="aimo-btn mobile-nav-btn mobile-persona-btn" data-modal-open="persona-manager-modal" title="Standard-Persona verwalten">
                 <img src="{{ url_for('uploaded_file', filename=g.default_persona.portrait_path) }}" alt="{{ g.default_persona.name }}" onerror="this.src='/static/img/cover.svg'">
                 <span>Persona: <strong>{{ g.default_persona.name }}</strong></span>
               </button>
             {% else %}
-              <button type="button" class="header-btn mobile-nav-btn mobile-persona-btn" data-modal-open="persona-manager-modal">
+              <button type="button" class="aimo-btn mobile-nav-btn mobile-persona-btn" data-modal-open="persona-manager-modal">
                 <span class="icon-mono">👤</span>
                 <span>Persona wählen</span>
               </button>
             {% endif %}
 
             {% if has_perm('admin_access') %}
-              <a href="{{ url_for('admin.users_list') }}" class="header-btn mobile-nav-btn">
+              <a href="{{ url_for('admin.users_list') }}" class="aimo-btn mobile-nav-btn">
                 <span class="icon-mono">⚙️</span>
                 <span>Admin</span>
               </a>
             {% endif %}
 
-            <a href="{{ url_for('auth.logout') }}" class="header-btn mobile-nav-btn">
+            <a href="{{ url_for('auth.logout') }}" class="aimo-btn mobile-nav-btn">
               <span class="icon-mono">🚪</span>
               <span>Logout</span>
             </a>

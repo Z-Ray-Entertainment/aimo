@@ -170,7 +170,7 @@ window.showAimoToast = function showAimoToast(notif) {
   if (!container || !notif) return;
 
   const toast = document.createElement("div");
-  toast.className = "aimo-toast wood-frame";
+  toast.className = "aimo-toast aimo-frame";
 
   const portraitUrl = notif.character_portrait ? `/uploads/${notif.character_portrait}` : "/static/img/cover.svg";
   const rawPreview = String(notif.localized_content || "").replace(/\s+/g, " ").trim();
@@ -207,7 +207,7 @@ window.showToastError = function showToastError(message, title) {
   if (!container) return;
 
   const toast = document.createElement("div");
-  toast.className = "aimo-toast toast-error wood-frame";
+  toast.className = "aimo-toast toast-error aimo-frame";
 
   toast.innerHTML = `
     <div style="font-size: 1.4rem; line-height: 1; flex-shrink: 0; padding-top: 0.15rem;" aria-hidden="true">⚠️</div>

@@ -3,7 +3,7 @@
 {% block title %}AIMO — Lorebook: {{ lorebook.name }}{% endblock %}
 
 {% block content %}
-<div class="wood-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+<div class="aimo-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
   <div style="display: flex; align-items: center; gap: 1rem;">
     {{ action_button("Zurück", href=url_for('overview.index'), arrow="left") }}
     <form method="POST" action="{{ url_for('lorebooks.detail', lorebook_id=lorebook.id) }}" style="display: flex; align-items: flex-end; gap: 0.75rem; flex-wrap: wrap;">

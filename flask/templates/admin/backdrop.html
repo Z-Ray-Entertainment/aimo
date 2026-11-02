@@ -3,7 +3,7 @@
 {% block admin_content %}
 <div class="backdrop-manager-grid">
   <!-- Linke Spalte: Aktuelle Vorschau & Status -->
-  <div class="wood-frame backdrop-preview-stage" style="padding: 1.5rem;">
+  <div class="aimo-frame backdrop-preview-stage" style="padding: 1.5rem;">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.75rem;">
       <div>
         <h2 style="color: var(--gold-accent); margin-bottom: 0.25rem;">Systemweiter Standard-Backdrop</h2>
@@ -65,7 +65,7 @@
   <!-- Rechte Spalte: Upload & Schnellauswahl aus Schauplätzen -->
   <div style="display: flex; flex-direction: column; gap: 1.5rem;">
     <!-- 1. Datei-Upload Formular -->
-    <form method="POST" action="{{ url_for('admin.backdrop_config') }}" enctype="multipart/form-data" class="wood-frame backdrop-upload-box">
+    <form method="POST" action="{{ url_for('admin.backdrop_config') }}" enctype="multipart/form-data" class="aimo-frame backdrop-upload-box">
       <input type="hidden" name="action" value="upload">
       <div style="display: flex; align-items: center; gap: 0.5rem;">
         <span style="font-size: 1.25rem;">📤</span>
@@ -90,7 +90,7 @@
     </form>
 
     <!-- 2. Auswahl aus bestehenden WorldInfo-Schauplätzen -->
-    <div class="wood-frame" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 0.85rem;">
+    <div class="aimo-frame" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 0.85rem;">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           <span style="font-size: 1.15rem;">🗺️</span>

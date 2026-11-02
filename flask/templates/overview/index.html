@@ -6,7 +6,7 @@
 <div data-tab-group id="overview-tabs-group">
   <!-- TAB 1: KI-Charaktere -->
   <section id="tab-characters" class="tab-pane{% if (active_tab|default('characters')) == 'characters' %} active{% endif %}">
-    <form method="GET" action="{{ url_for('overview.index') }}" class="wood-frame" style="padding: 0.85rem 1.2rem; margin-bottom: 1.25rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+    <form method="GET" action="{{ url_for('overview.index') }}" class="aimo-frame" style="padding: 0.85rem 1.2rem; margin-bottom: 1.25rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
       <input type="hidden" name="tab" value="characters">
       <div style="flex: 1; min-width: 160px;">
         <label style="font-size: 0.8rem; color: var(--text-muted);">Geschlecht</label>
@@ -115,7 +115,7 @@
   <div class="modal-frame" style="max-width: 480px;">
     <div class="modal-header">
       <h3 style="color: var(--gold-accent);">Neue Welt erstellen</h3>
-      <button type="button" class="header-btn" data-modal-close="new-worldinfo-modal">✕</button>
+      <button type="button" class="aimo-btn" data-modal-close="new-worldinfo-modal">✕</button>
     </div>
     <form method="POST" action="{{ url_for('worldinfo.create_worldinfo') }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
       <div>
@@ -130,8 +130,8 @@
         </select>
       </div>
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
-        <button type="button" class="header-btn" data-modal-close="new-worldinfo-modal">Abbrechen</button>
-        <button type="submit" class="header-btn primary">Anlegen</button>
+        <button type="button" class="aimo-btn" data-modal-close="new-worldinfo-modal">Abbrechen</button>
+        <button type="submit" class="aimo-btn primary">Anlegen</button>
       </div>
     </form>
   </div>
