@@ -13,6 +13,7 @@ class LLMProvider(ABC):
         model: str,
         params: ModelParameters,
         stop: list[str] | None = None,
+        think: bool | None = None,
     ) -> Iterator[str]:
         raise NotImplementedError
 

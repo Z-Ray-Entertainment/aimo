@@ -56,6 +56,7 @@ class ChatService:
         initial_location_id: int | None = None,
         disabled_lorebook_ids: set[int] | None = None,
         custom_lorebook_ids: list[int] | None = None,
+        thinking_enabled: bool = False,
     ) -> tuple[ChatSession, Message]:
         if isinstance(user_id, bool) or not isinstance(user_id, int) or user_id <= 0:
             raise InvalidChatDataError("A valid positive user_id is required.")
@@ -83,6 +84,7 @@ class ChatService:
             initial_location_id=initial_loc_id,
             relationship_value=initial_rel,
             events_enabled=True,
+            thinking_enabled=thinking_enabled,
             cooldown_counter=random.randint(10, 100),
             last_message_at=now,
             parent_session_id=None,
@@ -195,6 +197,7 @@ class ChatService:
             initial_location_id=session.initial_location_id,
             relationship_value=session.relationship_value,
             events_enabled=session.events_enabled,
+            thinking_enabled=session.thinking_enabled,
             cooldown_counter=session.cooldown_counter,
             last_message_at=now,
             parent_session_id=session.id,

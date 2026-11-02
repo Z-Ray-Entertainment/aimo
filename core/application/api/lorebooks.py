@@ -175,6 +175,7 @@ def suggest_tags():
                 top_p=0.9,
                 repeat_penalty=1.1,
             ),
+            think=False,
         ).strip()
         tags = parse_tags(raw_output)
         clean_tags = filter_stopwords(tags)

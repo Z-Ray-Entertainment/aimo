@@ -30,6 +30,7 @@ class OllamaLLMProvider(LLMProvider):
         model: str,
         params: ModelParameters,
         stop: list[str] | None = None,
+        think: bool | None = None,
     ) -> Iterator[str]:
         options = self._build_options(params)
         if stop:
@@ -40,13 +41,24 @@ class OllamaLLMProvider(LLMProvider):
             "stream": True,
             "options": options,
         }
+        if think is not None:
+            payload["think"] = think
         try:
-            with requests.post(
+            response = requests.post(
                 f"{self.base_url}/api/generate",
                 json=payload,
                 stream=True,
                 timeout=self.request_timeout,
-            ) as response:
+            )
+            if response.status_code == 400 and think is not None and "think" in response.text.lower():
+                payload.pop("think", None)
+                response = requests.post(
+                    f"{self.base_url}/api/generate",
+                    json=payload,
+                    stream=True,
+                    timeout=self.request_timeout,
+                )
+            with response:
                 self._ensure_ok(response, "Ollama streaming generation")
                 for raw_line in response.iter_lines(decode_unicode=True):
                     if not raw_line:
@@ -139,7 +151,7 @@ class OllamaLLMProvider(LLMProvider):
             repeat_penalty=1.0,
         )
         raw_output = self.generate(
-            prompt=prompt, model=model, params=classification_params
+            prompt=prompt, model=model, params=classification_params, think=False
         )
         return self._match_candidate(raw_output, cleaned_candidates)
 
@@ -189,6 +201,7 @@ class OllamaLLMProvider(LLMProvider):
                 model=model,
                 params=classification_params,
                 format="json",
+                think=False,
             )
             data = json.loads(raw_output)
             raw_emotion = str(data.get("emotion", "")).strip()
@@ -199,6 +212,7 @@ class OllamaLLMProvider(LLMProvider):
                     prompt=prompt,
                     model=model,
                     params=classification_params,
+                    think=False,
                 )
                 start = raw_output.find("{")
                 end = raw_output.rfind("}")

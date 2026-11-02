@@ -309,6 +309,20 @@
     <!-- Aktives Charakter-Sprite (2/3 der Seitenleistenhöhe, Seitenverhältnisse beibehalten) -->
     <div class="aimo-frame chat-glass-panel chat-character-portrait-frame">
       <img id="active-character-sprite" src="{{ url_for('uploaded_file', filename=active_sprite.file_path) }}" alt="{{ character.name }}" onerror="this.src='/static/img/cover.svg'">
+
+      <!-- Brain Thinking Overlay Button oben rechts im Charakterbild -->
+      <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" class="chat-thinking-overlay-form">
+        <input type="hidden" name="action" value="toggle_thinking">
+        <input type="hidden" name="thinking_enabled" value="{{ '0' if chat_session.thinking_enabled else '1' }}">
+        <button
+          type="submit"
+          class="chat-thinking-badge-btn {% if chat_session.thinking_enabled %}is-active{% else %}is-inactive{% endif %}"
+          title="Thinking: {{ 'Aktiviert (Klicken zum Deaktivieren)' if chat_session.thinking_enabled else 'Deaktiviert (Klicken zum Aktivieren)' }}"
+          aria-label="Thinking {{ 'deaktivieren' if chat_session.thinking_enabled else 'aktivieren' }}">
+          <span class="chat-thinking-brain-icon" aria-hidden="true">🧠</span>
+        </button>
+      </form>
+
       <div class="chat-character-portrait-name">
         {{ character.name }}
       </div>

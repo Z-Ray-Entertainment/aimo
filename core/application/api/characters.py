@@ -180,6 +180,13 @@ def sparkle_description():
                 top_p=0.9,
                 repeat_penalty=1.1,
             ),
+            think=False,
+        ).strip()
+        improved = re.sub(
+            r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
+            "",
+            improved,
+            flags=re.DOTALL | re.IGNORECASE,
         ).strip()
         return jsonify({"description": improved})
     except AimoError as exc:

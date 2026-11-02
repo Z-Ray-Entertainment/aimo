@@ -11,6 +11,7 @@ class StartChatForm:
     title: str = ""
     disabled_lorebook_ids: list[int] = field(default_factory=list)
     custom_lorebook_ids: list[int] = field(default_factory=list)
+    thinking_enabled: bool = False
 
     @classmethod
     def from_request(cls, form_data: Any) -> "StartChatForm":
@@ -21,6 +22,7 @@ class StartChatForm:
             title=p.to_str(form_data, "title"),
             disabled_lorebook_ids=p.to_int_list(form_data, "disabled_lorebook_ids"),
             custom_lorebook_ids=p.to_int_list(form_data, "custom_lorebook_ids"),
+            thinking_enabled=p.to_bool(form_data, "thinking_enabled"),
         )
 
 

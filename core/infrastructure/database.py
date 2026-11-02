@@ -154,6 +154,7 @@ CREATE TABLE IF NOT EXISTS chat_sessions (
     title TEXT NOT NULL DEFAULT 'Chat Session',
     relationship_value REAL NOT NULL DEFAULT 0.0,
     events_enabled INTEGER NOT NULL DEFAULT 1,
+    thinking_enabled INTEGER NOT NULL DEFAULT 0,
     cooldown_counter INTEGER NOT NULL DEFAULT 25,
     last_message_at TEXT NOT NULL,
     parent_session_id INTEGER REFERENCES chat_sessions(id) ON DELETE SET NULL,
@@ -405,6 +406,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE chat_sessions ADD COLUMN initial_location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL",
         "ALTER TABLE chat_messages ADD COLUMN system_type TEXT",
         "ALTER TABLE chat_messages ADD COLUMN metadata_json TEXT NOT NULL DEFAULT '{}'",
+        "ALTER TABLE chat_sessions ADD COLUMN thinking_enabled INTEGER NOT NULL DEFAULT 0",
     ):
         try:
             conn.execute(stmt)

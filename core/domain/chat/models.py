@@ -58,6 +58,7 @@ class ChatSession:
     initial_location_id: int | None = None
     relationship_value: float = 0.0
     events_enabled: bool = True
+    thinking_enabled: bool = False
     cooldown_counter: int = 25
     last_message_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     parent_session_id: int | None = None

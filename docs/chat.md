@@ -13,6 +13,7 @@ When starting a new conversation with a character:
    - **Persona Selection:** Select your playing persona. (Once the first message is sent, the persona is permanently locked for that session).
    - **WorldInfo Selection:** Choose the setting. The character's suggested world is pre-selected. You can also explicitly choose *"Without WorldInfo"* (applies neutral backgrounds and disables random events).
    - **Session Title:** Optional custom title for the adventure.
+   - **Thinking (Reasoning) Toggle:** Option to activate or deactivate deep chain-of-thought reasoning for compatible models (e.g., Gemma 4, DeepSeek-R1). Deactivating provides faster replies without internal thinking steps.
 2. **Reiter 2: Lorebooks (Wissensbücher):**
    - Inspect all default lorebooks inherited from the character and the selected world.
    - Toggle individual lorebooks on or off specifically for this session.
@@ -31,7 +32,7 @@ When starting a new conversation with a character:
   - **Tab 3: Memories:** Lists all system-generated memory summaries and allows manual edits.
   - **Tab 4: Lorebooks:** Live lorebook manager showing active, toggled, and custom lorebooks for this session.
 - **Right Info Box:**
-  - Character portrait / transparent emotion sprite (dynamically scaled in 9:16 aspect ratio to fit the display height).
+  - Character portrait / transparent emotion sprite (dynamically scaled in 9:16 aspect ratio to fit the display height), equipped with an aesthetic Brain overlay icon (🧠) in the top-right corner with a live hover tooltip. The icon visually indicates whether Thinking is active (in color with a soft glow) or inactive (in monochrome gray).
   - Dynamic relationship bar (-100 to +100 with heart icon).
   - Player persona badge / selector (locked after the first message).
   - Unified World & Setting block: Active WorldInfo with switch button, manual location selector, and random events toggle checkbox (integrated without separating divider).

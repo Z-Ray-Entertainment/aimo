@@ -12,7 +12,15 @@ from domain.translation.models import (
 
 
 class TranslationLLMProvider(Protocol):
-    def generate(self, prompt: str, model: str, params: ModelParameters) -> str:
+    def generate(
+        self,
+        prompt: str,
+        model: str,
+        params: ModelParameters,
+        stop: list[str] | None = None,
+        format: str | dict | None = None,
+        think: bool | None = None,
+    ) -> str:
         ...
 
 
@@ -49,10 +57,24 @@ class TranslationService:
             f"Text:\n{cleaned}"
         )
         try:
-            translated = llm_provider.generate(
-                prompt=prompt,
-                model=model,
-                params=self._default_params,
+            try:
+                translated = llm_provider.generate(
+                    prompt=prompt,
+                    model=model,
+                    params=self._default_params,
+                    think=False,
+                ).strip()
+            except TypeError:
+                translated = llm_provider.generate(
+                    prompt=prompt,
+                    model=model,
+                    params=self._default_params,
+                ).strip()
+            translated = re.sub(
+                r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
+                "",
+                translated,
+                flags=re.DOTALL | re.IGNORECASE,
             ).strip()
             return translated or cleaned
         except Exception:
@@ -87,10 +109,24 @@ class TranslationService:
             f"English Text:\n{cleaned_en}"
         )
         try:
-            translated = llm_provider.generate(
-                prompt=prompt,
-                model=model,
-                params=self._default_params,
+            try:
+                translated = llm_provider.generate(
+                    prompt=prompt,
+                    model=model,
+                    params=self._default_params,
+                    think=False,
+                ).strip()
+            except TypeError:
+                translated = llm_provider.generate(
+                    prompt=prompt,
+                    model=model,
+                    params=self._default_params,
+                ).strip()
+            translated = re.sub(
+                r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
+                "",
+                translated,
+                flags=re.DOTALL | re.IGNORECASE,
             ).strip()
             result = translated or cleaned_en
         except Exception:
@@ -121,10 +157,24 @@ class TranslationService:
             f"Text:\n{cleaned}"
         )
         try:
-            translated = llm_provider.generate(
-                prompt=prompt,
-                model=model,
-                params=self._default_params,
+            try:
+                translated = llm_provider.generate(
+                    prompt=prompt,
+                    model=model,
+                    params=self._default_params,
+                    think=False,
+                ).strip()
+            except TypeError:
+                translated = llm_provider.generate(
+                    prompt=prompt,
+                    model=model,
+                    params=self._default_params,
+                ).strip()
+            translated = re.sub(
+                r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
+                "",
+                translated,
+                flags=re.DOTALL | re.IGNORECASE,
             ).strip()
             return translated or cleaned
         except Exception:

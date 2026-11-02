@@ -466,6 +466,7 @@ def _start_background_turn(
                     model=settings.tasks.roleplay_model,
                     params=settings.params,
                     stop=stop_sequences,
+                    think=bool(w_session.thinking_enabled),
                 ):
                     if task.is_aborted:
                         break
@@ -508,6 +509,16 @@ def _start_background_turn(
                 return
 
             raw_reply = "".join(full_english_chunks).strip()
+            # Clean thinking tags from raw_reply before processing and translation
+            cleaned_narrative = re.sub(
+                r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
+                "",
+                raw_reply,
+                flags=re.DOTALL | re.IGNORECASE,
+            ).strip()
+            if cleaned_narrative:
+                raw_reply = cleaned_narrative
+
             for stop_seq in stop_sequences:
                 if stop_seq.strip() and stop_seq in raw_reply:
                     raw_reply = raw_reply.split(stop_seq)[0].strip()
@@ -1144,6 +1155,13 @@ def generate_scene_image(session_id: int):
             prompt=diffuser_instruction,
             model=settings.tasks.assistant_model,
             params=ModelParameters(num_ctx=4096, temperature=0.5, top_p=0.9, repeat_penalty=1.05),
+            think=False,
+        ).strip()
+        sd_prompt = re.sub(
+            r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
+            "",
+            sd_prompt,
+            flags=re.DOTALL | re.IGNORECASE,
         ).strip()
     except Exception:
         sd_prompt = f"{character.name}, {location_desc}, high quality roleplay scene"
@@ -1801,5 +1819,34 @@ def remove_session_custom_lorebook(session_id: int, lorebook_id: int):
         "success": True,
         "session_id": session_id,
         "lorebook_id": lorebook_id,
+    })
+
+
+@api_chat_bp.route("/<int:session_id>/thinking", methods=["POST"])
+@require_permission(FunctionPermission.CHAT_ACCESS)
+def toggle_session_thinking(session_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
+    data = request.get_json(silent=True) or {}
+    raw_val = data.get("thinking_enabled")
+    if raw_val is None:
+        raw_val = request.form.get("thinking_enabled")
+
+    if raw_val is None:
+        chat_session.thinking_enabled = not chat_session.thinking_enabled
+    else:
+        chat_session.thinking_enabled = bool(raw_val and str(raw_val).lower() not in ("0", "false", "off"))
+
+    chat_repo = ChatRepository()
+    chat_repo.update_session(chat_session)
+
+    return jsonify({
+        "success": True,
+        "session_id": session_id,
+        "thinking_enabled": chat_session.thinking_enabled,
     })
 

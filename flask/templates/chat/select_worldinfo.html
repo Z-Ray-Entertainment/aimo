@@ -72,6 +72,16 @@
           <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">Optionaler Sitzungstitel</label>
           <input type="text" name="title" placeholder="Chat with {{ character.name }}">
         </div>
+
+        <div>
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-weight: 600;">
+            <input type="checkbox" name="thinking_enabled" value="1">
+            <span>🧠 Thinking (Reasoning) aktivieren</span>
+          </label>
+          <small style="color: var(--text-muted); display: block; margin-top: 0.25rem;">
+            Aktiviert erweitertes Chain-of-Thought-Denken für kompatible Modelle (z. B. Gemma 4, DeepSeek-R1). Deaktiviert für schnellere Antworten ohne Denkschritte.
+          </small>
+        </div>
       </div>
     </div>
 

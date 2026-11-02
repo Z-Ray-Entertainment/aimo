@@ -2405,6 +2405,7 @@ button.chat-menu-dropdown-item.danger:focus {
 
 /* Character Portrait Frame (9:16 Aspect Ratio, Flexible Sidebar Height) */
 .chat-character-portrait-frame {
+  position: relative;
   flex: 1 1 0;
   min-height: 120px;
   max-height: calc((100vh - var(--header-height, 64px) - 3rem) * 0.666);
@@ -2418,6 +2419,96 @@ button.chat-menu-dropdown-item.danger:focus {
   text-align: center;
   border-radius: var(--radius-card, 10px);
 }
+
+/* Brain Thinking Overlay Button on Character Portrait */
+.chat-thinking-overlay-form {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+}
+
+.chat-thinking-badge-btn {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(18, 12, 8, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  border: 1.5px solid transparent;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.chat-thinking-badge-btn:focus-visible {
+  outline: 2px solid var(--gold-accent, #d4af37);
+  outline-offset: 2px;
+}
+
+/* Inactive State: Grau / Deaktiviert */
+.chat-thinking-badge-btn.is-inactive {
+  border-color: rgba(140, 130, 120, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  background: rgba(22, 16, 12, 0.78);
+}
+
+.chat-thinking-badge-btn.is-inactive .chat-thinking-brain-icon {
+  filter: grayscale(100%) opacity(0.45);
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: filter 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
+}
+
+.chat-thinking-badge-btn.is-inactive:hover {
+  border-color: rgba(190, 180, 170, 0.7);
+  background: rgba(32, 24, 18, 0.9);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.65);
+}
+
+.chat-thinking-badge-btn.is-inactive:hover .chat-thinking-brain-icon {
+  filter: grayscale(60%) opacity(0.85);
+  transform: scale(1.08);
+}
+
+/* Active State: In Farbe / Aktiviert mit warmem Gold/Glühen */
+.chat-thinking-badge-btn.is-active {
+  border-color: var(--gold-accent, #d4af37);
+  background: rgba(36, 24, 14, 0.92);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.5), 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.chat-thinking-badge-btn.is-active .chat-thinking-brain-icon {
+  filter: grayscale(0%) drop-shadow(0 0 5px rgba(255, 140, 180, 0.85));
+  font-size: 1.22rem;
+  line-height: 1;
+  animation: pulse-thinking-brain 2.8s infinite ease-in-out;
+}
+
+.chat-thinking-badge-btn.is-active:hover {
+  background: rgba(48, 32, 18, 0.96);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.75), 0 3px 10px rgba(0, 0, 0, 0.8);
+}
+
+@keyframes pulse-thinking-brain {
+  0%, 100% {
+    transform: scale(1);
+    filter: grayscale(0%) drop-shadow(0 0 4px rgba(255, 140, 180, 0.7));
+  }
+  50% {
+    transform: scale(1.14);
+    filter: grayscale(0%) drop-shadow(0 0 9px rgba(255, 120, 170, 0.95));
+  }
+}
+
+
 
 /* Chat Sidebar Sub-Sections & Form Components */
 .chat-sidebar-section {
@@ -2448,12 +2539,14 @@ button.chat-menu-dropdown-item.danger:focus {
   font-size: 0.85rem;
 }
 
-.chat-sidebar-events-toggle {
+.chat-sidebar-events-toggle,
+.chat-sidebar-thinking-toggle {
   margin: 0;
   padding-top: 0.15rem;
 }
 
-.chat-sidebar-events-toggle label {
+.chat-sidebar-events-toggle label,
+.chat-sidebar-thinking-toggle label {
   display: flex;
   align-items: center;
   gap: 0.45rem;
@@ -2463,7 +2556,8 @@ button.chat-menu-dropdown-item.danger:focus {
   margin: 0;
 }
 
-.chat-sidebar-events-toggle input[type="checkbox"] {
+.chat-sidebar-events-toggle input[type="checkbox"],
+.chat-sidebar-thinking-toggle input[type="checkbox"] {
   cursor: pointer;
   margin: 0;
 }

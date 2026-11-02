@@ -242,6 +242,7 @@ def new_character_chat(character_id: int):
                 initial_location_id=initial_loc,
                 disabled_lorebook_ids=disabled_lb_set,
                 custom_lorebook_ids=form.custom_lorebook_ids,
+                thinking_enabled=form.thinking_enabled,
             )
             saved_session = chat_repo.create_session(session_obj)
             assert saved_session.id is not None
@@ -501,6 +502,14 @@ def update_session_settings(session_id: int):
         elif action == "toggle_events":
             chat_session.events_enabled = bool(request.form.get("events_enabled"))
             flash("Event-Einstellung gespeichert.", "success")
+        elif action == "toggle_thinking":
+            raw_val = request.form.get("thinking_enabled")
+            if raw_val is not None:
+                chat_session.thinking_enabled = str(raw_val).strip() in ("1", "true", "True", "on")
+            else:
+                chat_session.thinking_enabled = not chat_session.thinking_enabled
+            status_text = "aktiviert" if chat_session.thinking_enabled else "deaktiviert"
+            flash(f"Thinking {status_text}.", "success")
         elif action == "rename_title":
             new_title = request.form.get("title", "").strip()
             if new_title:

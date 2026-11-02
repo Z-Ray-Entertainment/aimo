@@ -42,11 +42,11 @@ class ChatRepository:
                 INSERT INTO chat_sessions (
                     user_id, character_id, persona_id, active_worldinfo_id,
                     current_location_id, initial_location_id, title, relationship_value, events_enabled,
-                    cooldown_counter, last_message_at, parent_session_id,
+                    thinking_enabled, cooldown_counter, last_message_at, parent_session_id,
                     persona_locked, triggered_event_ids_json, disabled_lorebook_ids_json,
                     custom_lorebook_ids_json, created_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     chat_session.user_id,
@@ -58,6 +58,7 @@ class ChatRepository:
                     chat_session.title,
                     chat_session.relationship_value,
                     1 if chat_session.events_enabled else 0,
+                    1 if chat_session.thinking_enabled else 0,
                     chat_session.cooldown_counter,
                     last_msg_str,
                     chat_session.parent_session_id,
@@ -91,7 +92,7 @@ class ChatRepository:
                 UPDATE chat_sessions
                 SET persona_id = ?, active_worldinfo_id = ?, current_location_id = ?,
                     initial_location_id = ?, title = ?, relationship_value = ?, events_enabled = ?,
-                    cooldown_counter = ?, last_message_at = ?, persona_locked = ?,
+                    thinking_enabled = ?, cooldown_counter = ?, last_message_at = ?, persona_locked = ?,
                     triggered_event_ids_json = ?, disabled_lorebook_ids_json = ?,
                     custom_lorebook_ids_json = ?
                 WHERE id = ?
@@ -104,6 +105,7 @@ class ChatRepository:
                     chat_session.title,
                     chat_session.relationship_value,
                     1 if chat_session.events_enabled else 0,
+                    1 if chat_session.thinking_enabled else 0,
                     chat_session.cooldown_counter,
                     last_msg_str,
                     1 if chat_session.persona_locked else 0,
@@ -340,6 +342,7 @@ class ChatRepository:
             initial_location_id=init_loc_id,
             relationship_value=float(row["relationship_value"]),
             events_enabled=bool(row["events_enabled"]),
+            thinking_enabled=bool(row["thinking_enabled"]) if "thinking_enabled" in keys else False,
             cooldown_counter=int(row["cooldown_counter"]),
             last_message_at=parse_datetime(row["last_message_at"]),
             parent_session_id=(
