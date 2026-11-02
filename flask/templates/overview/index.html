@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "macros/cards.html" import character_card, worldinfo_card, character_grid, worldinfo_grid %}
 {% block title %}AIMO — Hub-Dashboard{% endblock %}
 
 {% block content %}
@@ -34,47 +35,7 @@
       </div>
     </form>
 
-    <div class="card-grid">
-      {% if has_perm('character_create') %}
-        {{ new_button("Neuer Charakter", href=url_for('characters.new_character')) }}
-      {% endif %}
-
-      {% for item in character_cards %}
-        {% set char = item.character %}
-        <div class="card-tile">
-          <a href="{{ url_for('chat.open_character_chat', character_id=char.id) }}" class="char-card-bg" style="background-image: url('{{ url_for('uploaded_file', filename=char.avatar_path or char.primary_portrait_path) }}'), url('/static/img/cover.svg');">
-            <div class="char-scroll-overlay">
-              <strong style="color: var(--gold-accent); display: block; margin-bottom: 0.35rem;">{{ char.name }} ({{ char.gender.value }})</strong>
-              <p>{{ char.description }}</p>
-            </div>
-            {% if item.message_count > 0 %}
-              <div class="char-msg-badge" title="Ausgetauschte Nachrichten">
-                <span class="icon-mono">💬</span> {{ item.message_count }}
-              </div>
-            {% endif %}
-          </a>
-
-          <div style="padding: 0.55rem 0.75rem; display: flex; justify-content: space-between; align-items: center; background: rgba(25, 18, 13, 0.96);">
-            <a href="{{ url_for('chat.open_character_chat', character_id=char.id) }}" style="font-weight: 700; color: var(--text-main);">
-              {{ char.name }}
-            </a>
-            {% if has_perm('character_edit') %}
-              <a href="{{ url_for('characters.edit_character', character_id=char.id) }}" title="Bearbeiten"><span class="icon-mono">✏️</span></a>
-            {% endif %}
-          </div>
-
-          <div class="relationship-bar-wrap" data-relationship-score="{{ item.best_relationship }}">
-            <div class="relationship-header">
-              <span>Beziehung: {{ "%.1f"|format(item.best_relationship) }}</span>
-              <span class="heart-icon">❤️</span>
-            </div>
-            <div class="relationship-track">
-              <div class="relationship-fill"></div>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
+    {{ character_grid(character_cards, can_create=has_perm('character_create'), can_edit=has_perm('character_edit')) }}
   </section>
 
   <!-- TAB 2: Lorebooks -->
@@ -106,29 +67,7 @@
 
   <!-- TAB 3: Worlds -->
   <section id="tab-worldinfo" class="tab-pane{% if (active_tab|default('')) == 'worldinfo' %} active{% endif %}">
-    <div class="card-grid">
-      {% if has_perm('worldinfo_create') %}
-        {{ new_button("Neue Welt", modal="new-worldinfo-modal") }}
-      {% endif %}
-
-      {% for item in worldinfo_cards %}
-        {% set wi = item.worldinfo %}
-        <a href="{{ url_for('worldinfo.detail', worldinfo_id=wi.id) }}" class="card-tile" style="padding: 1.25rem; justify-content: space-between; text-decoration: none;">
-          <div>
-            {% if wi.cover_image_path %}
-              <img src="{{ url_for('uploaded_file', filename=wi.cover_image_path) }}" alt="{{ wi.name }}" style="width: 56px; height: 56px; border-radius: 10px; object-fit: cover; border: 1.5px solid var(--gold-accent); margin-bottom: 0.5rem; display: block;" onerror="this.style.display='none';">
-            {% else %}
-              <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">{{ wi.icon or '🌐' }}</div>
-            {% endif %}
-            <h3 style="color: var(--gold-accent); margin-bottom: 0.4rem;">{{ wi.name }}</h3>
-          </div>
-          <div style="font-size: 0.85rem; color: var(--text-muted);">
-            <div>📍 {{ item.location_count }} Orte</div>
-            <div>🎲 {{ item.event_count }} Events</div>
-          </div>
-        </a>
-      {% endfor %}
-    </div>
+    {{ worldinfo_grid(worldinfo_cards, can_create=has_perm('worldinfo_create')) }}
   </section>
 </div>
 
