@@ -112,10 +112,10 @@ def detail(worldinfo_id: int):
         if ev.id is not None
     }
 
-    valid_tabs = ("places", "events", "collab")
-    active_tab = request.args.get("tab", "places")
+    valid_tabs = ("info", "places", "events", "collab")
+    active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
     if active_tab not in valid_tabs:
-        active_tab = "places"
+        active_tab = "info"
 
     return render_template(
         "worldinfo/detail.html",
@@ -143,7 +143,7 @@ def duplicate_worldinfo(worldinfo_id: int):
     orig = repo.get_by_id(worldinfo_id)
     if orig is None or not orig.is_visible_to_user(user.id, user.is_initial_admin):
         flash("WorldInfo nicht gefunden.", "error")
-        return redirect(url_for("overview.index"))
+        return redirect(url_for("overview.index", tab="worldinfo"))
     copied = repo.duplicate(worldinfo_id, user.id)
     flash(f"Kopie '{copied.name}' erfolgreich angelegt.", "success")
     return redirect(url_for("worldinfo.detail", worldinfo_id=copied.id))
@@ -158,10 +158,10 @@ def delete_worldinfo(worldinfo_id: int):
     worldinfo = repo.get_by_id(worldinfo_id)
     if worldinfo is None or not worldinfo.is_deletable_by_user(user.id, user.is_initial_admin):
         flash("WorldInfo nicht gefunden oder keine Berechtigung zum Löschen.", "error")
-        return redirect(url_for("overview.index"))
+        return redirect(url_for("overview.index", tab="worldinfo"))
     repo.delete(worldinfo_id)
     flash("WorldInfo gelöscht.", "success")
-    return redirect(url_for("overview.index"))
+    return redirect(url_for("overview.index", tab="worldinfo"))
 
 
 @worldinfo_bp.route("/<int:worldinfo_id>/locations/add", methods=["POST"])

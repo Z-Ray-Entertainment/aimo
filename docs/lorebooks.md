@@ -8,11 +8,11 @@
 
 ## 🛠️ Header & Actions
 
-- **Back Button (`←`):** Returns to the hub overview.
+- **Back Button (`← Zurück`):** Returns directly to the Lorebook Grid (`/overview?tab=lorebooks`).
 - **Lorebook Title & Badges:** Displays the name of the lorebook and a readonly badge (`🔒 Schreibgeschützt`) if viewing another user's lorebook without edit permissions.
 - **Save (`💾 Speichern`):** Saves all basic settings and collaborator tags.
-- **Duplicate (`📄 Duplizieren`):** Allows any creator to clone any visible lorebook and its complete entries into their own private collection.
-- **Delete (`🗑️ Lorebook löschen`):** Strictly reserved for the author and initial administrators.
+- **Duplicate (`📄 Kopieren`):** Allows any creator to clone any visible lorebook and its complete entries into their own private collection.
+- **Delete (`🗑️ Löschen`):** Strictly reserved for the author and initial administrators.
 
 ---
 

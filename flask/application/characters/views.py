@@ -260,7 +260,7 @@ def copy_character(character_id: int):
     orig = char_repo.get_by_id(character_id)
     if orig is None or not orig.is_visible_to_user(user.id, user.is_initial_admin):
         flash("Charakter nicht gefunden.", "error")
-        return redirect(url_for("overview.index"))
+        return redirect(url_for("overview.index", tab="characters"))
 
     copied = char_repo.duplicate(character_id, user.id)
     flash(f"Kopie '{copied.name}' als Entwurf erstellt.", "success")
@@ -276,11 +276,11 @@ def delete_character(character_id: int):
     char = char_repo.get_by_id(character_id)
     if char is None or not char.is_deletable_by_user(user.id, user.is_initial_admin):
         flash("Charakter nicht gefunden oder keine Berechtigung zum Löschen.", "error")
-        return redirect(url_for("overview.index"))
+        return redirect(url_for("overview.index", tab="characters"))
 
     char_repo.delete(character_id)
     flash("Charakter gelöscht.", "success")
-    return redirect(url_for("overview.index"))
+    return redirect(url_for("overview.index", tab="characters"))
 
 
 @characters_bp.route("/<int:character_id>/gallery/add", methods=["POST"])

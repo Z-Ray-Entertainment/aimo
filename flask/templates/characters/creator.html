@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button, new_button %}
+{% from "macros/editor_header.html" import editor_header %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
 {% from "macros/collaboration.html" import collaboration_manager %}
 {% block title %}AIMO — Character Designer{% endblock %}
@@ -7,28 +8,18 @@
 {% block content %}
 <div data-tab-group>
   <!-- Top Action Bar -->
-  <div class="aimo-frame" style="padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-    <div style="display: flex; align-items: center; gap: 1rem;">
-      {{ action_button("Zurück", href=url_for('overview.index'), arrow="left") }}
-      <h2 style="color: var(--gold-accent);">
-        {% if character %}Charakter bearbeiten: {{ character.name }}{% else %}Neuen Charakter erschaffen{% endif %}
-      </h2>
-    </div>
-
-    <div style="display: flex; align-items: center; gap: 0.65rem;">
-      <button type="submit" form="character-main-form" class="aimo-btn primary"><span class="icon-mono">💾</span> Speichern</button>
-      {% if character %}
-        <form method="POST" action="{{ url_for('characters.copy_character', character_id=character.id) }}" style="display: inline;">
-          <button type="submit" class="aimo-btn"><span class="icon-mono">📄</span> Kopieren</button>
-        </form>
-        {% if is_author %}
-          <form method="POST" action="{{ url_for('characters.delete_character', character_id=character.id) }}" style="display: inline;" onsubmit="return confirm('Charakter wirklich unwiderruflich löschen?');">
-            <button type="submit" class="aimo-btn danger"><span class="icon-mono">🗑️</span> Löschen</button>
-          </form>
-        {% endif %}
-      {% endif %}
-    </div>
-  </div>
+  {{ editor_header(
+      title=character.name if character else "Neuer Charakter",
+      back_url=url_for('overview.index', tab='characters'),
+      form_id="character-main-form",
+      is_editable=is_editable,
+      copy_url=(url_for('characters.copy_character', character_id=character.id) if character else none),
+      can_copy=(character is not none and character.id is not none),
+      delete_url=(url_for('characters.delete_character', character_id=character.id) if character else none),
+      can_delete=(character is not none and is_author),
+      delete_confirm_msg="Charakter wirklich unwiderruflich löschen?",
+      save_title="Charakter speichern"
+  ) }}
 
   <!-- Designer Tabs (Consistent with Header & Chat Nav Buttons) -->
   <div class="rpg-tabs">

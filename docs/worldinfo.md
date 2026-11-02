@@ -9,21 +9,29 @@ A **WorldInfo** encapsulates the geography, scenes, and random events of a rolep
 ## 🏛️ WorldInfo Editor (`templates/worldinfo/detail.html`)
 
 - **Header & Actions:**
-  - **Back Button (`←`):** Returns to the hub overview.
-  - **Save (`💾 Speichern`):** Saves world metadata, icon, and collaborators.
-  - **Duplicate (`📄 Duplizieren`):** Deep-clones the entire world setting — including all locations, 16:9 backgrounds, and random event pools — into an independent duplicate for the creator.
-  - **Delete (`🗑️ Welt löschen`):** Strictly reserved for the author and initial administrators.
-- **World Name:** Setting title (e.g., *"Kingdom of Acheron"*).
-- **WorldInfo Icon (`icon`):** A representative icon or graphic shown in headers and chat sidebars.
-- **World Lorebook (Optional):** Creators can attach an encyclopedia ([Lorebook](lorebooks.md)) directly to the world.
-  - Whenever a chat session is played in this world, this lorebook is automatically loaded as an active default lorebook.
-  - Useful for overarching world lore, political factions, pantheons, and geography that apply to any character visiting this realm.
+  - **Back Button (`← Zurück`):** Returns directly to the World Grid (`/overview?tab=worldinfo`).
+  - **World Title & Badges:** Displays the name of the world and a readonly badge (`🔒 Schreibgeschützt`) if viewing another creator's world without edit permissions.
+  - **Save (`💾 Speichern`):** Saves world metadata, cover image, and collaborator settings.
+  - **Duplicate (`📄 Kopieren`):** Deep-clones the entire world setting — including all locations, 16:9 backgrounds, and random event pools — into an independent duplicate for the creator.
+  - **Delete (`🗑️ Löschen`):** Strictly reserved for the author and initial administrators.
 
-The editor is organized into three functional tabs:
+The editor is organized into four functional tabs:
 
 ---
 
-## 📍 Tab 1: Places (Locations)
+## 📋 Tab 1: Basic Settings (`📋 Grundeinstellungen`)
+
+- **World Name:** Setting title (e.g., *"Kingdom of Acheron"*).
+- **1:1 Cover Image:** Square cover artwork for the World Grid tile and world selection dialog. Features an integrated cropping tool (`AimoImageCropper`).
+- **Visibility:** Toggle between `Private` (visible only to you and collaborators) and `Public` (available for all players in the hub).
+- **Bound Lorebook (Optional):** Creators can attach an encyclopedia ([Lorebook](lorebooks.md)) directly to the world.
+  - Whenever a chat session is played in this world, this lorebook is automatically loaded as an active default lorebook.
+  - Useful for overarching world lore, political factions, pantheons, and geography that apply to any character visiting this realm.
+- **Save Button (`💾 Speichern`):** Direct save trigger at the foot of the settings form.
+
+---
+
+## 📍 Tab 2: Places (Locations)
 
 A gallery of all locales in this world:
 - First tile (`+`) to register a new place.
@@ -37,7 +45,7 @@ A gallery of all locales in this world:
 
 ---
 
-## ⚡ Tab 2: Events (Random Encounters)
+## ⚡ Tab 3: Events (Random Encounters)
 
 Events inject unexpected life into the world (e.g., sudden storm, wandering bandit, royal procession).
 - First tile (`+`) to author a new event.
@@ -51,7 +59,7 @@ Events inject unexpected life into the world (e.g., sudden storm, wandering band
 
 ---
 
-## 👥 Tab 3: Collaboration (`👥 Kollaboration`)
+## 👥 Tab 4: Collaboration (`👥 Kollaboration`)
 
 - **Creator-Tag Management:** The author can add trusted creators by their private **Creator-Tag** (UUID4).
 - **Collaborative Worldbuilding:** Collaborators can create and edit locations, upload 16:9 backgrounds, and configure random events.

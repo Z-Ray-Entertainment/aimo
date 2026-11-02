@@ -1,0 +1,59 @@
+{# =============================================================================
+   AIMO Reusable Editor Header Component
+   Shared header bar component for entity editors (Character, Lorebook, WorldInfo)
+   Standardizes:
+     - Back button targeting the respective component grid
+     - Clean title (without emoji icons)
+     - Read-only badge for non-editable entities
+     - Unified action buttons: Speichern (💾), Kopieren (📄), Löschen (🗑️)
+   ============================================================================= #}
+{% from "macros/buttons.html" import action_button %}
+
+{% macro editor_header(
+    title,
+    back_url,
+    form_id=none,
+    is_editable=true,
+    copy_url=none,
+    can_copy=false,
+    delete_url=none,
+    can_delete=false,
+    delete_confirm_msg="Wirklich unwiderruflich löschen?",
+    readonly_badge_text=none,
+    save_title="Speichern"
+) %}
+<div class="aimo-frame editor-header-bar" style="padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+  <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+    {{ action_button("Zurück", href=back_url, arrow="left") }}
+    <h2 style="color: var(--gold-accent); margin: 0; font-size: 1.35rem;">{{ title }}</h2>
+    {% if not is_editable and readonly_badge_text %}
+      <span class="aimo-card-badge" style="background: rgba(212, 175, 55, 0.15); border: 1px solid var(--gold-accent); color: var(--gold-accent); padding: 0.35rem 0.75rem;">
+        🔒 {{ readonly_badge_text }}
+      </span>
+    {% endif %}
+    {% if caller is defined and caller %}{{ caller() }}{% endif %}
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+    {% if is_editable and form_id %}
+      <button type="submit" form="{{ form_id }}" class="aimo-btn primary" title="{{ save_title }}">
+        <span class="icon-mono">💾</span> Speichern
+      </button>
+    {% endif %}
+    {% if can_copy and copy_url %}
+      <form method="POST" action="{{ copy_url }}" style="display: inline;">
+        <button type="submit" class="aimo-btn">
+          <span class="icon-mono">📄</span> Kopieren
+        </button>
+      </form>
+    {% endif %}
+    {% if can_delete and delete_url %}
+      <form method="POST" action="{{ delete_url }}" style="display: inline;" onsubmit="return confirm('{{ delete_confirm_msg }}');">
+        <button type="submit" class="aimo-btn danger">
+          <span class="icon-mono">🗑️</span> Löschen
+        </button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endmacro %}

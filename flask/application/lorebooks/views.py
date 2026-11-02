@@ -103,7 +103,7 @@ def duplicate_lorebook(lorebook_id: int):
     orig = repo.get_by_id(lorebook_id)
     if orig is None or not orig.is_visible_to_user(user.id, user.is_initial_admin):
         flash("Lorebook nicht gefunden.", "error")
-        return redirect(url_for("overview.index"))
+        return redirect(url_for("overview.index", tab="lorebooks"))
     copied = repo.duplicate(lorebook_id, user.id)
     flash(f"Kopie '{copied.name}' erfolgreich angelegt.", "success")
     return redirect(url_for("lorebooks.detail", lorebook_id=copied.id))
@@ -118,10 +118,10 @@ def delete_lorebook(lorebook_id: int):
     lorebook = repo.get_by_id(lorebook_id)
     if lorebook is None or not lorebook.is_deletable_by_user(user.id, user.is_initial_admin):
         flash("Lorebook nicht gefunden oder keine Berechtigung zum Löschen.", "error")
-        return redirect(url_for("overview.index"))
+        return redirect(url_for("overview.index", tab="lorebooks"))
     repo.delete(lorebook_id)
     flash("Lorebook gelöscht.", "success")
-    return redirect(url_for("overview.index"))
+    return redirect(url_for("overview.index", tab="lorebooks"))
 
 
 @lorebooks_bp.route("/<int:lorebook_id>/entries/add", methods=["POST"])

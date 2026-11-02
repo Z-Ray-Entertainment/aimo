@@ -1,103 +1,32 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button, new_button %}
+{% from "macros/editor_header.html" import editor_header %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
 {% from "macros/collaboration.html" import collaboration_manager %}
 {% block title %}AIMO — WorldInfo: {{ worldinfo.name }}{% endblock %}
 
 {% block content %}
 <div data-tab-group>
-  <div class="aimo-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-      {{ action_button("Zurück", href=url_for('overview.index'), arrow="left") }}
-      {% if not is_editable %}
-        <span class="aimo-card-badge" style="background: rgba(212, 175, 55, 0.15); border: 1px solid var(--gold-accent); color: var(--gold-accent); padding: 0.35rem 0.75rem;">
-          🔒 Schreibgeschützt (Fremde Welt)
-        </span>
-      {% endif %}
+  {{ editor_header(
+      title=worldinfo.name,
+      back_url=url_for('overview.index', tab='worldinfo'),
+      form_id="worldinfo-meta-form",
+      is_editable=is_editable,
+      copy_url=url_for('worldinfo.duplicate_worldinfo', worldinfo_id=worldinfo.id),
+      can_copy=has_perm('worldinfo_create'),
+      delete_url=url_for('worldinfo.delete_worldinfo', worldinfo_id=worldinfo.id),
+      can_delete=(has_perm('worldinfo_delete') and is_author),
+      delete_confirm_msg="WorldInfo wirklich löschen?",
+      readonly_badge_text="Schreibgeschützt (Fremde Welt)",
+      save_title="WorldInfo speichern"
+  ) }}
 
-      <form id="worldinfo-meta-form" method="POST" action="{{ url_for('worldinfo.detail', worldinfo_id=worldinfo.id) }}" enctype="multipart/form-data" style="display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
-        <!-- 1:1 Cover Image & Preview -->
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <div id="worldinfo-cover-preview-wrap" style="width: 72px; height: 72px; border-radius: 12px; border: 2px solid var(--gold-accent); overflow: hidden; background: rgba(15, 11, 8, 0.9); display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="1:1 Welt-Cover">
-            <img id="worldinfo-cover-preview-img" src="{% if worldinfo.cover_image_path %}{{ url_for('uploaded_file', filename=worldinfo.cover_image_path) }}{% endif %}" alt="Cover" style="{% if not worldinfo.cover_image_path %}display: none;{% endif %} width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; document.getElementById('worldinfo-cover-placeholder-icon').style.display='flex';">
-            <div id="worldinfo-cover-placeholder-icon" style="{% if worldinfo.cover_image_path %}display: none;{% else %}display: flex;{% endif %} align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 2.2rem; user-select: none;">
-              {{ worldinfo.icon or '🌐' }}
-            </div>
-          </div>
-
-          {% if is_editable %}
-            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-              <input type="file" id="worldinfo-cover-input" name="cover_file" accept=".png,.jpg,.jpeg,.webp" style="display: none;">
-              <label for="worldinfo-cover-input" class="aimo-btn" style="padding: 0.28rem 0.6rem; font-size: 0.78rem; cursor: pointer; margin-bottom: 0; text-align: center;">
-                <span class="icon-mono">📷</span> Cover wählen
-              </label>
-              <button type="button" id="open-worldinfo-crop-btn" class="aimo-btn" style="padding: 0.28rem 0.6rem; font-size: 0.78rem;" {% if not worldinfo.cover_image_path %}disabled{% endif %}>
-                <span class="icon-mono">✂️</span> Zuschneiden
-              </button>
-              <span id="worldinfo-cover-crop-badge" style="display: none; font-size: 0.72rem; color: #4CAF50; font-weight: 600;">✓ 1:1 Cover aktiv</span>
-            </div>
-          {% endif %}
-        </div>
-
-        <div>
-          <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">
-            Welt-Name
-            <span class="field-help-btn" title="Welt-Name:&#10;Der Name des Universums oder Schauplatzes. Wird als Primärwelt in den Prompt-Kontext eingebunden.">?</span>
-          </label>
-          <input type="text" name="name" value="{{ worldinfo.name }}" style="width: 240px; font-weight: 700;" required {% if not is_editable %}disabled readonly{% endif %}>
-        </div>
-
-        <div>
-          <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">
-            Sichtbarkeit
-            <span class="field-help-btn" title="Sichtbarkeit:&#10;Privat = Nur dir zugänglich.&#10;Öffentlich = Allen Benutzern für Chats zugänglich.">?</span>
-          </label>
-          <select name="visibility" style="width: 140px;" {% if not is_editable %}disabled{% endif %}>
-            <option value="private" {% if worldinfo.visibility != 'public' %}selected{% endif %}>Privat</option>
-            <option value="public" {% if worldinfo.visibility == 'public' %}selected{% endif %}>Öffentlich</option>
-          </select>
-        </div>
-
-        <div>
-          <label style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 0.25rem;">
-            Gebundenes Lorebook (Optional)
-            <span class="field-help-btn" title="Gebundenes Lorebook:&#10;Ein optionales Lorebook, das in allen Chats in dieser Welt automatisch neben dem Charakter-Lorebook für den Rollenspiel-Kontext herangezogen wird.">?</span>
-          </label>
-          <select name="lorebook_id" style="width: 200px;" {% if not is_editable %}disabled{% endif %}>
-            <option value="">Kein Lorebook gebunden</option>
-            {% for lb in lorebooks %}
-              <option value="{{ lb.id }}" {% if worldinfo.lorebook_id == lb.id %}selected{% endif %}>
-                📜 {{ lb.name }}
-              </option>
-            {% endfor %}
-          </select>
-        </div>
-
-        {% if is_editable %}
-          <div style="padding-top: 1.1rem;">
-            <button type="submit" class="aimo-btn primary"><span class="icon-mono">💾</span> Speichern</button>
-          </div>
-        {% endif %}
-      </form>
-    </div>
-
-    <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-      {% if has_perm('worldinfo_create') %}
-        <form method="POST" action="{{ url_for('worldinfo.duplicate_worldinfo', worldinfo_id=worldinfo.id) }}" style="display: inline;">
-          <button type="submit" class="aimo-btn primary"><span class="icon-mono">📄</span> Welt duplizieren</button>
-        </form>
-      {% endif %}
-      {% if has_perm('worldinfo_delete') and is_author %}
-        <form method="POST" action="{{ url_for('worldinfo.delete_worldinfo', worldinfo_id=worldinfo.id) }}" onsubmit="return confirm('WorldInfo wirklich löschen?');">
-          <button type="submit" class="aimo-btn danger"><span class="icon-mono">🗑️</span> Welt löschen</button>
-        </form>
-      {% endif %}
-    </div>
-  </div>
-
-  <!-- Tabs: Places, Events & Collaboration -->
+  <!-- Tabs: Grundeinstellungen, Orte & Hintergründe, Events & Kollaboration -->
   <div class="rpg-tabs">
-    <button type="button" class="aimo-btn {% if (active_tab|default('places')) == 'places' %}active{% endif %}" data-tab-target="tab-places">
+    <button type="button" class="aimo-btn {% if (active_tab|default('info')) == 'info' %}active{% endif %}" data-tab-target="tab-info">
+      <span class="icon-mono">📋</span> <span>Grundeinstellungen</span>
+    </button>
+    <button type="button" class="aimo-btn {% if active_tab == 'places' %}active{% endif %}" data-tab-target="tab-places">
       <span class="icon-mono">📍</span> <span>Orte &amp; Hintergründe ({{ locations|length }})</span>
     </button>
     <button type="button" class="aimo-btn {% if active_tab == 'events' %}active{% endif %}" data-tab-target="tab-events">
@@ -108,8 +37,96 @@
     </button>
   </div>
 
-  <!-- TAB 1: Places -->
-  <section id="tab-places" class="tab-pane {% if (active_tab|default('places')) == 'places' %}active{% endif %}">
+  <!-- TAB 1: Grundeinstellungen -->
+  <section id="tab-info" class="tab-pane {% if (active_tab|default('info')) == 'info' %}active{% endif %}">
+    <form id="worldinfo-meta-form" method="POST" action="{{ url_for('worldinfo.detail', worldinfo_id=worldinfo.id) }}" enctype="multipart/form-data">
+      <input type="hidden" name="active_tab" value="{{ active_tab }}">
+      <div class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; max-width: 800px;">
+        <h3 style="color: var(--gold-accent); margin-top: 0; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span class="icon-mono">📋</span> Grundeinstellungen
+        </h3>
+
+        <!-- Welt-Name -->
+        <div>
+          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">
+            Welt-Name *
+            <span class="field-help-btn" title="Welt-Name:&#10;Der Name des Universums oder Schauplatzes. Wird als Primärwelt in den Prompt-Kontext eingebunden.">?</span>
+          </label>
+          <input type="text" name="name" value="{{ worldinfo.name }}" required style="width: 100%; font-size: 1rem; font-weight: 700;" {% if not is_editable %}disabled readonly{% endif %}>
+        </div>
+
+        <!-- 1:1 Cover Image & Vorschau -->
+        <div>
+          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">
+            Cover-Bild (1:1)
+            <span class="field-help-btn" title="1:1 Welt-Cover:&#10;Quadratisches Titelbild für die Weltkarte im Hub und die Weltenauswahl.">?</span>
+          </label>
+          <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <div id="worldinfo-cover-preview-wrap" style="width: 80px; height: 80px; border-radius: 12px; border: 2px solid var(--gold-accent); overflow: hidden; background: rgba(15, 11, 8, 0.9); display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="1:1 Welt-Cover">
+              <img id="worldinfo-cover-preview-img" src="{% if worldinfo.cover_image_path %}{{ url_for('uploaded_file', filename=worldinfo.cover_image_path) }}{% endif %}" alt="Cover" style="{% if not worldinfo.cover_image_path %}display: none;{% endif %} width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; document.getElementById('worldinfo-cover-placeholder-icon').style.display='flex';">
+              <div id="worldinfo-cover-placeholder-icon" style="{% if worldinfo.cover_image_path %}display: none;{% else %}display: flex;{% endif %} align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 2.5rem; user-select: none;">
+                {{ worldinfo.icon or '🌐' }}
+              </div>
+            </div>
+
+            {% if is_editable %}
+              <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <input type="file" id="worldinfo-cover-input" name="cover_file" accept=".png,.jpg,.jpeg,.webp" style="display: none;">
+                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                  <label for="worldinfo-cover-input" class="aimo-btn" style="cursor: pointer; margin-bottom: 0; text-align: center;">
+                    <span class="icon-mono">📷</span> Cover wählen
+                  </label>
+                  <button type="button" id="open-worldinfo-crop-btn" class="aimo-btn" {% if not worldinfo.cover_image_path %}disabled{% endif %}>
+                    <span class="icon-mono">✂️</span> Zuschneiden
+                  </button>
+                </div>
+                <span id="worldinfo-cover-crop-badge" style="display: none; font-size: 0.78rem; color: #4CAF50; font-weight: 600;">✓ 1:1 Cover aktiv</span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Sichtbarkeit -->
+        <div>
+          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">
+            Sichtbarkeit
+            <span class="field-help-btn" title="Sichtbarkeit:&#10;Privat = Nur dir zugänglich.&#10;Öffentlich = Allen Benutzern für Chats zugänglich.">?</span>
+          </label>
+          <select name="visibility" style="width: 220px;" {% if not is_editable %}disabled{% endif %}>
+            <option value="private" {% if worldinfo.visibility != 'public' %}selected{% endif %}>🔒 Privat</option>
+            <option value="public" {% if worldinfo.visibility == 'public' %}selected{% endif %}>🌍 Öffentlich</option>
+          </select>
+        </div>
+
+        <!-- Gebundenes Lorebook -->
+        <div>
+          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">
+            Gebundenes Lorebook (Optional)
+            <span class="field-help-btn" title="Gebundenes Lorebook:&#10;Ein optionales Lorebook, das in allen Chats in dieser Welt automatisch neben dem Charakter-Lorebook für den Rollenspiel-Kontext herangezogen wird.">?</span>
+          </label>
+          <select name="lorebook_id" style="width: 100%; max-width: 400px;" {% if not is_editable %}disabled{% endif %}>
+            <option value="">Kein Lorebook gebunden</option>
+            {% for lb in lorebooks %}
+              <option value="{{ lb.id }}" {% if worldinfo.lorebook_id == lb.id %}selected{% endif %}>
+                📜 {{ lb.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        {% if is_editable %}
+          <div style="margin-top: 0.5rem;">
+            <button type="submit" class="aimo-btn primary">
+              <span class="icon-mono">💾</span> Speichern
+            </button>
+          </div>
+        {% endif %}
+      </div>
+    </form>
+  </section>
+
+  <!-- TAB 2: Places -->
+  <section id="tab-places" class="tab-pane {% if active_tab == 'places' %}active{% endif %}">
     <div class="card-grid">
       {% if is_editable %}
         {{ new_button("Neuer Ort", modal="new-location-modal") }}
@@ -213,8 +230,8 @@
     </div>
   </section>
 
-  <!-- TAB 2: Events -->
-  <section id="tab-events" class="tab-pane">
+  <!-- TAB 3: Events -->
+  <section id="tab-events" class="tab-pane {% if active_tab == 'events' %}active{% endif %}">
     <div class="card-grid">
       {% if is_editable %}
         {{ new_button("Neues Event", modal="new-event-modal") }}
@@ -317,7 +334,7 @@
     </div>
   </section>
 
-  <!-- TAB 3: Kollaboration -->
+  <!-- TAB 4: Kollaboration -->
   <section id="tab-collab" class="tab-pane {% if active_tab == 'collab' %}active{% endif %}">
     {{ collaboration_manager(worldinfo.collaborator_creator_tags, is_author=is_author, is_editable=is_editable, form_id='worldinfo-meta-form') }}
   </section>

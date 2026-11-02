@@ -1,40 +1,23 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button, new_button %}
+{% from "macros/editor_header.html" import editor_header %}
 {% from "macros/collaboration.html" import collaboration_manager %}
 {% block title %}AIMO — Lorebook: {{ lorebook.name }}{% endblock %}
 
 {% block content %}
-<div class="aimo-frame" style="padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-  <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-    {{ action_button("Zurück", href=url_for('overview.index'), arrow="left") }}
-    <h2 style="color: var(--gold-accent); margin: 0; font-size: 1.35rem; display: flex; align-items: center; gap: 0.5rem;">
-      <span class="icon-mono">📜</span> {{ lorebook.name }}
-    </h2>
-    {% if not is_editable %}
-      <span class="aimo-card-badge" style="background: rgba(212, 175, 55, 0.15); border: 1px solid var(--gold-accent); color: var(--gold-accent); padding: 0.35rem 0.75rem;">
-        🔒 Schreibgeschützt (Fremdes Lorebook)
-      </span>
-    {% endif %}
-  </div>
-
-  <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
-    {% if is_editable %}
-      <button type="submit" form="lorebook-meta-form" class="aimo-btn primary" title="Lorebook speichern">
-        <span class="icon-mono">💾</span> Speichern
-      </button>
-    {% endif %}
-    {% if has_perm('lorebook_create') %}
-      <form method="POST" action="{{ url_for('lorebooks.duplicate_lorebook', lorebook_id=lorebook.id) }}" style="display: inline;">
-        <button type="submit" class="aimo-btn"><span class="icon-mono">📄</span> Duplizieren</button>
-      </form>
-    {% endif %}
-    {% if has_perm('lorebook_delete') and is_author %}
-      <form method="POST" action="{{ url_for('lorebooks.delete_lorebook', lorebook_id=lorebook.id) }}" style="display: inline;" onsubmit="return confirm('Lorebook wirklich löschen?');">
-        <button type="submit" class="aimo-btn danger"><span class="icon-mono">🗑️</span> Lorebook löschen</button>
-      </form>
-    {% endif %}
-  </div>
-</div>
+{{ editor_header(
+    title=lorebook.name,
+    back_url=url_for('overview.index', tab='lorebooks'),
+    form_id="lorebook-meta-form",
+    is_editable=is_editable,
+    copy_url=url_for('lorebooks.duplicate_lorebook', lorebook_id=lorebook.id),
+    can_copy=has_perm('lorebook_create'),
+    delete_url=url_for('lorebooks.delete_lorebook', lorebook_id=lorebook.id),
+    can_delete=(has_perm('lorebook_delete') and is_author),
+    delete_confirm_msg="Lorebook wirklich löschen?",
+    readonly_badge_text="Schreibgeschützt (Fremdes Lorebook)",
+    save_title="Lorebook speichern"
+) }}
 
 <div data-tab-group>
   <!-- Tabs: Grundeinstellungen, Einträge & Kollaboration -->
