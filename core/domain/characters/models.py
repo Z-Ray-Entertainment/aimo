@@ -92,6 +92,7 @@ class Character:
     card_image_path: str | None = None
     appearance: str = ""
     visibility: str = "private"
+    collaborator_creator_tags: list[str] = field(default_factory=list)
     dialogue_examples: list[dict[str, str]] = field(default_factory=list)
     linked_lorebook_ids: list[int] = field(default_factory=list)
     lorebook_world_conditions: dict[int, int] = field(default_factory=dict)
@@ -107,6 +108,18 @@ class Character:
     def is_visible_to_user(self, user_id: int, is_admin: bool = False) -> bool:
         return self.visibility == "public" or self.user_id == user_id or is_admin
 
-    def is_editable_by_user(self, user_id: int, is_admin: bool = False) -> bool:
+    def is_editable_by_user(
+        self,
+        user_id: int,
+        is_admin: bool = False,
+        creator_tag: str | None = None,
+    ) -> bool:
+        if self.user_id == user_id or is_admin:
+            return True
+        if creator_tag and creator_tag in self.collaborator_creator_tags:
+            return True
+        return False
+
+    def is_deletable_by_user(self, user_id: int, is_admin: bool = False) -> bool:
         return self.user_id == user_id or is_admin
 

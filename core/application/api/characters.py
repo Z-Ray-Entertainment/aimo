@@ -254,7 +254,7 @@ def upload_sprite(character_id: int):
     storage = FileStorage()
 
     character = char_repo.get_by_id(character_id)
-    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin):
+    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
         return jsonify({"error": "Character not found."}), 404
 
     emotion_raw = request.form.get("emotion", Emotion.NEUTRAL.value)
@@ -292,7 +292,20 @@ def delete_sprite(character_id: int, emotion: str, variant: int):
     assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     character = char_repo.get_by_id(character_id)
-    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin):
+    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
         return jsonify({"error": "Character not found."}), 404
     deleted = char_repo.delete_sprite(character_id, emotion, variant)
     return jsonify({"deleted": deleted})
+
+
+@api_characters_bp.route("/<int:character_id>/duplicate", methods=["POST"])
+@require_permission(FunctionPermission.CHARACTER_CREATE)
+def duplicate_character(character_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    char_repo = CharacterRepository()
+    orig = char_repo.get_by_id(character_id)
+    if orig is None or not orig.is_visible_to_user(user.id, user.is_initial_admin):
+        return jsonify({"error": "Character not found."}), 404
+    copied = char_repo.duplicate(character_id, user.id)
+    return jsonify({"id": copied.id, "name": copied.name}), 201

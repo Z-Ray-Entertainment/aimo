@@ -1,6 +1,7 @@
 from application.auth.decorators import (
     get_current_permissions,
     get_current_user,
+    has_creator_permission,
     has_perm,
     require_auth,
     require_permission,
@@ -11,6 +12,7 @@ __all__ = [
     "auth_bp",
     "get_current_permissions",
     "get_current_user",
+    "has_creator_permission",
     "has_perm",
     "require_auth",
     "require_permission",

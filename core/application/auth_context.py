@@ -50,3 +50,22 @@ class AuthContext:
             return True
         perms = AuthContext.get_current_permissions()
         return PermissionService().has_permission(perms, permission)
+
+    @staticmethod
+    def has_creator_permission() -> bool:
+        user = AuthContext.get_current_user()
+        if user is None:
+            return False
+        if user.is_initial_admin:
+            return True
+        perms = AuthContext.get_current_permissions()
+        creator_perms = {
+            FunctionPermission.CHARACTER_CREATE.value,
+            FunctionPermission.CHARACTER_EDIT.value,
+            FunctionPermission.WORLDINFO_CREATE.value,
+            FunctionPermission.WORLDINFO_EDIT.value,
+            FunctionPermission.LOREBOOK_CREATE.value,
+            FunctionPermission.LOREBOOK_EDIT.value,
+            FunctionPermission.ADMIN_ACCESS.value,
+        }
+        return any(p in perms.permissions for p in creator_perms)

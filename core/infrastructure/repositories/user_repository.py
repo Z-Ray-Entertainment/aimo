@@ -1,4 +1,5 @@
 import sqlite3
+import uuid
 
 from domain.auth.models import User
 from domain.permissions.models import (
@@ -27,22 +28,25 @@ class UserRepository(BaseRepository[User]):
 
     def create(self, user: User) -> User:
         created_str = format_datetime(user.created_at)
+        creator_tag = (user.creator_tag or str(uuid.uuid4())).strip()
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO users (username, email, password_hash, is_initial_admin, created_at)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO users (username, email, password_hash, creator_tag, is_initial_admin, created_at)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """,
                 (
                     user.username,
                     user.email.strip().lower(),
                     user.password_hash,
+                    creator_tag,
                     1 if user.is_initial_admin else 0,
                     created_str,
                 ),
             )
             new_id = int(cursor.lastrowid or 0)
             user.id = new_id
+            user.creator_tag = creator_tag
             if user.is_initial_admin:
                 for perm in sorted(PRESET_PERMISSIONS[Preset.ADMIN]):
                     conn.execute(
@@ -65,16 +69,19 @@ class UserRepository(BaseRepository[User]):
             ).fetchone()
             if existing is None:
                 return self.create(user)
+            existing_tag = str(existing["creator_tag"]) if "creator_tag" in existing.keys() and existing["creator_tag"] else str(uuid.uuid4())
+            tag_to_save = user.creator_tag.strip() if user.creator_tag and user.creator_tag.strip() else existing_tag
             conn.execute(
                 """
                 UPDATE users
-                SET username = ?, email = ?, password_hash = ?
+                SET username = ?, email = ?, password_hash = ?, creator_tag = ?
                 WHERE id = ?
                 """,
                 (
                     user.username,
                     user.email.strip().lower(),
                     user.password_hash,
+                    tag_to_save,
                     user.id,
                 ),
             )
@@ -140,11 +147,17 @@ class UserRepository(BaseRepository[User]):
 
     @staticmethod
     def _to_entity(row: sqlite3.Row) -> User:
+        tag = (
+            str(row["creator_tag"])
+            if ("creator_tag" in row.keys() and row["creator_tag"])
+            else ""
+        )
         return User(
             id=int(row["id"]),
             username=str(row["username"]),
             email=str(row["email"]),
             password_hash=str(row["password_hash"]),
+            creator_tag=tag,
             is_initial_admin=bool(row["is_initial_admin"]),
             created_at=parse_datetime(row["created_at"]),
         )

@@ -67,6 +67,12 @@
                 <span>Persona wählen</span>
               </button>
             {% endif %}
+            {% if has_creator_permission() %}
+              <button type="button" class="aimo-btn" data-modal-open="creator-tag-modal" title="Dein persönlicher Creator-Tag">
+                <span class="icon-mono">🏷️</span>
+                <span>Creator-Tag</span>
+              </button>
+            {% endif %}
             {% if has_perm('admin_access') %}
               <a href="{{ url_for('admin.users_list') }}" class="aimo-btn"><span class="icon-mono">⚙️</span> Admin</a>
             {% endif %}
@@ -124,6 +130,13 @@
               <button type="button" class="aimo-btn mobile-nav-btn mobile-persona-btn" data-modal-open="persona-manager-modal">
                 <span class="icon-mono">👤</span>
                 <span>Persona wählen</span>
+              </button>
+            {% endif %}
+
+            {% if has_creator_permission() %}
+              <button type="button" class="aimo-btn mobile-nav-btn" data-modal-open="creator-tag-modal">
+                <span class="icon-mono">🏷️</span>
+                <span>Creator-Tag</span>
               </button>
             {% endif %}
 
@@ -372,6 +385,71 @@
         </div>
       </div>
     </div>
+
+    {% if has_creator_permission() %}
+      <!-- Globaler Modal: Creator-Tag -->
+      <div class="modal-backdrop" id="creator-tag-modal" aria-hidden="true">
+        <div class="modal-frame" style="max-width: 560px;">
+          <div class="modal-header">
+            <h2 style="color: var(--gold-accent); margin: 0; font-size: 1.25rem;">
+              <span class="icon-mono">🏷️</span> Dein persönlicher Creator-Tag
+            </h2>
+            <button type="button" class="aimo-btn" data-modal-close="creator-tag-modal">✕</button>
+          </div>
+
+          <div style="padding: 1rem 0;">
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.2rem;">
+              Dein persönlicher Creator-Tag ist eine eindeutige UUID. Wenn du mit anderen Creatoren an Charakteren, Welten oder Lorebooks zusammenarbeiten möchtest, teile ihnen diesen Tag eigenständig mit (z. B. via Discord oder Chat). Andere Creatoren können deinen Tag in ihren Kreationen hinterlegen, um dir Schreibzugriff zu gewähren.
+            </p>
+
+            <label style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; margin-bottom: 0.4rem; display: block;">
+              Dein Creator-Tag (Klicken zum Kopieren)
+            </label>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <input
+                type="text"
+                id="user-creator-tag-field"
+                value="{{ g.current_user.creator_tag }}"
+                readonly
+                style="font-family: monospace; font-size: 0.95rem; font-weight: 700; color: var(--gold-accent); background: rgba(0,0,0,0.3); border: 1px solid var(--border-wood-dark); border-radius: 6px; padding: 0.55rem 0.8rem; flex: 1; cursor: pointer;"
+                onclick="copyCreatorTag()"
+                title="Klicken zum Kopieren">
+              <button
+                type="button"
+                id="copy-creator-tag-btn"
+                class="aimo-btn primary"
+                onclick="copyCreatorTag()"
+                style="padding: 0.55rem 1rem; font-size: 0.85rem; white-space: nowrap;">
+                <span class="icon-mono">📋</span> Kopieren
+              </button>
+            </div>
+
+            <div style="margin-top: 1.25rem; padding: 0.75rem 1rem; background: rgba(212, 175, 55, 0.08); border-left: 3px solid var(--gold-accent); border-radius: 4px; font-size: 0.82rem; color: var(--text-main); line-height: 1.4;">
+              🔒 <strong>Datenschutz-Hinweis:</strong> Dein Creator-Tag wird anderen Nutzern niemals systemweit angezeigt und kann nicht über eine Suche ausgelesen werden.
+            </div>
+          </div>
+
+          <div style="text-align: right; margin-top: 0.5rem;">
+            <button type="button" class="aimo-btn" data-modal-close="creator-tag-modal">Schließen</button>
+          </div>
+        </div>
+      </div>
+      <script>
+        function copyCreatorTag() {
+          const field = document.getElementById('user-creator-tag-field');
+          const btn = document.getElementById('copy-creator-tag-btn');
+          if (field && field.value) {
+            navigator.clipboard.writeText(field.value).then(() => {
+              if (btn) {
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<span class="icon-mono">✓</span> Kopiert!';
+                setTimeout(() => { btn.innerHTML = orig; }, 2500);
+              }
+            });
+          }
+        }
+      </script>
+    {% endif %}
   {% endif %}
 
   <script src="{{ url_for('static', filename='js/modals.js') }}"></script>

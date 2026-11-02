@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 import os
 from pathlib import Path
 import sqlite3
+import uuid
 
 from shared.config import Config
 
@@ -13,10 +14,12 @@ CREATE TABLE IF NOT EXISTS users (
     username TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
+    creator_tag TEXT UNIQUE,
     is_initial_admin INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_users_email ON users (email);
+CREATE INDEX IF NOT EXISTS ix_users_creator_tag ON users (creator_tag);
 
 CREATE TABLE IF NOT EXISTS user_permissions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,6 +47,7 @@ CREATE TABLE IF NOT EXISTS lorebooks (
     name TEXT NOT NULL,
     description TEXT NOT NULL DEFAULT '',
     visibility TEXT NOT NULL DEFAULT 'private',
+    collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]',
     created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_lorebooks_user_id ON lorebooks (user_id);
@@ -68,6 +72,7 @@ CREATE TABLE IF NOT EXISTS worldinfos (
     visibility TEXT NOT NULL DEFAULT 'private',
     cover_image_path TEXT,
     lorebook_id INTEGER REFERENCES lorebooks(id) ON DELETE SET NULL,
+    collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]',
     created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_worldinfos_user_id ON worldinfos (user_id);
@@ -100,6 +105,7 @@ CREATE TABLE IF NOT EXISTS characters (
     name TEXT NOT NULL,
     gender TEXT NOT NULL DEFAULT 'non-binary',
     visibility TEXT NOT NULL DEFAULT 'private',
+    collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]',
     primary_portrait_path TEXT NOT NULL,
     avatar_path TEXT,
     card_image_path TEXT,
@@ -375,11 +381,23 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE characters ADD COLUMN lorebook_world_conditions_json TEXT NOT NULL DEFAULT '{}'",
         "ALTER TABLE system_settings ADD COLUMN classification_model TEXT NOT NULL DEFAULT 'hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M'",
         "ALTER TABLE system_settings ADD COLUMN default_backdrop_path TEXT",
+        "ALTER TABLE users ADD COLUMN creator_tag TEXT",
+        "ALTER TABLE characters ADD COLUMN collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]'",
+        "ALTER TABLE worldinfos ADD COLUMN collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]'",
+        "ALTER TABLE lorebooks ADD COLUMN collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]'",
     ):
         try:
             conn.execute(stmt)
         except sqlite3.OperationalError:
             pass
+
+    try:
+        conn.execute("CREATE INDEX IF NOT EXISTS ix_users_creator_tag ON users (creator_tag)")
+        user_rows = conn.execute("SELECT id FROM users WHERE creator_tag IS NULL OR creator_tag = ''").fetchall()
+        for u_row in user_rows:
+            conn.execute("UPDATE users SET creator_tag = ? WHERE id = ?", (str(uuid.uuid4()), u_row["id"]))
+    except sqlite3.OperationalError:
+        pass
 
 
 @contextmanager

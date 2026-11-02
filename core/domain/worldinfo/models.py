@@ -11,12 +11,25 @@ class WorldInfo:
     visibility: str = "private"
     cover_image_path: str | None = None
     lorebook_id: int | None = None
+    collaborator_creator_tags: list[str] = field(default_factory=list)
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def is_visible_to_user(self, user_id: int, is_admin: bool = False) -> bool:
         return self.visibility == "public" or self.user_id == user_id or is_admin
 
-    def is_editable_by_user(self, user_id: int, is_admin: bool = False) -> bool:
+    def is_editable_by_user(
+        self,
+        user_id: int,
+        is_admin: bool = False,
+        creator_tag: str | None = None,
+    ) -> bool:
+        if self.user_id == user_id or is_admin:
+            return True
+        if creator_tag and creator_tag in self.collaborator_creator_tags:
+            return True
+        return False
+
+    def is_deletable_by_user(self, user_id: int, is_admin: bool = False) -> bool:
         return self.user_id == user_id or is_admin
 
 

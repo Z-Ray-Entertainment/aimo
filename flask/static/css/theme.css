@@ -2846,3 +2846,51 @@ button.chat-menu-dropdown-item.danger:focus {
   cursor: not-allowed;
   border-style: dashed;
 }
+
+/* =============================================================================
+   AIMO Table Component (.aimo-table & .aimo-table-wrap)
+   Reusable RPG-Themed Data Table
+   ============================================================================= */
+.aimo-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-wood-dark);
+  background: rgba(20, 15, 11, 0.75);
+}
+
+.aimo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  text-align: left;
+}
+
+.aimo-table th {
+  background: rgba(35, 25, 18, 0.95);
+  color: var(--gold-accent);
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--border-wood);
+  white-space: nowrap;
+}
+
+.aimo-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(139, 90, 43, 0.25);
+  color: var(--text-main);
+  vertical-align: middle;
+}
+
+.aimo-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.aimo-table tbody tr:hover {
+  background: rgba(212, 175, 55, 0.06);
+}
+
+.aimo-table tbody tr:last-child td {
+  border-bottom: none;
+}
+

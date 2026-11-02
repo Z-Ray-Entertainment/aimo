@@ -13,6 +13,7 @@ class LorebookService:
         name: str,
         description: str = "",
         visibility: str = "private",
+        collaborator_creator_tags: list[str] | None = None,
     ) -> Lorebook:
         DomainValidator.validate_positive_user_id(user_id, InvalidLorebookDataError)
         cleaned_name = DomainValidator.validate_required_string(name, "Lorebook name", InvalidLorebookDataError)
@@ -25,6 +26,10 @@ class LorebookService:
             name=cleaned_name,
             description=cleaned_desc,
             visibility=cleaned_vis,
+            collaborator_creator_tags=[
+                t.strip().lower() for t in collaborator_creator_tags
+                if isinstance(t, str) and t.strip()
+            ] if collaborator_creator_tags else [],
             created_at=datetime.now(timezone.utc),
         )
 
@@ -34,11 +39,17 @@ class LorebookService:
         name: str,
         description: str,
         visibility: str | None = None,
+        collaborator_creator_tags: list[str] | None = None,
     ) -> Lorebook:
         lorebook.name = DomainValidator.validate_required_string(name, "Lorebook name", InvalidLorebookDataError)
         lorebook.description = description.strip() if isinstance(description, str) else ""
         if visibility is not None:
             lorebook.visibility = DomainValidator.normalize_visibility(visibility)
+        if collaborator_creator_tags is not None:
+            lorebook.collaborator_creator_tags = [
+                t.strip().lower() for t in collaborator_creator_tags
+                if isinstance(t, str) and t.strip()
+            ]
         return lorebook
 
     def add_entry(

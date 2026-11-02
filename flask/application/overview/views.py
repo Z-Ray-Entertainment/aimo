@@ -44,11 +44,13 @@ def index():
         best_rel = char_repo.get_best_relationship_for_user(
             char.id, user.id, default_value=float(char.initial_relationship)
         )
+        is_editable = char.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag)
         character_cards.append(
             {
                 "character": char,
                 "message_count": msg_count,
                 "best_relationship": best_rel,
+                "is_editable": is_editable,
             }
         )
 
@@ -75,6 +77,7 @@ def index():
                 "lorebook": lb,
                 "entry_count": len(entries),
                 "tags": all_tags[:8],
+                "is_editable": lb.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag),
             }
         )
 
@@ -90,6 +93,7 @@ def index():
                 "worldinfo": wi,
                 "location_count": len(locations),
                 "event_count": len(events),
+                "is_editable": wi.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag),
             }
         )
 

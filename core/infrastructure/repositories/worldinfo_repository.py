@@ -21,11 +21,12 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
 
     def create(self, worldinfo: WorldInfo) -> WorldInfo:
         created_str = format_datetime(worldinfo.created_at)
+        tags_json = json.dumps(getattr(worldinfo, "collaborator_creator_tags", []) or [])
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO worldinfos (user_id, name, icon, visibility, cover_image_path, lorebook_id, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO worldinfos (user_id, name, icon, visibility, cover_image_path, lorebook_id, collaborator_creator_tags_json, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     worldinfo.user_id,
@@ -34,6 +35,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     worldinfo.visibility,
                     worldinfo.cover_image_path,
                     worldinfo.lorebook_id,
+                    tags_json,
                     created_str,
                 ),
             )
@@ -47,6 +49,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
     def update(self, worldinfo: WorldInfo) -> WorldInfo:
         if worldinfo.id is None:
             return self.create(worldinfo)
+        tags_json = json.dumps(getattr(worldinfo, "collaborator_creator_tags", []) or [])
         with get_db_session() as conn:
             existing = conn.execute(
                 "SELECT id FROM worldinfos WHERE id = ?",
@@ -57,7 +60,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             conn.execute(
                 """
                 UPDATE worldinfos
-                SET name = ?, icon = ?, visibility = ?, cover_image_path = ?, lorebook_id = ?
+                SET name = ?, icon = ?, visibility = ?, cover_image_path = ?, lorebook_id = ?, collaborator_creator_tags_json = ?
                 WHERE id = ?
                 """,
                 (
@@ -66,6 +69,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     worldinfo.visibility,
                     worldinfo.cover_image_path,
                     worldinfo.lorebook_id,
+                    tags_json,
                     worldinfo.id,
                 ),
             )
@@ -77,6 +81,63 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
 
     def delete(self, worldinfo_id: int) -> bool:
         return self._delete_by_id("worldinfos", worldinfo_id)
+
+    def duplicate(self, worldinfo_id: int, target_user_id: int) -> WorldInfo:
+        orig = self.get_by_id(worldinfo_id)
+        if orig is None:
+            raise ValueError(f"WorldInfo {worldinfo_id} not found.")
+
+        copy_name = f"{orig.name} (Kopie)"
+        clone = WorldInfo(
+            id=None,
+            user_id=target_user_id,
+            name=copy_name,
+            icon=orig.icon,
+            visibility="private",
+            cover_image_path=orig.cover_image_path,
+            lorebook_id=orig.lorebook_id,
+            collaborator_creator_tags=[],
+        )
+        saved = self.create(clone)
+        assert saved.id is not None
+
+        # Duplicate locations with ID mapping
+        loc_map: dict[int, int] = {}
+        orig_locations = self.list_locations(worldinfo_id)
+        for loc in orig_locations:
+            if loc.id is None:
+                continue
+            clone_loc = Location(
+                id=None,
+                worldinfo_id=saved.id,
+                name=loc.name,
+                tags=list(loc.tags),
+                description=loc.description,
+                background_image_path=loc.background_image_path,
+                vision_alt_text=loc.vision_alt_text,
+            )
+            saved_loc = self.add_location(clone_loc)
+            assert saved_loc.id is not None
+            loc_map[loc.id] = saved_loc.id
+
+        # Duplicate events with remapped location_id
+        orig_events = self.list_events(worldinfo_id)
+        for ev in orig_events:
+            mapped_loc_id = loc_map.get(ev.location_id) if ev.location_id is not None else None
+            clone_ev = Event(
+                id=None,
+                worldinfo_id=saved.id,
+                title=ev.title,
+                probability=ev.probability,
+                one_shot=ev.one_shot,
+                description=ev.description,
+                location_id=mapped_loc_id,
+            )
+            self.add_event(clone_ev)
+
+        reloaded = self.get_by_id(saved.id)
+        assert reloaded is not None
+        return reloaded
 
     def add_location(self, location: Location) -> Location:
         with get_db_session() as conn:
@@ -242,6 +303,14 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
         )
         icon_val = str(row["icon"]) if "icon" in keys and row["icon"] is not None else "🌐"
         lb_id = int(row["lorebook_id"]) if "lorebook_id" in keys and row["lorebook_id"] is not None else None
+        collaborator_tags = []
+        if "collaborator_creator_tags_json" in keys and row["collaborator_creator_tags_json"]:
+            try:
+                parsed_tags = json.loads(row["collaborator_creator_tags_json"])
+                collaborator_tags = [str(t) for t in parsed_tags if isinstance(parsed_tags, list)]
+            except (json.JSONDecodeError, TypeError):
+                collaborator_tags = []
+
         return WorldInfo(
             id=int(row["id"]),
             user_id=int(row["user_id"]),
@@ -250,6 +319,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             visibility=vis,
             cover_image_path=cover_path,
             lorebook_id=lb_id,
+            collaborator_creator_tags=collaborator_tags,
             created_at=parse_datetime(row["created_at"]),
         )
 

@@ -37,7 +37,7 @@
 {% endmacro %}
 
 {# Character Card for Hub Grid (1:1 Avatar Background, Name, Relationship, Badges Overlay) #}
-{% macro character_card(item, has_edit_perm=false) %}
+{% macro character_card(item, has_edit_perm=false, has_create_perm=false) %}
   {% set char = item.character %}
   {% set img_url = url_for('uploaded_file', filename=char.avatar_path or char.primary_portrait_path) if (char.avatar_path or char.primary_portrait_path) else '/static/img/cover.svg' %}
   {% set bg_style = "background-image: url('" ~ img_url ~ "'), url('/static/img/cover.svg');" %}
@@ -56,10 +56,16 @@
             <span class="icon-mono">💬</span> {{ item.message_count }}
           </span>
         {% endif %}
-        {% if has_edit_perm %}
+        {% if item.is_editable and has_edit_perm %}
           <a href="{{ url_for('characters.edit_character', character_id=char.id) }}" class="aimo-card-action-btn" title="Charakter bearbeiten">
             <span class="icon-mono">✏️</span>
           </a>
+        {% elif has_create_perm %}
+          <form method="POST" action="{{ url_for('characters.copy_character', character_id=char.id) }}" style="display: inline; margin: 0;">
+            <button type="submit" class="aimo-card-action-btn" title="Charakter duplizieren (eigenes Duplikat anlegen)">
+              <span class="icon-mono">📄</span>
+            </button>
+          </form>
         {% endif %}
       </div>
     </div>
@@ -117,7 +123,7 @@
       {{ new_button("Neuer Charakter", href=url_for('characters.new_character')) }}
     {% endif %}
     {% for item in character_cards %}
-      {{ character_card(item, has_edit_perm=can_edit) }}
+      {{ character_card(item, has_edit_perm=can_edit, has_create_perm=can_create) }}
     {% endfor %}
   {% endcall %}
 {% endmacro %}

@@ -14,7 +14,13 @@ for path_entry in (str(CORE_DIR), str(FLASK_DIR)):
 from flask import Flask, abort, g, redirect, request, send_from_directory, url_for
 
 from application.admin import admin_bp
-from application.auth import auth_bp, get_current_permissions, get_current_user, has_perm
+from application.auth import (
+    auth_bp,
+    get_current_permissions,
+    get_current_user,
+    has_creator_permission,
+    has_perm,
+)
 from application.characters import characters_bp
 from application.chat import chat_bp
 from application.core_client import core_proxy_bp
@@ -121,6 +127,7 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
         default_bg = settings.default_backdrop_path if settings else None
         return {
             "has_perm": has_perm,
+            "has_creator_permission": has_creator_permission,
             "new_button": render_new_button,
             "system_backdrop_path": default_bg,
             "system_backdrop_url": url_for("uploaded_file", filename=default_bg) if default_bg else url_for("static", filename="img/cover.svg"),

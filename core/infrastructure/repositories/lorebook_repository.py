@@ -21,17 +21,19 @@ class LorebookRepository(BaseRepository[Lorebook]):
 
     def create(self, lorebook: Lorebook) -> Lorebook:
         created_str = format_datetime(lorebook.created_at)
+        tags_json = json.dumps(getattr(lorebook, "collaborator_creator_tags", []) or [])
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO lorebooks (user_id, name, description, visibility, created_at)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO lorebooks (user_id, name, description, visibility, collaborator_creator_tags_json, created_at)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """,
                 (
                     lorebook.user_id,
                     lorebook.name,
                     lorebook.description,
                     lorebook.visibility,
+                    tags_json,
                     created_str,
                 ),
             )
@@ -45,6 +47,7 @@ class LorebookRepository(BaseRepository[Lorebook]):
     def update(self, lorebook: Lorebook) -> Lorebook:
         if lorebook.id is None:
             return self.create(lorebook)
+        tags_json = json.dumps(getattr(lorebook, "collaborator_creator_tags", []) or [])
         with get_db_session() as conn:
             existing = conn.execute(
                 "SELECT id FROM lorebooks WHERE id = ?",
@@ -55,10 +58,10 @@ class LorebookRepository(BaseRepository[Lorebook]):
             conn.execute(
                 """
                 UPDATE lorebooks
-                SET name = ?, description = ?, visibility = ?
+                SET name = ?, description = ?, visibility = ?, collaborator_creator_tags_json = ?
                 WHERE id = ?
                 """,
-                (lorebook.name, lorebook.description, lorebook.visibility, lorebook.id),
+                (lorebook.name, lorebook.description, lorebook.visibility, tags_json, lorebook.id),
             )
             row = conn.execute(
                 "SELECT * FROM lorebooks WHERE id = ?",
@@ -68,6 +71,40 @@ class LorebookRepository(BaseRepository[Lorebook]):
 
     def delete(self, lorebook_id: int) -> bool:
         return self._delete_by_id("lorebooks", lorebook_id)
+
+    def duplicate(self, lorebook_id: int, target_user_id: int) -> Lorebook:
+        orig = self.get_by_id(lorebook_id)
+        if orig is None:
+            raise ValueError(f"Lorebook {lorebook_id} not found.")
+
+        copy_name = f"{orig.name} (Kopie)"
+        clone = Lorebook(
+            id=None,
+            user_id=target_user_id,
+            name=copy_name,
+            description=orig.description,
+            visibility="private",
+            collaborator_creator_tags=[],
+        )
+        saved = self.create(clone)
+        assert saved.id is not None
+
+        # Duplicate entries
+        orig_entries = self.list_entries(lorebook_id)
+        for entry in orig_entries:
+            clone_entry = LorebookEntry(
+                id=None,
+                lorebook_id=saved.id,
+                title=entry.title,
+                tags=list(entry.tags),
+                content=entry.content,
+                visibility=entry.visibility,
+            )
+            self.add_entry(clone_entry)
+
+        reloaded = self.get_by_id(saved.id)
+        assert reloaded is not None
+        return reloaded
 
     def add_entry(self, entry: LorebookEntry) -> LorebookEntry:
         created_str = format_datetime(entry.created_at)
@@ -171,12 +208,21 @@ class LorebookRepository(BaseRepository[Lorebook]):
     def _to_entity(row: sqlite3.Row) -> Lorebook:
         keys = row.keys()
         vis = str(row["visibility"]) if "visibility" in keys and row["visibility"] else "private"
+        collaborator_tags = []
+        if "collaborator_creator_tags_json" in keys and row["collaborator_creator_tags_json"]:
+            try:
+                parsed_tags = json.loads(row["collaborator_creator_tags_json"])
+                collaborator_tags = [str(t) for t in parsed_tags if isinstance(parsed_tags, list)]
+            except (json.JSONDecodeError, TypeError):
+                collaborator_tags = []
+
         return Lorebook(
             id=int(row["id"]),
             user_id=int(row["user_id"]),
             name=str(row["name"]),
             description=str(row["description"]),
             visibility=vis,
+            collaborator_creator_tags=collaborator_tags,
             created_at=parse_datetime(row["created_at"]),
         )
 

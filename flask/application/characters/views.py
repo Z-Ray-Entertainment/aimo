@@ -70,15 +70,24 @@ def _render_creator(character=None, form=None):
         for sp in character.sprites:
             sprites_by_emotion.setdefault(sp.emotion.value, []).append(sp)
 
-    valid_tabs = ("info", "gallery", "sprites", "dialogue", "world", "lorebooks")
+    valid_tabs = ("info", "gallery", "sprites", "dialogue", "world", "lorebooks", "collab")
     active_tab = request.args.get("tab", "info")
     if active_tab not in valid_tabs:
         active_tab = "info"
+
+    is_author = (character.user_id == user.id or user.is_initial_admin) if (character and user) else True
+    is_editable = (
+        character.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag)
+        if (character and user)
+        else True
+    )
 
     return render_template(
         "characters/creator.html",
         character=character,
         form=form or CharacterForm(),
+        is_author=is_author,
+        is_editable=is_editable,
         lorebooks=lorebooks,
         worldinfos=worldinfos,
         all_locations=all_locations,
@@ -136,6 +145,7 @@ def new_character():
                 initial_relationship=form.initial_relationship,
                 preferred_location_ids=form.preferred_location_ids,
                 disliked_location_ids=form.disliked_location_ids,
+                collaborator_creator_tags=form.collaborator_creator_tags,
             )
             saved = char_repo.save(character)
             flash(f"Charakter '{saved.name}' erfolgreich angelegt!", "success")
@@ -162,9 +172,11 @@ def edit_character(character_id: int):
         flash("Charakter nicht gefunden.", "error")
         return redirect(url_for("overview.index"))
 
-    if not character.is_editable_by_user(user.id, user.is_initial_admin):
-        flash("Zugriff verweigert: Du kannst nur deine eigenen Charaktere bearbeiten.", "error")
+    if not character.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+        flash("Zugriff verweigert: Du kannst nur deine eigenen Charaktere oder für dich freigegebene Kreationen bearbeiten.", "error")
         return redirect(url_for("overview.index"))
+
+    is_author = (character.user_id == user.id or user.is_initial_admin)
 
     if request.method == "POST":
         form = CharacterForm.from_request(request.form)
@@ -183,6 +195,8 @@ def edit_character(character_id: int):
             card_file = request.files.get("card_portrait")
             if card_file and card_file.filename:
                 card_image_path = storage.save_portrait(card_file.stream, card_file.filename)
+
+            collaborator_tags = form.collaborator_creator_tags if is_author else character.collaborator_creator_tags
 
             char_service.update_character(
                 character=character,
@@ -203,6 +217,7 @@ def edit_character(character_id: int):
                 initial_relationship=form.initial_relationship,
                 preferred_location_ids=form.preferred_location_ids,
                 disliked_location_ids=form.disliked_location_ids,
+                collaborator_creator_tags=collaborator_tags,
             )
             character = char_repo.save(character)
             flash(f"Charakter '{character.name}' gespeichert.", "success")
@@ -228,12 +243,15 @@ def edit_character(character_id: int):
             lorebook_world_conditions=getattr(character, "lorebook_world_conditions", {}) or {},
             preferred_location_ids=character.preferred_location_ids,
             disliked_location_ids=character.disliked_location_ids,
+            collaborator_creator_tags=character.collaborator_creator_tags,
+            collaborator_creator_tags_text=", ".join(character.collaborator_creator_tags),
         )
 
     return _render_creator(character=character, form=form)
 
 
 @characters_bp.route("/<int:character_id>/copy", methods=["POST"])
+@characters_bp.route("/<int:character_id>/duplicate", methods=["POST"])
 @require_permission(FunctionPermission.CHARACTER_CREATE)
 def copy_character(character_id: int):
     user = get_current_user()
@@ -244,11 +262,7 @@ def copy_character(character_id: int):
         flash("Charakter nicht gefunden.", "error")
         return redirect(url_for("overview.index"))
 
-    orig.id = None
-    orig.user_id = user.id
-    orig.name = f"{orig.name} (Kopie)"
-    orig.visibility = "private"
-    copied = char_repo.save(orig)
+    copied = char_repo.duplicate(character_id, user.id)
     flash(f"Kopie '{copied.name}' als Entwurf erstellt.", "success")
     return redirect(url_for("characters.edit_character", character_id=copied.id))
 
@@ -260,8 +274,8 @@ def delete_character(character_id: int):
     assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     char = char_repo.get_by_id(character_id)
-    if char is None or not char.is_editable_by_user(user.id, user.is_initial_admin):
-        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+    if char is None or not char.is_deletable_by_user(user.id, user.is_initial_admin):
+        flash("Charakter nicht gefunden oder keine Berechtigung zum Löschen.", "error")
         return redirect(url_for("overview.index"))
 
     char_repo.delete(character_id)
@@ -279,7 +293,7 @@ def add_gallery_image(character_id: int):
     storage = FileStorage()
 
     character = char_repo.get_by_id(character_id)
-    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin):
+    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
         flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 
@@ -304,7 +318,7 @@ def delete_gallery_image(character_id: int, image_id: int):
     assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     char = char_repo.get_by_id(character_id)
-    if char is None or not char.is_editable_by_user(user.id, user.is_initial_admin):
+    if char is None or not char.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
         flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 
@@ -323,7 +337,7 @@ def upload_sprite(character_id: int):
     storage = FileStorage()
 
     character = char_repo.get_by_id(character_id)
-    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin):
+    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
         flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 
@@ -354,7 +368,7 @@ def delete_sprite(character_id: int, emotion: str, variant: int):
     assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     char = char_repo.get_by_id(character_id)
-    if char is None or not char.is_editable_by_user(user.id, user.is_initial_admin):
+    if char is None or not char.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
         flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 

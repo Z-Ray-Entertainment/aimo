@@ -82,7 +82,7 @@ def add_lorebook_entry(lorebook_id: int):
     assert user is not None and user.id is not None
     repo = LorebookRepository()
     lb = repo.get_by_id(lorebook_id)
-    if lb is None or not lb.is_editable_by_user(user.id, user.is_initial_admin):
+    if lb is None or not lb.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
         return jsonify({"error": "Lorebook not found."}), 404
 
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -120,10 +120,23 @@ def delete_lorebook_entry(entry_id: int):
     if entry is None:
         return jsonify({"error": "Entry not found."}), 404
     lb = repo.get_by_id(entry.lorebook_id)
-    if lb is None or not lb.is_editable_by_user(user.id, user.is_initial_admin):
+    if lb is None or not lb.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
         return jsonify({"error": "Lorebook not found."}), 404
     deleted = repo.delete_entry(entry_id)
     return jsonify({"deleted": deleted})
+
+
+@api_lorebooks_bp.route("/<int:lorebook_id>/duplicate", methods=["POST"])
+@require_permission(FunctionPermission.LOREBOOK_CREATE)
+def duplicate_lorebook(lorebook_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = LorebookRepository()
+    orig = repo.get_by_id(lorebook_id)
+    if orig is None or not orig.is_visible_to_user(user.id, user.is_initial_admin):
+        return jsonify({"error": "Lorebook not found."}), 404
+    copied = repo.duplicate(lorebook_id, user.id)
+    return jsonify({"id": copied.id, "name": copied.name}), 201
 
 
 @api_lorebooks_bp.route("/suggest-tags", methods=["POST"])

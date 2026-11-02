@@ -8,5 +8,6 @@ class User:
     username: str
     email: str
     password_hash: str
+    creator_tag: str = ""
     is_initial_admin: bool = False
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))

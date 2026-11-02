@@ -10,6 +10,7 @@ from domain.permissions.models import FunctionPermission, UserPermissions
 get_current_user = AuthContext.get_current_user
 get_current_permissions = AuthContext.get_current_permissions
 has_perm = AuthContext.has_permission
+has_creator_permission = AuthContext.has_creator_permission
 
 
 def require_auth(view_func: Callable[..., Any]) -> Callable[..., Any]:

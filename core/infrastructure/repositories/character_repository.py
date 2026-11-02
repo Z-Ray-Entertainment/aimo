@@ -43,19 +43,20 @@ class CharacterRepository(BaseRepository[Character]):
                 cursor = conn.execute(
                     """
                     INSERT INTO characters (
-                        user_id, name, gender, visibility, primary_portrait_path,
+                        user_id, name, gender, visibility, collaborator_creator_tags_json, primary_portrait_path,
                         avatar_path, card_image_path, appearance, description, dialogue_examples_json, linked_lorebook_ids_json,
                         lorebook_world_conditions_json, suggested_worldinfo_id, first_message, initial_location_id,
                         initial_relationship, preferred_location_ids_json,
                         disliked_location_ids_json, created_at
                     )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         character.user_id,
                         character.name,
                         character.gender.value,
                         character.visibility,
+                        json.dumps(getattr(character, "collaborator_creator_tags", []) or []),
                         character.primary_portrait_path,
                         character.avatar_path,
                         character.card_image_path,
@@ -85,7 +86,7 @@ class CharacterRepository(BaseRepository[Character]):
                 conn.execute(
                     """
                     UPDATE characters
-                    SET name = ?, gender = ?, visibility = ?, primary_portrait_path = ?,
+                    SET name = ?, gender = ?, visibility = ?, collaborator_creator_tags_json = ?, primary_portrait_path = ?,
                         avatar_path = ?, card_image_path = ?, appearance = ?, description = ?, dialogue_examples_json = ?, linked_lorebook_ids_json = ?,
                         lorebook_world_conditions_json = ?, suggested_worldinfo_id = ?, first_message = ?, initial_location_id = ?,
                         initial_relationship = ?, preferred_location_ids_json = ?,
@@ -96,6 +97,7 @@ class CharacterRepository(BaseRepository[Character]):
                         character.name,
                         character.gender.value,
                         character.visibility,
+                        json.dumps(getattr(character, "collaborator_creator_tags", []) or []),
                         character.primary_portrait_path,
                         character.avatar_path,
                         character.card_image_path,
@@ -121,6 +123,68 @@ class CharacterRepository(BaseRepository[Character]):
 
     def delete(self, character_id: int) -> bool:
         return self._delete_by_id("characters", character_id)
+
+    def duplicate(self, character_id: int, target_user_id: int) -> Character:
+        orig = self.get_by_id(character_id)
+        if orig is None:
+            raise ValueError(f"Character {character_id} not found.")
+
+        copy_name = f"{orig.name} (Kopie)"
+        clone = Character(
+            id=None,
+            user_id=target_user_id,
+            name=copy_name,
+            gender=orig.gender,
+            visibility="private",
+            collaborator_creator_tags=[],
+            primary_portrait_path=orig.primary_portrait_path,
+            avatar_path=orig.avatar_path,
+            card_image_path=orig.card_image_path,
+            appearance=getattr(orig, "appearance", "") or "",
+            description=orig.description,
+            dialogue_examples=list(orig.dialogue_examples),
+            linked_lorebook_ids=list(orig.linked_lorebook_ids),
+            lorebook_world_conditions=dict(getattr(orig, "lorebook_world_conditions", {}) or {}),
+            suggested_worldinfo_id=orig.suggested_worldinfo_id,
+            first_message=orig.first_message,
+            initial_location_id=orig.initial_location_id,
+            initial_relationship=orig.initial_relationship,
+            preferred_location_ids=list(orig.preferred_location_ids),
+            disliked_location_ids=list(orig.disliked_location_ids),
+            gallery_images=[],
+            sprites=[],
+        )
+        saved = self.save(clone)
+        assert saved.id is not None
+
+        # Deep-copy gallery images
+        for img in orig.gallery_images:
+            self.add_gallery_image(
+                saved.id,
+                CharacterImage(
+                    id=None,
+                    character_id=saved.id,
+                    file_path=img.file_path,
+                    unlock_threshold=img.unlock_threshold,
+                ),
+            )
+
+        # Deep-copy sprites
+        for sp in orig.sprites:
+            self.add_sprite(
+                saved.id,
+                EmotionalSprite(
+                    id=None,
+                    character_id=saved.id,
+                    emotion=sp.emotion,
+                    variant=sp.variant,
+                    file_path=sp.file_path,
+                ),
+            )
+
+        reloaded = self.get_by_id(saved.id)
+        assert reloaded is not None
+        return reloaded
 
     def add_sprite(self, character_id: int, sprite: EmotionalSprite) -> EmotionalSprite:
         with get_db_session() as conn:
@@ -288,6 +352,9 @@ class CharacterRepository(BaseRepository[Character]):
             name=str(row["name"]),
             gender=Gender.resolve(str(row["gender"])),
             visibility=str(row["visibility"]),
+            collaborator_creator_tags=[
+                str(t) for t in _load_list(str(row["collaborator_creator_tags_json"]))
+            ] if "collaborator_creator_tags_json" in row.keys() and row["collaborator_creator_tags_json"] else [],
             primary_portrait_path=str(row["primary_portrait_path"]),
             avatar_path=(
                 str(row["avatar_path"])

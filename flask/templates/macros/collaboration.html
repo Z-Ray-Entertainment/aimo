@@ -1,0 +1,135 @@
+{# =============================================================================
+   AIMO Reusable Collaboration Manager Component
+   Shared component for managing creator tags and collaborator permissions
+   Used in Character Designer, WorldInfo Detail, and Lorebook Detail
+   ============================================================================= #}
+
+{% macro collaboration_manager(collaborator_tags, is_author=true, is_editable=true, form_id=none, input_name="collaborator_creator_tags") %}
+<div class="collaboration-manager-root aimo-frame" data-form-id="{{ form_id or '' }}" style="padding: 1.5rem;">
+
+  <!-- Header & Explanation -->
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.85rem;">
+    <div>
+      <h3 style="color: var(--gold-accent); margin: 0 0 0.35rem 0; font-size: 1.15rem; display: flex; align-items: center; gap: 0.5rem;">
+        <span class="icon-mono">👥</span> Kollaboration &amp; Berechtigungen
+      </h3>
+      <p style="margin: 0; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; max-width: 820px;">
+        Kollaboratoren erhalten vollen Bearbeitungszugriff auf diese Kreation (Inhalte, Sprites, Orte &amp; Events), können sie jedoch niemals löschen oder Kollaboratoren verwalten.
+      </p>
+    </div>
+    {% if is_author and form_id %}
+      <button type="submit" form="{{ form_id }}" class="aimo-btn primary collab-save-btn" title="Speichert alle Änderungen des Formulars">
+        <span class="icon-mono">💾</span> Kollaboratoren speichern
+      </button>
+    {% endif %}
+  </div>
+
+  <!-- Read-only notice for collaborators -->
+  {% if not is_author %}
+    <div class="aimo-frame" style="background: rgba(45, 34, 24, 0.7); border-color: var(--gold-accent); padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
+      <span style="font-size: 1.4rem;">🔒</span>
+      <div>
+        <strong style="color: var(--gold-accent); display: block; font-size: 0.92rem;">Kollaborator-Ansicht</strong>
+        <span style="color: var(--text-muted); font-size: 0.84rem;">
+          Du bearbeitest diesen Inhalt als autorisierter Kollaborator. Die Liste der Kollaboratoren kann nur vom ursprünglichen Autor verwaltet werden.
+        </span>
+      </div>
+    </div>
+  {% else %}
+    <p style="color: var(--text-muted); font-size: 0.84rem; margin-bottom: 1rem;">
+      Füge den persönlichen <strong>Creator-Tag (UUID4)</strong> befreundeter Autoren hinzu, um ihnen Schreibrechte zu gewähren.
+    </p>
+  {% endif %}
+
+  <!-- Hidden input holding current tags for form submission -->
+  <input
+    type="hidden"
+    class="collab-tags-hidden-input"
+    name="{{ input_name }}"
+    value="{{ (collaborator_tags or [])|join(', ') }}"
+    {% if form_id %}form="{{ form_id }}"{% endif %}>
+
+  <!-- Collaborators Table -->
+  <div class="aimo-table-wrap" style="margin-bottom: 1.25rem;">
+    <table class="aimo-table collab-table">
+      <thead>
+        <tr>
+          <th style="width: 50px; text-align: center;">#</th>
+          <th>Creator-Tag (UUID4)</th>
+          <th style="width: 220px;">Berechtigung</th>
+          {% if is_author %}
+            <th style="width: 140px; text-align: right;">Aktion</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody class="collab-table-body">
+        {% for tag in (collaborator_tags or []) %}
+          <tr class="collab-row" data-tag="{{ tag }}">
+            <td style="text-align: center; color: var(--text-muted); font-weight: 600;" class="collab-row-idx">{{ loop.index }}</td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <code class="collab-tag-code" style="font-family: monospace; font-size: 0.88rem; background: rgba(0, 0, 0, 0.4); padding: 0.22rem 0.55rem; border-radius: 6px; border: 1px solid var(--border-wood-dark); color: var(--gold-accent); letter-spacing: 0.5px;">{{ tag }}</code>
+                <button type="button" class="aimo-btn copy-collab-tag-btn" data-tag="{{ tag }}" style="padding: 0.2rem 0.45rem; font-size: 0.75rem;" title="Creator-Tag kopieren">
+                  <span class="icon-mono">📋</span>
+                </button>
+              </div>
+            </td>
+            <td>
+              <span class="aimo-card-badge" style="font-size: 0.78rem; padding: 0.2rem 0.55rem; background: rgba(212, 175, 55, 0.12); border-color: var(--gold-accent);">
+                ✏️ Bearbeiten erlaubt
+              </span>
+            </td>
+            {% if is_author %}
+              <td style="text-align: right;">
+                <button type="button" class="aimo-btn danger remove-collab-tag-btn" data-tag="{{ tag }}" style="padding: 0.25rem 0.65rem; font-size: 0.78rem;" title="Kollaborator entfernen">
+                  <span class="icon-mono">🗑️</span> Entfernen
+                </button>
+              </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Empty State Notice -->
+    <div class="collab-empty-notice" style="text-align: center; padding: 2.2rem 1rem; color: var(--text-muted); font-size: 0.9rem; {% if (collaborator_tags or [])|length > 0 %}display: none;{% endif %}">
+      <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.6;">👥</span>
+      Bislang sind keine Kollaboratoren eingetragen.
+      {% if is_author %}
+        <br><span style="font-size: 0.82rem; color: var(--gold-accent); margin-top: 0.25rem; display: inline-block;">Füge unten den Creator-Tag eines anderen Autors ein, um die Zusammenarbeit zu starten.</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Add Creator Interface (Author Only) -->
+  {% if is_author %}
+    <div class="collab-add-box aimo-frame" style="padding: 1.25rem; background: rgba(24, 17, 12, 0.75); border-color: var(--border-wood-dark);">
+      <h4 style="color: var(--gold-accent); margin: 0 0 0.35rem 0; font-size: 0.95rem; display: flex; align-items: center; gap: 0.45rem;">
+        <span class="icon-mono">➕</span> Neuen Creator hinzufügen
+      </h4>
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        Gib den persönlichen Creator-Tag (36 Zeichen lange UUID4) des Autors ein. Du kannst auch mehrere kommagetrennte Tags auf einmal einfügen.
+      </p>
+      <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 280px;">
+          <input
+            type="text"
+            class="collab-new-tag-input"
+            placeholder="z. B. 123e4567-e89b-12d3-a456-426614174000"
+            style="width: 100%; font-family: monospace; font-size: 0.88rem;">
+        </div>
+        <button type="button" class="aimo-btn primary add-collab-tag-btn">
+          <span class="icon-mono">➕</span> Hinzufügen
+        </button>
+        {% if form_id %}
+          <button type="submit" form="{{ form_id }}" class="aimo-btn primary collab-save-btn" title="Speichert alle Änderungen des Formulars">
+            <span class="icon-mono">💾</span> Speichern
+          </button>
+        {% endif %}
+      </div>
+      <div class="collab-feedback-msg" style="margin-top: 0.65rem; font-size: 0.84rem; display: none;"></div>
+    </div>
+  {% endif %}
+
+</div>
+{% endmacro %}

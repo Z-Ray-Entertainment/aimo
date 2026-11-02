@@ -21,6 +21,8 @@ class CharacterForm:
     lorebook_world_conditions: dict[int, int] = field(default_factory=dict)
     preferred_location_ids: list[int] = field(default_factory=list)
     disliked_location_ids: list[int] = field(default_factory=list)
+    collaborator_creator_tags: list[str] = field(default_factory=list)
+    collaborator_creator_tags_text: str = ""
 
     @classmethod
     def from_request(cls, form_data) -> "CharacterForm":
@@ -66,6 +68,12 @@ class CharacterForm:
                 if lb_id_str.isdigit() and str(val).isdigit() and int(val) > 0:
                     lorebook_world_conditions[int(lb_id_str)] = int(val)
 
+        raw_tags = p.to_str(form_data, "collaborator_creator_tags")
+        collaborator_tags = [
+            t.strip().lower() for t in raw_tags.split(",")
+            if t.strip()
+        ]
+
         return cls(
             name=p.to_str(form_data, "name"),
             gender=p.to_str(form_data, "gender", "female"),
@@ -82,4 +90,6 @@ class CharacterForm:
             lorebook_world_conditions=lorebook_world_conditions,
             preferred_location_ids=p.to_int_list(form_data, "preferred_location_ids"),
             disliked_location_ids=p.to_int_list(form_data, "disliked_location_ids"),
+            collaborator_creator_tags=collaborator_tags,
+            collaborator_creator_tags_text=raw_tags,
         )

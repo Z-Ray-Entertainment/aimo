@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button, new_button %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
+{% from "macros/collaboration.html" import collaboration_manager %}
 {% block title %}AIMO — Character Designer{% endblock %}
 
 {% block content %}
@@ -20,9 +21,11 @@
         <form method="POST" action="{{ url_for('characters.copy_character', character_id=character.id) }}" style="display: inline;">
           <button type="submit" class="aimo-btn"><span class="icon-mono">📄</span> Kopieren</button>
         </form>
-        <form method="POST" action="{{ url_for('characters.delete_character', character_id=character.id) }}" style="display: inline;" onsubmit="return confirm('Charakter wirklich unwiderruflich löschen?');">
-          <button type="submit" class="aimo-btn danger"><span class="icon-mono">🗑️</span> Löschen</button>
-        </form>
+        {% if is_author %}
+          <form method="POST" action="{{ url_for('characters.delete_character', character_id=character.id) }}" style="display: inline;" onsubmit="return confirm('Charakter wirklich unwiderruflich löschen?');">
+            <button type="submit" class="aimo-btn danger"><span class="icon-mono">🗑️</span> Löschen</button>
+          </form>
+        {% endif %}
       {% endif %}
     </div>
   </div>
@@ -52,6 +55,10 @@
     <button type="button" class="aimo-btn {% if active_tab == 'lorebooks' %}active{% endif %}" data-tab-target="tab-char-lorebooks">
       <span class="icon-mono">📖</span>
       <span>Lorebooks</span>
+    </button>
+    <button type="button" class="aimo-btn {% if active_tab == 'collab' %}active{% endif %}" data-tab-target="tab-char-collab">
+      <span class="icon-mono">👥</span>
+      <span>Kollaboration</span>
     </button>
   </div>
 
@@ -380,6 +387,11 @@
           Keine Lorebooks verknüpft. Klicke auf <strong>„Lorebook hinzufügen“</strong>, um Kompendien auszuwählen.
         </div>
       </div>
+    </section>
+
+    <!-- TAB 7: Kollaboration -->
+    <section id="tab-char-collab" class="tab-pane {% if active_tab == 'collab' %}active{% endif %}">
+      {{ collaboration_manager(form.collaborator_creator_tags, is_author=is_author, is_editable=is_editable, form_id='character-main-form') }}
     </section>
   </form>
 

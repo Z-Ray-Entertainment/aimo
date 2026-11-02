@@ -33,6 +33,7 @@ class CharacterService:
         avatar_path: str | None = None,
         card_image_path: str | None = None,
         appearance: str = "",
+        collaborator_creator_tags: list[str] | None = None,
     ) -> Character:
         DomainValidator.validate_positive_user_id(user_id, InvalidCharacterDataError)
         cleaned_name = DomainValidator.validate_required_string(name, "Character name", InvalidCharacterDataError)
@@ -78,6 +79,10 @@ class CharacterService:
             avatar_path=cleaned_avatar,
             card_image_path=cleaned_card,
             appearance=cleaned_appearance,
+            collaborator_creator_tags=[
+                t.strip().lower() for t in collaborator_creator_tags
+                if isinstance(t, str) and t.strip()
+            ] if collaborator_creator_tags else [],
             dialogue_examples=list(dialogue_examples or []),
             linked_lorebook_ids=list(linked_lorebook_ids or []),
             lorebook_world_conditions=dict(lorebook_world_conditions or {}),
@@ -111,6 +116,7 @@ class CharacterService:
         avatar_path: str | None = None,
         card_image_path: str | None = None,
         appearance: str | None = None,
+        collaborator_creator_tags: list[str] | None = None,
     ) -> Character:
         cleaned_name = name.strip() if isinstance(name, str) else ""
         if not cleaned_name:
@@ -173,6 +179,11 @@ class CharacterService:
                 character.disliked_location_ids = list(disliked_location_ids)
 
         character.initial_relationship = initial_relationship
+        if collaborator_creator_tags is not None:
+            character.collaborator_creator_tags = [
+                t.strip().lower() for t in collaborator_creator_tags
+                if isinstance(t, str) and t.strip()
+            ]
         return character
 
     def add_gallery_image(

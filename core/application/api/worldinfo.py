@@ -105,7 +105,7 @@ def create_event():
     try:
         worldinfo_id = int(data.get("worldinfo_id", 0))
         wi = repo.get_by_id(worldinfo_id)
-        if wi is None or not wi.is_editable_by_user(user.id, user.is_initial_admin):
+        if wi is None or not wi.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
             return jsonify({"error": "WorldInfo not found."}), 404
 
         loc_raw = data.get("location_id")
@@ -190,3 +190,16 @@ def extract_location_tags():
         return jsonify({"tags": tags, "tags_string": ", ".join(tags)})
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 400
+
+
+@api_worldinfo_bp.route("/<int:worldinfo_id>/duplicate", methods=["POST"])
+@require_permission(FunctionPermission.WORLDINFO_CREATE)
+def duplicate_worldinfo(worldinfo_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = WorldInfoRepository()
+    orig = repo.get_by_id(worldinfo_id)
+    if orig is None or not orig.is_visible_to_user(user.id, user.is_initial_admin):
+        return jsonify({"error": "WorldInfo not found."}), 404
+    copied = repo.duplicate(worldinfo_id, user.id)
+    return jsonify({"id": copied.id, "name": copied.name}), 201

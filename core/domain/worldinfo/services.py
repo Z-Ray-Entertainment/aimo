@@ -19,6 +19,7 @@ class WorldInfoService:
         visibility: str = "private",
         cover_image_path: str | None = None,
         lorebook_id: int | None = None,
+        collaborator_creator_tags: list[str] | None = None,
     ) -> WorldInfo:
         DomainValidator.validate_positive_user_id(user_id, InvalidWorldInfoDataError)
         cleaned_name = DomainValidator.validate_required_string(name, "WorldInfo name", InvalidWorldInfoDataError)
@@ -35,6 +36,10 @@ class WorldInfoService:
             visibility=cleaned_vis,
             cover_image_path=cleaned_cover,
             lorebook_id=valid_lb_id,
+            collaborator_creator_tags=[
+                t.strip().lower() for t in collaborator_creator_tags
+                if isinstance(t, str) and t.strip()
+            ] if collaborator_creator_tags else [],
             created_at=datetime.now(timezone.utc),
         )
 
@@ -46,6 +51,7 @@ class WorldInfoService:
         visibility: str | None = None,
         cover_image_path: str | None | object = ...,
         lorebook_id: int | None | object = ...,
+        collaborator_creator_tags: list[str] | None = None,
     ) -> WorldInfo:
         worldinfo.name = DomainValidator.validate_required_string(name, "WorldInfo name", InvalidWorldInfoDataError)
         if icon is not ...:
@@ -60,6 +66,11 @@ class WorldInfoService:
             )
         if lorebook_id is not ...:
             worldinfo.lorebook_id = int(lorebook_id) if lorebook_id is not None and int(lorebook_id) > 0 else None
+        if collaborator_creator_tags is not None:
+            worldinfo.collaborator_creator_tags = [
+                t.strip().lower() for t in collaborator_creator_tags
+                if isinstance(t, str) and t.strip()
+            ]
         return worldinfo
 
     def extract_tags_from_description(
