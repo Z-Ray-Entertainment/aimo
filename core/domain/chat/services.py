@@ -1,9 +1,10 @@
 from datetime import datetime, timezone
 import random
+from typing import Any
 
 from domain.characters.models import Character, Emotion
 from domain.chat.exceptions import InvalidChatDataError, PersonaLockedError
-from domain.chat.models import ChatSession, Message, MessageRole
+from domain.chat.models import ChatSession, Message, MessageRole, SystemMessageType
 from shared.utils import replace_roleplay_placeholders
 
 MIN_RELATIONSHIP: float = -100.0
@@ -79,6 +80,7 @@ class ChatService:
             active_worldinfo_id=worldinfo_id,
             current_location_id=initial_loc_id,
             title=(title.strip() if title and title.strip() else f"Chat with {character.name}"),
+            initial_location_id=initial_loc_id,
             relationship_value=initial_rel,
             events_enabled=True,
             cooldown_counter=random.randint(10, 100),
@@ -156,6 +158,8 @@ class ChatService:
                 image_path=msg.image_path,
                 image_alt_text=msg.image_alt_text,
                 emotion_tag=msg.emotion_tag,
+                system_type=msg.system_type,
+                metadata=dict(msg.metadata) if msg.metadata else {},
                 created_at=msg.created_at,
             )
             for msg in messages
@@ -163,14 +167,32 @@ class ChatService:
         ]
         has_user_msg = any(m.role == MessageRole.USER for m in filtered_messages)
 
+        last_loc_msg = next(
+            (
+                m
+                for m in reversed(filtered_messages)
+                if m.role == MessageRole.SYSTEM
+                and m.system_type == SystemMessageType.LOCATION_CHANGE.value
+                and m.metadata
+                and "location_id" in m.metadata
+            ),
+            None,
+        )
+        forked_current_loc_id = (
+            int(last_loc_msg.metadata["location_id"])
+            if last_loc_msg and last_loc_msg.metadata and "location_id" in last_loc_msg.metadata
+            else (session.initial_location_id or session.current_location_id)
+        )
+
         forked_session = ChatSession(
             id=None,
             user_id=session.user_id,
             character_id=session.character_id,
             persona_id=session.persona_id,
             active_worldinfo_id=session.active_worldinfo_id,
-            current_location_id=session.current_location_id,
+            current_location_id=forked_current_loc_id,
             title=f"{session.title} (Fork)",
+            initial_location_id=session.initial_location_id,
             relationship_value=session.relationship_value,
             events_enabled=session.events_enabled,
             cooldown_counter=session.cooldown_counter,
@@ -183,6 +205,78 @@ class ChatService:
             created_at=now,
         )
         return forked_session, filtered_messages
+
+    def create_system_message(
+        self,
+        session_id: int,
+        message_idx: int,
+        system_type: str | SystemMessageType,
+        english_content: str,
+        localized_content: str,
+        metadata: dict[str, Any] | None = None,
+    ) -> Message:
+        stype = system_type.value if isinstance(system_type, SystemMessageType) else str(system_type)
+        return Message(
+            id=None,
+            session_id=session_id,
+            message_idx=message_idx,
+            role=MessageRole.SYSTEM,
+            english_content=english_content.strip(),
+            localized_content=localized_content.strip(),
+            system_type=stype,
+            metadata=dict(metadata) if metadata else {},
+            created_at=datetime.now(timezone.utc),
+        )
+
+    def create_location_change_message(
+        self,
+        session: ChatSession,
+        message_idx: int,
+        location_id: int,
+        location_name: str,
+        location_description: str | None = None,
+        background_image_path: str | None = None,
+        from_location_id: int | None = None,
+    ) -> Message:
+        desc_snippet = f" — {location_description.strip()}" if location_description and location_description.strip() else ""
+        meta = {
+            "location_id": location_id,
+            "location_name": location_name.strip(),
+            "background_image_path": background_image_path.strip() if background_image_path else None,
+            "from_location_id": from_location_id if from_location_id is not None else session.current_location_id,
+        }
+        return self.create_system_message(
+            session_id=session.id or 0,
+            message_idx=message_idx,
+            system_type=SystemMessageType.LOCATION_CHANGE,
+            english_content=f"You travelled to {location_name.strip()}.",
+            localized_content=f"Ihr seid nach {location_name.strip()} gegangen{desc_snippet}",
+            metadata=meta,
+        )
+
+    def switch_location(self, session: ChatSession, new_location_id: int) -> None:
+        session.current_location_id = new_location_id
+
+    def recalculate_current_location_after_deletion(
+        self,
+        session: ChatSession,
+        remaining_messages: list[Message],
+    ) -> None:
+        last_loc_msg = next(
+            (
+                m
+                for m in reversed(remaining_messages)
+                if m.role == MessageRole.SYSTEM
+                and m.system_type == SystemMessageType.LOCATION_CHANGE.value
+                and m.metadata
+                and "location_id" in m.metadata
+            ),
+            None,
+        )
+        if last_loc_msg and last_loc_msg.metadata and "location_id" in last_loc_msg.metadata:
+            session.current_location_id = int(last_loc_msg.metadata["location_id"])
+        else:
+            session.current_location_id = session.initial_location_id
 
     def toggle_lorebook(self, session: ChatSession, lorebook_id: int, active: bool) -> None:
         if active:

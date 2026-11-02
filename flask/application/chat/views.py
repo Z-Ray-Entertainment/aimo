@@ -374,6 +374,11 @@ def view_session(session_id: int):
         if chat_session.active_worldinfo_id and chat_session.current_location_id
         else None
     )
+    initial_location = (
+        wi_repo.get_location(chat_session.initial_location_id)
+        if chat_session.active_worldinfo_id and chat_session.initial_location_id
+        else current_location
+    )
     raw_locations = (
         wi_repo.list_locations(worldinfo.id)
         if worldinfo and worldinfo.id is not None
@@ -436,6 +441,7 @@ def view_session(session_id: int):
         lorebook_data=lorebook_data,
         worldinfo=worldinfo,
         current_location=current_location,
+        initial_location=initial_location,
         worldinfo_locations=worldinfo_locations,
         worldinfo_events=worldinfo_events,
         all_worldinfos=all_worldinfos,

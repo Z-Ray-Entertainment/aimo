@@ -731,45 +731,124 @@ class AimoChatStream {
     document.getElementById("loc-confirm-yes")?.addEventListener("click", async () => {
       clearInterval(this.countdownTimer);
       bannerContainer.innerHTML = "";
-      const resp = await fetch(`/api/chat/${this.sessionId}/switch-location`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ location_id: locationObj.id }),
-      });
-      const resData = await resp.json();
-      if (resp.ok) {
+      await this.switchLocation(locationObj.id);
+    });
+  }
+
+  appendSystemMessage(msg) {
+    const messagesList = document.getElementById("chat-messages-list");
+    if (!messagesList || !msg) return;
+
+    const row = document.createElement("div");
+    row.className = "chat-system-message-row";
+    row.setAttribute("data-message-idx", msg.message_idx);
+    row.setAttribute("data-system-type", msg.system_type || "general");
+
+    const icon = msg.system_type === "location_change" ? "📍" : (msg.system_type === "event_trigger" ? "⚡" : "⚙️");
+    const locName = msg.metadata?.location_name || "";
+    const title = msg.system_type === "location_change"
+      ? (locName ? `Ortswechsel: ${locName}` : "Ortswechsel")
+      : (msg.system_type === "event_trigger" ? "Ereignis" : "System");
+
+    const systemMsgDiv = document.createElement("div");
+    systemMsgDiv.className = `chat-system-message${msg.system_type ? ` system-msg-${msg.system_type}` : ""}`;
+
+    const headerDiv = document.createElement("div");
+    headerDiv.className = "chat-system-message-header";
+
+    const badgeDiv = document.createElement("div");
+    badgeDiv.className = "chat-system-message-badge";
+
+    const iconSpan = document.createElement("span");
+    iconSpan.className = "chat-system-message-icon";
+    iconSpan.textContent = icon;
+
+    const titleSpan = document.createElement("span");
+    titleSpan.className = "chat-system-message-title";
+    titleSpan.textContent = title;
+
+    badgeDiv.appendChild(iconSpan);
+    badgeDiv.appendChild(titleSpan);
+
+    const actionsDiv = document.createElement("div");
+    actionsDiv.className = "chat-system-message-actions";
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.type = "button";
+    deleteBtn.className = "system-msg-action-btn";
+    deleteBtn.title = "Ab hier löschen";
+    deleteBtn.setAttribute("onclick", `deleteMessagesFrom(${msg.message_idx})`);
+
+    const deleteIcon = document.createElement("span");
+    deleteIcon.className = "icon-mono";
+    deleteIcon.textContent = "🗑️";
+    deleteBtn.appendChild(deleteIcon);
+    actionsDiv.appendChild(deleteBtn);
+
+    headerDiv.appendChild(badgeDiv);
+    headerDiv.appendChild(actionsDiv);
+
+    const contentDiv = document.createElement("div");
+    contentDiv.className = "chat-system-message-content";
+    contentDiv.textContent = msg.localized_content || "";
+
+    systemMsgDiv.appendChild(headerDiv);
+    systemMsgDiv.appendChild(contentDiv);
+    row.appendChild(systemMsgDiv);
+
+    messagesList.appendChild(row);
+    messagesList.scrollTop = messagesList.scrollHeight;
+  }
+
+  async switchLocation(locationId) {
+    if (!locationId) return null;
+    const resp = await fetch(`/api/chat/${this.sessionId}/switch-location`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ location_id: locationId }),
+    });
+    const resData = await resp.json();
+    if (resp.ok) {
+      if (resData.system_message) {
+        this.appendSystemMessage(resData.system_message);
+      } else if (resData.ui_notice) {
         const messagesList = document.getElementById("chat-messages-list");
-        if (messagesList && resData.ui_notice) {
+        if (messagesList) {
           const notice = document.createElement("div");
           notice.className = "system-ui-notice";
           notice.textContent = resData.ui_notice;
           messagesList.appendChild(notice);
           messagesList.scrollTop = messagesList.scrollHeight;
         }
-        const backdrop = document.getElementById("system-default-backdrop") || document.querySelector(".system-default-backdrop");
-        if (backdrop) {
-          const bgPath = resData.location?.background_image_path;
-          if (bgPath && bgPath.trim()) {
-            const cleanPath = bgPath.trim();
-            const bgUrl = (cleanPath.startsWith("/") || cleanPath.startsWith("http"))
-              ? cleanPath
-              : `/uploads/${cleanPath}`;
-            backdrop.style.backgroundImage = `url('${bgUrl}')`;
-          } else {
-            const defaultBackdrop = backdrop.getAttribute("data-default-backdrop") || "/static/img/cover.svg";
-            backdrop.style.backgroundImage = `url('${defaultBackdrop}')`;
-          }
-        }
-        const locIndicator = document.getElementById("chat-location-indicator");
-        if (locIndicator && resData.location?.name) {
-          locIndicator.innerHTML = `📍 Ort: <strong>${escapeHtml(resData.location.name)}</strong>`;
-        }
-        const locSelect = document.getElementById("chat-location-select");
-        if (locSelect) {
-          locSelect.value = String(locationObj.id || resData.location?.id || "");
+      }
+      const backdrop = document.getElementById("system-default-backdrop") || document.querySelector(".system-default-backdrop");
+      if (backdrop) {
+        const bgPath = resData.location?.background_image_path;
+        if (bgPath && bgPath.trim()) {
+          const cleanPath = bgPath.trim();
+          const bgUrl = (cleanPath.startsWith("/") || cleanPath.startsWith("http"))
+            ? cleanPath
+            : `/uploads/${cleanPath}`;
+          backdrop.style.backgroundImage = `url('${bgUrl}')`;
+        } else {
+          const defaultBackdrop = backdrop.getAttribute("data-default-backdrop") || "/static/img/cover.svg";
+          backdrop.style.backgroundImage = `url('${defaultBackdrop}')`;
         }
       }
-    });
+      const locIndicator = document.getElementById("chat-location-indicator");
+      if (locIndicator && resData.location?.name) {
+        locIndicator.innerHTML = `📍 Ort: <strong>${escapeHtml(resData.location.name)}</strong>`;
+      }
+      const locSelect = document.getElementById("chat-location-select");
+      if (locSelect) {
+        locSelect.value = String(locationId);
+      }
+      return resData;
+    } else {
+      const errStr = resData.error || "Fehler beim Wechseln des Ortes.";
+      window.showToastError ? window.showToastError(errStr) : alert(errStr);
+    }
+    return null;
   }
 
   async triggerComfyUIGeneration() {

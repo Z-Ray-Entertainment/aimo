@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import StrEnum
+from typing import Any
 
 
 class MessageRole(StrEnum):
@@ -23,6 +24,12 @@ class MessageRole(StrEnum):
         return cls.USER
 
 
+class SystemMessageType(StrEnum):
+    GENERAL = "general"
+    LOCATION_CHANGE = "location_change"
+    EVENT_TRIGGER = "event_trigger"
+
+
 @dataclass
 class Message:
     id: int | None
@@ -34,6 +41,8 @@ class Message:
     image_path: str | None = None
     image_alt_text: str | None = None
     emotion_tag: str | None = None
+    system_type: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
 
@@ -46,6 +55,7 @@ class ChatSession:
     active_worldinfo_id: int | None
     current_location_id: int | None
     title: str
+    initial_location_id: int | None = None
     relationship_value: float = 0.0
     events_enabled: bool = True
     cooldown_counter: int = 25

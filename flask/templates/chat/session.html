@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import menu_item %}
 {% from "macros/lorebook_manager.html" import lorebook_manager, lorebook_picker_modal %}
+{% from "macros/system_message.html" import chat_system_message %}
 {% block title %}AIMO — {{ chat_session.title }} ({{ character.name }}){% endblock %}
 {% block body_class %} chat-page{% endblock %}
 
@@ -79,13 +80,13 @@
           data-persona-name="{{ persona.name if persona else 'Du' }}"
           data-persona-portrait="{{ url_for('uploaded_file', filename=persona.portrait_path) if persona else '/static/img/cover.svg' }}"
           data-is-admin="{{ 'true' if is_admin else 'false' }}">
-          {% if current_location %}
+          {% if initial_location %}
             <div class="system-ui-notice location-intro-notice" style="margin: 0.25rem auto 1rem auto; max-width: 88%; text-align: left; padding: 0.65rem 1rem;">
               <div style="font-weight: 700; color: var(--gold-accent); margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.4rem;">
-                <span class="icon-mono">📍</span> <span>Ort: {{ current_location.name }}</span>
+                <span class="icon-mono">📍</span> <span>Ort: {{ initial_location.name }}</span>
               </div>
-              {% if current_location.description %}
-                <div style="font-size: 0.86rem; color: var(--text-color); opacity: 0.95; line-height: 1.45; white-space: pre-wrap;">{{ current_location.description }}</div>
+              {% if initial_location.description %}
+                <div style="font-size: 0.86rem; color: var(--text-color); opacity: 0.95; line-height: 1.45; white-space: pre-wrap;">{{ initial_location.description }}</div>
               {% endif %}
             </div>
           {% endif %}
@@ -141,9 +142,7 @@
                 </div>
               </div>
             {% elif msg.role.value == 'system' %}
-              <div class="system-ui-notice" data-message-idx="{{ msg.message_idx }}" style="margin: 0.5rem auto; max-width: 88%;">
-                {{ msg.localized_content }}
-              </div>
+              {{ chat_system_message(msg, is_admin=is_admin) }}
             {% endif %}
           {% endfor %}
         </div>
@@ -716,6 +715,7 @@
       window.location.reload();
     }
   }
+  window.deleteMessagesFrom = deleteMessagesFrom;
 
   async function forkChatAt(msgIdx) {
     const resp = await fetch(`/api/chat/{{ chat_session.id }}/fork`, {
@@ -728,48 +728,24 @@
       window.location.href = `/chat/session/${data.forked_session_id}`;
     }
   }
+  window.forkChatAt = forkChatAt;
 
   async function manualSwitchLocation(locationId) {
     if (!locationId) return;
-    const resp = await fetch(`/api/chat/{{ chat_session.id }}/switch-location`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ location_id: parseInt(locationId, 10) }),
-    });
-    if (resp.ok) {
-      const resData = await resp.json();
-      const messagesList = document.getElementById("chat-messages-list");
-      if (messagesList && resData.ui_notice) {
-        const notice = document.createElement("div");
-        notice.className = "system-ui-notice";
-        notice.textContent = resData.ui_notice;
-        messagesList.appendChild(notice);
-        messagesList.scrollTop = messagesList.scrollHeight;
-      }
-      const backdrop = document.getElementById("system-default-backdrop") || document.querySelector(".system-default-backdrop");
-      if (backdrop) {
-        const bgPath = resData.location?.background_image_path;
-        if (bgPath && bgPath.trim()) {
-          const cleanPath = bgPath.trim();
-          const bgUrl = (cleanPath.startsWith("/") || cleanPath.startsWith("http"))
-            ? cleanPath
-            : `/uploads/${cleanPath}`;
-          backdrop.style.backgroundImage = `url('${bgUrl}')`;
-        } else {
-          const defaultBackdrop = backdrop.getAttribute("data-default-backdrop") || "/static/img/cover.svg";
-          backdrop.style.backgroundImage = `url('${defaultBackdrop}')`;
-        }
-      }
-      const locIndicator = document.getElementById("chat-location-indicator");
-      if (locIndicator && resData.location?.name) {
-        locIndicator.innerHTML = `📍 Ort: <strong>${escapeHtml(resData.location.name)}</strong>`;
-      }
-      const locSelect = document.getElementById("chat-location-select");
-      if (locSelect) {
-        locSelect.value = String(locationId);
+    if (window.chatStream) {
+      await window.chatStream.switchLocation(parseInt(locationId, 10));
+    } else {
+      const resp = await fetch(`/api/chat/{{ chat_session.id }}/switch-location`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ location_id: parseInt(locationId, 10) }),
+      });
+      if (resp.ok) {
+        window.location.reload();
       }
     }
   }
+  window.manualSwitchLocation = manualSwitchLocation;
 
   window.refreshSessionMemories = async function() {
     try {

@@ -64,12 +64,19 @@ Because modern LLMs write with the greatest depth and nuance in English while th
 
 ## 🧭 Interactive Location Transitions & Venue Management (Text Adventure)
 
+- **Starting Location & Introduction:** The introductory box at the very top of the chat history displays the original starting location where the adventure began.
 - **Character-Bound Location Filtering:** Locations bound to another character are completely hidden from the chat's location dropdown and will never be suggested by the AI narrative. Only unrestricted locations and venues bound to the active character are accessible.
 - **Manual Location Selector:** Located in the right sidebar under the active WorldInfo. Players can freely choose between all accessible locations within the world at any time.
 - **Dynamic AI Location Suggestions:** When the AI narrative suggests travelling to an accessible location (e.g., *"Let us set out into the forest"*):
   - A confirmation button appears in chat: *"Would you like to move to [New Location]? [Yes] [No]"*.
   - **60-Second Countdown:** A red progress bar along the bottom edge of the button steadily shrinks over 60 seconds. If ignored, the prompt silently dissolves.
-  - **On "Yes":** The location shifts, the 16:9 background image changes, and a discreet centered system notification appears: *"You travelled to {location}"*. This notice is **never** added to the LLM prompt history.
+  - **On "Yes":** The location shifts, the 16:9 background image changes, and a permanent, gold-accented system notification (*"📍 Ortswechsel: [Ort]"*) is created directly at that point in the chat stream.
+- **Persistent Chat History:** Location transition notices remain permanently anchored at the exact point in the conversation where they took place and remain visible upon reopening or reloading the chat session. System messages are never fed into the roleplay AI context.
+- **Rewinding & Cascading Deletions:**
+  - Deleting messages prior to a location transition automatically removes all subsequent messages including the location change notices.
+  - When messages are rolled back, the chat's active location and background illustration automatically restore to the venue that was active at that point in time (or back to the initial starting location if all subsequent transitions are removed).
+  - Each system notice features a trash icon (`🗑️`) allowing players to rewind the adventure from that transition onward.
+- **Re-Generating Replies:** Using the Re-Generate button to rewrite an AI reply replaces only the character's answer; any location transition and system notices remain preserved in the chat.
 
 ---
 

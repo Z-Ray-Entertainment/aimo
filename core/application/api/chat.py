@@ -171,6 +171,7 @@ def _start_background_turn(
     uploaded_image_file=None,
     is_admin: bool = False,
     existing_user_msg: Message | None = None,
+    target_ai_idx: int | None = None,
 ) -> tuple[_BackgroundTurnTask, Message, dict | None]:
     chat_repo = ChatRepository()
     char_repo = CharacterRepository()
@@ -589,7 +590,7 @@ def _start_background_turn(
                     task.condition.notify_all()
                 return
 
-            ai_next_idx = w_chat_repo.get_next_message_idx(session_id)
+            ai_next_idx = target_ai_idx if target_ai_idx is not None else w_chat_repo.get_next_message_idx(session_id)
             ai_msg = Message(
                 id=None,
                 session_id=session_id,
@@ -893,16 +894,21 @@ def regenerate_turn(session_id: int):
 
     last_msg = narrative_msgs[-1]
     deleted_msg_idx = None
+    target_ai_idx = None
 
     if last_msg.role == MessageRole.CHARACTER:
         if last_msg.message_idx == 0:
             return jsonify({"error": "Die Begrüßung der KI kann nicht neu generiert werden."}), 400
 
-        chat_repo.delete_messages_after(session_id, last_msg.message_idx, inclusive=True)
+        if last_msg.id is not None:
+            chat_repo.delete_single_message(last_msg.id)
+        else:
+            chat_repo.delete_message_by_idx(session_id, last_msg.message_idx)
         mem_repo.delete_after_idx(session_id, last_msg.message_idx - 1)
         deleted_msg_idx = last_msg.message_idx
+        target_ai_idx = last_msg.message_idx
 
-        updated_messages = chat_repo.get_messages(session_id, limit=None)
+        updated_messages = [m for m in all_messages if m.id != last_msg.id]
         user_msgs = [m for m in updated_messages if m.role == MessageRole.USER]
         if not user_msgs:
             return jsonify({"error": "Keine Spielernachricht zum Neu-Generieren gefunden."}), 400
@@ -910,6 +916,7 @@ def regenerate_turn(session_id: int):
 
     elif last_msg.role == MessageRole.USER:
         target_user_msg = last_msg
+        target_ai_idx = None
     else:
         return jsonify({"error": "Ungültiger Rollenstatus der letzten Nachricht."}), 400
 
@@ -920,6 +927,7 @@ def regenerate_turn(session_id: int):
             user_language=user_lang,
             is_admin=is_admin,
             existing_user_msg=target_user_msg,
+            target_ai_idx=target_ai_idx,
         )
         return jsonify({
             "task_id": task.task_id,
@@ -1012,10 +1020,20 @@ def switch_location(session_id: int):
     if location.character_id is not None and location.character_id != chat_session.character_id:
         return jsonify({"error": "Dieser Ort ist an einen anderen Charakter gebunden und kann nicht betreten werden."}), 403
 
-    chat_session.current_location_id = location.id
+    chat_service = ChatService()
+    chat_service.switch_location(chat_session, location.id)
+    next_idx = chat_repo.get_next_message_idx(session_id)
+    sys_msg = chat_service.create_location_change_message(
+        session=chat_session,
+        message_idx=next_idx,
+        location_id=location.id,
+        location_name=location.name,
+        location_description=location.description,
+        background_image_path=location.background_image_path,
+    )
+    saved_sys_msg = chat_repo.add_message(sys_msg)
     chat_repo.update_session(chat_session)
 
-    desc_snippet = f" — {location.description}" if location.description else ""
     return jsonify(
         {
             "status": "switched",
@@ -1025,7 +1043,18 @@ def switch_location(session_id: int):
                 "description": location.description,
                 "background_image_path": location.background_image_path,
             },
-            "ui_notice": f"Ihr seid nach {location.name} gegangen{desc_snippet}",
+            "ui_notice": saved_sys_msg.localized_content,
+            "system_message": {
+                "id": saved_sys_msg.id,
+                "session_id": saved_sys_msg.session_id,
+                "message_idx": saved_sys_msg.message_idx,
+                "role": saved_sys_msg.role.value,
+                "system_type": saved_sys_msg.system_type,
+                "english_content": saved_sys_msg.english_content,
+                "localized_content": saved_sys_msg.localized_content,
+                "metadata": saved_sys_msg.metadata,
+                "created_at": saved_sys_msg.created_at.isoformat(),
+            },
         }
     )
 
@@ -1216,6 +1245,8 @@ def delete_messages_from_idx(session_id: int, message_idx: int):
 
     chat_repo = ChatRepository()
     mem_repo = MemoryRepository()
+    chat_service = ChatService()
+    wi_repo = WorldInfoRepository()
 
     deleted_msgs = chat_repo.delete_messages_after(
         session_id=session_id,
@@ -1226,10 +1257,27 @@ def delete_messages_from_idx(session_id: int, message_idx: int):
         session_id=session_id,
         message_idx=message_idx - 1,
     )
+
+    remaining_messages = chat_repo.get_messages(session_id, limit=None)
+    chat_service.recalculate_current_location_after_deletion(chat_session, remaining_messages)
+    chat_repo.update_session(chat_session)
+
+    curr_loc = (
+        wi_repo.get_location(chat_session.current_location_id)
+        if chat_session.current_location_id
+        else None
+    )
+
     return jsonify(
         {
             "deleted_messages": deleted_msgs,
             "deleted_memories": deleted_mems,
+            "current_location_id": chat_session.current_location_id,
+            "current_location": {
+                "id": curr_loc.id,
+                "name": curr_loc.name,
+                "background_image_path": curr_loc.background_image_path,
+            } if curr_loc else None,
         }
     )
 

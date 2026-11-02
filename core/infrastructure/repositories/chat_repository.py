@@ -41,12 +41,12 @@ class ChatRepository:
                 """
                 INSERT INTO chat_sessions (
                     user_id, character_id, persona_id, active_worldinfo_id,
-                    current_location_id, title, relationship_value, events_enabled,
+                    current_location_id, initial_location_id, title, relationship_value, events_enabled,
                     cooldown_counter, last_message_at, parent_session_id,
                     persona_locked, triggered_event_ids_json, disabled_lorebook_ids_json,
                     custom_lorebook_ids_json, created_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     chat_session.user_id,
@@ -54,6 +54,7 @@ class ChatRepository:
                     chat_session.persona_id,
                     chat_session.active_worldinfo_id,
                     chat_session.current_location_id,
+                    chat_session.initial_location_id,
                     chat_session.title,
                     chat_session.relationship_value,
                     1 if chat_session.events_enabled else 0,
@@ -89,7 +90,7 @@ class ChatRepository:
                 """
                 UPDATE chat_sessions
                 SET persona_id = ?, active_worldinfo_id = ?, current_location_id = ?,
-                    title = ?, relationship_value = ?, events_enabled = ?,
+                    initial_location_id = ?, title = ?, relationship_value = ?, events_enabled = ?,
                     cooldown_counter = ?, last_message_at = ?, persona_locked = ?,
                     triggered_event_ids_json = ?, disabled_lorebook_ids_json = ?,
                     custom_lorebook_ids_json = ?
@@ -99,6 +100,7 @@ class ChatRepository:
                     chat_session.persona_id,
                     chat_session.active_worldinfo_id,
                     chat_session.current_location_id,
+                    chat_session.initial_location_id,
                     chat_session.title,
                     chat_session.relationship_value,
                     1 if chat_session.events_enabled else 0,
@@ -143,9 +145,10 @@ class ChatRepository:
                 """
                 INSERT INTO chat_messages (
                     session_id, message_idx, role, english_content,
-                    localized_content, image_path, image_alt_text, emotion_tag, created_at
+                    localized_content, image_path, image_alt_text, emotion_tag,
+                    system_type, metadata_json, created_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     message.session_id,
@@ -156,6 +159,8 @@ class ChatRepository:
                     message.image_path,
                     message.image_alt_text,
                     message.emotion_tag,
+                    message.system_type,
+                    json.dumps(message.metadata or {}),
                     created_str,
                 ),
             )
@@ -180,7 +185,7 @@ class ChatRepository:
                 """
                 UPDATE chat_messages
                 SET english_content = ?, localized_content = ?, image_path = ?,
-                    image_alt_text = ?, emotion_tag = ?
+                    image_alt_text = ?, emotion_tag = ?, system_type = ?, metadata_json = ?
                 WHERE id = ?
                 """,
                 (
@@ -189,9 +194,29 @@ class ChatRepository:
                     message.image_path,
                     message.image_alt_text,
                     message.emotion_tag,
+                    message.system_type,
+                    json.dumps(message.metadata or {}),
                     message.id,
                 ),
             )
+            row = conn.execute(
+                "SELECT * FROM chat_messages WHERE id = ?",
+                (message.id,),
+            ).fetchone()
+            return self._message_to_entity(row)
+
+    def delete_single_message(self, message_id: int) -> bool:
+        with get_db_session() as conn:
+            cursor = conn.execute("DELETE FROM chat_messages WHERE id = ?", (message_id,))
+            return bool(cursor.rowcount and cursor.rowcount > 0)
+
+    def delete_message_by_idx(self, session_id: int, message_idx: int) -> bool:
+        with get_db_session() as conn:
+            cursor = conn.execute(
+                "DELETE FROM chat_messages WHERE session_id = ? AND message_idx = ?",
+                (session_id, message_idx),
+            )
+            return bool(cursor.rowcount and cursor.rowcount > 0)
             row = conn.execute(
                 "SELECT * FROM chat_messages WHERE id = ?",
                 (message.id,),
@@ -289,6 +314,17 @@ class ChatRepository:
         except (json.JSONDecodeError, TypeError, ValueError, KeyError):
             custom_lb_ids = []
 
+        curr_loc_id = (
+            int(row["current_location_id"])
+            if row["current_location_id"] is not None
+            else None
+        )
+        init_loc_id = (
+            int(row["initial_location_id"])
+            if "initial_location_id" in keys and row["initial_location_id"] is not None
+            else curr_loc_id
+        )
+
         return ChatSession(
             id=int(row["id"]),
             user_id=int(row["user_id"]),
@@ -299,12 +335,9 @@ class ChatRepository:
                 if row["active_worldinfo_id"] is not None
                 else None
             ),
-            current_location_id=(
-                int(row["current_location_id"])
-                if row["current_location_id"] is not None
-                else None
-            ),
+            current_location_id=curr_loc_id,
             title=str(row["title"]),
+            initial_location_id=init_loc_id,
             relationship_value=float(row["relationship_value"]),
             events_enabled=bool(row["events_enabled"]),
             cooldown_counter=int(row["cooldown_counter"]),
@@ -323,6 +356,21 @@ class ChatRepository:
 
     @staticmethod
     def _message_to_entity(row: sqlite3.Row) -> Message:
+        keys = row.keys()
+        system_type = (
+            str(row["system_type"])
+            if "system_type" in keys and row["system_type"] is not None
+            else None
+        )
+        try:
+            metadata = (
+                json.loads(str(row["metadata_json"]))
+                if "metadata_json" in keys and row["metadata_json"]
+                else {}
+            )
+        except (json.JSONDecodeError, TypeError, ValueError):
+            metadata = {}
+
         return Message(
             id=int(row["id"]),
             session_id=int(row["session_id"]),
@@ -335,5 +383,7 @@ class ChatRepository:
                 str(row["image_alt_text"]) if row["image_alt_text"] is not None else None
             ),
             emotion_tag=str(row["emotion_tag"]) if row["emotion_tag"] is not None else None,
+            system_type=system_type,
+            metadata=metadata,
             created_at=parse_datetime(row["created_at"]),
         )

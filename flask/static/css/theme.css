@@ -1408,6 +1408,101 @@ body.chat-page {
   margin: 0.35rem 0;
 }
 
+/* General Chat System Message Component */
+.chat-system-message-row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0.45rem 0;
+}
+
+.chat-system-message {
+  max-width: 86%;
+  width: 100%;
+  background: rgba(22, 16, 11, 0.75);
+  border: none;
+  border-radius: 8px;
+  padding: 0.35rem 0.75rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  line-height: 1.35;
+  color: var(--text-muted);
+  position: relative;
+}
+
+.chat-system-message.system-msg-location_change {
+  border: none;
+  background: rgba(24, 17, 12, 0.80);
+}
+
+.chat-system-message.system-msg-event_trigger {
+  border: none;
+  background: rgba(26, 16, 11, 0.80);
+}
+
+.chat-system-message-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.15rem;
+  font-size: 0.74rem;
+  color: var(--gold-accent);
+  opacity: 0.85;
+  font-weight: 500;
+}
+
+.chat-system-message-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.chat-system-message-icon {
+  font-size: 0.85rem;
+}
+
+.chat-system-message-title {
+  letter-spacing: 0.02em;
+}
+
+.chat-system-message-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+
+.chat-system-message-row:hover .chat-system-message-actions {
+  opacity: 0.9;
+}
+
+.system-msg-action-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 1px 3px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.system-msg-action-btn:hover {
+  color: #ff6b6b;
+  background-color: rgba(255, 107, 107, 0.15);
+}
+
+.chat-system-message-content {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  white-space: pre-wrap;
+  line-height: 1.35;
+}
+
 /* Location Switch Prompt & 60s Red Countdown Bar */
 .location-prompt-banner {
   margin: 0;
