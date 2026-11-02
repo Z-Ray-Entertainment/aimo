@@ -31,11 +31,10 @@ When starting a new conversation with a character:
   - **Tab 3: Memories:** Lists all system-generated memory summaries and allows manual edits.
   - **Tab 4: Lorebooks:** Live lorebook manager showing active, toggled, and custom lorebooks for this session.
 - **Right Info Box:**
-  - Character portrait / transparent emotion sprite.
+  - Character portrait / transparent emotion sprite (dynamically scaled in 9:16 aspect ratio to fit the display height).
   - Dynamic relationship bar (-100 to +100 with heart icon).
-  - Active WorldInfo with edit pencil.
-  - Player persona badge.
-  - Actions: Events toggle (checkbox), New Chat, Delete Chat.
+  - Player persona badge / selector (locked after the first message).
+  - Unified World & Setting block: Active WorldInfo with switch button, manual location selector, and random events toggle checkbox (integrated without separating divider).
 
 ---
 

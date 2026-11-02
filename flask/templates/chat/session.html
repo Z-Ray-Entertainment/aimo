@@ -326,9 +326,9 @@
     </div>
 
     <!-- Aktive Spieler-Persona (gesperrt nach 1. Nachricht) -->
-    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
-        <span style="font-size: 0.8rem; color: var(--text-muted);">Aktive Persona</span>
+    <div class="chat-sidebar-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+        <span class="chat-sidebar-label" style="margin-bottom: 0;">Aktive Persona</span>
         {% if persona %}
           <button
             type="button"
@@ -364,10 +364,10 @@
       {% endif %}
     </div>
 
-    <!-- Welt & Aktueller Ort (Gemeinsamer Block ohne Trennstrich) -->
-    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem; display: flex; flex-direction: column; gap: 0.6rem;">
+    <!-- Welt, Aktueller Ort & Zufalls-Events (Gemeinsamer Block ohne interne Trennstriche) -->
+    <div class="chat-sidebar-world-section">
       <div>
-        <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem;">Welt</span>
+        <span class="chat-sidebar-label">Welt</span>
         <div class="chat-field-box">
           <div class="chat-field-content">
             {% if worldinfo %}
@@ -387,8 +387,8 @@
       <!-- Aktueller Ort (Direkt unter Welt ohne Trennstrich) -->
       {% if worldinfo and worldinfo_locations %}
         <div>
-          <label for="chat-location-select" style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem;">Aktueller Ort</label>
-          <select id="chat-location-select" onchange="manualSwitchLocation(this.value)" style="padding: 0.4rem; width: 100%;">
+          <label for="chat-location-select" class="chat-sidebar-label">Aktueller Ort</label>
+          <select id="chat-location-select" class="chat-sidebar-select" onchange="manualSwitchLocation(this.value)">
             <option value="">-- Ort wählen --</option>
             {% for loc in worldinfo_locations %}
               {% if not loc.character_id or loc.character_id == character.id %}
@@ -400,18 +400,18 @@
           </select>
         </div>
       {% endif %}
-    </div>
 
-    <!-- Checkbox: Zufalls-Events aktivieren/deaktivieren (nur wenn WorldInfo & Events vorhanden) -->
-    {% if worldinfo and worldinfo_events %}
-      <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" style="border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
-        <input type="hidden" name="action" value="toggle_events">
-        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.86rem; cursor: pointer;">
-          <input type="checkbox" name="events_enabled" value="1" {% if chat_session.events_enabled %}checked{% endif %} onchange="this.form.submit()">
-          <span>🎲 Zufalls-Events aktivieren</span>
-        </label>
-      </form>
-    {% endif %}
+      <!-- Checkbox: Zufalls-Events aktivieren/deaktivieren (gehört zur Welt, ohne Trennstrich) -->
+      {% if worldinfo and worldinfo_events %}
+        <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" class="chat-sidebar-events-toggle">
+          <input type="hidden" name="action" value="toggle_events">
+          <label>
+            <input type="checkbox" name="events_enabled" value="1" {% if chat_session.events_enabled %}checked{% endif %} onchange="this.form.submit()">
+            <span>🎲 Zufalls-Events aktivieren</span>
+          </label>
+        </form>
+      {% endif %}
+    </div>
   </aside>
 </div>
 
