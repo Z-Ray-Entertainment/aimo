@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-from application.auth.decorators import get_current_user, require_permission
+from application.auth.decorators import get_current_user, has_perm, require_permission
 from application.chat.forms import MemoryEditForm, StartChatForm
 from domain.characters.models import Emotion
 from domain.characters.services import CharacterService

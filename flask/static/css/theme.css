@@ -574,13 +574,18 @@ a.persona-avatar-btn:focus {
   display: none;
 }
 
+.tab-pane:not(.active) {
+  display: none !important;
+}
+
 .tab-pane.active {
   display: block;
 }
 
 #chat-pane-messages.tab-pane.active,
 #chat-pane-media.tab-pane.active,
-#chat-pane-memories.tab-pane.active {
+#chat-pane-memories.tab-pane.active,
+#chat-pane-lorebooks.tab-pane.active {
   display: flex;
   flex-direction: column;
   flex: 1;
