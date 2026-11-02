@@ -187,6 +187,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 - **PyPI Minimalism:** Favor the Python standard library. External packages only when strictly necessary (`Flask`, `SQLAlchemy`, `bcrypt`, `requests`, `python-dotenv`).
 - **CSS-First for Layout & Animations:** Layout wrapping (`flex-wrap: wrap`, CSS Grid with `repeat(auto-fit, minmax(...))`, media queries) and visual animations (transitions, `@keyframes`, opacity, transforms, hover states) **must strictly be implemented with pure CSS**. JavaScript must only be used if a layout or animation behavior is technically impossible to achieve via CSS alone.
 - **Reusable UI Components First:** Für JEDES UI-Element (Buttons, Modals, Badges, Dropdowns, Cards, Formularfelder, Icons etc.) müssen immer nach Möglichkeit wiederverwendbare, einheitliche Komponenten (gemeinsame CSS-Klassen, Jinja2-Macros wie in `templates/macros/`, standardisierte HTML/SVG-Snippets) geschrieben und konsequent wiederverwendet werden, statt ad-hoc Insellösungen oder duplizierte Stile neu zu implementieren. Bestehende Basis-Komponenten (z. B. `.aimo-btn`, `.chat-input-btn`, `.modal-backdrop`, `.aimo-card-tile`) müssen stets bevorzugt und erweitert werden.
+- **Synchronous Documentation Maintenance (IST-Zustand):** Bei JEDEM neuen Feature und bei JEDER Änderung bestehender Features oder UI-Abläufe **muss** die Endanwender-Dokumentation in `docs/` (z. B. `README.md`, `lorebooks.md`, `characters.md`, `worldinfo.md`, `hub.md`, `chat.md` etc.) im selben Arbeitsschritt mitgeführt und aktualisiert werden. Die Dokumentation beschreibt dabei **immer ausschließlich den aktuellen IST-Zustand** (keine Changelogs, keine Vorher-/Nachher-Vergleiche und keine Erläuterungen darüber, was früher einmal war).
 
 ---
 
@@ -207,6 +208,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 - ❌ Import web framework code (`flask`, `render_template`, `request`) into `domain/` or `infrastructure/`.
 - ❌ Use JavaScript for layout wrapping, element dimensions, or animations when CSS (Flexbox, Grid, `@keyframes`, transitions) can achieve the result.
 - ❌ Ad-hoc duplizierte UI-Elemente oder inline neu erfundene Buttons/Komponenten bauen, statt auf bestehende, wiederverwendbare UI-Klassen und Macros zurückzugreifen.
+- ❌ Leave documentation in `docs/` outdated when modifying or adding features, or add historical changelogs into `docs/` instead of maintaining the pure current state ("IST-Zustand").
 - ❌ Create unsolicited automated tests.
 - ❌ Configure any external database (strictly SQLite).
 
@@ -219,7 +221,8 @@ When given a coding or customization task:
 1. **Analyze** which layer is affected (`domain`, `infrastructure`, `application`, `shared`).
 2. **Choose** the appropriate file in the DDD model.
 3. **Write** code with exactly one single responsibility.
-4. **Explicitly mention** which layer you are touching and why.
+4. **Update Documentation:** Ensure any feature additions or behavioral changes are immediately reflected in `docs/` (exclusively current state / IST-Zustand).
+5. **Explicitly mention** which layer you are touching and why.
 
 Example:
 > *"I am modifying `domain/characters/services.py` to implement random sprite selection for detected emotions. I am not touching templates or controllers, as this is a pure domain component."*
