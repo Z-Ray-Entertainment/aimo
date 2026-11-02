@@ -12,9 +12,10 @@ aimo avoids rigid role hierarchies in favor of a **functional permission model**
 - **Create User:** Provision new user accounts with username, email, and initial password.
 - **Permission Presets:**
   - `Admin`: Automatically grants all available permissions (Super User).
-  - `Creator`: Allows creating and editing characters, lorebooks, WorldInfo settings, and personas.
+  - `Creator`: Allows creating, editing, and duplicating characters, lorebooks, WorldInfo settings, and personas, as well as accessing the Creator-Tag collaboration system.
   - `User`: Basic access for roleplay chats and personal persona management.
 - **Granular Checkboxes:** Any permission (`character_create`, `chat_access`, `worldinfo_edit`, etc.) can also be granted or revoked individually.
+- **Creator-Tag Privacy & Protection:** A unique UUID4 creator tag is provisioned in the database for every user. The UI displays the Creator-Tag only to accounts possessing active creator permissions.
 - **Protection for Initial Admin:** The administrator created during first boot cannot be deleted, nor can their permissions be revoked or modified.
 
 ---

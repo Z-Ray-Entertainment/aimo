@@ -15,7 +15,7 @@ This manual is intended for end users, story creators, and administrators, detai
 
 2. [**The Hub Dashboard**](hub.md)
    - Navigation via the three primary tabs: Characters 👤, Lorebooks 📜, WorldInfo 🌐
-   - Persona manager button in header
+   - Persona manager and private Creator-Tag button in header
    - Filtering, relationship meters, and message counters
 
 3. [**Player Personas**](personas.md)
@@ -24,22 +24,24 @@ This manual is intended for end users, story creators, and administrators, detai
    - Deletion protection for active personas
 
 4. [**AI Characters & Designer**](characters.md)
-   - Character creation and management
+   - 7-tab character creation suite with 1-click duplication
    - AI Writing Assistant ✨ (Sparkle) for description optimization
    - Transparent emotional sprites & variant stacks
    - Unlockable 9:16 gallery images with affection thresholds
    - Linked lorebooks with optional world-specific conditions
+   - Collaborator management via private Creator-Tags
 
 5. [**Lorebooks & Encyclopedias**](lorebooks.md)
-   - Structuring background lore and world lore
-   - Tile grid overview and modal entry editor
+   - 3-tab compendium editor (Basic Settings, Entries, Collaboration)
+   - Header action bar with Save, 1-Click Duplication, and Delete
+   - Tile grid overview and modal entry editor with AI tag suggestions ✨
    - Tagging system for contextual roleplay knowledge (Vectorless Tag-RAG)
    - Private Lorebooks & Creator Knowledge protection (`🔒 Ersteller-Wissen`)
    - Attachment to Characters and WorldInfos
 
 6. [**Worlds, Places & Events (WorldInfo)**](worldinfo.md)
-   - Creating worlds and assigning icons
-   - Linking optional WorldInfo lorebooks
+   - 3-tab world setting suite (Places, Events, Collaboration) with 1-click duplication
+   - Creating worlds, assigning icons, and attaching world lorebooks
    - Locations with 16:9 background images and Vision ALT enhancement
    - Random event pool, cooldown counter cycle, and probabilities
 

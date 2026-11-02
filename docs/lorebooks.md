@@ -6,21 +6,42 @@
 
 ---
 
-## 🏗️ Structure of a Lorebook
+## 🛠️ Header & Actions
 
-1. **Lorebook Name:** E.g., *"History of Eldoria"*, *"Magic & Arcane Spells"*.
-2. **Tile Overview of Entries:**
-   - **First Tile:** A placeholder tile with a plus icon (`+`) to add new entries.
-   - All following tiles display the entry's title, linked tags, and a short snippet preview.
+- **Back Button (`←`):** Returns to the hub overview.
+- **Lorebook Title & Badges:** Displays the name of the lorebook and a readonly badge (`🔒 Schreibgeschützt`) if viewing another user's lorebook without edit permissions.
+- **Save (`💾 Speichern`):** Saves all basic settings and collaborator tags.
+- **Duplicate (`📄 Duplizieren`):** Allows any creator to clone any visible lorebook and its complete entries into their own private collection.
+- **Delete (`🗑️ Lorebook löschen`):** Strictly reserved for the author and initial administrators.
 
 ---
 
-## 📝 Composing an Entry (Modal Dialog)
+## 🏗️ Structure & Tabs of the Lorebook Editor
 
-Clicking an entry tile opens an overlay modal:
-- **Title:** E.g., *"The Order of Shadow Mages"*.
-- **Tags (Keywords):** Comma-separated list of keywords (e.g., `magic, order, shadow, wizard`).
-- **Description / Prose:** In-depth explanation, background facts, and context.
+The Lorebook editor is organized into three specialized tabs:
+
+### 1. Tab 1: Basic Settings (`📋 Grundeinstellungen`)
+- **Lorebook Name:** The title of this compendium (e.g., *"History of Eldoria"*, *"Magic & Arcane Spells"*).
+- **Visibility:**
+  - `Private`: Visible only to you and designated collaborators.
+  - `Public`: Available in the library for other users to explore and reference in their characters.
+- **Short Description:** A concise summary of the lorebook's theme for orientation in the library catalog.
+
+### 2. Tab 2: Entries (`📜 Einträge`)
+- **Tile Overview:**
+  - **First Tile (`+`):** Opens a modal to author a new lorebook entry.
+  - **Entry Tiles:** Display entry title, linked tags, and a short snippet preview. Clicking a tile opens the editor modal.
+- **Entry Editor (Modal Dialog):**
+  - **Title:** E.g., *"The Order of Shadow Mages"*.
+  - **Visibility:** `🌍 Public` (readable in library) or `🔒 Private` (secret lore / spoiler protection).
+  - **Tags (Keywords):** Comma-separated list of keywords for Vectorless Tag-RAG.
+  - **AI Tag Suggestion (`✨ Tags vorschlagen`):** Automatically infers relevant keywords from title and content.
+  - **Prose Content:** The factual knowledge text injected into the LLM context when triggered.
+
+### 3. Tab 3: Collaboration (`👥 Kollaboration`)
+- **Collaborator Management:** Authors can add or remove trusted creators using their private **Creator-Tag** (UUID4).
+- **Permissions:** Collaborators listed in the table receive edit access to lorebook settings and entries, while deletion and collaborator management remain protected and author-only.
+- **Collaborator View:** Collaborators see their active membership in a read-only table without the ability to add third parties.
 
 ---
 

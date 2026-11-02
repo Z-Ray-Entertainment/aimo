@@ -6,11 +6,14 @@ Following a successful login, you land directly on the main central hub of aimo.
 
 ---
 
-## 👤 The Header Persona Button
+## 👤 Header Navigation: Personas & Creator-Tags
 
-At the top of the screen sits a compact circular button displaying the avatar portrait of your current default persona.
-- **Clicking the Avatar:** Opens the [Persona Overlay Modal](personas.md).
-- Allows you to quickly switch between identities, create new personas, or manage existing ones.
+The top header bar hosts your account controls:
+- **Persona Avatar Button:** Compact circular button displaying the avatar portrait of your current default persona.
+  - Opens the [Persona Overlay Modal](personas.md) to switch identities, create new personas, or manage existing ones.
+- **Creator-Tag Button (`🪪 Creator-Tag`):** Visible exclusively to users with creator or administrator permissions.
+  - Opens a dedicated modal displaying your unique, private **Creator-Tag** (UUID4) with a 1-click copy button.
+  - Creator-Tags are never listed publicly; share your tag with trusted authors so they can grant you collaboration access to their characters, lorebooks, and world settings.
 
 ---
 

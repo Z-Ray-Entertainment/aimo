@@ -8,13 +8,18 @@ A **WorldInfo** encapsulates the geography, scenes, and random events of a rolep
 
 ## 🏛️ WorldInfo Editor (`templates/worldinfo/detail.html`)
 
+- **Header & Actions:**
+  - **Back Button (`←`):** Returns to the hub overview.
+  - **Save (`💾 Speichern`):** Saves world metadata, icon, and collaborators.
+  - **Duplicate (`📄 Duplizieren`):** Deep-clones the entire world setting — including all locations, 16:9 backgrounds, and random event pools — into an independent duplicate for the creator.
+  - **Delete (`🗑️ Welt löschen`):** Strictly reserved for the author and initial administrators.
 - **World Name:** Setting title (e.g., *"Kingdom of Acheron"*).
 - **WorldInfo Icon (`icon`):** A representative icon or graphic shown in headers and chat sidebars.
 - **World Lorebook (Optional):** Creators can attach an encyclopedia ([Lorebook](lorebooks.md)) directly to the world.
   - Whenever a chat session is played in this world, this lorebook is automatically loaded as an active default lorebook.
   - Useful for overarching world lore, political factions, pantheons, and geography that apply to any character visiting this realm.
 
-The editor is divided into two functional tabs:
+The editor is organized into three functional tabs:
 
 ---
 
@@ -43,6 +48,14 @@ Events inject unexpected life into the world (e.g., sudden storm, wandering band
   - **Probability (0–100%):** Relative weight during random draws.
   - **One-Shot:** When checked, the event triggers at most once per chat session.
   - **Scenic Description:** The prose injected into the prompt when triggered so the AI reacts dynamically.
+
+---
+
+## 👥 Tab 3: Collaboration (`👥 Kollaboration`)
+
+- **Creator-Tag Management:** The author can add trusted creators by their private **Creator-Tag** (UUID4).
+- **Collaborative Worldbuilding:** Collaborators can create and edit locations, upload 16:9 backgrounds, and configure random events.
+- **Ownership & Deletion Protection:** Deletion of the world setting and managing the collaborator list remains strictly limited to the author. Collaborators see their status in a clean read-only view.
 
 ---
 
