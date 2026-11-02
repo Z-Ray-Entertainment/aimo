@@ -48,4 +48,18 @@ aimo supports dynamic, transparent sprites (PNG or WEBP) that adapt to the AI ch
 - **Stackview & Eye Button (👁️):** When multiple variants exist, a layered stack effect indicates the variety. Clicking the eye button opens a modal popup to inspect variants and delete individual images.
 - **Runtime Random Selection:** When the AI expresses an emotion, the system selects one of the available variants at random.
 
+---
+
+## 📖 Tab: Linked Lorebooks & World Conditions
+
+Under the **Lorebooks** tab in the Character Designer, creators can bind one or more [Lorebooks](lorebooks.md) directly to the character:
+- **Binding Lorebooks:** Click *„➕ Lorebook hinzufügen“* to attach thematic encyclopedias to this character.
+- **World Condition Dropdown:** Beside each attached lorebook, a condition dropdown determines when the lorebook should become active:
+  - `🌍 All Worlds (Always active)`: The lorebook is injected into any chat with this character, regardless of the active setting.
+  - `🌐 Only in World: [World Name]`: The lorebook is strictly tied to a specific world.
+- **Strict AND Evaluation:**
+  - If a lorebook requires World *X*, it will **only** be active in chat sessions where both this character **AND** World *X* are simultaneously active.
+  - If the player starts a chat without a world or in a different world, the lorebook is marked as locked (`🔒 Inaktiv — Benötigt Welt: [Name]`) and its tag entries are **not** injected into the prompt.
+  - In-chat toggle sliders for locked lorebooks are disabled and cannot be forced on.
+
 Continue to: [**Lorebooks & Encyclopedias →**](lorebooks.md)

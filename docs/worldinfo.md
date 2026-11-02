@@ -10,6 +10,9 @@ A **WorldInfo** encapsulates the geography, scenes, and random events of a rolep
 
 - **World Name:** Setting title (e.g., *"Kingdom of Acheron"*).
 - **WorldInfo Icon (`icon`):** A representative icon or graphic shown in headers and chat sidebars.
+- **World Lorebook (Optional):** Creators can attach an encyclopedia ([Lorebook](lorebooks.md)) directly to the world.
+  - Whenever a chat session is played in this world, this lorebook is automatically loaded as an active default lorebook.
+  - Useful for overarching world lore, political factions, pantheons, and geography that apply to any character visiting this realm.
 
 The editor is divided into two functional tabs:
 

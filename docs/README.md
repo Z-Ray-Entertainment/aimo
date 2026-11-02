@@ -28,20 +28,26 @@ This manual is intended for end users, story creators, and administrators, detai
    - AI Writing Assistant ✨ (Sparkle) for description optimization
    - Transparent emotional sprites & variant stacks
    - Unlockable 9:16 gallery images with affection thresholds
+   - Linked lorebooks with optional world-specific conditions
 
 5. [**Lorebooks & Encyclopedias**](lorebooks.md)
    - Structuring background lore and world lore
    - Tile grid overview and modal entry editor
-   - Tagging system for contextual roleplay knowledge
+   - Tagging system for contextual roleplay knowledge (Vectorless Tag-RAG)
+   - Private Lorebooks & Creator Knowledge protection (`🔒 Ersteller-Wissen`)
+   - Attachment to Characters and WorldInfos
 
 6. [**Worlds, Places & Events (WorldInfo)**](worldinfo.md)
    - Creating worlds and assigning icons
+   - Linking optional WorldInfo lorebooks
    - Locations with 16:9 background images and Vision ALT enhancement
    - Random event pool, cooldown counter cycle, and probabilities
 
 7. [**Chat & Roleplay Interface**](chat.md)
-   - Dialogue launch, welcome message, and initial selection
+   - Dialogue launch and "New Chat" tabbed configuration (Settings & Lorebooks)
    - Live streaming with seamless localization
+   - Four-tab central interface: Chat, Media, Memories, and Lorebooks
+   - In-chat Lorebook manager (Default toggles, conditional locks, custom additions)
    - Interactive location change (text adventure with 60s countdown)
    - Multimodal features (image upload with ALT text, ComfyUI magic wand ✨)
    - Relationship bar, automatic memories, and chat forks

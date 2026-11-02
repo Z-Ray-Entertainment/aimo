@@ -6,12 +6,18 @@ The chat screen is the centerpiece of aimo. Here, the interactive text adventure
 
 ---
 
-## 🚀 Starting a Chat ("First Chat")
+## 🚀 Starting a Chat ("New Chat" Configuration)
 
-When you open a character for the first time:
-1. **Persona Selection:** If you have more than one persona, a quick dialog prompts you to choose who you want to play. (Once the first user message is sent, your persona is locked for that session).
-2. **WorldInfo Selection:** Select your setting (the character's recommendation is pre-selected). You can also explicitly choose *"Without WorldInfo"* (applies neutral backgrounds and no events).
-3. **Welcome Message:** The character immediately greets you with their opening message at the designated starting location.
+When starting a new conversation with a character:
+1. **Reiter 1: Settings (Einstellungen):**
+   - **Persona Selection:** Select your playing persona. (Once the first message is sent, the persona is permanently locked for that session).
+   - **WorldInfo Selection:** Choose the setting. The character's suggested world is pre-selected. You can also explicitly choose *"Without WorldInfo"* (applies neutral backgrounds and disables random events).
+   - **Session Title:** Optional custom title for the adventure.
+2. **Reiter 2: Lorebooks (Wissensbücher):**
+   - Inspect all default lorebooks inherited from the character and the selected world.
+   - Toggle individual lorebooks on or off specifically for this session.
+   - Add custom lorebooks from the system catalog or remove them.
+3. **Launch & Welcome Message:** Upon clicking *"Abenteuer starten"*, the chat opens and the character greets you with their opening message at the designated starting location.
 
 ---
 
@@ -19,16 +25,32 @@ When you open a character for the first time:
 
 - **Header:** Back button (`←`) to the main overview.
 - **Left Sidebar (Multi-Chat):** Lists all your chat sessions and forks with this character. Titles update dynamically based on key events.
-- **Central Three-Tab Container:**
+- **Central Four-Tab Container:**
   - **Tab 1: Chat:** The ongoing dialogue in message bubbles (AI on the left with portrait/sprite, player on the right).
   - **Tab 2: Media:** Aggregates all unlocked 9:16 gallery images, uploaded photos, and generated images.
   - **Tab 3: Memories:** Lists all system-generated memory summaries and allows manual edits.
+  - **Tab 4: Lorebooks:** Live lorebook manager showing active, toggled, and custom lorebooks for this session.
 - **Right Info Box:**
   - Character portrait / transparent emotion sprite.
   - Dynamic relationship bar (-100 to +100 with heart icon).
   - Active WorldInfo with edit pencil.
   - Player persona badge.
   - Actions: Events toggle (checkbox), New Chat, Delete Chat.
+
+---
+
+## 📜 In-Chat Lorebook Management
+
+Under the **Lorebooks** tab in the central chat container (and in the New Chat wizard), players have full control over the knowledge injected into their session:
+- **Default Lorebooks:**
+  - Automatically assembled from the Character's linked lorebooks and the active World's lorebook.
+  - **Session Toggle (Slider):** Players can temporarily disable or re-enable individual default lorebooks for this specific chat without modifying the character or world definition.
+  - **Conditional Locks (`🔒 Inaktiv — Benötigt Welt: ...`):** If a character lorebook requires a specific world condition not met by the current session, it is locked. The toggle is disabled and its entries are excluded from the prompt.
+- **Custom Lorebooks:**
+  - Players can click *„➕ Lorebook hinzufügen“* to browse available encyclopedias in a searchable grid overlay and add them to the chat session.
+  - Custom lorebooks appear in a separate section below default lorebooks.
+  - They feature both an active/inactive toggle slider and a trash button (🗑️) to remove them completely from the session.
+- **Order:** Default lorebooks appear at the top, custom lorebooks at the bottom; both sections are sorted alphabetically.
 
 ---
 
