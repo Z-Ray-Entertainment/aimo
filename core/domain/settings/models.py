@@ -177,3 +177,7 @@ class ServiceSettings:
     params: ModelParameters = field(default_factory=ModelParameters)
     prompts: SystemPrompts = field(default_factory=SystemPrompts)
     default_backdrop_path: str | None = None
+
+    @property
+    def parameters(self) -> ModelParameters:
+        return self.params

@@ -77,7 +77,8 @@ class OllamaLLMProvider(LLMProvider):
         model: str,
         params: ModelParameters,
         stop: list[str] | None = None,
-        format: str | None = None,
+        format: str | dict | None = None,
+        think: bool | None = None,
     ) -> str:
         options = self._build_options(params)
         if stop:
@@ -90,12 +91,21 @@ class OllamaLLMProvider(LLMProvider):
         }
         if format:
             payload["format"] = format
+        if think is not None:
+            payload["think"] = think
         try:
             response = requests.post(
                 f"{self.base_url}/api/generate",
                 json=payload,
                 timeout=self.request_timeout,
             )
+            if response.status_code == 400 and think is not None and "think" in response.text.lower():
+                payload.pop("think", None)
+                response = requests.post(
+                    f"{self.base_url}/api/generate",
+                    json=payload,
+                    timeout=self.request_timeout,
+                )
             self._ensure_ok(response, "Ollama generation")
             data = response.json()
         except (requests.RequestException, ValueError) as exc:

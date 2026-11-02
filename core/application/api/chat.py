@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 import json
+import logging
 from pathlib import Path
 import re
 import threading
@@ -35,6 +36,7 @@ from shared.exceptions import AimoError
 from shared.utils import filter_stopwords, parse_tags, replace_roleplay_placeholders
 
 api_chat_bp = Blueprint("api_chat", __name__, url_prefix="/api/chat")
+logger = logging.getLogger(__name__)
 
 _ACTIVE_IMAGE_TASKS: dict[int, str] = {}
 _PENDING_PROMPTS: dict[int, dict] = {}
@@ -119,7 +121,7 @@ def _run_async_memory_extraction(session_id: int) -> None:
             llm = get_llm_provider(settings)
 
             msg_dicts = [
-                {"role": m.role.value, "content": m.english_content}
+                {"role": m.role.value, "content": m.english_content or m.localized_content or ""}
                 for m in chunk
             ]
             title, tags, summary, new_chat_title = mem_service.extract_memory_and_title(
@@ -127,6 +129,7 @@ def _run_async_memory_extraction(session_id: int) -> None:
                 memory_prompt=settings.prompts.memory_prompt,
                 llm_provider=llm,
                 model=settings.tasks.memory_model,
+                params=settings.params,
             )
             memory = mem_service.create_memory(
                 chat_session_id=session_id,
@@ -140,8 +143,8 @@ def _run_async_memory_extraction(session_id: int) -> None:
             if new_chat_title:
                 chat_session.title = new_chat_title
                 chat_repo.update_session(chat_session)
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.exception("Background memory generation failed for session %s: %s", session_id, exc)
 
     thread = threading.Thread(target=_worker, daemon=True)
     thread.start()
@@ -1505,6 +1508,7 @@ def recalculate_memory(session_id: int, memory_id: int):
             memory_prompt=settings.prompts.memory_prompt,
             llm_provider=llm,
             model=settings.tasks.memory_model,
+            params=settings.params,
         )
     except Exception as exc:
         return jsonify({"error": f"LLM memory generation failed: {exc}"}), 502

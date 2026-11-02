@@ -648,6 +648,7 @@ def recalculate_memory(session_id: int, memory_id: int):
             memory_prompt=settings.prompts.memory_prompt,
             llm_provider=llm,
             model=settings.tasks.memory_model,
+            params=settings.params,
         )
         mem_service.update_memory(
             memory=target_memory,

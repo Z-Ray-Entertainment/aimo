@@ -23,7 +23,8 @@ class LLMProvider(ABC):
         model: str,
         params: ModelParameters,
         stop: list[str] | None = None,
-        format: str | None = None,
+        format: str | dict | None = None,
+        think: bool | None = None,
     ) -> str:
         raise NotImplementedError
 
