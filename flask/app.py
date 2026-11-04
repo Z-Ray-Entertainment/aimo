@@ -27,6 +27,7 @@ from application.core_client import core_proxy_bp
 from application.lorebooks import lorebooks_bp
 from application.overview import overview_bp
 from application.personas import personas_bp
+from application.settings import settings_bp
 from application.setup import setup_bp
 from application.ui_helpers import render_new_button
 from application.worldinfo import worldinfo_bp
@@ -60,6 +61,7 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
     app.register_blueprint(lorebooks_bp)
     app.register_blueprint(worldinfo_bp)
     app.register_blueprint(chat_bp)
+    app.register_blueprint(settings_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(core_proxy_bp)
 

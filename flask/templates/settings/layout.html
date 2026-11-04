@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% from "macros/buttons.html" import action_button %}
+{% block title %}AIMO — Einstellungen{% endblock %}
+
+{% block content %}
+<div class="aimo-sidebar-layout">
+  <!-- Vertikale Seitenleiste links -->
+  <aside class="aimo-frame aimo-sidebar">
+    <div class="aimo-sidebar-header">
+      <div class="aimo-sidebar-title">
+        <span class="icon-mono">⚙️</span>
+        <span>Einstellungen</span>
+      </div>
+      <p class="aimo-sidebar-subtitle">Benutzer & Personalisierung</p>
+    </div>
+
+    <nav class="aimo-sidebar-nav">
+      <a href="{{ url_for('settings.index') }}"
+         class="aimo-sidebar-nav-item {% if request.endpoint == 'settings.index' %}active{% endif %}">
+        <span class="icon-mono">👤</span>
+        <span class="aimo-sidebar-nav-text">Allgemein & Konto</span>
+      </a>
+    </nav>
+
+    <div class="aimo-sidebar-footer">
+      {{ action_button("Zurück zum Hub", href=url_for('overview.index'), arrow="left", extra_class="aimo-sidebar-back-btn") }}
+    </div>
+  </aside>
+
+  <!-- Rechter Hauptbereich für Inhalte -->
+  <section class="aimo-sidebar-stage">
+    {% block settings_content %}{% endblock %}
+  </section>
+</div>
+{% endblock %}

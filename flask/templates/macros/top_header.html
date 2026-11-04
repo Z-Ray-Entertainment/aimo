@@ -100,8 +100,15 @@
             </button>
           {% endif %}
 
+          <a href="{{ url_for('settings.index') }}"
+             class="aimo-btn mobile-nav-btn{% if request.blueprint == 'settings' %} active{% endif %}">
+            <span class="icon-mono">⚙️</span>
+            <span>Einstellungen</span>
+          </a>
+
           {% if has_perm('admin_access') %}
-            <a href="{{ url_for('admin.users_list') }}" class="aimo-btn mobile-nav-btn">
+            <a href="{{ url_for('admin.users_list') }}"
+               class="aimo-btn mobile-nav-btn{% if request.blueprint == 'admin' %} active{% endif %}">
               <span class="icon-mono">⚙️</span>
               <span>Admin-Einstellungen</span>
             </a>

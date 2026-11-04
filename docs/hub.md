@@ -11,6 +11,7 @@ Following a successful login, you land directly on the main central hub of aimo.
 In the top-right corner of the header bar, you find a circular button displaying the portrait image of your current default persona (or a monochrome user icon if no persona is selected yet). Clicking this icon opens your personal account menu:
 - **Persona-Auswahl (`👤 Persona-Auswahl`):** Opens the [Persona Overlay Modal](personas.md) to switch your default identity, create new personas, or edit existing ones.
 - **Creator-Tag Kopieren (`🏷️ Creator-Tag Kopieren`):** Visible to accounts with creator or administrator permissions. Clicking it copies your unique, private **Creator-Tag** directly to the clipboard. While the menu stays open, the button label briefly turns soft green and displays *"Kopiert"* for one second before returning to *"Creator-Tag Kopieren"*. Share your tag privately with trusted authors so they can grant you collaboration access to their characters, lorebooks, and world settings.
+- **Einstellungen (`⚙️ Einstellungen`):** Available to all logged-in users; opens your personal [User Settings](settings.md) view.
 - **Admin-Einstellungen (`⚙️ Admin-Einstellungen`):** Visible to administrators; opens the [Administration & Settings](admin.md) area.
 - **Logout (`🚪 Logout`):** Located at the bottom of the menu below a visual divider line to end your current session.
 

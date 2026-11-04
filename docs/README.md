@@ -15,7 +15,7 @@ This manual is intended for end users, story creators, and administrators, detai
 
 2. [**The Hub Dashboard**](hub.md)
    - Navigation via the three primary tabs: Characters 👤, Lorebooks 📜, WorldInfo 🌐
-   - Top-right Persona Avatar menu (Persona selection, 1-click Creator-Tag copy, Admin settings, Logout)
+   - Top-right Persona Avatar menu (Persona selection, 1-click Creator-Tag copy, User settings, Admin settings, Logout)
    - Filtering, relationship meters, and message counters
 
 3. [**Player Personas**](personas.md)
@@ -54,7 +54,11 @@ This manual is intended for end users, story creators, and administrators, detai
    - Multimodal features (image upload with ALT text, ComfyUI magic wand ✨)
    - Relationship bar, automatic memories, and chat forks
 
-8. [**Administration & Settings**](admin.md)
+8. [**User Settings**](settings.md)
+   - Personal account overview (username and email)
+   - Dedicated two-column view for user-specific preferences
+
+9. [**Administration & Settings**](admin.md)
    - User creation, management, and permission presets
    - Ollama local model pull, assignment, and deletion
    - System prompts and fine-tuning inference parameters
