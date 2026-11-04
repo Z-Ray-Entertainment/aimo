@@ -3,6 +3,7 @@
    Global application header with brand title, central Hub navigation,
    and the top-right Persona Avatar user menu dropdown.
    ============================================================================= #}
+{% from "macros/buttons.html" import action_button %}
 <header class="top-header">
   <div class="header-left">
     <a href="{{ url_for('overview.index') }}" class="brand-title">
@@ -13,27 +14,9 @@
 
   {% if g.current_user %}
     <nav class="header-nav header-hub-nav" id="header-hub-nav">
-      <a href="{{ url_for('overview.index', tab='characters') }}"
-         class="aimo-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters' %} active{% endif %}"
-         data-hub-tab="tab-characters"
-         title="KI-Charaktere">
-        <span class="icon-mono">👤</span>
-        <span>KI-Charaktere</span>
-      </a>
-      <a href="{{ url_for('overview.index', tab='lorebooks') }}"
-         class="aimo-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks' %} active{% endif %}"
-         data-hub-tab="tab-lorebooks"
-         title="Lorebooks">
-        <span class="icon-mono">📜</span>
-        <span>Lorebooks</span>
-      </a>
-      <a href="{{ url_for('overview.index', tab='worldinfo') }}"
-         class="aimo-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo' %} active{% endif %}"
-         data-hub-tab="tab-worldinfo"
-         title="Worlds">
-        <span class="icon-mono">🌐</span>
-        <span>Worlds</span>
-      </a>
+      {{ action_button("KI-Charaktere", href=url_for('overview.index', tab='characters'), icon="👤", active=((request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters'), data={"hub-tab": "tab-characters"}) }}
+      {{ action_button("Lorebooks", href=url_for('overview.index', tab='lorebooks'), icon="📜", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks'), data={"hub-tab": "tab-lorebooks"}) }}
+      {{ action_button("Worlds", href=url_for('overview.index', tab='worldinfo'), icon="🌐", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo'), data={"hub-tab": "tab-worldinfo"}) }}
     </nav>
   {% else %}
     <div class="header-nav-placeholder"></div>
@@ -58,27 +41,9 @@
       <div class="mobile-dropdown-menu" id="mobile-dropdown-menu" aria-hidden="true">
         <div class="mobile-only-nav-group">
           <div class="mobile-menu-group">
-            <a href="{{ url_for('overview.index', tab='characters') }}"
-               class="aimo-btn mobile-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters' %} active{% endif %}"
-               data-hub-tab="tab-characters"
-               title="KI-Charaktere">
-              <span class="icon-mono">👤</span>
-              <span>KI-Charaktere</span>
-            </a>
-            <a href="{{ url_for('overview.index', tab='lorebooks') }}"
-               class="aimo-btn mobile-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks' %} active{% endif %}"
-               data-hub-tab="tab-lorebooks"
-               title="Lorebooks">
-              <span class="icon-mono">📜</span>
-              <span>Lorebooks</span>
-            </a>
-            <a href="{{ url_for('overview.index', tab='worldinfo') }}"
-               class="aimo-btn mobile-nav-btn{% if (request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo' %} active{% endif %}"
-               data-hub-tab="tab-worldinfo"
-               title="Worlds">
-              <span class="icon-mono">🌐</span>
-              <span>Worlds</span>
-            </a>
+            {{ action_button("KI-Charaktere", href=url_for('overview.index', tab='characters'), icon="👤", active=((request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters'), data={"hub-tab": "tab-characters"}, extra_class="mobile-nav-btn") }}
+            {{ action_button("Lorebooks", href=url_for('overview.index', tab='lorebooks'), icon="📜", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks'), data={"hub-tab": "tab-lorebooks"}, extra_class="mobile-nav-btn") }}
+            {{ action_button("Worlds", href=url_for('overview.index', tab='worldinfo'), icon="🌐", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo'), data={"hub-tab": "tab-worldinfo"}, extra_class="mobile-nav-btn") }}
           </div>
 
           <hr class="aimo-menu-divider">
