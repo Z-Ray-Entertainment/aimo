@@ -526,7 +526,7 @@ button.aimo-btn.copied-success {
   gap: 0.45rem;
 }
 
-.mobile-menu-divider {
+.aimo-menu-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--border-wood), var(--gold-accent), var(--border-wood), transparent);
   border: none;

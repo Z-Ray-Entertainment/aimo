@@ -81,7 +81,7 @@
             </a>
           </div>
 
-          <hr class="mobile-menu-divider">
+          <hr class="aimo-menu-divider">
         </div>
 
         <div class="mobile-menu-group">
@@ -101,6 +101,8 @@
             <span>Einstellungen</span>
           </a>
 
+          <hr class="aimo-menu-divider">
+
           {% if has_perm('admin_access') %}
             <a href="{{ url_for('admin.users_list') }}"
                class="aimo-btn mobile-nav-btn{% if request.blueprint == 'admin' %} active{% endif %}">
@@ -109,7 +111,7 @@
             </a>
           {% endif %}
 
-          <hr class="mobile-menu-divider">
+          <hr class="aimo-menu-divider">
 
           <a href="{{ url_for('auth.logout') }}" class="aimo-btn mobile-nav-btn">
             <span class="icon-mono">🚪</span>
