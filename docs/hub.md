@@ -6,14 +6,15 @@ Following a successful login, you land directly on the main central hub of aimo.
 
 ---
 
-## 👤 Header Navigation: Personas & Creator-Tags
+## 👤 Header Navigation & User Menu
 
-The top header bar hosts your account controls:
-- **Persona Avatar Button:** Compact circular button displaying the avatar portrait of your current default persona.
-  - Opens the [Persona Overlay Modal](personas.md) to switch identities, create new personas, or manage existing ones.
-- **Creator-Tag Button (`🪪 Creator-Tag`):** Visible exclusively to users with creator or administrator permissions.
-  - Opens a dedicated modal displaying your unique, private **Creator-Tag** (UUID4) with a 1-click copy button.
-  - Creator-Tags are never listed publicly; share your tag with trusted authors so they can grant you collaboration access to their characters, lorebooks, and world settings.
+In the top-right corner of the header bar, you find a circular button displaying the portrait image of your current default persona (or a monochrome user icon if no persona is selected yet). Clicking this icon opens your personal account menu:
+- **Persona-Auswahl (`👤 Persona-Auswahl`):** Opens the [Persona Overlay Modal](personas.md) to switch your default identity, create new personas, or edit existing ones.
+- **Creator-Tag Kopieren (`🏷️ Creator-Tag Kopieren`):** Visible to accounts with creator or administrator permissions. Clicking it copies your unique, private **Creator-Tag** directly to the clipboard. While the menu stays open, the button label briefly turns soft green and displays *"Kopiert"* for one second before returning to *"Creator-Tag Kopieren"*. Share your tag privately with trusted authors so they can grant you collaboration access to their characters, lorebooks, and world settings.
+- **Admin-Einstellungen (`⚙️ Admin-Einstellungen`):** Visible to administrators; opens the [Administration & Settings](admin.md) area.
+- **Logout (`🚪 Logout`):** Located at the bottom of the menu below a visual divider line to end your current session.
+
+On smaller or mobile screens, the three main Hub navigation sections (*KI-Charaktere*, *Lorebooks*, *Worlds*) also appear at the top of this menu above a divider line.
 
 ---
 
