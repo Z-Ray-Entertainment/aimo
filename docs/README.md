@@ -15,11 +15,12 @@ This manual is intended for end users, story creators, and administrators, detai
 
 2. [**The Hub Dashboard**](hub.md)
    - Navigation via the three primary tabs: Characters 👤, Lorebooks 📜, WorldInfo 🌐
-   - Top-right Persona Avatar menu (Persona selection, 1-click Creator-Tag copy, User settings, Admin settings, Logout)
+   - Top-right Persona Avatar menu (1-click Creator-Tag copy, User settings, Admin settings, Logout)
    - Filtering, relationship meters, and message counters
 
 3. [**Player Personas**](personas.md)
-   - Creating custom roleplay identities
+   - Square persona grid in the user settings with default star
+   - Creating custom roleplay identities with 1:1 image crop
    - Portrait upload and automated AI Vision appearance analysis
    - Deletion protection for active personas
 
@@ -55,7 +56,7 @@ This manual is intended for end users, story creators, and administrators, detai
    - Relationship bar, automatic memories, and chat forks
 
 8. [**User Settings**](settings.md)
-   - Personal account overview (username and email)
+   - Persona management as first view
    - Dedicated two-column view for user-specific preferences
 
 9. [**Administration & Settings**](admin.md)

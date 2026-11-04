@@ -10,8 +10,7 @@ The **User Settings** area is accessible to every logged-in user via the **⚙�
 
 The interface features a two-column layout:
 - **Left Sidebar (`Einstellungen`):**
-  - Provides quick navigation between personal setting categories.
-  - **Allgemein & Konto (`👤`):** Displays your personal account overview and general preferences.
+  - **Personas (`👤`):** Opens the management of your [Player Personas](personas.md).
   - **Zurück zum Hub (`← Zurück zum Hub`):** Returns you directly to the central Hub dashboard at any time.
 - **Right Main Area:**
   - Displays the selected settings section inside a framed panel.
@@ -19,9 +18,6 @@ The interface features a two-column layout:
 
 ---
 
-## 👤 General & Account (`Allgemein & Konto`)
+## 👤 Personas
 
-In this section, you can view your personal account details at a glance:
-- **Benutzername:** Your display and login name in aimo.
-- **E-Mail-Adresse:** The email address linked to your account.
-- Additional personal customization options and user-specific preferences are organized here.
+The **Personas** view shows all your player personas as square tiles. See [Player Personas](personas.md) for details.

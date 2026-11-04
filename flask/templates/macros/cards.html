@@ -19,16 +19,27 @@
 {% endmacro %}
 
 {# Reusable AIMO Card Container Component #}
-{% macro aimo_card_container(main_url, title, bg_style, description=none, extra_class='') %}
+{% macro aimo_card_container(main_url, title, bg_style, description=none, extra_class='', onclick=none, click_attrs=none) %}
   <div class="aimo-card-tile {{ extra_class }}" style="{{ bg_style }}">
-    <a href="{{ main_url }}" class="aimo-card-click-area" aria-label="{{ title }}">
-      {% if description %}
-        <div class="aimo-card-scroll-overlay">
-          <strong style="color: var(--gold-accent); display: block; margin-bottom: 0.35rem;">{{ title }}</strong>
-          <p style="margin: 0;">{{ description }}</p>
-        </div>
-      {% endif %}
-    </a>
+    {% if main_url %}
+      <a href="{{ main_url }}" class="aimo-card-click-area" aria-label="{{ title }}"{% if onclick %} onclick="{{ onclick }}"{% endif %}{% if click_attrs %}{% for k, v in click_attrs.items() %} {{ k }}="{{ v|forceescape }}"{% endfor %}{% endif %}>
+        {% if description %}
+          <div class="aimo-card-scroll-overlay">
+            <strong style="color: var(--gold-accent); display: block; margin-bottom: 0.35rem;">{{ title }}</strong>
+            <p style="margin: 0;">{{ description }}</p>
+          </div>
+        {% endif %}
+      </a>
+    {% else %}
+      <div role="button" tabindex="0" class="aimo-card-click-area" aria-label="{{ title }}"{% if onclick %} onclick="{{ onclick }}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();{{ onclick }}}" {% endif %}{% if click_attrs %}{% for k, v in click_attrs.items() %} {{ k }}="{{ v|forceescape }}"{% endfor %}{% endif %}>
+        {% if description %}
+          <div class="aimo-card-scroll-overlay">
+            <strong style="color: var(--gold-accent); display: block; margin-bottom: 0.35rem;">{{ title }}</strong>
+            <p style="margin: 0;">{{ description }}</p>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
     <div class="aimo-card-overlay"></div>
     <div class="aimo-card-content">
       {{ caller() }}
@@ -113,6 +124,59 @@
         <span class="aimo-card-stat-pill">🎲 {{ item.event_count }} Events</span>
       </div>
     </div>
+  {% endcall %}
+{% endmacro %}
+
+{# Persona Card for Settings Grid (1:1 Portrait, Gender Badge, Default Star Quick-Action, Name) #}
+{% macro persona_card(p_item, can_manage=true) %}
+  {% set p = p_item.persona %}
+  {% set img_url = url_for('uploaded_file', filename=p.portrait_path) if p.portrait_path else '/static/img/cover.svg' %}
+  {% set bg_style = "background-image: url('" ~ img_url ~ "'), url('/static/img/cover.svg');" %}
+  {% set click_attrs = {
+    'data-persona-id': p.id,
+    'data-persona-name': p.name,
+    'data-persona-gender': p.gender.value,
+    'data-persona-description': p.description,
+    'data-persona-appearance': p.appearance,
+    'data-persona-portrait-url': img_url,
+    'data-persona-in-use': '1' if p_item.in_use else '0',
+    'data-persona-i18n-description': (p_item.i18n_description or {}) | tojson,
+    'data-persona-i18n-appearance': (p_item.i18n_appearance or {}) | tojson
+  } %}
+  {% call aimo_card_container(none, p.name, bg_style, description=(p.description or p.appearance), onclick=("openEditPersonaFromBtn(this)" if can_manage else none), click_attrs=click_attrs) %}
+    <div class="aimo-card-header">
+      <span class="aimo-card-badge" title="Geschlecht">
+        {% if p.gender.value == 'female' %}♀️ Weiblich
+        {% elif p.gender.value == 'male' %}♂️ Männlich
+        {% else %}⚧️ {{ p.gender.value }}
+        {% endif %}
+      </span>
+      {% if p.is_default %}
+        <span class="aimo-card-action-btn persona-star-btn is-default" title="Standard-Persona" aria-label="Standard-Persona">★</span>
+      {% elif can_manage %}
+        <form method="POST" action="{{ url_for('personas.set_default', persona_id=p.id) }}" style="display: inline; margin: 0;">
+          <button type="submit" class="aimo-card-action-btn persona-star-btn" title="Als Standard-Persona festlegen" aria-label="Als Standard-Persona festlegen">☆</button>
+        </form>
+      {% else %}
+        <span class="aimo-card-action-btn persona-star-btn" aria-hidden="true">☆</span>
+      {% endif %}
+    </div>
+
+    <div class="aimo-card-footer">
+      <h3 class="aimo-card-title">{{ p.name }}</h3>
+    </div>
+  {% endcall %}
+{% endmacro %}
+
+{# Unified Persona Grid View (Includes "Add Persona" tile & cards) #}
+{% macro persona_grid(persona_items, can_manage=false) %}
+  {% call aimo_card_grid() %}
+    {% if can_manage %}
+      {{ new_button("Neue Persona", onclick="if (!window.aimoPersonaVisionRunning) openNewPersonaForm()") }}
+    {% endif %}
+    {% for p_item in persona_items %}
+      {{ persona_card(p_item, can_manage=can_manage) }}
+    {% endfor %}
   {% endcall %}
 {% endmacro %}
 

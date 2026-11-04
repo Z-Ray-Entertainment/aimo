@@ -1,32 +1,13 @@
 {% extends "settings/layout.html" %}
+{% from "macros/cards.html" import persona_grid %}
 
 {% block settings_content %}
 <div class="aimo-frame" style="padding: 1.5rem;">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
-    <div>
-      <h1 style="font-size: 1.4rem; color: var(--gold-accent); margin-bottom: 0.2rem;">Allgemein & Konto</h1>
-      <p class="text-muted" style="font-size: 0.9rem;">Persönliche Benutzereinstellungen und Kontoübersicht</p>
-    </div>
+  <div style="margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.75rem;">
+    <h1 style="font-size: 1.4rem; color: var(--gold-accent); margin-bottom: 0.2rem;">Spieler-Personas</h1>
+    <p class="text-muted" style="font-size: 0.9rem;">Verwalte deine Rollenspiel-Identitäten. Der Stern markiert deine Standard-Persona.</p>
   </div>
 
-  <div class="aimo-frame" style="padding: 1.25rem; background: rgba(20, 14, 10, 0.55); margin-bottom: 1.25rem;">
-    <h2 style="font-size: 1.05rem; color: var(--gold-accent); margin-bottom: 0.85rem;">👤 Kontoinformationen</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-      <div>
-        <div class="text-muted" style="font-size: 0.8rem; margin-bottom: 0.25rem;">Benutzername</div>
-        <div style="font-weight: 600;">{{ current_user.username }}</div>
-      </div>
-      <div>
-        <div class="text-muted" style="font-size: 0.8rem; margin-bottom: 0.25rem;">E-Mail-Adresse</div>
-        <div style="font-weight: 600;">{{ current_user.email }}</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="aimo-frame" style="padding: 1.25rem; background: rgba(20, 14, 10, 0.4); border-style: dashed;">
-    <p class="text-muted" style="font-size: 0.9rem; margin: 0;">
-      Weitere persönliche Einstellungen werden hier in Kürze verfügbar sein.
-    </p>
-  </div>
+  {{ persona_grid(g.persona_items, can_manage=has_perm('persona_manage')) }}
 </div>
 {% endblock %}

@@ -3322,3 +3322,32 @@ button.chat-menu-dropdown-item.danger:focus {
   border-bottom: none;
 }
 
+
+
+/* Persona Default Star Overlay (.persona-star-btn) */
+.persona-star-btn {
+  font-size: 1.05rem;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+  color: var(--text-muted);
+}
+
+.persona-star-btn.is-default {
+  color: var(--gold-accent);
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 10px var(--gold-glow);
+  cursor: default;
+}
+
+span.persona-star-btn:hover {
+  transform: none;
+}
+
+.persona-star-btn:not(.is-default):hover {
+  color: var(--gold-accent);
+}
+
+#persona-new-crop-modal,
+#persona-edit-crop-modal {
+  z-index: 1100;
+}
