@@ -59,6 +59,8 @@ class _BackgroundTurnTask:
         self.has_image: bool = has_image
         self.user_message_idx: int = user_message_idx
         self.is_admin: bool = is_admin
+        self.system_message: Message | None = None
+        self.can_view_event_counter: bool = False
         self.assembled_prompt: str | None = None
         self.image_analyzed: bool = False
         self.image_alt_text: str | None = None
@@ -231,8 +233,11 @@ def _start_background_turn(
         if chat_session.active_worldinfo_id
         else None
     )
+    can_view_event_counter = is_admin or bool(worldinfo and worldinfo.user_id == chat_session.user_id)
+
     triggered_event = None
-    if worldinfo and worldinfo.id is not None and chat_session.events_enabled:
+    saved_event_msg: Message | None = None
+    if existing_user_msg is None and worldinfo and worldinfo.id is not None and chat_session.events_enabled:
         cooldown_state = EventCooldownState(
             current_counter=chat_session.cooldown_counter,
             triggered_event_ids=set(chat_session.triggered_event_ids),
@@ -244,6 +249,33 @@ def _start_background_turn(
                 current_location_id=chat_session.current_location_id,
                 state=cooldown_state,
             )
+            if triggered_event and triggered_event.id is not None:
+                trans_repo = TranslationRepository()
+                localized_event_desc = trans_repo.get_localized_field(
+                    "worldinfo_event",
+                    triggered_event.id,
+                    "description",
+                    user_language,
+                    triggered_event.description,
+                )
+                english_event_desc = trans_repo.get_localized_field(
+                    "worldinfo_event",
+                    triggered_event.id,
+                    "description",
+                    "en",
+                    triggered_event.description,
+                )
+                event_msg_idx = chat_repo.get_next_message_idx(session_id)
+                sys_msg = chat_service.create_event_trigger_message(
+                    session=chat_session,
+                    message_idx=event_msg_idx,
+                    event_id=triggered_event.id,
+                    event_title=triggered_event.title,
+                    event_description=english_event_desc,
+                    localized_description=localized_event_desc,
+                    location_id=triggered_event.location_id,
+                )
+                saved_event_msg = chat_repo.add_message(sys_msg)
         chat_session.cooldown_counter = cooldown_state.current_counter
         chat_session.triggered_event_ids = cooldown_state.triggered_event_ids
 
@@ -257,6 +289,8 @@ def _start_background_turn(
         user_message_idx=saved_user_msg.message_idx,
         is_admin=is_admin,
     )
+    task.system_message = saved_event_msg
+    task.can_view_event_counter = can_view_event_counter
     with _TASKS_LOCK:
         _BACKGROUND_TASKS[session_id] = task
 
@@ -620,14 +654,6 @@ def _start_background_turn(
                 _record_admin_prompt(session_id, saved_ai_msg.message_idx, task.assembled_prompt)
 
             latest_session = w_chat_repo.get_session(session_id) or w_session
-            if latest_session.active_worldinfo_id and latest_session.events_enabled:
-                cooldown_state = EventCooldownState(
-                    current_counter=latest_session.cooldown_counter,
-                    triggered_event_ids=set(latest_session.triggered_event_ids),
-                )
-                w_wi_service.decrement_cooldown(cooldown_state)
-                latest_session.cooldown_counter = max(1, cooldown_state.current_counter)
-                w_chat_repo.update_session(latest_session)
 
             _run_async_memory_extraction(session_id)
 
@@ -642,6 +668,9 @@ def _start_background_turn(
                 "relationship_value": latest_session.relationship_value,
                 "suggested_location": suggested_location,
             }
+            if task.can_view_event_counter:
+                payload["cooldown_counter"] = latest_session.cooldown_counter
+                payload["events_enabled"] = latest_session.events_enabled
             if task.is_admin and task.assembled_prompt:
                 payload["prompt"] = task.assembled_prompt
 
@@ -688,6 +717,7 @@ def _stream_from_task(task: _BackgroundTurnTask):
     sent_tokens = 0
     sent_gen_done = False
     sent_image_analyzed = False
+    sent_system_message = False
 
     while True:
         with task.condition:
@@ -698,6 +728,10 @@ def _stream_from_task(task: _BackgroundTurnTask):
                 and task.status not in ("completed", "error", "aborted")
             ):
                 task.condition.wait(timeout=15.0)
+
+            emit_sys_msg = task.system_message is not None and not sent_system_message
+            if emit_sys_msg:
+                sent_system_message = True
 
             emit_image_analyzed = task.image_analyzed and not sent_image_analyzed
             if emit_image_analyzed:
@@ -713,6 +747,20 @@ def _stream_from_task(task: _BackgroundTurnTask):
             current_status = task.status
             result_payload = task.result_payload
             error_message = task.error_message
+
+        if emit_sys_msg and task.system_message is not None:
+            sys_msg_data = {
+                "id": task.system_message.id,
+                "session_id": task.system_message.session_id,
+                "message_idx": task.system_message.message_idx,
+                "role": task.system_message.role.value,
+                "system_type": task.system_message.system_type,
+                "english_content": task.system_message.english_content,
+                "localized_content": task.system_message.localized_content,
+                "metadata": task.system_message.metadata,
+                "created_at": task.system_message.created_at.isoformat(),
+            }
+            yield f"event: system_message\ndata: {json.dumps(sys_msg_data)}\n\n"
 
         if emit_image_analyzed:
             yield f"event: image_analyzed\ndata: {json.dumps({'image_alt_text': image_alt_text or '', 'user_message_idx': task.user_message_idx})}\n\n"
@@ -775,6 +823,19 @@ def post_message(session_id: int):
         return jsonify({"error": str(exc)}), 400
 
     if not stream_now:
+        sys_msg_dict = None
+        if task.system_message is not None:
+            sys_msg_dict = {
+                "id": task.system_message.id,
+                "session_id": task.system_message.session_id,
+                "message_idx": task.system_message.message_idx,
+                "role": task.system_message.role.value,
+                "system_type": task.system_message.system_type,
+                "english_content": task.system_message.english_content,
+                "localized_content": task.system_message.localized_content,
+                "metadata": task.system_message.metadata,
+                "created_at": task.system_message.created_at.isoformat(),
+            }
         return jsonify(
             {
                 "status": "ready_for_stream",
@@ -788,6 +849,9 @@ def post_message(session_id: int):
                     "image_alt_text": user_msg.image_alt_text,
                 },
                 "triggered_event": triggered_event,
+                "system_message": sys_msg_dict,
+                "cooldown_counter": chat_session.cooldown_counter if task.can_view_event_counter else None,
+                "events_enabled": chat_session.events_enabled,
             }
         )
 
@@ -1281,6 +1345,7 @@ def delete_messages_from_idx(session_id: int, message_idx: int):
 
     remaining_messages = chat_repo.get_messages(session_id, limit=None)
     chat_service.recalculate_current_location_after_deletion(chat_session, remaining_messages)
+    chat_service.recalculate_events_after_deletion(chat_session, remaining_messages)
     chat_repo.update_session(chat_session)
 
     curr_loc = (

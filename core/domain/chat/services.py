@@ -186,6 +186,15 @@ class ChatService:
             else (session.initial_location_id or session.current_location_id)
         )
 
+        forked_triggered_event_ids = {
+            int(m.metadata["event_id"])
+            for m in filtered_messages
+            if m.role == MessageRole.SYSTEM
+            and m.system_type == SystemMessageType.EVENT_TRIGGER.value
+            and m.metadata
+            and "event_id" in m.metadata
+        }
+
         forked_session = ChatSession(
             id=None,
             user_id=session.user_id,
@@ -202,7 +211,7 @@ class ChatService:
             last_message_at=now,
             parent_session_id=session.id,
             persona_locked=has_user_msg or session.persona_locked,
-            triggered_event_ids=set(session.triggered_event_ids),
+            triggered_event_ids=forked_triggered_event_ids,
             disabled_lorebook_ids=set(session.disabled_lorebook_ids),
             custom_lorebook_ids=list(session.custom_lorebook_ids),
             created_at=now,
@@ -257,8 +266,52 @@ class ChatService:
             metadata=meta,
         )
 
+    def create_event_trigger_message(
+        self,
+        session: ChatSession,
+        message_idx: int,
+        event_id: int,
+        event_title: str,
+        event_description: str,
+        localized_description: str | None = None,
+        location_id: int | None = None,
+    ) -> Message:
+        meta = {
+            "event_id": event_id,
+            "event_title": event_title.strip(),
+            "location_id": location_id,
+        }
+        loc_desc = (
+            localized_description.strip()
+            if localized_description and localized_description.strip()
+            else event_description.strip()
+        )
+        return self.create_system_message(
+            session_id=session.id or 0,
+            message_idx=message_idx,
+            system_type=SystemMessageType.EVENT_TRIGGER,
+            english_content=f"Event triggered: {event_title.strip()} - {event_description.strip()}",
+            localized_content=loc_desc,
+            metadata=meta,
+        )
+
     def switch_location(self, session: ChatSession, new_location_id: int) -> None:
         session.current_location_id = new_location_id
+
+    def recalculate_events_after_deletion(
+        self,
+        session: ChatSession,
+        remaining_messages: list[Message],
+    ) -> None:
+        remaining_event_ids = {
+            int(m.metadata["event_id"])
+            for m in remaining_messages
+            if m.role == MessageRole.SYSTEM
+            and m.system_type == SystemMessageType.EVENT_TRIGGER.value
+            and m.metadata
+            and "event_id" in m.metadata
+        }
+        session.triggered_event_ids = remaining_event_ids
 
     def recalculate_current_location_after_deletion(
         self,

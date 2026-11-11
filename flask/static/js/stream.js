@@ -322,6 +322,13 @@ class AimoChatStream {
         this.upgradeUserBubbleWithServerData(userRow, prepData.user_message, tempGalleryTile);
       }
 
+      if (prepData.system_message) {
+        this.appendSystemMessage(prepData.system_message, thinkingUI?.row);
+      }
+      if (prepData.cooldown_counter !== undefined && prepData.cooldown_counter !== null) {
+        this.updateEventCounter(prepData.cooldown_counter, prepData.events_enabled);
+      }
+
       await this.startSSEStream(messagesList, thinkingUI);
     } catch (fetchErr) {
       if (thinkingUI?.row) thinkingUI.row.remove();
@@ -592,6 +599,15 @@ class AimoChatStream {
         if (container) container.scrollTop = container.scrollHeight;
       });
 
+      es.addEventListener("system_message", (e) => {
+        try {
+          const sysMsg = JSON.parse(e.data);
+          if (!container.querySelector(`[data-message-idx="${sysMsg.message_idx}"]`)) {
+            this.appendSystemMessage(sysMsg, ui?.row);
+          }
+        } catch (_) {}
+      });
+
       es.addEventListener("generation_done", () => {
         const label = ui.thinkingBox?.querySelector(".thinking-label");
         if (label) {
@@ -650,6 +666,10 @@ class AimoChatStream {
 
         if (data.suggested_location) {
           this.showLocationSwitchCountdown(data.suggested_location);
+        }
+
+        if (data.cooldown_counter !== undefined && data.cooldown_counter !== null) {
+          this.updateEventCounter(data.cooldown_counter, data.events_enabled);
         }
 
         setTimeout(() => {
@@ -735,7 +755,7 @@ class AimoChatStream {
     });
   }
 
-  appendSystemMessage(msg) {
+  appendSystemMessage(msg, insertBeforeEl = null) {
     const messagesList = document.getElementById("chat-messages-list");
     if (!messagesList || !msg) return;
 
@@ -746,9 +766,10 @@ class AimoChatStream {
 
     const icon = msg.system_type === "location_change" ? "📍" : (msg.system_type === "event_trigger" ? "⚡" : "⚙️");
     const locName = msg.metadata?.location_name || "";
+    const eventTitle = msg.metadata?.event_title || "";
     const title = msg.system_type === "location_change"
       ? (locName ? `Ortswechsel: ${locName}` : "Ortswechsel")
-      : (msg.system_type === "event_trigger" ? "Ereignis" : "System");
+      : (msg.system_type === "event_trigger" ? (eventTitle ? `Ereignis: ${eventTitle}` : "Ereignis") : "System");
 
     const systemMsgDiv = document.createElement("div");
     systemMsgDiv.className = `chat-system-message${msg.system_type ? ` system-msg-${msg.system_type}` : ""}`;
@@ -796,8 +817,28 @@ class AimoChatStream {
     systemMsgDiv.appendChild(contentDiv);
     row.appendChild(systemMsgDiv);
 
-    messagesList.appendChild(row);
+    if (insertBeforeEl && insertBeforeEl.parentNode === messagesList) {
+      messagesList.insertBefore(row, insertBeforeEl);
+    } else {
+      messagesList.appendChild(row);
+    }
     messagesList.scrollTop = messagesList.scrollHeight;
+  }
+
+  updateEventCounter(counter, eventsEnabled) {
+    const statusEl = document.getElementById("admin-event-counter-status");
+    if (!statusEl || counter === undefined || counter === null) return;
+    const isPaused = eventsEnabled === false;
+    const val = parseInt(counter, 10);
+    if (isNaN(val)) return;
+
+    if (isPaused) {
+      statusEl.innerHTML = `in <strong id="admin-event-counter-val">${val}</strong> ${val === 1 ? "Nachricht" : "Nachrichten"} <span class="counter-paused-label">(pausiert)</span>`;
+    } else if (val <= 1) {
+      statusEl.innerHTML = `<strong id="admin-event-counter-val">nächste Nachricht</strong>`;
+    } else {
+      statusEl.innerHTML = `in <strong id="admin-event-counter-val">${val}</strong> Nachrichten`;
+    }
   }
 
   async switchLocation(locationId) {

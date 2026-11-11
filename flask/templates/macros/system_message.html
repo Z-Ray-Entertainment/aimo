@@ -17,7 +17,7 @@
             {%- if msg.system_type == 'location_change' -%}
               Ortswechsel: {{ (msg.metadata.location_name if msg.metadata and msg.metadata.location_name else '') }}
             {%- elif msg.system_type == 'event_trigger' -%}
-              Ereignis
+              Ereignis{% if msg.metadata and msg.metadata.event_title %}: {{ msg.metadata.event_title }}{% endif %}
             {%- else -%}
               System
             {%- endif -%}

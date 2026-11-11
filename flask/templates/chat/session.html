@@ -424,6 +424,21 @@
             <span>🎲 Zufalls-Events aktivieren</span>
           </label>
         </form>
+
+        {% if can_view_event_counter %}
+          <div class="chat-sidebar-admin-event-counter" id="admin-event-counter-box" title="Admin- &amp; Ersteller-Info: Cooldown bis zum nächsten Zufalls-Event">
+            <span class="icon-mono">⏳</span> Nächstes Event: 
+            <span id="admin-event-counter-status">
+              {%- if not chat_session.events_enabled -%}
+                in <strong id="admin-event-counter-val">{{ chat_session.cooldown_counter }}</strong> {{ 'Nachricht' if chat_session.cooldown_counter == 1 else 'Nachrichten' }} <span class="counter-paused-label">(pausiert)</span>
+              {%- elif chat_session.cooldown_counter <= 1 -%}
+                <strong id="admin-event-counter-val">nächste Nachricht</strong>
+              {%- else -%}
+                in <strong id="admin-event-counter-val">{{ chat_session.cooldown_counter }}</strong> Nachrichten
+              {%- endif -%}
+            </span>
+          </div>
+        {% endif %}
       {% endif %}
     </div>
   </aside>

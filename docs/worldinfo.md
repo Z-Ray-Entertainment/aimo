@@ -74,8 +74,10 @@ Events inject unexpected life into the world (e.g., sudden storm, wandering band
 ## 🔄 In-Chat Cooldown & Trigger Mechanics
 
 - **Unified Pool:** World events and location events for the current venue form a single combined pool.
-- **Message Counter (10–100):** When a chat starts, a random integer between 10 and 100 is rolled. Each message sent (by user or AI) decrements the counter by 1.
-- **Trigger at 0:** When the counter reaches 0, exactly one eligible event is drawn weighted by probability. Immediately afterward, a new counter is rolled (10–100).
-- **Opt-Out:** A toggle checkbox in the chat sidebar allows you to disable events at any time if you prefer uninterrupted scenes.
+- **Message Counter (10–100):** When a chat starts, a random integer between 10 and 100 is rolled. Each player message sent decrements the counter by 1.
+- **Trigger at 0:** When the counter reaches 0, exactly one eligible event is drawn weighted by probability. Immediately afterward, a new counter is rolled (10–100). If no eligible event exists in the pool, a silent re-roll occurs.
+- **Persistent Event Notice:** Upon trigger, the event is saved as a permanent system message in the chat history with a bolt icon (*"⚡ Ereignis: [Event-Titel]"*) and its narrative description. The AI character receives this event context and weaves it into its immediate reaction.
+- **Live Cooldown Counter:** Administrators and the world's author can view the live remaining messages until the next event directly in the chat sidebar.
+- **Opt-Out & Pausing:** A toggle checkbox in the chat sidebar allows you to disable events at any time if you prefer uninterrupted scenes. The cooldown counter pauses and retains its current value.
 
 Continue to: [**The Chat & Roleplay Interface →**](chat.md)
