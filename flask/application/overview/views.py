@@ -24,6 +24,7 @@ def index():
 
     gender_filter = request.args.get("gender", "").strip().lower()
     chat_filter = request.args.get("chatted", "").strip().lower()
+    author_filter = request.args.get("author", "").strip().lower()
     sort_by = request.args.get("sort", "newest").strip().lower()
     active_tab = request.args.get("tab", "characters").strip().lower()
     if active_tab not in ("characters", "lorebooks", "worldinfo"):
@@ -34,6 +35,16 @@ def index():
     for char in raw_characters:
         if char.id is None:
             continue
+        if author_filter == "mine" and char.user_id != user.id:
+            continue
+        if author_filter == "collaborations":
+            is_collab = (
+                char.user_id != user.id
+                and bool(user.creator_tag)
+                and (user.creator_tag in (char.collaborator_creator_tags or []))
+            )
+            if not is_collab:
+                continue
         if gender_filter and char.gender.value != gender_filter:
             continue
         msg_count = char_repo.get_message_count_for_user(char.id, user.id)
@@ -120,6 +131,7 @@ def index():
         persona_items=persona_items,
         gender_filter=gender_filter,
         chat_filter=chat_filter,
+        author_filter=author_filter,
         sort_by=sort_by,
         active_tab=active_tab,
     )

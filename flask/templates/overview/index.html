@@ -34,6 +34,16 @@
           <option value="relationship" {% if sort_by == 'relationship' %}selected{% endif %}>Bester Beziehungswert</option>
         </select>
       </div>
+      {% if has_perm('character_create') %}
+      <div style="flex: 1; min-width: 160px;">
+        <label style="font-size: 0.8rem; color: var(--text-muted);">Urheber</label>
+        <select name="author" onchange="this.form.submit()">
+          <option value="" {% if not author_filter %}selected{% endif %}>Alle Charaktere</option>
+          <option value="mine" {% if author_filter == 'mine' %}selected{% endif %}>Nur eigene (Ersteller)</option>
+          <option value="collaborations" {% if author_filter == 'collaborations' %}selected{% endif %}>Kollaborationen</option>
+        </select>
+      </div>
+      {% endif %}
     </form>
 
     {{ character_grid(character_cards, can_create=has_perm('character_create'), can_edit=has_perm('character_edit')) }}

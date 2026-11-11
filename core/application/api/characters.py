@@ -25,11 +25,25 @@ def list_characters():
 
     gender_filter = request.args.get("gender", "").strip().lower()
     chat_filter = request.args.get("chatted", "").strip().lower()
+    author_filter = (
+        request.args.get("author", "").strip().lower()
+        or request.args.get("scope", "").strip().lower()
+    )
 
     result = []
     for char in characters:
         if char.id is None:
             continue
+        if author_filter in ("mine", "own") and char.user_id != user.id:
+            continue
+        if author_filter in ("collaborations", "collab"):
+            is_collab = (
+                char.user_id != user.id
+                and bool(user.creator_tag)
+                and (user.creator_tag in (getattr(char, "collaborator_creator_tags", []) or []))
+            )
+            if not is_collab:
+                continue
         if gender_filter and char.gender.value != gender_filter:
             continue
         msg_count = char_repo.get_message_count_for_user(char.id, user.id)
