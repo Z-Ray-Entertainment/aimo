@@ -19,6 +19,12 @@
          class="aimo-sidebar-nav-item {% if request.endpoint == 'settings.index' %}active{% endif %}"><span class="icon-mono">👤</span>
         <span class="aimo-sidebar-nav-text">Personas</span>
       </a>
+      {% if has_creator_permission() %}
+      <a href="{{ url_for('settings.creations') }}"
+         class="aimo-sidebar-nav-item {% if request.endpoint == 'settings.creations' %}active{% endif %}"><span class="icon-mono">✨</span>
+        <span class="aimo-sidebar-nav-text">My Creations</span>
+      </a>
+      {% endif %}
     </nav>
 
     <div class="aimo-sidebar-footer">

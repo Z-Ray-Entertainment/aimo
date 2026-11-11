@@ -29,7 +29,7 @@ from application.overview import overview_bp
 from application.personas import personas_bp
 from application.settings import settings_bp
 from application.setup import setup_bp
-from application.ui_helpers import render_new_button
+from application.ui_helpers import get_safe_back_url, render_new_button
 from application.worldinfo import worldinfo_bp
 from infrastructure.database import init_db
 from infrastructure.repositories.persona_repository import PersonaRepository
@@ -131,6 +131,7 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
             "has_perm": has_perm,
             "has_creator_permission": has_creator_permission,
             "new_button": render_new_button,
+            "get_safe_back_url": get_safe_back_url,
             "system_backdrop_path": default_bg,
             "system_backdrop_url": url_for("uploaded_file", filename=default_bg) if default_bg else url_for("static", filename="img/cover.svg"),
         }

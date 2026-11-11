@@ -10,7 +10,7 @@
   <!-- Top Action Bar -->
   {{ editor_header(
       title=character.name if character else "Neuer Charakter",
-      back_url=url_for('overview.index', tab='characters'),
+      back_url=get_safe_back_url(url_for('overview.index', tab='characters')),
       form_id="character-main-form",
       is_editable=is_editable,
       copy_url=(url_for('characters.copy_character', character_id=character.id) if character else none),
@@ -55,6 +55,7 @@
 
   <!-- MAIN CHARACTER FORM (Encloses Tabs 1, 4, 5, 6 for safe single-submit) -->
   <form id="character-main-form" method="POST" action="{% if character %}{{ url_for('characters.edit_character', character_id=character.id) }}{% else %}{{ url_for('characters.new_character') }}{% endif %}" enctype="multipart/form-data">
+    <input type="hidden" name="return_to" value="{{ get_safe_back_url(url_for('overview.index', tab='characters')) }}">
     <input type="hidden" name="dialogue_examples_json" id="dialogue-examples-json" value='{{ form.dialogue_examples | tojson }}'>
 
     <!-- TAB 1: Hauptinformationen -->

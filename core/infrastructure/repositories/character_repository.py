@@ -26,6 +26,44 @@ class CharacterRepository(BaseRepository[Character]):
             ).fetchall()
             return [self._to_entity(conn, row) for row in rows]
 
+    def list_for_user_creations(
+        self, user_id: int, creator_tag: str | None = None
+    ) -> list[Character]:
+        with get_db_session() as conn:
+            if creator_tag:
+                pattern = f"%{creator_tag.strip().lower()}%"
+                rows = conn.execute(
+                    """
+                    SELECT * FROM characters
+                    WHERE user_id = ? OR collaborator_creator_tags_json LIKE ?
+                    ORDER BY id DESC
+                    """,
+                    (user_id, pattern),
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    """
+                    SELECT * FROM characters
+                    WHERE user_id = ?
+                    ORDER BY id DESC
+                    """,
+                    (user_id,),
+                ).fetchall()
+            entities = [self._to_entity(conn, row) for row in rows]
+            if creator_tag:
+                normalized_tag = creator_tag.strip().lower()
+                return [
+                    c
+                    for c in entities
+                    if c.user_id == user_id
+                    or (
+                        c.collaborator_creator_tags
+                        and normalized_tag
+                        in [t.lower() for t in c.collaborator_creator_tags]
+                    )
+                ]
+            return entities
+
     def get_by_id(self, character_id: int) -> Character | None:
         with get_db_session() as conn:
             row = conn.execute(

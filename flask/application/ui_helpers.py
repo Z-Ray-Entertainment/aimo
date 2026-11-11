@@ -1,4 +1,32 @@
+from urllib.parse import urlparse
+from flask import request
 from markupsafe import Markup, escape
+
+
+def get_safe_back_url(fallback: str) -> str:
+    """Return a safe relative URL to navigate back to, or the provided fallback."""
+    candidate = request.args.get("return_to") or request.form.get("return_to")
+
+    # If no candidate, try the Referer header
+    if not candidate and request.referrer:
+        try:
+            ref_parsed = urlparse(request.referrer)
+            req_parsed = urlparse(request.url)
+            # Verify same host / domain
+            if (not ref_parsed.netloc or ref_parsed.netloc == req_parsed.netloc) and ref_parsed.path != req_parsed.path:
+                candidate = ref_parsed.path
+                if ref_parsed.query:
+                    candidate += f"?{ref_parsed.query}"
+        except Exception:
+            candidate = None
+
+    if candidate:
+        candidate = candidate.strip()
+        # Ensure it is a safe relative local path (prevents open redirects)
+        if candidate.startswith("/") and not candidate.startswith("//"):
+            return candidate
+
+    return fallback
 
 
 def render_new_button(
