@@ -1113,52 +1113,49 @@ document.addEventListener("DOMContentLoaded", () => {
         closeMobileMenu();
       });
     });
-
-    // Inline 1-click Creator-Tag Copy inside the menu
-    const copyCreatorTagBtn = document.getElementById("copy-creator-tag-menu-btn");
-    if (copyCreatorTagBtn) {
-      let copyResetTimer = null;
-      copyCreatorTagBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const tag = copyCreatorTagBtn.getAttribute("data-creator-tag") || "";
-        if (!tag) return;
-
-        const showCopiedState = () => {
-          const labelEl = copyCreatorTagBtn.querySelector(".copy-creator-tag-label");
-          if (labelEl) {
-            labelEl.textContent = "Kopiert";
-          }
-          copyCreatorTagBtn.classList.add("copied-success");
-          if (copyResetTimer) {
-            clearTimeout(copyResetTimer);
-          }
-          copyResetTimer = setTimeout(() => {
-            if (labelEl) {
-              labelEl.textContent = "Creator-Tag Kopieren";
-            }
-            copyCreatorTagBtn.classList.remove("copied-success");
-            copyResetTimer = null;
-          }, 1000);
-        };
-
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(tag).then(showCopiedState).catch(showCopiedState);
-        } else {
-          const tmp = document.createElement("textarea");
-          tmp.value = tag;
-          tmp.style.position = "fixed";
-          tmp.style.opacity = "0";
-          document.body.appendChild(tmp);
-          tmp.select();
-          try {
-            document.execCommand("copy");
-          } catch (_) {}
-          document.body.removeChild(tmp);
-          showCopiedState();
-        }
-      });
-    }
   }
+
+  document.querySelectorAll("[data-copy-text]").forEach((btn) => {
+    btn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+    let resetTimer = null;
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const text = btn.getAttribute("data-copy-text") || "";
+      if (!text) return;
+      const labelEl = btn.querySelector("span:not(.icon-mono)");
+      const originalLabel = labelEl ? labelEl.textContent : "";
+      const showCopiedState = () => {
+        if (labelEl) labelEl.textContent = "Kopiert";
+        btn.classList.add("copied-success");
+        if (resetTimer) clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => {
+          if (labelEl) labelEl.textContent = originalLabel;
+          btn.classList.remove("copied-success");
+          resetTimer = null;
+        }, 1000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showCopiedState).catch(showCopiedState);
+      } else {
+        const tmp = document.createElement("textarea");
+        tmp.value = text;
+        tmp.style.position = "fixed";
+        tmp.style.opacity = "0";
+        document.body.appendChild(tmp);
+        tmp.select();
+        try {
+          document.execCommand("copy");
+        } catch (_) {}
+        document.body.removeChild(tmp);
+        showCopiedState();
+      }
+    });
+  });
 
   // Hub Header Nav Tab Switcher (instant switch when on overview page, works for desktop and mobile)
   document.querySelectorAll("[data-hub-tab]").forEach((btn) => {

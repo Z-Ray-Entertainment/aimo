@@ -3503,3 +3503,40 @@ span.persona-star-btn:hover {
     max-width: 100%;
   }
 }
+
+/* Form section and copy field macros */
+.aimo-form-section + .aimo-form-section {
+  border-top: 1px solid var(--border-wood-dark);
+  padding-top: 1rem;
+}
+.aimo-form-section h3 {
+  color: var(--gold-accent);
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+.aimo-copy-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.aimo-copy-field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-right: 2.75rem;
+  cursor: pointer;
+}
+.aimo-copy-field .aimo-copy-field-btn {
+  position: absolute;
+  right: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  padding: 0.25rem 0.4rem;
+}
+.aimo-copy-field.copied-success input {
+  color: #58D68D;
+  border-color: rgba(88, 214, 141, 0.65);
+}
