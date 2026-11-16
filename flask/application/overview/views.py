@@ -4,6 +4,7 @@ from application.auth.decorators import get_current_user, is_admin, require_auth
 from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.lorebook_repository import LorebookRepository
 from infrastructure.repositories.persona_repository import PersonaRepository
+from infrastructure.repositories.relationship_repository import RelationshipRepository
 from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 
@@ -21,6 +22,8 @@ def index():
     lb_repo = LorebookRepository()
     wi_repo = WorldInfoRepository()
     persona_repo = PersonaRepository()
+    rel_repo = RelationshipRepository()
+    sys_lang = user.language if user.language else "en"
 
     gender_filter = request.args.get("gender", "").strip().lower()
     chat_filter = request.args.get("chatted", "").strip().lower()
@@ -55,12 +58,14 @@ def index():
         best_rel = char_repo.get_best_relationship_for_user(
             char.id, user.id, default_value=float(char.initial_relationship)
         )
+        tier = rel_repo.get_tier(best_rel, language=sys_lang)
         is_editable = char.is_editable_by_user(user.id, is_admin(), user.creator_tag)
         character_cards.append(
             {
                 "character": char,
                 "message_count": msg_count,
                 "best_relationship": best_rel,
+                "relationship_tier_name": tier.name,
                 "is_editable": is_editable,
             }
         )

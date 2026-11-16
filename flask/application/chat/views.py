@@ -17,6 +17,7 @@ from infrastructure.repositories.chat_repository import ChatRepository
 from infrastructure.repositories.lorebook_repository import LorebookRepository
 from infrastructure.repositories.memory_repository import MemoryRepository
 from infrastructure.repositories.persona_repository import PersonaRepository
+from infrastructure.repositories.relationship_repository import RelationshipRepository
 from infrastructure.repositories.settings_repository import SettingsRepository
 from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
@@ -432,6 +433,13 @@ def view_session(session_id: int):
         user.id, character, worldinfo=worldinfo, chat_session=chat_session, is_admin=is_admin
     )
 
+    rel_repo = RelationshipRepository()
+    rel_tier = rel_repo.get_tier(chat_session.relationship_value, language=sys_lang)
+    gallery_threshold_names = {
+        lvl: rel_repo.get_tier(lvl, language=sys_lang).name
+        for lvl in range(-100, 101, 10)
+    }
+
     return render_template(
         "chat/session.html",
         chat_session=chat_session,
@@ -454,6 +462,8 @@ def view_session(session_id: int):
         unlocked_gallery=unlocked_gallery,
         session_media_images=session_media_images,
         sys_lang=sys_lang,
+        relationship_tier_name=rel_tier.name,
+        gallery_threshold_names=gallery_threshold_names,
         comfyui_available=comfyui_available,
         is_admin=is_admin,
         can_view_event_counter=can_view_event_counter,

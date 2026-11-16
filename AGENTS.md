@@ -105,6 +105,10 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 {user_persona}
 [/USER_PERSONA]
 
+[RELATION]
+{relationship_status_description_and_behavior_rules}
+[/RELATION]
+
 [DIALOGUE_EXAMPLES]
 {dialogue_examples}
 [/DIALOGUE_EXAMPLES]
@@ -126,6 +130,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 - Increase: Each player message increases the score by **`+0.1`**.
 - Decay: During inactivity, the score decreases by **`-0.1` per day** (calculated based on `last_message_at`).
 - Affection scores are strictly bound to the specific `ChatSession` (not statically tied to the character).
+- **21 Behavioral Tiers:** Score maps into 21 qualitative tiers (in 10-point steps from -100 "Pure Hatred" to +100 "Blind Devotion"). Instead of raw numbers, the roleplay model receives concrete narrative behavioral guidelines inside `[RELATION]...[/RELATION]`. In the UI, the player sees exclusively the relationship status title without numerical scores or hover tooltips.
 
 ### 6. Single-WorldInfo Rule & Special Constraints
 - Exactly **one WorldInfo can be active at most** per chat session (or `None`).

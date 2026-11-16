@@ -214,13 +214,13 @@
 
       <!-- TAB 2: Medien (Freigeschaltete 9:16-Galeriebilder & Generierungen) -->
       <div id="chat-pane-media" class="tab-pane">
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.75rem;">Freigeschaltete 9:16 Charakter-Bilder (Beziehung: {{ "%.1f"|format(chat_session.relationship_value) }})</h3>
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.75rem;">Freigeschaltete 9:16 Charakter-Bilder (Beziehung: <span id="gallery-rel-tier-label">{{ relationship_tier_name }}</span>)</h3>
         <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); margin-bottom: 1.5rem;">
           {% for img in unlocked_gallery %}
             <div class="card-tile" style="min-height: 260px;">
               <img src="{{ url_for('uploaded_file', filename=img.file_path) }}" alt="Gallery" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/static/img/cover.svg'">
               <div style="position: absolute; bottom: 0; inset-inline: 0; background: rgba(15, 10, 7, 0.85); padding: 0.3rem 0.5rem; font-size: 0.75rem; text-align: center; color: var(--gold-accent);">
-                Ab Schwelle {{ img.unlock_threshold }}
+                Freischaltung ab: {{ gallery_threshold_names.get(img.unlock_threshold, img.unlock_threshold) }}
               </div>
             </div>
           {% else %}
@@ -306,7 +306,7 @@
     <!-- Beziehungsbalken (-100 bis +100) -->
     <div class="relationship-bar-wrap aimo-frame chat-glass-panel" data-relationship-score="{{ chat_session.relationship_value }}" style="border-radius: 10px; padding: 0.65rem;">
       <div class="relationship-header">
-        <span>Zuneigung: <strong id="rel-score-label">{{ "%.1f"|format(chat_session.relationship_value) }}</strong></span>
+        <span>Beziehung: <strong id="rel-score-label">{{ relationship_tier_name }}</strong></span>
         <span class="heart-icon">❤️</span>
       </div>
       <div class="relationship-track">

@@ -33,7 +33,7 @@ When starting a new conversation with a character:
   - **Tab 4: Lorebooks:** Live lorebook manager showing active, toggled, and custom lorebooks for this session.
 - **Right Info Box:**
   - Character portrait / transparent emotion sprite (dynamically scaled in 9:16 aspect ratio to fit the display height), equipped with an aesthetic Brain overlay icon (🧠) in the top-right corner with a live hover tooltip. The icon visually indicates whether Thinking is active (in color with a soft glow) or inactive (in monochrome gray).
-  - Dynamic relationship bar (-100 to +100 with heart icon).
+  - Dynamic relationship bar displaying the current qualitative status title (e.g. *„Neutral“*, *„Friendly“*, *„Affection“*, *„Blind Devotion“*) with visual progress fill and dynamic heart icon.
   - Player persona badge / selector (locked after the first message).
   - Unified World & Setting block: Active WorldInfo with switch button, manual location selector, random events toggle checkbox, and a live event cooldown counter for administrators and world authors (integrated without separating divider, updating dynamically as messages are exchanged).
 
@@ -102,8 +102,14 @@ Because modern LLMs write with the greatest depth and nuance in English while th
 
 ## 💔 Relationship Dynamics & Memories
 
-- **Affection Score:** Each message sent by the player increases the score by `+0.1`. Extended inactivity decreases the score by `-0.1` per day (bounded between -100.0 and +100.0).
-- **Unlockable Artwork:** Once the relationship reaches the threshold set on a 9:16 character image, it automatically unlocks in the *"Media"* tab.
+- **Qualitative Relationship Status:** The relationship between the player and character dynamically evolves across 21 stages (from *-100: Pure Hatred* through *0: Neutral* up to *+100: Blind Devotion*).
+- **Behavioral Evolution:** Every 10 points, the character's internal emotional stance and narrative behavior change perceptibly:
+  - **Negative Tiers (-100 to -10):** From cold indifference and guarded distrust up to bitter hostility and visceral hatred. The character acts distant, sarcastic, uncooperative, or overtly hostile.
+  - **Neutral (0):** Treats the player like a stranger with standard polite social distance without emotional investment.
+  - **Positive Tiers (+10 to +100):** Evolves through polite courtesy, friendly warmth, deep affection, loyalty, and intimate devotion up to unconditional surrender.
+- **Pure Roleplay Immersion:** In the user interface, players see exclusively the relationship status title (e.g., *Beziehung: Neutral*, *Beziehung: Friendly*, *Beziehung: Affection*). No raw numbers or hover popups break immersion.
+- **Affection Dynamics:** Each message sent by the player increases the score by `+0.1`. Extended inactivity gently decays the score by `-0.1` per day.
+- **Unlockable Artwork:** Once the relationship reaches the required relationship tier set on a 9:16 character image, it automatically unlocks in the *"Media"* tab.
 - **Memories (Every 10 Messages):** Every 10 messages, a background LLM summarizes recent events and refreshes the chat session title in the sidebar.
 - **Three-Dot Menu (`...`):**
   - **Delete Message:** Deletes the selected message along with all subsequent messages and cascaded memories.

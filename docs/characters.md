@@ -43,7 +43,7 @@ The Character Designer uses a modern two-column layout consistent with the Admin
 ## 🖼️ 2. Unlockable Gallery Images (`🖼️ Galeriebilder`)
 
 - Smartphone/portrait-oriented images (9:16 aspect ratio).
-- **Affection Threshold:** Assign a value between `-100 and +100` to each image. As soon as your relationship score in a chat meets this threshold, the image unlocks under the *"Media"* tab!
+- **Affection Threshold:** Assign a relationship tier (from *Pure Hatred* to *Blind Devotion*) to each image. As soon as your relationship in a chat reaches this tier, the image unlocks under the *"Media"* tab!
 
 ---
 

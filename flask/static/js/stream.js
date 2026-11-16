@@ -657,13 +657,39 @@ class AimoChatStream {
 
         if (typeof data.relationship_value === "number") {
           const relLabel = document.getElementById("rel-score-label");
-          if (relLabel) relLabel.textContent = data.relationship_value.toFixed(1);
+          if (relLabel) {
+            if (data.relationship_tier_name) {
+              relLabel.textContent = data.relationship_tier_name;
+            }
+          }
+          const galleryRelLabel = document.getElementById("gallery-rel-tier-label");
+          if (galleryRelLabel && data.relationship_tier_name) {
+            galleryRelLabel.textContent = data.relationship_tier_name;
+          }
           const relWrap = document.querySelector(".relationship-bar-wrap[data-relationship-score]");
           if (relWrap) {
             relWrap.setAttribute("data-relationship-score", String(data.relationship_value));
             const pct = Math.max(0, Math.min(100, ((data.relationship_value + 100) / 200) * 100));
             const fill = relWrap.querySelector(".relationship-fill");
             if (fill) fill.style.width = `${pct}%`;
+
+            const heartIcon = relWrap.querySelector(".heart-icon");
+            if (heartIcon) {
+              const score = data.relationship_value;
+              if (score <= -60) {
+                heartIcon.textContent = "💔";
+                heartIcon.style.color = "#7A1C1C";
+              } else if (score < 0) {
+                heartIcon.textContent = "❤️‍🩹";
+                heartIcon.style.color = "#A93226";
+              } else if (score < 50) {
+                heartIcon.textContent = "❤️";
+                heartIcon.style.color = "#E74C3C";
+              } else {
+                heartIcon.textContent = "💖";
+                heartIcon.style.color = "#FF69B4";
+              }
+            }
           }
         }
 

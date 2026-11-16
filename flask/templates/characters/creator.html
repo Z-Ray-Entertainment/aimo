@@ -129,10 +129,16 @@
 
         <div>
           <label>
-            Initialer Beziehungswert (-100 bis +100) *
-            <span class="field-help-btn" title="Initialer Beziehungswert (-100 bis +100):&#10;Startwert der Zuneigung (-100 = tiefe Feindschaft, +100 = höchstes Vertrauen/Liebe). Jede Spielernachricht erhöht den Wert um +0.1; bei Inaktivität sinkt er um -0.1 pro Tag.">?</span>
+            Initialer Beziehungsstatus *
+            <span class="field-help-btn" title="Initialer Beziehungsstatus:&#10;Startstufe der Zuneigung (z. B. Pure Hatred, Neutral, Blind Devotion). Steuert das anfängliche Rollenspielverhalten von {{char}} gegenüber dem Spieler.">?</span>
           </label>
-          <input type="number" name="initial_relationship" min="-100" max="100" value="{{ form.initial_relationship }}" required>
+          <select name="initial_relationship" required>
+            {% for tier in relationship_tiers %}
+              <option value="{{ tier.level }}" {% if form.initial_relationship == tier.level %}selected{% endif %}>
+                {{ tier.name }}
+              </option>
+            {% endfor %}
+          </select>
         </div>
 
         <!-- Charakterbeschreibung -->
@@ -390,7 +396,7 @@
                 </form>
               </div>
               <div style="padding: 0.6rem; text-align: center; font-size: 0.85rem;">
-                Freischaltung ab Beziehung: <strong>{{ img.unlock_threshold }}</strong>
+                Freischaltung ab Beziehung: <strong>{{ gallery_threshold_names.get(img.unlock_threshold, img.unlock_threshold) }}</strong>
               </div>
             </div>
           {% endfor %}
@@ -516,10 +522,16 @@
           </div>
           <div>
             <label>
-              Freischalt-Schwellenwert (-100 bis +100) *
-              <span class="field-help-btn" title="Schwellenwert:&#10;Erforderlicher Beziehungswert (-100 bis +100), ab dem dieses Galeriebild freigeschaltet wird.">?</span>
+              Freischalt-Beziehungsstufe *
+              <span class="field-help-btn" title="Freischalt-Beziehungsstufe:&#10;Erforderliche Beziehungsstufe, ab der dieses 9:16-Galeriebild im Chat freigeschaltet wird.">?</span>
             </label>
-            <input type="number" name="unlock_threshold" min="-100" max="100" value="20" required>
+            <select name="unlock_threshold" required>
+              {% for tier in relationship_tiers %}
+                <option value="{{ tier.level }}" {% if tier.level == 20 %}selected{% endif %}>
+                  {{ tier.name }}
+                </option>
+              {% endfor %}
+            </select>
           </div>
           <div style="text-align: right; display: flex; justify-content: flex-end; gap: 0.5rem;">
             {{ action_button("Abbrechen", modal_close="add-gallery-modal") }}

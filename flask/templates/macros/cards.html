@@ -85,7 +85,7 @@
       <h3 class="aimo-card-title">{{ char.name }}</h3>
       <div class="relationship-bar-wrap aimo-card-rel-wrap" data-relationship-score="{{ item.best_relationship }}">
         <div class="relationship-header">
-          <span>Beziehung: {{ "%.1f"|format(item.best_relationship) }}</span>
+          <span>Beziehung: {{ item.relationship_tier_name|default(item.best_relationship) }}</span>
           <span class="heart-icon">❤️</span>
         </div>
         <div class="relationship-track">

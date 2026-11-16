@@ -28,6 +28,7 @@ from infrastructure.repositories.chat_repository import ChatRepository
 from infrastructure.repositories.lorebook_repository import LorebookRepository
 from infrastructure.repositories.memory_repository import MemoryRepository
 from infrastructure.repositories.persona_repository import PersonaRepository
+from infrastructure.repositories.relationship_repository import RelationshipRepository
 from infrastructure.repositories.settings_repository import SettingsRepository
 from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
@@ -306,6 +307,7 @@ def _start_background_turn(
         w_lb_repo = LorebookRepository()
         w_mem_repo = MemoryRepository()
         w_trans_repo = TranslationRepository()
+        w_rel_repo = RelationshipRepository()
         w_settings_repo = SettingsRepository()
 
         w_char_service = CharacterService()
@@ -467,6 +469,7 @@ def _start_background_turn(
                         "lorebook_entry", lb_entry.id, "content", "en", lb_entry.content
                     )
 
+            relation_trans = w_rel_repo.get_translations_map(task.user_language)
             assembled_prompt = w_prompt_builder.build_roleplay_prompt(
                 roleplay_system_prompt=settings.prompts.roleplay_prompt,
                 character=w_character,
@@ -479,6 +482,7 @@ def _start_background_turn(
                 matched_lorebooks=matched_lorebooks,
                 available_locations=available_locations,
                 relationship_value=w_session.relationship_value,
+                relation_translations=relation_trans,
             )
             if task.is_admin:
                 task.assembled_prompt = assembled_prompt
@@ -492,6 +496,7 @@ def _start_background_turn(
                 f"\n{w_persona.name} (Player):",
                 f"\n[{w_persona.name}]:",
                 "\n[USER_PERSONA]",
+                "\n[RELATION]",
                 "\n[CHAT_HISTORY]",
                 "\n[DIALOGUE_EXAMPLES]",
                 "\n[WORLD_INFO]",
@@ -661,6 +666,8 @@ def _start_background_turn(
 
             _run_async_memory_extraction(session_id)
 
+            tier = w_rel_repo.get_tier(latest_session.relationship_value, language=task.user_language)
+
             payload = {
                 "notification_id": task.task_id,
                 "message_id": saved_ai_msg.id,
@@ -670,6 +677,7 @@ def _start_background_turn(
                 "emotion": detected_emotion.value,
                 "sprite_path": selected_sprite.file_path,
                 "relationship_value": latest_session.relationship_value,
+                "relationship_tier_name": tier.name,
                 "suggested_location": suggested_location,
             }
             if task.can_view_event_counter:

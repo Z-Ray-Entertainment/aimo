@@ -8,6 +8,7 @@ from domain.characters.services import CharacterService
 from domain.permissions.models import FunctionPermission
 from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.lorebook_repository import LorebookRepository
+from infrastructure.repositories.relationship_repository import RelationshipRepository
 from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from infrastructure.storage.file_storage import FileStorage
@@ -87,6 +88,11 @@ def _render_creator(character=None, form=None):
         else True
     )
 
+    rel_repo = RelationshipRepository()
+    sys_lang = user.language if user and user.language else "en"
+    rel_tiers = rel_repo.list_tiers(sys_lang)
+    gallery_threshold_names = {t.level: t.name for t in rel_tiers}
+
     return render_template(
         "characters/creator.html",
         character=character,
@@ -99,6 +105,8 @@ def _render_creator(character=None, form=None):
         locations_by_world=locations_by_world,
         emotions=STANDARD_28_EMOTIONS,
         sprites_by_emotion=sprites_by_emotion,
+        relationship_tiers=rel_tiers,
+        gallery_threshold_names=gallery_threshold_names,
         active_tab=active_tab,
     )
 

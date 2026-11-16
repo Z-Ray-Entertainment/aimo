@@ -1,5 +1,10 @@
 from domain.characters.models import Character
 from domain.chat.models import Message, MessageRole
+from domain.chat.relationship import (
+    RelationshipTier,
+    format_relationship_prompt,
+    get_relationship_tier,
+)
 from domain.lorebooks.models import LorebookEntry
 from domain.memories.models import Memory
 from domain.personas.models import UserPersona
@@ -21,11 +26,11 @@ class PromptBuilder:
         matched_lorebooks: list[LorebookEntry],
         available_locations: list[Location] | None = None,
         relationship_value: float = 0.0,
+        relation_translations: dict[int, RelationshipTier] | None = None,
     ) -> str:
         system_section = roleplay_system_prompt.strip()
         character_section = self._format_character_definition(
             character=character,
-            relationship_value=relationship_value,
         )
         history_section = self._format_chat_history(
             messages=recent_messages,
@@ -42,6 +47,10 @@ class PromptBuilder:
             character=character,
         )
         persona_section = self._format_user_persona(persona=persona)
+        relation_section = self._format_relation_section(
+            relationship_value=relationship_value,
+            translations=relation_translations,
+        )
         dialogue_examples_section = self._format_dialogue_examples(
             dialogue_examples=character.dialogue_examples,
         )
@@ -56,6 +65,7 @@ class PromptBuilder:
             f"[RELEVANT_LOREBOOKS]\n{lorebooks_section}\n[/RELEVANT_LOREBOOKS]",
             f"[WORLD_INFO]\n{world_section}\n[/WORLD_INFO]",
             f"[USER_PERSONA]\n{persona_section}\n[/USER_PERSONA]",
+            f"[RELATION]\n{relation_section}\n[/RELATION]",
             f"[DIALOGUE_EXAMPLES]\n{dialogue_examples_section}\n[/DIALOGUE_EXAMPLES]",
         ])
         assembled = "\n\n".join(parts)
@@ -70,7 +80,6 @@ class PromptBuilder:
     @staticmethod
     def _format_character_definition(
         character: Character,
-        relationship_value: float,
     ) -> str:
         c_forms = get_gender_forms(character.gender.value)
         desc_block = character.description.strip()
@@ -81,10 +90,17 @@ class PromptBuilder:
             f"Role: You play this character ({character.name}). Embody these traits and voice exclusively:",
             f"Name: {character.name}",
             f"Gender: {character.gender.value} ({c_forms['pronouns']})",
-            f"Current Affection / Relationship Score (-100 to +100): {relationship_value:.1f}",
             f"Description & Personality:\n{desc_block}",
         ]
         return "\n".join(lines)
+
+    @staticmethod
+    def _format_relation_section(
+        relationship_value: float,
+        translations: dict[int, RelationshipTier] | None = None,
+    ) -> str:
+        tier = get_relationship_tier(relationship_value, translations=translations)
+        return format_relationship_prompt(tier)
 
     @staticmethod
     def _format_dialogue_examples(dialogue_examples: list | str) -> str:
