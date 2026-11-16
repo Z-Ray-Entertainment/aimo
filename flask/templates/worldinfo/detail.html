@@ -9,7 +9,7 @@
 <div data-tab-group>
   {{ editor_header(
       title=worldinfo.name,
-      back_url=url_for('overview.index', tab='worldinfo'),
+      back_url=get_safe_back_url(url_for('overview.index', tab='worldinfo')),
       form_id="worldinfo-meta-form",
       is_editable=is_editable,
       copy_url=url_for('worldinfo.duplicate_worldinfo', worldinfo_id=worldinfo.id),
@@ -40,6 +40,7 @@
   <!-- TAB 1: Grundeinstellungen -->
   <section id="tab-info" class="tab-pane {% if (active_tab|default('info')) == 'info' %}active{% endif %}">
     <form id="worldinfo-meta-form" method="POST" action="{{ url_for('worldinfo.detail', worldinfo_id=worldinfo.id) }}" enctype="multipart/form-data">
+      <input type="hidden" name="return_to" value="{{ get_safe_back_url(url_for('overview.index', tab='worldinfo')) }}">
       <input type="hidden" name="active_tab" value="{{ active_tab }}">
       <div class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; max-width: 800px;">
         <h3 style="color: var(--gold-accent); margin-top: 0; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">

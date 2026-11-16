@@ -9,11 +9,11 @@ A **WorldInfo** encapsulates the geography, scenes, and random events of a rolep
 ## 🏛️ WorldInfo Editor (`templates/worldinfo/detail.html`)
 
 - **Header & Actions:**
-  - **Back Button (`← Zurück`):** Returns directly to the World Grid (`/overview?tab=worldinfo`).
+  - **Back Button (`← Zurück`):** Returns directly to the previous view you came from (such as My Creations or the central World Grid).
   - **World Title & Badges:** Displays the name of the world and a readonly badge (`🔒 Schreibgeschützt`) if viewing another creator's world without edit permissions.
   - **Save (`💾 Speichern`):** Saves world metadata, cover image, and collaborator settings.
   - **Duplicate (`📄 Kopieren`):** Deep-clones the entire world setting — including all locations, 16:9 backgrounds, and random event pools — into an independent duplicate for the creator.
-  - **Delete (`🗑️ Löschen`):** Strictly reserved for the author and initial administrators.
+  - **Delete (`🗑️ Löschen`):** Strictly reserved for the author and all administrators.
 
 The editor is organized into four functional tabs:
 

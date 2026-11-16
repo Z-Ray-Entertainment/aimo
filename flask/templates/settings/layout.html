@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% from "macros/buttons.html" import action_button %}
+{% block title %}AIMO — Einstellungen{% endblock %}
+
+{% block content %}
+<div class="aimo-sidebar-layout">
+  <!-- Vertikale Seitenleiste links -->
+  <aside class="aimo-frame aimo-sidebar">
+    <div class="aimo-sidebar-header">
+      <div class="aimo-sidebar-title">
+        <span class="icon-mono">⚙️</span>
+        <span>Einstellungen</span>
+      </div>
+      <p class="aimo-sidebar-subtitle">Benutzer & Personalisierung</p>
+    </div>
+
+    <nav class="aimo-sidebar-nav">
+      {{ action_button("Personas", href=url_for('settings.index'), icon="👤", active=(request.endpoint == 'settings.index'), extra_class="aimo-sidebar-nav-item") }}
+      {% if has_creator_permission() %}
+        {{ action_button("My Creations", href=url_for('settings.creations'), icon="✨", active=(request.endpoint == 'settings.creations'), extra_class="aimo-sidebar-nav-item") }}
+      {% endif %}
+      {{ action_button("Account", href=url_for('settings.account'), icon="🪪", active=(request.endpoint == 'settings.account'), extra_class="aimo-sidebar-nav-item") }}
+    </nav>
+
+    <div class="aimo-sidebar-footer">
+      {{ action_button("Zurück zum Hub", href=url_for('overview.index'), arrow="left", extra_class="aimo-sidebar-back-btn") }}
+    </div>
+  </aside>
+
+  <!-- Rechter Hauptbereich für Inhalte -->
+  <section class="aimo-sidebar-stage">
+    {% block settings_content %}{% endblock %}
+  </section>
+</div>
+{% endblock %}

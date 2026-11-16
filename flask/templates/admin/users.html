@@ -1,4 +1,5 @@
 {% extends "admin/layout.html" %}
+{% from "macros/buttons.html" import action_button %}
 
 {% block admin_content %}
 <div class="aimo-frame" style="padding: 1.5rem;">
@@ -7,7 +8,7 @@
       <h2 style="color: var(--gold-accent);">Benutzer & Funktionale Berechtigungen</h2>
       <p style="font-size: 0.86rem; color: var(--text-muted);">Granulare Steuerung einzelner Funktionsrechte. Der initiale Administrator ist dauerhaft geschützt.</p>
     </div>
-    <a href="{{ url_for('admin.create_user') }}" class="btn">+ Neuer Benutzer</a>
+    {{ action_button("Neuer Benutzer", href=url_for('admin.create_user'), icon="➕", variant="primary") }}
   </div>
 
   <div style="display: flex; flex-direction: column; gap: 0.85rem;">
@@ -37,16 +38,14 @@
         </div>
 
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <a href="{{ url_for('admin.edit_user', user_id=u.id) }}" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
-            <span class="icon-mono">✏️</span> Bearbeiten
-          </a>
+          {{ action_button("Bearbeiten", href=url_for('admin.edit_user', user_id=u.id), icon="✏️") }}
           {% if u.is_initial_admin %}
-            <button type="button" class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" disabled title="Initialer Administrator kann nicht gelöscht werden">
-              🔒 Geschützt
+            <button type="button" class="aimo-btn" disabled title="Initialer Administrator kann nicht gelöscht werden">
+              <span class="icon-mono">🔒</span> Geschützt
             </button>
           {% else %}
             <form method="POST" action="{{ url_for('admin.delete_user', user_id=u.id) }}" onsubmit="return confirm('Benutzer {{ u.username }} wirklich löschen?');">
-              <button type="submit" class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+              <button type="submit" class="aimo-btn danger">
                 <span class="icon-mono">🗑️</span> Löschen
               </button>
             </form>

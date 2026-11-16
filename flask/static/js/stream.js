@@ -830,9 +830,11 @@ class AimoChatStream {
             ? cleanPath
             : `/uploads/${cleanPath}`;
           backdrop.style.backgroundImage = `url('${bgUrl}')`;
+          document.body.style.setProperty("--system-backdrop-url", `url('${bgUrl}')`);
         } else {
           const defaultBackdrop = backdrop.getAttribute("data-default-backdrop") || "/static/img/cover.svg";
           backdrop.style.backgroundImage = `url('${defaultBackdrop}')`;
+          document.body.style.setProperty("--system-backdrop-url", `url('${defaultBackdrop}')`);
         }
       }
       const locIndicator = document.getElementById("chat-location-indicator");

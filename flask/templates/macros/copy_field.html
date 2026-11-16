@@ -1,0 +1,8 @@
+{# Reusable read-only field that copies its value on click (whole element is the click target) #}
+{% from "macros/buttons.html" import action_button %}
+{% macro copy_field(value, title, id=none) %}
+  <div class="aimo-copy-field" data-copy-text="{{ value }}" title="{{ title }}" role="button" tabindex="0">
+    <input type="text" value="{{ value }}" readonly aria-label="{{ title }}"{% if id %} id="{{ id }}"{% endif %}>
+    {{ action_button(none, icon="📋", layout="icon", title=title, extra_class="aimo-copy-field-btn") }}
+  </div>
+{% endmacro %}

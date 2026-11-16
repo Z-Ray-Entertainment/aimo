@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-from application.auth.decorators import get_current_user, require_permission
+from application.auth.decorators import get_current_user, is_admin, require_permission
 from application.character_helpers import save_and_persist_sprite
 from application.characters.forms import CharacterForm
 from domain.characters.models import Emotion
@@ -80,9 +80,9 @@ def _render_creator(character=None, form=None):
     if active_tab not in valid_tabs:
         active_tab = "info"
 
-    is_author = (character.user_id == user.id or user.is_initial_admin) if (character and user) else True
+    is_author = (character.user_id == user.id or is_admin()) if (character and user) else True
     is_editable = (
-        character.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag)
+        character.is_editable_by_user(user.id, is_admin(), user.creator_tag)
         if (character and user)
         else True
     )
@@ -173,15 +173,15 @@ def edit_character(character_id: int):
     storage = FileStorage()
 
     character = char_repo.get_by_id(character_id)
-    if character is None or not character.is_visible_to_user(user.id, user.is_initial_admin):
+    if character is None or not character.is_visible_to_user(user.id, is_admin()):
         flash("Charakter nicht gefunden.", "error")
         return redirect(url_for("overview.index"))
 
-    if not character.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         flash("Zugriff verweigert: Du kannst nur deine eigenen Charaktere oder für dich freigegebene Kreationen bearbeiten.", "error")
         return redirect(url_for("overview.index"))
 
-    is_author = (character.user_id == user.id or user.is_initial_admin)
+    is_author = (character.user_id == user.id or is_admin())
 
     if request.method == "POST":
         form = CharacterForm.from_request(request.form)
@@ -263,7 +263,7 @@ def copy_character(character_id: int):
     assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     orig = char_repo.get_by_id(character_id)
-    if orig is None or not orig.is_visible_to_user(user.id, user.is_initial_admin):
+    if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
         flash("Charakter nicht gefunden.", "error")
         return redirect(url_for("overview.index", tab="characters"))
 
@@ -279,7 +279,7 @@ def delete_character(character_id: int):
     assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     char = char_repo.get_by_id(character_id)
-    if char is None or not char.is_deletable_by_user(user.id, user.is_initial_admin):
+    if char is None or not char.is_deletable_by_user(user.id, is_admin()):
         flash("Charakter nicht gefunden oder keine Berechtigung zum Löschen.", "error")
         return redirect(url_for("overview.index", tab="characters"))
 
@@ -298,7 +298,7 @@ def add_gallery_image(character_id: int):
     storage = FileStorage()
 
     character = char_repo.get_by_id(character_id)
-    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 
@@ -323,7 +323,7 @@ def delete_gallery_image(character_id: int, image_id: int):
     assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     char = char_repo.get_by_id(character_id)
-    if char is None or not char.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if char is None or not char.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 
@@ -342,7 +342,7 @@ def upload_sprite(character_id: int):
     storage = FileStorage()
 
     character = char_repo.get_by_id(character_id)
-    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 
@@ -373,7 +373,7 @@ def delete_sprite(character_id: int, emotion: str, variant: int):
     assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     char = char_repo.get_by_id(character_id)
-    if char is None or not char.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if char is None or not char.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 

@@ -37,15 +37,24 @@ body {
 }
 
 body.has-system-backdrop {
-  background-image: none;
   background-color: #14100c;
+  background-image: radial-gradient(circle at center, rgba(16, 12, 9, 0.35) 0%, rgba(14, 10, 8, 0.72) 100%),
+                    linear-gradient(to bottom, rgba(14, 10, 8, 0.3) 0%, rgba(14, 10, 8, 0.65) 100%),
+                    var(--system-backdrop-url, none);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+body.has-system-backdrop::before {
+  display: none;
 }
 
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  backdrop-filter: blur(8px);
   background: rgba(20, 16, 12, 0.85);
   z-index: -1;
   pointer-events: none;
@@ -317,6 +326,23 @@ a.aimo-btn-lg {
   font-size: 0.92rem;
 }
 
+.aimo-btn.aimo-btn-icon {
+  padding: 0.38rem;
+  width: 2rem;
+  height: 2rem;
+  gap: 0;
+}
+
+.aimo-btn-lg.aimo-btn-icon {
+  width: 2.6rem;
+  height: 2.6rem;
+}
+
+.aimo-btn.w-100,
+.w-100 {
+  width: 100% !important;
+}
+
 .aimo-btn .btn-arrow {
   display: inline-block;
   flex-shrink: 0;
@@ -335,6 +361,7 @@ a.aimo-btn-lg {
   display: flex;
   align-items: center;
   gap: 0.85rem;
+  position: relative;
 }
 
 .persona-avatar-btn {
@@ -376,6 +403,38 @@ a.persona-avatar-btn:focus {
   border: 1px solid var(--gold-accent);
 }
 
+.persona-avatar-btn.user-menu-toggle {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold-accent);
+  background: var(--bg-panel-light);
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.persona-avatar-btn.user-menu-toggle img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: none;
+  display: block;
+}
+
+.persona-avatar-btn.user-menu-toggle.open {
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.aimo-btn.copied-success,
+button.aimo-btn.copied-success {
+  color: #58D68D !important;
+  border-color: rgba(88, 214, 141, 0.65) !important;
+}
+
 /* Desktop Grid Centering (>= 992px) */
 @media (min-width: 992px) {
   .top-header {
@@ -396,11 +455,8 @@ a.persona-avatar-btn:focus {
     justify-self: end;
   }
 
-  .hamburger-btn {
-    display: none !important;
-  }
-
-  .mobile-dropdown-menu {
+  .hamburger-btn,
+  .mobile-only-nav-group {
     display: none !important;
   }
 }
@@ -456,11 +512,15 @@ a.persona-avatar-btn:focus {
 .mobile-dropdown-menu {
   display: none;
   position: absolute;
-  top: 100%;
-  left: 0;
+  top: calc(100% + 10px);
   right: 0;
+  left: auto;
+  width: max-content;
+  min-width: 240px;
+  max-width: calc(100vw - 2rem);
   background: rgba(22, 15, 10, 0.98);
-  border-bottom: 2px solid var(--border-wood-dark);
+  border: 2px solid var(--border-wood);
+  border-radius: var(--radius-card);
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(8px);
   padding: 0.85rem 1rem;
@@ -492,7 +552,7 @@ a.persona-avatar-btn:focus {
   gap: 0.45rem;
 }
 
-.mobile-menu-divider {
+.aimo-menu-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--border-wood), var(--gold-accent), var(--border-wood), transparent);
   border: none;
@@ -529,12 +589,11 @@ a.persona-avatar-btn:focus {
   }
 
   .header-nav,
-  .header-nav-placeholder,
-  .header-actions {
+  .header-nav-placeholder {
     display: none !important;
   }
 
-  .hamburger-btn {
+  .header-actions {
     display: flex;
   }
 }
@@ -1250,32 +1309,12 @@ body.chat-page {
 
 /* ==========================================================================
    Fullpage Backdrop & Clean Non-Flicker Rendering
-   Einziger Backdrop für die gesamte Applikation (top: 0, 100vw x 100vh)
+   Der systemweite Backdrop liegt direkt auf body.has-system-backdrop für
+   flackerfreie Übergänge im nativen Browser-Canvas.
    ========================================================================== */
-.system-default-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  pointer-events: none;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  opacity: 1;
-  transition: opacity 0.25s ease-in-out;
-}
-
+.system-default-backdrop,
 .system-default-backdrop::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, rgba(16, 12, 9, 0.35) 0%, rgba(14, 10, 8, 0.72) 100%),
-              linear-gradient(to bottom, rgba(14, 10, 8, 0.3) 0%, rgba(14, 10, 8, 0.65) 100%);
-  pointer-events: none;
+  display: none !important;
 }
 
 /* Blurred Transparent Glass Panel for Chat Containers */
@@ -2751,16 +2790,16 @@ button.chat-menu-dropdown-item.danger:focus {
 }
 
 /* ==========================================================================
-   Admin Two-Column Layout with Vertical Sidebar Menu (CSS-First)
+   Reusable Two-Column Sidebar Layout with Vertical Sidebar Menu (CSS-First)
    ========================================================================== */
-.admin-layout {
+.aimo-sidebar-layout {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
   gap: 1.5rem;
   align-items: start;
 }
 
-.admin-sidebar {
+.aimo-sidebar {
   display: flex;
   flex-direction: column;
   padding: 1.25rem;
@@ -2773,12 +2812,12 @@ button.chat-menu-dropdown-item.danger:focus {
   top: calc(var(--header-height, 64px) + 1.25rem);
 }
 
-.admin-sidebar-header {
+.aimo-sidebar-header {
   border-bottom: 1px solid var(--border-wood-dark);
   padding-bottom: 0.85rem;
 }
 
-.admin-sidebar-title {
+.aimo-sidebar-title {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -2787,23 +2826,25 @@ button.chat-menu-dropdown-item.danger:focus {
   color: var(--gold-accent);
 }
 
-.admin-sidebar-subtitle {
+.aimo-sidebar-subtitle {
   font-size: 0.78rem;
   color: var(--text-muted);
   margin-top: 0.25rem;
 }
 
-.admin-nav-menu {
+.aimo-sidebar-nav {
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
 }
 
-.admin-nav-item {
+.aimo-sidebar-nav-item {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  width: 100%;
   gap: 0.75rem;
-  padding: 0.75rem 0.95rem;
+  padding: 0.65rem 0.95rem;
   border-radius: var(--radius-btn, 8px);
   border: 1px solid var(--border-wood-dark);
   background: rgba(40, 28, 19, 0.75);
@@ -2811,45 +2852,56 @@ button.chat-menu-dropdown-item.danger:focus {
   font-weight: 600;
   font-size: 0.88rem;
   text-decoration: none;
+  white-space: normal !important;
+  line-height: 1.35;
   transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
 }
 
-.admin-nav-item:hover {
+.aimo-sidebar-nav-item:hover {
   background: rgba(60, 42, 28, 0.9);
   color: var(--text-main);
   border-color: var(--border-wood-gold, #8a6d3b);
   transform: translateX(4px);
 }
 
-.admin-nav-item.active {
+.aimo-sidebar-nav-item.active {
   background: var(--bg-leather);
   color: var(--text-main);
   border-color: var(--gold-accent);
   box-shadow: 0 0 12px var(--gold-glow);
 }
 
-.admin-nav-item .icon-mono {
+.aimo-sidebar-nav-item .icon-mono {
   font-size: 1.1rem;
+  flex-shrink: 0;
   filter: grayscale(30%);
   transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-.admin-nav-item:hover .icon-mono,
-.admin-nav-item.active .icon-mono {
+.aimo-sidebar-nav-item:hover .icon-mono,
+.aimo-sidebar-nav-item.active .icon-mono {
   filter: none;
   transform: scale(1.1);
 }
 
-.admin-nav-text {
+.aimo-sidebar-nav-item > span:not(.icon-mono),
+.aimo-sidebar-nav-text {
   flex: 1;
+  text-align: left;
+  min-width: 0;
+  white-space: normal !important;
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
-.admin-sidebar-footer {
+.aimo-sidebar-footer {
   border-top: 1px solid var(--border-wood-dark);
   padding-top: 1rem;
 }
 
-.admin-back-btn {
+.aimo-sidebar-back-btn {
   width: 100%;
   font-size: 0.85rem;
   display: flex;
@@ -2859,27 +2911,15 @@ button.chat-menu-dropdown-item.danger:focus {
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-.admin-back-btn:hover {
+.aimo-sidebar-back-btn:hover {
   transform: translateX(-2px);
 }
 
-.admin-main-stage {
+.aimo-sidebar-stage {
   min-width: 0;
-  animation: adminStageFadeIn 0.3s ease-out;
 }
 
-@keyframes adminStageFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.admin-services-grid {
+.aimo-split-stage-grid {
   display: grid;
   grid-template-columns: minmax(340px, 1fr) 360px;
   gap: 1.5rem;
@@ -2888,18 +2928,18 @@ button.chat-menu-dropdown-item.danger:focus {
 
 /* Responsive Layout-Umbrüche (CSS-First): Auf kleineren Screens bricht die Seitenleiste nach oben um */
 @media (max-width: 990px) {
-  .admin-layout {
+  .aimo-sidebar-layout {
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
 
-  .admin-sidebar {
+  .aimo-sidebar {
     position: static;
     padding: 1rem;
     gap: 0.85rem;
   }
 
-  .admin-sidebar-header {
+  .aimo-sidebar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -2907,34 +2947,34 @@ button.chat-menu-dropdown-item.danger:focus {
     padding-bottom: 0;
   }
 
-  .admin-nav-menu {
+  .aimo-sidebar-nav {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 0.5rem;
   }
 
-  .admin-nav-item {
+  .aimo-sidebar-nav-item {
     flex: 1 1 200px;
     justify-content: center;
   }
 
-  .admin-nav-item:hover {
+  .aimo-sidebar-nav-item:hover {
     transform: translateY(-2px);
   }
 
-  .admin-sidebar-footer {
+  .aimo-sidebar-footer {
     border-top: 1px solid var(--border-wood-dark);
     padding-top: 0.65rem;
   }
 
-  .admin-back-btn {
+  .aimo-sidebar-back-btn {
     width: auto;
     display: inline-flex;
   }
 }
 
 @media (max-width: 1200px) {
-  .admin-services-grid {
+  .aimo-split-stage-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -3289,3 +3329,217 @@ button.chat-menu-dropdown-item.danger:focus {
   border-bottom: none;
 }
 
+
+
+/* Persona Default Star Overlay (.persona-star-btn) */
+.persona-star-btn {
+  font-size: 1.05rem;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+  color: var(--text-muted);
+}
+
+.persona-star-btn.is-default {
+  color: var(--gold-accent);
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 10px var(--gold-glow);
+  cursor: default;
+}
+
+span.persona-star-btn:hover {
+  transform: none;
+}
+
+.persona-star-btn:not(.is-default):hover {
+  color: var(--gold-accent);
+}
+
+#persona-new-crop-modal,
+#persona-edit-crop-modal {
+  z-index: 1100;
+}
+
+/* =============================================================================
+   My Creations Settings View (.creations-table, .aimo-clickable-row, etc.)
+   ============================================================================= */
+.creations-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding: 0.85rem 1.1rem;
+  background: rgba(24, 17, 12, 0.75);
+  border: 1px solid var(--border-wood-dark);
+  border-radius: var(--radius-card);
+}
+
+.creations-filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.creations-pill {
+  padding: 0.32rem 0.75rem;
+  font-size: 0.82rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-wood);
+  background: rgba(30, 20, 14, 0.85);
+  color: var(--text-main);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.creations-pill:hover {
+  border-color: var(--gold-accent);
+  color: var(--gold-accent);
+}
+
+.creations-pill.active {
+  background: var(--gold-accent);
+  color: #120d09;
+  border-color: var(--gold-accent);
+  font-weight: 600;
+}
+
+.creations-search-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 200px;
+  flex: 1;
+  max-width: 320px;
+}
+
+.creations-search-box input {
+  width: 100%;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  background: rgba(14, 10, 7, 0.85);
+  border: 1px solid var(--border-wood-dark);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.creations-search-box input:focus {
+  border-color: var(--gold-accent);
+}
+
+.aimo-clickable-row {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.aimo-clickable-row:hover {
+  background: rgba(212, 175, 55, 0.08) !important;
+}
+
+.creations-table-thumb {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  border: 1px solid var(--border-wood-dark);
+  background: rgba(0, 0, 0, 0.5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  vertical-align: middle;
+}
+
+.creations-name-link {
+  color: var(--gold-accent);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+
+.creations-name-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.creations-empty-frame {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  border-radius: var(--radius-card);
+  border: 1px dashed var(--border-wood-dark);
+  background: rgba(20, 15, 11, 0.6);
+  color: var(--text-muted);
+}
+
+.creations-empty-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .col-creations-visibility,
+  .col-creations-created {
+    display: none !important;
+  }
+
+  .creations-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .creations-search-box {
+    max-width: 100%;
+  }
+}
+
+/* Form section and copy field macros */
+.aimo-form-section + .aimo-form-section {
+  border-top: 1px solid var(--border-wood-dark);
+  padding-top: 1rem;
+}
+.aimo-form-section h3 {
+  color: var(--gold-accent);
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+.aimo-copy-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.aimo-copy-field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-right: 2.75rem;
+  cursor: pointer;
+}
+.aimo-copy-field .aimo-copy-field-btn {
+  position: absolute;
+  right: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  padding: 0.25rem 0.4rem;
+}
+.aimo-copy-field.copied-success input {
+  color: #58D68D;
+  border-color: rgba(88, 214, 141, 0.65);
+}
+
+/* Account settings */
+.account-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  align-items: end;
+}

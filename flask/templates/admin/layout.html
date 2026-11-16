@@ -3,44 +3,30 @@
 {% block title %}AIMO — Administration{% endblock %}
 
 {% block content %}
-<div class="admin-layout">
+<div class="aimo-sidebar-layout">
   <!-- Vertikale Seitenleiste links -->
-  <aside class="aimo-frame admin-sidebar">
-    <div class="admin-sidebar-header">
-      <div class="admin-sidebar-title">
-        <span class="icon-mono">⚙️</span>
+  <aside class="aimo-frame aimo-sidebar">
+    <div class="aimo-sidebar-header">
+      <div class="aimo-sidebar-title">
+        <span class="icon-mono">🛡️</span>
         <span>Administration</span>
       </div>
-      <p class="admin-sidebar-subtitle">System & Konfiguration</p>
+      <p class="aimo-sidebar-subtitle">System & Konfiguration</p>
     </div>
 
-    <nav class="admin-nav-menu">
-      <a href="{{ url_for('admin.users_list') }}"
-         class="admin-nav-item {% if request.endpoint in ('admin.users_list', 'admin.create_user', 'admin.edit_user') %}active{% endif %}">
-        <span class="icon-mono">👥</span>
-        <span class="admin-nav-text">Benutzerverwaltung</span>
-      </a>
-
-      <a href="{{ url_for('admin.services_config') }}"
-         class="admin-nav-item {% if request.endpoint == 'admin.services_config' %}active{% endif %}">
-        <span class="icon-mono">⚙️</span>
-        <span class="admin-nav-text">Services, Modelle & Prompts</span>
-      </a>
-
-      <a href="{{ url_for('admin.backdrop_config') }}"
-         class="admin-nav-item {% if request.endpoint == 'admin.backdrop_config' %}active{% endif %}">
-        <span class="icon-mono">🖼️</span>
-        <span class="admin-nav-text">System-Backdrop</span>
-      </a>
+    <nav class="aimo-sidebar-nav">
+      {{ action_button("Benutzerverwaltung", href=url_for('admin.users_list'), icon="👥", active=(request.endpoint in ('admin.users_list', 'admin.create_user', 'admin.edit_user')), extra_class="aimo-sidebar-nav-item") }}
+      {{ action_button("Services, Modelle & Prompts", href=url_for('admin.services_config'), icon="⚙️", active=(request.endpoint == 'admin.services_config'), extra_class="aimo-sidebar-nav-item") }}
+      {{ action_button("System-Backdrop", href=url_for('admin.backdrop_config'), icon="🖼️", active=(request.endpoint == 'admin.backdrop_config'), extra_class="aimo-sidebar-nav-item") }}
     </nav>
 
-    <div class="admin-sidebar-footer">
-      {{ action_button("Zurück zum Hub", href=url_for('overview.index'), arrow="left", extra_class="admin-back-btn") }}
+    <div class="aimo-sidebar-footer">
+      {{ action_button("Zurück zum Hub", href=url_for('overview.index'), arrow="left", extra_class="aimo-sidebar-back-btn") }}
     </div>
   </aside>
 
   <!-- Rechter Hauptbereich für Inhalte -->
-  <section class="admin-main-stage">
+  <section class="aimo-sidebar-stage">
     {% block admin_content %}{% endblock %}
   </section>
 </div>

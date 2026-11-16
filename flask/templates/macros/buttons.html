@@ -31,40 +31,38 @@
   {% endif %}
 {% endmacro %}
 
-{# Reusable Action/Navigation Button Component (System-weite .aimo-btn Basisklasse) #}
-{% macro action_button(text, href=none, type="button", icon=none, arrow=none, variant="default", size="default", extra_class="", id=none, title=none, onclick=none, modal=none) %}
+{# Interner Inhalt fuer action_button (Icon, Text, Pfeile) #}
+{% macro _btn_content(text, icon, arrow, layout) %}
+  {% if arrow == 'left' %}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="btn-arrow btn-arrow-left" aria-hidden="true">
+      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+    </svg>
+  {% endif %}
+  {% if icon %}<span class="icon-mono">{{ icon }}</span>{% endif %}
+  {% if text and layout != 'icon' %}<span>{{ text }}</span>{% endif %}
+  {% if arrow == 'right' %}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="btn-arrow btn-arrow-right" aria-hidden="true">
+      <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+    </svg>
+  {% endif %}
+{% endmacro %}
+
+{# Reusable Action/Navigation Button Component (System-weite .aimo-btn Basisklasse); layout: 'full' (Icon + Text) oder 'icon' (nur Icon) #}
+{% macro action_button(text, href=none, type="button", icon=none, arrow=none, variant="default", size="default", extra_class="", id=none, title=none, onclick=none, modal=none, modal_close=none, layout="full", active=false, data={}) %}
   {% set variant_class = ' primary' if variant == 'primary' else (' danger' if variant == 'danger' else '') %}
   {% set size_class = ' aimo-btn-lg' if size == 'lg' else '' %}
-  {% set classes = 'aimo-btn' ~ variant_class ~ size_class ~ (' ' ~ extra_class if extra_class else '') %}
+  {% set layout_class = ' aimo-btn-icon' if layout == 'icon' else '' %}
+  {% set active_class = ' active' if active else '' %}
+  {% set data_attrs %}{% for key, value in data.items() %} data-{{ key }}="{{ value }}"{% endfor %}{% endset %}
+  {% set classes = 'aimo-btn' ~ variant_class ~ size_class ~ layout_class ~ active_class ~ (' ' ~ extra_class if extra_class else '') %}
+  {% set label = title if title else (text if layout == 'icon' else none) %}
   {% if href %}
-    <a href="{{ href }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}>
-      {% if arrow == 'left' %}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="btn-arrow btn-arrow-left" aria-hidden="true">
-          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-        </svg>
-      {% endif %}
-      {% if icon %}<span class="icon-mono">{{ icon }}</span>{% endif %}
-      {% if text %}<span>{{ text }}</span>{% endif %}
-      {% if arrow == 'right' %}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="btn-arrow btn-arrow-right" aria-hidden="true">
-          <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-        </svg>
-      {% endif %}
+    <a href="{{ href }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if label %} title="{{ label }}"{% if layout == 'icon' %} aria-label="{{ label }}"{% endif %}{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{{ data_attrs }}>
+      {{ _btn_content(text, icon, arrow, layout) }}
     </a>
   {% else %}
-    <button type="{{ type }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if modal %} data-modal-open="{{ modal }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}>
-      {% if arrow == 'left' %}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="btn-arrow btn-arrow-left" aria-hidden="true">
-          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-        </svg>
-      {% endif %}
-      {% if icon %}<span class="icon-mono">{{ icon }}</span>{% endif %}
-      {% if text %}<span>{{ text }}</span>{% endif %}
-      {% if arrow == 'right' %}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="btn-arrow btn-arrow-right" aria-hidden="true">
-          <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-        </svg>
-      {% endif %}
+    <button type="{{ type }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if label %} title="{{ label }}"{% if layout == 'icon' %} aria-label="{{ label }}"{% endif %}{% endif %}{% if modal %} data-modal-open="{{ modal }}"{% endif %}{% if modal_close %} data-modal-close="{{ modal_close }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{{ data_attrs }}>
+      {{ _btn_content(text, icon, arrow, layout) }}
     </button>
   {% endif %}
 {% endmacro %}

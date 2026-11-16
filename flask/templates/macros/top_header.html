@@ -1,0 +1,67 @@
+{# =============================================================================
+   AIMO Top Header Component
+   Global application header with brand title, central Hub navigation,
+   and the top-right Persona Avatar user menu dropdown.
+   ============================================================================= #}
+{% from "macros/buttons.html" import action_button %}
+<header class="top-header">
+  <div class="header-left">
+    <a href="{{ url_for('overview.index') }}" class="brand-title">
+      <span class="icon-mono">⚔️</span>
+      <span>AIMO</span>
+    </a>
+  </div>
+
+  {% if g.current_user %}
+    <nav class="header-nav header-hub-nav" id="header-hub-nav">
+      {{ action_button("KI-Charaktere", href=url_for('overview.index', tab='characters'), icon="👤", active=((request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters'), data={"hub-tab": "tab-characters"}) }}
+      {{ action_button("Lorebooks", href=url_for('overview.index', tab='lorebooks'), icon="📜", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks'), data={"hub-tab": "tab-lorebooks"}) }}
+      {{ action_button("Worlds", href=url_for('overview.index', tab='worldinfo'), icon="🌐", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo'), data={"hub-tab": "tab-worldinfo"}) }}
+    </nav>
+  {% else %}
+    <div class="header-nav-placeholder"></div>
+  {% endif %}
+
+  <div class="header-actions">
+    {% if g.current_user %}
+      <button type="button"
+              class="persona-avatar-btn user-menu-toggle"
+              id="mobile-menu-toggle"
+              aria-label="Menü öffnen"
+              aria-expanded="false"
+              aria-controls="mobile-dropdown-menu"
+              title="{{ g.default_persona.name if g.default_persona else 'Benutzermenü' }}">
+        {% if g.default_persona %}
+          <img src="{{ url_for('uploaded_file', filename=g.default_persona.portrait_path) }}" alt="{{ g.default_persona.name }}" onerror="this.src='/static/img/cover.svg'">
+        {% else %}
+          <span class="icon-mono">👤</span>
+        {% endif %}
+      </button>
+
+      <div class="mobile-dropdown-menu" id="mobile-dropdown-menu" aria-hidden="true">
+        <div class="mobile-only-nav-group">
+          <div class="mobile-menu-group">
+            {{ action_button("KI-Charaktere", href=url_for('overview.index', tab='characters'), icon="👤", active=((request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters'), data={"hub-tab": "tab-characters"}, extra_class="mobile-nav-btn") }}
+            {{ action_button("Lorebooks", href=url_for('overview.index', tab='lorebooks'), icon="📜", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks'), data={"hub-tab": "tab-lorebooks"}, extra_class="mobile-nav-btn") }}
+            {{ action_button("Worlds", href=url_for('overview.index', tab='worldinfo'), icon="🌐", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo'), data={"hub-tab": "tab-worldinfo"}, extra_class="mobile-nav-btn") }}
+          </div>
+
+          <hr class="aimo-menu-divider">
+        </div>
+
+        <div class="mobile-menu-group">
+          {{ action_button("Einstellungen", href=url_for('settings.index'), icon="⚙️", active=(request.blueprint == 'settings'), extra_class="mobile-nav-btn") }}
+
+          <hr class="aimo-menu-divider">
+
+          {% if has_perm('admin_access') %}
+            {{ action_button("Administration", href=url_for('admin.users_list'), icon="🛡️", active=(request.blueprint == 'admin'), extra_class="mobile-nav-btn") }}
+            <hr class="aimo-menu-divider">
+          {% endif %}
+
+          {{ action_button("Logout", href=url_for('auth.logout'), icon="🚪", extra_class="mobile-nav-btn") }}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</header>

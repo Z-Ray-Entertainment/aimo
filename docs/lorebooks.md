@@ -8,11 +8,11 @@
 
 ## 🛠️ Header & Actions
 
-- **Back Button (`← Zurück`):** Returns directly to the Lorebook Grid (`/overview?tab=lorebooks`).
+- **Back Button (`← Zurück`):** Returns directly to the previous view you came from (such as My Creations or the central Lorebook Grid).
 - **Lorebook Title & Badges:** Displays the name of the lorebook and a readonly badge (`🔒 Schreibgeschützt`) if viewing another user's lorebook without edit permissions.
 - **Save (`💾 Speichern`):** Saves all basic settings and collaborator tags.
 - **Duplicate (`📄 Kopieren`):** Allows any creator to clone any visible lorebook and its complete entries into their own private collection.
-- **Delete (`🗑️ Löschen`):** Strictly reserved for the author and initial administrators.
+- **Delete (`🗑️ Löschen`):** Strictly reserved for the author and all administrators.
 
 ---
 

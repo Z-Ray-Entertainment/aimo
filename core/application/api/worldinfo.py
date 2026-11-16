@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from application.api.auth import get_current_user, require_auth, require_permission
+from application.api.auth import get_current_user, is_admin, require_auth, require_permission
 from domain.permissions.models import FunctionPermission
 from domain.worldinfo.services import WorldInfoService
 from infrastructure.llm.factory import get_llm_provider
@@ -106,7 +106,7 @@ def create_event():
     try:
         worldinfo_id = int(data.get("worldinfo_id", 0))
         wi = repo.get_by_id(worldinfo_id)
-        if wi is None or not wi.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+        if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
             return jsonify({"error": "WorldInfo not found."}), 404
 
         loc_raw = data.get("location_id")
@@ -200,7 +200,7 @@ def duplicate_worldinfo(worldinfo_id: int):
     assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     orig = repo.get_by_id(worldinfo_id)
-    if orig is None or not orig.is_visible_to_user(user.id, user.is_initial_admin):
+    if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
         return jsonify({"error": "WorldInfo not found."}), 404
     copied = repo.duplicate(worldinfo_id, user.id)
     return jsonify({"id": copied.id, "name": copied.name}), 201

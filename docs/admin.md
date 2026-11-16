@@ -1,8 +1,21 @@
 # 🛡️ Administration & Settings
 
-[← Back to Overview](README.md) | [← The Chat Interface](chat.md)
+[← Back to Overview](README.md) | [← The Hub Dashboard](hub.md)
 
-The Admin Panel is reserved for users holding the `ADMIN_ACCESS` permission. Here, you manage user accounts, assign functional permissions, and configure local AI models.
+The Admin Panel is reserved for users holding the `ADMIN_ACCESS` permission. Here, you manage user accounts, assign functional permissions, configure local AI models, and customize the system backdrop.
+
+---
+
+## 🧭 Navigation & Layout
+
+The Administration area shares the exact same two-column layout as the [User Settings](settings.md):
+- **Left Sidebar (`Administration`):**
+  - **Benutzerverwaltung (`👥`):** Opens the user and functional permission management.
+  - **Services, Modelle & Prompts (`⚙️`):** Opens configuration for AI service connections, model routing, and prompt templates.
+  - **System-Backdrop (`🖼️`):** Opens the configuration for the global system background wallpaper.
+  - **Zurück zum Hub (`← Zurück zum Hub`):** Returns you directly to the central Hub dashboard at any time.
+- **Right Main Area:**
+  - Displays the active administration section with responsive wrapping for mobile touch screens.
 
 ---
 
@@ -15,7 +28,8 @@ aimo avoids rigid role hierarchies in favor of a **functional permission model**
   - `Creator`: Allows creating, editing, and duplicating characters, lorebooks, WorldInfo settings, and personas, as well as accessing the Creator-Tag collaboration system.
   - `User`: Basic access for roleplay chats and personal persona management.
 - **Granular Checkboxes:** Any permission (`character_create`, `chat_access`, `worldinfo_edit`, etc.) can also be granted or revoked individually.
-- **Creator-Tag Privacy & Protection:** A unique UUID4 creator tag is provisioned in the database for every user. The UI displays the Creator-Tag only to accounts possessing active creator permissions.
+- **Full Access to Creations:** Every administrator can view, edit, and delete all characters, lorebooks, and worlds, even if they are neither the author nor a collaborator.
+- **Creator-Tag Privacy & Protection:** A unique UUID4 creator tag is provisioned in the database for every user. Every user can see and copy their own Creator-Tag in **Settings → Account**.
 - **Protection for Initial Admin:** The administrator created during first boot cannot be deleted, nor can their permissions be revoked or modified.
 
 ---
@@ -50,3 +64,12 @@ Route specific duties to specialized models:
   - `temperature`: Creativity and randomness (e.g., 0.7).
   - `top_p` and `repeat_penalty`.
 - **Edit System Prompts:** Directly customize base system directives for Roleplay, Memory extraction, ComfyUI prompt diffusion, and the Sparkle Writing Assistant ✨.
+
+---
+
+## 🖼️ System-Backdrop (`/admin/backdrop`)
+
+Configure the global fallback background wallpaper for the application:
+- **Upload Wallpaper:** Upload any 16:9 widescreen wallpaper (PNG, JPG, WEBP) to serve as the global atmospheric background across the entire interface.
+- **Select from Worlds & Locations:** Quick-pick background art directly from any existing WorldInfo location.
+- **Reset:** Revert to the default parchment and wood texture theme at any time.
