@@ -7,13 +7,12 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
   {% block extra_head %}{% endblock %}
 </head>
-<body class="has-system-backdrop{% block body_class %}{% endblock %}">
+<body class="has-system-backdrop{% block body_class %}{% endblock %}" style="--system-backdrop-url: url('{%- block backdrop_image %}{{ system_backdrop_url }}{% endblock -%}');">
   <div class="app-overlay">
     {% block page_backdrop %}
       <div id="system-default-backdrop"
            class="system-default-backdrop"
-           data-default-backdrop="{{ system_backdrop_url }}"
-           style="background-image: url('{%- block backdrop_image %}{{ system_backdrop_url }}{% endblock -%}');">
+           data-default-backdrop="{{ system_backdrop_url }}">
       </div>
     {% endblock %}
 

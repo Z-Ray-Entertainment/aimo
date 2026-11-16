@@ -48,6 +48,7 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
         template_folder=str(FLASK_DIR / "templates"),
     )
     app.config.from_object(config_class)
+    app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 86400
     app.secret_key = config_class.SECRET_KEY
 
     init_db()
@@ -73,9 +74,9 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
         except InfrastructureError:
             abort(404)
         if not resolved.is_file():
-            return send_from_directory(str(FLASK_DIR / "static" / "img"), "cover.svg")
+            return send_from_directory(str(FLASK_DIR / "static" / "img"), "cover.svg", max_age=86400)
         rel = resolved.relative_to(storage.base_upload_dir)
-        return send_from_directory(str(storage.base_upload_dir), str(rel))
+        return send_from_directory(str(storage.base_upload_dir), str(rel), max_age=86400)
 
     @app.before_request
     def load_user_and_check_first_boot():

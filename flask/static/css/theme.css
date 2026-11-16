@@ -37,8 +37,18 @@ body {
 }
 
 body.has-system-backdrop {
-  background-image: none;
   background-color: #14100c;
+  background-image: radial-gradient(circle at center, rgba(16, 12, 9, 0.35) 0%, rgba(14, 10, 8, 0.72) 100%),
+                    linear-gradient(to bottom, rgba(14, 10, 8, 0.3) 0%, rgba(14, 10, 8, 0.65) 100%),
+                    var(--system-backdrop-url, none);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+body.has-system-backdrop::before {
+  display: none;
 }
 
 body::before {
@@ -1299,34 +1309,12 @@ body.chat-page {
 
 /* ==========================================================================
    Fullpage Backdrop & Clean Non-Flicker Rendering
-   Einziger Backdrop für die gesamte Applikation (top: 0, 100vw x 100vh)
+   Der systemweite Backdrop liegt direkt auf body.has-system-backdrop für
+   flackerfreie Übergänge im nativen Browser-Canvas.
    ========================================================================== */
-.system-default-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  pointer-events: none;
-  background-color: #14100c;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-}
-
+.system-default-backdrop,
 .system-default-backdrop::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, rgba(16, 12, 9, 0.35) 0%, rgba(14, 10, 8, 0.72) 100%),
-              linear-gradient(to bottom, rgba(14, 10, 8, 0.3) 0%, rgba(14, 10, 8, 0.65) 100%);
-  pointer-events: none;
+  display: none !important;
 }
 
 /* Blurred Transparent Glass Panel for Chat Containers */
