@@ -6,6 +6,7 @@ from pathlib import Path
 import sqlite3
 import uuid
 
+from domain.chat.relationship import CANONICAL_RELATIONSHIP_TIERS
 from shared.config import Config
 
 SCHEMA_DDL = """
@@ -222,6 +223,27 @@ CREATE TABLE IF NOT EXISTS entity_field_translations (
 CREATE INDEX IF NOT EXISTS ix_entity_field_trans_lookup
     ON entity_field_translations (entity_type, entity_id, field_name);
 
+CREATE TABLE IF NOT EXISTS relationship_tiers (
+    level INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    behavior_rules TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS relationship_tier_translations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    level INTEGER NOT NULL,
+    language TEXT NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    behavior_rules TEXT,
+    updated_at TEXT NOT NULL,
+    UNIQUE(level, language)
+);
+CREATE INDEX IF NOT EXISTS ix_relationship_tier_trans_lookup
+    ON relationship_tier_translations (level, language);
+
 CREATE TABLE IF NOT EXISTS system_settings (
     id INTEGER PRIMARY KEY DEFAULT 1,
     ollama_url TEXT NOT NULL,
@@ -422,6 +444,48 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         user_rows = conn.execute("SELECT id FROM users WHERE creator_tag IS NULL OR creator_tag = ''").fetchall()
         for u_row in user_rows:
             conn.execute("UPDATE users SET creator_tag = ? WHERE id = ?", (str(uuid.uuid4()), u_row["id"]))
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS relationship_tiers (
+                level INTEGER PRIMARY KEY,
+                name TEXT NOT NULL,
+                description TEXT NOT NULL,
+                behavior_rules TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS relationship_tier_translations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                level INTEGER NOT NULL,
+                language TEXT NOT NULL,
+                name TEXT NOT NULL,
+                description TEXT NOT NULL,
+                behavior_rules TEXT,
+                updated_at TEXT NOT NULL,
+                UNIQUE(level, language)
+            )
+            """
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS ix_relationship_tier_trans_lookup ON relationship_tier_translations (level, language)"
+        )
+        now_str = datetime.now(timezone.utc).isoformat()
+        for tier in CANONICAL_RELATIONSHIP_TIERS.values():
+            conn.execute(
+                """
+                INSERT INTO relationship_tiers (level, name, description, behavior_rules, updated_at)
+                VALUES (?, ?, ?, ?, ?)
+                ON CONFLICT(level) DO UPDATE SET
+                    name = excluded.name,
+                    description = excluded.description,
+                    behavior_rules = excluded.behavior_rules,
+                    updated_at = excluded.updated_at
+                """,
+                (tier.level, tier.name, tier.description, tier.behavior_rules, now_str),
+            )
     except sqlite3.OperationalError:
         pass
 
