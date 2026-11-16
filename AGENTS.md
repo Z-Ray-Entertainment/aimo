@@ -2,6 +2,8 @@
 
 > [!IMPORTANT]
 > **Role of the Assistant:** You are the **Architecture Guardian** for the `aimo` project. Your mission is to hold all code changes strictly to the rules and DDD layers defined in this document.
+>
+> **Language Rule:** `AGENTS.md` must **ALWAYS** be maintained strictly and exclusively in English.
 
 ---
 
@@ -170,7 +172,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
   - `PRAGMA foreign_keys=ON;`
 
 ### 15. Mandatory Access Control (MAC) & Default-Deny Discipline
-- **Default-Deny Policy (Zero Trust):** The absolute baseline across the entire application is **zero access to anything by default** ("Kein Zugriff auf nichts"). No user has implicit permission to access, view, modify, or delete any entity or resource. Access must be granted explicitly.
+- **Default-Deny Policy (Zero Trust):** The absolute baseline across the entire application is **zero access to anything by default**. No user has implicit permission to access, view, modify, or delete any entity or resource. Access must be granted explicitly.
 - **Consistent Application-Wide Enforcement:** Every single controller route (`flask/application/`), REST API endpoint (`core/application/api/`), SSE stream, background worker, and action handler that takes an ID or accesses a resource **must strictly enforce access control without exception**.
 - **Domain-Encapsulated Authorization Logic:** Business rules governing visibility and editability (`is_visible_to_user`, `is_editable_by_user`) belong strictly to domain entities (`Character`, `Lorebook`, `WorldInfo`, etc.). Controllers in `application/` are obligated to call these domain methods before performing any operation.
 - **Zero Tolerance for IDOR (Insecure Direct Object References):** Merely changing or guessing a numeric ID or URL path (e.g. `/characters/<id>`, `/chat/session/<id>`, `/api/chat/<session_id>/...`) must never grant access to private resources of another user. Unauthorized attempts must be blocked immediately (redirecting or returning HTTP 404/403).
@@ -180,15 +182,15 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 ## 💻 3. Coding Conventions & Guidelines
 
 - **Object-Oriented Programming (OOP):** Consistent encapsulation in classes, entities, and value objects.
-- **Expressive names & minimal comments:** Code is self-explanatory through clean structure and type hints. No trivial comments.
+- **Expressive names & minimal comments:** Code and templates must be self-explanatory through meaningful naming, clean structure, and type hints. Comments in code and templates are only permitted when the code cannot explain itself or when complex domain logic and non-trivial relationships cannot be understood immediately. Trivial or redundant comments (e.g., above self-explanatory includes, functions, HTML elements, or control structures) are strictly forbidden.
 - **No defensive `None` checks:** Avoid defensive `None` checks unless `None` represents an explicit, valid domain state.
 - **Confidentiality:** Never hardcode secrets or API keys; everything is retrieved via `shared/config.py` from environment variables.
 - **Testing Policy:** Automated tests are **written only when explicitly requested by the user**.
 - **PyPI Minimalism:** Favor the Python standard library. External packages only when strictly necessary (`Flask`, `SQLAlchemy`, `bcrypt`, `requests`, `python-dotenv`).
 - **CSS-First for Layout & Animations:** Layout wrapping (`flex-wrap: wrap`, CSS Grid with `repeat(auto-fit, minmax(...))`, media queries) and visual animations (transitions, `@keyframes`, opacity, transforms, hover states) **must strictly be implemented with pure CSS**. JavaScript must only be used if a layout or animation behavior is technically impossible to achieve via CSS alone.
-- **Reusable UI Components First:** Für JEDES UI-Element (Buttons, Modals, Badges, Dropdowns, Cards, Formularfelder, Icons etc.) müssen immer nach Möglichkeit wiederverwendbare, einheitliche Komponenten (gemeinsame CSS-Klassen, Jinja2-Macros wie in `templates/macros/`, standardisierte HTML/SVG-Snippets) geschrieben und konsequent wiederverwendet werden, statt ad-hoc Insellösungen oder duplizierte Stile neu zu implementieren. Bestehende Basis-Komponenten (z. B. `.aimo-btn`, `.chat-input-btn`, `.modal-backdrop`, `.aimo-card-tile`) müssen stets bevorzugt und erweitert werden.
-- **Synchronous Documentation Maintenance (IST-Zustand):** Bei JEDEM neuen Feature und bei JEDER Änderung bestehender Features oder UI-Abläufe **muss** die Endanwender-Dokumentation in `docs/` (z. B. `README.md`, `lorebooks.md`, `characters.md`, `worldinfo.md`, `hub.md`, `chat.md` etc.) im selben Arbeitsschritt mitgeführt und aktualisiert werden. Die Dokumentation beschreibt dabei **immer ausschließlich den aktuellen IST-Zustand** (keine Changelogs, keine Vorher-/Nachher-Vergleiche und keine Erläuterungen darüber, was früher einmal war).
-- **Benutzerorientiertes Handbuch (Keine Entwickler-Details):** Die Dokumentation in `docs/` dient als reines **Benutzer-Handbuch für Endanwender der Software**, die im Zweifel keinerlei technisches Hintergrundwissen besitzen. Technische Implementierungsdetails (wie CSS-Keyframes, Klassennamen, HTTP-Statuscodes, interne API-Endpunkte, Dateipfade oder Architekturkonzepte) gehören **nicht** in die Benutzerdokumentation. Beschrieben wird ausschließlich das Verhalten aus Anwendersicht: Was sieht der Benutzer, was bedeuten Anzeigen und Farben, welche Aktionen kann er ausführen und wie bedient er die Oberfläche.
+- **Reusable UI Components First:** For EVERY UI element (buttons, modals, badges, dropdowns, cards, form fields, icons, etc.), reusable, standardized components (shared CSS classes, Jinja2 macros such as in `templates/macros/`, standardized HTML/SVG snippets) must be created and consistently reused whenever possible, rather than implementing ad-hoc isolated solutions or duplicating styles. Existing base components (e.g., `.aimo-btn`, `.chat-input-btn`, `.modal-backdrop`, `.aimo-card-tile`) must always be prioritized and extended.
+- **Synchronous Documentation Maintenance (Current State / IST-Zustand):** With EVERY new feature and EVERY modification to existing features or UI workflows, end-user documentation in `docs/` (e.g., `README.md`, `lorebooks.md`, `characters.md`, `worldinfo.md`, `hub.md`, `chat.md`, etc.) **must** be updated simultaneously in the same step. Documentation always describes **exclusively the current state (IST-Zustand)** (no changelogs, no before/after comparisons, and no explanations of historical states).
+- **User-Oriented Manual (No Developer Details):** Documentation in `docs/` serves strictly as an end-user manual for consumers who may lack technical knowledge. Technical implementation details (such as CSS keyframes, class names, HTTP status codes, internal API endpoints, file paths, or architectural concepts) do not belong in user documentation. It describes exclusively the user-facing behavior: what the user sees, what indicators and colors mean, what actions are available, and how the interface is operated.
 
 ---
 
@@ -208,7 +210,8 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 - ❌ Execute SQL queries directly inside `domain/` or `application/` (only via repositories).
 - ❌ Import web framework code (`flask`, `render_template`, `request`) into `domain/` or `infrastructure/`.
 - ❌ Use JavaScript for layout wrapping, element dimensions, or animations when CSS (Flexbox, Grid, `@keyframes`, transitions) can achieve the result.
-- ❌ Ad-hoc duplizierte UI-Elemente oder inline neu erfundene Buttons/Komponenten bauen, statt auf bestehende, wiederverwendbare UI-Klassen und Macros zurückzugreifen.
+- ❌ Build ad-hoc duplicated UI elements or reinvent inline buttons/components instead of using existing, reusable UI classes and macros.
+- ❌ Add redundant or trivial comments in code or templates that merely paraphrase what self-explanatory code, includes, tags, or functions already express.
 - ❌ Leave documentation in `docs/` outdated when modifying or adding features, or add historical changelogs into `docs/` instead of maintaining the pure current state ("IST-Zustand").
 - ❌ Overload end-user documentation in `docs/` with developer implementation details, CSS keyframes, HTTP status codes, or internal backend architecture concepts (docs/ serves strictly as an accessible user manual for non-technical users).
 - ❌ Create unsolicited automated tests.

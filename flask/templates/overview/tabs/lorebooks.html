@@ -1,0 +1,27 @@
+{% from "macros/buttons.html" import new_button %}
+<section id="tab-lorebooks" class="tab-pane{% if (active_tab|default('')) == 'lorebooks' %} active{% endif %}">
+  <div class="card-grid">
+    {% if has_perm('lorebook_create') %}
+      {{ new_button("Neues Lorebook", modal="new-lorebook-modal") }}
+    {% endif %}
+
+    {% for item in lorebook_cards %}
+      {% set lb = item.lorebook %}
+      <a href="{{ url_for('lorebooks.detail', lorebook_id=lb.id) }}" class="card-tile" style="padding: 1.25rem; justify-content: space-between; text-decoration: none;">
+        <div>
+          <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;"><span class="icon-mono">📜</span> {{ lb.name }}</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">{{ lb.description }}</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
+            {% for tag in item.tags %}
+              <span style="font-size: 0.75rem; padding: 0.15rem 0.5rem; border: 1px solid var(--border-wood); border-radius: 10px; color: var(--text-main);">#{{ tag }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        <div style="margin-top: 1rem; font-size: 0.85rem; color: var(--gold-accent);">
+          {{ item.entry_count }} Einträge →
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+

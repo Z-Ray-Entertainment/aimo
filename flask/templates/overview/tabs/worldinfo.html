@@ -1,0 +1,5 @@
+{% from "macros/cards.html" import worldinfo_grid %}
+<section id="tab-worldinfo" class="tab-pane{% if (active_tab|default('')) == 'worldinfo' %} active{% endif %}">
+  {{ worldinfo_grid(worldinfo_cards, can_create=has_perm('worldinfo_create')) }}
+</section>
+

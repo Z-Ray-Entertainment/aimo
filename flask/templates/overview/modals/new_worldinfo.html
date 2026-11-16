@@ -1,0 +1,36 @@
+{% from "macros/buttons.html" import action_button %}
+<div class="modal-backdrop" id="new-worldinfo-modal" aria-hidden="true">
+  <div class="modal-frame" style="max-width: 480px;">
+    <div class="modal-header">
+      <h3 style="color: var(--gold-accent);">Neue Welt erstellen</h3>
+      {{ action_button("Schließen", icon="✕", layout="icon", modal_close="new-worldinfo-modal") }}
+    </div>
+    <form method="POST" action="{{ url_for('worldinfo.create_worldinfo') }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
+      <div>
+        <label>Name der Welt *</label>
+        <input type="text" name="name" required>
+      </div>
+      <div>
+        <label>Sichtbarkeit</label>
+        <select name="visibility">
+          <option value="private" selected>Privat</option>
+          <option value="public">Öffentlich</option>
+        </select>
+      </div>
+      <div>
+        <label>Gebundenes Lorebook (Optional)</label>
+        <select name="lorebook_id">
+          <option value="" selected>Kein Lorebook gebunden</option>
+          {% for lb in lorebooks|default([]) %}
+            <option value="{{ lb.id }}">📜 {{ lb.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+        {{ action_button("Abbrechen", modal_close="new-worldinfo-modal") }}
+        {{ action_button("Anlegen", type="submit", variant="primary") }}
+      </div>
+    </form>
+  </div>
+</div>
+
