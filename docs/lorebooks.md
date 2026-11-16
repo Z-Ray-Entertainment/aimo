@@ -6,28 +6,34 @@
 
 ---
 
-## 🛠️ Header & Actions
+## 🏗️ Structure & Vertical Sidebar Navigation
 
-- **Back Button (`← Zurück`):** Returns directly to the previous view you came from (such as My Creations or the central Lorebook Grid).
-- **Lorebook Title & Badges:** Displays the name of the lorebook and a readonly badge (`🔒 Schreibgeschützt`) if viewing another user's lorebook without edit permissions.
-- **Save (`💾 Speichern`):** Saves all basic settings and collaborator tags.
-- **Duplicate (`📄 Kopieren`):** Allows any creator to clone any visible lorebook and its complete entries into their own private collection.
-- **Delete (`🗑️ Löschen`):** Strictly reserved for the author and all administrators.
+The Lorebook editor is organized into a clean two-column layout with a vertical sidebar on the left and the main editing stage on the right:
+- **Left Sidebar Navigation:**
+  - **Sidebar Header:** Displays the lorebook name and book icon (`📖`).
+  - **Vertical Navigation Menu:**
+    1. **📋 Basic Settings (`Grundeinstellungen`):** Title, visibility, and compendium overview description.
+    2. **📜 Entries (`Einträge`):** Interactive card grid of all knowledge entries (displays total count).
+    3. **👥 Collaboration (`Kollaboration`):** Co-creator access management.
+  - **Sidebar Footer:** Quick return button (`← Zurück zur Übersicht`) to jump back directly to the lorebook library or creations grid.
+- **Right Main Stage:**
+  - **Header Bar:** Shows the lorebook title, read-only status (for non-editable lorebooks), and action buttons:
+    - **Save (`💾 Speichern`):** Saves all basic settings and collaborator tags.
+    - **Duplicate (`📄 Kopieren`):** Allows any creator to clone any visible lorebook and its complete entries into their own private collection.
+    - **Delete (`🗑️ Löschen`):** Strictly reserved for the author and all administrators.
 
 ---
 
-## 🏗️ Structure & Tabs of the Lorebook Editor
-
-The Lorebook editor is organized into three specialized tabs:
-
-### 1. Tab 1: Basic Settings (`📋 Grundeinstellungen`)
+## 📋 1. Basic Settings (`📋 Grundeinstellungen`)
 - **Lorebook Name:** The title of this compendium (e.g., *"History of Eldoria"*, *"Magic & Arcane Spells"*).
 - **Visibility:**
   - `Private`: Visible only to you and designated collaborators.
   - `Public`: Available in the library for other users to explore and reference in their characters.
 - **Short Description:** A concise summary of the lorebook's theme for orientation in the library catalog.
 
-### 2. Tab 2: Entries (`📜 Einträge`)
+---
+
+## 📜 2. Entries (`📜 Einträge`)
 - **Tile Overview:**
   - **First Tile (`+`):** Opens a modal to author a new lorebook entry.
   - **Entry Tiles:** Display entry title, linked tags, and a short snippet preview. Clicking a tile opens the editor modal.
@@ -38,7 +44,9 @@ The Lorebook editor is organized into three specialized tabs:
   - **AI Tag Suggestion (`✨ Tags vorschlagen`):** Automatically infers relevant keywords from title and content.
   - **Prose Content:** The factual knowledge text injected into the LLM context when triggered.
 
-### 3. Tab 3: Collaboration (`👥 Kollaboration`)
+---
+
+## 👥 3. Collaboration (`👥 Kollaboration`)
 - **Collaborator Management:** Authors can add or remove trusted creators using their private **Creator-Tag** (UUID4).
 - **Permissions:** Collaborators listed in the table receive edit access to lorebook settings and entries, while deletion and collaborator management remain protected and author-only.
 - **Collaborator View:** Collaborators see their active membership in a read-only table without the ability to add third parties.

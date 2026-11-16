@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "macros/buttons.html" import action_button %}
 {% block title %}AIMO — Erststart-Einrichtung (First-Boot Wizard){% endblock %}
 
 {% block content %}
@@ -76,7 +77,7 @@ ollama pull llama3.2:1b</pre>
     </div>
 
     <div style="margin-top: 1rem; text-align: right;">
-      <button type="submit" class="btn">✨ System initialisieren & Starten</button>
+      {{ action_button("System initialisieren & Starten", type="submit", icon="✨", variant="primary", size="lg") }}
     </div>
   </form>
 </div>

@@ -3,7 +3,7 @@
    Shared component for managing active, disabled and custom chat lorebooks
    Used in both the New Chat Dialog and the active Chat Session Interface
    ============================================================================= #}
-{% from "macros/buttons.html" import action_button %}
+{% from "macros/buttons.html" import action_button, modal_close_button %}
 
 {% macro lorebook_manager(lorebook_data, is_new_chat=false, session_id=none, modal_id="chat-add-lorebook-modal") %}
 <div class="lorebook-manager-root"
@@ -176,12 +176,7 @@
                      {% if lb.is_active %}checked{% endif %}>
               <span class="aimo-switch-slider"></span>
             </label>
-            <button type="button"
-                    class="aimo-btn danger remove-custom-lorebook-btn"
-                    data-lorebook-id="{{ lb.id }}"
-                    title="Lorebook aus Chat entfernen">
-              <span class="icon-mono">🗑️</span>
-            </button>
+            {{ action_button("Entfernen", icon="🗑️", layout="icon", variant="danger", extra_class="remove-custom-lorebook-btn", data={"lorebook-id": lb.id}, title="Lorebook aus Chat entfernen") }}
           </div>
         </div>
       {% endfor %}
@@ -200,7 +195,7 @@
   <div class="modal-frame" style="max-width: 820px; max-height: 85vh; display: flex; flex-direction: column;">
     <div class="modal-header">
       <h3 style="color: var(--gold-accent); margin: 0;"><span class="icon-mono">📜</span> Lorebook zum Chat hinzufügen</h3>
-      <button type="button" class="aimo-btn" data-modal-close="{{ modal_id }}">✕</button>
+      {{ modal_close_button(modal_id) }}
     </div>
 
     <!-- Suchleiste nach Lorebook-Name -->
@@ -250,7 +245,7 @@
     </div>
 
     <div style="display: flex; justify-content: flex-end; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
-      <button type="button" class="aimo-btn" data-modal-close="{{ modal_id }}">Schließen</button>
+      {{ action_button("Schließen", modal_close=modal_id) }}
     </div>
   </div>
 </div>

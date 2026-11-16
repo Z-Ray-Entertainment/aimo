@@ -45,9 +45,7 @@
         <label style="font-weight: 700; color: var(--gold-accent);">Schnellauswahl über Preset</label>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
           {% for preset_name in presets %}
-            <button type="button" class="aimo-btn" onclick="applyPreset('{{ preset_name }}')" {% if target_user and target_user.is_initial_admin and preset_name != 'Admin' %}disabled{% endif %}>
-              Preset: {{ preset_name }}
-            </button>
+            {{ action_button("Preset: " ~ preset_name, onclick="applyPreset('" ~ preset_name ~ "')", disabled=(target_user and target_user.is_initial_admin and preset_name != 'Admin')) }}
           {% endfor %}
         </div>
       </div>

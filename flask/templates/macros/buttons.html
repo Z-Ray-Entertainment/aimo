@@ -48,21 +48,33 @@
 {% endmacro %}
 
 {# Reusable Action/Navigation Button Component (System-weite .aimo-btn Basisklasse); layout: 'full' (Icon + Text) oder 'icon' (nur Icon) #}
-{% macro action_button(text, href=none, type="button", icon=none, arrow=none, variant="default", size="default", extra_class="", id=none, title=none, onclick=none, modal=none, modal_close=none, layout="full", active=false, data={}) %}
+{% macro action_button(text="", href=none, type="button", icon=none, arrow=none, variant="default", size="default", extra_class="", id=none, title=none, onclick=none, modal=none, modal_close=none, layout="full", active=false, disabled=false, form=none, style=none, target=none, aria_label=none, data={}) %}
   {% set variant_class = ' primary' if variant == 'primary' else (' danger' if variant == 'danger' else '') %}
-  {% set size_class = ' aimo-btn-lg' if size == 'lg' else '' %}
+  {% set size_class = ' aimo-btn-lg' if size == 'lg' else (' aimo-btn-sm' if size == 'sm' else '') %}
   {% set layout_class = ' aimo-btn-icon' if layout == 'icon' else '' %}
   {% set active_class = ' active' if active else '' %}
+  {% set disabled_class = ' disabled' if disabled and href else '' %}
   {% set data_attrs %}{% for key, value in data.items() %} data-{{ key }}="{{ value }}"{% endfor %}{% endset %}
-  {% set classes = 'aimo-btn' ~ variant_class ~ size_class ~ layout_class ~ active_class ~ (' ' ~ extra_class if extra_class else '') %}
-  {% set label = title if title else (text if layout == 'icon' else none) %}
+  {% set classes = 'aimo-btn' ~ variant_class ~ size_class ~ layout_class ~ active_class ~ disabled_class ~ (' ' ~ extra_class if extra_class else '') %}
+  {% set label = aria_label if aria_label else (title if title else (text if layout == 'icon' else none)) %}
   {% if href %}
-    <a href="{{ href }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if label %} title="{{ label }}"{% if layout == 'icon' %} aria-label="{{ label }}"{% endif %}{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{{ data_attrs }}>
+    <a href="{{ href }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if label and (layout == 'icon' or aria_label) %} aria-label="{{ label }}"{% endif %}{% if disabled %} aria-disabled="true" tabindex="-1"{% endif %}{% if target %} target="{{ target }}"{% if target == '_blank' %} rel="noopener noreferrer"{% endif %}{% endif %}{% if style %} style="{{ style }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{{ data_attrs }}>
       {{ _btn_content(text, icon, arrow, layout) }}
     </a>
   {% else %}
-    <button type="{{ type }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if label %} title="{{ label }}"{% if layout == 'icon' %} aria-label="{{ label }}"{% endif %}{% endif %}{% if modal %} data-modal-open="{{ modal }}"{% endif %}{% if modal_close %} data-modal-close="{{ modal_close }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{{ data_attrs }}>
+    <button type="{{ type }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if form %} form="{{ form }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if label and (layout == 'icon' or aria_label) %} aria-label="{{ label }}"{% endif %}{% if disabled %} disabled{% endif %}{% if style %} style="{{ style }}"{% endif %}{% if modal %} data-modal-open="{{ modal }}"{% endif %}{% if modal_close %} data-modal-close="{{ modal_close }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{{ data_attrs }}>
       {{ _btn_content(text, icon, arrow, layout) }}
     </button>
   {% endif %}
+{% endmacro %}
+
+{# Reusable Tab Navigation Button Component #}
+{% macro tab_button(text, target, icon=none, active=false, disabled=false, title=none, id=none, extra_class="", size="default", count=none) %}
+  {% set tab_text = (text ~ ' (' ~ count ~ ')') if count is not none else text %}
+  {{ action_button(tab_text, icon=icon, active=active, disabled=disabled, title=title, id=id, extra_class=extra_class, size=size, data={"tab-target": target}) }}
+{% endmacro %}
+
+{# Reusable Modal Header Close Button (✕ Icon) #}
+{% macro modal_close_button(modal_id, text="Schließen", title="Schließen", id=none, extra_class="") %}
+  {{ action_button(text, icon="✕", layout="icon", modal_close=modal_id, title=title, id=id, extra_class=extra_class) }}
 {% endmacro %}

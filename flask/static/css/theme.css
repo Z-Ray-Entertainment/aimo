@@ -326,11 +326,24 @@ a.aimo-btn-lg {
   font-size: 0.92rem;
 }
 
+.aimo-btn-sm,
+button.aimo-btn-sm,
+a.aimo-btn-sm {
+  padding: 0.25rem 0.55rem;
+  font-size: 0.78rem;
+}
+
 .aimo-btn.aimo-btn-icon {
   padding: 0.38rem;
   width: 2rem;
   height: 2rem;
   gap: 0;
+}
+
+.aimo-btn-sm.aimo-btn-icon {
+  width: 1.65rem;
+  height: 1.65rem;
+  padding: 0.2rem;
 }
 
 .aimo-btn-lg.aimo-btn-icon {
@@ -2863,6 +2876,16 @@ button.chat-menu-dropdown-item.danger:focus {
   color: var(--text-main);
   border-color: var(--border-wood-gold, #8a6d3b);
   transform: translateX(4px);
+}
+
+.aimo-sidebar-nav-item:disabled,
+button.aimo-sidebar-nav-item:disabled {
+  opacity: 0.45;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  border-color: var(--border-wood-dark) !important;
+  background: rgba(40, 28, 19, 0.4) !important;
+  transform: none !important;
 }
 
 .aimo-sidebar-nav-item.active {
