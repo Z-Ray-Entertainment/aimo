@@ -35,7 +35,7 @@ When starting a new conversation with a character:
   - Character portrait / transparent emotion sprite (dynamically scaled in 9:16 aspect ratio to fit the display height), equipped with an aesthetic Brain overlay icon (🧠) in the top-right corner with a live hover tooltip. The icon visually indicates whether Thinking is active (in color with a soft glow) or inactive (in monochrome gray).
   - Dynamic relationship bar (-100 to +100 with heart icon).
   - Player persona badge / selector (locked after the first message).
-  - Unified World & Setting block: Active WorldInfo with switch button, manual location selector, and random events toggle checkbox (integrated without separating divider).
+  - Unified World & Setting block: Active WorldInfo with switch button, manual location selector, random events toggle checkbox, and a live event cooldown counter for administrators and world authors (integrated without separating divider, updating dynamically as messages are exchanged).
 
 ---
 
@@ -77,6 +77,14 @@ Because modern LLMs write with the greatest depth and nuance in English while th
   - When messages are rolled back, the chat's active location and background illustration automatically restore to the venue that was active at that point in time (or back to the initial starting location if all subsequent transitions are removed).
   - Each system notice features a trash icon (`🗑️`) allowing players to rewind the adventure from that transition onward.
 - **Re-Generating Replies:** Using the Re-Generate button to rewrite an AI reply replaces only the character's answer; any location transition and system notices remain preserved in the chat.
+
+---
+
+## ⚡ Random Events & System Notifications
+
+- **Persistent Event Notices in Chat:** When a random event from the active world setting triggers, it is saved directly into the chat history as a persistent system message with a bolt badge (*"⚡ Ereignis: [Event-Titel]"*) and its narrative description. The notification appears right before the AI character's response, and the character weaves the event into their dialogue.
+- **Rewinding & Cascading Deletions:** Each event message features a trash icon (`🗑️`). Clicking it deletes the chat history from that point forward and returns any consumed one-shot events back to the active pool.
+- **Live Event Cooldown Indicator (Admins & World Creators):** In the right chat sidebar directly below the *🎲 Zufalls-Events aktivieren* checkbox, administrators and the author of the active world see a live countdown indicator showing the exact number of messages remaining until the next event (*"⏳ Nächstes Event: in X Nachrichten"* or *"nächste Nachricht"*). When events are paused via the checkbox, the indicator preserves the current count and displays *(pausiert)*.
 
 ---
 

@@ -2614,6 +2614,30 @@ button.chat-menu-dropdown-item.danger:focus {
   margin: 0;
 }
 
+.chat-sidebar-admin-event-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  background: rgba(22, 16, 11, 0.7);
+  border: 1px solid var(--border-wood-dark);
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  margin-top: 0.35rem;
+  line-height: 1.3;
+}
+
+.chat-sidebar-admin-event-counter strong {
+  color: var(--gold-accent);
+}
+
+.chat-sidebar-admin-event-counter .counter-paused-label {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.72rem;
+}
+
 .chat-character-portrait-frame #active-character-sprite {
   width: 100%;
   flex: 1;

@@ -426,6 +426,7 @@ def view_session(session_id: int):
     )
 
     is_admin = bool(user and (user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS)))
+    can_view_event_counter = is_admin or bool(worldinfo and worldinfo.user_id == user.id)
 
     lorebook_data = _build_lorebook_view_data(
         user.id, character, worldinfo=worldinfo, chat_session=chat_session, is_admin=is_admin
@@ -455,6 +456,7 @@ def view_session(session_id: int):
         sys_lang=sys_lang,
         comfyui_available=comfyui_available,
         is_admin=is_admin,
+        can_view_event_counter=can_view_event_counter,
     )
 
 

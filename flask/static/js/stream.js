@@ -294,6 +294,9 @@ class AimoChatStream {
       isAnalyzingImage: hasFile,
     });
 
+    // 3. Event-Cooldown sofort dynamisch um 1 verringern (optimistisches UI-Update)
+    this.decrementEventCounterOptimistic();
+
     try {
       const prepResp = await fetch(`/api/chat/${this.sessionId}/messages`, {
         method: "POST",
@@ -320,6 +323,13 @@ class AimoChatStream {
 
       if (prepData.user_message && userRow) {
         this.upgradeUserBubbleWithServerData(userRow, prepData.user_message, tempGalleryTile);
+      }
+
+      if (prepData.system_message) {
+        this.appendSystemMessage(prepData.system_message, thinkingUI?.row);
+      }
+      if (prepData.cooldown_counter !== undefined && prepData.cooldown_counter !== null) {
+        this.updateEventCounter(prepData.cooldown_counter, prepData.events_enabled);
       }
 
       await this.startSSEStream(messagesList, thinkingUI);
@@ -592,6 +602,15 @@ class AimoChatStream {
         if (container) container.scrollTop = container.scrollHeight;
       });
 
+      es.addEventListener("system_message", (e) => {
+        try {
+          const sysMsg = JSON.parse(e.data);
+          if (!container.querySelector(`[data-message-idx="${sysMsg.message_idx}"]`)) {
+            this.appendSystemMessage(sysMsg, ui?.row);
+          }
+        } catch (_) {}
+      });
+
       es.addEventListener("generation_done", () => {
         const label = ui.thinkingBox?.querySelector(".thinking-label");
         if (label) {
@@ -650,6 +669,10 @@ class AimoChatStream {
 
         if (data.suggested_location) {
           this.showLocationSwitchCountdown(data.suggested_location);
+        }
+
+        if (data.cooldown_counter !== undefined && data.cooldown_counter !== null) {
+          this.updateEventCounter(data.cooldown_counter, data.events_enabled);
         }
 
         setTimeout(() => {
@@ -735,7 +758,7 @@ class AimoChatStream {
     });
   }
 
-  appendSystemMessage(msg) {
+  appendSystemMessage(msg, insertBeforeEl = null) {
     const messagesList = document.getElementById("chat-messages-list");
     if (!messagesList || !msg) return;
 
@@ -746,9 +769,10 @@ class AimoChatStream {
 
     const icon = msg.system_type === "location_change" ? "📍" : (msg.system_type === "event_trigger" ? "⚡" : "⚙️");
     const locName = msg.metadata?.location_name || "";
+    const eventTitle = msg.metadata?.event_title || "";
     const title = msg.system_type === "location_change"
       ? (locName ? `Ortswechsel: ${locName}` : "Ortswechsel")
-      : (msg.system_type === "event_trigger" ? "Ereignis" : "System");
+      : (msg.system_type === "event_trigger" ? (eventTitle ? `Ereignis: ${eventTitle}` : "Ereignis") : "System");
 
     const systemMsgDiv = document.createElement("div");
     systemMsgDiv.className = `chat-system-message${msg.system_type ? ` system-msg-${msg.system_type}` : ""}`;
@@ -790,14 +814,67 @@ class AimoChatStream {
 
     const contentDiv = document.createElement("div");
     contentDiv.className = "chat-system-message-content";
-    contentDiv.textContent = msg.localized_content || "";
+    const meta = this.getChatMetadata();
+    let text = msg.localized_content || "";
+    if (meta.personaName) {
+      text = text.replace(/\{\{user\}\}/gi, meta.personaName);
+    }
+    if (meta.characterName) {
+      text = text.replace(/\{\{char\}\}/gi, meta.characterName);
+    }
+    contentDiv.textContent = text;
 
     systemMsgDiv.appendChild(headerDiv);
     systemMsgDiv.appendChild(contentDiv);
     row.appendChild(systemMsgDiv);
 
-    messagesList.appendChild(row);
+    if (insertBeforeEl && insertBeforeEl.parentNode === messagesList) {
+      messagesList.insertBefore(row, insertBeforeEl);
+    } else {
+      messagesList.appendChild(row);
+    }
     messagesList.scrollTop = messagesList.scrollHeight;
+  }
+
+  decrementEventCounterOptimistic() {
+    const statusEl = document.getElementById("admin-event-counter-status");
+    const valEl = document.getElementById("admin-event-counter-val");
+    if (!statusEl) return;
+    const eventsToggle = document.querySelector(".chat-sidebar-events-toggle input[type='checkbox']");
+    if (eventsToggle && !eventsToggle.checked) return;
+    if (statusEl.textContent.includes("(pausiert)")) return;
+
+    let currentVal = valEl ? parseInt(valEl.textContent.trim(), 10) : NaN;
+    if (isNaN(currentVal)) {
+      if (statusEl.textContent.includes("nächste Nachricht")) {
+        currentVal = 1;
+      } else {
+        return;
+      }
+    }
+
+    const nextVal = Math.max(0, currentVal - 1);
+    if (nextVal <= 1) {
+      statusEl.innerHTML = `<strong id="admin-event-counter-val">nächste Nachricht</strong>`;
+    } else {
+      statusEl.innerHTML = `in <strong id="admin-event-counter-val">${nextVal}</strong> Nachrichten`;
+    }
+  }
+
+  updateEventCounter(counter, eventsEnabled) {
+    const statusEl = document.getElementById("admin-event-counter-status");
+    if (!statusEl || counter === undefined || counter === null) return;
+    const isPaused = eventsEnabled === false;
+    const val = parseInt(counter, 10);
+    if (isNaN(val)) return;
+
+    if (isPaused) {
+      statusEl.innerHTML = `in <strong id="admin-event-counter-val">${val}</strong> ${val === 1 ? "Nachricht" : "Nachrichten"} <span class="counter-paused-label">(pausiert)</span>`;
+    } else if (val <= 1) {
+      statusEl.innerHTML = `<strong id="admin-event-counter-val">nächste Nachricht</strong>`;
+    } else {
+      statusEl.innerHTML = `in <strong id="admin-event-counter-val">${val}</strong> Nachrichten`;
+    }
   }
 
   async switchLocation(locationId) {

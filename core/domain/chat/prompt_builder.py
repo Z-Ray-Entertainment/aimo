@@ -174,7 +174,8 @@ class PromptBuilder:
         if triggered_event is not None:
             lines.append(
                 f"Active Narrative Event ({triggered_event.title}): "
-                f"{triggered_event.description.strip()}"
+                f"{triggered_event.description.strip()} "
+                f"(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"
             )
 
         return "\n".join(lines)
