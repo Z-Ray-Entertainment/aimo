@@ -1,6 +1,6 @@
 # ⚙️ User Settings
 
-[← Back to Overview](README.md) | [← The Hub Dashboard](hub.md) | [Administration & Settings →](admin.md)
+[← Back to Overview](README.md) | [← The Hub Dashboard](hub.md)
 
 The **User Settings** area is accessible to every logged-in user via the **⚙️ Einstellungen** button in the top-right account menu. Unlike the Administration area, this view is dedicated exclusively to personal user settings and account preferences.
 
@@ -10,24 +10,13 @@ The **User Settings** area is accessible to every logged-in user via the **⚙�
 
 The interface features a two-column layout:
 - **Left Sidebar (`Einstellungen`):**
-  - **Account (`🪪`):** Opens your account settings.
   - **Personas (`👤`):** Opens the management of your [Player Personas](personas.md).
   - **My Creations (`✨`):** Available to users with creator permissions; opens the central overview of all your created characters, worlds, and lorebooks.
+  - **Account (`🪪`):** Opens your account settings.
   - **Zurück zum Hub (`← Zurück zum Hub`):** Returns you directly to the central Hub dashboard at any time.
 - **Right Main Area:**
   - Displays the selected settings section inside a framed panel.
   - On smaller or mobile screens, the sidebar automatically moves to the top above the main content area for comfortable touch navigation.
-
----
-
-## 🪪 Account
-
-The **Account** view contains the following sections:
-- **Creator-Tag:** Your personal tag (read-only). **Tag kopieren** copies it so you can hand it to authors who want to add you as a collaborator.
-- **Name:** Change your display name. Your personas keep their own names.
-- **E-Mail-Adresse:** Change your login e-mail. The address must not be used by another account, and you must enter your current password to confirm.
-- **Passwort:** Enter your current password and the new password twice.
-- **Sprache:** Choose the language of the interface and translations. On your first login the language of your browser is selected automatically.
 
 ---
 
@@ -61,4 +50,15 @@ The table lists all creations you own or co-author across all domains:
 - **One-Click Editor Opening:** Clicking anywhere on an item's row or on the `✏️ Editor` button instantly opens the appropriate editor ([Character Designer](characters.md), [World Editor](worldinfo.md), or [Lorebook Editor](lorebooks.md)) in the same browser tab.
 - **Filter & Search Bar:** Aligned with the central Hub dashboard layout (`overview`), providing intuitive controls for **Typ** (All, Characters, Worlds, Lorebooks), **Urheber** (All, Owner, Collaborations), **Sortierung** (Name A-Z, Newest first), and a responsive **Suche** field.
 - **Live Search:** Type into the search field to immediately filter the table rows in real time.
+
+---
+
+## 🪪 Account
+
+The **Account** view contains the following sections:
+- **Creator-Tag:** Your personal tag (read-only). **Tag kopieren** copies it so you can hand it to authors who want to add you as a collaborator.
+- **Name:** Change your display name. Your personas keep their own names.
+- **E-Mail-Adresse:** Change your login e-mail. The address must not be used by another account, and you must enter your current password to confirm.
+- **Passwort:** Enter your current password and the new password twice.
+- **Sprache:** Choose the language of the interface and translations. On your first login the language of your browser is selected automatically.
 

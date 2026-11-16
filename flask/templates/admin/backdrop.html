@@ -1,4 +1,5 @@
 {% extends "admin/layout.html" %}
+{% from "macros/buttons.html" import action_button %}
 
 {% block admin_content %}
 <div class="backdrop-manager-grid">
@@ -54,9 +55,7 @@
       <div style="display: flex; justify-content: flex-end; align-items: center; gap: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
         <form method="POST" action="{{ url_for('admin.backdrop_config') }}" onsubmit="return confirm('Möchtest du den benutzerdefinierten Standard-Backdrop wirklich entfernen und auf das Standard-Theme zurücksetzen?');">
           <input type="hidden" name="action" value="clear">
-          <button type="submit" class="btn btn-danger" style="display: inline-flex; align-items: center; gap: 0.4rem;">
-            <span class="icon-mono">🗑️</span> Backdrop entfernen (Auf Standard zurücksetzen)
-          </button>
+          {{ action_button("Backdrop entfernen (Auf Standard zurücksetzen)", type="submit", variant="danger", icon="🗑️") }}
         </form>
       </div>
     {% endif %}
@@ -83,9 +82,7 @@
       </div>
 
       <div style="text-align: right; margin-top: 0.25rem;">
-        <button type="submit" class="btn" style="width: 100%;">
-          <span class="icon-mono">💾</span> Als System-Backdrop speichern
-        </button>
+        {{ action_button("Als System-Backdrop speichern", type="submit", variant="primary", icon="💾", extra_class="w-100") }}
       </div>
     </form>
 

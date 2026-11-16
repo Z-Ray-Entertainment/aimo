@@ -45,7 +45,6 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  backdrop-filter: blur(8px);
   background: rgba(20, 16, 12, 0.85);
   z-index: -1;
   pointer-events: none;
@@ -327,6 +326,11 @@ a.aimo-btn-lg {
 .aimo-btn-lg.aimo-btn-icon {
   width: 2.6rem;
   height: 2.6rem;
+}
+
+.aimo-btn.w-100,
+.w-100 {
+  width: 100% !important;
 }
 
 .aimo-btn .btn-arrow {
@@ -1307,11 +1311,13 @@ body.chat-page {
   height: 100vh;
   z-index: 0;
   pointer-events: none;
+  background-color: #14100c;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
   opacity: 1;
-  transition: opacity 0.25s ease-in-out;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
 .system-default-backdrop::after {
@@ -2847,8 +2853,10 @@ button.chat-menu-dropdown-item.danger:focus {
 .aimo-sidebar-nav-item {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  width: 100%;
   gap: 0.75rem;
-  padding: 0.75rem 0.95rem;
+  padding: 0.65rem 0.95rem;
   border-radius: var(--radius-btn, 8px);
   border: 1px solid var(--border-wood-dark);
   background: rgba(40, 28, 19, 0.75);
@@ -2856,7 +2864,10 @@ button.chat-menu-dropdown-item.danger:focus {
   font-weight: 600;
   font-size: 0.88rem;
   text-decoration: none;
+  white-space: normal !important;
+  line-height: 1.35;
   transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
 }
 
 .aimo-sidebar-nav-item:hover {
@@ -2875,6 +2886,7 @@ button.chat-menu-dropdown-item.danger:focus {
 
 .aimo-sidebar-nav-item .icon-mono {
   font-size: 1.1rem;
+  flex-shrink: 0;
   filter: grayscale(30%);
   transition: transform 0.2s ease, filter 0.2s ease;
 }
@@ -2885,8 +2897,15 @@ button.chat-menu-dropdown-item.danger:focus {
   transform: scale(1.1);
 }
 
+.aimo-sidebar-nav-item > span:not(.icon-mono),
 .aimo-sidebar-nav-text {
   flex: 1;
+  text-align: left;
+  min-width: 0;
+  white-space: normal !important;
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .aimo-sidebar-footer {
@@ -2910,18 +2929,6 @@ button.chat-menu-dropdown-item.danger:focus {
 
 .aimo-sidebar-stage {
   min-width: 0;
-  animation: aimoStageFadeIn 0.3s ease-out;
-}
-
-@keyframes aimoStageFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .aimo-split-stage-grid {
