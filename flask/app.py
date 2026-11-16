@@ -27,8 +27,9 @@ from application.core_client import core_proxy_bp
 from application.lorebooks import lorebooks_bp
 from application.overview import overview_bp
 from application.personas import personas_bp
+from application.settings import settings_bp
 from application.setup import setup_bp
-from application.ui_helpers import render_new_button
+from application.ui_helpers import get_safe_back_url, render_new_button
 from application.worldinfo import worldinfo_bp
 from infrastructure.database import init_db
 from infrastructure.repositories.persona_repository import PersonaRepository
@@ -47,6 +48,7 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
         template_folder=str(FLASK_DIR / "templates"),
     )
     app.config.from_object(config_class)
+    app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 86400
     app.secret_key = config_class.SECRET_KEY
 
     init_db()
@@ -60,6 +62,7 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
     app.register_blueprint(lorebooks_bp)
     app.register_blueprint(worldinfo_bp)
     app.register_blueprint(chat_bp)
+    app.register_blueprint(settings_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(core_proxy_bp)
 
@@ -71,9 +74,9 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
         except InfrastructureError:
             abort(404)
         if not resolved.is_file():
-            return send_from_directory(str(FLASK_DIR / "static" / "img"), "cover.svg")
+            return send_from_directory(str(FLASK_DIR / "static" / "img"), "cover.svg", max_age=86400)
         rel = resolved.relative_to(storage.base_upload_dir)
-        return send_from_directory(str(storage.base_upload_dir), str(rel))
+        return send_from_directory(str(storage.base_upload_dir), str(rel), max_age=86400)
 
     @app.before_request
     def load_user_and_check_first_boot():
@@ -129,6 +132,7 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
             "has_perm": has_perm,
             "has_creator_permission": has_creator_permission,
             "new_button": render_new_button,
+            "get_safe_back_url": get_safe_back_url,
             "system_backdrop_path": default_bg,
             "system_backdrop_url": url_for("uploaded_file", filename=default_bg) if default_bg else url_for("static", filename="img/cover.svg"),
         }

@@ -1,0 +1,130 @@
+{# =============================================================================
+   AIMO Persona Editor Modal Component
+   Global overlay frame for creating and editing player personas
+   (opened from the persona grid in the user settings or from the chat sidebar).
+   ============================================================================= #}
+{% from "macros/buttons.html" import action_button, modal_close_button %}
+{% from "macros/image_cropper.html" import image_cropper_modal %}
+{% macro persona_portrait_field(prefix, label) %}
+  <div>
+    <label>{{ label }}</label>
+    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-top: 0.35rem;">
+      <div id="{{ prefix }}-persona-preview-wrap" style="display: none; width: 64px; height: 64px; border-radius: 10px; border: 2px solid #64B5F6; overflow: hidden; background: rgba(15, 11, 8, 0.9);" title="1:1 Porträt">
+        <img id="{{ prefix }}-persona-preview-img" src="" alt="1:1 Porträt" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
+      </div>
+      <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 0.45rem;">
+        <input type="file" id="{{ prefix }}-persona-portrait" name="portrait" accept=".png,.jpg,.jpeg,.webp" onchange="document.getElementById('{{ prefix }}-persona-preuploaded-portrait').value=''; document.getElementById('{{ prefix }}-persona-vision-status').textContent='';">
+        <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+          {{ action_button("Ausschnitt anpassen (1:1)", icon="✂️", id=prefix ~ "-persona-open-crop-btn", size="sm", disabled=true, data={"persona-lockable": "1"}) }}
+          <span id="{{ prefix }}-persona-crop-badge" style="display: none; font-size: 0.8rem; color: #4CAF50; font-weight: 600;">✓ 1:1 Ausschnitt aktiv</span>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro persona_text_fields(prefix) %}
+  <div>
+    <label>Hintergrund / Persönlichkeit</label>
+    <input type="hidden" name="i18n_description" id="i18n-persona-{{ prefix }}-desc" value="{}">
+    <textarea
+      id="{{ prefix }}-persona-description"
+      name="description"
+      rows="2"
+      data-i18n-field="description"
+      data-i18n-entity-type="persona"
+      data-i18n-entity-id=""
+      data-i18n-hidden="i18n-persona-{{ prefix }}-desc"></textarea>
+  </div>
+  <div>
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.35rem;">
+      <label style="margin-bottom: 0;">Physisches Aussehen</label>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span id="{{ prefix }}-persona-vision-status" style="font-size: 0.78rem; color: var(--gold-accent);"></span>
+        {{ action_button("Bild-Features extrahieren", icon="🔍", id=prefix ~ "-persona-vision-btn", size="sm", onclick="window.extractPersonaVisionFeatures('" ~ prefix ~ "')", title="Aussehen per Vision-Modell automatisch aus dem Porträtbild extrahieren", data={"persona-lockable": "1"}) }}
+      </div>
+    </div>
+    <input type="hidden" name="i18n_appearance" id="i18n-persona-{{ prefix }}-app" value="{}">
+    <textarea
+      id="{{ prefix }}-persona-appearance"
+      name="appearance"
+      rows="2"
+      data-i18n-field="appearance"
+      data-i18n-entity-type="persona"
+      data-i18n-entity-id=""
+      data-i18n-hidden="i18n-persona-{{ prefix }}-app"></textarea>
+  </div>
+{% endmacro %}
+
+{% if g.current_user %}
+  <div class="modal-backdrop" id="persona-manager-modal" aria-hidden="true">
+    <div class="modal-frame" style="max-width: 640px;">
+      <div class="modal-header">
+        <h2 id="persona-modal-title" style="color: var(--gold-accent);"><span class="icon-mono">👤</span> Persona</h2>
+        {{ action_button("Schließen", icon="✕", layout="icon", id="persona-modal-close-btn", modal_close="persona-manager-modal", data={"persona-lockable": "1"}) }}
+      </div>
+
+      <!-- Formular: Neue Persona anlegen -->
+      <div id="new-persona-form-box" style="display: none;">
+        <form id="new-persona-form" method="POST" action="{{ url_for('personas.create_persona') }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <input type="hidden" name="preuploaded_portrait_path" id="new-persona-preuploaded-portrait" value="">
+          <div>
+            <label>Name *</label>
+            <input type="text" id="new-persona-name" name="name" required>
+          </div>
+          <div>
+            <label>Geschlecht *</label>
+            <select name="gender">
+              <option value="female">Weiblich (female)</option>
+              <option value="male">Männlich (male)</option>
+              <option value="non-binary">Nicht-Binär (non-binary)</option>
+            </select>
+          </div>
+          {{ persona_portrait_field('new', 'Porträtbild (PNG/JPG/WEBP)') }}
+          {{ persona_text_fields('new') }}
+          <div style="display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
+            {{ action_button("Abbrechen", modal_close="persona-manager-modal", data={"persona-lockable": "1"}) }}
+            {{ action_button("Persona speichern", type="submit", variant="primary", icon="💾", id="new-persona-submit-btn", data={"persona-lockable": "1"}) }}
+          </div>
+        </form>
+      </div>
+
+      <!-- Formular: Bestehende Persona bearbeiten -->
+      <div id="edit-persona-form-box" style="display: none;">
+        <form id="edit-persona-form" method="POST" action="" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <input type="hidden" id="edit-persona-id" name="persona_id" value="">
+          <input type="hidden" name="preuploaded_portrait_path" id="edit-persona-preuploaded-portrait" value="">
+          <div>
+            <label>Name *</label>
+            <input type="text" id="edit-persona-name" name="name" required>
+          </div>
+          <div>
+            <label>Geschlecht *</label>
+            <select id="edit-persona-gender" name="gender">
+              <option value="female">Weiblich (female)</option>
+              <option value="male">Männlich (male)</option>
+              <option value="non-binary">Nicht-Binär (non-binary)</option>
+            </select>
+          </div>
+          {{ persona_portrait_field('edit', 'Neues Porträtbild (optional, PNG/JPG/WEBP)') }}
+          {{ persona_text_fields('edit') }}
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
+            {{ action_button("Löschen", type="submit", form="edit-persona-delete-form", variant="danger", icon="🗑️", id="edit-persona-delete-btn", data={"persona-lockable": "1"}) }}
+            <div style="display: flex; gap: 0.5rem;">
+              {{ action_button("Abbrechen", modal_close="persona-manager-modal", data={"persona-lockable": "1"}) }}
+              {{ action_button("Änderungen speichern", type="submit", variant="primary", icon="💾", id="edit-persona-submit-btn", data={"persona-lockable": "1"}) }}
+            </div>
+          </div>
+        </form>
+        <form id="edit-persona-delete-form" method="POST" action="" style="display: none;" onsubmit="return confirm('Persona wirklich löschen?');"></form>
+      </div>
+    </div>
+  </div>
+
+  {{ image_cropper_modal("persona-new-crop-modal", title="Bild-Ausschnitt festlegen (1:1)", targets=[
+    {"id": "avatar", "label": "1:1 Porträt", "short_label": "1:1 Porträt", "icon": "👤", "ratio": 1.0, "preview_width": 96, "preview_height": 96, "accent_color": "#64B5F6"}
+  ]) }}
+  {{ image_cropper_modal("persona-edit-crop-modal", title="Bild-Ausschnitt festlegen (1:1)", targets=[
+    {"id": "avatar", "label": "1:1 Porträt", "short_label": "1:1 Porträt", "icon": "👤", "ratio": 1.0, "preview_width": 96, "preview_height": 96, "accent_color": "#64B5F6"}
+  ]) }}
+{% endif %}

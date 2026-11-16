@@ -11,6 +11,44 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
     def list_visible(self, user_id: int) -> list[WorldInfo]:
         return self._list_visible("worldinfos", user_id, self._to_entity)
 
+    def list_for_user_creations(
+        self, user_id: int, creator_tag: str | None = None
+    ) -> list[WorldInfo]:
+        with get_db_session() as conn:
+            if creator_tag:
+                pattern = f"%{creator_tag.strip().lower()}%"
+                rows = conn.execute(
+                    """
+                    SELECT * FROM worldinfos
+                    WHERE user_id = ? OR collaborator_creator_tags_json LIKE ?
+                    ORDER BY id DESC
+                    """,
+                    (user_id, pattern),
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    """
+                    SELECT * FROM worldinfos
+                    WHERE user_id = ?
+                    ORDER BY id DESC
+                    """,
+                    (user_id,),
+                ).fetchall()
+            entities = [self._to_entity(row) for row in rows]
+            if creator_tag:
+                normalized_tag = creator_tag.strip().lower()
+                return [
+                    w
+                    for w in entities
+                    if w.user_id == user_id
+                    or (
+                        w.collaborator_creator_tags
+                        and normalized_tag
+                        in [t.lower() for t in w.collaborator_creator_tags]
+                    )
+                ]
+            return entities
+
     def list_all(self, user_id: int | None = None) -> list[WorldInfo]:
         if user_id is not None:
             return self.list_visible(user_id)

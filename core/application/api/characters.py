@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from application.api.auth import get_current_user, require_auth, require_permission
+from application.api.auth import get_current_user, is_admin, require_auth, require_permission
 from application.character_helpers import save_and_persist_sprite
 from domain.characters.models import Emotion, Gender
 from domain.characters.services import CharacterService
@@ -25,11 +25,25 @@ def list_characters():
 
     gender_filter = request.args.get("gender", "").strip().lower()
     chat_filter = request.args.get("chatted", "").strip().lower()
+    author_filter = (
+        request.args.get("author", "").strip().lower()
+        or request.args.get("scope", "").strip().lower()
+    )
 
     result = []
     for char in characters:
         if char.id is None:
             continue
+        if author_filter in ("mine", "own") and char.user_id != user.id:
+            continue
+        if author_filter in ("collaborations", "collab"):
+            is_collab = (
+                char.user_id != user.id
+                and bool(user.creator_tag)
+                and (user.creator_tag in (getattr(char, "collaborator_creator_tags", []) or []))
+            )
+            if not is_collab:
+                continue
         if gender_filter and char.gender.value != gender_filter:
             continue
         msg_count = char_repo.get_message_count_for_user(char.id, user.id)
@@ -261,7 +275,7 @@ def upload_sprite(character_id: int):
     storage = FileStorage()
 
     character = char_repo.get_by_id(character_id)
-    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         return jsonify({"error": "Character not found."}), 404
 
     emotion_raw = request.form.get("emotion", Emotion.NEUTRAL.value)
@@ -299,7 +313,7 @@ def delete_sprite(character_id: int, emotion: str, variant: int):
     assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     character = char_repo.get_by_id(character_id)
-    if character is None or not character.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         return jsonify({"error": "Character not found."}), 404
     deleted = char_repo.delete_sprite(character_id, emotion, variant)
     return jsonify({"deleted": deleted})
@@ -312,7 +326,7 @@ def duplicate_character(character_id: int):
     assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     orig = char_repo.get_by_id(character_id)
-    if orig is None or not orig.is_visible_to_user(user.id, user.is_initial_admin):
+    if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
         return jsonify({"error": "Character not found."}), 404
     copied = char_repo.duplicate(character_id, user.id)
     return jsonify({"id": copied.id, "name": copied.name}), 201

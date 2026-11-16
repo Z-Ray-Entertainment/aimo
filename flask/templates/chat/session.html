@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros/buttons.html" import menu_item %}
+{% from "macros/buttons.html" import action_button, menu_item, tab_button, modal_close_button %}
 {% from "macros/lorebook_manager.html" import lorebook_manager, lorebook_picker_modal %}
 {% from "macros/system_message.html" import chat_system_message %}
 {% block title %}AIMO — {{ chat_session.title }} ({{ character.name }}){% endblock %}
@@ -16,44 +16,21 @@
       <div class="chat-stage-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem; border-bottom: 2px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           <!-- Zurück zur Übersicht (nur Pfeil-Icon, kein Text) -->
-          <a href="{{ url_for('overview.index', tab='characters') }}"
-             class="aimo-btn"
-             style="padding: 0.38rem 0.65rem;"
-             title="Zurück zur Übersicht"
-             aria-label="Zurück zur Übersicht">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
-              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-            </svg>
-          </a>
+          {{ action_button("Zurück zur Übersicht", href=url_for('overview.index', tab='characters'), arrow="left", layout="icon") }}
 
           <!-- Vertikaler Trennstrich -->
           <div class="chat-header-vdivider"></div>
 
           <!-- Reiter-Leiste mit .aimo-btn Basisklasse -->
           <div class="rpg-tabs" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0; gap: 0.5rem;">
-            <button type="button" class="aimo-btn active" data-tab-target="chat-pane-messages">
-              <span class="icon-mono">💬</span>
-              <span>Chat</span>
-            </button>
-            <button type="button" class="aimo-btn" data-tab-target="chat-pane-media">
-              <span class="icon-mono">🖼️</span>
-              <span>Medien</span>
-            </button>
-            <button type="button" class="aimo-btn" data-tab-target="chat-pane-memories">
-              <span class="icon-mono">🧠</span>
-              <span>Erinnerungen (<span id="memories-count">{{ memories|length }}</span>)</span>
-            </button>
-            <button type="button" class="aimo-btn" data-tab-target="chat-pane-lorebooks">
-              <span class="icon-mono">📜</span>
-              <span>Lorebooks (<span id="session-lorebooks-count">{{ lorebook_data.active_count }}</span>)</span>
-            </button>
+            {{ tab_button("Chat", "chat-pane-messages", icon="💬", active=true) }}
+            {{ tab_button("Medien", "chat-pane-media", icon="🖼️") }}
+            {{ tab_button(('Erinnerungen (<span id="memories-count">' ~ (memories|length) ~ '</span>)')|safe, "chat-pane-memories", icon="🧠") }}
+            {{ tab_button(('Lorebooks (<span id="session-lorebooks-count">' ~ lorebook_data.active_count ~ '</span>)')|safe, "chat-pane-lorebooks", icon="📜") }}
 
             <!-- Mobil: Seitenleiste als Tab rechts von Erinnerungen mit vertikalem Trennstrich davor -->
             <div class="chat-header-vdivider mobile-tab-only"></div>
-            <button type="button" class="aimo-btn mobile-tab-only" data-tab-target="chat-pane-sidebar" title="Seitenleiste / Charakterinfo">
-              <span class="icon-mono">👤</span>
-              <span>Info</span>
-            </button>
+            {{ tab_button("Info", "chat-pane-sidebar", icon="👤", extra_class="mobile-tab-only", title="Seitenleiste / Charakterinfo") }}
           </div>
         </div>
 
@@ -286,10 +263,8 @@
                 <textarea name="summary" rows="3" required>{{ mem.summary }}</textarea>
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                <button type="button" class="btn btn-secondary" onclick="window.recalculateMemory({{ chat_session.id }}, {{ mem.id }}, this)" title="Erinnerung aus den zugehörigen Episoden-Nachrichten neu berechnen" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
-                  <span class="icon-mono">🔄</span> Neu berechnen
-                </button>
-                <button type="submit" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Speichern</button>
+                {{ action_button("Neu berechnen", icon="🔄", size="sm", onclick="window.recalculateMemory(" ~ chat_session.id ~ ", " ~ mem.id ~ ", this)", title="Erinnerung aus den zugehörigen Episoden-Nachrichten neu berechnen") }}
+                {{ action_button("Speichern", type="submit", variant="primary", size="sm", icon="💾") }}
               </div>
             </form>
           {% endfor %}
@@ -355,8 +330,9 @@
             data-persona-appearance="{{ persona.appearance }}"
             data-persona-i18n-description='{{ (persona_i18n_description or {}) | tojson }}'
             data-persona-i18n-appearance='{{ (persona_i18n_appearance or {}) | tojson }}'
-            data-persona-default="{{ '1' if persona.is_default else '0' }}"
-            onclick="window.AimoModals.open('persona-manager-modal'); openEditPersonaFromBtn(this);">
+            data-persona-portrait-url="{{ url_for('uploaded_file', filename=persona.portrait_path) }}"
+            data-persona-in-use="1"
+            onclick="openEditPersonaFromBtn(this);">
             <span class="icon-mono">✏️</span>
           </button>
         {% endif %}
@@ -449,7 +425,7 @@
   <div class="modal-frame" style="max-width: 480px;">
     <div class="modal-header">
       <h3 style="color: var(--gold-accent);">Welt wechseln</h3>
-      <button type="button" class="btn" data-modal-close="switch-worldinfo-modal">✕</button>
+      {{ modal_close_button("switch-worldinfo-modal") }}
     </div>
     <div style="padding: 0.75rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid #E74C3C; background: rgba(100, 30, 22, 0.35); font-size: 0.86rem;">
       ⚠️ <strong>Warnung:</strong> Ein Wechsel der Welt während eines laufenden Chats kann zu Inkonsistenzen bei früheren Erinnerungen führen.
@@ -468,7 +444,7 @@
         </select>
       </div>
       <div style="text-align: right;">
-        <button type="submit" class="btn">Welt umschalten</button>
+        {{ action_button("Welt umschalten", type="submit", variant="primary") }}
       </div>
     </form>
   </div>
@@ -482,10 +458,8 @@
         <span class="icon-mono">💬</span> Sitzungen mit {{ character.name }}
       </h3>
       <div style="display: flex; gap: 0.5rem; align-items: center;">
-        <a href="{{ url_for('chat.new_character_chat', character_id=character.id, configure=1) }}" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.85rem;">
-          ➕ Neuer Chat
-        </a>
-        <button type="button" class="btn" data-modal-close="chat-sessions-modal" style="padding: 0.35rem 0.65rem; font-size: 0.85rem;">✕</button>
+        {{ action_button("Neuer Chat", href=url_for('chat.new_character_chat', character_id=character.id, configure=1), icon="➕", size="sm", variant="primary") }}
+        {{ modal_close_button("chat-sessions-modal") }}
       </div>
     </div>
     <div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; padding-right: 0.25rem;">
@@ -507,15 +481,11 @@
           </div>
           <div style="display: flex; gap: 0.4rem; align-items: center;">
             {% if s.id != chat_session.id %}
-              <a href="{{ url_for('chat.view_session', session_id=s.id) }}" class="btn" style="padding: 0.25rem 0.6rem; font-size: 0.8rem;">
-                Wechseln
-              </a>
+              {{ action_button("Wechseln", href=url_for('chat.view_session', session_id=s.id), size="sm") }}
             {% endif %}
             <form method="POST" action="{{ url_for('chat.delete_session', session_id=s.id) }}" onsubmit="return confirm('Wollen Sie diese Sitzung wirklich löschen?');" style="margin: 0;">
               <input type="hidden" name="redirect_to" value="{% if s.id == chat_session.id %}overview{% else %}session{% endif %}">
-              <button type="submit" class="btn" style="padding: 0.25rem 0.55rem; font-size: 0.8rem; color: #E74C3C; border-color: rgba(231,76,60,0.4);" title="Sitzung löschen">
-                🗑️
-              </button>
+              {{ action_button("Löschen", type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title="Sitzung löschen") }}
             </form>
           </div>
         </div>
@@ -531,13 +501,13 @@
   <div class="modal-frame" style="max-width: 540px;">
     <div class="modal-header">
       <h3 style="color: var(--gold-accent);">Nachricht bearbeiten</h3>
-      <button type="button" class="btn" data-modal-close="edit-message-modal">✕</button>
+      {{ modal_close_button("edit-message-modal") }}
     </div>
     <form id="edit-message-form" onsubmit="submitEditMessage(event)" style="display: flex; flex-direction: column; gap: 0.85rem;">
       <input type="hidden" id="edit-msg-idx" value="">
       <textarea id="edit-msg-content" rows="5" required></textarea>
       <div style="text-align: right;">
-        <button type="submit" class="btn">Änderung speichern (Sync Kanon)</button>
+        {{ action_button("Änderung speichern (Sync Kanon)", type="submit", variant="primary", icon="💾") }}
       </div>
     </form>
   </div>
@@ -552,12 +522,8 @@
         <span style="font-family: monospace; font-weight: bold;">{ }</span> LLM Generation Prompt (Admin Debug)
       </h3>
       <div style="display: flex; gap: 0.5rem; align-items: center;">
-        <button type="button" class="btn" id="copy-prompt-debug-btn" onclick="copyPromptDebugText()" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
-          📋 Kopieren
-        </button>
-        <button type="button" class="btn" data-modal-close="prompt-debug-modal" style="padding: 0.35rem 0.65rem; font-size: 0.85rem;">
-          ✕
-        </button>
+        {{ action_button("Kopieren", icon="📋", id="copy-prompt-debug-btn", size="sm", onclick="copyPromptDebugText()") }}
+        {{ modal_close_button("prompt-debug-modal") }}
       </div>
     </div>
     <div style="flex: 1; overflow-y: auto; background: rgba(10, 8, 6, 0.75); border: 1px solid var(--border-wood); border-radius: 8px; padding: 0.85rem; margin-bottom: 0.5rem;">
@@ -823,10 +789,10 @@
               <textarea name="summary" rows="3" required>${escapeHtml(mem.summary || '')}</textarea>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-              <button type="button" class="btn btn-secondary" onclick="window.recalculateMemory({{ chat_session.id }}, ${mem.id}, this)" title="Erinnerung aus den zugehörigen Episoden-Nachrichten neu berechnen" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
-                <span class="icon-mono">🔄</span> Neu berechnen
+              <button type="button" class="aimo-btn aimo-btn-sm" onclick="window.recalculateMemory({{ chat_session.id }}, ${mem.id}, this)" title="Erinnerung aus den zugehörigen Episoden-Nachrichten neu berechnen">
+                <span class="icon-mono">🔄</span> <span>Neu berechnen</span>
               </button>
-              <button type="submit" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Speichern</button>
+              <button type="submit" class="aimo-btn primary aimo-btn-sm"><span class="icon-mono">💾</span> <span>Speichern</span></button>
             </div>
           </form>
         `;

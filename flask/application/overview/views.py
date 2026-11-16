@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request
 
-from application.auth.decorators import get_current_user, require_auth
+from application.auth.decorators import get_current_user, is_admin, require_auth
 from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.lorebook_repository import LorebookRepository
 from infrastructure.repositories.persona_repository import PersonaRepository
@@ -24,6 +24,7 @@ def index():
 
     gender_filter = request.args.get("gender", "").strip().lower()
     chat_filter = request.args.get("chatted", "").strip().lower()
+    author_filter = request.args.get("author", "").strip().lower()
     sort_by = request.args.get("sort", "newest").strip().lower()
     active_tab = request.args.get("tab", "characters").strip().lower()
     if active_tab not in ("characters", "lorebooks", "worldinfo"):
@@ -34,6 +35,16 @@ def index():
     for char in raw_characters:
         if char.id is None:
             continue
+        if author_filter == "mine" and char.user_id != user.id:
+            continue
+        if author_filter == "collaborations":
+            is_collab = (
+                char.user_id != user.id
+                and bool(user.creator_tag)
+                and (user.creator_tag in (char.collaborator_creator_tags or []))
+            )
+            if not is_collab:
+                continue
         if gender_filter and char.gender.value != gender_filter:
             continue
         msg_count = char_repo.get_message_count_for_user(char.id, user.id)
@@ -44,7 +55,7 @@ def index():
         best_rel = char_repo.get_best_relationship_for_user(
             char.id, user.id, default_value=float(char.initial_relationship)
         )
-        is_editable = char.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag)
+        is_editable = char.is_editable_by_user(user.id, is_admin(), user.creator_tag)
         character_cards.append(
             {
                 "character": char,
@@ -66,7 +77,7 @@ def index():
     for lb in lorebooks:
         if lb.id is None:
             continue
-        entries = lb_repo.list_entries(lb.id, user_id=user.id, is_admin=user.is_initial_admin)
+        entries = lb_repo.list_entries(lb.id, user_id=user.id, is_admin=is_admin())
         all_tags = []
         for e in entries:
             for t in e.tags:
@@ -77,7 +88,7 @@ def index():
                 "lorebook": lb,
                 "entry_count": len(entries),
                 "tags": all_tags[:8],
-                "is_editable": lb.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag),
+                "is_editable": lb.is_editable_by_user(user.id, is_admin(), user.creator_tag),
             }
         )
 
@@ -93,7 +104,7 @@ def index():
                 "worldinfo": wi,
                 "location_count": len(locations),
                 "event_count": len(events),
-                "is_editable": wi.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag),
+                "is_editable": wi.is_editable_by_user(user.id, is_admin(), user.creator_tag),
             }
         )
 
@@ -120,6 +131,7 @@ def index():
         persona_items=persona_items,
         gender_filter=gender_filter,
         chat_filter=chat_filter,
+        author_filter=author_filter,
         sort_by=sort_by,
         active_tab=active_tab,
     )

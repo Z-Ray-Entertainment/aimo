@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "macros/buttons.html" import new_button, action_button %}
 {% from "macros/cards.html" import character_card, worldinfo_card, character_grid, worldinfo_grid %}
 {% block title %}AIMO — Hub-Dashboard{% endblock %}
 
@@ -33,6 +34,16 @@
           <option value="relationship" {% if sort_by == 'relationship' %}selected{% endif %}>Bester Beziehungswert</option>
         </select>
       </div>
+      {% if has_perm('character_create') %}
+      <div style="flex: 1; min-width: 160px;">
+        <label style="font-size: 0.8rem; color: var(--text-muted);">Urheber</label>
+        <select name="author" onchange="this.form.submit()">
+          <option value="" {% if not author_filter %}selected{% endif %}>Alle Charaktere</option>
+          <option value="mine" {% if author_filter == 'mine' %}selected{% endif %}>Nur eigene (Ersteller)</option>
+          <option value="collaborations" {% if author_filter == 'collaborations' %}selected{% endif %}>Kollaborationen</option>
+        </select>
+      </div>
+      {% endif %}
     </form>
 
     {{ character_grid(character_cards, can_create=has_perm('character_create'), can_edit=has_perm('character_edit')) }}
@@ -76,7 +87,7 @@
   <div class="modal-frame" style="max-width: 540px;">
     <div class="modal-header">
       <h3 style="color: var(--gold-accent);">Neues Lorebook erstellen</h3>
-      <button type="button" class="btn" data-modal-close="new-lorebook-modal">✕</button>
+      {{ action_button("Schließen", icon="✕", layout="icon", modal_close="new-lorebook-modal") }}
     </div>
     <form method="POST" action="{{ url_for('lorebooks.create_lorebook') }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
       <div style="display: flex; gap: 0.75rem;">
@@ -97,7 +108,7 @@
         <textarea name="description" rows="3" placeholder="Kurzbeschreibung..."></textarea>
       </div>
       <div style="text-align: right;">
-        <button type="submit" class="aimo-btn primary">Anlegen</button>
+        {{ action_button("Anlegen", type="submit", variant="primary") }}
       </div>
     </form>
   </div>
@@ -108,7 +119,7 @@
   <div class="modal-frame" style="max-width: 480px;">
     <div class="modal-header">
       <h3 style="color: var(--gold-accent);">Neue Welt erstellen</h3>
-      <button type="button" class="aimo-btn" data-modal-close="new-worldinfo-modal">✕</button>
+      {{ action_button("Schließen", icon="✕", layout="icon", modal_close="new-worldinfo-modal") }}
     </div>
     <form method="POST" action="{{ url_for('worldinfo.create_worldinfo') }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
       <div>
@@ -132,8 +143,8 @@
         </select>
       </div>
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
-        <button type="button" class="aimo-btn" data-modal-close="new-worldinfo-modal">Abbrechen</button>
-        <button type="submit" class="aimo-btn primary">Anlegen</button>
+        {{ action_button("Abbrechen", modal_close="new-worldinfo-modal") }}
+        {{ action_button("Anlegen", type="submit", variant="primary") }}
       </div>
     </form>
   </div>

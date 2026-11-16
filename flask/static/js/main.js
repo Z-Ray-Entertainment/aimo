@@ -12,6 +12,15 @@ window.setPersonaEditorLocked = function setPersonaEditorLocked(locked) {
   modal.querySelectorAll("[data-persona-lockable='1']").forEach((el) => {
     el.disabled = Boolean(locked);
   });
+  if (!locked) {
+    const deleteBtn = document.getElementById("edit-persona-delete-btn");
+    if (deleteBtn && deleteBtn.dataset.inUse === "1") deleteBtn.disabled = true;
+    ["new", "edit"].forEach((prefix) => {
+      const img = document.getElementById(`${prefix}-persona-preview-img`);
+      const openBtn = document.getElementById(`${prefix}-persona-open-crop-btn`);
+      if (openBtn && img) openBtn.disabled = !img.getAttribute("src");
+    });
+  }
 };
 
 window.extractPersonaVisionFeatures = async function extractPersonaVisionFeatures(mode) {
@@ -99,17 +108,39 @@ window.extractPersonaVisionFeatures = async function extractPersonaVisionFeature
   }
 };
 
+window.personaCropControllers = {};
+
+window.resetPersonaPortraitPreview = function resetPersonaPortraitPreview(prefix, src) {
+  const wrap = document.getElementById(`${prefix}-persona-preview-wrap`);
+  const img = document.getElementById(`${prefix}-persona-preview-img`);
+  const openBtn = document.getElementById(`${prefix}-persona-open-crop-btn`);
+  const badge = document.getElementById(`${prefix}-persona-crop-badge`);
+  const fileInput = document.getElementById(`${prefix}-persona-portrait`);
+  if (fileInput) fileInput.value = "";
+  if (badge) badge.style.display = "none";
+  if (img) img.src = src || "";
+  if (wrap) wrap.style.display = src ? "block" : "none";
+  if (openBtn) openBtn.disabled = !src;
+};
+
 window.openNewPersonaForm = function openNewPersonaForm() {
   if (window.aimoPersonaVisionRunning) return;
   const editBox = document.getElementById("edit-persona-form-box");
   const newBox = document.getElementById("new-persona-form-box");
+  const titleEl = document.getElementById("persona-modal-title");
+  const form = document.getElementById("new-persona-form");
   const statusEl = document.getElementById("new-persona-vision-status");
+  if (form) form.reset();
   if (statusEl) statusEl.textContent = "";
+  ["new-persona-description", "new-persona-appearance"].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el && typeof el._reloadI18nVariants === "function") el._reloadI18nVariants({}, "", "");
+  });
+  window.resetPersonaPortraitPreview("new", "");
+  if (titleEl) titleEl.innerHTML = '<span class="icon-mono">👤</span> Neue Persona anlegen';
   if (editBox) editBox.style.display = "none";
-  if (newBox) {
-    newBox.style.display = "block";
-    newBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
+  if (newBox) newBox.style.display = "block";
+  window.AimoModals.open("persona-manager-modal");
 };
 
 window.openEditPersonaFromBtn = function openEditPersonaFromBtn(btn) {
@@ -128,22 +159,23 @@ window.openEditPersonaFromBtn = function openEditPersonaFromBtn(btn) {
   const appearance = btn.getAttribute("data-persona-appearance") || "";
   const i18nDesc = btn.getAttribute("data-persona-i18n-description") || "{}";
   const i18nApp = btn.getAttribute("data-persona-i18n-appearance") || "{}";
-  const isDefault = btn.getAttribute("data-persona-default") === "1";
+  const portraitUrl = btn.getAttribute("data-persona-portrait-url") || "";
+  const inUse = btn.getAttribute("data-persona-in-use") === "1";
 
   form.action = `/personas/${id}/edit`;
   const idInput = document.getElementById("edit-persona-id");
   const preuploadedInput = document.getElementById("edit-persona-preuploaded-portrait");
-  const portraitInput = document.getElementById("edit-persona-portrait");
   const statusEl = document.getElementById("edit-persona-vision-status");
   const nameInput = document.getElementById("edit-persona-name");
   const genderSelect = document.getElementById("edit-persona-gender");
   const descInput = document.getElementById("edit-persona-description");
   const appInput = document.getElementById("edit-persona-appearance");
-  const defCheck = document.getElementById("edit-persona-default");
+  const deleteForm = document.getElementById("edit-persona-delete-form");
+  const deleteBtn = document.getElementById("edit-persona-delete-btn");
+  const titleEl = document.getElementById("persona-modal-title");
 
   if (idInput) idInput.value = id;
   if (preuploadedInput) preuploadedInput.value = "";
-  if (portraitInput) portraitInput.value = "";
   if (statusEl) statusEl.textContent = "";
   if (nameInput) nameInput.value = name;
   if (genderSelect) genderSelect.value = gender;
@@ -159,11 +191,44 @@ window.openEditPersonaFromBtn = function openEditPersonaFromBtn(btn) {
       appInput._reloadI18nVariants(i18nApp, id, appearance);
     }
   }
-  if (defCheck) defCheck.checked = isDefault;
+  if (deleteForm) deleteForm.action = `/personas/${id}/delete`;
+  if (deleteBtn) {
+    deleteBtn.dataset.inUse = inUse ? "1" : "0";
+    deleteBtn.disabled = inUse;
+    deleteBtn.title = inUse
+      ? "Wird in aktiven Chats verwendet (Lösch-Schutz)"
+      : "Persona löschen";
+    deleteBtn.innerHTML = inUse
+      ? '<span class="icon-mono">🔒</span> Löschen gesperrt'
+      : '<span class="icon-mono">🗑️</span> Löschen';
+  }
+  window.resetPersonaPortraitPreview("edit", portraitUrl);
+  if (titleEl) titleEl.innerHTML = '<span class="icon-mono">👤</span> Persona bearbeiten';
 
   editBox.style.display = "block";
-  editBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  window.AimoModals.open("persona-manager-modal");
 };
+
+document.addEventListener("DOMContentLoaded", () => {
+  ["new", "edit"].forEach((prefix) => {
+    window.AimoImageCropper?.setup({
+      modalId: `persona-${prefix}-crop-modal`,
+      fileInputId: `${prefix}-persona-portrait`,
+      openBtnId: `${prefix}-persona-open-crop-btn`,
+      statusBadgeId: `${prefix}-persona-crop-badge`,
+      targets: [
+        {
+          id: "avatar",
+          ratio: 1.0,
+          inputElement: document.getElementById(`${prefix}-persona-portrait`),
+          previewImgElement: document.getElementById(`${prefix}-persona-preview-img`),
+          previewWrapElement: document.getElementById(`${prefix}-persona-preview-wrap`),
+          outputFilename: "persona_1_1.png",
+        },
+      ],
+    });
+  });
+});
 
 window.showToast = function showToast(options) {
   const container = document.getElementById("aimo-toast-container");
@@ -1048,14 +1113,49 @@ document.addEventListener("DOMContentLoaded", () => {
         closeMobileMenu();
       });
     });
+  }
 
-    // Automatically close when window is resized to desktop width
-    window.addEventListener("resize", () => {
-      if (window.innerWidth >= 992) {
-        closeMobileMenu();
+  document.querySelectorAll("[data-copy-text]").forEach((btn) => {
+    btn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        btn.click();
       }
     });
-  }
+    let resetTimer = null;
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const text = btn.getAttribute("data-copy-text") || "";
+      if (!text) return;
+      const labelEl = btn.querySelector("span:not(.icon-mono)");
+      const originalLabel = labelEl ? labelEl.textContent : "";
+      const showCopiedState = () => {
+        if (labelEl) labelEl.textContent = "Kopiert";
+        btn.classList.add("copied-success");
+        if (resetTimer) clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => {
+          if (labelEl) labelEl.textContent = originalLabel;
+          btn.classList.remove("copied-success");
+          resetTimer = null;
+        }, 1000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showCopiedState).catch(showCopiedState);
+      } else {
+        const tmp = document.createElement("textarea");
+        tmp.value = text;
+        tmp.style.position = "fixed";
+        tmp.style.opacity = "0";
+        document.body.appendChild(tmp);
+        tmp.select();
+        try {
+          document.execCommand("copy");
+        } catch (_) {}
+        document.body.removeChild(tmp);
+        showCopiedState();
+      }
+    });
+  });
 
   // Hub Header Nav Tab Switcher (instant switch when on overview page, works for desktop and mobile)
   document.querySelectorAll("[data-hub-tab]").forEach((btn) => {
@@ -1155,5 +1255,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setInterval(pollNotifications, 2500);
     setTimeout(pollNotifications, 600);
+  }
+
+  // Clickable table rows (e.g. in My Creations)
+  document.addEventListener("click", (e) => {
+    const row = e.target.closest(".aimo-clickable-row");
+    if (!row) return;
+    // If clicked directly on an interactive element, let its native action run
+    if (e.target.closest("a, button, input, select, label, textarea")) return;
+    const href = row.getAttribute("data-href");
+    if (href) {
+      window.location.href = href;
+    }
+  });
+
+  // Client-side instant live search for creations table
+  const creationsSearchInput = document.getElementById("creations-search-input");
+  const creationsTableBody = document.getElementById("creations-table-body");
+  if (creationsSearchInput && creationsTableBody) {
+    creationsSearchInput.addEventListener("input", (e) => {
+      const term = e.target.value.trim().toLowerCase();
+      const rows = creationsTableBody.querySelectorAll(".aimo-clickable-row");
+      rows.forEach((row) => {
+        const text = row.textContent.toLowerCase();
+        if (!term || text.includes(term)) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    });
   }
 });

@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-from application.auth.decorators import get_current_user, require_auth, require_permission
+from application.auth.decorators import get_current_user, is_admin, require_auth, require_permission
 from application.worldinfo.forms import EventForm, LocationForm
 from domain.permissions.models import FunctionPermission
 from domain.worldinfo.services import WorldInfoService
@@ -48,12 +48,12 @@ def detail(worldinfo_id: int):
     repo = WorldInfoRepository()
     service = WorldInfoService()
     worldinfo = repo.get_by_id(worldinfo_id)
-    if worldinfo is None or not worldinfo.is_visible_to_user(user.id, user.is_initial_admin):
+    if worldinfo is None or not worldinfo.is_visible_to_user(user.id, is_admin()):
         flash("WorldInfo nicht gefunden.", "error")
         return redirect(url_for("overview.index"))
 
-    is_editable = worldinfo.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag)
-    is_author = (worldinfo.user_id == user.id or user.is_initial_admin)
+    is_editable = worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag)
+    is_author = (worldinfo.user_id == user.id or is_admin())
 
     if request.method == "POST":
         if not is_editable:
@@ -153,7 +153,7 @@ def duplicate_worldinfo(worldinfo_id: int):
     assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     orig = repo.get_by_id(worldinfo_id)
-    if orig is None or not orig.is_visible_to_user(user.id, user.is_initial_admin):
+    if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
         flash("WorldInfo nicht gefunden.", "error")
         return redirect(url_for("overview.index", tab="worldinfo"))
     copied = repo.duplicate(worldinfo_id, user.id)
@@ -168,7 +168,7 @@ def delete_worldinfo(worldinfo_id: int):
     assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
-    if worldinfo is None or not worldinfo.is_deletable_by_user(user.id, user.is_initial_admin):
+    if worldinfo is None or not worldinfo.is_deletable_by_user(user.id, is_admin()):
         flash("WorldInfo nicht gefunden oder keine Berechtigung zum Löschen.", "error")
         return redirect(url_for("overview.index", tab="worldinfo"))
     repo.delete(worldinfo_id)
@@ -183,7 +183,7 @@ def add_location(worldinfo_id: int):
     assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
-    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 
@@ -224,7 +224,7 @@ def edit_location(worldinfo_id: int, location_id: int):
     assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
-    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 
@@ -267,7 +267,7 @@ def delete_location(worldinfo_id: int, location_id: int):
     assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
-    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 
@@ -283,7 +283,7 @@ def add_event(worldinfo_id: int):
     assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
-    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 
@@ -315,7 +315,7 @@ def edit_event(worldinfo_id: int, event_id: int):
     assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
-    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 
@@ -349,7 +349,7 @@ def delete_event(worldinfo_id: int, event_id: int):
     assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
-    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if worldinfo is None or not worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
         return redirect(url_for("overview.index"))
 

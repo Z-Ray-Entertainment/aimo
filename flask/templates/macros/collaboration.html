@@ -3,6 +3,7 @@
    Shared component for managing creator tags and collaborator permissions
    Used in Character Designer, WorldInfo Detail, and Lorebook Detail
    ============================================================================= #}
+{% from "macros/buttons.html" import action_button %}
 
 {% macro collaboration_manager(collaborator_tags, is_author=true, is_editable=true, form_id=none, input_name="collaborator_creator_tags") %}
 <div class="collaboration-manager-root aimo-frame" data-form-id="{{ form_id or '' }}" style="padding: 1.5rem;">
@@ -18,9 +19,7 @@
       </p>
     </div>
     {% if is_author and form_id %}
-      <button type="submit" form="{{ form_id }}" class="aimo-btn primary collab-save-btn" title="Speichert alle Änderungen des Formulars">
-        <span class="icon-mono">💾</span> Kollaboratoren speichern
-      </button>
+      {{ action_button("Kollaboratoren speichern", type="submit", form=form_id, variant="primary", icon="💾", extra_class="collab-save-btn", title="Speichert alle Änderungen des Formulars") }}
     {% endif %}
   </div>
 
@@ -69,9 +68,7 @@
             <td>
               <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                 <code class="collab-tag-code" style="font-family: monospace; font-size: 0.88rem; background: rgba(0, 0, 0, 0.4); padding: 0.22rem 0.55rem; border-radius: 6px; border: 1px solid var(--border-wood-dark); color: var(--gold-accent); letter-spacing: 0.5px;">{{ tag }}</code>
-                <button type="button" class="aimo-btn copy-collab-tag-btn" data-tag="{{ tag }}" style="padding: 0.2rem 0.45rem; font-size: 0.75rem;" title="Creator-Tag kopieren">
-                  <span class="icon-mono">📋</span>
-                </button>
+                {{ action_button("Kopieren", icon="📋", layout="icon", size="sm", extra_class="copy-collab-tag-btn", data={"tag": tag}, title="Creator-Tag kopieren") }}
               </div>
             </td>
             <td>
@@ -81,9 +78,7 @@
             </td>
             {% if is_author %}
               <td style="text-align: right;">
-                <button type="button" class="aimo-btn danger remove-collab-tag-btn" data-tag="{{ tag }}" style="padding: 0.25rem 0.65rem; font-size: 0.78rem;" title="Kollaborator entfernen">
-                  <span class="icon-mono">🗑️</span> Entfernen
-                </button>
+                {{ action_button("Entfernen", icon="🗑️", variant="danger", size="sm", extra_class="remove-collab-tag-btn", data={"tag": tag}, title="Kollaborator entfernen") }}
               </td>
             {% endif %}
           </tr>
@@ -118,13 +113,9 @@
             placeholder="z. B. 123e4567-e89b-12d3-a456-426614174000"
             style="width: 100%; font-family: monospace; font-size: 0.88rem;">
         </div>
-        <button type="button" class="aimo-btn primary add-collab-tag-btn">
-          <span class="icon-mono">➕</span> Hinzufügen
-        </button>
+        {{ action_button("Hinzufügen", icon="➕", variant="primary", extra_class="add-collab-tag-btn") }}
         {% if form_id %}
-          <button type="submit" form="{{ form_id }}" class="aimo-btn primary collab-save-btn" title="Speichert alle Änderungen des Formulars">
-            <span class="icon-mono">💾</span> Speichern
-          </button>
+          {{ action_button("Speichern", type="submit", form=form_id, variant="primary", icon="💾", extra_class="collab-save-btn", title="Speichert alle Änderungen des Formulars") }}
         {% endif %}
       </div>
       <div class="collab-feedback-msg" style="margin-top: 0.65rem; font-size: 0.84rem; display: none;"></div>

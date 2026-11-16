@@ -10,6 +10,7 @@ from domain.permissions.models import FunctionPermission, UserPermissions
 get_current_user = AuthContext.get_current_user
 get_current_permissions = AuthContext.get_current_permissions
 has_perm = AuthContext.has_permission
+is_admin = AuthContext.is_admin
 has_creator_permission = AuthContext.has_creator_permission
 
 

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "macros/buttons.html" import action_button %}
 {% block title %}AIMO — Anmeldung{% endblock %}
 
 {% block content %}
@@ -18,7 +19,7 @@
       <input type="password" id="password" name="password" required>
     </div>
     <div style="margin-top: 0.75rem;">
-      <button type="submit" class="btn" style="width: 100%;">Betreten</button>
+      {{ action_button("Betreten", type="submit", variant="primary", extra_class="w-100") }}
     </div>
   </form>
 </div>

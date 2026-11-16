@@ -52,6 +52,13 @@ class AuthContext:
         return PermissionService().has_permission(perms, permission)
 
     @staticmethod
+    def is_admin() -> bool:
+        user = AuthContext.get_current_user()
+        if user is None:
+            return False
+        return PermissionService().is_admin(user, AuthContext.get_current_permissions())
+
+    @staticmethod
     def has_creator_permission() -> bool:
         user = AuthContext.get_current_user()
         if user is None:

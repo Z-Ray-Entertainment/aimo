@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from application.api.auth import get_current_user, require_auth, require_permission
+from application.api.auth import get_current_user, is_admin, require_auth, require_permission
 from domain.lorebooks.services import LorebookService
 from domain.permissions.models import FunctionPermission
 from domain.settings.models import ModelParameters
@@ -18,14 +18,14 @@ api_lorebooks_bp = Blueprint("api_lorebooks", __name__, url_prefix="/api/loreboo
 def list_lorebooks():
     user = get_current_user()
     uid = user.id if user and user.id else None
-    is_admin = user.is_initial_admin if user else False
+    admin_view = is_admin() if user else False
     repo = LorebookRepository()
     lorebooks = repo.list_for_user(uid)
     result = []
     for lb in lorebooks:
         if lb.id is None:
             continue
-        entries = repo.list_entries(lb.id, user_id=uid, is_admin=is_admin)
+        entries = repo.list_entries(lb.id, user_id=uid, is_admin=admin_view)
         result.append(
             {
                 "id": lb.id,
@@ -82,7 +82,7 @@ def add_lorebook_entry(lorebook_id: int):
     assert user is not None and user.id is not None
     repo = LorebookRepository()
     lb = repo.get_by_id(lorebook_id)
-    if lb is None or not lb.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if lb is None or not lb.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         return jsonify({"error": "Lorebook not found."}), 404
 
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -120,7 +120,7 @@ def delete_lorebook_entry(entry_id: int):
     if entry is None:
         return jsonify({"error": "Entry not found."}), 404
     lb = repo.get_by_id(entry.lorebook_id)
-    if lb is None or not lb.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag):
+    if lb is None or not lb.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         return jsonify({"error": "Lorebook not found."}), 404
     deleted = repo.delete_entry(entry_id)
     return jsonify({"deleted": deleted})
@@ -133,7 +133,7 @@ def duplicate_lorebook(lorebook_id: int):
     assert user is not None and user.id is not None
     repo = LorebookRepository()
     orig = repo.get_by_id(lorebook_id)
-    if orig is None or not orig.is_visible_to_user(user.id, user.is_initial_admin):
+    if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
         return jsonify({"error": "Lorebook not found."}), 404
     copied = repo.duplicate(lorebook_id, user.id)
     return jsonify({"id": copied.id, "name": copied.name}), 201

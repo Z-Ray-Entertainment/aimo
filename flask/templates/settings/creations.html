@@ -1,0 +1,153 @@
+{% extends "settings/layout.html" %}
+{% from "macros/buttons.html" import action_button %}
+{% block title %}AIMO — My Creations{% endblock %}
+
+{% block settings_content %}
+<div class="aimo-frame" style="padding: 1.5rem;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.85rem; flex-wrap: wrap; gap: 0.75rem;">
+    <div>
+      <h1 style="font-size: 1.4rem; color: var(--gold-accent); margin-bottom: 0.25rem;">My Creations</h1>
+      <p class="text-muted" style="font-size: 0.88rem;">Übersicht aller von dir erstellten Charaktere, Welten und Lorebooks sowie deiner Kollaborationen. Ein Klick öffnet direkt den passenden Editor.</p>
+    </div>
+    <div style="display: flex; gap: 0.5rem; align-items: center;">
+      <span class="aimo-card-badge" style="font-size: 0.82rem; padding: 0.25rem 0.65rem; color: var(--gold-accent); border-color: var(--gold-accent);">
+        Gesamt: {{ total_count }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Filterleiste (im gleichen Layout wie im Hub-Dashboard) -->
+  <form method="GET" action="{{ url_for('settings.creations') }}" id="creations-filter-form" class="aimo-frame" style="padding: 0.85rem 1.2rem; margin-bottom: 1.25rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">Typ</label>
+      <select name="type" onchange="this.form.submit()">
+        <option value="all" {% if type_filter == 'all' %}selected{% endif %}>Alle Typen ({{ total_count }})</option>
+        <option value="characters" {% if type_filter == 'characters' %}selected{% endif %}>Charaktere ({{ char_count }})</option>
+        <option value="worldinfo" {% if type_filter == 'worldinfo' %}selected{% endif %}>Welten ({{ world_count }})</option>
+        <option value="lorebooks" {% if type_filter == 'lorebooks' %}selected{% endif %}>Lorebooks ({{ lorebook_count }})</option>
+      </select>
+    </div>
+
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">Urheber</label>
+      <select name="role" onchange="this.form.submit()">
+        <option value="all" {% if role_filter == 'all' %}selected{% endif %}>Alle Werke</option>
+        <option value="owner" {% if role_filter in ('owner', 'mine') %}selected{% endif %}>Nur eigene (Ersteller)</option>
+        <option value="collaboration" {% if role_filter in ('collaboration', 'collaborations') %}selected{% endif %}>Kollaborationen</option>
+      </select>
+    </div>
+
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">Sortierung</label>
+      <select name="sort" onchange="this.form.submit()">
+        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name (A-Z)</option>
+        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Neueste zuerst</option>
+      </select>
+    </div>
+
+    <div style="flex: 1.5; min-width: 200px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">Suche</label>
+      <input type="text"
+             name="q"
+             id="creations-search-input"
+             value="{{ q }}"
+             placeholder="Name suchen..."
+             autocomplete="off"
+             aria-label="Kreationen durchsuchen">
+    </div>
+  </form>
+
+  <!-- Tabelle der Kreationen -->
+  {% if items %}
+    <div class="aimo-table-wrap">
+      <table class="aimo-table creations-table" id="creations-table">
+        <thead>
+          <tr>
+            <th style="width: 130px;">Typ</th>
+            <th style="width: 55px; text-align: center;">Vorschau</th>
+            <th>Name</th>
+            <th>Details</th>
+            <th class="col-creations-visibility" style="width: 120px;">Sichtbarkeit</th>
+            <th style="width: 140px;">Rolle</th>
+            <th class="col-creations-created" style="width: 110px;">Erstellt</th>
+            <th style="width: 110px; text-align: right;">Aktion</th>
+          </tr>
+        </thead>
+        <tbody id="creations-table-body">
+          {% for item in items %}
+            <tr class="aimo-clickable-row"
+                data-href="{{ item.editor_url }}"
+                data-type="{{ item.type }}"
+                data-role="{{ 'owner' if item.is_owner else 'collaboration' }}"
+                data-name="{{ item.name|lower }}">
+              <td>
+                <span class="aimo-card-badge" style="font-size: 0.78rem;">
+                  <span class="icon-mono">{{ item.type_icon }}</span> {{ item.type_label }}
+                </span>
+              </td>
+              <td style="text-align: center;">
+                {% if item.image_path %}
+                  <img src="{{ url_for('uploaded_file', filename=item.image_path) }}"
+                       alt="{{ item.name }}"
+                       class="creations-table-thumb"
+                       onerror="this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.style.display='inline-flex';}">
+                  <span class="creations-table-thumb" style="display: none;">{{ item.icon or item.type_icon }}</span>
+                {% else %}
+                  <span class="creations-table-thumb">{{ item.icon or item.type_icon }}</span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="{{ item.editor_url }}" class="creations-name-link">
+                  {{ item.name }}
+                </a>
+              </td>
+              <td>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">{{ item.details }}</span>
+              </td>
+              <td class="col-creations-visibility">
+                {% if item.visibility == 'public' %}
+                  <span class="aimo-card-badge" style="color: #68d391; border-color: rgba(104, 211, 145, 0.4); font-size: 0.76rem;">
+                    Öffentlich
+                  </span>
+                {% else %}
+                  <span class="aimo-card-badge" style="color: var(--text-muted); border-color: var(--border-wood-dark); font-size: 0.76rem;">
+                    Privat
+                  </span>
+                {% endif %}
+              </td>
+              <td>
+                {% if item.is_owner %}
+                  <span class="aimo-card-badge" style="color: var(--gold-accent); border-color: rgba(212, 175, 55, 0.4); font-size: 0.76rem;">
+                    👑 Eigentümer
+                  </span>
+                {% else %}
+                  <span class="aimo-card-badge" style="color: #63b3ed; border-color: rgba(99, 179, 237, 0.4); font-size: 0.76rem;">
+                    🤝 Kollaborateur
+                  </span>
+                {% endif %}
+              </td>
+              <td class="col-creations-created">
+                <span style="font-size: 0.82rem; color: var(--text-muted);">{{ item.created_at_formatted }}</span>
+              </td>
+              <td style="text-align: right;">
+                {{ action_button("Editor", href=item.editor_url, icon="✏️", size="sm", title="Editor öffnen") }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="creations-empty-frame">
+      <div class="creations-empty-icon">📜</div>
+      <h3 style="font-size: 1.1rem; color: var(--gold-accent); margin-bottom: 0.35rem;">Keine Kreationen gefunden</h3>
+      <p style="font-size: 0.88rem; max-width: 480px; margin: 0 auto 1rem auto;">
+        Es wurden keine Werke gefunden, die den gewählten Filtern entsprechen oder von dir erstellt bzw. mit dir geteilt wurden.
+      </p>
+      {% if type_filter != 'all' or role_filter != 'all' or q %}
+        {{ action_button("Alle Filter zurücksetzen", href=url_for('settings.creations')) }}
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
