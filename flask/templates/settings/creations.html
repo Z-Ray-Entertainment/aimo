@@ -1,4 +1,5 @@
 {% extends "settings/layout.html" %}
+{% from "macros/buttons.html" import action_button %}
 {% block title %}AIMO — My Creations{% endblock %}
 
 {% block settings_content %}
@@ -129,9 +130,7 @@
                 <span style="font-size: 0.82rem; color: var(--text-muted);">{{ item.created_at_formatted }}</span>
               </td>
               <td style="text-align: right;">
-                <a href="{{ item.editor_url }}" class="aimo-btn" style="padding: 0.25rem 0.55rem; font-size: 0.78rem;" title="Editor öffnen">
-                  <span class="icon-mono">✏️</span> Editor
-                </a>
+                {{ action_button("Editor", href=item.editor_url, icon="✏️", size="sm", title="Editor öffnen") }}
               </td>
             </tr>
           {% endfor %}
@@ -146,9 +145,7 @@
         Es wurden keine Werke gefunden, die den gewählten Filtern entsprechen oder von dir erstellt bzw. mit dir geteilt wurden.
       </p>
       {% if type_filter != 'all' or role_filter != 'all' or q %}
-        <a href="{{ url_for('settings.creations') }}" class="aimo-btn" style="display: inline-block;">
-          Alle Filter zurücksetzen
-        </a>
+        {{ action_button("Alle Filter zurücksetzen", href=url_for('settings.creations')) }}
       {% endif %}
     </div>
   {% endif %}

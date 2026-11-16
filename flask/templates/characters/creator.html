@@ -1,59 +1,55 @@
 {% extends "base.html" %}
-{% from "macros/buttons.html" import action_button, new_button %}
+{% from "macros/buttons.html" import action_button, new_button, tab_button, modal_close_button %}
 {% from "macros/editor_header.html" import editor_header %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
 {% from "macros/collaboration.html" import collaboration_manager %}
 {% block title %}AIMO — Character Designer{% endblock %}
 
 {% block content %}
-<div data-tab-group>
-  <!-- Top Action Bar -->
-  {{ editor_header(
-      title=character.name if character else "Neuer Charakter",
-      back_url=get_safe_back_url(url_for('overview.index', tab='characters')),
-      form_id="character-main-form",
-      is_editable=is_editable,
-      copy_url=(url_for('characters.copy_character', character_id=character.id) if character else none),
-      can_copy=(character is not none and character.id is not none),
-      delete_url=(url_for('characters.delete_character', character_id=character.id) if character else none),
-      can_delete=(character is not none and is_author),
-      delete_confirm_msg="Charakter wirklich unwiderruflich löschen?",
-      save_title="Charakter speichern"
-  ) }}
+<div class="aimo-sidebar-layout" data-tab-group>
+  <!-- Vertikale Seitenleiste links -->
+  <aside class="aimo-frame aimo-sidebar">
+    <div class="aimo-sidebar-header">
+      <div class="aimo-sidebar-title">
+        <span class="icon-mono">🎭</span>
+        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ character.name if character else "Neuer Charakter" }}</span>
+      </div>
+      <p class="aimo-sidebar-subtitle">Charakter-Designer</p>
+    </div>
 
-  <!-- Designer Tabs (Consistent with Header & Chat Nav Buttons) -->
-  <div class="rpg-tabs">
-    <button type="button" class="aimo-btn {% if active_tab == 'info' %}active{% endif %}" data-tab-target="tab-char-info">
-      <span class="icon-mono">📋</span>
-      <span>Hauptinformationen</span>
-    </button>
-    <button type="button" class="aimo-btn {% if active_tab == 'gallery' %}active{% endif %}" data-tab-target="tab-char-gallery" {% if not character %}disabled title="Bitte zuerst Grunddaten speichern"{% endif %}>
-      <span class="icon-mono">🖼️</span>
-      <span>Galeriebilder</span>
-    </button>
-    <button type="button" class="aimo-btn {% if active_tab == 'sprites' %}active{% endif %}" data-tab-target="tab-char-sprites" {% if not character %}disabled title="Bitte zuerst Grunddaten speichern"{% endif %}>
-      <span class="icon-mono">🎭</span>
-      <span>Emotionale Sprites</span>
-    </button>
-    <button type="button" class="aimo-btn {% if active_tab == 'dialogue' %}active{% endif %}" data-tab-target="tab-char-dialogue">
-      <span class="icon-mono">💬</span>
-      <span>Gesprächsstile</span>
-    </button>
-    <button type="button" class="aimo-btn {% if active_tab == 'world' %}active{% endif %}" data-tab-target="tab-char-world">
-      <span class="icon-mono">🗺️</span>
-      <span>World</span>
-    </button>
-    <button type="button" class="aimo-btn {% if active_tab == 'lorebooks' %}active{% endif %}" data-tab-target="tab-char-lorebooks">
-      <span class="icon-mono">📖</span>
-      <span>Lorebooks</span>
-    </button>
-    <button type="button" class="aimo-btn {% if active_tab == 'collab' %}active{% endif %}" data-tab-target="tab-char-collab">
-      <span class="icon-mono">👥</span>
-      <span>Kollaboration</span>
-    </button>
-  </div>
+    <nav class="aimo-sidebar-nav">
+      {{ tab_button("Hauptinformationen", "tab-char-info", icon="📋", active=(active_tab == 'info'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button("Galeriebilder", "tab-char-gallery", icon="🖼️", active=(active_tab == 'gallery'), disabled=(not character), title=("Bitte zuerst Grunddaten speichern" if not character else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button("Emotionale Sprites", "tab-char-sprites", icon="🎭", active=(active_tab == 'sprites'), disabled=(not character), title=("Bitte zuerst Grunddaten speichern" if not character else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button("Gesprächsstile", "tab-char-dialogue", icon="💬", active=(active_tab == 'dialogue'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button("World", "tab-char-world", icon="🗺️", active=(active_tab == 'world'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button("Lorebooks", "tab-char-lorebooks", icon="📖", active=(active_tab == 'lorebooks'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button("Kollaboration", "tab-char-collab", icon="👥", active=(active_tab == 'collab'), extra_class="aimo-sidebar-nav-item") }}
+    </nav>
 
-  <!-- MAIN CHARACTER FORM (Encloses Tabs 1, 4, 5, 6 for safe single-submit) -->
+    <div class="aimo-sidebar-footer">
+      {{ action_button("Zurück zur Übersicht", href=get_safe_back_url(url_for('overview.index', tab='characters')), arrow="left", extra_class="aimo-sidebar-back-btn") }}
+    </div>
+  </aside>
+
+  <!-- Rechter Hauptbereich für Inhalte -->
+  <section class="aimo-sidebar-stage">
+    <!-- Top Action Bar -->
+    {{ editor_header(
+        title=character.name if character else "Neuer Charakter",
+        back_url=get_safe_back_url(url_for('overview.index', tab='characters')),
+        form_id="character-main-form",
+        is_editable=is_editable,
+        copy_url=(url_for('characters.copy_character', character_id=character.id) if character else none),
+        can_copy=(character is not none and character.id is not none),
+        delete_url=(url_for('characters.delete_character', character_id=character.id) if character else none),
+        can_delete=(character is not none and is_author),
+        delete_confirm_msg="Charakter wirklich unwiderruflich löschen?",
+        save_title="Charakter speichern",
+        show_back=false
+    ) }}
+
+    <!-- MAIN CHARACTER FORM (Encloses Tabs 1, 4, 5, 6 for safe single-submit) -->
   <form id="character-main-form" method="POST" action="{% if character %}{{ url_for('characters.edit_character', character_id=character.id) }}{% else %}{{ url_for('characters.new_character') }}{% endif %}" enctype="multipart/form-data">
     <input type="hidden" name="return_to" value="{{ get_safe_back_url(url_for('overview.index', tab='characters')) }}">
     <input type="hidden" name="dialogue_examples_json" id="dialogue-examples-json" value='{{ form.dialogue_examples | tojson }}'>
@@ -121,9 +117,7 @@
               <input type="file" id="avatar-portrait-input" name="avatar_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
               <input type="file" id="card-portrait-input" name="card_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
               <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-                <button type="button" id="open-crop-btn" class="aimo-btn" style="padding: 0.35rem 0.75rem; font-size: 0.82rem;" {% if not character %}disabled{% endif %}>
-                  <span class="icon-mono">✂️</span> Ausschnitte anpassen (9:16 &amp; 1:1)
-                </button>
+                {{ action_button("Ausschnitte anpassen (9:16 & 1:1)", icon="✂️", id="open-crop-btn", size="sm", disabled=(not character)) }}
                 <span id="crop-status-badge" style="display: none; font-size: 0.8rem; color: #4CAF50; font-weight: 600;">✓ Ausschnitte aktiv</span>
               </div>
               <div style="font-size: 0.76rem; color: var(--text-muted);">
@@ -148,9 +142,7 @@
               Charakterbeschreibung &amp; Persönlichkeit *
               <span class="field-help-btn" title="Charakterbeschreibung &amp; Persönlichkeit:&#10;Kernidentität der Figur (Wesen, Eigenarten, Hintergrundgeschichte, Ängste, Motivationen). Tipp: Nutze '✨ KI-Autor Optimierung'.">?</span>
             </label>
-            <button type="button" id="sparkle-improve-btn" class="aimo-btn btn-sparkle">
-              <span class="icon-sparkle">✨</span> KI-Autor Optimierung
-            </button>
+            {{ action_button("KI-Autor Optimierung", icon="✨", id="sparkle-improve-btn", extra_class="btn-sparkle") }}
           </div>
           <textarea
             id="char-description-textarea"
@@ -166,9 +158,7 @@
               Aussehen des Charakters (Physical Appearance)
               <span class="field-help-btn" title="Aussehen des Charakters:&#10;Detaillierte visuelle Beschreibung (Augenfarbe, Frisur, Hautton, Statur, Kleidung). Fließt direkt in den [CHARACTER_DEFINITION]-Prompt ein und steuert KI-Bildgenerierungen.">?</span>
             </label>
-            <button type="button" id="extract-appearance-btn" class="aimo-btn btn-sparkle" title="Analysiert das Porträtbild mit einem Vision-LLM">
-              <span class="icon-sparkle">👁️</span> Aussehen aus Bild extrahieren
-            </button>
+            {{ action_button("Aussehen aus Bild extrahieren", icon="👁️", id="extract-appearance-btn", extra_class="btn-sparkle", title="Analysiert das Porträtbild mit einem Vision-LLM") }}
           </div>
           <textarea
             id="char-appearance-textarea"
@@ -191,7 +181,7 @@
 
         <!-- Bottom Save Action Row -->
         <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-wood-dark);">
-          <button type="submit" class="aimo-btn primary"><span class="icon-mono">💾</span> Speichern</button>
+          {{ action_button("Speichern", type="submit", variant="primary", icon="💾") }}
         </div>
       </div>
     </section>
@@ -209,9 +199,7 @@
               Definiere typische Trigger-Response-Beispiele, an denen sich die KI für Tonalität, Dialekt und Reaktionen orientiert.
             </p>
           </div>
-          <button type="button" class="aimo-btn primary" data-modal-open="add-dialogue-modal">
-            <span class="icon-mono">➕</span> Gesprächsstil hinzufügen
-          </button>
+          {{ action_button("Gesprächsstil hinzufügen", icon="➕", variant="primary", modal="add-dialogue-modal") }}
         </div>
 
         <div id="dialogue-examples-list" class="dialogue-examples-list">
@@ -220,12 +208,8 @@
               <div class="dialogue-item-header">
                 <span class="dialogue-index-label"><span class="icon-mono">💬</span> Beispiel {{ loop.index }}</span>
                 <div class="dialogue-item-actions">
-                  <button type="button" class="aimo-btn edit-dialogue-btn dialogue-action-btn" data-index="{{ loop.index0 }}" title="Beispiel bearbeiten">
-                    <span class="icon-mono">✏️</span>
-                  </button>
-                  <button type="button" class="aimo-btn danger delete-dialogue-btn dialogue-action-btn" data-index="{{ loop.index0 }}" title="Beispiel löschen">
-                    <span class="icon-mono">🗑️</span>
-                  </button>
+                  {{ action_button("Bearbeiten", icon="✏️", layout="icon", size="sm", extra_class="edit-dialogue-btn dialogue-action-btn", data={"index": loop.index0}, title="Beispiel bearbeiten") }}
+                  {{ action_button("Löschen", icon="🗑️", layout="icon", variant="danger", size="sm", extra_class="delete-dialogue-btn dialogue-action-btn", data={"index": loop.index0}, title="Beispiel löschen") }}
                 </div>
               </div>
               <!-- Trigger: Rechtsbündig, {{text}} {{user}} -->
@@ -343,9 +327,7 @@
               Füge Wissenskompendien an. Relevante Einträge werden nach dem Tag-Matching-Verfahren automatisch injiziert.
             </p>
           </div>
-          <button type="button" class="aimo-btn primary" data-modal-open="add-lorebook-modal">
-            <span class="icon-mono">➕</span> Lorebook hinzufügen
-          </button>
+          {{ action_button("Lorebook hinzufügen", icon="➕", variant="primary", modal="add-lorebook-modal") }}
         </div>
 
         <div id="linked-lorebooks-list" class="lorebook-list">
@@ -366,9 +348,7 @@
                       <option value="{{ wi.id }}" {% if form.lorebook_world_conditions.get(lb.id) == wi.id %}selected{% endif %}>🌐 Nur in Welt: {{ wi.name }}</option>
                     {% endfor %}
                   </select>
-                  <button type="button" class="aimo-btn danger remove-lorebook-btn" data-id="{{ lb.id }}" title="Lorebook entkoppeln">
-                    <span class="icon-mono">🗑️</span>
-                  </button>
+                  {{ action_button("Entkoppeln", icon="🗑️", layout="icon", variant="danger", size="sm", extra_class="remove-lorebook-btn", data={"id": lb.id}, title="Lorebook entkoppeln") }}
                 </div>
               </div>
             {% endif %}
@@ -406,7 +386,7 @@
             <div class="card-tile" style="justify-content: space-between;">
               <div style="flex: 1; background-image: url('{{ url_for('uploaded_file', filename=img.file_path) }}'); background-size: cover; background-position: center; min-height: 240px; position: relative;">
                 <form method="POST" action="{{ url_for('characters.delete_gallery_image', character_id=character.id, image_id=img.id) }}" style="position: absolute; top: 0.5rem; right: 0.5rem;">
-                  <button type="submit" class="aimo-btn danger" style="padding: 0.28rem 0.5rem; font-size: 0.82rem;" title="Bild löschen"><span class="icon-mono">🗑️</span></button>
+                  {{ action_button("Löschen", type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title="Bild löschen") }}
                 </form>
               </div>
               <div style="padding: 0.6rem; text-align: center; font-size: 0.85rem;">
@@ -465,14 +445,10 @@
                     </form>
 
                     {% if sp_list|length > 1 %}
-                      <button type="button" class="aimo-btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" data-modal-open="sprite-modal-{{ emotion }}" title="Alle {{ sp_list|length }} Varianten ansehen">
-                        <span class="icon-mono">👁️</span> {{ sp_list|length }}
-                      </button>
+                      {{ action_button(sp_list|length|string, icon="👁️", size="sm", modal="sprite-modal-" ~ emotion, title="Alle " ~ (sp_list|length) ~ " Varianten ansehen") }}
                     {% else %}
                       <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp_list[0].variant) }}" onsubmit="window.saveSpriteScrollPos()">
-                        <button type="submit" class="aimo-btn danger" style="padding: 0.25rem 0.45rem; font-size: 0.78rem;" title="Sprite löschen">
-                          <span class="icon-mono">🗑️</span>
-                        </button>
+                        {{ action_button("Löschen", type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title="Sprite löschen") }}
                       </form>
                     {% endif %}
                   </div>
@@ -490,14 +466,14 @@
                 <div class="modal-frame">
                   <div class="modal-header">
                     <h3 style="color: var(--gold-accent);">Varianten für Emotion: {{ emotion }}</h3>
-                    <button type="button" class="aimo-btn" data-modal-close="sprite-modal-{{ emotion }}">✕</button>
+                    {{ modal_close_button("sprite-modal-" ~ emotion) }}
                   </div>
                   <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));">
                     {% for sp in sp_list %}
                       <div class="card-tile" style="min-height: 200px; position: relative;">
                         <img src="{{ url_for('uploaded_file', filename=sp.file_path) }}" alt="{{ emotion }}_{{ sp.variant }}" style="width: 100%; height: 160px; object-fit: contain;">
                         <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp.variant) }}" style="position: absolute; top: 0.4rem; right: 0.4rem;" onsubmit="window.saveSpriteScrollPos()">
-                          <button type="submit" class="aimo-btn danger" style="padding: 0.25rem 0.5rem; font-size: 0.82rem;" title="Variante löschen"><span class="icon-mono">🗑️</span></button>
+                          {{ action_button("Löschen", type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title="Variante löschen") }}
                         </form>
                         <div style="text-align: center; padding: 0.35rem; font-size: 0.8rem;">
                           {{ emotion }}_{{ sp.variant }}
@@ -528,7 +504,7 @@
       <div class="modal-frame" style="max-width: 440px;">
         <div class="modal-header">
           <h3 style="color: var(--gold-accent);">9:16-Galeriebild hochladen</h3>
-          <button type="button" class="aimo-btn" data-modal-close="add-gallery-modal">✕</button>
+          {{ modal_close_button("add-gallery-modal") }}
         </div>
         <form method="POST" action="{{ url_for('characters.add_gallery_image', character_id=character.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
           <div>
@@ -546,20 +522,21 @@
             <input type="number" name="unlock_threshold" min="-100" max="100" value="20" required>
           </div>
           <div style="text-align: right; display: flex; justify-content: flex-end; gap: 0.5rem;">
-            <button type="button" class="aimo-btn" data-modal-close="add-gallery-modal">Abbrechen</button>
-            <button type="submit" class="aimo-btn primary">Hochladen</button>
+            {{ action_button("Abbrechen", modal_close="add-gallery-modal") }}
+            {{ action_button("Hochladen", type="submit", variant="primary") }}
           </div>
         </form>
       </div>
     </div>
   {% endif %}
+  </section>
 
   <!-- MODAL: Gesprächsstil hinzufügen (Overlay Frame) -->
   <div class="modal-backdrop" id="add-dialogue-modal" aria-hidden="true">
     <div class="modal-frame" style="max-width: 580px;">
       <div class="modal-header">
         <h3 style="color: var(--gold-accent);" id="dialogue-modal-title"><span class="icon-mono">💬</span> Neuen Gesprächsstil hinzufügen</h3>
-        <button type="button" class="aimo-btn" data-modal-close="add-dialogue-modal">✕</button>
+        {{ modal_close_button("add-dialogue-modal") }}
       </div>
       <div style="display: flex; flex-direction: column; gap: 1rem; padding: 0.5rem 0;">
         <div>
@@ -578,10 +555,8 @@
         </div>
       </div>
       <div style="display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1rem; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
-        <button type="button" class="aimo-btn" data-modal-close="add-dialogue-modal">Abbrechen</button>
-        <button type="button" id="confirm-add-dialogue-btn" class="aimo-btn primary">
-          <span class="icon-mono">➕</span> Hinzufügen
-        </button>
+        {{ action_button("Abbrechen", modal_close="add-dialogue-modal") }}
+        {{ action_button("Hinzufügen", icon="➕", variant="primary", id="confirm-add-dialogue-btn") }}
       </div>
     </div>
   </div>
@@ -591,7 +566,7 @@
     <div class="modal-frame" style="max-width: 620px;">
       <div class="modal-header">
         <h3 style="color: var(--gold-accent);"><span class="icon-mono">📖</span> Lorebook verknüpfen</h3>
-        <button type="button" class="aimo-btn" data-modal-close="add-lorebook-modal">✕</button>
+        {{ modal_close_button("add-lorebook-modal") }}
       </div>
       <div style="padding: 0.5rem 0 1rem 0;">
         <input type="text" id="lorebook-filter-input" placeholder="Nach Lorebook-Name filtern..." class="search-input" style="width: 100%; margin-bottom: 0.85rem;" autocomplete="off">
@@ -615,7 +590,7 @@
         </div>
       </div>
       <div style="display: flex; justify-content: flex-end; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
-        <button type="button" class="aimo-btn" data-modal-close="add-lorebook-modal">Abbrechen</button>
+        {{ action_button("Abbrechen", modal_close="add-lorebook-modal") }}
       </div>
     </div>
   </div>

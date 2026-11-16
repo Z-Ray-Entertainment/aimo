@@ -40,14 +40,10 @@
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           {{ action_button("Bearbeiten", href=url_for('admin.edit_user', user_id=u.id), icon="✏️") }}
           {% if u.is_initial_admin %}
-            <button type="button" class="aimo-btn" disabled title="Initialer Administrator kann nicht gelöscht werden">
-              <span class="icon-mono">🔒</span> Geschützt
-            </button>
+            {{ action_button("Geschützt", icon="🔒", disabled=true, title="Initialer Administrator kann nicht gelöscht werden") }}
           {% else %}
             <form method="POST" action="{{ url_for('admin.delete_user', user_id=u.id) }}" onsubmit="return confirm('Benutzer {{ u.username }} wirklich löschen?');">
-              <button type="submit" class="aimo-btn danger">
-                <span class="icon-mono">🗑️</span> Löschen
-              </button>
+              {{ action_button("Löschen", type="submit", variant="danger", icon="🗑️") }}
             </form>
           {% endif %}
         </div>

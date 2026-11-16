@@ -6,16 +6,29 @@ The **Character Designer** allows creators to craft detailed interactive AI char
 
 ---
 
-## 🛠️ Header & Actions
+## 🏛️ Structure & Vertical Sidebar Navigation
 
-- **Back Button (`← Zurück`):** Returns directly to the previous view you came from (such as My Creations or the central Character Grid).
-- **Save (`💾 Speichern`):** Saves character metadata and dialogue styles.
-- **Duplicate (`📄 Kopieren`):** Allows any creator to deep-clone visible characters — including all primary portraits, transparent sprites, unlockable gallery artwork, and dialogue examples — into an independent duplicate they own.
-- **Delete (`🗑️ Löschen`):** Strictly reserved for the character's author and all administrators.
+The Character Designer uses a modern two-column layout consistent with the Administration and Settings panels:
+- **Left Sidebar Navigation:**
+  - **Sidebar Header:** Displays the character's name and icon (`🎭`).
+  - **Vertical Navigation Menu:** Direct access to all seven functional areas:
+    1. **📋 Main Information (`Hauptinformationen`):** Core persona details, name, gender, bio, and welcome message.
+    2. **🖼️ Unlockable Gallery Images (`Galeriebilder`):** High-resolution 9:16 artwork tied to affection thresholds.
+    3. **🎭 Emotional Sprites (`Emotionale Sprites`):** Dynamic 28-emotion sprites that adapt during chat.
+    4. **💬 Dialogue Styles (`Gesprächsstile`):** Representative conversation examples.
+    5. **🗺️ World Settings (`World`):** Recommended world and location preferences.
+    6. **📖 Linked Lorebooks (`Lorebooks`):** Encyclopedias bound directly to the character.
+    7. **👥 Collaboration (`Kollaboration`):** Co-creator access management.
+  - **Sidebar Footer:** Includes a quick return button (`← Zurück zur Übersicht`) to navigate back to the character gallery or creations overview.
+- **Right Main Stage:**
+  - **Header Bar:** Shows the character title, read-only status (for non-editable characters), and action buttons:
+    - **Save (`💾 Speichern`):** Saves character data and dialogue styles.
+    - **Duplicate (`📄 Kopieren`):** Deep-clones the character into an independent duplicate you own.
+    - **Delete (`🗑️ Löschen`):** Reserved for the author and administrators.
 
 ---
 
-## 📝 Tab 1: Main Information (`📋 Hauptinformationen`)
+## 📝 1. Main Information (`📋 Hauptinformationen`)
 
 - **Name:** Character's name.
 - **Gender:** `male`, `female`, or `non-binary`.
@@ -27,14 +40,14 @@ The **Character Designer** allows creators to craft detailed interactive AI char
 
 ---
 
-## 🖼️ Tab 2: Unlockable Gallery Images (`🖼️ Galeriebilder`)
+## 🖼️ 2. Unlockable Gallery Images (`🖼️ Galeriebilder`)
 
 - Smartphone/portrait-oriented images (9:16 aspect ratio).
 - **Affection Threshold:** Assign a value between `-100 and +100` to each image. As soon as your relationship score in a chat meets this threshold, the image unlocks under the *"Media"* tab!
 
 ---
 
-## 🎭 Tab 3: Emotional Sprites (`🎭 Emotionale Sprites`)
+## 🎭 3. Emotional Sprites (`🎭 Emotionale Sprites`)
 
 aimo supports dynamic, transparent sprites (PNG or WEBP) that adapt to the AI character's current emotional state during conversations.
 
@@ -49,22 +62,22 @@ aimo supports dynamic, transparent sprites (PNG or WEBP) that adapt to the AI ch
 
 ---
 
-## 💬 Tab 4: Dialogue Styles (`💬 Gesprächsstile`)
+## 💬 4. Dialogue Styles (`💬 Gesprächsstile`)
 
 - Representative conversation snippets (User / Assistant turns) to calibrate the character's tone, vernacular, dialect, and speech habits.
 
 ---
 
-## 🗺️ Tab 5: World Settings (`🗺️ World`)
+## 🗺️ 5. World Settings (`🗺️ World`)
 
 - **Recommended WorldInfo:** Select a suggested [WorldInfo](worldinfo.md) setting.
 - **Location Preferences:** Specify **preferred locations** (places the character enjoys visiting) and **disliked locations** (places they avoid).
 
 ---
 
-## 📖 Tab 6: Linked Lorebooks & World Conditions (`📖 Lorebooks`)
+## 📖 6. Linked Lorebooks & World Conditions (`📖 Lorebooks`)
 
-Under the **Lorebooks** tab in the Character Designer, creators can bind one or more [Lorebooks](lorebooks.md) directly to the character:
+Under the **Lorebooks** section in the Character Designer, creators can bind one or more [Lorebooks](lorebooks.md) directly to the character:
 - **Binding Lorebooks:** Click *„➕ Lorebook hinzufügen“* to attach thematic encyclopedias to this character.
 - **World Condition Dropdown:** Beside each attached lorebook, a condition dropdown determines when the lorebook should become active:
   - `🌍 All Worlds (Always active)`: The lorebook is injected into any chat with this character, regardless of the active setting.
@@ -76,7 +89,7 @@ Under the **Lorebooks** tab in the Character Designer, creators can bind one or 
 
 ---
 
-## 👥 Tab 7: Collaboration (`👥 Kollaboration`)
+## 👥 7. Collaboration (`👥 Kollaboration`)
 
 - **Collaborator Management:** Authors can invite other creators by adding their private **Creator-Tag** (UUID4).
 - **Shared Creation:** Collaborators can edit all tabs, upload sprites, add gallery images, and adjust prompts.

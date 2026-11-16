@@ -3,6 +3,7 @@
    Global overlay frame for creating and editing player personas
    (opened from the persona grid in the user settings or from the chat sidebar).
    ============================================================================= #}
+{% from "macros/buttons.html" import action_button, modal_close_button %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
 {% macro persona_portrait_field(prefix, label) %}
   <div>
@@ -14,9 +15,7 @@
       <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 0.45rem;">
         <input type="file" id="{{ prefix }}-persona-portrait" name="portrait" accept=".png,.jpg,.jpeg,.webp" onchange="document.getElementById('{{ prefix }}-persona-preuploaded-portrait').value=''; document.getElementById('{{ prefix }}-persona-vision-status').textContent='';">
         <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-          <button type="button" id="{{ prefix }}-persona-open-crop-btn" class="aimo-btn" data-persona-lockable="1" style="padding: 0.35rem 0.75rem; font-size: 0.82rem;" disabled>
-            <span class="icon-mono">✂️</span> Ausschnitt anpassen (1:1)
-          </button>
+          {{ action_button("Ausschnitt anpassen (1:1)", icon="✂️", id=prefix ~ "-persona-open-crop-btn", size="sm", disabled=true, data={"persona-lockable": "1"}) }}
           <span id="{{ prefix }}-persona-crop-badge" style="display: none; font-size: 0.8rem; color: #4CAF50; font-weight: 600;">✓ 1:1 Ausschnitt aktiv</span>
         </div>
       </div>
@@ -42,16 +41,7 @@
       <label style="margin-bottom: 0;">Physisches Aussehen</label>
       <div style="display: flex; align-items: center; gap: 0.5rem;">
         <span id="{{ prefix }}-persona-vision-status" style="font-size: 0.78rem; color: var(--gold-accent);"></span>
-        <button
-          type="button"
-          id="{{ prefix }}-persona-vision-btn"
-          class="aimo-btn"
-          data-persona-lockable="1"
-          style="padding: 0.25rem 0.65rem; font-size: 0.78rem;"
-          onclick="window.extractPersonaVisionFeatures('{{ prefix }}')"
-          title="Aussehen per Vision-Modell automatisch aus dem Porträtbild extrahieren">
-          <span class="icon-mono">🔍</span> Bild-Features extrahieren
-        </button>
+        {{ action_button("Bild-Features extrahieren", icon="🔍", id=prefix ~ "-persona-vision-btn", size="sm", onclick="window.extractPersonaVisionFeatures('" ~ prefix ~ "')", title="Aussehen per Vision-Modell automatisch aus dem Porträtbild extrahieren", data={"persona-lockable": "1"}) }}
       </div>
     </div>
     <input type="hidden" name="i18n_appearance" id="i18n-persona-{{ prefix }}-app" value="{}">
@@ -71,7 +61,7 @@
     <div class="modal-frame" style="max-width: 640px;">
       <div class="modal-header">
         <h2 id="persona-modal-title" style="color: var(--gold-accent);"><span class="icon-mono">👤</span> Persona</h2>
-        <button type="button" id="persona-modal-close-btn" class="aimo-btn" data-modal-close="persona-manager-modal" data-persona-lockable="1">✕</button>
+        {{ action_button("Schließen", icon="✕", layout="icon", id="persona-modal-close-btn", modal_close="persona-manager-modal", data={"persona-lockable": "1"}) }}
       </div>
 
       <!-- Formular: Neue Persona anlegen -->
@@ -93,8 +83,8 @@
           {{ persona_portrait_field('new', 'Porträtbild (PNG/JPG/WEBP)') }}
           {{ persona_text_fields('new') }}
           <div style="display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
-            <button type="button" class="aimo-btn" data-persona-lockable="1" data-modal-close="persona-manager-modal">Abbrechen</button>
-            <button type="submit" id="new-persona-submit-btn" class="aimo-btn primary" data-persona-lockable="1"><span class="icon-mono">💾</span> Persona speichern</button>
+            {{ action_button("Abbrechen", modal_close="persona-manager-modal", data={"persona-lockable": "1"}) }}
+            {{ action_button("Persona speichern", type="submit", variant="primary", icon="💾", id="new-persona-submit-btn", data={"persona-lockable": "1"}) }}
           </div>
         </form>
       </div>
@@ -119,12 +109,10 @@
           {{ persona_portrait_field('edit', 'Neues Porträtbild (optional, PNG/JPG/WEBP)') }}
           {{ persona_text_fields('edit') }}
           <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
-            <button type="submit" form="edit-persona-delete-form" id="edit-persona-delete-btn" class="aimo-btn danger" data-persona-lockable="1">
-              <span class="icon-mono">🗑️</span> Löschen
-            </button>
+            {{ action_button("Löschen", type="submit", form="edit-persona-delete-form", variant="danger", icon="🗑️", id="edit-persona-delete-btn", data={"persona-lockable": "1"}) }}
             <div style="display: flex; gap: 0.5rem;">
-              <button type="button" class="aimo-btn" data-persona-lockable="1" data-modal-close="persona-manager-modal">Abbrechen</button>
-              <button type="submit" id="edit-persona-submit-btn" class="aimo-btn primary" data-persona-lockable="1"><span class="icon-mono">💾</span> Änderungen speichern</button>
+              {{ action_button("Abbrechen", modal_close="persona-manager-modal", data={"persona-lockable": "1"}) }}
+              {{ action_button("Änderungen speichern", type="submit", variant="primary", icon="💾", id="edit-persona-submit-btn", data={"persona-lockable": "1"}) }}
             </div>
           </div>
         </form>

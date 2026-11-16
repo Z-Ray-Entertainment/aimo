@@ -6,20 +6,26 @@ A **WorldInfo** encapsulates the geography, scenes, and random events of a rolep
 
 ---
 
-## 🏛️ WorldInfo Editor (`templates/worldinfo/detail.html`)
+## 🏛️ WorldInfo Editor & Vertical Sidebar Navigation
 
-- **Header & Actions:**
-  - **Back Button (`← Zurück`):** Returns directly to the previous view you came from (such as My Creations or the central World Grid).
-  - **World Title & Badges:** Displays the name of the world and a readonly badge (`🔒 Schreibgeschützt`) if viewing another creator's world without edit permissions.
-  - **Save (`💾 Speichern`):** Saves world metadata, cover image, and collaborator settings.
-  - **Duplicate (`📄 Kopieren`):** Deep-clones the entire world setting — including all locations, 16:9 backgrounds, and random event pools — into an independent duplicate for the creator.
-  - **Delete (`🗑️ Löschen`):** Strictly reserved for the author and all administrators.
-
-The editor is organized into four functional tabs:
+The WorldInfo Editor is organized in a two-column layout with a vertical sidebar on the left and the main editing stage on the right:
+- **Left Sidebar Navigation:**
+  - **Sidebar Header:** Displays the world name and globe icon (`🗺️`).
+  - **Vertical Navigation Menu:**
+    1. **📋 Basic Settings (`Grundeinstellungen`):** Title, 1:1 cover artwork, visibility, and bound world lorebooks.
+    2. **📍 Places (`Orte & Hintergründe`):** Gallery of all locations and 16:9 backgrounds (displays total count).
+    3. **🎲 Random Events (`Zufalls-Events`):** Configured random encounters and probabilities (displays total count).
+    4. **👥 Collaboration (`Kollaboration`):** Co-creator access management.
+  - **Sidebar Footer:** Quick return button (`← Zurück zur Übersicht`) to jump directly back to the world overview or creations grid.
+- **Right Main Stage:**
+  - **Header Bar:** Shows the world title, read-only status (for non-editable worlds), and action buttons:
+    - **Save (`💾 Speichern`):** Saves world settings and collaborator permissions.
+    - **Duplicate (`📄 Kopieren`):** Deep-clones the entire world setting — including all locations, 16:9 backgrounds, and random event pools — into an independent duplicate for the creator.
+    - **Delete (`🗑️ Löschen`):** Strictly reserved for the author and administrators.
 
 ---
 
-## 📋 Tab 1: Basic Settings (`📋 Grundeinstellungen`)
+## 📋 1. Basic Settings (`📋 Grundeinstellungen`)
 
 - **World Name:** Setting title (e.g., *"Kingdom of Acheron"*).
 - **1:1 Cover Image:** Square cover artwork for the World Grid tile and world selection dialog. Features an integrated cropping tool (`AimoImageCropper`).
@@ -31,7 +37,7 @@ The editor is organized into four functional tabs:
 
 ---
 
-## 📍 Tab 2: Places (Locations)
+## 📍 2. Places (`📍 Orte & Hintergründe`)
 
 A gallery of all locales in this world:
 - First tile (`+`) to register a new place.
@@ -49,7 +55,7 @@ A gallery of all locales in this world:
 
 ---
 
-## ⚡ Tab 3: Events (Random Encounters)
+## 🎲 3. Events (`🎲 Zufalls-Events`)
 
 Events inject unexpected life into the world (e.g., sudden storm, wandering bandit, royal procession).
 - First tile (`+`) to author a new event.
@@ -63,7 +69,7 @@ Events inject unexpected life into the world (e.g., sudden storm, wandering band
 
 ---
 
-## 👥 Tab 4: Collaboration (`👥 Kollaboration`)
+## 👥 4. Collaboration (`👥 Kollaboration`)
 
 - **Creator-Tag Management:** The author can add trusted creators by their private **Creator-Tag** (UUID4).
 - **Collaborative Worldbuilding:** Collaborators can create and edit locations, upload 16:9 backgrounds, and configure random events.
