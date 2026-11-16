@@ -1,4 +1,5 @@
 {% extends "admin/layout.html" %}
+{% from "macros/buttons.html" import action_button %}
 
 {% block admin_content %}
 <div class="aimo-split-stage-grid">
@@ -46,7 +47,7 @@
     <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
         <h3 style="color: var(--gold-accent); font-size: 1rem; margin: 0;">2. Task-spezifische Modell-Zuweisung</h3>
-        <button type="button" class="btn" style="padding: 0.35rem 0.75rem; font-size: 0.82rem;" onclick="applyRecommendedModels()" title="Setzt alle 5 Dropdowns auf die vorgeschlagenen Standard-Modelle">
+        <button type="button" class="aimo-btn" onclick="applyRecommendedModels()" title="Setzt alle 5 Dropdowns auf die vorgeschlagenen Standard-Modelle">
           ✨ Vorgeschlagene Modelle zuweisen
         </button>
       </div>
@@ -163,7 +164,7 @@
     </div>
 
     <div style="text-align: right; margin-top: 0.5rem;">
-      <button type="submit" class="btn">Alle Einstellungen speichern</button>
+      {{ action_button("Alle Einstellungen speichern", type="submit", variant="primary", icon="💾") }}
     </div>
   </form>
 
@@ -179,7 +180,7 @@
         <h4 style="color: var(--gold-accent); font-size: 0.92rem; margin: 0; display: flex; align-items: center; gap: 0.4rem;">
           <span class="icon-mono">🧙‍♂️</span> Setup-Helper für Ollama
         </h4>
-        <button type="button" class="btn" id="pull-all-missing-btn" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;" onclick="pullAllMissingRecommended()">
+        <button type="button" class="aimo-btn" id="pull-all-missing-btn" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;" onclick="pullAllMissingRecommended()">
           ⚡ Fehlende installieren
         </button>
       </div>
@@ -205,7 +206,7 @@
                 <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ Bereit</span>
               {% else %}
                 <span style="color: #E67E22; font-size: 0.74rem;">⏳ Fehlt</span>
-                <button type="button" class="btn" style="padding: 0.2rem 0.45rem; font-size: 0.72rem;" onclick="pullSpecificModel('igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest')">📥 Pull</button>
+                <button type="button" class="aimo-btn" style="padding: 0.2rem 0.45rem; font-size: 0.72rem;" onclick="pullSpecificModel('igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest')">📥 Pull</button>
               {% endif %}
             </div>
           </div>
@@ -228,7 +229,7 @@
                 <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ Bereit</span>
               {% else %}
                 <span style="color: #E67E22; font-size: 0.74rem;">⏳ Fehlt</span>
-                <button type="button" class="btn" style="padding: 0.2rem 0.45rem; font-size: 0.72rem;" onclick="pullSpecificModel('gemma4:e4b')">📥 Pull</button>
+                <button type="button" class="aimo-btn" style="padding: 0.2rem 0.45rem; font-size: 0.72rem;" onclick="pullSpecificModel('gemma4:e4b')">📥 Pull</button>
               {% endif %}
             </div>
           </div>
@@ -250,7 +251,7 @@
                 <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ Bereit</span>
               {% else %}
                 <span style="color: #E67E22; font-size: 0.74rem;">⏳ Fehlt</span>
-                <button type="button" class="btn" style="padding: 0.2rem 0.45rem; font-size: 0.72rem;" onclick="pullSpecificModel('llama3.2:1b')">📥 Pull</button>
+                <button type="button" class="aimo-btn" style="padding: 0.2rem 0.45rem; font-size: 0.72rem;" onclick="pullSpecificModel('llama3.2:1b')">📥 Pull</button>
               {% endif %}
             </div>
           </div>
@@ -262,7 +263,7 @@
       <label style="display: block; margin-bottom: 0.4rem; font-size: 0.88rem;">Neues Modell installieren (Pull)</label>
       <div style="display: flex; gap: 0.5rem;">
         <input type="text" id="pull-model-name" value="igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest" placeholder="z. B. igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest">
-        <button type="button" class="btn" id="pull-model-btn" onclick="pullOllamaModel()">Pull</button>
+        <button type="button" class="aimo-btn primary" id="pull-model-btn" onclick="pullOllamaModel()">Pull</button>
       </div>
       <div style="margin-top: 0.35rem; font-size: 0.76rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center;">
         <span>💡 Schnellwahl:</span>
@@ -283,7 +284,7 @@
         {% for model_name in installed_models %}
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.7rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 8px;">
             <span style="font-size: 0.86rem; font-family: monospace;">{{ model_name }}</span>
-            <button type="button" class="btn btn-danger" style="padding: 0.25rem 0.55rem; font-size: 0.76rem;" onclick="deleteOllamaModel('{{ model_name }}')">
+            <button type="button" class="aimo-btn danger" style="padding: 0.25rem 0.55rem; font-size: 0.76rem;" onclick="deleteOllamaModel('{{ model_name }}')">
               <span class="icon-mono">🗑️</span>
             </button>
           </div>

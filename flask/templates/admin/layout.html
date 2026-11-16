@@ -8,30 +8,16 @@
   <aside class="aimo-frame aimo-sidebar">
     <div class="aimo-sidebar-header">
       <div class="aimo-sidebar-title">
-        <span class="icon-mono">⚙️</span>
+        <span class="icon-mono">🛡️</span>
         <span>Administration</span>
       </div>
       <p class="aimo-sidebar-subtitle">System & Konfiguration</p>
     </div>
 
     <nav class="aimo-sidebar-nav">
-      <a href="{{ url_for('admin.users_list') }}"
-         class="aimo-sidebar-nav-item {% if request.endpoint in ('admin.users_list', 'admin.create_user', 'admin.edit_user') %}active{% endif %}">
-        <span class="icon-mono">👥</span>
-        <span class="aimo-sidebar-nav-text">Benutzerverwaltung</span>
-      </a>
-
-      <a href="{{ url_for('admin.services_config') }}"
-         class="aimo-sidebar-nav-item {% if request.endpoint == 'admin.services_config' %}active{% endif %}">
-        <span class="icon-mono">⚙️</span>
-        <span class="aimo-sidebar-nav-text">Services, Modelle & Prompts</span>
-      </a>
-
-      <a href="{{ url_for('admin.backdrop_config') }}"
-         class="aimo-sidebar-nav-item {% if request.endpoint == 'admin.backdrop_config' %}active{% endif %}">
-        <span class="icon-mono">🖼️</span>
-        <span class="aimo-sidebar-nav-text">System-Backdrop</span>
-      </a>
+      {{ action_button("Benutzerverwaltung", href=url_for('admin.users_list'), icon="👥", active=(request.endpoint in ('admin.users_list', 'admin.create_user', 'admin.edit_user')), extra_class="aimo-sidebar-nav-item") }}
+      {{ action_button("Services, Modelle & Prompts", href=url_for('admin.services_config'), icon="⚙️", active=(request.endpoint == 'admin.services_config'), extra_class="aimo-sidebar-nav-item") }}
+      {{ action_button("System-Backdrop", href=url_for('admin.backdrop_config'), icon="🖼️", active=(request.endpoint == 'admin.backdrop_config'), extra_class="aimo-sidebar-nav-item") }}
     </nav>
 
     <div class="aimo-sidebar-footer">

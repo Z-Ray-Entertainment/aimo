@@ -50,28 +50,16 @@
         </div>
 
         <div class="mobile-menu-group">
-          <a href="{{ url_for('settings.index') }}"
-             class="aimo-btn mobile-nav-btn{% if request.blueprint == 'settings' %} active{% endif %}">
-            <span class="icon-mono">⚙️</span>
-            <span>Einstellungen</span>
-          </a>
+          {{ action_button("Einstellungen", href=url_for('settings.index'), icon="⚙️", active=(request.blueprint == 'settings'), extra_class="mobile-nav-btn") }}
 
           <hr class="aimo-menu-divider">
 
           {% if has_perm('admin_access') %}
-            <a href="{{ url_for('admin.users_list') }}"
-               class="aimo-btn mobile-nav-btn{% if request.blueprint == 'admin' %} active{% endif %}">
-              <span class="icon-mono">🛑</span>
-              <span>Administration</span>
-            </a>
+            {{ action_button("Administration", href=url_for('admin.users_list'), icon="🛡️", active=(request.blueprint == 'admin'), extra_class="mobile-nav-btn") }}
+            <hr class="aimo-menu-divider">
           {% endif %}
 
-          <hr class="aimo-menu-divider">
-
-          <a href="{{ url_for('auth.logout') }}" class="aimo-btn mobile-nav-btn">
-            <span class="icon-mono">🚪</span>
-            <span>Logout</span>
-          </a>
+          {{ action_button("Logout", href=url_for('auth.logout'), icon="🚪", extra_class="mobile-nav-btn") }}
         </div>
       </div>
     {% endif %}

@@ -1,4 +1,5 @@
 {% extends "admin/layout.html" %}
+{% from "macros/buttons.html" import action_button %}
 
 {% block admin_content %}
 <div class="aimo-frame" style="max-width: 760px; margin: 0 auto; padding: 1.75rem;">
@@ -42,9 +43,9 @@
     <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
         <label style="font-weight: 700; color: var(--gold-accent);">Schnellauswahl über Preset</label>
-        <div style="display: flex; gap: 0.5rem;">
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
           {% for preset_name in presets %}
-            <button type="button" class="btn" style="padding: 0.3rem 0.75rem; font-size: 0.8rem;" onclick="applyPreset('{{ preset_name }}')" {% if target_user and target_user.is_initial_admin and preset_name != 'Admin' %}disabled{% endif %}>
+            <button type="button" class="aimo-btn" onclick="applyPreset('{{ preset_name }}')" {% if target_user and target_user.is_initial_admin and preset_name != 'Admin' %}disabled{% endif %}>
               Preset: {{ preset_name }}
             </button>
           {% endfor %}
@@ -69,9 +70,9 @@
       </div>
     </div>
 
-    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
-      <a href="{{ url_for('admin.users_list') }}" class="btn">Abbrechen</a>
-      <button type="submit" class="btn">Speichern</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+      {{ action_button("Abbrechen", href=url_for('admin.users_list'), arrow="left") }}
+      {{ action_button("Speichern", type="submit", variant="primary", icon="💾") }}
     </div>
   </form>
 </div>
