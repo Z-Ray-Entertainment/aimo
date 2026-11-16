@@ -35,7 +35,7 @@ When starting a new conversation with a character:
   - Character portrait / transparent emotion sprite (dynamically scaled in 9:16 aspect ratio to fit the display height), equipped with an aesthetic Brain overlay icon (🧠) in the top-right corner with a live hover tooltip. The icon visually indicates whether Thinking is active (in color with a soft glow) or inactive (in monochrome gray).
   - Dynamic relationship bar (-100 to +100 with heart icon).
   - Player persona badge / selector (locked after the first message).
-  - Unified World & Setting block: Active WorldInfo with switch button, manual location selector, random events toggle checkbox, and a live event cooldown counter for administrators and world authors (integrated without separating divider).
+  - Unified World & Setting block: Active WorldInfo with switch button, manual location selector, random events toggle checkbox, and a live event cooldown counter for administrators and world authors (integrated without separating divider, updating dynamically as messages are exchanged).
 
 ---
 

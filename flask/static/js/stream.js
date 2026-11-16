@@ -294,6 +294,9 @@ class AimoChatStream {
       isAnalyzingImage: hasFile,
     });
 
+    // 3. Event-Cooldown sofort dynamisch um 1 verringern (optimistisches UI-Update)
+    this.decrementEventCounterOptimistic();
+
     try {
       const prepResp = await fetch(`/api/chat/${this.sessionId}/messages`, {
         method: "POST",
@@ -811,7 +814,15 @@ class AimoChatStream {
 
     const contentDiv = document.createElement("div");
     contentDiv.className = "chat-system-message-content";
-    contentDiv.textContent = msg.localized_content || "";
+    const meta = this.getChatMetadata();
+    let text = msg.localized_content || "";
+    if (meta.personaName) {
+      text = text.replace(/\{\{user\}\}/gi, meta.personaName);
+    }
+    if (meta.characterName) {
+      text = text.replace(/\{\{char\}\}/gi, meta.characterName);
+    }
+    contentDiv.textContent = text;
 
     systemMsgDiv.appendChild(headerDiv);
     systemMsgDiv.appendChild(contentDiv);
@@ -823,6 +834,31 @@ class AimoChatStream {
       messagesList.appendChild(row);
     }
     messagesList.scrollTop = messagesList.scrollHeight;
+  }
+
+  decrementEventCounterOptimistic() {
+    const statusEl = document.getElementById("admin-event-counter-status");
+    const valEl = document.getElementById("admin-event-counter-val");
+    if (!statusEl) return;
+    const eventsToggle = document.querySelector(".chat-sidebar-events-toggle input[type='checkbox']");
+    if (eventsToggle && !eventsToggle.checked) return;
+    if (statusEl.textContent.includes("(pausiert)")) return;
+
+    let currentVal = valEl ? parseInt(valEl.textContent.trim(), 10) : NaN;
+    if (isNaN(currentVal)) {
+      if (statusEl.textContent.includes("nächste Nachricht")) {
+        currentVal = 1;
+      } else {
+        return;
+      }
+    }
+
+    const nextVal = Math.max(0, currentVal - 1);
+    if (nextVal <= 1) {
+      statusEl.innerHTML = `<strong id="admin-event-counter-val">nächste Nachricht</strong>`;
+    } else {
+      statusEl.innerHTML = `in <strong id="admin-event-counter-val">${nextVal}</strong> Nachrichten`;
+    }
   }
 
   updateEventCounter(counter, eventsEnabled) {

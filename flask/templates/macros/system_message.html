@@ -1,5 +1,5 @@
 {# Reusable Chat System Message Component #}
-{% macro chat_system_message(msg, is_admin=false) %}
+{% macro chat_system_message(msg, is_admin=false, persona_name=none, character_name=none) %}
   <div class="chat-system-message-row" data-message-idx="{{ msg.message_idx }}" data-system-type="{{ msg.system_type or 'general' }}">
     <div class="chat-system-message{% if msg.system_type %} system-msg-{{ msg.system_type }}{% endif %}">
       <div class="chat-system-message-header">
@@ -29,7 +29,16 @@
           </button>
         </div>
       </div>
-      <div class="chat-system-message-content">{{ msg.localized_content }}</div>
+      <div class="chat-system-message-content">
+        {%- set text = msg.localized_content -%}
+        {%- if persona_name -%}
+          {%- set text = text.replace('{{user}}', persona_name) -%}
+        {%- endif -%}
+        {%- if character_name -%}
+          {%- set text = text.replace('{{char}}', character_name) -%}
+        {%- endif -%}
+        {{ text }}
+      </div>
     </div>
   </div>
 {% endmacro %}

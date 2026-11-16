@@ -61,6 +61,8 @@ class _BackgroundTurnTask:
         self.is_admin: bool = is_admin
         self.system_message: Message | None = None
         self.can_view_event_counter: bool = False
+        self.cooldown_counter: int | None = None
+        self.events_enabled: bool = True
         self.assembled_prompt: str | None = None
         self.image_analyzed: bool = False
         self.image_alt_text: str | None = None
@@ -291,6 +293,8 @@ def _start_background_turn(
     )
     task.system_message = saved_event_msg
     task.can_view_event_counter = can_view_event_counter
+    task.cooldown_counter = chat_session.cooldown_counter
+    task.events_enabled = chat_session.events_enabled
     with _TASKS_LOCK:
         _BACKGROUND_TASKS[session_id] = task
 
@@ -719,12 +723,29 @@ def _stream_from_task(task: _BackgroundTurnTask):
     sent_image_analyzed = False
     sent_system_message = False
 
+    # Emit system message immediately upon stream start if already present
+    if task.system_message is not None and not sent_system_message:
+        sent_system_message = True
+        sys_msg_data = {
+            "id": task.system_message.id,
+            "session_id": task.system_message.session_id,
+            "message_idx": task.system_message.message_idx,
+            "role": task.system_message.role.value,
+            "system_type": task.system_message.system_type,
+            "english_content": task.system_message.english_content,
+            "localized_content": task.system_message.localized_content,
+            "metadata": task.system_message.metadata,
+            "created_at": task.system_message.created_at.isoformat(),
+        }
+        yield f"event: system_message\ndata: {json.dumps(sys_msg_data)}\n\n"
+
     while True:
         with task.condition:
             while (
                 sent_tokens >= len(task.tokens)
                 and (sent_gen_done or not task.generation_done)
                 and (sent_image_analyzed or not task.image_analyzed)
+                and (sent_system_message or task.system_message is None)
                 and task.status not in ("completed", "error", "aborted")
             ):
                 task.condition.wait(timeout=15.0)
@@ -850,8 +871,8 @@ def post_message(session_id: int):
                 },
                 "triggered_event": triggered_event,
                 "system_message": sys_msg_dict,
-                "cooldown_counter": chat_session.cooldown_counter if task.can_view_event_counter else None,
-                "events_enabled": chat_session.events_enabled,
+                "cooldown_counter": task.cooldown_counter if task.can_view_event_counter else None,
+                "events_enabled": task.events_enabled,
             }
         )
 
