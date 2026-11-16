@@ -3540,3 +3540,11 @@ span.persona-star-btn:hover {
   color: #58D68D;
   border-color: rgba(88, 214, 141, 0.65);
 }
+
+/* Account settings */
+.account-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  align-items: end;
+}

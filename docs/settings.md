@@ -10,12 +10,24 @@ The **User Settings** area is accessible to every logged-in user via the **⚙�
 
 The interface features a two-column layout:
 - **Left Sidebar (`Einstellungen`):**
+  - **Account (`🪪`):** Opens your account settings.
   - **Personas (`👤`):** Opens the management of your [Player Personas](personas.md).
   - **My Creations (`✨`):** Available to users with creator permissions; opens the central overview of all your created characters, worlds, and lorebooks.
   - **Zurück zum Hub (`← Zurück zum Hub`):** Returns you directly to the central Hub dashboard at any time.
 - **Right Main Area:**
   - Displays the selected settings section inside a framed panel.
   - On smaller or mobile screens, the sidebar automatically moves to the top above the main content area for comfortable touch navigation.
+
+---
+
+## 🪪 Account
+
+The **Account** view contains the following sections:
+- **Creator-Tag:** Your personal tag (read-only). **Tag kopieren** copies it so you can hand it to authors who want to add you as a collaborator.
+- **Name:** Change your display name. Your personas keep their own names.
+- **E-Mail-Adresse:** Change your login e-mail. The address must not be used by another account, and you must enter your current password to confirm.
+- **Passwort:** Enter your current password and the new password twice.
+- **Sprache:** Choose the language of the interface and translations. On your first login the language of your browser is selected automatically.
 
 ---
 

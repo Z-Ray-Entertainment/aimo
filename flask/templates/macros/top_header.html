@@ -50,16 +50,6 @@
         </div>
 
         <div class="mobile-menu-group">
-          {% if has_creator_permission() %}
-            <button type="button"
-                    class="aimo-btn mobile-nav-btn"
-                    id="copy-creator-tag-menu-btn"
-                    data-creator-tag="{{ g.current_user.creator_tag }}">
-              <span class="icon-mono">🏷️</span>
-              <span class="copy-creator-tag-label">Creator-Tag Kopieren</span>
-            </button>
-          {% endif %}
-
           <a href="{{ url_for('settings.index') }}"
              class="aimo-btn mobile-nav-btn{% if request.blueprint == 'settings' %} active{% endif %}">
             <span class="icon-mono">⚙️</span>

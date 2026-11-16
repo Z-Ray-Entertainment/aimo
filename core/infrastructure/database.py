@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
     email TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
     creator_tag TEXT UNIQUE,
+    language TEXT NOT NULL DEFAULT '',
     is_initial_admin INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL
 );
@@ -399,6 +400,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE system_settings ADD COLUMN classification_model TEXT NOT NULL DEFAULT 'hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M'",
         "ALTER TABLE system_settings ADD COLUMN default_backdrop_path TEXT",
         "ALTER TABLE users ADD COLUMN creator_tag TEXT",
+        "ALTER TABLE users ADD COLUMN language TEXT NOT NULL DEFAULT ''",
         "ALTER TABLE characters ADD COLUMN collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]'",
         "ALTER TABLE worldinfos ADD COLUMN collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]'",
         "ALTER TABLE lorebooks ADD COLUMN collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]'",

@@ -32,14 +32,15 @@ class UserRepository(BaseRepository[User]):
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO users (username, email, password_hash, creator_tag, is_initial_admin, created_at)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO users (username, email, password_hash, creator_tag, language, is_initial_admin, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     user.username,
                     user.email.strip().lower(),
                     user.password_hash,
                     creator_tag,
+                    user.language,
                     1 if user.is_initial_admin else 0,
                     created_str,
                 ),
@@ -74,7 +75,7 @@ class UserRepository(BaseRepository[User]):
             conn.execute(
                 """
                 UPDATE users
-                SET username = ?, email = ?, password_hash = ?, creator_tag = ?
+                SET username = ?, email = ?, password_hash = ?, creator_tag = ?, language = ?
                 WHERE id = ?
                 """,
                 (
@@ -82,6 +83,7 @@ class UserRepository(BaseRepository[User]):
                     user.email.strip().lower(),
                     user.password_hash,
                     tag_to_save,
+                    user.language,
                     user.id,
                 ),
             )
@@ -158,6 +160,7 @@ class UserRepository(BaseRepository[User]):
             email=str(row["email"]),
             password_hash=str(row["password_hash"]),
             creator_tag=tag,
+            language=str(row["language"]) if "language" in row.keys() and row["language"] else "",
             is_initial_admin=bool(row["is_initial_admin"]),
             created_at=parse_datetime(row["created_at"]),
         )

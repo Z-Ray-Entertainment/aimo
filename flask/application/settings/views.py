@@ -1,20 +1,26 @@
 from datetime import datetime
-from flask import Blueprint, abort, render_template, request, url_for
+from flask import Blueprint, abort, flash, make_response, redirect, render_template, request, url_for
 
 from application.auth.decorators import (
     get_current_user,
     has_creator_permission,
+    is_admin,
     require_auth,
 )
+from application.settings.forms import AccountForm
+from domain.auth.services import AuthService
 from domain.characters.models import Gender
+from domain.translation.models import LANGUAGE_METADATA
 from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.lorebook_repository import LorebookRepository
+from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
+from shared.exceptions import AimoError
 
 settings_bp = Blueprint("settings", __name__, url_prefix="/settings")
 
 
-@settings_bp.route("", methods=["GET"])
+@settings_bp.route("/", methods=["GET"])
 @require_auth
 def index():
     user = get_current_user()
@@ -110,7 +116,7 @@ def creations():
     for lb in lorebooks:
         if lb.id is None:
             continue
-        entries = lb_repo.list_entries(lb.id, user_id=user.id, is_admin=user.is_initial_admin)
+        entries = lb_repo.list_entries(lb.id, user_id=user.id, is_admin=is_admin())
         all_items.append({
             "type": "lorebook",
             "type_label": "Lorebook",
@@ -181,3 +187,48 @@ def creations():
         sort_by=sort_by,
         q=q,
     )
+
+
+@settings_bp.route("/account", methods=["GET"])
+@require_auth
+def account():
+    return render_template(
+        "settings/account.html",
+        languages=LANGUAGE_METADATA,
+    )
+
+
+@settings_bp.route("/account", methods=["POST"])
+@require_auth
+def update_account():
+    user = get_current_user()
+    form = AccountForm.from_request(request.form)
+    auth_service = AuthService()
+    user_repo = UserRepository()
+    try:
+        email_changed = form.email != user.email
+        password_changed = bool(form.new_password)
+        if email_changed or password_changed:
+            if not auth_service.authenticate_user(user, form.current_password):
+                raise AimoError("Das aktuelle Passwort ist falsch.")
+        if email_changed:
+            existing = user_repo.get_by_email(form.email)
+            if existing is not None and existing.id != user.id:
+                raise AimoError("Ein Benutzer mit dieser E-Mail-Adresse existiert bereits.")
+        if password_changed and form.new_password != form.confirm_password:
+            raise AimoError("Die neuen Passwörter stimmen nicht überein.")
+
+        auth_service.update_name(user, form.username)
+        auth_service.update_email(user, form.email)
+        auth_service.assign_language(user, form.language)
+        if password_changed:
+            auth_service.change_password(user, form.new_password)
+        user_repo.update(user)
+        flash("Account-Einstellungen gespeichert.", "success")
+    except AimoError as exc:
+        flash(str(exc), "error")
+        return redirect(url_for("settings.account"))
+
+    response = make_response(redirect(url_for("settings.account")))
+    response.set_cookie("aimo_sys_lang", user.language, max_age=60 * 60 * 24 * 365, samesite="Lax")
+    return response

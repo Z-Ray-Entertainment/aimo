@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from domain.auth.exceptions import AuthError
 from domain.auth.models import User
+from domain.translation.models import Language
 from shared.utils import hash_password, verify_password
 
 
@@ -36,6 +37,26 @@ class AuthService:
         if not password or not user.password_hash:
             return False
         return verify_password(password, user.password_hash)
+
+    def update_name(self, user: User, username: str) -> None:
+        cleaned = username.strip()
+        if not cleaned:
+            raise AuthError("Username must not be empty.")
+        user.username = cleaned
+
+    def update_email(self, user: User, email: str) -> None:
+        cleaned = email.strip().lower()
+        if not cleaned or "@" not in cleaned:
+            raise AuthError("A valid email address is required.")
+        user.email = cleaned
+
+    def change_password_verified(self, user: User, current_password: str, new_password: str) -> None:
+        if not self.authenticate_user(user, current_password):
+            raise AuthError("Current password is incorrect.")
+        self.change_password(user, new_password)
+
+    def assign_language(self, user: User, raw_language: str) -> None:
+        user.language = Language.resolve(raw_language).value
 
     def change_password(self, user: User, new_password: str) -> None:
         if not new_password:

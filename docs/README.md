@@ -15,7 +15,7 @@ This manual is intended for end users, story creators, and administrators, detai
 
 2. [**The Hub Dashboard**](hub.md)
    - Navigation via the three primary tabs: Characters 👤, Lorebooks 📜, WorldInfo 🌐
-   - Top-right Persona Avatar menu (1-click Creator-Tag copy, User settings, Admin settings, Logout)
+   - Top-right Persona Avatar menu (User settings, Admin settings, Logout)
    - Filtering, relationship meters, and message counters
 
 3. [**Player Personas**](personas.md)
