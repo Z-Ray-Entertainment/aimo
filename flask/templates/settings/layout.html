@@ -15,10 +15,6 @@
     </div>
 
     <nav class="aimo-sidebar-nav">
-      <a href="{{ url_for('settings.index') }}"
-         class="aimo-sidebar-nav-item {% if request.endpoint == 'settings.index' %}active{% endif %}"><span class="icon-mono">👤</span>
-        <span class="aimo-sidebar-nav-text">Personas</span>
-      </a>
       <a href="{{ url_for('settings.account') }}"
          class="aimo-sidebar-nav-item {% if request.endpoint == 'settings.account' %}active{% endif %}"><span class="icon-mono">🪪</span>
         <span class="aimo-sidebar-nav-text">Account</span>
