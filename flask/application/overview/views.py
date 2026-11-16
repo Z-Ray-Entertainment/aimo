@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request
 
-from application.auth.decorators import get_current_user, require_auth
+from application.auth.decorators import get_current_user, is_admin, require_auth
 from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.lorebook_repository import LorebookRepository
 from infrastructure.repositories.persona_repository import PersonaRepository
@@ -55,7 +55,7 @@ def index():
         best_rel = char_repo.get_best_relationship_for_user(
             char.id, user.id, default_value=float(char.initial_relationship)
         )
-        is_editable = char.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag)
+        is_editable = char.is_editable_by_user(user.id, is_admin(), user.creator_tag)
         character_cards.append(
             {
                 "character": char,
@@ -77,7 +77,7 @@ def index():
     for lb in lorebooks:
         if lb.id is None:
             continue
-        entries = lb_repo.list_entries(lb.id, user_id=user.id, is_admin=user.is_initial_admin)
+        entries = lb_repo.list_entries(lb.id, user_id=user.id, is_admin=is_admin())
         all_tags = []
         for e in entries:
             for t in e.tags:
@@ -88,7 +88,7 @@ def index():
                 "lorebook": lb,
                 "entry_count": len(entries),
                 "tags": all_tags[:8],
-                "is_editable": lb.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag),
+                "is_editable": lb.is_editable_by_user(user.id, is_admin(), user.creator_tag),
             }
         )
 
@@ -104,7 +104,7 @@ def index():
                 "worldinfo": wi,
                 "location_count": len(locations),
                 "event_count": len(events),
-                "is_editable": wi.is_editable_by_user(user.id, user.is_initial_admin, user.creator_tag),
+                "is_editable": wi.is_editable_by_user(user.id, is_admin(), user.creator_tag),
             }
         )
 

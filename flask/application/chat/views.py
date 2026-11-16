@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-from application.auth.decorators import get_current_user, has_perm, require_permission
+from application.auth.decorators import get_current_user, has_perm, is_admin as is_admin_user, require_permission
 from application.chat.forms import MemoryEditForm, StartChatForm
 from domain.characters.models import Emotion
 from domain.characters.services import CharacterService
@@ -27,6 +27,9 @@ chat_bp = Blueprint("chat", __name__, url_prefix="/chat")
 
 
 def _get_user_system_language() -> str:
+    user = get_current_user()
+    if user is not None and user.language:
+        return user.language
     cookie_lang = request.cookies.get("aimo_sys_lang", "").strip().lower()[:2]
     if cookie_lang in ("de", "en", "fr", "es", "it", "ja"):
         return cookie_lang
@@ -170,7 +173,7 @@ def open_character_chat(character_id: int):
     char_repo = CharacterRepository()
 
     character = char_repo.get_by_id(character_id)
-    if character is None or not character.is_visible_to_user(user.id, user.is_initial_admin):
+    if character is None or not character.is_visible_to_user(user.id, is_admin_user()):
         flash("Charakter nicht gefunden.", "error")
         return redirect(url_for("overview.index"))
 
@@ -194,7 +197,7 @@ def new_character_chat(character_id: int):
     chat_service = ChatService()
 
     character = char_repo.get_by_id(character_id)
-    if character is None or not character.is_visible_to_user(user.id, user.is_initial_admin):
+    if character is None or not character.is_visible_to_user(user.id, is_admin_user()):
         flash("Charakter nicht gefunden.", "error")
         return redirect(url_for("overview.index"))
 
@@ -338,7 +341,7 @@ def view_session(session_id: int):
     chat_repo.update_session(chat_session)
 
     character = char_repo.get_by_id(chat_session.character_id)
-    if character is None or not character.is_visible_to_user(user.id, user.is_initial_admin):
+    if character is None or not character.is_visible_to_user(user.id, is_admin_user()):
         flash("Zugehöriger Charakter nicht gefunden.", "error")
         return redirect(url_for("overview.index"))
 
@@ -488,7 +491,7 @@ def update_session_settings(session_id: int):
             init_loc = None
             if new_wi_id:
                 wi = wi_repo.get_by_id(new_wi_id)
-                if wi is None or not wi.is_visible_to_user(user.id, user.is_initial_admin):
+                if wi is None or not wi.is_visible_to_user(user.id, is_admin_user()):
                     flash("Ungültige WorldInfo.", "error")
                     return redirect(url_for("chat.view_session", session_id=session_id))
                 char = char_repo.get_by_id(chat_session.character_id)

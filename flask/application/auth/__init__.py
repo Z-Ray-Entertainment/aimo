@@ -3,6 +3,7 @@ from application.auth.decorators import (
     get_current_user,
     has_creator_permission,
     has_perm,
+    is_admin,
     require_auth,
     require_permission,
 )
@@ -14,6 +15,7 @@ __all__ = [
     "get_current_user",
     "has_creator_permission",
     "has_perm",
+    "is_admin",
     "require_auth",
     "require_permission",
 ]

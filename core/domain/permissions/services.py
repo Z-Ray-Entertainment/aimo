@@ -68,6 +68,11 @@ class PermissionService:
                 f"Missing required functional permission: '{permission}'."
             )
 
+    def is_admin(self, user: User, user_perms: UserPermissions) -> bool:
+        return user.is_initial_admin or self.has_permission(
+            user_perms, FunctionPermission.ADMIN_ACCESS
+        )
+
     def assert_modifiable_user(self, user: User) -> None:
         if user.is_initial_admin:
             raise SuperAdminProtectionError(

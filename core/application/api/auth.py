@@ -48,6 +48,7 @@ def verify_client_key() -> tuple[bool, Any | None]:
 get_current_user = AuthContext.get_current_user
 get_current_permissions = AuthContext.get_current_permissions
 has_perm = AuthContext.has_permission
+is_admin = AuthContext.is_admin
 
 
 def require_auth(view_func: Callable[..., Any]) -> Callable[..., Any]:

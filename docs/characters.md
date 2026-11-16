@@ -11,7 +11,7 @@ The **Character Designer** allows creators to craft detailed interactive AI char
 - **Back Button (`← Zurück`):** Returns directly to the previous view you came from (such as My Creations or the central Character Grid).
 - **Save (`💾 Speichern`):** Saves character metadata and dialogue styles.
 - **Duplicate (`📄 Kopieren`):** Allows any creator to deep-clone visible characters — including all primary portraits, transparent sprites, unlockable gallery artwork, and dialogue examples — into an independent duplicate they own.
-- **Delete (`🗑️ Löschen`):** Strictly reserved for the character's author and initial administrators.
+- **Delete (`🗑️ Löschen`):** Strictly reserved for the character's author and all administrators.
 
 ---
 
