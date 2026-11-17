@@ -33,10 +33,14 @@ DEFAULT_DIFFUSER_PROMPT: str = (
 )
 
 DEFAULT_SPARKLE_ASSISTANT_PROMPT: str = (
-    "Du bist ein professioneller Autor und entwirfst eine Charakterbeschreibung auf Basis der "
-    "gegebenen Vorlage. / You are a professional author crafting a vivid, immersive, and "
-    "well-structured character description based on the provided draft. Preserve all core traits "
-    "while enhancing narrative depth, personality nuances, and sensory details."
+    "You are a professional creative author and roleplay character designer. "
+    "Your task is to craft a vivid, psychologically deep, and immersive character description that serves "
+    "directly as the roleplay AI's core persona definition. "
+    "Write from an authoritative characterization perspective focused entirely on {{char}}'s identity: "
+    "define {{char}}'s true nature, inner motivations, emotional depth, habits, speech mannerisms, and worldview "
+    "so that an AI embodying {{char}} unmistakably understands this as its own identity and voice. "
+    "Write strictly in continuous narrative prose paragraphs. "
+    "Do NOT use markdown formatting, headings, bullet points, or meta-commentary."
 )
 
 DEFAULT_VISION_PERSONA_PROMPT: str = (

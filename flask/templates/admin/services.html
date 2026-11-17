@@ -3,10 +3,10 @@
 
 {% block admin_content %}
 <div class="aimo-split-stage-grid">
-  <!-- Linke Spalte: Hauptformular für URLs, Task-Zuweisung, Inferenz-Parameter & System-Prompts -->
+  <!-- Linke Spalte: Hauptformular für URLs, Task-Zuweisung & Inferenz-Parameter -->
   <form method="POST" action="{{ url_for('admin.services_config') }}" class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
     <h2 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
-      Service-Endpunkte, Modell-Aufgaben & System-Prompts
+      Service-Endpunkte & Modell-Aufgaben
     </h2>
 
     <!-- 1. Service-URLs -->
@@ -131,38 +131,8 @@
       </div>
     </div>
 
-    <!-- 4. Editierbare System-Prompts -->
-    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
-      <h3 style="color: var(--gold-accent); font-size: 1rem;">4. Editierbare System-Prompts (Englischer Kanon)</h3>
-
-      <div>
-        <label>Rollenspiel-System-Prompt ([SYSTEM_PROMPT])</label>
-        <textarea name="roleplay_prompt" rows="4" required>{{ settings.prompts.roleplay_prompt }}</textarea>
-      </div>
-
-      <div>
-        <label>Memory-Zusammenfassungs-Prompt (Alle 10 Nachrichten)</label>
-        <textarea name="memory_prompt" rows="3" required>{{ settings.prompts.memory_prompt }}</textarea>
-      </div>
-
-      <div>
-        <label>Diffuser-Prompt (Szenenbeschreibung → ComfyUI Prompt)</label>
-        <textarea name="diffuser_prompt" rows="3" required>{{ settings.prompts.diffuser_prompt }}</textarea>
-      </div>
-
-      <div>
-        <label>Sparkle-Assistent-Prompt (✨ Charakterbeschreibungs-Aufwertung)</label>
-        <textarea name="sparkle_assistant_prompt" rows="3" required>{{ settings.prompts.sparkle_assistant_prompt }}</textarea>
-      </div>
-
-      <div>
-        <label>Vision-Persona-Prompt (Physische Aussehens-Extraktion)</label>
-        <textarea name="vision_persona_prompt" rows="2" required>{{ settings.prompts.vision_persona_prompt }}</textarea>
-      </div>
-    </div>
-
     <div style="text-align: right; margin-top: 0.5rem;">
-      {{ action_button("Alle Einstellungen speichern", type="submit", variant="primary", icon="💾") }}
+      {{ action_button("Services & Modell-Einstellungen speichern", type="submit", variant="primary", icon="💾") }}
     </div>
   </form>
 

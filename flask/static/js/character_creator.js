@@ -55,6 +55,7 @@
     const btn = document.getElementById("sparkle-improve-btn");
     const textarea = document.getElementById("char-description-textarea");
     const nameInput = document.getElementById("char-name-input");
+    const genderSelect = document.querySelector('select[name="gender"]');
     if (!textarea || !btn) return;
 
     btn.addEventListener("click", async () => {
@@ -68,6 +69,7 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name: nameInput ? nameInput.value : "",
+            gender: genderSelect ? genderSelect.value : "",
             description: textarea.value,
           }),
         });

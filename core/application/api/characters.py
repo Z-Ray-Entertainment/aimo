@@ -172,19 +172,64 @@ def create_character():
         return jsonify({"error": str(exc)}), 400
 
 
+def _clean_sparkle_prose(raw_text: str) -> str:
+    cleaned = re.sub(
+        r"<(?:think|thought|reasoning|scratchpad)>.*?</(?:think|thought|reasoning|scratchpad)>",
+        "",
+        raw_text,
+        flags=re.DOTALL | re.IGNORECASE,
+    ).strip()
+    if not cleaned:
+        cleaned = re.sub(
+            r"<(?:think|thought|reasoning|scratchpad)>.*",
+            "",
+            raw_text,
+            flags=re.DOTALL | re.IGNORECASE,
+        ).strip() or raw_text
+
+    cleaned = re.sub(r"^[ \t]*[-*_]{3,}[ \t]*$", "", cleaned, flags=re.MULTILINE)
+
+    cleaned_lines: list[str] = []
+    for line in cleaned.splitlines():
+        l = line.strip()
+        if not l:
+            cleaned_lines.append("")
+            continue
+        l = re.sub(r"^>+\s*", "", l)
+        l = re.sub(r"^#+\s*", "", l)
+        l = re.sub(r"^[-*+•]\s+", "", l)
+        l = re.sub(r"^\d+[\.)]\s+", "", l)
+        cleaned_lines.append(l)
+
+    cleaned = "\n".join(cleaned_lines)
+    cleaned = re.sub(r"\*{1,3}(.*?)\*{1,3}", r"\1", cleaned)
+    cleaned = re.sub(r"(?<!\w)_{1,3}(.*?)_{1,3}(?!\w)", r"\1", cleaned)
+    cleaned = re.sub(r"`+(.*?)`+", r"\1", cleaned)
+    cleaned = re.sub(r"[ \t]+", " ", cleaned)
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return cleaned.strip()
+
+
 @api_characters_bp.route("/sparkle", methods=["POST"])
 @require_permission(FunctionPermission.CHARACTER_EDIT, FunctionPermission.CHARACTER_CREATE)
 def sparkle_description():
     data = request.get_json(silent=True) or {}
     draft = str(data.get("description", "")).strip()
     name = str(data.get("name", "Character")).strip()
+    gender = str(data.get("gender", "")).strip()
+    gender_info = f"\nGender: {gender}" if gender else ""
 
     settings = SettingsRepository().get_settings()
     llm_provider = get_llm_provider(settings)
     prompt = (
         f"{settings.prompts.sparkle_assistant_prompt}\n\n"
-        f"Charaktername / Character Name: {name}\n"
-        f"Vorlage / Draft:\n{draft or 'Create an engaging fantasy/roleplay personality.'}"
+        f"Character Name: {name}{gender_info}\n"
+        f"Draft / Notes:\n{draft or 'Create an engaging fantasy/roleplay personality.'}\n\n"
+        "Strict Formatting & Persona Rules:\n"
+        f"- Focus entirely on defining {name} (or {{{{char}}}}): establish their identity, psychology, temperament, mannerisms, and worldview so the roleplay model effortlessly embodies this persona as its own self.\n"
+        "- Write strictly in natural, continuous narrative prose paragraphs (pure prose).\n"
+        "- Do NOT use any markdown formatting, headings, bullet points, numbered lists, bold text, or asterisks.\n"
+        "- Do NOT include meta-text, introductions, or instructions; output only the final character description."
     )
     try:
         raw_output = llm_provider.generate(
@@ -198,19 +243,7 @@ def sparkle_description():
             ),
             think=False,
         ).strip()
-        improved = re.sub(
-            r"<(?:think|thought|reasoning|scratchpad)>.*?</(?:think|thought|reasoning|scratchpad)>",
-            "",
-            raw_output,
-            flags=re.DOTALL | re.IGNORECASE,
-        ).strip()
-        if not improved:
-            improved = re.sub(
-                r"<(?:think|thought|reasoning|scratchpad)>.*",
-                "",
-                raw_output,
-                flags=re.DOTALL | re.IGNORECASE,
-            ).strip() or raw_output
+        improved = _clean_sparkle_prose(raw_output)
         return jsonify({"description": improved})
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 502

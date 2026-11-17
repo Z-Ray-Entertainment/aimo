@@ -39,11 +39,6 @@ class AdminServicesForm:
     temperature: float = 0.7
     top_p: float = 0.9
     repeat_penalty: float = 1.1
-    roleplay_prompt: str = ""
-    memory_prompt: str = ""
-    diffuser_prompt: str = ""
-    sparkle_assistant_prompt: str = ""
-    vision_persona_prompt: str = ""
 
     @classmethod
     def from_request(cls, form_data: Any) -> "AdminServicesForm":
@@ -62,6 +57,21 @@ class AdminServicesForm:
             temperature=p.to_float(form_data, "temperature", 0.7),
             top_p=p.to_float(form_data, "top_p", 0.9),
             repeat_penalty=p.to_float(form_data, "repeat_penalty", 1.1),
+        )
+
+
+@dataclass
+class AdminPromptsForm:
+    roleplay_prompt: str = ""
+    memory_prompt: str = ""
+    diffuser_prompt: str = ""
+    sparkle_assistant_prompt: str = ""
+    vision_persona_prompt: str = ""
+
+    @classmethod
+    def from_request(cls, form_data: Any) -> "AdminPromptsForm":
+        p = RequestDataParser
+        return cls(
             roleplay_prompt=p.to_str(form_data, "roleplay_prompt"),
             memory_prompt=p.to_str(form_data, "memory_prompt"),
             diffuser_prompt=p.to_str(form_data, "diffuser_prompt"),
