@@ -116,34 +116,41 @@
     if (!btn || !textarea) return;
 
     btn.addEventListener("click", async () => {
-      const origHtml = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '<span class="icon-sparkle">👁️</span> Analysiere Bild...';
-
       const ctx = getCharacterContext();
+      const hasFile = fileInput && fileInput.files && fileInput.files.length > 0;
+      if (!hasFile && !ctx.characterId) {
+        if (window.showToastWarning) {
+          window.showToastWarning("Bitte wähle zuerst ein Porträtbild aus.");
+        } else {
+          alert("Bitte wähle zuerst ein Porträtbild aus.");
+        }
+        return;
+      }
+
+      const origPlaceholder = textarea.placeholder;
+      btn.classList.add("is-loading");
+      btn.disabled = true;
+      btn.innerHTML = '<span class="thinking-dots" aria-hidden="true"><span></span><span></span><span></span></span> <span>Vision-KI analysiert Bild</span>';
+
+      if (!textarea.value.trim()) {
+        textarea.placeholder = "✨ Vision-KI analysiert Porträt und extrahiert Aussehen";
+      }
 
       try {
         let resp;
-        if (fileInput && fileInput.files && fileInput.files.length > 0) {
+        if (hasFile) {
           const fd = new FormData();
           fd.append("primary_portrait", fileInput.files[0]);
           resp = await fetch("/api/characters/extract-appearance", {
             method: "POST",
             body: fd,
           });
-        } else if (ctx.characterId) {
+        } else {
           resp = await fetch("/api/characters/extract-appearance", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ character_id: ctx.characterId }),
           });
-        } else {
-          if (window.showToastWarning) {
-            window.showToastWarning("Bitte wähle zuerst ein Porträtbild aus.");
-          } else {
-            alert("Bitte wähle zuerst ein Porträtbild aus.");
-          }
-          return;
         }
 
         let data = null;
@@ -171,8 +178,10 @@
           alert("Fehler bei der Bildanalyse: " + err);
         }
       } finally {
+        btn.classList.remove("is-loading");
         btn.disabled = false;
-        btn.innerHTML = origHtml;
+        btn.innerHTML = '<span class="icon-mono">👁️</span><span>Aussehen aus Bild extrahieren</span>';
+        textarea.placeholder = origPlaceholder;
       }
     });
   }

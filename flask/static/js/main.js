@@ -59,7 +59,9 @@ window.extractPersonaVisionFeatures = async function extractPersonaVisionFeature
   const origBtnHtml = visionBtn ? visionBtn.innerHTML : "";
   window.setPersonaEditorLocked(true);
   if (visionBtn) {
-    visionBtn.textContent = "⏳ Analysiere Bild...";
+    visionBtn.classList.add("is-loading");
+    visionBtn.disabled = true;
+    visionBtn.innerHTML = '<span class="thinking-dots" aria-hidden="true"><span></span><span></span><span></span></span> <span>Vision-KI analysiert Bild</span>';
   }
   if (statusEl) {
     statusEl.style.color = "var(--gold-accent)";
@@ -102,8 +104,12 @@ window.extractPersonaVisionFeatures = async function extractPersonaVisionFeature
     }
   } finally {
     window.setPersonaEditorLocked(false);
-    if (visionBtn && origBtnHtml) {
-      visionBtn.innerHTML = origBtnHtml;
+    if (visionBtn) {
+      visionBtn.classList.remove("is-loading");
+      visionBtn.disabled = false;
+      if (origBtnHtml) {
+        visionBtn.innerHTML = origBtnHtml;
+      }
     }
   }
 };
