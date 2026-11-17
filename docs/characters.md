@@ -35,7 +35,7 @@ The Character Designer uses a modern two-column layout consistent with the Admin
 - **Primary Portrait (Mandatory):** Main portrait image used for tiles and default chat presentation.
 - **Description & AI Sparkle ✨:**
   - Define personality, speech patterns, quirks, and mannerisms.
-  - **AI Writing Assistant:** Clicking the magic wand with sparkles ✨ automatically enhances your draft using a specialized author prompt.
+  - **KI-Autor Optimierung (AI Writing Assistant ✨):** Clicking this button above the description textarea automatically drafts or enhances the character description based on the provided character name and draft text. The assistant writes exclusively in natural, continuous prose paragraphs without markdown, headings, bullet lists, or bolding. While generating, the button displays animated bouncing dots alongside "Optimiere Beschreibung" and upon completion populates the description field directly with status feedback.
 - **First Message (Welcome Message):** The character's opening greeting, automatically presented when starting a new chat session.
 
 ---
@@ -64,7 +64,13 @@ aimo supports dynamic, transparent sprites (PNG or WEBP) that adapt to the AI ch
 
 ## 💬 4. Dialogue Styles (`💬 Gesprächsstile`)
 
-- Representative conversation snippets (User / Assistant turns) to calibrate the character's tone, vernacular, dialect, and speech habits.
+Representative conversation snippets (Few-Shot trigger and response pairs) that calibrate the character's tone, vernacular, dialect, mannerisms, and emotional reactions:
+- **Add Dialogue Style (`➕ Gesprächsstil hinzufügen`):** Opens an overlay modal to define a player trigger (`{{user}}`) and character response (`{{char}}`).
+- **AI Author (`✨ Mit KI ausfüllen`):** Inside the modal, creators can tap the AI Author button to generate situational dialogue examples directly from the character's description in the user's configured language.
+  - **Context-Aware:** If a trigger prompt is already provided, the AI drafts exclusively the authentic response; if empty, it invents a complete, fresh interaction.
+  - **Dynamic Placeholders:** Generated examples utilize `{{user}}` and `{{char}}` tokens so they remain universally adaptable across any player persona.
+  - **Roleplay Styling:** Formats responses with spoken dialogue in quotation marks and narrative actions, gestures, and expressions in asterisks.
+- **Edit & Delete:** Existing dialogue examples can be reviewed, edited, or deleted from the list at any time.
 
 ---
 

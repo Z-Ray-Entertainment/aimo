@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-from application.admin.forms import AdminServicesForm, AdminUserForm
+from application.admin.forms import AdminPromptsForm, AdminServicesForm, AdminUserForm
 from application.auth.decorators import require_permission
 from domain.auth.services import AuthService
 from domain.permissions.models import (
@@ -19,6 +19,7 @@ from domain.settings.models import (
     RECOMMENDED_MODELS,
     RECOMMENDED_ROLEPLAY_MODEL,
     RECOMMENDED_VISION_MODEL,
+    SystemPrompts,
 )
 from domain.settings.services import SettingsService
 from infrastructure.image_gen.factory import get_image_gen_provider
@@ -240,16 +241,8 @@ def services_config():
                     top_p=form.top_p,
                     repeat_penalty=form.repeat_penalty,
                 )
-                settings_service.update_system_prompts(
-                    settings=settings,
-                    roleplay_prompt=form.roleplay_prompt,
-                    memory_prompt=form.memory_prompt,
-                    diffuser_prompt=form.diffuser_prompt,
-                    sparkle_assistant_prompt=form.sparkle_assistant_prompt,
-                    vision_persona_prompt=form.vision_persona_prompt,
-                )
                 settings = settings_repo.save_settings(settings)
-                flash("Service-Einstellungen, Modelle und System-Prompts gespeichert.", "success")
+                flash("Service-Einstellungen und Modelle erfolgreich gespeichert.", "success")
             except AimoError as exc:
                 flash(str(exc), "error")
 
@@ -290,6 +283,39 @@ def services_config():
         unique_recommended=unique_recommended,
         ollama_healthy=ollama_healthy,
         comfy_healthy=comfy_healthy,
+    )
+
+
+@admin_bp.route("/prompts", methods=["GET", "POST"])
+@require_permission(FunctionPermission.ADMIN_ACCESS)
+def prompts_config():
+    settings_repo = SettingsRepository()
+    settings_service = SettingsService()
+    settings = settings_repo.get_settings()
+    defaults = SystemPrompts()
+
+    if request.method == "POST":
+        form = AdminPromptsForm.from_request(request.form)
+        try:
+            settings_service.update_system_prompts(
+                settings=settings,
+                roleplay_prompt=form.roleplay_prompt,
+                memory_prompt=form.memory_prompt,
+                diffuser_prompt=form.diffuser_prompt,
+                sparkle_assistant_prompt=form.sparkle_assistant_prompt,
+                vision_persona_prompt=form.vision_persona_prompt,
+                dialogue_author_prompt=form.dialogue_author_prompt,
+            )
+            settings = settings_repo.save_settings(settings)
+            flash("System-Prompts erfolgreich gespeichert.", "success")
+            return redirect(url_for("admin.prompts_config"))
+        except AimoError as exc:
+            flash(str(exc), "error")
+
+    return render_template(
+        "admin/prompts.html",
+        settings=settings,
+        defaults=defaults,
     )
 
 

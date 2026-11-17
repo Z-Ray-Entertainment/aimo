@@ -27,7 +27,7 @@ def require_auth(view_func: Callable[..., Any]) -> Callable[..., Any]:
     return wrapped
 
 
-def require_permission(permission: str | FunctionPermission) -> Callable[..., Any]:
+def require_permission(*permissions: str | FunctionPermission) -> Callable[..., Any]:
     def decorator(view_func: Callable[..., Any]) -> Callable[..., Any]:
         @wraps(view_func)
         def wrapped(*args: Any, **kwargs: Any) -> Any:
@@ -36,9 +36,10 @@ def require_permission(permission: str | FunctionPermission) -> Callable[..., An
                 if request.path.startswith("/api/"):
                     return jsonify({"error": "Authentication required."}), 401
                 return redirect(url_for("auth.login", next=request.path))
-            if not has_perm(permission):
+            if not any(has_perm(p) for p in permissions):
                 if request.path.startswith("/api/"):
-                    return jsonify({"error": f"Missing permission: {permission}"}), 403
+                    perm_names = ", ".join(str(p) for p in permissions)
+                    return jsonify({"error": f"Missing permission: {perm_names}"}), 403
                 abort(403)
             return view_func(*args, **kwargs)
 

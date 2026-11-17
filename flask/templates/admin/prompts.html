@@ -1,0 +1,83 @@
+{% extends "admin/layout.html" %}
+{% from "macros/buttons.html" import action_button %}
+
+{% block extra_head %}
+  <script src="{{ url_for('static', filename='js/admin_prompts.js') }}" defer></script>
+{% endblock %}
+
+{% block admin_content %}
+<div style="max-width: 900px; width: 100%;">
+  <form method="POST" action="{{ url_for('admin.prompts_config') }}" class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
+    <h2 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem; margin: 0;">
+      System-Prompts
+    </h2>
+
+    <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border-wood-dark); border-left: 3px solid var(--gold-accent); border-radius: 4px; padding: 0.85rem 1rem; font-size: 0.88rem; line-height: 1.45; color: var(--text-color);">
+      <div style="font-weight: 700; color: var(--gold-accent); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+        <span class="icon-mono">ℹ️</span> <span>Hinweis zu Prompt-Platzhaltern</span>
+      </div>
+      <p style="margin: 0; opacity: 0.95;">
+        In den Prompts können die Variablen <code style="color: var(--gold-accent); background: rgba(0, 0, 0, 0.3); padding: 0.1rem 0.3rem; border-radius: 3px;">&#123;&#123;char&#125;&#125;</code> (Name des Charakters) und <code style="color: var(--gold-accent); background: rgba(0, 0, 0, 0.3); padding: 0.1rem 0.3rem; border-radius: 3px;">&#123;&#123;user&#125;&#125;</code> (Name der Spieler-Persona) verwendet werden. Diese werden zur Laufzeit dynamisch durch die jeweiligen Entitätsdaten ersetzt.
+      </p>
+    </div>
+
+    <!-- 1. Rollenspiel-Prompt -->
+    <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <label for="prompt-roleplay_prompt" style="font-weight: bold; margin: 0;">Rollenspiel-Prompt</label>
+        {{ action_button("Standard wiederherstellen", icon="🔄", size="sm", extra_class="btn-reset-prompt", data={"target": "roleplay_prompt"}, title="Setzt diesen Prompt auf den Werksstandard zurück") }}
+      </div>
+      <textarea name="roleplay_prompt" id="prompt-roleplay_prompt" rows="5" required data-default-prompt="{{ defaults.roleplay_prompt }}">{{ settings.prompts.roleplay_prompt }}</textarea>
+    </div>
+
+    <!-- 2. Memory-Prompt -->
+    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.4rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <label for="prompt-memory_prompt" style="font-weight: bold; margin: 0;">Memory-Prompt</label>
+        {{ action_button("Standard wiederherstellen", icon="🔄", size="sm", extra_class="btn-reset-prompt", data={"target": "memory_prompt"}, title="Setzt diesen Prompt auf den Werksstandard zurück") }}
+      </div>
+      <textarea name="memory_prompt" id="prompt-memory_prompt" rows="4" required data-default-prompt="{{ defaults.memory_prompt }}">{{ settings.prompts.memory_prompt }}</textarea>
+    </div>
+
+    <!-- 3. Diffuser-Prompt -->
+    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.4rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <label for="prompt-diffuser_prompt" style="font-weight: bold; margin: 0;">Diffuser-Prompt</label>
+        {{ action_button("Standard wiederherstellen", icon="🔄", size="sm", extra_class="btn-reset-prompt", data={"target": "diffuser_prompt"}, title="Setzt diesen Prompt auf den Werksstandard zurück") }}
+      </div>
+      <textarea name="diffuser_prompt" id="prompt-diffuser_prompt" rows="4" required data-default-prompt="{{ defaults.diffuser_prompt }}">{{ settings.prompts.diffuser_prompt }}</textarea>
+    </div>
+
+    <!-- 4. KI-Autor-Prompt -->
+    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.4rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <label for="prompt-sparkle_assistant_prompt" style="font-weight: bold; margin: 0;">KI-Autor-Prompt</label>
+        {{ action_button("Standard wiederherstellen", icon="🔄", size="sm", extra_class="btn-reset-prompt", data={"target": "sparkle_assistant_prompt"}, title="Setzt diesen Prompt auf den Werksstandard zurück") }}
+      </div>
+      <textarea name="sparkle_assistant_prompt" id="prompt-sparkle_assistant_prompt" rows="4" required data-default-prompt="{{ defaults.sparkle_assistant_prompt }}">{{ settings.prompts.sparkle_assistant_prompt }}</textarea>
+    </div>
+
+    <!-- 5. Vision-Prompt -->
+    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.4rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <label for="prompt-vision_persona_prompt" style="font-weight: bold; margin: 0;">Vision-Prompt</label>
+        {{ action_button("Standard wiederherstellen", icon="🔄", size="sm", extra_class="btn-reset-prompt", data={"target": "vision_persona_prompt"}, title="Setzt diesen Prompt auf den Werksstandard zurück") }}
+      </div>
+      <textarea name="vision_persona_prompt" id="prompt-vision_persona_prompt" rows="3" required data-default-prompt="{{ defaults.vision_persona_prompt }}">{{ settings.prompts.vision_persona_prompt }}</textarea>
+    </div>
+
+    <!-- 6. KI-Autor-Dialog-Prompt -->
+    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.4rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <label for="prompt-dialogue_author_prompt" style="font-weight: bold; margin: 0;">KI-Autor-Dialog-Prompt</label>
+        {{ action_button("Standard wiederherstellen", icon="🔄", size="sm", extra_class="btn-reset-prompt", data={"target": "dialogue_author_prompt"}, title="Setzt diesen Prompt auf den Werksstandard zurück") }}
+      </div>
+      <textarea name="dialogue_author_prompt" id="prompt-dialogue_author_prompt" rows="4" required data-default-prompt="{{ defaults.dialogue_author_prompt }}">{{ settings.prompts.dialogue_author_prompt }}</textarea>
+    </div>
+
+    <div style="text-align: right; margin-top: 0.5rem; border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
+      {{ action_button("Prompts speichern", type="submit", variant="primary", icon="💾") }}
+    </div>
+  </form>
+</div>
+{% endblock %}

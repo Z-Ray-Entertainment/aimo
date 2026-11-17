@@ -1,6 +1,7 @@
 import sqlite3
 
 from domain.settings.models import (
+    DEFAULT_DIALOGUE_AUTHOR_PROMPT,
     ModelParameters,
     ServiceSettings,
     SystemPrompts,
@@ -44,9 +45,9 @@ class SettingsRepository:
                 roleplay_model, memory_model, assistant_model, vision_model, classification_model,
                 num_ctx, temperature, top_p, repeat_penalty,
                 roleplay_prompt, memory_prompt, diffuser_prompt,
-                sparkle_assistant_prompt, vision_persona_prompt, default_backdrop_path
+                sparkle_assistant_prompt, vision_persona_prompt, dialogue_author_prompt, default_backdrop_path
             )
-            VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(id) DO UPDATE SET
                 ollama_url = excluded.ollama_url,
                 comfyui_url = excluded.comfyui_url,
@@ -66,6 +67,7 @@ class SettingsRepository:
                 diffuser_prompt = excluded.diffuser_prompt,
                 sparkle_assistant_prompt = excluded.sparkle_assistant_prompt,
                 vision_persona_prompt = excluded.vision_persona_prompt,
+                dialogue_author_prompt = excluded.dialogue_author_prompt,
                 default_backdrop_path = excluded.default_backdrop_path
             """,
             (
@@ -87,6 +89,7 @@ class SettingsRepository:
                 settings.prompts.diffuser_prompt,
                 settings.prompts.sparkle_assistant_prompt,
                 settings.prompts.vision_persona_prompt,
+                settings.prompts.dialogue_author_prompt,
                 settings.default_backdrop_path,
             ),
         )
@@ -103,6 +106,11 @@ class SettingsRepository:
             str(row["default_backdrop_path"])
             if ("default_backdrop_path" in keys and row["default_backdrop_path"] is not None)
             else None
+        )
+        dialogue_prompt = (
+            str(row["dialogue_author_prompt"])
+            if ("dialogue_author_prompt" in keys and row["dialogue_author_prompt"])
+            else DEFAULT_DIALOGUE_AUTHOR_PROMPT
         )
         return ServiceSettings(
             id=int(row["id"]),
@@ -129,6 +137,7 @@ class SettingsRepository:
                 diffuser_prompt=str(row["diffuser_prompt"]),
                 sparkle_assistant_prompt=str(row["sparkle_assistant_prompt"]),
                 vision_persona_prompt=str(row["vision_persona_prompt"]),
+                dialogue_author_prompt=dialogue_prompt,
             ),
             default_backdrop_path=default_backdrop,
         )

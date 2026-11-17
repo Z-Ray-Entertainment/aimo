@@ -16,7 +16,8 @@
 
     <nav class="aimo-sidebar-nav">
       {{ action_button("Benutzerverwaltung", href=url_for('admin.users_list'), icon="👥", active=(request.endpoint in ('admin.users_list', 'admin.create_user', 'admin.edit_user')), extra_class="aimo-sidebar-nav-item") }}
-      {{ action_button("Services, Modelle & Prompts", href=url_for('admin.services_config'), icon="⚙️", active=(request.endpoint == 'admin.services_config'), extra_class="aimo-sidebar-nav-item") }}
+      {{ action_button("Services & Modelle", href=url_for('admin.services_config'), icon="⚙️", active=(request.endpoint == 'admin.services_config'), extra_class="aimo-sidebar-nav-item") }}
+      {{ action_button("System-Prompts", href=url_for('admin.prompts_config'), icon="📜", active=(request.endpoint == 'admin.prompts_config'), extra_class="aimo-sidebar-nav-item") }}
       {{ action_button("System-Backdrop", href=url_for('admin.backdrop_config'), icon="🖼️", active=(request.endpoint == 'admin.backdrop_config'), extra_class="aimo-sidebar-nav-item") }}
     </nav>
 

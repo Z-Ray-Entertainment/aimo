@@ -319,6 +319,39 @@ button.aimo-btn:disabled {
   pointer-events: none;
 }
 
+/* Animated Loading States for Action Buttons (Chat-style bouncing dots) */
+.aimo-btn.is-loading,
+button.aimo-btn.is-loading {
+  cursor: wait !important;
+  pointer-events: none !important;
+  opacity: 0.95 !important;
+  background: linear-gradient(135deg, #4A235A, #6E472A) !important;
+  border-color: var(--sparkle-gold) !important;
+  color: var(--sparkle-gold) !important;
+}
+
+.aimo-btn .thinking-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.aimo-btn .thinking-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--sparkle-gold);
+  animation: aimoThinkingBounce 1.3s infinite ease-in-out both;
+}
+
+.aimo-btn .thinking-dots span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.aimo-btn .thinking-dots span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
 .aimo-btn-lg,
 button.aimo-btn-lg,
 a.aimo-btn-lg {

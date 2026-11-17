@@ -11,7 +11,8 @@ The Admin Panel is reserved for users holding the `ADMIN_ACCESS` permission. Her
 The Administration area shares the exact same two-column layout as the [User Settings](settings.md):
 - **Left Sidebar (`Administration`):**
   - **Benutzerverwaltung (`👥`):** Opens the user and functional permission management.
-  - **Services, Modelle & Prompts (`⚙️`):** Opens configuration for AI service connections, model routing, and prompt templates.
+  - **Services & Modelle (`⚙️`):** Opens configuration for AI service connections, model routing, and inference hyperparameters.
+  - **System-Prompts (`📜`):** Opens configuration for system prompts and default reset capabilities.
   - **System-Backdrop (`🖼️`):** Opens the configuration for the global system background wallpaper.
   - **Zurück zum Hub (`← Zurück zum Hub`):** Returns you directly to the central Hub dashboard at any time.
 - **Right Main Area:**
@@ -58,12 +59,33 @@ Route specific duties to specialized models:
 - **Assistant:** Dedicated model for Sparkle assistant, translation, and diffuser prompts.
 - **Vision:** Multimodal model for image analysis and persona appearance scans.
 
-### 3. Inference Parameters & System Prompts
+### 3. Inference Parameters
 - Fine-tune generation hyperparameters:
   - `num_ctx`: Context window size (e.g., 4096, 8192).
   - `temperature`: Creativity and randomness (e.g., 0.7).
   - `top_p` and `repeat_penalty`.
-- **Edit System Prompts:** Directly customize base system directives for Roleplay, Memory extraction, ComfyUI prompt diffusion, and the Sparkle Writing Assistant ✨.
+
+---
+
+## 📜 System-Prompts (`/admin/prompts`)
+
+Manage and customize the system-level instructions that guide AI models across all core tasks.
+
+### Placeholders
+In roleplay prompts, dynamic template tags can be inserted:
+- `{{char}}`: Dynamically substituted with the active character's name.
+- `{{user}}`: Dynamically substituted with the active player persona's name.
+
+### Configurable Prompts
+- **Rollenspiel-Prompt:** The foundation prompt governing how the primary roleplay model embodies characters and generates pure dialogue and narrative text.
+- **Memory-Prompt:** Directives instructing the memory model on creating concise, episodic summaries and relevant tags every 10 messages.
+- **Diffuser-Prompt:** Formulates scenic descriptions into effective visual diffusion prompts for ComfyUI.
+- **KI-Autor-Prompt:** Powers the Sparkle assistant (✨) in the character editor to write immersive, third-person descriptive prose based on author notes.
+- **Vision-Prompt:** Directs multimodal vision models in extracting physical appearance features from persona portrait images.
+- **KI-Autor-Dialog-Prompt:** Guides the AI author in formulating authentic, situational dialogue examples (`{{user}}` trigger and `{{char}}` response) based on the character description.
+
+### Restoring Defaults
+Each prompt section features a **Standard wiederherstellen** button. Clicking it prompts for confirmation and immediately inserts the factory default prompt into the respective editor field. Changes take effect once you click **Prompts speichern**.
 
 ---
 

@@ -33,16 +33,31 @@ DEFAULT_DIFFUSER_PROMPT: str = (
 )
 
 DEFAULT_SPARKLE_ASSISTANT_PROMPT: str = (
-    "Du bist ein professioneller Autor und entwirfst eine Charakterbeschreibung auf Basis der "
-    "gegebenen Vorlage. / You are a professional author crafting a vivid, immersive, and "
-    "well-structured character description based on the provided draft. Preserve all core traits "
-    "while enhancing narrative depth, personality nuances, and sensory details."
+    "You are a professional creative author and roleplay character designer. "
+    "Your task is to craft a vivid, psychologically deep, and immersive character description that serves "
+    "directly as the roleplay AI's core persona definition. "
+    "Write from an authoritative characterization perspective focused entirely on {{char}}'s identity: "
+    "define {{char}}'s true nature, inner motivations, emotional depth, habits, speech mannerisms, and worldview "
+    "so that an AI embodying {{char}} unmistakably understands this as its own identity and voice. "
+    "Write strictly in continuous narrative prose paragraphs. "
+    "Do NOT use markdown formatting, headings, bullet points, or meta-commentary."
 )
 
 DEFAULT_VISION_PERSONA_PROMPT: str = (
     "Analyze the portrait image and describe only the character's physical appearance in English: "
     "facial features, eye color, hairstyle and hair color, skin tone, build, and distinctive "
     "physical traits. Strictly ignore image backgrounds, lighting effects, and situational body poses."
+)
+
+DEFAULT_DIALOGUE_AUTHOR_PROMPT: str = (
+    "You are a professional creative dialogue author and voice designer for roleplay characters. "
+    "Your task is to analyze {{char}}'s identity, personality, speech quirks, tone, and worldview from their description, "
+    "and generate a single vivid, authentic dialogue example showcasing how {{char}} naturally speaks and reacts to {{user}}.\n"
+    "Guidelines:\n"
+    "1. Output strictly one single dialogue pair formatted with {{user}}'s trigger and {{char}}'s response.\n"
+    "2. Use {{user}} and {{char}} as placeholders.\n"
+    "3. Format the response using roleplay dialogue style: spoken words in quotes, narrative actions, gestures, and facial expressions in asterisks (e.g. *actions* \"speech\").\n"
+    "4. Respect the requested language and do not repeat scenarios from existing dialogue examples."
 )
 
 
@@ -147,6 +162,7 @@ class SystemPrompts:
     diffuser_prompt: str = DEFAULT_DIFFUSER_PROMPT
     sparkle_assistant_prompt: str = DEFAULT_SPARKLE_ASSISTANT_PROMPT
     vision_persona_prompt: str = DEFAULT_VISION_PERSONA_PROMPT
+    dialogue_author_prompt: str = DEFAULT_DIALOGUE_AUTHOR_PROMPT
 
     def __post_init__(self) -> None:
         self.validate()
@@ -158,6 +174,7 @@ class SystemPrompts:
             "diffuser_prompt": self.diffuser_prompt,
             "sparkle_assistant_prompt": self.sparkle_assistant_prompt,
             "vision_persona_prompt": self.vision_persona_prompt,
+            "dialogue_author_prompt": self.dialogue_author_prompt,
         }
         for field_name, value in fields.items():
             if not isinstance(value, str) or not value.strip():
