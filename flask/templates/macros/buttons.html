@@ -78,3 +78,8 @@
 {% macro modal_close_button(modal_id, text="Schließen", title="Schließen", id=none, extra_class="") %}
   {{ action_button(text, icon="✕", layout="icon", modal_close=modal_id, title=title, id=id, extra_class=extra_class) }}
 {% endmacro %}
+
+{# Reusable Animated Thinking Dots Component (Chat-style 3 Bouncing Dots) #}
+{% macro thinking_dots() %}
+  <span class="thinking-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+{% endmacro %}

@@ -1,5 +1,44 @@
 window.aimoPersonaVisionRunning = false;
 
+/**
+ * Standardized HTML markup for animated thinking dots (Chat bounce style).
+ * @returns {string} Standardized HTML string with 3 animated bouncing dots
+ */
+window.aimoThinkingDotsHtml = function aimoThinkingDotsHtml() {
+  return '<span class="thinking-dots" aria-hidden="true"><span></span><span></span><span></span></span>';
+};
+
+/**
+ * Puts an action button into the standardized loading state with animated thinking dots.
+ * @param {HTMLElement|string} btn - Button element or selector
+ * @param {string} label - Active loading text (e.g. "Analysiere Bild", "Entwerfe Dialog")
+ * @returns {string} Original button innerHTML for later restoration
+ */
+window.setButtonLoading = function setButtonLoading(btn, label) {
+  const el = typeof btn === "string" ? document.querySelector(btn) : btn;
+  if (!el) return "";
+  const origHtml = el.innerHTML;
+  el.classList.add("is-loading");
+  el.disabled = true;
+  el.innerHTML = `${window.aimoThinkingDotsHtml()} <span>${label || ""}</span>`;
+  return origHtml;
+};
+
+/**
+ * Restores an action button from the loading state.
+ * @param {HTMLElement|string} btn - Button element or selector
+ * @param {string} [restoreHtml] - Optional HTML to restore. If omitted, retains current text but removes is-loading and re-enables.
+ */
+window.resetButtonLoading = function resetButtonLoading(btn, restoreHtml) {
+  const el = typeof btn === "string" ? document.querySelector(btn) : btn;
+  if (!el) return;
+  el.classList.remove("is-loading");
+  el.disabled = false;
+  if (restoreHtml !== undefined && restoreHtml !== null) {
+    el.innerHTML = restoreHtml;
+  }
+};
+
 window.setPersonaEditorLocked = function setPersonaEditorLocked(locked) {
   window.aimoPersonaVisionRunning = Boolean(locked);
   const modal = document.getElementById("persona-manager-modal");
@@ -56,16 +95,11 @@ window.extractPersonaVisionFeatures = async function extractPersonaVisionFeature
     formData.append("persona_id", personaIdInput.value.trim());
   }
 
-  const origBtnHtml = visionBtn ? visionBtn.innerHTML : "";
+  const origBtnHtml = window.setButtonLoading(visionBtn, "Analysiere Bild");
   window.setPersonaEditorLocked(true);
-  if (visionBtn) {
-    visionBtn.classList.add("is-loading");
-    visionBtn.disabled = true;
-    visionBtn.innerHTML = '<span class="thinking-dots" aria-hidden="true"><span></span><span></span><span></span></span> <span>Vision-KI analysiert Bild</span>';
-  }
   if (statusEl) {
     statusEl.style.color = "var(--gold-accent)";
-    statusEl.textContent = "⏳ Bildanalyse läuft… (Speichern & Schließen gesperrt)";
+    statusEl.textContent = "⏳ Analysiere Bild (Speichern & Schließen gesperrt)";
   }
 
   try {
@@ -104,13 +138,7 @@ window.extractPersonaVisionFeatures = async function extractPersonaVisionFeature
     }
   } finally {
     window.setPersonaEditorLocked(false);
-    if (visionBtn) {
-      visionBtn.classList.remove("is-loading");
-      visionBtn.disabled = false;
-      if (origBtnHtml) {
-        visionBtn.innerHTML = origBtnHtml;
-      }
-    }
+    window.resetButtonLoading(visionBtn, origBtnHtml);
   }
 };
 
@@ -733,9 +761,7 @@ function initEditorI18nFields() {
         return;
       }
       const targetLang = langSelect.value;
-      const origHtml = translateBtn.innerHTML;
-      translateBtn.disabled = true;
-      translateBtn.textContent = "⏳ Übersetze...";
+      const origHtml = window.setButtonLoading(translateBtn, "Übersetze Text");
 
       try {
         if (!variants[activeLang] || !variants[activeLang].content) {
@@ -776,8 +802,7 @@ function initEditorI18nFields() {
       } catch (_) {
         window.showToastError("Fehler bei der Verbindung zum Übersetzungsdienst.", "Verbindungsfehler");
       } finally {
-        translateBtn.disabled = false;
-        translateBtn.innerHTML = origHtml;
+        window.resetButtonLoading(translateBtn, origHtml);
       }
     });
 

@@ -59,13 +59,11 @@
     if (!textarea || !btn) return;
 
     btn.addEventListener("click", async () => {
-      btn.classList.add("is-loading");
-      btn.disabled = true;
-      btn.innerHTML = '<span class="thinking-dots" aria-hidden="true"><span></span><span></span><span></span></span> <span>KI-Autor schreibt</span>';
+      const origBtnHtml = window.setButtonLoading(btn, "Optimiere Beschreibung");
 
       const origPlaceholder = textarea.placeholder;
       if (!textarea.value.trim()) {
-        textarea.placeholder = "✨ KI-Autor verfasst die Beschreibung";
+        textarea.placeholder = "✨ Optimiere Beschreibung";
       }
 
       try {
@@ -101,9 +99,7 @@
         const errText = "Verbindungsfehler zum KI-Autor: " + (err.message || err);
         if (window.showToastError) window.showToastError(errText); else alert(errText);
       } finally {
-        btn.classList.remove("is-loading");
-        btn.disabled = false;
-        btn.innerHTML = '<span class="icon-mono">✨</span><span>KI-Autor Optimierung</span>';
+        window.resetButtonLoading(btn, '<span class="icon-mono">✨</span><span>KI-Autor Optimierung</span>');
         textarea.placeholder = origPlaceholder;
       }
     });
@@ -128,12 +124,10 @@
       }
 
       const origPlaceholder = textarea.placeholder;
-      btn.classList.add("is-loading");
-      btn.disabled = true;
-      btn.innerHTML = '<span class="thinking-dots" aria-hidden="true"><span></span><span></span><span></span></span> <span>Vision-KI analysiert Bild</span>';
+      const origBtnHtml = window.setButtonLoading(btn, "Analysiere Bild");
 
       if (!textarea.value.trim()) {
-        textarea.placeholder = "✨ Vision-KI analysiert Porträt und extrahiert Aussehen";
+        textarea.placeholder = "✨ Analysiere Porträt und extrahiere Aussehen";
       }
 
       try {
@@ -178,9 +172,7 @@
           alert("Fehler bei der Bildanalyse: " + err);
         }
       } finally {
-        btn.classList.remove("is-loading");
-        btn.disabled = false;
-        btn.innerHTML = '<span class="icon-mono">👁️</span><span>Aussehen aus Bild extrahieren</span>';
+        window.resetButtonLoading(btn, '<span class="icon-mono">👁️</span><span>Aussehen aus Bild extrahieren</span>');
         textarea.placeholder = origPlaceholder;
       }
     });
@@ -487,19 +479,15 @@
         return;
       }
 
-      const origHtml = sparkleModalBtn.innerHTML;
       const origTriggerPlaceholder = triggerInput.placeholder;
       const origResponsePlaceholder = responseInput.placeholder;
-
-      sparkleModalBtn.classList.add("is-loading");
-      sparkleModalBtn.disabled = true;
-      sparkleModalBtn.innerHTML = '<span class="thinking-dots" aria-hidden="true"><span></span><span></span><span></span></span> <span>KI entwirft Dialog</span>';
+      const origBtnHtml = window.setButtonLoading(sparkleModalBtn, "Entwerfe Dialog");
 
       if (!triggerInput.value) {
         triggerInput.placeholder = "✨ Analysiere Charakterbeschreibung";
       }
       if (!responseInput.value) {
-        responseInput.placeholder = "✨ Formuliere in-character Antwort";
+        responseInput.placeholder = "✨ Formuliere Antwort";
       }
 
       const userLang = (document.documentElement.lang || "de").slice(0, 2).toLowerCase();
@@ -540,9 +528,7 @@
         const errMsg = "Verbindungsfehler bei der Dialogbeispiel-Generierung.";
         if (window.showToastError) window.showToastError(errMsg); else alert(errMsg);
       } finally {
-        sparkleModalBtn.classList.remove("is-loading");
-        sparkleModalBtn.disabled = false;
-        sparkleModalBtn.innerHTML = '<span class="icon-mono">✨</span><span>Mit KI ausfüllen</span>';
+        window.resetButtonLoading(sparkleModalBtn, '<span class="icon-mono">✨</span><span>Mit KI ausfüllen</span>');
         triggerInput.placeholder = origTriggerPlaceholder;
         responseInput.placeholder = origResponsePlaceholder;
       }
