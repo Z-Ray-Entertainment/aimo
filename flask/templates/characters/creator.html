@@ -62,6 +62,7 @@
         data-character-name="{{ character.name if character else '' }}"
         data-active-persona="{{ (g.default_persona.name if g.default_persona else 'Du') }}">
     <input type="hidden" name="return_to" value="{{ get_safe_back_url(url_for('overview.index', tab='characters')) }}">
+    <input type="hidden" name="active_tab" id="character-active-tab-input" value="{{ active_tab }}">
     <input type="hidden" name="dialogue_examples_json" id="dialogue-examples-json" value='{{ form.dialogue_examples | tojson }}'>
 
     <!-- TAB 1: Hauptinformationen -->
@@ -582,9 +583,14 @@
           <textarea id="modal-dialogue-response" rows="3" placeholder="z. B. Sey gegrüßt, Wanderer. Die Wälder bergen nachts Geheimnisse, die nicht für jedes Ohr bestimmt sind..." style="width: 100%;"></textarea>
         </div>
       </div>
-      <div style="display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1rem; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
-        {{ action_button("Abbrechen", modal_close="add-dialogue-modal") }}
-        {{ action_button("Hinzufügen", icon="➕", variant="primary", id="confirm-add-dialogue-btn") }}
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.65rem; margin-top: 1rem; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem; flex-wrap: wrap;">
+        <div>
+          {{ action_button("Mit KI ausfüllen", id="sparkle-modal-dialogue-btn", icon="✨", extra_class="btn-sparkle", title="Füllt Trigger und Response basierend auf der Charakterbeschreibung aus") }}
+        </div>
+        <div style="display: flex; gap: 0.65rem;">
+          {{ action_button("Abbrechen", icon="✕", modal_close="add-dialogue-modal") }}
+          {{ action_button("Hinzufügen", icon="➕", variant="primary", id="confirm-add-dialogue-btn") }}
+        </div>
       </div>
     </div>
   </div>

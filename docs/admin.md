@@ -82,6 +82,7 @@ In roleplay prompts, dynamic template tags can be inserted:
 - **Diffuser-Prompt:** Formulates scenic descriptions into effective visual diffusion prompts for ComfyUI.
 - **KI-Autor-Prompt:** Powers the Sparkle assistant (✨) in the character editor to write immersive, third-person descriptive prose based on author notes.
 - **Vision-Prompt:** Directs multimodal vision models in extracting physical appearance features from persona portrait images.
+- **KI-Autor-Dialog-Prompt:** Guides the AI author in formulating authentic, situational dialogue examples (`{{user}}` trigger and `{{char}}` response) based on the character description.
 
 ### Restoring Defaults
 Each prompt section features a **Standard wiederherstellen** button. Clicking it prompts for confirmation and immediately inserts the factory default prompt into the respective editor field. Changes take effect once you click **Prompts speichern**.

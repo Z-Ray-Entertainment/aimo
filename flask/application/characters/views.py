@@ -77,7 +77,7 @@ def _render_creator(character=None, form=None):
             sprites_by_emotion.setdefault(sp.emotion.value, []).append(sp)
 
     valid_tabs = ("info", "gallery", "sprites", "dialogue", "world", "lorebooks", "collab")
-    active_tab = request.args.get("tab", "info")
+    active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
     if active_tab not in valid_tabs:
         active_tab = "info"
 
@@ -162,7 +162,10 @@ def new_character():
             )
             saved = char_repo.save(character)
             flash(f"Charakter '{saved.name}' erfolgreich angelegt!", "success")
-            return redirect(url_for("characters.edit_character", character_id=saved.id))
+            active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
+            if active_tab not in ("info", "gallery", "sprites", "dialogue", "world", "lorebooks", "collab"):
+                active_tab = "info"
+            return redirect(url_for("characters.edit_character", character_id=saved.id, tab=active_tab))
         except AimoError as exc:
             flash(str(exc), "error")
 
@@ -234,6 +237,10 @@ def edit_character(character_id: int):
             )
             character = char_repo.save(character)
             flash(f"Charakter '{character.name}' gespeichert.", "success")
+            active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
+            if active_tab not in ("info", "gallery", "sprites", "dialogue", "world", "lorebooks", "collab"):
+                active_tab = "info"
+            return redirect(url_for("characters.edit_character", character_id=character.id, tab=active_tab))
         except AimoError as exc:
             flash(str(exc), "error")
     else:
@@ -321,7 +328,7 @@ def add_gallery_image(character_id: int):
         except AimoError as exc:
             flash(str(exc), "error")
 
-    return redirect(url_for("characters.edit_character", character_id=character_id))
+    return redirect(url_for("characters.edit_character", character_id=character_id, tab="gallery"))
 
 
 @characters_bp.route("/<int:character_id>/gallery/<int:image_id>/delete", methods=["POST"])
@@ -337,7 +344,7 @@ def delete_gallery_image(character_id: int, image_id: int):
 
     char_repo.delete_gallery_image(image_id)
     flash("Galeriebild entfernt.", "success")
-    return redirect(url_for("characters.edit_character", character_id=character_id))
+    return redirect(url_for("characters.edit_character", character_id=character_id, tab="gallery"))
 
 
 @characters_bp.route("/<int:character_id>/sprites/upload", methods=["POST"])

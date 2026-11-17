@@ -85,6 +85,10 @@ def detail(worldinfo_id: int):
             )
             worldinfo = repo.update(worldinfo)
             flash("WorldInfo gespeichert.", "success")
+            active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
+            if active_tab not in ("info", "places", "events", "collab"):
+                active_tab = "info"
+            return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo.id, tab=active_tab))
         except AimoError as exc:
             flash(str(exc), "error")
 
@@ -214,7 +218,7 @@ def add_location(worldinfo_id: int):
     except AimoError as exc:
         flash(str(exc), "error")
 
-    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id))
+    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="places"))
 
 
 @worldinfo_bp.route("/<int:worldinfo_id>/locations/<int:location_id>/edit", methods=["POST"])
@@ -257,7 +261,7 @@ def edit_location(worldinfo_id: int, location_id: int):
         except AimoError as exc:
             flash(str(exc), "error")
 
-    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id))
+    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="places"))
 
 
 @worldinfo_bp.route("/<int:worldinfo_id>/locations/<int:location_id>/delete", methods=["POST"])
@@ -273,7 +277,7 @@ def delete_location(worldinfo_id: int, location_id: int):
 
     repo.delete_location(location_id)
     flash("Ort gelöscht.", "success")
-    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id))
+    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="places"))
 
 
 @worldinfo_bp.route("/<int:worldinfo_id>/events/add", methods=["POST"])
@@ -305,7 +309,7 @@ def add_event(worldinfo_id: int):
         flash(f"Event '{ev.title}' hinzugefügt.", "success")
     except AimoError as exc:
         flash(str(exc), "error")
-    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id))
+    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="events"))
 
 
 @worldinfo_bp.route("/<int:worldinfo_id>/events/<int:event_id>/edit", methods=["POST"])
@@ -339,7 +343,7 @@ def edit_event(worldinfo_id: int, event_id: int):
             flash("Event aktualisiert.", "success")
         except AimoError as exc:
             flash(str(exc), "error")
-    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id))
+    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="events"))
 
 
 @worldinfo_bp.route("/<int:worldinfo_id>/events/<int:event_id>/delete", methods=["POST"])
@@ -355,4 +359,4 @@ def delete_event(worldinfo_id: int, event_id: int):
 
     repo.delete_event(event_id)
     flash("Event gelöscht.", "success")
-    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id))
+    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="events"))

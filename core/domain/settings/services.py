@@ -107,11 +107,17 @@ class SettingsService:
         diffuser_prompt: str,
         sparkle_assistant_prompt: str,
         vision_persona_prompt: str | None = None,
+        dialogue_author_prompt: str | None = None,
     ) -> ServiceSettings:
         resolved_vision_prompt = (
             settings.prompts.vision_persona_prompt
             if vision_persona_prompt is None
             else vision_persona_prompt.strip()
+        )
+        resolved_dialogue_prompt = (
+            settings.prompts.dialogue_author_prompt
+            if dialogue_author_prompt is None
+            else dialogue_author_prompt.strip()
         )
         settings.prompts = SystemPrompts(
             roleplay_prompt=roleplay_prompt.strip() if isinstance(roleplay_prompt, str) else "",
@@ -123,6 +129,7 @@ class SettingsService:
                 else ""
             ),
             vision_persona_prompt=resolved_vision_prompt,
+            dialogue_author_prompt=resolved_dialogue_prompt,
         )
         return settings
 

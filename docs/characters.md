@@ -64,7 +64,13 @@ aimo supports dynamic, transparent sprites (PNG or WEBP) that adapt to the AI ch
 
 ## 💬 4. Dialogue Styles (`💬 Gesprächsstile`)
 
-- Representative conversation snippets (User / Assistant turns) to calibrate the character's tone, vernacular, dialect, and speech habits.
+Representative conversation snippets (Few-Shot trigger and response pairs) that calibrate the character's tone, vernacular, dialect, mannerisms, and emotional reactions:
+- **Add Dialogue Style (`➕ Gesprächsstil hinzufügen`):** Opens an overlay modal to define a player trigger (`{{user}}`) and character response (`{{char}}`).
+- **AI Author (`✨ Mit KI ausfüllen`):** Inside the modal, creators can tap the AI Author button to generate situational dialogue examples directly from the character's description in the user's configured language.
+  - **Context-Aware:** If a trigger prompt is already provided, the AI drafts exclusively the authentic response; if empty, it invents a complete, fresh interaction.
+  - **Dynamic Placeholders:** Generated examples utilize `{{user}}` and `{{char}}` tokens so they remain universally adaptable across any player persona.
+  - **Roleplay Styling:** Formats responses with spoken dialogue in quotation marks and narrative actions, gestures, and expressions in asterisks.
+- **Edit & Delete:** Existing dialogue examples can be reviewed, edited, or deleted from the list at any time.
 
 ---
 

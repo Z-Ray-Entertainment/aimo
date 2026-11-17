@@ -68,6 +68,10 @@ def detail(lorebook_id: int):
             )
             lorebook = repo.update(lorebook)
             flash("Lorebook aktualisiert.", "success")
+            active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
+            if active_tab not in ("info", "entries", "collab"):
+                active_tab = "info"
+            return redirect(url_for("lorebooks.detail", lorebook_id=lorebook.id, tab=active_tab))
         except AimoError as exc:
             flash(str(exc), "error")
 

@@ -67,6 +67,7 @@ class AdminPromptsForm:
     diffuser_prompt: str = ""
     sparkle_assistant_prompt: str = ""
     vision_persona_prompt: str = ""
+    dialogue_author_prompt: str = ""
 
     @classmethod
     def from_request(cls, form_data: Any) -> "AdminPromptsForm":
@@ -77,4 +78,5 @@ class AdminPromptsForm:
             diffuser_prompt=p.to_str(form_data, "diffuser_prompt"),
             sparkle_assistant_prompt=p.to_str(form_data, "sparkle_assistant_prompt"),
             vision_persona_prompt=p.to_str(form_data, "vision_persona_prompt"),
+            dialogue_author_prompt=p.to_str(form_data, "dialogue_author_prompt"),
         )

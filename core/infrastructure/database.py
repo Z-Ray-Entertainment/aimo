@@ -264,6 +264,7 @@ CREATE TABLE IF NOT EXISTS system_settings (
     diffuser_prompt TEXT NOT NULL,
     sparkle_assistant_prompt TEXT NOT NULL,
     vision_persona_prompt TEXT NOT NULL,
+    dialogue_author_prompt TEXT,
     default_backdrop_path TEXT
 );
 """
@@ -431,6 +432,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE chat_messages ADD COLUMN system_type TEXT",
         "ALTER TABLE chat_messages ADD COLUMN metadata_json TEXT NOT NULL DEFAULT '{}'",
         "ALTER TABLE chat_sessions ADD COLUMN thinking_enabled INTEGER NOT NULL DEFAULT 0",
+        "ALTER TABLE system_settings ADD COLUMN dialogue_author_prompt TEXT",
     ):
         try:
             conn.execute(stmt)

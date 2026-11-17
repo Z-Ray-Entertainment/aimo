@@ -304,6 +304,7 @@ def prompts_config():
                 diffuser_prompt=form.diffuser_prompt,
                 sparkle_assistant_prompt=form.sparkle_assistant_prompt,
                 vision_persona_prompt=form.vision_persona_prompt,
+                dialogue_author_prompt=form.dialogue_author_prompt,
             )
             settings = settings_repo.save_settings(settings)
             flash("System-Prompts erfolgreich gespeichert.", "success")

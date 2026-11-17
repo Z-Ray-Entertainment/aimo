@@ -903,6 +903,17 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll('input[name="active_tab"]').forEach((inp) => {
           inp.value = tabKey;
         });
+        document.querySelectorAll("form").forEach((f) => {
+          if (f.action) {
+            try {
+              const fUrl = new URL(f.action, window.location.origin);
+              if (fUrl.pathname === window.location.pathname) {
+                fUrl.searchParams.set("tab", tabKey);
+                f.action = fUrl.toString();
+              }
+            } catch (_) {}
+          }
+        });
       }
     });
   });

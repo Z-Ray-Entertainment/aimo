@@ -59,9 +59,14 @@
     if (!textarea || !btn) return;
 
     btn.addEventListener("click", async () => {
-      const origLabel = btn.innerHTML;
+      btn.classList.add("is-loading");
       btn.disabled = true;
-      btn.textContent = "✨ KI-Autor schreibt...";
+      btn.innerHTML = '<span class="thinking-dots" aria-hidden="true"><span></span><span></span><span></span></span> <span>KI-Autor schreibt</span>';
+
+      const origPlaceholder = textarea.placeholder;
+      if (!textarea.value.trim()) {
+        textarea.placeholder = "✨ KI-Autor verfasst die Beschreibung";
+      }
 
       try {
         const resp = await fetch("/api/characters/sparkle", {
@@ -96,8 +101,10 @@
         const errText = "Verbindungsfehler zum KI-Autor: " + (err.message || err);
         if (window.showToastError) window.showToastError(errText); else alert(errText);
       } finally {
+        btn.classList.remove("is-loading");
         btn.disabled = false;
-        btn.innerHTML = origLabel;
+        btn.innerHTML = '<span class="icon-mono">✨</span><span>KI-Autor Optimierung</span>';
+        textarea.placeholder = origPlaceholder;
       }
     });
   }
@@ -262,6 +269,9 @@
     const modalTitle = document.getElementById("dialogue-modal-title");
     const openAddBtn = document.querySelector('[data-modal-open="add-dialogue-modal"]');
     const nameInput = document.getElementById("char-name-input");
+    const sparkleModalBtn = document.getElementById("sparkle-modal-dialogue-btn");
+    const descTextarea = document.getElementById("char-description-textarea");
+    const genderSelect = document.querySelector('select[name="gender"]');
 
     if (!hiddenInput || !listContainer) return;
 
@@ -311,6 +321,11 @@
       editingIndex = idx;
       if (modalTitle) modalTitle.innerHTML = '<span class="icon-mono">✏️</span> Gesprächsstil bearbeiten';
       if (confirmBtn) confirmBtn.innerHTML = '<span class="icon-mono">💾</span> Speichern';
+      if (sparkleModalBtn) {
+        sparkleModalBtn.classList.remove("is-loading");
+        sparkleModalBtn.disabled = false;
+        sparkleModalBtn.innerHTML = '<span class="icon-mono">✨</span><span>Mit KI ausfüllen</span>';
+      }
       updateModalBadges();
       triggerInput.value = examples[idx].trigger || "";
       responseInput.value = examples[idx].response || "";
@@ -326,6 +341,11 @@
       editingIndex = null;
       if (modalTitle) modalTitle.innerHTML = '<span class="icon-mono">💬</span> Neuen Gesprächsstil hinzufügen';
       if (confirmBtn) confirmBtn.innerHTML = '<span class="icon-mono">➕</span> Hinzufügen';
+      if (sparkleModalBtn) {
+        sparkleModalBtn.classList.remove("is-loading");
+        sparkleModalBtn.disabled = false;
+        sparkleModalBtn.innerHTML = '<span class="icon-mono">✨</span><span>Mit KI ausfüllen</span>';
+      }
       updateModalBadges();
       triggerInput.value = "";
       responseInput.value = "";
@@ -444,6 +464,78 @@
         window.AimoModals.close("add-dialogue-modal");
       } else {
         document.getElementById("add-dialogue-modal")?.classList.remove("open");
+      }
+    });
+
+    sparkleModalBtn?.addEventListener("click", async () => {
+      const desc = (descTextarea ? descTextarea.value : "").trim();
+      if (!desc || desc.length < 10) {
+        if (window.showToastWarning) {
+          window.showToastWarning("Bitte gib zuerst im Reiter 'Basis-Info' eine aussagekräftige Charakterbeschreibung ein.");
+        } else {
+          alert("Bitte gib zuerst im Reiter 'Basis-Info' eine aussagekräftige Charakterbeschreibung ein.");
+        }
+        return;
+      }
+
+      const origHtml = sparkleModalBtn.innerHTML;
+      const origTriggerPlaceholder = triggerInput.placeholder;
+      const origResponsePlaceholder = responseInput.placeholder;
+
+      sparkleModalBtn.classList.add("is-loading");
+      sparkleModalBtn.disabled = true;
+      sparkleModalBtn.innerHTML = '<span class="thinking-dots" aria-hidden="true"><span></span><span></span><span></span></span> <span>KI entwirft Dialog</span>';
+
+      if (!triggerInput.value) {
+        triggerInput.placeholder = "✨ Analysiere Charakterbeschreibung";
+      }
+      if (!responseInput.value) {
+        responseInput.placeholder = "✨ Formuliere in-character Antwort";
+      }
+
+      const userLang = (document.documentElement.lang || "de").slice(0, 2).toLowerCase();
+      const payload = {
+        name: getCharacterName(),
+        gender: genderSelect ? genderSelect.value : "",
+        description: desc,
+        language: userLang,
+        current_trigger: (triggerInput.value || "").trim(),
+        current_response: (responseInput.value || "").trim(),
+        existing_examples: examples,
+      };
+
+      try {
+        const resp = await fetch("/api/characters/sparkle-dialogue", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await resp.json();
+        if (resp.ok && data) {
+          if (data.trigger !== undefined) {
+            triggerInput.value = data.trigger;
+            triggerInput.dispatchEvent(new Event("input", { bubbles: true }));
+          }
+          if (data.response !== undefined) {
+            responseInput.value = data.response;
+            responseInput.dispatchEvent(new Event("input", { bubbles: true }));
+          }
+          if (window.showToastSuccess) {
+            window.showToastSuccess("Dialogbeispiel generiert. Du kannst es nun anpassen und speichern.");
+          }
+        } else {
+          const errMsg = data.error || "Fehler bei der Generierung des Dialogbeispiels.";
+          if (window.showToastError) window.showToastError(errMsg); else alert(errMsg);
+        }
+      } catch (err) {
+        const errMsg = "Verbindungsfehler bei der Dialogbeispiel-Generierung.";
+        if (window.showToastError) window.showToastError(errMsg); else alert(errMsg);
+      } finally {
+        sparkleModalBtn.classList.remove("is-loading");
+        sparkleModalBtn.disabled = false;
+        sparkleModalBtn.innerHTML = '<span class="icon-mono">✨</span><span>Mit KI ausfüllen</span>';
+        triggerInput.placeholder = origTriggerPlaceholder;
+        responseInput.placeholder = origResponsePlaceholder;
       }
     });
   }

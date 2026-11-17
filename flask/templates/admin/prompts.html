@@ -66,6 +66,15 @@
       <textarea name="vision_persona_prompt" id="prompt-vision_persona_prompt" rows="3" required data-default-prompt="{{ defaults.vision_persona_prompt }}">{{ settings.prompts.vision_persona_prompt }}</textarea>
     </div>
 
+    <!-- 6. KI-Autor-Dialog-Prompt -->
+    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.4rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <label for="prompt-dialogue_author_prompt" style="font-weight: bold; margin: 0;">KI-Autor-Dialog-Prompt</label>
+        {{ action_button("Standard wiederherstellen", icon="🔄", size="sm", extra_class="btn-reset-prompt", data={"target": "dialogue_author_prompt"}, title="Setzt diesen Prompt auf den Werksstandard zurück") }}
+      </div>
+      <textarea name="dialogue_author_prompt" id="prompt-dialogue_author_prompt" rows="4" required data-default-prompt="{{ defaults.dialogue_author_prompt }}">{{ settings.prompts.dialogue_author_prompt }}</textarea>
+    </div>
+
     <div style="text-align: right; margin-top: 0.5rem; border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
       {{ action_button("Prompts speichern", type="submit", variant="primary", icon="💾") }}
     </div>
