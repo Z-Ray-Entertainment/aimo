@@ -1,3 +1,5 @@
+import re
+
 from flask import Blueprint, jsonify, request
 
 from application.api.auth import get_current_user, is_admin, require_auth, require_permission
@@ -171,7 +173,7 @@ def create_character():
 
 
 @api_characters_bp.route("/sparkle", methods=["POST"])
-@require_permission(FunctionPermission.CHARACTER_EDIT)
+@require_permission(FunctionPermission.CHARACTER_EDIT, FunctionPermission.CHARACTER_CREATE)
 def sparkle_description():
     data = request.get_json(silent=True) or {}
     draft = str(data.get("description", "")).strip()
@@ -185,7 +187,7 @@ def sparkle_description():
         f"Vorlage / Draft:\n{draft or 'Create an engaging fantasy/roleplay personality.'}"
     )
     try:
-        improved = llm_provider.generate(
+        raw_output = llm_provider.generate(
             prompt=prompt,
             model=settings.tasks.assistant_model,
             params=ModelParameters(
@@ -197,18 +199,25 @@ def sparkle_description():
             think=False,
         ).strip()
         improved = re.sub(
-            r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
+            r"<(?:think|thought|reasoning|scratchpad)>.*?</(?:think|thought|reasoning|scratchpad)>",
             "",
-            improved,
+            raw_output,
             flags=re.DOTALL | re.IGNORECASE,
         ).strip()
+        if not improved:
+            improved = re.sub(
+                r"<(?:think|thought|reasoning|scratchpad)>.*",
+                "",
+                raw_output,
+                flags=re.DOTALL | re.IGNORECASE,
+            ).strip() or raw_output
         return jsonify({"description": improved})
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 502
 
 
 @api_characters_bp.route("/extract-appearance", methods=["POST"])
-@require_permission(FunctionPermission.CHARACTER_EDIT)
+@require_permission(FunctionPermission.CHARACTER_EDIT, FunctionPermission.CHARACTER_CREATE)
 def extract_appearance():
     storage = FileStorage()
     portrait_path = None

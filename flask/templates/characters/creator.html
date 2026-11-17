@@ -5,6 +5,10 @@
 {% from "macros/collaboration.html" import collaboration_manager %}
 {% block title %}AIMO — Character Designer{% endblock %}
 
+{% block extra_head %}
+<script src="{{ url_for('static', filename='js/character_creator.js') }}" defer></script>
+{% endblock %}
+
 {% block content %}
 <div class="aimo-sidebar-layout" data-tab-group>
   <!-- Vertikale Seitenleiste links -->
@@ -50,7 +54,13 @@
     ) }}
 
     <!-- MAIN CHARACTER FORM (Encloses Tabs 1, 4, 5, 6 for safe single-submit) -->
-  <form id="character-main-form" method="POST" action="{% if character %}{{ url_for('characters.edit_character', character_id=character.id) }}{% else %}{{ url_for('characters.new_character') }}{% endif %}" enctype="multipart/form-data">
+  <form id="character-main-form"
+        method="POST"
+        action="{% if character %}{{ url_for('characters.edit_character', character_id=character.id) }}{% else %}{{ url_for('characters.new_character') }}{% endif %}"
+        enctype="multipart/form-data"
+        data-character-id="{{ character.id if character else '' }}"
+        data-character-name="{{ character.name if character else '' }}"
+        data-active-persona="{{ (g.default_persona.name if g.default_persona else 'Du') }}">
     <input type="hidden" name="return_to" value="{{ get_safe_back_url(url_for('overview.index', tab='characters')) }}">
     <input type="hidden" name="dialogue_examples_json" id="dialogue-examples-json" value='{{ form.dialogue_examples | tojson }}'>
 
@@ -274,9 +284,11 @@
             <select name="initial_location_id" id="char-initial-location-select">
               <option value="">-- Kein fester Startort --</option>
               {% for loc in all_locations %}
-                {% if form.suggested_worldinfo_id and loc.worldinfo_id == form.suggested_worldinfo_id %}
-                  <option value="{{ loc.id }}" {% if form.initial_location_id == loc.id %}selected{% endif %}>{{ loc.name }}</option>
-                {% endif %}
+                <option value="{{ loc.id }}"
+                        data-worldinfo-id="{{ loc.worldinfo_id }}"
+                        {% if form.initial_location_id == loc.id %}selected{% endif %}>
+                  {{ loc.name }}
+                </option>
               {% endfor %}
             </select>
           </div>
@@ -289,9 +301,11 @@
               </label>
               <select name="preferred_location_ids" id="char-preferred-locations-select" multiple size="5">
                 {% for loc in all_locations %}
-                  {% if form.suggested_worldinfo_id and loc.worldinfo_id == form.suggested_worldinfo_id %}
-                    <option value="{{ loc.id }}" {% if loc.id in form.preferred_location_ids %}selected{% endif %}>{{ loc.name }}</option>
-                  {% endif %}
+                  <option value="{{ loc.id }}"
+                          data-worldinfo-id="{{ loc.worldinfo_id }}"
+                          {% if loc.id in form.preferred_location_ids %}selected{% endif %}>
+                    {{ loc.name }}
+                  </option>
                 {% endfor %}
               </select>
               <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.25rem;">
@@ -306,9 +320,11 @@
               </label>
               <select name="disliked_location_ids" id="char-disliked-locations-select" multiple size="5">
                 {% for loc in all_locations %}
-                  {% if form.suggested_worldinfo_id and loc.worldinfo_id == form.suggested_worldinfo_id %}
-                    <option value="{{ loc.id }}" {% if loc.id in form.disliked_location_ids %}selected{% endif %}>{{ loc.name }}</option>
-                  {% endif %}
+                  <option value="{{ loc.id }}"
+                          data-worldinfo-id="{{ loc.worldinfo_id }}"
+                          {% if loc.id in form.disliked_location_ids %}selected{% endif %}>
+                    {{ loc.name }}
+                  </option>
                 {% endfor %}
               </select>
               <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.25rem;">
@@ -613,551 +629,4 @@
     {"id": "avatar", "label": "1:1 Avatar (Übersicht & Bubble)", "short_label": "1:1 Avatar", "icon": "👤", "ratio": 1.0, "preview_width": 64, "preview_height": 64, "accent_color": "#64B5F6"}
   ]) }}
 </div>
-{% endblock %}
-
-{% block extra_scripts %}
-<script>
-// Locations grouped by WorldInfo ID for instant client-side filtering
-const LOCATIONS_BY_WORLD = {{ locations_by_world | tojson }};
-
-// Helper: Sprite scroll position preservation
-window.saveSpriteScrollPos = function () {
-  try {
-    sessionStorage.setItem("aimo_sprite_scroll_y", String(window.scrollY || window.pageYOffset || 0));
-  } catch (_) {}
-};
-
-window.saveSpriteScrollAndSubmit = function (formEl) {
-  window.saveSpriteScrollPos();
-  if (formEl) formEl.submit();
-};
-
-(() => {
-  try {
-    const savedY = sessionStorage.getItem("aimo_sprite_scroll_y");
-    if (savedY !== null) {
-      sessionStorage.removeItem("aimo_sprite_scroll_y");
-      const targetY = parseInt(savedY, 10);
-      if (!Number.isNaN(targetY) && targetY > 0) {
-        if ("scrollRestoration" in history) {
-          history.scrollRestoration = "manual";
-        }
-        const restoreScroll = () => window.scrollTo({ top: targetY, behavior: "instant" });
-        restoreScroll();
-        requestAnimationFrame(restoreScroll);
-        window.addEventListener("load", restoreScroll, { once: true });
-      }
-    }
-  } catch (_) {}
-})();
-
-// Sparkle KI-Autor Description Improver
-document.getElementById("sparkle-improve-btn")?.addEventListener("click", async () => {
-  const btn = document.getElementById("sparkle-improve-btn");
-  const textarea = document.getElementById("char-description-textarea");
-  const nameInput = document.getElementById("char-name-input");
-  if (!textarea || !btn) return;
-
-  const origLabel = btn.innerHTML;
-  btn.disabled = true;
-  btn.textContent = "✨ KI-Autor schreibt...";
-
-  try {
-    const resp = await fetch("/api/characters/sparkle", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: nameInput ? nameInput.value : "",
-        description: textarea.value,
-      }),
-    });
-    const data = await resp.json();
-    if (resp.ok && data.description) {
-      textarea.value = data.description;
-      textarea.dispatchEvent(new Event("input", { bubbles: true }));
-      if (window.showToastSuccess) window.showToastSuccess("Beschreibung erfolgreich generiert.");
-    } else {
-      if (window.showToastError) window.showToastError(data.error || "Konnte Beschreibung nicht generieren."); else alert(data.error || "Konnte Beschreibung nicht generieren.");
-    }
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = origLabel;
-  }
-});
-
-// Vision-AI: Aussehen des Charakters aus Porträt extrahieren
-document.getElementById("extract-appearance-btn")?.addEventListener("click", async () => {
-  const btn = document.getElementById("extract-appearance-btn");
-  const textarea = document.getElementById("char-appearance-textarea");
-  const fileInput = document.getElementById("primary-portrait-input");
-  if (!btn || !textarea) return;
-
-  const origHtml = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<span class="icon-sparkle">👁️</span> Analysiere Bild...';
-
-  try {
-    let resp;
-    if (fileInput && fileInput.files && fileInput.files.length > 0) {
-      const fd = new FormData();
-      fd.append("primary_portrait", fileInput.files[0]);
-      resp = await fetch("/api/characters/extract-appearance", {
-        method: "POST",
-        body: fd,
-      });
-    } else {
-      {% if character %}
-        resp = await fetch("/api/characters/extract-appearance", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ character_id: {{ character.id }} }),
-        });
-      {% else %}
-        if (window.showToastWarning) window.showToastWarning("Bitte wähle zuerst ein Porträtbild aus."); else alert("Bitte wähle zuerst ein Porträtbild aus.");
-        return;
-      {% endif %}
-    }
-
-    const data = await resp.json();
-    if (resp.ok && data.appearance) {
-      textarea.value = data.appearance;
-      textarea.dispatchEvent(new Event("input", { bubbles: true }));
-      if (window.showToastSuccess) window.showToastSuccess("Aussehen erfolgreich aus Bild extrahiert.");
-    } else {
-      if (window.showToastError) window.showToastError(data.error || "Aussehen konnte nicht extrahiert werden."); else alert(data.error || "Aussehen konnte nicht extrahiert werden.");
-    }
-  } catch (err) {
-    if (window.showToastError) window.showToastError("Fehler bei der Bildanalyse: " + err); else alert("Fehler bei der Bildanalyse: " + err);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = origHtml;
-  }
-});
-
-// Tab 4: Dynamic World & Locations Filter
-(() => {
-  const worldSelect = document.getElementById("char-worldinfo-select");
-  const container = document.getElementById("worldinfo-locations-container");
-  const initialSelect = document.getElementById("char-initial-location-select");
-  const preferredSelect = document.getElementById("char-preferred-locations-select");
-  const dislikedSelect = document.getElementById("char-disliked-locations-select");
-
-  if (!worldSelect || !container) return;
-
-  function updateLocationsForWorld(worldId, preserveSelected = true) {
-    if (!worldId) {
-      container.style.display = "none";
-      if (initialSelect) initialSelect.value = "";
-      if (preferredSelect) Array.from(preferredSelect.options).forEach(o => o.selected = false);
-      if (dislikedSelect) Array.from(dislikedSelect.options).forEach(o => o.selected = false);
-      return;
-    }
-
-    container.style.display = "flex";
-    const locs = LOCATIONS_BY_WORLD[worldId] || [];
-
-    // Save previous selections
-    const prevInitial = preserveSelected && initialSelect ? initialSelect.value : "";
-    const prevPreferred = preserveSelected && preferredSelect ? Array.from(preferredSelect.selectedOptions).map(o => o.value) : [];
-    const prevDisliked = preserveSelected && dislikedSelect ? Array.from(dislikedSelect.selectedOptions).map(o => o.value) : [];
-
-    // Update Initial Location Dropdown
-    if (initialSelect) {
-      initialSelect.innerHTML = '<option value="">-- Kein fester Startort (Standard der WorldInfo) --</option>';
-      locs.forEach(loc => {
-        const opt = document.createElement("option");
-        opt.value = loc.id;
-        opt.textContent = loc.name;
-        if (String(loc.id) === String(prevInitial)) opt.selected = true;
-        initialSelect.appendChild(opt);
-      });
-    }
-
-    // Update Preferred Locations
-    if (preferredSelect) {
-      preferredSelect.innerHTML = "";
-      locs.forEach(loc => {
-        const opt = document.createElement("option");
-        opt.value = loc.id;
-        opt.textContent = loc.name;
-        if (prevPreferred.includes(String(loc.id))) opt.selected = true;
-        preferredSelect.appendChild(opt);
-      });
-    }
-
-    // Update Disliked Locations
-    if (dislikedSelect) {
-      dislikedSelect.innerHTML = "";
-      locs.forEach(loc => {
-        const opt = document.createElement("option");
-        opt.value = loc.id;
-        opt.textContent = loc.name;
-        if (prevDisliked.includes(String(loc.id))) opt.selected = true;
-        dislikedSelect.appendChild(opt);
-      });
-    }
-  }
-
-  worldSelect.addEventListener("change", () => {
-    updateLocationsForWorld(worldSelect.value, false);
-  });
-})();
-
-// Tab 4: Gesprächsstile (Few-Shot Dialogbeispiele) Manager
-(() => {
-  const hiddenInput = document.getElementById("dialogue-examples-json");
-  const listContainer = document.getElementById("dialogue-examples-list");
-  const emptyNotice = document.getElementById("dialogue-empty-notice");
-  const confirmBtn = document.getElementById("confirm-add-dialogue-btn");
-  const triggerInput = document.getElementById("modal-dialogue-trigger");
-  const responseInput = document.getElementById("modal-dialogue-response");
-  const modalTitle = document.getElementById("dialogue-modal-title");
-  const openAddBtn = document.querySelector('[data-modal-open="add-dialogue-modal"]');
-  const nameInput = document.getElementById("char-name-input");
-
-  if (!hiddenInput || !listContainer) return;
-
-  const ACTIVE_PERSONA_NAME = {{ (g.default_persona.name if g.default_persona else 'Du') | tojson }};
-
-  function getCharacterName() {
-    const val = (nameInput ? nameInput.value : "").trim();
-    return val || {% if character %}{{ character.name|tojson }}{% else %}"Charakter"{% endif %};
-  }
-
-  function formatDisplayText(raw) {
-    if (!raw) return "";
-    const charName = getCharacterName();
-    return raw
-      .replace(/\{\{user\}\}/g, ACTIVE_PERSONA_NAME)
-      .replace(/\{\{char\}\}/g, charName);
-  }
-
-  function updateModalBadges() {
-    document.querySelectorAll(".modal-badge-user").forEach(b => {
-      b.textContent = ACTIVE_PERSONA_NAME;
-    });
-    document.querySelectorAll(".modal-badge-char").forEach(b => {
-      b.textContent = getCharacterName();
-    });
-  }
-
-  let examples = [];
-  let editingIndex = null;
-
-  try {
-    examples = JSON.parse(hiddenInput.value || "[]");
-  } catch (_) {
-    examples = [];
-  }
-
-  function syncData() {
-    hiddenInput.value = JSON.stringify(examples);
-    if (emptyNotice) {
-      emptyNotice.style.display = examples.length === 0 ? "block" : "none";
-    }
-  }
-
-  function openEditModal(idx) {
-    if (idx < 0 || idx >= examples.length) return;
-    editingIndex = idx;
-    if (modalTitle) modalTitle.innerHTML = '<span class="icon-mono">✏️</span> Gesprächsstil bearbeiten';
-    if (confirmBtn) confirmBtn.innerHTML = '<span class="icon-mono">💾</span> Speichern';
-    updateModalBadges();
-    triggerInput.value = examples[idx].trigger || "";
-    responseInput.value = examples[idx].response || "";
-
-    if (window.AimoModals && typeof window.AimoModals.open === "function") {
-      window.AimoModals.open("add-dialogue-modal");
-    } else {
-      document.getElementById("add-dialogue-modal")?.classList.add("open");
-    }
-  }
-
-  openAddBtn?.addEventListener("click", () => {
-    editingIndex = null;
-    if (modalTitle) modalTitle.innerHTML = '<span class="icon-mono">💬</span> Neuen Gesprächsstil hinzufügen';
-    if (confirmBtn) confirmBtn.innerHTML = '<span class="icon-mono">➕</span> Hinzufügen';
-    updateModalBadges();
-    triggerInput.value = "";
-    responseInput.value = "";
-  });
-
-  function renderList() {
-    listContainer.innerHTML = "";
-    examples.forEach((ex, idx) => {
-      const item = document.createElement("div");
-      item.className = "dialogue-example-item";
-      item.setAttribute("data-index", idx);
-
-      // Header with index label and action buttons
-      const headerDiv = document.createElement("div");
-      headerDiv.className = "dialogue-item-header";
-
-      const indexLabel = document.createElement("span");
-      indexLabel.className = "dialogue-index-label";
-      indexLabel.innerHTML = `<span class="icon-mono">💬</span> Beispiel ${idx + 1}`;
-      headerDiv.appendChild(indexLabel);
-
-      const actionsDiv = document.createElement("div");
-      actionsDiv.className = "dialogue-item-actions";
-
-      const editBtn = document.createElement("button");
-      editBtn.type = "button";
-      editBtn.className = "aimo-btn edit-dialogue-btn dialogue-action-btn";
-      editBtn.title = "Beispiel bearbeiten";
-      editBtn.innerHTML = '<span class="icon-mono">✏️</span>';
-      editBtn.addEventListener("click", () => openEditModal(idx));
-
-      const delBtn = document.createElement("button");
-      delBtn.type = "button";
-      delBtn.className = "aimo-btn danger delete-dialogue-btn dialogue-action-btn";
-      delBtn.title = "Beispiel löschen";
-      delBtn.innerHTML = '<span class="icon-mono">🗑️</span>';
-      delBtn.addEventListener("click", () => {
-        examples.splice(idx, 1);
-        syncData();
-        renderList();
-      });
-
-      actionsDiv.appendChild(editBtn);
-      actionsDiv.appendChild(delBtn);
-      headerDiv.appendChild(actionsDiv);
-      item.appendChild(headerDiv);
-
-      // Trigger: Rechtsbündig, {{text}} {{user}}
-      const trigDiv = document.createElement("div");
-      trigDiv.className = "dialogue-entry-trigger";
-
-      const trigSpan = document.createElement("div");
-      trigSpan.className = "dialogue-text";
-      trigSpan.textContent = formatDisplayText(ex.trigger || "");
-      trigDiv.appendChild(trigSpan);
-
-      const userBadge = document.createElement("span");
-      userBadge.className = "role-badge user-badge";
-      userBadge.title = "{{user}}";
-      userBadge.textContent = ACTIVE_PERSONA_NAME;
-      trigDiv.appendChild(userBadge);
-
-      item.appendChild(trigDiv);
-
-      // Response: Linksbündig, {{char}} {{text}}
-      const respDiv = document.createElement("div");
-      respDiv.className = "dialogue-entry-response";
-
-      const charBadge = document.createElement("span");
-      charBadge.className = "role-badge char-badge";
-      charBadge.title = "{{char}}";
-      charBadge.textContent = getCharacterName();
-      respDiv.appendChild(charBadge);
-
-      const respSpan = document.createElement("div");
-      respSpan.className = "dialogue-text";
-      respSpan.textContent = formatDisplayText(ex.response || "");
-      respDiv.appendChild(respSpan);
-
-      item.appendChild(respDiv);
-      listContainer.appendChild(item);
-    });
-    syncData();
-  }
-
-  // Live update of character badges and text when character name changes
-  nameInput?.addEventListener("input", () => {
-    updateModalBadges();
-    renderList();
-  });
-
-  // Render initially to activate dynamic persona & character bindings
-  renderList();
-
-  confirmBtn?.addEventListener("click", () => {
-    const trig = (triggerInput.value || "").trim();
-    const resp = (responseInput.value || "").trim();
-    if (!trig && !resp) {
-      if (window.showToastWarning) window.showToastWarning("Bitte gib mindestens einen Trigger oder eine Response ein."); else alert("Bitte gib mindestens einen Trigger oder eine Response ein.");
-      return;
-    }
-
-    if (editingIndex !== null && editingIndex >= 0 && editingIndex < examples.length) {
-      examples[editingIndex] = { trigger: trig, response: resp };
-    } else {
-      examples.push({ trigger: trig, response: resp });
-    }
-
-    editingIndex = null;
-    syncData();
-    renderList();
-
-    triggerInput.value = "";
-    responseInput.value = "";
-
-    if (window.AimoModals && typeof window.AimoModals.close === "function") {
-      window.AimoModals.close("add-dialogue-modal");
-    } else {
-      document.getElementById("add-dialogue-modal")?.classList.remove("open");
-    }
-  });
-})();
-
-// Tab 5: Lorebooks Manager & Search Filter
-(() => {
-  const filterInput = document.getElementById("lorebook-filter-input");
-  const pickerList = document.getElementById("lorebook-picker-list");
-  const linkedList = document.getElementById("linked-lorebooks-list");
-  const emptyNotice = document.getElementById("lorebook-empty-notice");
-
-  if (!pickerList || !linkedList) return;
-
-  function updateEmptyNotice() {
-    if (emptyNotice) {
-      const count = linkedList.querySelectorAll(".lorebook-list-item").length;
-      emptyNotice.style.display = count === 0 ? "block" : "none";
-    }
-  }
-
-  filterInput?.addEventListener("input", () => {
-    const query = filterInput.value.toLowerCase().trim();
-    pickerList.querySelectorAll(".lorebook-picker-item").forEach(item => {
-      const name = item.getAttribute("data-name") || "";
-      const desc = (item.getAttribute("data-desc") || "").toLowerCase();
-      item.style.display = (name.includes(query) || desc.includes(query)) ? "flex" : "none";
-    });
-  });
-
-  const availableWorldinfos = [
-    {% for wi in worldinfos %}
-      { id: {{ wi.id }}, name: {{ wi.name|tojson }} },
-    {% endfor %}
-  ];
-
-  pickerList.querySelectorAll(".lorebook-picker-item").forEach(item => {
-    item.addEventListener("click", () => {
-      if (item.classList.contains("already-added")) return;
-
-      const lbId = item.getAttribute("data-id");
-      const lbName = item.getAttribute("data-fullname");
-      const lbDesc = item.getAttribute("data-desc");
-
-      // Append to linked list
-      const row = document.createElement("div");
-      row.className = "lorebook-list-item";
-      row.setAttribute("data-lorebook-id", lbId);
-      row.style.display = "flex";
-      row.style.justifyContent = "space-between";
-      row.style.alignItems = "center";
-      row.style.gap = "1rem";
-      row.style.flexWrap = "wrap";
-
-      const hidden = document.createElement("input");
-      hidden.type = "hidden";
-      hidden.name = "linked_lorebook_ids";
-      hidden.value = lbId;
-      row.appendChild(hidden);
-
-      const info = document.createElement("div");
-      info.style.flex = "1";
-      info.style.minWidth = "200px";
-      info.innerHTML = `<div style="font-weight: 700; color: var(--gold-accent); font-size: 0.95rem;">${lbName}</div>` +
-        (lbDesc ? `<div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.15rem;">${lbDesc}</div>` : "");
-      row.appendChild(info);
-
-      const actionsDiv = document.createElement("div");
-      actionsDiv.style.display = "flex";
-      actionsDiv.style.alignItems = "center";
-      actionsDiv.style.gap = "0.65rem";
-
-      let optionsHtml = '<option value="">🌍 Alle Welten (Immer aktiv)</option>';
-      availableWorldinfos.forEach(wi => {
-        optionsHtml += `<option value="${wi.id}">🌐 Nur in Welt: ${wi.name}</option>`;
-      });
-
-      const select = document.createElement("select");
-      select.name = `lorebook_world_condition_${lbId}`;
-      select.style.fontSize = "0.82rem";
-      select.style.padding = "0.35rem 0.6rem";
-      select.style.maxWidth = "240px";
-      select.title = "Wann soll dieses Lorebook aktiv sein?";
-      select.innerHTML = optionsHtml;
-      actionsDiv.appendChild(select);
-
-      const delBtn = document.createElement("button");
-      delBtn.type = "button";
-      delBtn.className = "aimo-btn danger remove-lorebook-btn";
-      delBtn.title = "Lorebook entkoppeln";
-      delBtn.innerHTML = '<span class="icon-mono">🗑️</span>';
-      delBtn.addEventListener("click", () => {
-        row.remove();
-        item.classList.remove("already-added");
-        item.querySelector(".picker-status-badge").textContent = "+ Hinzufügen";
-        updateEmptyNotice();
-      });
-      actionsDiv.appendChild(delBtn);
-
-      row.appendChild(actionsDiv);
-
-      linkedList.appendChild(row);
-
-      // Update picker item state
-      item.classList.add("already-added");
-      item.querySelector(".picker-status-badge").textContent = "✓ Verknüpft";
-      updateEmptyNotice();
-
-      // Close modal
-      if (window.AimoModals && typeof window.AimoModals.close === "function") {
-        window.AimoModals.close("add-lorebook-modal");
-      } else {
-        document.getElementById("add-lorebook-modal")?.classList.remove("open");
-      }
-    });
-  });
-
-  // Attach delete handlers for already rendered lorebooks
-  linkedList.querySelectorAll(".remove-lorebook-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const row = btn.closest(".lorebook-list-item");
-      const lbId = btn.getAttribute("data-id");
-      if (row) row.remove();
-      if (lbId) {
-        const pickerItem = pickerList.querySelector(`.lorebook-picker-item[data-id="${lbId}"]`);
-        if (pickerItem) {
-          pickerItem.classList.remove("already-added");
-          const badge = pickerItem.querySelector(".picker-status-badge");
-          if (badge) badge.textContent = "+ Hinzufügen";
-        }
-      }
-      updateEmptyNotice();
-    });
-  });
-})();
-
-// Setup Reusable Dual-Crop Component (9:16 Porträt & 1:1 Avatar)
-document.addEventListener("DOMContentLoaded", () => {
-  window.AimoImageCropper?.setup({
-    modalId: "portrait-crop-modal",
-    fileInputId: "primary-portrait-input",
-    openBtnId: "open-crop-btn",
-    statusBadgeId: "crop-status-badge",
-    targets: [
-      {
-        id: "portrait",
-        ratio: 9 / 16,
-        inputElement: document.getElementById("primary-portrait-input"),
-        previewImgElement: document.getElementById("portrait-preview-img"),
-        previewWrapElement: document.getElementById("portrait-preview-wrap"),
-        outputFilename: "portrait_9_16.png",
-      },
-      {
-        id: "avatar",
-        ratio: 1.0,
-        inputElement: document.getElementById("avatar-portrait-input"),
-        linkedInputElements: [document.getElementById("card-portrait-input")],
-        previewImgElement: document.getElementById("avatar-preview-img"),
-        previewWrapElement: document.getElementById("avatar-preview-wrap"),
-        outputFilename: "avatar_1_1.png",
-      },
-    ],
-  });
-});
-</script>
 {% endblock %}

@@ -35,7 +35,7 @@ The Character Designer uses a modern two-column layout consistent with the Admin
 - **Primary Portrait (Mandatory):** Main portrait image used for tiles and default chat presentation.
 - **Description & AI Sparkle ✨:**
   - Define personality, speech patterns, quirks, and mannerisms.
-  - **AI Writing Assistant:** Clicking the magic wand with sparkles ✨ automatically enhances your draft using a specialized author prompt.
+  - **KI-Autor Optimierung (AI Writing Assistant ✨):** Clicking this button above the description textarea automatically drafts or enhances the character description based on the provided character name and draft text. While generating, the button indicates "✨ KI-Autor schreibt..." and upon completion populates the description field directly while providing status feedback.
 - **First Message (Welcome Message):** The character's opening greeting, automatically presented when starting a new chat session.
 
 ---
