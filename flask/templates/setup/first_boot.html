@@ -252,14 +252,40 @@
     const step3Label = document.getElementById("stepper-step3-label");
 
     [
-      [ollamaPanel, backend === "ollama"],
-      [googlePanel, backend === "google_ai"],
-    ].forEach(([panel, active]) => {
+      [ollamaPanel, backend === "ollama", { image_gen_backend: "comfyui", search_backend: "disabled" }],
+      [googlePanel, backend === "google_ai", { image_gen_backend: "google_ai", search_backend: "disabled" }],
+    ].forEach(([panel, active, defaults]) => {
       if (!panel) return;
       panel.hidden = !active;
       panel.querySelectorAll("input, select, textarea").forEach((el) => {
+        if (el.type === "radio") {
+          const fieldName = el.dataset.fieldName || el.getAttribute("name");
+          if (fieldName) {
+            el.dataset.fieldName = fieldName;
+          }
+          if (active && el.dataset.fieldName) {
+            el.setAttribute("name", el.dataset.fieldName);
+          } else if (!active) {
+            el.removeAttribute("name");
+          }
+        }
         el.disabled = !active;
       });
+
+      if (active) {
+        Object.entries(defaults).forEach(([groupName, fallbackVal]) => {
+          const groupRadios = Array.from(
+            panel.querySelectorAll(`input[type="radio"][name="${groupName}"]`)
+          );
+          if (groupRadios.length > 0 && !groupRadios.some((r) => r.checked)) {
+            const targetRadio =
+              groupRadios.find((r) => r.defaultChecked) ||
+              groupRadios.find((r) => r.value === fallbackVal) ||
+              groupRadios[0];
+            if (targetRadio) targetRadio.checked = true;
+          }
+        });
+      }
     });
 
     if (step3Label) {

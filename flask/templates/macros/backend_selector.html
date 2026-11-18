@@ -2,7 +2,7 @@
 
 {% macro llm_backend_cards(selected_backend, field_name="llm_backend", id_prefix="backend") %}
 <div class="backend-choice-grid" data-backend-selector-group="{{ field_name }}">
-  <label class="backend-choice-card{% if selected_backend == 'ollama' %} is-selected{% endif %}" for="{{ id_prefix }}-ollama">
+  <label class="backend-choice-card" for="{{ id_prefix }}-ollama">
     <input type="radio"
            id="{{ id_prefix }}-ollama"
            name="{{ field_name }}"
@@ -17,7 +17,7 @@
     </p>
   </label>
 
-  <label class="backend-choice-card{% if selected_backend == 'google_ai' %} is-selected{% endif %}" for="{{ id_prefix }}-google_ai">
+  <label class="backend-choice-card" for="{{ id_prefix }}-google_ai">
     <input type="radio"
            id="{{ id_prefix }}-google_ai"
            name="{{ field_name }}"
@@ -37,7 +37,7 @@
 {% macro image_gen_options(selected_value, allow_google=true, id_prefix="img_gen") %}
 <div class="service-option-grid" data-service-radio-group="image_gen_backend">
   {% if allow_google %}
-    <label class="service-option-pill{% if selected_value == 'google_ai' %} is-selected{% endif %}"
+    <label class="service-option-pill"
            for="{{ id_prefix }}-google_ai"
            data-google-only="1">
       <input type="radio"
@@ -50,7 +50,7 @@
     </label>
   {% endif %}
 
-  <label class="service-option-pill{% if selected_value == 'comfyui' %} is-selected{% endif %}" for="{{ id_prefix }}-comfyui">
+  <label class="service-option-pill" for="{{ id_prefix }}-comfyui">
     <input type="radio"
            id="{{ id_prefix }}-comfyui"
            name="image_gen_backend"
@@ -60,7 +60,7 @@
     <span class="service-option-sub">Eigener ComfyUI-Server für lokale Diffusions-Workflows.</span>
   </label>
 
-  <label class="service-option-pill{% if selected_value == 'disabled' %} is-selected{% endif %}" for="{{ id_prefix }}-disabled">
+  <label class="service-option-pill" for="{{ id_prefix }}-disabled">
     <input type="radio"
            id="{{ id_prefix }}-disabled"
            name="image_gen_backend"
@@ -75,7 +75,7 @@
 {% macro search_options(selected_value, allow_google=true, id_prefix="search") %}
 <div class="service-option-grid" data-service-radio-group="search_backend">
   {% if allow_google %}
-    <label class="service-option-pill{% if selected_value == 'google_ai' %} is-selected{% endif %}"
+    <label class="service-option-pill"
            for="{{ id_prefix }}-google_ai"
            data-google-only="1">
       <input type="radio"
@@ -88,7 +88,7 @@
     </label>
   {% endif %}
 
-  <label class="service-option-pill{% if selected_value == 'searxng' %} is-selected{% endif %}" for="{{ id_prefix }}-searxng">
+  <label class="service-option-pill" for="{{ id_prefix }}-searxng">
     <input type="radio"
            id="{{ id_prefix }}-searxng"
            name="search_backend"
@@ -98,7 +98,7 @@
     <span class="service-option-sub">Eigene SearXNG-Instanz per URL anbinden (vorbereitet).</span>
   </label>
 
-  <label class="service-option-pill{% if selected_value == 'disabled' %} is-selected{% endif %}" for="{{ id_prefix }}-disabled">
+  <label class="service-option-pill" for="{{ id_prefix }}-disabled">
     <input type="radio"
            id="{{ id_prefix }}-disabled"
            name="search_backend"

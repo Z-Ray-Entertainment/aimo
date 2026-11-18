@@ -3750,8 +3750,7 @@ span.persona-star-btn:hover {
   pointer-events: none;
 }
 
-.backend-choice-card:has(input:checked),
-.backend-choice-card.is-selected {
+.backend-choice-card:has(input:checked) {
   border-color: var(--gold-accent);
   background: rgba(110, 71, 42, 0.28);
   box-shadow: 0 0 14px var(--gold-glow);
@@ -3781,8 +3780,7 @@ span.persona-star-btn:hover {
   color: var(--text-muted);
 }
 
-.backend-choice-card:has(input:checked) .backend-choice-badge,
-.backend-choice-card.is-selected .backend-choice-badge {
+.backend-choice-card:has(input:checked) .backend-choice-badge {
   border-color: var(--gold-accent);
   background: rgba(212, 175, 55, 0.2);
   color: var(--gold-accent);
@@ -3817,8 +3815,7 @@ span.persona-star-btn:hover {
   pointer-events: none;
 }
 
-.service-option-pill:has(input:checked),
-.service-option-pill.is-selected {
+.service-option-pill:has(input:checked) {
   border-color: var(--gold-accent);
   background: rgba(110, 71, 42, 0.26);
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.28);
@@ -3833,8 +3830,7 @@ span.persona-star-btn:hover {
   gap: 0.35rem;
 }
 
-.service-option-pill:has(input:checked) .service-option-title,
-.service-option-pill.is-selected .service-option-title {
+.service-option-pill:has(input:checked) .service-option-title {
   color: var(--gold-accent);
 }
 
