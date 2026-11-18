@@ -1,55 +1,99 @@
 {% extends "admin/layout.html" %}
 {% from "macros/buttons.html" import action_button %}
+{% from "macros/backend_selector.html" import api_key_field, google_ai_steps_guide, image_gen_options, llm_backend_cards, search_options %}
 
 {% block admin_content %}
+{% set is_google = (settings.llm_backend.value == 'google_ai') %}
 <div class="aimo-split-stage-grid">
-  <!-- Linke Spalte: Hauptformular für URLs, Task-Zuweisung & Inferenz-Parameter -->
   <form method="POST" action="{{ url_for('admin.services_config') }}" class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
     <h2 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
-      Service-Endpunkte & Modell-Aufgaben
+      Service-Endpunkte &amp; Modell-Aufgaben
     </h2>
 
-    <!-- 1. Service-URLs -->
     <div>
-      <h3 style="color: var(--gold-accent); font-size: 1rem; margin-bottom: 0.75rem;">1. Externe Service-Verbindungen</h3>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-        <div>
-          <label>Ollama API URL *
-            <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if ollama_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
-              ● {% if ollama_healthy %}Verbunden{% else %}Nicht erreichbar{% endif %}
-            </span>
-          </label>
-          <input type="url" name="ollama_url" value="{{ settings.ollama_url }}" required>
-        </div>
-        <div>
-          <label>ComfyUI API URL *
-            <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if comfy_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
-              ● {% if comfy_healthy %}Verbunden{% else %}Offline{% endif %}
-            </span>
-          </label>
-          <input type="url" name="comfyui_url" value="{{ settings.comfyui_url }}" required>
-        </div>
+      <h3 style="color: var(--gold-accent); font-size: 1rem; margin-bottom: 0.5rem;">1. Aktives KI-Backend (Exklusiv)</h3>
+      <div class="backend-notice-banner" style="margin-bottom: 0.85rem;">
+        AIMO betreibt immer genau <strong>ein</strong> KI-Backend (entweder <strong>Ollama</strong> oder <strong>Google AI Cloud</strong>) – kein Parallelbetrieb.
       </div>
 
-      <div style="margin-top: 0.85rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: end;">
-        <div>
-          <label>SearXNG URL (Optional / vorbereitet)</label>
-          <input type="url" name="searxng_url" value="{{ settings.searxng_url }}" required>
-        </div>
-        <label style="display: flex; align-items: center; gap: 0.5rem; padding-bottom: 0.65rem; cursor: pointer;">
-          <input type="checkbox" name="searxng_enabled" value="1" {% if settings.searxng_enabled %}checked{% endif %}>
-          <span>SearXNG aktivieren</span>
+      {{ llm_backend_cards(settings.llm_backend.value, field_name="llm_backend", id_prefix="admin-backend") }}
+
+      <div id="admin-conn-ollama" class="backend-panel" style="margin-top: 1rem;" {% if is_google %}hidden{% endif %}>
+        <label>Ollama API URL *
+          <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if ollama_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
+            ● {% if ollama_healthy %}Verbunden{% else %}Nicht erreichbar{% endif %}
+          </span>
         </label>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <input type="url" id="admin-ollama-url" name="ollama_url" value="{{ settings.ollama_url }}" {% if not is_google %}required{% endif %} style="flex: 1 1 auto;">
+          {{ action_button("Testen", icon="🔌", id="admin-verify-ollama-btn", onclick="verifyAdminBackend('ollama')") }}
+        </div>
+        <div id="admin-verify-ollama-status" class="backend-status-line"></div>
+      </div>
+
+      <div id="admin-conn-google_ai" class="backend-panel" style="margin-top: 1rem;" {% if not is_google %}hidden{% endif %}>
+        <label for="admin-google-api-key">Google AI API-Key *
+          <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if is_google and llm_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
+            ● {% if is_google and llm_healthy %}Verbunden{% elif has_google_ai_api_key %}Nicht erreichbar / ungültig{% else %}Nicht konfiguriert{% endif %}
+          </span>
+        </label>
+        {{ api_key_field("admin-google-api-key", name="google_ai_api_key", has_existing=has_google_ai_api_key, masked_hint=google_ai_api_key_hint, required=(is_google and not has_google_ai_api_key)) }}
+        <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem; flex-wrap: wrap;">
+          {{ action_button("API-Key & Modelle testen", icon="🔌", id="admin-verify-google-btn", onclick="verifyAdminBackend('google_ai')") }}
+        </div>
+        <div id="admin-verify-google_ai-status" class="backend-status-line"></div>
       </div>
     </div>
 
-    <!-- 2. Task-spezifische Modell-Zuweisung -->
-    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
-        <h3 style="color: var(--gold-accent); font-size: 1rem; margin: 0;">2. Task-spezifische Modell-Zuweisung</h3>
-        {{ action_button("Vorgeschlagene Modelle zuweisen", icon="✨", onclick="applyRecommendedModels()", title="Setzt alle 5 Dropdowns auf die vorgeschlagenen Standard-Modelle") }}
+    <div class="aimo-form-section">
+      <h3>2. Bildgenerierung &amp; Websuche</h3>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <label style="margin-bottom: 0.45rem; display: block;">Bildgenerierung (Szenenbilder im Chat)</label>
+          {{ image_gen_options(settings.image_gen_backend.value, allow_google=true, id_prefix="admin-img") }}
+
+          <div id="admin-comfyui-box" class="conditional-service-box" style="margin-top: 0.65rem;" {% if settings.image_gen_backend.value != 'comfyui' %}hidden{% endif %}>
+            <label>ComfyUI API URL *
+              <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if comfy_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
+                ● {% if comfy_healthy %}Verbunden{% else %}Offline{% endif %}
+              </span>
+            </label>
+            <input type="url" id="admin-comfyui-url" name="comfyui_url" value="{{ settings.comfyui_url }}">
+          </div>
+
+          <div id="admin-google-img-box" class="conditional-service-box" style="margin-top: 0.65rem;" {% if not (is_google and settings.image_gen_backend.value == 'google_ai') %}hidden{% endif %}>
+            <label for="admin-google-image-model">Google AI Bild-Modell *
+              <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if is_google and settings.image_gen_backend.value == 'google_ai' and image_gen_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
+                ● {% if is_google and settings.image_gen_backend.value == 'google_ai' and image_gen_healthy %}Bereit{% else %}Nicht geprüft / Offline{% endif %}
+              </span>
+            </label>
+            <select id="admin-google-image-model" name="google_ai_image_model">
+              {% for m in available_image_models %}
+                <option value="{{ m }}" {% if m == settings.google_ai_image_model %}selected{% endif %}>{{ m }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label style="margin-bottom: 0.45rem; display: block;">Websuche (Vorbereitet)</label>
+          {{ search_options(settings.search_backend.value, allow_google=true, id_prefix="admin-search") }}
+
+          <div id="admin-searxng-box" class="conditional-service-box" style="margin-top: 0.65rem;" {% if settings.search_backend.value != 'searxng' %}hidden{% endif %}>
+            <label for="admin-searxng-url">SearXNG URL (Vorbereitet) *</label>
+            <input type="url" id="admin-searxng-url" name="searxng_url" value="{{ settings.searxng_url }}">
+          </div>
+        </div>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+    </div>
+
+    <div class="aimo-form-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+        <h3 style="margin: 0;">3. Task-spezifische Modell-Zuweisung</h3>
+        {{ action_button("Vorgeschlagene Modelle zuweisen", icon="✨", onclick="applyRecommendedModels()", title="Setzt alle 5 Dropdowns auf die empfohlenen Standard-Modelle des gewählten Backends") }}
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
         <div>
           <label>
             Roleplay
@@ -86,7 +130,7 @@
         <div>
           <label>
             Assistant
-            <span class="field-help-btn" title="Assistant-Modell:&#10;Zuständig für KI-Autor Optimierung (Sparkle ✨), Text-Übersetzungen und Stable Diffusion Bild-Prompts für ComfyUI.">?</span>
+            <span class="field-help-btn" title="Assistant-Modell:&#10;Zuständig für KI-Autor Optimierung (Sparkle ✨), Text-Übersetzungen und Szenenbild-Prompts.">?</span>
           </label>
           <select name="assistant_model">
             {% for m in installed_models %}
@@ -108,12 +152,14 @@
       </div>
     </div>
 
-    <!-- 3. Inferenz-Parameter -->
-    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
-      <h3 style="color: var(--gold-accent); font-size: 1rem; margin-bottom: 0.75rem;">3. LLM Inferenz-Hyperparameter</h3>
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.85rem;">
+    <div class="aimo-form-section">
+      <h3>4. LLM Inferenz-Hyperparameter</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.85rem;">
         <div>
-          <label>Context (num_ctx)</label>
+          <label>
+            Context (num_ctx)
+            <span class="field-help-btn" title="Steuert das Token-Budget für Verlauf, Memories und Lorebooks (auch bei Google AI als Kosten-/Verlaufsgrenze aktiv).">?</span>
+          </label>
           <input type="number" name="num_ctx" min="512" max="131072" step="256" value="{{ settings.params.num_ctx }}" required>
         </div>
         <div>
@@ -125,7 +171,10 @@
           <input type="number" name="top_p" min="0.05" max="1.0" step="0.05" value="{{ settings.params.top_p }}" required>
         </div>
         <div>
-          <label>Repeat Penalty</label>
+          <label>
+            Repeat Penalty
+            <span class="field-help-btn" title="Wiederholungsstrafe für lokale Ollama-Modelle.">?</span>
+          </label>
           <input type="number" name="repeat_penalty" min="0.5" max="2.5" step="0.05" value="{{ settings.params.repeat_penalty }}" required>
         </div>
       </div>
@@ -136,90 +185,79 @@
     </div>
   </form>
 
-  <!-- Rechte Spalte: Ollama Modell-Management (Install / Pull & Delete) -->
-  <aside class="aimo-frame" style="padding: 1.35rem; display: flex; flex-direction: column; gap: 1.1rem;">
+  <aside id="admin-aside-ollama" class="aimo-frame backend-panel" style="padding: 1.35rem; display: flex; flex-direction: column; gap: 1.1rem;" {% if is_google %}hidden{% endif %}>
     <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
       <span class="icon-mono">📦</span> Ollama Modell-Manager
     </h3>
 
-    <!-- Setup-Helper: Vorgeschlagene Modelle pro Rolle -->
-    <div style="background: rgba(0,0,0,0.22); border: 1px solid var(--border-wood-dark); border-radius: 8px; padding: 0.85rem;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.4rem;">
+    <div class="setup-helper-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem;">
         <h4 style="color: var(--gold-accent); font-size: 0.92rem; margin: 0; display: flex; align-items: center; gap: 0.4rem;">
           <span class="icon-mono">🧙‍♂️</span> Setup-Helper für Ollama
         </h4>
         {{ action_button("Fehlende installieren", icon="⚡", id="pull-all-missing-btn", size="sm", onclick="pullAllMissingRecommended()") }}
       </div>
-      <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+      <div style="font-size: 0.78rem; color: var(--text-muted);">
         Empfohlene Modelle pro Rolle:
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 0.55rem;">
-        <!-- Modell 1: igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest -->
-        <div style="padding: 0.55rem 0.65rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 6px;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
-            <div style="min-width: 0; flex: 1;">
-              <div style="font-family: monospace; font-size: 0.79rem; word-break: break-all; color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest')" title="Klicken zum Übernehmen in die Pull-Eingabe">
-                igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest
-              </div>
-              <div style="display: flex; gap: 0.35rem; margin-top: 0.35rem; flex-wrap: wrap;">
-                <span style="font-size: 0.68rem; padding: 0.12rem 0.4rem; background: var(--border-wood-dark); border-radius: 4px; color: var(--text-main);">Roleplay</span>
-                <span style="font-size: 0.68rem; padding: 0.12rem 0.4rem; background: var(--border-wood-dark); border-radius: 4px; color: var(--text-main);">Memory</span>
-              </div>
+        <div class="setup-helper-row">
+          <div style="min-width: 0; flex: 1;">
+            <div style="font-family: monospace; font-size: 0.79rem; word-break: break-all; color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest')" title="Klicken zum Übernehmen in die Pull-Eingabe">
+              igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest
             </div>
-            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0;">
-              {% if 'igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest' in installed_models and ollama_healthy %}
-                <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ Bereit</span>
-              {% else %}
-                <span style="color: #E67E22; font-size: 0.74rem;">⏳ Fehlt</span>
-                {{ action_button("Pull", icon="📥", size="sm", onclick="pullSpecificModel('igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest')") }}
-              {% endif %}
+            <div style="display: flex; gap: 0.35rem; margin-top: 0.35rem; flex-wrap: wrap;">
+              <span class="role-tag-pill">Roleplay</span>
+              <span class="role-tag-pill">Memory</span>
             </div>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0;">
+            {% if 'igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest' in installed_models and ollama_healthy %}
+              <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ Bereit</span>
+            {% else %}
+              <span style="color: #E67E22; font-size: 0.74rem;">⏳ Fehlt</span>
+              {{ action_button("Pull", icon="📥", size="sm", onclick="pullSpecificModel('igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest')") }}
+            {% endif %}
           </div>
         </div>
 
-        <!-- Modell 2: gemma4:e4b -->
-        <div style="padding: 0.55rem 0.65rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 6px;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
-            <div style="min-width: 0; flex: 1;">
-              <div style="font-family: monospace; font-size: 0.79rem; word-break: break-all; color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('gemma4:e4b')" title="Klicken zum Übernehmen in die Pull-Eingabe">
-                gemma4:e4b
-              </div>
-              <div style="display: flex; gap: 0.35rem; margin-top: 0.35rem; flex-wrap: wrap;">
-                <span style="font-size: 0.68rem; padding: 0.12rem 0.4rem; background: var(--border-wood-dark); border-radius: 4px; color: var(--text-main);">Assistant</span>
-                <span style="font-size: 0.68rem; padding: 0.12rem 0.4rem; background: var(--border-wood-dark); border-radius: 4px; color: var(--text-main);">Vision</span>
-              </div>
+        <div class="setup-helper-row">
+          <div style="min-width: 0; flex: 1;">
+            <div style="font-family: monospace; font-size: 0.79rem; word-break: break-all; color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('gemma4:e4b')" title="Klicken zum Übernehmen in die Pull-Eingabe">
+              gemma4:e4b
             </div>
-            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0;">
-              {% if 'gemma4:e4b' in installed_models and ollama_healthy %}
-                <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ Bereit</span>
-              {% else %}
-                <span style="color: #E67E22; font-size: 0.74rem;">⏳ Fehlt</span>
-                {{ action_button("Pull", icon="📥", size="sm", onclick="pullSpecificModel('gemma4:e4b')") }}
-              {% endif %}
+            <div style="display: flex; gap: 0.35rem; margin-top: 0.35rem; flex-wrap: wrap;">
+              <span class="role-tag-pill">Assistant</span>
+              <span class="role-tag-pill">Vision</span>
             </div>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0;">
+            {% if 'gemma4:e4b' in installed_models and ollama_healthy %}
+              <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ Bereit</span>
+            {% else %}
+              <span style="color: #E67E22; font-size: 0.74rem;">⏳ Fehlt</span>
+              {{ action_button("Pull", icon="📥", size="sm", onclick="pullSpecificModel('gemma4:e4b')") }}
+            {% endif %}
           </div>
         </div>
 
-        <!-- Modell 3: llama3.2:1b -->
-        <div style="padding: 0.55rem 0.65rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 6px;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
-            <div style="min-width: 0; flex: 1;">
-              <div style="font-family: monospace; font-size: 0.79rem; word-break: break-all; color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('llama3.2:1b')" title="Klicken zum Übernehmen in die Pull-Eingabe">
-                llama3.2:1b
-              </div>
-              <div style="display: flex; gap: 0.35rem; margin-top: 0.35rem; flex-wrap: wrap;">
-                <span style="font-size: 0.68rem; padding: 0.12rem 0.4rem; background: var(--border-wood-dark); border-radius: 4px; color: var(--text-main);">Classification</span>
-              </div>
+        <div class="setup-helper-row">
+          <div style="min-width: 0; flex: 1;">
+            <div style="font-family: monospace; font-size: 0.79rem; word-break: break-all; color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('llama3.2:1b')" title="Klicken zum Übernehmen in die Pull-Eingabe">
+              llama3.2:1b
             </div>
-            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0;">
-              {% if 'llama3.2:1b' in installed_models and ollama_healthy %}
-                <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ Bereit</span>
-              {% else %}
-                <span style="color: #E67E22; font-size: 0.74rem;">⏳ Fehlt</span>
-                {{ action_button("Pull", icon="📥", size="sm", onclick="pullSpecificModel('llama3.2:1b')") }}
-              {% endif %}
+            <div style="display: flex; gap: 0.35rem; margin-top: 0.35rem; flex-wrap: wrap;">
+              <span class="role-tag-pill">Classification</span>
             </div>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0;">
+            {% if 'llama3.2:1b' in installed_models and ollama_healthy %}
+              <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ Bereit</span>
+            {% else %}
+              <span style="color: #E67E22; font-size: 0.74rem;">⏳ Fehlt</span>
+              {{ action_button("Pull", icon="📥", size="sm", onclick="pullSpecificModel('llama3.2:1b')") }}
+            {% endif %}
           </div>
         </div>
       </div>
@@ -258,18 +296,139 @@
       </div>
     </div>
   </aside>
+
+  <aside id="admin-aside-google_ai" class="aimo-frame backend-panel" style="padding: 1.35rem; display: flex; flex-direction: column; gap: 1.1rem;" {% if not is_google %}hidden{% endif %}>
+    <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
+      <span class="icon-mono">☁️</span> Google AI Cloud Setup
+    </h3>
+
+    {{ google_ai_steps_guide() }}
+
+    <div class="setup-helper-box">
+      <h4 style="color: var(--gold-accent); font-size: 0.92rem; margin: 0;">
+        <span class="icon-mono">✨</span> Empfohlene Google AI Modelle
+      </h4>
+      <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+        {% for role_key, info in google_recommended_models.items() %}
+          <div class="setup-helper-row">
+            <strong>{{ info.role_name }}</strong>
+            <code style="color: var(--gold-accent); font-size: 0.78rem;">{{ info.model }}</code>
+          </div>
+        {% endfor %}
+        <div class="setup-helper-row">
+          <strong>Bildgenerierung</strong>
+          <code style="color: var(--gold-accent); font-size: 0.78rem;">{{ recommended_google_image_model }}</code>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h4 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+        Verfügbare Cloud-Modelle (<span id="google-models-count">{{ installed_models|length if is_google else 0 }}</span>)
+      </h4>
+      <div id="google-available-models-list" style="display: flex; flex-direction: column; gap: 0.4rem; max-height: 360px; overflow-y: auto;">
+        {% if is_google and installed_models %}
+          {% for model_name in installed_models %}
+            <div style="padding: 0.45rem 0.65rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 8px; font-size: 0.84rem; font-family: monospace;">
+              {{ model_name }}
+            </div>
+          {% endfor %}
+        {% else %}
+          <p style="font-size: 0.84rem; color: var(--text-muted);">
+            Klicke auf <strong>„API-Key &amp; Modelle testen“</strong>, um die mit deinem Key verfügbaren Gemini-Modelle zu laden.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </aside>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
-  const RECOMMENDED_MODELS_MAP = {
-    roleplay: "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest",
-    memory: "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest",
-    assistant: "gemma4:e4b",
-    vision: "gemma4:e4b",
-    classification: "llama3.2:1b"
-  };
+  const RECOMMENDED_BY_BACKEND = {{ recommended_by_backend|tojson }};
+  const RECOMMENDED_GOOGLE_IMAGE_MODEL = {{ recommended_google_image_model|tojson }};
+  const INITIAL_BACKEND = {{ settings.llm_backend.value|tojson }};
+
+  function getSelectedAdminBackend() {
+    const checked = document.querySelector('input[name="llm_backend"]:checked');
+    return checked ? checked.value : INITIAL_BACKEND;
+  }
+
+  function syncAdminBackendUI(switchedByUser = false) {
+    const backend = getSelectedAdminBackend();
+    const isGoogle = backend === "google_ai";
+
+    const connOllama = document.getElementById("admin-conn-ollama");
+    const connGoogle = document.getElementById("admin-conn-google_ai");
+    const asideOllama = document.getElementById("admin-aside-ollama");
+    const asideGoogle = document.getElementById("admin-aside-google_ai");
+    const ollamaUrlInput = document.getElementById("admin-ollama-url");
+    const googleKeyInput = document.getElementById("admin-google-api-key");
+
+    if (connOllama) connOllama.hidden = isGoogle;
+    if (asideOllama) asideOllama.hidden = isGoogle;
+    if (connGoogle) connGoogle.hidden = !isGoogle;
+    if (asideGoogle) asideGoogle.hidden = !isGoogle;
+    if (ollamaUrlInput) ollamaUrlInput.required = !isGoogle;
+    if (googleKeyInput) {
+      const hasExisting = {{ 'true' if has_google_ai_api_key else 'false' }};
+      googleKeyInput.required = isGoogle && !hasExisting;
+    }
+
+    document.querySelectorAll('[data-google-only="1"]').forEach((el) => {
+      el.hidden = !isGoogle;
+      const radio = el.querySelector('input[type="radio"]');
+      if (radio) radio.disabled = !isGoogle;
+    });
+
+    if (!isGoogle) {
+      const imgSelected = document.querySelector('input[name="image_gen_backend"]:checked');
+      if (imgSelected && imgSelected.value === "google_ai") {
+        const comfyRadio = document.getElementById("admin-img-comfyui");
+        if (comfyRadio) comfyRadio.checked = true;
+      }
+      const searchSelected = document.querySelector('input[name="search_backend"]:checked');
+      if (searchSelected && searchSelected.value === "google_ai") {
+        const disabledRadio = document.getElementById("admin-search-disabled");
+        if (disabledRadio) disabledRadio.checked = true;
+      }
+    }
+
+    syncAdminConditionalServices();
+
+    if (switchedByUser) {
+      applyRecommendedModels();
+    }
+  }
+
+  function syncAdminConditionalServices() {
+    const backend = getSelectedAdminBackend();
+    const isGoogle = backend === "google_ai";
+
+    const imgSelected = document.querySelector('input[name="image_gen_backend"]:checked')?.value || "comfyui";
+    const comfyBox = document.getElementById("admin-comfyui-box");
+    const comfyInput = document.getElementById("admin-comfyui-url");
+    if (comfyBox && comfyInput) {
+      const showComfy = imgSelected === "comfyui";
+      comfyBox.hidden = !showComfy;
+      comfyInput.required = showComfy;
+    }
+
+    const gImgBox = document.getElementById("admin-google-img-box");
+    if (gImgBox) {
+      gImgBox.hidden = !(isGoogle && imgSelected === "google_ai");
+    }
+
+    const searchSelected = document.querySelector('input[name="search_backend"]:checked')?.value || "disabled";
+    const searxBox = document.getElementById("admin-searxng-box");
+    const searxInput = document.getElementById("admin-searxng-url");
+    if (searxBox && searxInput) {
+      const showSearx = searchSelected === "searxng";
+      searxBox.hidden = !showSearx;
+      searxInput.required = showSearx;
+    }
+  }
 
   function setPullModel(modelName) {
     const input = document.getElementById("pull-model-name");
@@ -280,7 +439,9 @@
   }
 
   function applyRecommendedModels() {
-    for (const [role, modelName] of Object.entries(RECOMMENDED_MODELS_MAP)) {
+    const backend = getSelectedAdminBackend();
+    const recMap = RECOMMENDED_BY_BACKEND[backend] || RECOMMENDED_BY_BACKEND.ollama;
+    for (const [role, modelName] of Object.entries(recMap)) {
       const select = document.querySelector(`select[name="${role}_model"]`);
       if (select) {
         let found = false;
@@ -300,6 +461,121 @@
         }
         select.style.boxShadow = "0 0 8px var(--gold-accent)";
         setTimeout(() => { select.style.boxShadow = ""; }, 1800);
+      }
+    }
+    if (backend === "google_ai") {
+      const imgSelect = document.getElementById("admin-google-image-model");
+      if (imgSelect) {
+        let found = false;
+        for (let i = 0; i < imgSelect.options.length; i++) {
+          if (imgSelect.options[i].value === RECOMMENDED_GOOGLE_IMAGE_MODEL) {
+            imgSelect.selectedIndex = i;
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          const opt = document.createElement("option");
+          opt.value = RECOMMENDED_GOOGLE_IMAGE_MODEL;
+          opt.textContent = RECOMMENDED_GOOGLE_IMAGE_MODEL;
+          opt.selected = true;
+          imgSelect.appendChild(opt);
+        }
+      }
+    }
+  }
+
+  async function verifyAdminBackend(backend) {
+    const btn = document.getElementById(backend === "google_ai" ? "admin-verify-google-btn" : "admin-verify-ollama-btn");
+    const statusEl = document.getElementById(`admin-verify-${backend}-status`);
+    const ollamaUrl = document.getElementById("admin-ollama-url")?.value?.trim() || "";
+    const apiKey = document.getElementById("admin-google-api-key")?.value?.trim() || "";
+
+    const origHtml = window.setButtonLoading ? window.setButtonLoading(btn, "Prüfe...") : null;
+    if (statusEl) {
+      statusEl.className = "backend-status-line is-warn";
+      statusEl.textContent = "⏳ Verbindung wird geprüft...";
+    }
+
+    try {
+      const resp = await fetch("/api/admin/llm/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          llm_backend: backend,
+          ollama_url: ollamaUrl,
+          google_ai_api_key: apiKey,
+        }),
+      });
+      const data = await resp.json();
+      if (data.healthy) {
+        const models = Array.isArray(data.models) ? data.models : [];
+        const imageModels = Array.isArray(data.image_models) ? data.image_models : [];
+        if (statusEl) {
+          statusEl.className = "backend-status-line is-ok";
+          statusEl.textContent =
+            backend === "google_ai"
+              ? `✓ Verbindung erfolgreich — ${models.length} Text-/Vision-Modelle & ${imageModels.length} Bildmodelle geladen.`
+              : `✓ Ollama erreichbar — ${models.length} installierte(s) Modell(e) gefunden.`;
+        }
+
+        const recMap = RECOMMENDED_BY_BACKEND[backend] || {};
+        for (const [role, recModel] of Object.entries(recMap)) {
+          const select = document.querySelector(`select[name="${role}_model"]`);
+          if (!select) continue;
+          const prevVal = select.value;
+          const list = Array.from(new Set([...models, recModel, prevVal].filter(Boolean)));
+          select.innerHTML = "";
+          list.forEach((m) => {
+            const opt = document.createElement("option");
+            opt.value = m;
+            opt.textContent = m;
+            if (m === prevVal) opt.selected = true;
+            select.appendChild(opt);
+          });
+        }
+
+        if (backend === "google_ai") {
+          const imgSel = document.getElementById("admin-google-image-model");
+          if (imgSel) {
+            const prevImg = imgSel.value;
+            const imgList = Array.from(new Set([...imageModels, RECOMMENDED_GOOGLE_IMAGE_MODEL, prevImg].filter(Boolean)));
+            imgSel.innerHTML = "";
+            imgList.forEach((m) => {
+              const opt = document.createElement("option");
+              opt.value = m;
+              opt.textContent = m;
+              if (m === prevImg) opt.selected = true;
+              imgSel.appendChild(opt);
+            });
+          }
+          const listEl = document.getElementById("google-available-models-list");
+          const countEl = document.getElementById("google-models-count");
+          if (countEl) countEl.textContent = String(models.length);
+          if (listEl) {
+            listEl.innerHTML = "";
+            models.forEach((m) => {
+              const item = document.createElement("div");
+              item.style.cssText = "padding: 0.45rem 0.65rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 8px; font-size: 0.84rem; font-family: monospace;";
+              item.textContent = m;
+              listEl.appendChild(item);
+            });
+          }
+        }
+      } else {
+        if (statusEl) {
+          statusEl.className = "backend-status-line is-err";
+          statusEl.textContent = `✕ ${data.error || "Verbindung fehlgeschlagen."}`;
+        }
+      }
+    } catch (_) {
+      if (statusEl) {
+        statusEl.className = "backend-status-line is-err";
+        statusEl.textContent = "✕ Verbindungsfehler beim Testen.";
+      }
+    } finally {
+      if (window.resetButtonLoading && origHtml !== null) {
+        window.resetButtonLoading(btn, origHtml);
       }
     }
   }
@@ -421,5 +697,15 @@
       }
     }
   }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('input[name="llm_backend"]').forEach((radio) => {
+      radio.addEventListener("change", () => syncAdminBackendUI(true));
+    });
+    document.querySelectorAll('input[name="image_gen_backend"], input[name="search_backend"]').forEach((radio) => {
+      radio.addEventListener("change", syncAdminConditionalServices);
+    });
+    syncAdminBackendUI(false);
+  });
 </script>
 {% endblock %}

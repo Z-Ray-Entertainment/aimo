@@ -60,6 +60,14 @@ class Config:
     ).resolve()
     DATABASE_URI: str = os.getenv("AIMO_DATABASE_URI", f"sqlite:///{DATABASE_PATH}")
 
+    DEFAULT_LLM_BACKEND: str = os.getenv("AIMO_LLM_BACKEND", "ollama")
     DEFAULT_OLLAMA_URL: str = os.getenv("AIMO_OLLAMA_URL", "http://localhost:11434")
+    DEFAULT_GOOGLE_AI_API_KEY: str = os.getenv(
+        "AIMO_GOOGLE_AI_API_KEY", os.getenv("GEMINI_API_KEY", "")
+    )
+    GOOGLE_AI_BASE_URL: str = os.getenv(
+        "AIMO_GOOGLE_AI_BASE_URL",
+        "https://generativelanguage.googleapis.com/v1beta",
+    )
     DEFAULT_COMFYUI_URL: str = os.getenv("AIMO_COMFYUI_URL", "http://localhost:8188")
     DEFAULT_SEARXNG_URL: str = os.getenv("AIMO_SEARXNG_URL", "http://localhost:8080")

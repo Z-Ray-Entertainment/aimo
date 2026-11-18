@@ -2,6 +2,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from application.admin.forms import AdminPromptsForm, AdminServicesForm, AdminUserForm
 from application.auth.decorators import require_permission
+from application.ui_helpers import mask_secret
 from domain.auth.services import AuthService
 from domain.permissions.models import (
     PRESET_PERMISSIONS,
@@ -15,15 +16,19 @@ from domain.personas.services import PersonaService
 from domain.settings.models import (
     RECOMMENDED_ASSISTANT_MODEL,
     RECOMMENDED_CLASSIFICATION_MODEL,
-    RECOMMENDED_MEMORY_MODEL,
+    RECOMMENDED_GOOGLE_AI_IMAGE_MODEL,
     RECOMMENDED_MODELS,
     RECOMMENDED_ROLEPLAY_MODEL,
-    RECOMMENDED_VISION_MODEL,
+    ImageGenBackend,
+    LLMBackend,
     SystemPrompts,
+    get_recommended_models_for_backend,
+    get_recommended_task_models,
 )
 from domain.settings.services import SettingsService
 from infrastructure.image_gen.factory import get_image_gen_provider
 from infrastructure.llm.factory import get_llm_provider
+from infrastructure.llm.google_ai import GoogleAILLMProvider
 from infrastructure.repositories.persona_repository import PersonaRepository
 from infrastructure.repositories.settings_repository import SettingsRepository
 from infrastructure.repositories.user_repository import UserRepository
@@ -214,25 +219,48 @@ def services_config():
                     "Vorgeschlagene Modelle für alle 5 Rollen erfolgreich zugewiesen!",
                     "success",
                 )
+                return redirect(url_for("admin.services_config"))
             except AimoError as exc:
                 flash(str(exc), "error")
         else:
             form = AdminServicesForm.from_request(request.form)
             try:
-                settings_service.update_service_urls(
+                previous_backend = settings.llm_backend
+                settings_service.update_backend_configuration(
                     settings=settings,
+                    llm_backend=form.llm_backend,
                     ollama_url=form.ollama_url,
+                    google_ai_api_key=form.google_ai_api_key,
+                    clear_google_ai_api_key=form.clear_google_ai_api_key,
+                    image_gen_backend=form.image_gen_backend,
                     comfyui_url=form.comfyui_url,
+                    google_ai_image_model=form.google_ai_image_model,
+                    search_backend=form.search_backend,
                     searxng_url=form.searxng_url,
-                    searxng_enabled=form.searxng_enabled,
                 )
+
+                target_backend = settings.llm_backend
+                rec = get_recommended_task_models(target_backend)
+
+                def _resolve_submitted_model(submitted: str, role: str) -> str:
+                    if (
+                        previous_backend != target_backend
+                        and not settings_service.is_model_compatible_with_backend(
+                            submitted, target_backend
+                        )
+                    ):
+                        return rec[role]
+                    return submitted or rec[role]
+
                 settings_service.update_task_models(
                     settings=settings,
-                    roleplay_model=form.roleplay_model,
-                    memory_model=form.memory_model,
-                    assistant_model=form.assistant_model,
-                    vision_model=form.vision_model,
-                    classification_model=form.classification_model,
+                    roleplay_model=_resolve_submitted_model(form.roleplay_model, "roleplay"),
+                    memory_model=_resolve_submitted_model(form.memory_model, "memory"),
+                    assistant_model=_resolve_submitted_model(form.assistant_model, "assistant"),
+                    vision_model=_resolve_submitted_model(form.vision_model, "vision"),
+                    classification_model=_resolve_submitted_model(
+                        form.classification_model, "classification"
+                    ),
                 )
                 settings_service.update_parameters(
                     settings=settings,
@@ -243,18 +271,23 @@ def services_config():
                 )
                 settings = settings_repo.save_settings(settings)
                 flash("Service-Einstellungen und Modelle erfolgreich gespeichert.", "success")
+                return redirect(url_for("admin.services_config"))
             except AimoError as exc:
                 flash(str(exc), "error")
 
     llm = get_llm_provider(settings)
     img_gen = get_image_gen_provider(settings)
 
-    ollama_healthy = llm.check_health()
-    comfy_healthy = img_gen.check_health()
+    llm_healthy = llm.check_health()
+    image_gen_healthy = img_gen.check_health()
     installed_models: list[str] = []
-    if ollama_healthy:
+    available_image_models: list[str] = []
+    if llm_healthy:
         try:
-            installed_models = llm.list_models()
+            if isinstance(llm, GoogleAILLMProvider):
+                installed_models, available_image_models = llm.list_model_catalog()
+            else:
+                installed_models = llm.list_models()
         except AimoError:
             installed_models = []
 
@@ -263,26 +296,50 @@ def services_config():
         RECOMMENDED_ASSISTANT_MODEL,
         RECOMMENDED_CLASSIFICATION_MODEL,
     ]
+    active_rec = get_recommended_task_models(settings.llm_backend)
 
     for assigned in (
-        *unique_recommended,
+        *active_rec.values(),
         settings.tasks.roleplay_model,
         settings.tasks.memory_model,
         settings.tasks.assistant_model,
         settings.tasks.classification_model,
         settings.tasks.vision_model,
     ):
-        if assigned and assigned not in installed_models:
+        if (
+            assigned
+            and assigned not in installed_models
+            and settings_service.is_model_compatible_with_backend(assigned, settings.llm_backend)
+        ):
             installed_models.append(assigned)
+
+    for img_model in (RECOMMENDED_GOOGLE_AI_IMAGE_MODEL, settings.google_ai_image_model):
+        if img_model and img_model not in available_image_models:
+            available_image_models.append(img_model)
 
     return render_template(
         "admin/services.html",
         settings=settings,
         installed_models=installed_models,
+        available_image_models=available_image_models,
         recommended_models=RECOMMENDED_MODELS,
+        google_recommended_models=get_recommended_models_for_backend(LLMBackend.GOOGLE_AI),
         unique_recommended=unique_recommended,
-        ollama_healthy=ollama_healthy,
-        comfy_healthy=comfy_healthy,
+        recommended_by_backend={
+            LLMBackend.OLLAMA.value: get_recommended_task_models(LLMBackend.OLLAMA),
+            LLMBackend.GOOGLE_AI.value: get_recommended_task_models(LLMBackend.GOOGLE_AI),
+        },
+        recommended_google_image_model=RECOMMENDED_GOOGLE_AI_IMAGE_MODEL,
+        llm_healthy=llm_healthy,
+        ollama_healthy=llm_healthy if settings.llm_backend == LLMBackend.OLLAMA else False,
+        comfy_healthy=(
+            image_gen_healthy
+            if settings.image_gen_backend == ImageGenBackend.COMFYUI
+            else False
+        ),
+        image_gen_healthy=image_gen_healthy,
+        has_google_ai_api_key=bool(settings.google_ai_api_key),
+        google_ai_api_key_hint=mask_secret(settings.google_ai_api_key),
     )
 
 

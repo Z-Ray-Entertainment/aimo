@@ -37,33 +37,43 @@ aimo avoids rigid role hierarchies in favor of a **functional permission model**
 
 ## 🔌 Service & Model Management (`/admin/services`)
 
-### 1. Ollama Model Management & Setup-Helper
-- **Setup-Helper:** Quick overview of the recommended model suite for optimal performance:
-  - **Roleplay:** `igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest` (deep conversational nuance and roleplay fidelity)
-  - **Memory:** `igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest` (10-message episodic memory and chat title generation)
-  - **Assistant:** `gemma4:e4b` (Sparkle writing assistant, translation, ComfyUI image prompts)
-  - **Vision:** `gemma4:e4b` (Multimodal vision analysis for portraits and 16:9 backgrounds)
-  - **Classification:** `llama3.2:1b` (Ultra-fast post-streaming emotion classification and location change suggestions)
-- **One-Click Actions:**
-  - `✨ Vorgeschlagene Modelle zuweisen`: Automatically binds the recommended models to all 5 tasks.
-  - `⚡ Fehlende installieren`: Sequentially pulls missing recommended models with live download progress.
-- **Installed Models:** View all models currently hosted on your Ollama server.
-- **Install New Model (Pull):** Enter any model tag or choose a quick shortcut to download it directly onto your Ollama server.
-- **Delete Model:** Remove unused models to reclaim disk storage.
+### 1. Active AI Backend (Exclusive Selection)
+Choose **strictly one** primary AI backend at any time (Ollama and Google AI Cloud are never operated simultaneously):
+- **🦙 Ollama (Local / Self-Hosted):** Connect to your Ollama server URL and test reachability directly from the panel.
+- **✨ Google AI Cloud (Gemini API):** Enter your Google AI Studio API key (stored masked once saved — leave the input empty to keep the existing key) and click **API-Key & Modelle testen** to verify access and load available cloud models.
 
-### 2. Task-Specific Model Assignments
-Route specific duties to specialized models:
+### 2. Image Generation & Web Search Services
+Depending on your active AI backend, configure image generation and prepared web search options:
+- **Image Generation (Chat Magic Wand):**
+  - **Google AI Image** *(only available with Google AI active)*: Uses your API key and a Gemini image model (default: `gemini-3.1-flash-image-preview`) to generate 16:9 scenes.
+  - **ComfyUI (Local):** Connect to your local ComfyUI server URL.
+  - **Deaktiviert:** Hides scene image generation in chat.
+- **Web Search (Prepared):**
+  - Select **Google Search** *(only available with Google AI active)*, **SearXNG (Local)** with a SearXNG URL, or **Deaktiviert**.
+
+When switching back from Google AI Cloud to Ollama, any Google-specific image or search selection automatically adjusts so local and cloud backends never run in parallel.
+
+### 3. Model Management & Setup-Helper
+- **When Ollama is active (Ollama Model Manager):**
+  - **Setup-Helper:** Overview of the recommended local models (`igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest`, `gemma4:e4b`, `llama3.2:1b`).
+  - **One-Click Actions:** `✨ Vorgeschlagene Modelle zuweisen` binds the recommended models to all 5 roles; `⚡ Fehlende installieren` sequentially pulls missing recommended models with live download progress.
+  - **Pull & Delete:** Enter any model tag to download onto your Ollama server, view installed models, and remove unused models.
+- **When Google AI Cloud is active (Google AI Cloud Setup):**
+  - Displays the API key setup instructions, recommended Gemini models (`gemini-4-hydrogen` and `gemini-3.1-flash-lite` plus `gemini-3.1-flash-image-preview` for images), and the list of cloud models available to your key.
+
+### 4. Task-Specific Model Assignments
+Route specific duties to specialized models of the active backend:
 - **Roleplay:** Primary model for dialogue, character depiction, and narrative nuance.
 - **Classification:** Fast, lightweight model for autonomous post-streaming emotion and location detection.
 - **Memory:** Efficient model for 10-message event summaries and tag extraction.
-- **Assistant:** Dedicated model for Sparkle assistant, translation, and diffuser prompts.
+- **Assistant:** Dedicated model for Sparkle assistant, translation, and image scene prompts.
 - **Vision:** Multimodal model for image analysis and persona appearance scans.
 
-### 3. Inference Parameters
+### 5. Inference Parameters
 - Fine-tune generation hyperparameters:
-  - `num_ctx`: Context window size (e.g., 4096, 8192).
+  - `num_ctx`: Context window budget controlling how much conversation history and lore fit into prompts (active for both Ollama and Google AI).
   - `temperature`: Creativity and randomness (e.g., 0.7).
-  - `top_p` and `repeat_penalty`.
+  - `top_p` and `repeat_penalty` (applied to Ollama).
 
 ---
 

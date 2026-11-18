@@ -313,8 +313,8 @@ class AimoChatStream {
           window.showToastWarning ? window.showToastWarning(errStr || "Zeitüberschreitung beim Senden.", "Timeout") : alert(errStr);
         } else if (prepResp.status === 502 || prepData.is_backend_down || /core service unreachable|backend/i.test(errStr)) {
           window.showToastError ? window.showToastError("Verbindung zum Backend (aimo-core) verloren.", "Backend-Verbindungsfehler") : alert("Verbindung zum Backend verloren.");
-        } else if (/ollama|llm|provider/i.test(errStr)) {
-          window.showToastError ? window.showToastError(errStr || "Verbindung zu Ollama (bzw. LLMProvider) verloren.", "Ollama-Verbindungsfehler") : alert(errStr);
+        } else if (/ollama|google\s*ai|gemini|api[- ]?key|llm|provider/i.test(errStr)) {
+          window.showToastError ? window.showToastError(errStr || "Verbindung zum KI-Backend verloren.", "KI-Verbindungsfehler") : alert(errStr);
         } else {
           window.showToastError ? window.showToastError(errStr || "Fehler beim Senden der Nachricht.", "Fehler") : alert(errStr);
         }

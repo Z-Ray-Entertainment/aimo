@@ -2,13 +2,18 @@ import sqlite3
 
 from domain.settings.models import (
     DEFAULT_DIALOGUE_AUTHOR_PROMPT,
+    RECOMMENDED_GOOGLE_AI_IMAGE_MODEL,
+    ImageGenBackend,
+    LLMBackend,
     ModelParameters,
+    SearchBackend,
     ServiceSettings,
     SystemPrompts,
     TaskAssignment,
 )
 from domain.settings.services import SettingsService
 from infrastructure.database import get_db_session
+from shared.config import Config
 
 
 class SettingsRepository:
@@ -41,16 +46,23 @@ class SettingsRepository:
         conn.execute(
             """
             INSERT INTO system_settings (
-                id, ollama_url, comfyui_url, searxng_url, searxng_enabled,
+                id, llm_backend, ollama_url, google_ai_api_key,
+                image_gen_backend, google_ai_image_model, comfyui_url,
+                search_backend, searxng_url, searxng_enabled,
                 roleplay_model, memory_model, assistant_model, vision_model, classification_model,
                 num_ctx, temperature, top_p, repeat_penalty,
                 roleplay_prompt, memory_prompt, diffuser_prompt,
                 sparkle_assistant_prompt, vision_persona_prompt, dialogue_author_prompt, default_backdrop_path
             )
-            VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(id) DO UPDATE SET
+                llm_backend = excluded.llm_backend,
                 ollama_url = excluded.ollama_url,
+                google_ai_api_key = excluded.google_ai_api_key,
+                image_gen_backend = excluded.image_gen_backend,
+                google_ai_image_model = excluded.google_ai_image_model,
                 comfyui_url = excluded.comfyui_url,
+                search_backend = excluded.search_backend,
                 searxng_url = excluded.searxng_url,
                 searxng_enabled = excluded.searxng_enabled,
                 roleplay_model = excluded.roleplay_model,
@@ -71,8 +83,13 @@ class SettingsRepository:
                 default_backdrop_path = excluded.default_backdrop_path
             """,
             (
+                settings.llm_backend.value,
                 settings.ollama_url,
+                settings.google_ai_api_key,
+                settings.image_gen_backend.value,
+                settings.google_ai_image_model,
                 settings.comfyui_url,
+                settings.search_backend.value,
                 settings.searxng_url,
                 1 if settings.searxng_enabled else 0,
                 settings.tasks.roleplay_model,
@@ -112,12 +129,54 @@ class SettingsRepository:
             if ("dialogue_author_prompt" in keys and row["dialogue_author_prompt"])
             else DEFAULT_DIALOGUE_AUTHOR_PROMPT
         )
+
+        raw_backend = str(row["llm_backend"]) if "llm_backend" in keys and row["llm_backend"] else "ollama"
+        try:
+            llm_backend = LLMBackend.resolve(raw_backend)
+        except Exception:
+            llm_backend = LLMBackend.OLLAMA
+
+        db_api_key = str(row["google_ai_api_key"]).strip() if "google_ai_api_key" in keys and row["google_ai_api_key"] else ""
+        resolved_api_key = db_api_key or Config.DEFAULT_GOOGLE_AI_API_KEY
+
+        raw_img_backend = (
+            str(row["image_gen_backend"])
+            if "image_gen_backend" in keys and row["image_gen_backend"]
+            else ImageGenBackend.COMFYUI.value
+        )
+        try:
+            image_gen_backend = ImageGenBackend.resolve(raw_img_backend)
+        except Exception:
+            image_gen_backend = ImageGenBackend.COMFYUI
+
+        img_model = (
+            str(row["google_ai_image_model"]).strip()
+            if "google_ai_image_model" in keys and row["google_ai_image_model"]
+            else RECOMMENDED_GOOGLE_AI_IMAGE_MODEL
+        )
+
+        searxng_enabled = bool(row["searxng_enabled"])
+        raw_search_backend = (
+            str(row["search_backend"])
+            if "search_backend" in keys and row["search_backend"]
+            else (SearchBackend.SEARXNG.value if searxng_enabled else SearchBackend.DISABLED.value)
+        )
+        try:
+            search_backend = SearchBackend.resolve(raw_search_backend)
+        except Exception:
+            search_backend = SearchBackend.SEARXNG if searxng_enabled else SearchBackend.DISABLED
+
         return ServiceSettings(
             id=int(row["id"]),
+            llm_backend=llm_backend,
             ollama_url=str(row["ollama_url"]),
+            google_ai_api_key=resolved_api_key,
+            image_gen_backend=image_gen_backend,
+            google_ai_image_model=img_model,
             comfyui_url=str(row["comfyui_url"]),
+            search_backend=search_backend,
             searxng_url=str(row["searxng_url"]),
-            searxng_enabled=bool(row["searxng_enabled"]),
+            searxng_enabled=searxng_enabled,
             tasks=TaskAssignment(
                 roleplay_model=str(row["roleplay_model"]),
                 memory_model=str(row["memory_model"]),

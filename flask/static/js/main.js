@@ -1,3 +1,13 @@
+window.toggleSecretVisibility = function toggleSecretVisibility(inputId, btnEl) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const isPassword = input.type === "password";
+  input.type = isPassword ? "text" : "password";
+  if (btnEl) {
+    btnEl.title = isPassword ? "API-Key verbergen" : "API-Key anzeigen";
+  }
+};
+
 window.aimoPersonaVisionRunning = false;
 
 /**

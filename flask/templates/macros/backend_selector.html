@@ -1,0 +1,142 @@
+{% from "macros/buttons.html" import action_button %}
+
+{% macro llm_backend_cards(selected_backend, field_name="llm_backend", id_prefix="backend") %}
+<div class="backend-choice-grid" data-backend-selector-group="{{ field_name }}">
+  <label class="backend-choice-card{% if selected_backend == 'ollama' %} is-selected{% endif %}" for="{{ id_prefix }}-ollama">
+    <input type="radio"
+           id="{{ id_prefix }}-ollama"
+           name="{{ field_name }}"
+           value="ollama"
+           {% if selected_backend == 'ollama' %}checked{% endif %}>
+    <div class="backend-choice-header">
+      <span><span class="icon-mono">🦙</span> Ollama (Lokal / Self-Hosted)</span>
+      <span class="backend-choice-badge">Lokal</span>
+    </div>
+    <p class="backend-choice-desc">
+      Volle Datenkontrolle auf eigener Hardware oder einem eigenen Ollama-Server. Modelle werden lokal geladen und verwaltet.
+    </p>
+  </label>
+
+  <label class="backend-choice-card{% if selected_backend == 'google_ai' %} is-selected{% endif %}" for="{{ id_prefix }}-google_ai">
+    <input type="radio"
+           id="{{ id_prefix }}-google_ai"
+           name="{{ field_name }}"
+           value="google_ai"
+           {% if selected_backend == 'google_ai' %}checked{% endif %}>
+    <div class="backend-choice-header">
+      <span><span class="icon-mono">✨</span> Google AI Cloud (Gemini API)</span>
+      <span class="backend-choice-badge">Cloud</span>
+    </div>
+    <p class="backend-choice-desc">
+      Sofort startklar ohne eigene GPU über einen API-Key aus Google AI Studio. Unterstützt Text, Vision und optional Bildgenerierung.
+    </p>
+  </label>
+</div>
+{% endmacro %}
+
+{% macro image_gen_options(selected_value, allow_google=true, id_prefix="img_gen") %}
+<div class="service-option-grid" data-service-radio-group="image_gen_backend">
+  {% if allow_google %}
+    <label class="service-option-pill{% if selected_value == 'google_ai' %} is-selected{% endif %}"
+           for="{{ id_prefix }}-google_ai"
+           data-google-only="1">
+      <input type="radio"
+             id="{{ id_prefix }}-google_ai"
+             name="image_gen_backend"
+             value="google_ai"
+             {% if selected_value == 'google_ai' %}checked{% endif %}>
+      <span class="service-option-title"><span>🎨</span> Google AI Image</span>
+      <span class="service-option-sub">Szenenbilder direkt über Gemini API &amp; deinen API-Key.</span>
+    </label>
+  {% endif %}
+
+  <label class="service-option-pill{% if selected_value == 'comfyui' %} is-selected{% endif %}" for="{{ id_prefix }}-comfyui">
+    <input type="radio"
+           id="{{ id_prefix }}-comfyui"
+           name="image_gen_backend"
+           value="comfyui"
+           {% if selected_value == 'comfyui' %}checked{% endif %}>
+    <span class="service-option-title"><span>🖼️</span> ComfyUI (Lokal)</span>
+    <span class="service-option-sub">Eigener ComfyUI-Server für lokale Diffusions-Workflows.</span>
+  </label>
+
+  <label class="service-option-pill{% if selected_value == 'disabled' %} is-selected{% endif %}" for="{{ id_prefix }}-disabled">
+    <input type="radio"
+           id="{{ id_prefix }}-disabled"
+           name="image_gen_backend"
+           value="disabled"
+           {% if selected_value == 'disabled' %}checked{% endif %}>
+    <span class="service-option-title"><span>🚫</span> Deaktiviert</span>
+    <span class="service-option-sub">Keine Bildgenerierung im Chat anzeigen.</span>
+  </label>
+</div>
+{% endmacro %}
+
+{% macro search_options(selected_value, allow_google=true, id_prefix="search") %}
+<div class="service-option-grid" data-service-radio-group="search_backend">
+  {% if allow_google %}
+    <label class="service-option-pill{% if selected_value == 'google_ai' %} is-selected{% endif %}"
+           for="{{ id_prefix }}-google_ai"
+           data-google-only="1">
+      <input type="radio"
+             id="{{ id_prefix }}-google_ai"
+             name="search_backend"
+             value="google_ai"
+             {% if selected_value == 'google_ai' %}checked{% endif %}>
+      <span class="service-option-title"><span>🔍</span> Google Search</span>
+      <span class="service-option-sub">Google Search Grounding über Google AI (vorbereitet).</span>
+    </label>
+  {% endif %}
+
+  <label class="service-option-pill{% if selected_value == 'searxng' %} is-selected{% endif %}" for="{{ id_prefix }}-searxng">
+    <input type="radio"
+           id="{{ id_prefix }}-searxng"
+           name="search_backend"
+           value="searxng"
+           {% if selected_value == 'searxng' %}checked{% endif %}>
+    <span class="service-option-title"><span>🌐</span> SearXNG (Lokal)</span>
+    <span class="service-option-sub">Eigene SearXNG-Instanz per URL anbinden (vorbereitet).</span>
+  </label>
+
+  <label class="service-option-pill{% if selected_value == 'disabled' %} is-selected{% endif %}" for="{{ id_prefix }}-disabled">
+    <input type="radio"
+           id="{{ id_prefix }}-disabled"
+           name="search_backend"
+           value="disabled"
+           {% if selected_value == 'disabled' %}checked{% endif %}>
+    <span class="service-option-title"><span>🚫</span> Deaktiviert</span>
+    <span class="service-option-sub">Keine externe Websuche konfigurieren.</span>
+  </label>
+</div>
+{% endmacro %}
+
+{% macro api_key_field(id, name="google_ai_api_key", has_existing=false, masked_hint="", required=false, placeholder="AIza...") %}
+<div class="api-key-input-wrap">
+  <input type="password"
+         id="{{ id }}"
+         name="{{ name }}"
+         autocomplete="off"
+         spellcheck="false"
+         placeholder="{{ placeholder }}"
+         {% if required %}required{% endif %}>
+  {{ action_button("Anzeigen", icon="👁️", layout="icon", title="API-Key ein-/ausblenden", onclick="window.toggleSecretVisibility('" ~ id ~ "', this)") }}
+</div>
+{% if has_existing %}
+  <div class="backend-status-line is-ok">
+    ✓ API-Key hinterlegt ({{ masked_hint }}) — leer lassen, um den gespeicherten Key beizubehalten.
+  </div>
+{% endif %}
+{% endmacro %}
+
+{% macro google_ai_steps_guide() %}
+<div class="setup-helper-box">
+  <div style="color: var(--gold-accent); font-size: 0.9rem; font-weight: 700;">
+    🔑 So erstellst du deinen Google AI API-Key
+  </div>
+  <ol style="margin-left: 1.25rem; font-size: 0.81rem; color: var(--text-muted); line-height: 1.55; display: flex; flex-direction: column; gap: 0.25rem;">
+    <li>Öffne <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio (aistudio.google.com/apikey)</a> und melde dich mit deinem Google-Konto an.</li>
+    <li>Klicke auf <strong>„API-Schlüssel erstellen“</strong> (<em>Create API key</em>) und wähle ein Cloud-Projekt (oder erstelle ein neues).</li>
+    <li>Kopiere den Schlüssel und füge ihn unten in das API-Key-Feld ein.</li>
+  </ol>
+</div>
+{% endmacro %}

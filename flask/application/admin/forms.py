@@ -26,10 +26,15 @@ class AdminUserForm:
 
 @dataclass
 class AdminServicesForm:
+    llm_backend: str = "ollama"
     ollama_url: str = ""
+    google_ai_api_key: str = ""
+    clear_google_ai_api_key: bool = False
+    image_gen_backend: str = "comfyui"
     comfyui_url: str = ""
+    google_ai_image_model: str = ""
+    search_backend: str = "disabled"
     searxng_url: str = ""
-    searxng_enabled: bool = False
     roleplay_model: str = ""
     memory_model: str = ""
     assistant_model: str = ""
@@ -43,11 +48,20 @@ class AdminServicesForm:
     @classmethod
     def from_request(cls, form_data: Any) -> "AdminServicesForm":
         p = RequestDataParser
+        raw_search = p.to_str(form_data, "search_backend")
+        if not raw_search:
+            raw_search = "searxng" if p.to_bool(form_data, "searxng_enabled") else "disabled"
+        raw_img = p.to_str(form_data, "image_gen_backend") or "comfyui"
         return cls(
+            llm_backend=p.to_str(form_data, "llm_backend", "ollama").lower(),
             ollama_url=p.to_str(form_data, "ollama_url"),
+            google_ai_api_key=p.to_str(form_data, "google_ai_api_key"),
+            clear_google_ai_api_key=p.to_bool(form_data, "clear_google_ai_api_key"),
+            image_gen_backend=raw_img.lower(),
             comfyui_url=p.to_str(form_data, "comfyui_url"),
+            google_ai_image_model=p.to_str(form_data, "google_ai_image_model"),
+            search_backend=raw_search.lower(),
             searxng_url=p.to_str(form_data, "searxng_url"),
-            searxng_enabled=p.to_bool(form_data, "searxng_enabled"),
             roleplay_model=p.to_str(form_data, "roleplay_model"),
             memory_model=p.to_str(form_data, "memory_model"),
             assistant_model=p.to_str(form_data, "assistant_model"),
