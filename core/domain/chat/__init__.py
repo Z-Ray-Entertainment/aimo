@@ -5,8 +5,9 @@ from domain.chat.exceptions import (
     MessageNotFoundError,
     PersonaLockedError,
 )
+from domain.chat.focus_analyzer import PythonFocusAnalyzer, SceneFocus
 from domain.chat.models import ChatSession, Message, MessageRole
-from domain.chat.prompt_builder import PromptBuilder
+from domain.chat.prompt_builder import PromptBudgetReport, PromptBuilder
 from domain.chat.services import ChatService
 
 __all__ = [
@@ -19,5 +20,8 @@ __all__ = [
     "MessageNotFoundError",
     "MessageRole",
     "PersonaLockedError",
+    "PromptBudgetReport",
     "PromptBuilder",
+    "PythonFocusAnalyzer",
+    "SceneFocus",
 ]

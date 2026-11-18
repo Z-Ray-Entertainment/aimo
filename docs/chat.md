@@ -111,10 +111,14 @@ Because modern LLMs write with the greatest depth and nuance in English while th
 - **Affection Dynamics:** Each message sent by the player increases the score by `+0.1`. Extended inactivity gently decays the score by `-0.1` per day.
 - **Unlockable Artwork:** Once the relationship reaches the required relationship tier set on a 9:16 character image, it automatically unlocks in the *"Media"* tab.
 - **Memories (Every 10 Messages):** Every 10 messages, a background LLM summarizes recent events and refreshes the chat session title in the sidebar.
+- **Situational Context & Character Consistency:**
+  - **Canon Origin & Organic Development:** Characters strictly preserve their pre-chat backstory, origins, and personal history while allowing their feelings, trust, and boundaries to evolve naturally through shared experiences in the conversation.
+  - **Automatic Scene Focus:** The chat automatically adapts its attention depending on what you are talking about—focusing on personal biography and emotional depth during intimate conversations, on surroundings and atmosphere during exploration, or on world lore when discussing factions and history.
 - **Three-Dot Menu (`...`):**
   - **Delete Message:** Deletes the selected message along with all subsequent messages and cascaded memories.
   - **Fork Chat:** Clones the conversation from this exact point forward into a branching timeline.
   - **Read Aloud:** Synthesizes and plays back the message via Voice AI.
+  - **Inspect Prompt (Administrators):** Displays the full context sent to the AI for that turn, including a summary of the detected scene focus and context utilization.
 
 ---
 

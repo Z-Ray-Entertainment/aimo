@@ -62,3 +62,6 @@ class LLMProvider(ABC):
     @abstractmethod
     def check_health(self) -> bool:
         raise NotImplementedError
+
+    def get_model_context_length(self, model: str) -> int | None:
+        return None

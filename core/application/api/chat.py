@@ -11,6 +11,7 @@ from flask import Blueprint, Response, jsonify, request, stream_with_context
 from application.api.auth import get_current_user, has_perm, require_permission
 from domain.characters.models import Emotion
 from domain.characters.services import CharacterService
+from domain.chat.focus_analyzer import PythonFocusAnalyzer, SceneFocus
 from domain.chat.models import ChatSession, Message, MessageRole
 from domain.chat.prompt_builder import PromptBuilder
 from domain.chat.services import ChatService
@@ -376,8 +377,12 @@ def _start_background_turn(
                 w_character.description = w_trans_repo.get_localized_field(
                     "character", w_character.id, "description", "en", w_character.description
                 )
+                if getattr(w_character, "appearance", None):
+                    w_character.appearance = w_trans_repo.get_localized_field(
+                        "character", w_character.id, "appearance", "en", w_character.appearance
+                    )
                 raw_default_examples = (
-                    "\n".join([
+                    "\n\n".join([
                         f"<START>\n{ex['trigger']}\n{ex['response']}" if isinstance(ex, dict) else str(ex)
                         for ex in w_character.dialogue_examples
                     ])
@@ -392,11 +397,18 @@ def _start_background_turn(
                     raw_default_examples,
                 )
                 if isinstance(localized_dialogue, str):
-                    w_character.dialogue_examples = [
-                        line.strip()
-                        for line in localized_dialogue.splitlines()
-                        if line.strip()
-                    ]
+                    if "<START>" in localized_dialogue:
+                        w_character.dialogue_examples = [
+                            f"<START>\n{blk.strip()}"
+                            for blk in localized_dialogue.split("<START>")
+                            if blk.strip()
+                        ]
+                    else:
+                        w_character.dialogue_examples = [
+                            line.strip()
+                            for line in localized_dialogue.splitlines()
+                            if line.strip()
+                        ]
                 elif isinstance(localized_dialogue, list):
                     w_character.dialogue_examples = [
                         str(x).strip() for x in localized_dialogue if str(x).strip()
@@ -448,12 +460,27 @@ def _start_background_turn(
 
             recent_messages = w_chat_repo.get_messages(session_id, limit=10)
             combined_context_text = " ".join(
-                m.english_content for m in recent_messages[-3:]
+                m.english_content for m in recent_messages[-2:]
             )
             active_tags = _extract_active_tags(combined_context_text)
+            latest_user_text = recent_messages[-1].english_content if recent_messages else ""
+            latest_user_tags = _extract_active_tags(latest_user_text)
+
+            focus_analyzer = PythonFocusAnalyzer()
+            scene_focus = focus_analyzer.analyze(
+                recent_messages=recent_messages,
+                active_tags=active_tags,
+                has_triggered_event=(triggered_event is not None),
+            )
+            focus_keywords = focus_analyzer.get_focus_keywords(scene_focus)
 
             all_memories = w_mem_repo.list_for_session(session_id)
-            matched_memories = w_mem_service.search_memories_by_tags(all_memories, active_tags)
+            matched_memories = w_mem_service.search_memories_by_tags(
+                all_memories,
+                active_tags,
+                latest_tags=latest_user_tags,
+                focus_keywords=focus_keywords,
+            )
 
             effective_lb_ids = w_chat_service.get_effective_lorebook_ids(
                 session=w_session,
@@ -461,13 +488,29 @@ def _start_background_turn(
                 worldinfo_lorebook_id=w_worldinfo.lorebook_id if w_worldinfo else None,
                 character_world_conditions=getattr(w_character, "lorebook_world_conditions", {}) or {},
             )
+            preferred_lb_ids: set[int] | None = None
+            if scene_focus == SceneFocus.INTIMACY_BIO and w_character.linked_lorebook_ids:
+                preferred_lb_ids = set(w_character.linked_lorebook_ids)
+            elif scene_focus == SceneFocus.WORLD_EXPLORATION and w_worldinfo and w_worldinfo.lorebook_id:
+                preferred_lb_ids = {w_worldinfo.lorebook_id}
+
             all_lorebook_entries = w_lb_repo.list_entries_for_lorebooks(effective_lb_ids)
-            matched_lorebooks = w_lb_service.search_entries_by_tags(all_lorebook_entries, active_tags)
+            matched_lorebooks = w_lb_service.search_entries_by_tags(
+                all_lorebook_entries,
+                active_tags,
+                latest_tags=latest_user_tags,
+                focus_keywords=focus_keywords,
+                preferred_lorebook_ids=preferred_lb_ids,
+            )
             for lb_entry in matched_lorebooks:
                 if lb_entry.id is not None:
                     lb_entry.content = w_trans_repo.get_localized_field(
                         "lorebook_entry", lb_entry.id, "content", "en", lb_entry.content
                     )
+
+            effective_num_ctx = settings.params.num_ctx
+            if effective_num_ctx <= 0:
+                effective_num_ctx = llm.get_model_context_length(settings.tasks.roleplay_model) or 4096
 
             relation_trans = w_rel_repo.get_translations_map(task.user_language)
             assembled_prompt = w_prompt_builder.build_roleplay_prompt(
@@ -483,9 +526,18 @@ def _start_background_turn(
                 available_locations=available_locations,
                 relationship_value=w_session.relationship_value,
                 relation_translations=relation_trans,
+                scene_focus=scene_focus,
+                effective_num_ctx=effective_num_ctx,
+                thinking_enabled=bool(w_session.thinking_enabled),
+                active_tags=active_tags,
             )
             if task.is_admin:
-                task.assembled_prompt = assembled_prompt
+                if w_prompt_builder.last_budget_report is not None:
+                    task.assembled_prompt = (
+                        f"{w_prompt_builder.last_budget_report.format_header()}\n\n{assembled_prompt}"
+                    )
+                else:
+                    task.assembled_prompt = assembled_prompt
 
             with task.condition:
                 task.status = "streaming"

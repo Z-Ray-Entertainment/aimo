@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from domain.lorebooks.exceptions import InvalidLorebookDataError
 from domain.lorebooks.models import Lorebook, LorebookEntry
 from domain.validation import DomainValidator
-from shared.utils import parse_tags, tags_overlap
+from shared.utils import count_tags_overlap, parse_tags, tags_overlap
 
 
 class LorebookService:
@@ -125,12 +125,31 @@ class LorebookService:
         self,
         entries: list[LorebookEntry],
         active_tags: list[str],
+        latest_tags: list[str] | None = None,
+        focus_keywords: frozenset[str] | set[str] | list[str] | None = None,
+        preferred_lorebook_ids: set[int] | list[int] | None = None,
+        max_results: int | None = None,
     ) -> list[LorebookEntry]:
         normalized_active = parse_tags(active_tags)
         if not normalized_active:
             return []
-        return [
-            entry
-            for entry in entries
-            if tags_overlap(entry.tags, normalized_active)
-        ]
+        normalized_latest = parse_tags(latest_tags) if latest_tags else []
+        focus_list = list(focus_keywords) if focus_keywords else []
+        pref_set = set(preferred_lorebook_ids) if preferred_lorebook_ids else set()
+
+        scored: list[tuple[float, int, LorebookEntry]] = []
+        for idx, entry in enumerate(entries):
+            overlap = count_tags_overlap(entry.tags, normalized_active)
+            if overlap <= 0:
+                continue
+            freshness = count_tags_overlap(entry.tags, normalized_latest) * 20.0 if normalized_latest else 0.0
+            focus_hit = count_tags_overlap(entry.tags, focus_list) * 8.0 if focus_list else 0.0
+            source_bonus = 20.0 if pref_set and entry.lorebook_id in pref_set else 0.0
+            score = (overlap * 10.0) + freshness + focus_hit + source_bonus
+            scored.append((score, -idx, entry))
+
+        scored.sort(key=lambda item: (item[0], item[1]), reverse=True)
+        matched = [item[2] for item in scored]
+        if max_results is not None and max_results > 0:
+            return matched[:max_results]
+        return matched

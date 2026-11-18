@@ -6,7 +6,7 @@ from typing import Any, Protocol
 from domain.memories.exceptions import InvalidMemoryDataError
 from domain.memories.models import Memory
 from domain.settings.models import ModelParameters
-from shared.utils import parse_tags, tags_overlap
+from shared.utils import count_tags_overlap, parse_tags, tags_overlap
 
 
 class MemoryLLMProvider(Protocol):
@@ -243,15 +243,32 @@ class MemoryService:
         self,
         memories: list[Memory],
         active_tags: list[str],
+        latest_tags: list[str] | None = None,
+        focus_keywords: frozenset[str] | set[str] | list[str] | None = None,
+        max_results: int | None = None,
     ) -> list[Memory]:
         normalized_active = parse_tags(active_tags)
         if not normalized_active:
             return []
-        return [
-            mem
-            for mem in memories
-            if tags_overlap(mem.tags, normalized_active)
-        ]
+        normalized_latest = parse_tags(latest_tags) if latest_tags else []
+        focus_list = list(focus_keywords) if focus_keywords else []
+
+        scored: list[tuple[float, int, Memory]] = []
+        for idx, mem in enumerate(memories):
+            overlap = count_tags_overlap(mem.tags, normalized_active)
+            if overlap <= 0:
+                continue
+            freshness = count_tags_overlap(mem.tags, normalized_latest) * 20.0 if normalized_latest else 0.0
+            focus_hit = count_tags_overlap(mem.tags, focus_list) * 8.0 if focus_list else 0.0
+            recency = float(getattr(mem, "message_idx", 0) or 0) * 0.05
+            score = (overlap * 10.0) + freshness + focus_hit + recency
+            scored.append((score, idx, mem))
+
+        scored.sort(key=lambda item: (item[0], item[1]), reverse=True)
+        matched = [item[2] for item in scored]
+        if max_results is not None and max_results > 0:
+            return matched[:max_results]
+        return matched
 
     def cascade_delete_memories(
         self,

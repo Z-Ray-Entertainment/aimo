@@ -3,7 +3,11 @@ from pathlib import Path
 from typing import Protocol
 
 from domain.personas.exceptions import InvalidPersonaDataError, PersonaInUseError
-from domain.personas.models import Gender, UserPersona
+from domain.personas.models import (
+    MAX_PERSONA_DESCRIPTION_LENGTH,
+    Gender,
+    UserPersona,
+)
 from domain.validation import DomainValidator
 
 
@@ -33,6 +37,10 @@ class PersonaService:
 
         cleaned_portrait = DomainValidator.validate_required_string(portrait_path, "Persona portrait_path", InvalidPersonaDataError)
         cleaned_desc = description.strip() if isinstance(description, str) else ""
+        if len(cleaned_desc) > MAX_PERSONA_DESCRIPTION_LENGTH:
+            raise InvalidPersonaDataError(
+                f"Persona description must not exceed {MAX_PERSONA_DESCRIPTION_LENGTH} characters."
+            )
         cleaned_appearance = appearance.strip() if isinstance(appearance, str) else ""
 
         return UserPersona(
@@ -69,10 +77,15 @@ class PersonaService:
         if not cleaned_portrait:
             raise InvalidPersonaDataError("Persona portrait_path must not be empty.")
 
+        cleaned_desc = description.strip() if isinstance(description, str) else ""
+        if len(cleaned_desc) > MAX_PERSONA_DESCRIPTION_LENGTH:
+            raise InvalidPersonaDataError(
+                f"Persona description must not exceed {MAX_PERSONA_DESCRIPTION_LENGTH} characters."
+            )
         persona.name = cleaned_name
         persona.gender = resolved_gender
         persona.portrait_path = cleaned_portrait
-        persona.description = description.strip() if isinstance(description, str) else ""
+        persona.description = cleaned_desc
         persona.appearance = appearance.strip() if isinstance(appearance, str) else ""
         return persona
 
