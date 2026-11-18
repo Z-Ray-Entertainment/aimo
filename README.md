@@ -8,7 +8,7 @@
 >
 > THIS IS STILL WIP, WHILE IT WORKS IT IS STILL ALPHA
 
-`aimo` is a modular, local-first roleplaying platform for interactive AI storytelling and text adventures. The system bridges state-of-the-art local language and vision models (Ollama) and generative image pipelines (ComfyUI) with an atmospheric tabletop RPG interface.
+`aimo` is a modular roleplaying platform for interactive AI storytelling and text adventures. The system bridges either local language and vision models (Ollama) or cloud models (Google AI Studio / Gemini API) alongside generative image pipelines (ComfyUI or Google AI Image) with an atmospheric tabletop RPG interface.
 
 ---
 
@@ -25,7 +25,7 @@
 - **🧭 Text Adventure Mechanics & Dynamic Worlds:**
   - Interactive location transitions with an animated 60-second countdown.
   - Unified event pool (world and location events) with a cooldown counter cycle (10–100 messages).
-  - Multimodal features: Image uploads with automatic Vision ALT-text generation and ComfyUI image generation via Magic Wand ✨.
+  - Multimodal features: Image uploads with automatic Vision ALT-text generation and scene image generation via Magic Wand ✨ (ComfyUI or Google AI Image).
 - **🎨 Modern RPG Theme:**
   - Semi-transparent background with atmospheric cover image.
   - Warm light brown wood frames with rounded corners for all input fields and tiles.
@@ -33,7 +33,7 @@
 - **🔒 Local-First & Headless Core:**
   - Full persistence in a local SQLite database with WAL mode (no external database required).
   - Exposure of a consistent REST API (`/api/...`) — Web UI and alternative frontends (e.g., a native GTK4/Libadwaita Flathub app) share the exact same core services.
-  - Modular provider interfaces for LLM (Ollama), image generation (ComfyUI), and voice TTS.
+  - Modular provider interfaces for LLM (Ollama or Google AI Cloud), image generation (ComfyUI or Google AI Image), search (stubbed), and voice TTS.
 
 ---
 
@@ -91,14 +91,14 @@ python flask/wsgi.py
 
 Comprehensive guides for all aspects of the application are located in [`docs/`](docs/README.md):
 
-- [**Initial Setup & First-Boot Wizard**](docs/first_boot.md): Super-user creation and Ollama configuration.
+- [**Initial Setup & First-Boot Wizard**](docs/first_boot.md): Super-user creation and exclusive Ollama or Google AI backend setup.
 - [**The Hub Dashboard**](docs/hub.md): 3-tab navigation (Characters 👤, Lorebooks 📜, WorldInfo 🌐) and filtering.
 - [**Player Personas**](docs/personas.md): Roleplay identities & automated vision appearance extraction.
 - [**AI Characters & Designer**](docs/characters.md): Creation, sprites, variants, and 9:16 galleries.
 - [**Lorebooks & Encyclopedias**](docs/lorebooks.md): Thematic knowledge & vectorless tag-based RAG.
 - [**Worlds, Places & Events (WorldInfo)**](docs/worldinfo.md): 16:9 backgrounds and random event mechanics.
 - [**Chat & Roleplay Interface**](docs/chat.md): Streaming, translation, text adventure location changes & ComfyUI.
-- [**Administration & Model Management**](docs/admin.md): Permission presets, Ollama pull/delete, and system prompts.
+- [**Administration & Model Management**](docs/admin.md): Permission presets, Ollama / Google AI backend switching, and system prompts.
 
 ---
 

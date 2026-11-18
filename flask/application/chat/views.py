@@ -416,10 +416,8 @@ def view_session(session_id: int):
     ]
 
     settings = SettingsRepository().get_settings()
-    comfyui_available = (
-        bool(settings.comfyui_url and settings.comfyui_url.strip())
-        and get_image_gen_provider(settings).check_health()
-    )
+    img_gen = get_image_gen_provider(settings)
+    image_gen_available = type(img_gen).is_enabled() and img_gen.check_health()
     persona_trans = (
         trans_repo.get_entity_translations_map("persona", persona.id)
         if persona and persona.id
@@ -464,7 +462,8 @@ def view_session(session_id: int):
         sys_lang=sys_lang,
         relationship_tier_name=rel_tier.name,
         gallery_threshold_names=gallery_threshold_names,
-        comfyui_available=comfyui_available,
+        image_gen_available=image_gen_available,
+        comfyui_available=image_gen_available,
         is_admin=is_admin,
         can_view_event_counter=can_view_event_counter,
     )

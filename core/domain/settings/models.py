@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 
 from domain.settings.exceptions import (
     InvalidModelParametersError,
     InvalidSystemPromptError,
 )
-from shared.config import Config
 
 DEFAULT_ROLEPLAY_PROMPT: str = (
     "Write {{char}}'s next reply in a fictional chat between {{char}} and {{user}}. "
@@ -106,54 +107,13 @@ class ModelParameters:
         self.repeat_penalty = float(self.repeat_penalty)
 
 
-RECOMMENDED_ROLEPLAY_MODEL: str = (
-    "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest"
-)
-RECOMMENDED_MEMORY_MODEL: str = (
-    "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest"
-)
-RECOMMENDED_ASSISTANT_MODEL: str = "gemma4:e4b"
-RECOMMENDED_VISION_MODEL: str = "gemma4:e4b"
-RECOMMENDED_CLASSIFICATION_MODEL: str = "llama3.2:1b"
-
-RECOMMENDED_DEFAULT_MODEL: str = RECOMMENDED_ROLEPLAY_MODEL
-
-RECOMMENDED_MODELS: dict[str, dict[str, str]] = {
-    "roleplay": {
-        "role_name": "Roleplay",
-        "model": RECOMMENDED_ROLEPLAY_MODEL,
-        "description": "Narrative Dialog-Generierung und Rollenspiel im Chat.",
-    },
-    "memory": {
-        "role_name": "Memory",
-        "model": RECOMMENDED_MEMORY_MODEL,
-        "description": "Erstellt alle 10 Nachrichten episodische Zusammenfassungen und aktualisiert den Chat-Titel.",
-    },
-    "assistant": {
-        "role_name": "Assistant",
-        "model": RECOMMENDED_ASSISTANT_MODEL,
-        "description": "Zuständig für Sparkle-Optimierung (✨), Übersetzungen und Diffuser-Prompts.",
-    },
-    "vision": {
-        "role_name": "Vision",
-        "model": RECOMMENDED_VISION_MODEL,
-        "description": "Optische Analyse von Porträts, Schauplatz-Hintergründen und Chat-Bildern.",
-    },
-    "classification": {
-        "role_name": "Classification",
-        "model": RECOMMENDED_CLASSIFICATION_MODEL,
-        "description": "Schnelle Erkennung von Emotionen (Avatar-Sprites) und Ortswechsel-Vorschlägen.",
-    },
-}
-
-
 @dataclass
 class TaskAssignment:
-    roleplay_model: str = RECOMMENDED_ROLEPLAY_MODEL
-    memory_model: str = RECOMMENDED_MEMORY_MODEL
-    assistant_model: str = RECOMMENDED_ASSISTANT_MODEL
-    classification_model: str = RECOMMENDED_CLASSIFICATION_MODEL
-    vision_model: str = RECOMMENDED_VISION_MODEL
+    roleplay_model: str = ""
+    memory_model: str = ""
+    assistant_model: str = ""
+    classification_model: str = ""
+    vision_model: str = ""
 
 
 @dataclass
@@ -187,10 +147,12 @@ class SystemPrompts:
 @dataclass
 class ServiceSettings:
     id: int = 1
-    ollama_url: str = Config.DEFAULT_OLLAMA_URL
-    comfyui_url: str = Config.DEFAULT_COMFYUI_URL
-    searxng_url: str = Config.DEFAULT_SEARXNG_URL
-    searxng_enabled: bool = False
+    llm_backend: str = ""
+    image_gen_backend: str = ""
+    search_backend: str = ""
+    llm_configs: dict[str, dict[str, str]] = field(default_factory=dict)
+    image_gen_configs: dict[str, dict[str, str]] = field(default_factory=dict)
+    search_configs: dict[str, dict[str, str]] = field(default_factory=dict)
     tasks: TaskAssignment = field(default_factory=TaskAssignment)
     params: ModelParameters = field(default_factory=ModelParameters)
     prompts: SystemPrompts = field(default_factory=SystemPrompts)
@@ -199,3 +161,30 @@ class ServiceSettings:
     @property
     def parameters(self) -> ModelParameters:
         return self.params
+
+    def get_llm_config(self, backend: str | None = None) -> dict[str, str]:
+        key = (backend or self.llm_backend).strip().lower()
+        return dict(self.llm_configs.get(key, {}))
+
+    def set_llm_config(self, backend: str, values: dict[str, str]) -> None:
+        key = backend.strip().lower()
+        if key:
+            self.llm_configs[key] = {str(k): str(v) for k, v in values.items()}
+
+    def get_image_gen_config(self, backend: str | None = None) -> dict[str, str]:
+        key = (backend or self.image_gen_backend).strip().lower()
+        return dict(self.image_gen_configs.get(key, {}))
+
+    def set_image_gen_config(self, backend: str, values: dict[str, str]) -> None:
+        key = backend.strip().lower()
+        if key:
+            self.image_gen_configs[key] = {str(k): str(v) for k, v in values.items()}
+
+    def get_search_config(self, backend: str | None = None) -> dict[str, str]:
+        key = (backend or self.search_backend).strip().lower()
+        return dict(self.search_configs.get(key, {}))
+
+    def set_search_config(self, backend: str, values: dict[str, str]) -> None:
+        key = backend.strip().lower()
+        if key:
+            self.search_configs[key] = {str(k): str(v) for k, v in values.items()}

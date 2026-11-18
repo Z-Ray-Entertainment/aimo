@@ -1,50 +1,36 @@
 from urllib.parse import urlparse
 
 from domain.settings.exceptions import (
+    InvalidServiceCredentialsError,
     InvalidServiceUrlError,
     InvalidTaskModelError,
 )
 from domain.settings.models import (
-    RECOMMENDED_ASSISTANT_MODEL,
-    RECOMMENDED_CLASSIFICATION_MODEL,
-    RECOMMENDED_MEMORY_MODEL,
-    RECOMMENDED_ROLEPLAY_MODEL,
-    RECOMMENDED_VISION_MODEL,
     ModelParameters,
     ServiceSettings,
     SystemPrompts,
     TaskAssignment,
 )
-from shared.config import Config
 
 
 class SettingsService:
-    def get_default_settings(self) -> ServiceSettings:
+    def get_default_settings(
+        self,
+        llm_backend: str = "",
+        image_gen_backend: str = "",
+        search_backend: str = "",
+        tasks: TaskAssignment | None = None,
+    ) -> ServiceSettings:
         return ServiceSettings(
             id=1,
-            ollama_url=Config.DEFAULT_OLLAMA_URL,
-            comfyui_url=Config.DEFAULT_COMFYUI_URL,
-            searxng_url=Config.DEFAULT_SEARXNG_URL,
-            searxng_enabled=False,
-            tasks=TaskAssignment(),
+            llm_backend=llm_backend.strip().lower(),
+            image_gen_backend=image_gen_backend.strip().lower(),
+            search_backend=search_backend.strip().lower(),
+            tasks=tasks or TaskAssignment(),
             params=ModelParameters(),
             prompts=SystemPrompts(),
             default_backdrop_path=None,
         )
-
-    def update_service_urls(
-        self,
-        settings: ServiceSettings,
-        ollama_url: str,
-        comfyui_url: str,
-        searxng_url: str,
-        searxng_enabled: bool = False,
-    ) -> ServiceSettings:
-        settings.ollama_url = self._validate_url("ollama_url", ollama_url)
-        settings.comfyui_url = self._validate_url("comfyui_url", comfyui_url)
-        settings.searxng_url = self._validate_url("searxng_url", searxng_url)
-        settings.searxng_enabled = bool(searxng_enabled)
-        return settings
 
     def update_task_models(
         self,
@@ -55,11 +41,11 @@ class SettingsService:
         vision_model: str,
         classification_model: str | None = None,
     ) -> ServiceSettings:
-        cleaned_roleplay = self._validate_model_name("roleplay_model", roleplay_model)
-        cleaned_memory = self._validate_model_name("memory_model", memory_model)
-        cleaned_assistant = self._validate_model_name("assistant_model", assistant_model)
-        cleaned_vision = self._validate_model_name("vision_model", vision_model)
-        cleaned_classification = self._validate_model_name(
+        cleaned_roleplay = self.validate_model_name("roleplay_model", roleplay_model)
+        cleaned_memory = self.validate_model_name("memory_model", memory_model)
+        cleaned_assistant = self.validate_model_name("assistant_model", assistant_model)
+        cleaned_vision = self.validate_model_name("vision_model", vision_model)
+        cleaned_classification = self.validate_model_name(
             "classification_model",
             classification_model or cleaned_roleplay,
         )
@@ -73,14 +59,19 @@ class SettingsService:
         )
         return settings
 
-    def apply_recommended_task_models(self, settings: ServiceSettings) -> ServiceSettings:
+    def apply_task_model_map(
+        self,
+        settings: ServiceSettings,
+        recommended_by_role: dict[str, str],
+    ) -> ServiceSettings:
+        roleplay = recommended_by_role.get("roleplay", "")
         return self.update_task_models(
             settings=settings,
-            roleplay_model=RECOMMENDED_ROLEPLAY_MODEL,
-            memory_model=RECOMMENDED_MEMORY_MODEL,
-            assistant_model=RECOMMENDED_ASSISTANT_MODEL,
-            vision_model=RECOMMENDED_VISION_MODEL,
-            classification_model=RECOMMENDED_CLASSIFICATION_MODEL,
+            roleplay_model=roleplay,
+            memory_model=recommended_by_role.get("memory", roleplay),
+            assistant_model=recommended_by_role.get("assistant", roleplay),
+            vision_model=recommended_by_role.get("vision", roleplay),
+            classification_model=recommended_by_role.get("classification", roleplay),
         )
 
     def update_parameters(
@@ -147,7 +138,7 @@ class SettingsService:
         return settings
 
     @staticmethod
-    def _validate_url(field_name: str, raw_url: str) -> str:
+    def validate_url(field_name: str, raw_url: str) -> str:
         if not isinstance(raw_url, str) or not raw_url.strip():
             raise InvalidServiceUrlError(f"Service URL '{field_name}' must not be empty.")
         cleaned = raw_url.strip().rstrip("/")
@@ -159,7 +150,20 @@ class SettingsService:
         return cleaned
 
     @staticmethod
-    def _validate_model_name(field_name: str, model_name: str) -> str:
+    def validate_secret(field_name: str, raw_secret: str) -> str:
+        if not isinstance(raw_secret, str) or not raw_secret.strip():
+            raise InvalidServiceCredentialsError(
+                f"Service credential '{field_name}' must not be empty."
+            )
+        cleaned = raw_secret.strip()
+        if any(ch.isspace() for ch in cleaned):
+            raise InvalidServiceCredentialsError(
+                f"Service credential '{field_name}' must not contain whitespace."
+            )
+        return cleaned
+
+    @staticmethod
+    def validate_model_name(field_name: str, model_name: str) -> str:
         if not isinstance(model_name, str) or not model_name.strip():
             raise InvalidTaskModelError(f"Task model '{field_name}' must not be empty.")
         return model_name.strip()

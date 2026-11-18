@@ -43,7 +43,7 @@ Creating and editing happens in an overlay window:
 ## 👁️ Automated Vision Appearance Analysis
 
 Whenever you upload and save a portrait image for your persona:
-1. **AI Scan:** A Vision model (via Ollama) scans the face and visible physical attributes (hair color, eye color, complexion, build).
+1. **AI Scan:** The configured Vision AI model scans the face and visible physical attributes (hair color, eye color, complexion, build).
 2. **Focus Rule:** Backgrounds, rooms, and situational poses are intentionally ignored.
 3. **Automatic Field Population:** The *"Appearance"* field is automatically populated with these physical traits.
 4. **Full Control:** You can manually edit or refine the *"Appearance"* field at any time. The system only triggers a new scan if you replace the portrait image.

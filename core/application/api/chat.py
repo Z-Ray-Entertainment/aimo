@@ -572,24 +572,7 @@ def _start_background_turn(
             except Exception as exc:
                 if task.is_aborted:
                     return
-                raw_err = str(exc)
-                if (
-                    "Failed to stream response from Ollama" in raw_err
-                    or "Connection refused" in raw_err
-                    or "Failed to establish a new connection" in raw_err
-                    or "Max retries exceeded" in raw_err
-                ):
-                    user_friendly_err = (
-                        f"Verbindung zu Ollama ({settings.tasks.roleplay_model}) fehlgeschlagen oder unterbrochen. "
-                        "Bitte stelle sicher, dass der Ollama-Dienst läuft."
-                    )
-                elif "not found" in raw_err.lower():
-                    user_friendly_err = (
-                        f"Ollama-Modell '{settings.tasks.roleplay_model}' wurde nicht gefunden. "
-                        f"Bitte in Ollama laden (ollama run {settings.tasks.roleplay_model})."
-                    )
-                else:
-                    user_friendly_err = f"Ollama-Verbindungsfehler ({settings.tasks.roleplay_model}): {raw_err}"
+                user_friendly_err = llm.format_stream_error(exc, settings.tasks.roleplay_model)
 
                 with task.condition:
                     task.error_message = user_friendly_err
@@ -938,7 +921,7 @@ def post_message(session_id: int):
 
     return Response(
         stream_with_context(_stream_from_task(task)),
-        mimetype="text/event-stream",
+        content_type="text/event-stream; charset=utf-8",
     )
 
 
@@ -972,7 +955,7 @@ def stream_session_response(session_id: int):
 
     return Response(
         stream_with_context(_stream_from_task(task)),
-        mimetype="text/event-stream",
+        content_type="text/event-stream; charset=utf-8",
     )
 
 
@@ -1253,8 +1236,10 @@ def generate_scene_image(session_id: int):
         )
 
     settings = settings_repo.get_settings()
-    llm = get_llm_provider(settings)
     img_gen = get_image_gen_provider(settings)
+    if not type(img_gen).is_enabled():
+        return jsonify({"error": "Bildgenerierung ist deaktiviert."}), 400
+    llm = get_llm_provider(settings)
 
     recent_msgs = chat_repo.get_messages(session_id, limit=4)
     scene_text = "\n".join(f"{m.role.value}: {m.english_content}" for m in recent_msgs)
@@ -1287,12 +1272,12 @@ def generate_scene_image(session_id: int):
                 except Exception:
                     pass
 
-    diffuser_instruction = (
-        f"{settings.prompts.diffuser_prompt}\n\n"
-        f"Character: {character.name} ({getattr(character, 'appearance', '') or character.description})\n"
-        f"Player Persona Appearance: {persona.appearance or persona.description}\n"
-        f"Location: {location_desc}\n"
-        f"Recent Scene:\n{scene_text}"
+    diffuser_instruction = img_gen.build_scene_prompt_instruction(
+        diffuser_prompt=settings.prompts.diffuser_prompt,
+        character_summary=f"{character.name} ({getattr(character, 'appearance', '') or character.description})",
+        persona_summary=persona.appearance or persona.description,
+        location_desc=location_desc,
+        scene_text=scene_text,
     )
 
     try:
@@ -1321,6 +1306,12 @@ def generate_scene_image(session_id: int):
             negative_prompt="lowres, blurry, bad anatomy, text, watermark",
             output_path=output_file,
         )
+        if _ACTIVE_IMAGE_TASKS.get(session_id) != task_id:
+            try:
+                generated_path.unlink(missing_ok=True)
+            except OSError:
+                pass
+            return jsonify({"status": "cancelled", "session_id": session_id})
         rel_path = storage.to_relative_path(generated_path)
         return jsonify(
             {
@@ -1332,7 +1323,8 @@ def generate_scene_image(session_id: int):
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 502
     finally:
-        _ACTIVE_IMAGE_TASKS.pop(session_id, None)
+        if _ACTIVE_IMAGE_TASKS.get(session_id) == task_id:
+            _ACTIVE_IMAGE_TASKS.pop(session_id, None)
 
 
 @api_chat_bp.route("/<int:session_id>/cancel-image", methods=["POST"])

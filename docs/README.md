@@ -9,8 +9,8 @@ This manual is intended for end users, story creators, and administrators, detai
 ## 🧭 Table of Contents
 
 1. [**Initial Setup & First-Boot**](first_boot.md)
-   - First system launch and setup wizard
-   - Administrator account creation and local AI service connections (Ollama, ComfyUI)
+   - Three-step launch wizard (Administrator, Exclusive AI Backend Choice, Backend Setup)
+   - Choice between local Ollama or Google AI Cloud (Gemini API), plus image and search service options
    - Secure authentication post-setup
 
 2. [**The Hub Dashboard**](hub.md)
@@ -52,7 +52,7 @@ This manual is intended for end users, story creators, and administrators, detai
    - Four-tab central interface: Chat, Media, Memories, and Lorebooks
    - In-chat Lorebook manager (Default toggles, conditional locks, custom additions)
    - Interactive location change (text adventure with 60s countdown)
-   - Multimodal features (image upload with ALT text, ComfyUI magic wand ✨)
+   - Multimodal features (image upload with ALT text, AI scene image generation via magic wand ✨)
    - Relationship bar, automatic memories, and chat forks
 
 8. [**User Settings**](settings.md)
@@ -61,7 +61,7 @@ This manual is intended for end users, story creators, and administrators, detai
 
 9. [**Administration & Settings**](admin.md)
    - User creation, management, and permission presets
-   - Ollama local model pull, assignment, and deletion
+   - Exclusive AI backend switching (Ollama or Google AI Cloud), model assignment, and image/search service setup
    - System prompts and fine-tuning inference parameters
 
 ---

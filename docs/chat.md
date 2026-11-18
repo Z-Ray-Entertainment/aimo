@@ -92,8 +92,8 @@ Because modern LLMs write with the greatest depth and nuance in English while th
 
 - **Persistent AI System Notice:** Directly attached to the top of the chat input box, a small persistent notice reminds you that you are conversing with an AI chatbot: *"Dies ist ein KI-Chatbot. Antworten werden automatisiert durch lokale oder externe Sprachmodelle generiert und können unvollständig oder fehlerhaft sein."*
 - **Paperclip Icon (Image Upload):** Attach any image to your message. A Vision model generates a concise ALT description in the background, providing the AI with situational awareness of what you showed it.
-- **Magic Wand with Sparkles ✨ (ComfyUI Image Generation):**
-  - Generates a scene illustration via ComfyUI based on current narrative context.
+- **Magic Wand with Sparkles ✨ (Scene Image Generation):**
+  - Generates a 16:9 scene illustration via the configured image backend (Google AI Image or ComfyUI) based on the current narrative context and character/location reference images.
   - During generation, a centered status indicator displays *"Generating image..."* and user input is locked.
   - A **Cancel Button** allows you to abort generation at any time and immediately unlocks input.
   - The generated image renders directly in chat and archives under the *"Media"* tab.
@@ -126,7 +126,7 @@ Because modern LLMs write with the greatest depth and nuance in English while th
 
 While you chat, floating notification banderoles in the bottom-right corner keep you informed about system status without disrupting your roleplay:
 - **Connection Issues:** If the connection to the application server is lost, a red-striped banderole informs you (*„Verbindung zum Backend verloren“*).
-- **AI Service Issues:** If the AI text model is unreachable or paused, a red-striped banderole alerts you (*„Verbindung zu Ollama verloren“*).
+- **AI Service Issues:** If the active AI text backend is unreachable, misconfigured, or paused, a red-striped banderole alerts you with a specific connection or credential message.
 - **Timeouts:** If a reply takes unusually long, a yellow-striped warning banderole indicates a timeout.
 - **Replies from Other Chats:** When another character finishes generating a response while you are looking at a different chat, a notification banderole slides in with their portrait and a *„Zum Chat →“* button to switch over immediately.
 

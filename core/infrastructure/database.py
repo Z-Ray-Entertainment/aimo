@@ -246,15 +246,21 @@ CREATE INDEX IF NOT EXISTS ix_relationship_tier_trans_lookup
 
 CREATE TABLE IF NOT EXISTS system_settings (
     id INTEGER PRIMARY KEY DEFAULT 1,
-    ollama_url TEXT NOT NULL,
-    comfyui_url TEXT NOT NULL,
-    searxng_url TEXT NOT NULL,
+    llm_backend TEXT NOT NULL DEFAULT 'ollama',
+    ollama_url TEXT NOT NULL DEFAULT '',
+    google_ai_api_key TEXT NOT NULL DEFAULT '',
+    image_gen_backend TEXT NOT NULL DEFAULT 'comfyui',
+    google_ai_image_model TEXT NOT NULL DEFAULT '',
+    comfyui_url TEXT NOT NULL DEFAULT '',
+    search_backend TEXT NOT NULL DEFAULT 'disabled',
+    searxng_url TEXT NOT NULL DEFAULT '',
     searxng_enabled INTEGER NOT NULL DEFAULT 0,
-    roleplay_model TEXT NOT NULL DEFAULT 'igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest',
-    memory_model TEXT NOT NULL DEFAULT 'igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest',
-    assistant_model TEXT NOT NULL DEFAULT 'gemma4:e4b',
-    classification_model TEXT NOT NULL DEFAULT 'llama3.2:1b',
-    vision_model TEXT NOT NULL DEFAULT 'gemma4:e4b',
+    provider_configs_json TEXT NOT NULL DEFAULT '{}',
+    roleplay_model TEXT NOT NULL DEFAULT '',
+    memory_model TEXT NOT NULL DEFAULT '',
+    assistant_model TEXT NOT NULL DEFAULT '',
+    classification_model TEXT NOT NULL DEFAULT '',
+    vision_model TEXT NOT NULL DEFAULT '',
     num_ctx INTEGER NOT NULL DEFAULT 4096,
     temperature REAL NOT NULL DEFAULT 0.7,
     top_p REAL NOT NULL DEFAULT 0.9,
@@ -433,11 +439,25 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE chat_messages ADD COLUMN metadata_json TEXT NOT NULL DEFAULT '{}'",
         "ALTER TABLE chat_sessions ADD COLUMN thinking_enabled INTEGER NOT NULL DEFAULT 0",
         "ALTER TABLE system_settings ADD COLUMN dialogue_author_prompt TEXT",
+        "ALTER TABLE system_settings ADD COLUMN llm_backend TEXT NOT NULL DEFAULT 'ollama'",
+        "ALTER TABLE system_settings ADD COLUMN google_ai_api_key TEXT NOT NULL DEFAULT ''",
+        "ALTER TABLE system_settings ADD COLUMN image_gen_backend TEXT NOT NULL DEFAULT 'comfyui'",
+        "ALTER TABLE system_settings ADD COLUMN google_ai_image_model TEXT NOT NULL DEFAULT ''",
+        "ALTER TABLE system_settings ADD COLUMN search_backend TEXT NOT NULL DEFAULT 'disabled'",
+        "ALTER TABLE system_settings ADD COLUMN provider_configs_json TEXT NOT NULL DEFAULT '{}'",
     ):
         try:
             conn.execute(stmt)
         except sqlite3.OperationalError:
             pass
+
+    try:
+        conn.execute(
+            "UPDATE system_settings SET search_backend = 'searxng' "
+            "WHERE searxng_enabled = 1 AND (search_backend IS NULL OR search_backend = 'disabled')"
+        )
+    except sqlite3.OperationalError:
+        pass
 
     try:
         conn.execute("UPDATE chat_sessions SET initial_location_id = current_location_id WHERE initial_location_id IS NULL AND current_location_id IS NOT NULL")

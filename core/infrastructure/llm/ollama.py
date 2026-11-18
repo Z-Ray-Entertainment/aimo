@@ -3,20 +3,132 @@ import json
 import re
 from collections.abc import Iterator
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 import requests
 
-from domain.settings.models import ModelParameters
-from infrastructure.llm.interface import LLMProvider
+from domain.settings.models import ModelParameters, ServiceSettings
+from domain.settings.services import SettingsService
+from infrastructure.llm.base import BaseLLMProvider
 from shared.config import Config
 from shared.exceptions import InfrastructureError
 
 
-class OllamaLLMProvider(LLMProvider):
+class OllamaLLMProvider(BaseLLMProvider):
+    PROVIDER_ID: ClassVar[str] = "ollama"
+    DISPLAY_NAME: ClassVar[str] = "Ollama (Lokal / Self-Hosted)"
+    BADGE_LABEL: ClassVar[str] = "Lokal"
+    DESCRIPTION: ClassVar[str] = (
+        "Volle Datenkontrolle auf eigener Hardware oder einem eigenen Ollama-Server. "
+        "Modelle werden lokal geladen und verwaltet."
+    )
+    DEFAULT_BASE_URL: ClassVar[str] = Config.DEFAULT_OLLAMA_URL
+
+    RECOMMENDED_ROLEPLAY_MODEL: ClassVar[str] = (
+        "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest"
+    )
+    RECOMMENDED_MEMORY_MODEL: ClassVar[str] = (
+        "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest"
+    )
+    RECOMMENDED_ASSISTANT_MODEL: ClassVar[str] = "gemma4:e4b"
+    RECOMMENDED_VISION_MODEL: ClassVar[str] = "gemma4:e4b"
+    RECOMMENDED_CLASSIFICATION_MODEL: ClassVar[str] = "llama3.2:1b"
+
+    DEFAULT_MODEL_ROLES: ClassVar[dict[str, dict[str, str]]] = {
+        "roleplay": {
+            "role_name": "Roleplay",
+            "model": RECOMMENDED_ROLEPLAY_MODEL,
+            "description": "Narrative Dialog-Generierung und Rollenspiel im Chat.",
+        },
+        "memory": {
+            "role_name": "Memory",
+            "model": RECOMMENDED_MEMORY_MODEL,
+            "description": "Erstellt alle 10 Nachrichten episodische Zusammenfassungen und aktualisiert den Chat-Titel.",
+        },
+        "assistant": {
+            "role_name": "Assistant",
+            "model": RECOMMENDED_ASSISTANT_MODEL,
+            "description": "Zuständig für Sparkle-Optimierung (✨), Übersetzungen und Bild-Prompts.",
+        },
+        "vision": {
+            "role_name": "Vision",
+            "model": RECOMMENDED_VISION_MODEL,
+            "description": "Optische Analyse von Porträts, Schauplatz-Hintergründen und Chat-Bildern.",
+        },
+        "classification": {
+            "role_name": "Classification",
+            "model": RECOMMENDED_CLASSIFICATION_MODEL,
+            "description": "Schnelle Erkennung von Emotionen (Avatar-Sprites) und Ortswechsel-Vorschlägen.",
+        },
+    }
+
+    @classmethod
+    def supports_model_management(cls) -> bool:
+        return True
+
+    @classmethod
+    def is_model_compatible(cls, model_name: str) -> bool:
+        cleaned = (model_name or "").strip().lower()
+        if not cleaned:
+            return False
+        return not cleaned.startswith("gemini-") and not cleaned.startswith("models/gemini-")
+
+    @classmethod
+    def get_default_config(cls) -> dict[str, str]:
+        return {"base_url": cls.DEFAULT_BASE_URL}
+
+    @classmethod
+    def validate_active_config(
+        cls,
+        submitted: dict[str, str],
+        existing: dict[str, str],
+        clear_secret: bool = False,
+    ) -> dict[str, str]:
+        raw_url = (submitted.get("base_url") or "").strip() or (existing.get("base_url") or "").strip()
+        validated = SettingsService.validate_url("ollama_url", raw_url)
+        return {"base_url": validated}
+
+    @classmethod
+    def validate_inactive_config(
+        cls,
+        submitted: dict[str, str],
+        existing: dict[str, str],
+        clear_secret: bool = False,
+    ) -> dict[str, str]:
+        raw_url = (submitted.get("base_url") or "").strip()
+        if raw_url:
+            return {"base_url": SettingsService.validate_url("ollama_url", raw_url)}
+        existing_url = (existing.get("base_url") or "").strip() or cls.DEFAULT_BASE_URL
+        return {"base_url": existing_url}
+
+    @classmethod
+    def from_settings(cls, settings: ServiceSettings) -> "OllamaLLMProvider":
+        cfg = settings.get_llm_config(cls.PROVIDER_ID)
+        base_url = cfg.get("base_url") or cls.DEFAULT_BASE_URL
+        return cls(base_url=base_url)
+
+    def format_stream_error(self, exc: Exception, model: str) -> str:
+        raw_err = str(exc)
+        if (
+            "Failed to stream response from Ollama" in raw_err
+            or "Connection refused" in raw_err
+            or "Failed to establish a new connection" in raw_err
+            or "Max retries exceeded" in raw_err
+        ):
+            return (
+                f"Verbindung zu Ollama ({model}) fehlgeschlagen oder unterbrochen. "
+                "Bitte stelle sicher, dass der Ollama-Dienst läuft."
+            )
+        if "not found" in raw_err.lower():
+            return (
+                f"Ollama-Modell '{model}' wurde nicht gefunden. "
+                f"Bitte in Ollama laden (ollama run {model})."
+            )
+        return f"Ollama-Verbindungsfehler ({model}): {raw_err}"
+
     def __init__(
         self,
-        base_url: str = Config.DEFAULT_OLLAMA_URL,
+        base_url: str = DEFAULT_BASE_URL,
         request_timeout: tuple[float, float] = (10.0, 120.0),
         pull_timeout: tuple[float, float] = (10.0, 600.0),
     ) -> None:
@@ -50,6 +162,7 @@ class OllamaLLMProvider(LLMProvider):
                 stream=True,
                 timeout=self.request_timeout,
             )
+            response.encoding = "utf-8"
             if response.status_code == 400 and think is not None and "think" in response.text.lower():
                 payload.pop("think", None)
                 response = requests.post(
@@ -58,16 +171,19 @@ class OllamaLLMProvider(LLMProvider):
                     stream=True,
                     timeout=self.request_timeout,
                 )
+                response.encoding = "utf-8"
             with response:
+                response.encoding = "utf-8"
                 self._ensure_ok(response, "Ollama streaming generation")
-                for raw_line in response.iter_lines(decode_unicode=True):
+                for raw_line in response.iter_lines(decode_unicode=False):
                     if not raw_line:
                         continue
+                    line_str = self._decode_utf8_line(raw_line)
                     try:
-                        chunk = json.loads(raw_line)
+                        chunk = json.loads(line_str)
                     except json.JSONDecodeError as exc:
                         raise InfrastructureError(
-                            f"Invalid JSON chunk received from Ollama stream: {raw_line}"
+                            f"Invalid JSON chunk received from Ollama stream: {line_str}"
                         ) from exc
                     if "error" in chunk:
                         raise InfrastructureError(
@@ -128,105 +244,6 @@ class OllamaLLMProvider(LLMProvider):
         if "error" in data:
             raise InfrastructureError(f"Ollama generation error: {data['error']}")
         return str(data.get("response", "")).strip()
-
-    def classify(self, text: str, candidates: list[str], model: str) -> str:
-        cleaned_candidates = [c.strip() for c in candidates if c.strip()]
-        if not cleaned_candidates:
-            raise InfrastructureError(
-                "Classification requires at least one non-empty candidate label."
-            )
-
-        candidates_str = ", ".join(cleaned_candidates)
-        prompt = (
-            "Classify the following narrative passage by choosing strictly one label "
-            f"from the valid candidates: [{candidates_str}].\n"
-            "Respond with ONLY the exact candidate label and nothing else.\n\n"
-            f"Passage:\n{text}\n\n"
-            "Selected label:"
-        )
-        classification_params = ModelParameters(
-            num_ctx=2048,
-            temperature=0.0,
-            top_p=0.9,
-            repeat_penalty=1.0,
-        )
-        raw_output = self.generate(
-            prompt=prompt, model=model, params=classification_params, think=False
-        )
-        return self._match_candidate(raw_output, cleaned_candidates)
-
-    def classify_turn(
-        self,
-        text: str,
-        emotion_candidates: list[str] | None,
-        location_candidates: list[str] | None,
-        model: str,
-    ) -> tuple[str, str | None]:
-        clean_emotions = [e.strip() for e in (emotion_candidates or []) if e.strip()]
-        clean_locs = [l.strip() for l in (location_candidates or []) if l.strip()]
-
-        if not clean_emotions and not clean_locs:
-            return "neutral", None
-
-        if clean_emotions and not clean_locs:
-            detected_emotion = self.classify(text=text, candidates=clean_emotions, model=model)
-            return detected_emotion, None
-
-        if clean_locs and not clean_emotions:
-            raw_loc = self.classify(text=text, candidates=clean_locs, model=model)
-            loc_matched = self._match_candidate(raw_loc, clean_locs)
-            matched_loc = None if loc_matched.lower() == "stay_here" else loc_matched
-            return "neutral", matched_loc
-
-        emotions_str = ", ".join(clean_emotions)
-        locs_str = ", ".join(clean_locs)
-        prompt = (
-            "Analyze the narrative response and classify two attributes strictly in JSON format:\n"
-            f"1. 'emotion': strictly choose one emotion label from: [{emotions_str}]\n"
-            f"2. 'location': strictly choose one location label from: [{locs_str}] (choose 'stay_here' if no explicit relocation or journey was decided or proposed)\n\n"
-            f"Passage:\n{text}\n\n"
-            'Respond ONLY with a valid JSON object of the exact shape: {"emotion": "...", "location": "..."}'
-        )
-        classification_params = ModelParameters(
-            num_ctx=2048,
-            temperature=0.0,
-            top_p=0.9,
-            repeat_penalty=1.0,
-        )
-        raw_emotion = "neutral"
-        raw_loc = "stay_here"
-        try:
-            raw_output = self.generate(
-                prompt=prompt,
-                model=model,
-                params=classification_params,
-                format="json",
-                think=False,
-            )
-            data = json.loads(raw_output)
-            raw_emotion = str(data.get("emotion", "")).strip()
-            raw_loc = str(data.get("location", "")).strip()
-        except Exception:
-            try:
-                raw_output = self.generate(
-                    prompt=prompt,
-                    model=model,
-                    params=classification_params,
-                    think=False,
-                )
-                start = raw_output.find("{")
-                end = raw_output.rfind("}")
-                if start != -1 and end != -1:
-                    data = json.loads(raw_output[start : end + 1])
-                    raw_emotion = str(data.get("emotion", "")).strip()
-                    raw_loc = str(data.get("location", "")).strip()
-            except Exception:
-                raw_emotion = "neutral"
-                raw_loc = "stay_here"
-
-        detected_emotion = self._match_candidate(raw_emotion, clean_emotions)
-        detected_loc = self._match_candidate(raw_loc, clean_locs)
-        return detected_emotion, (detected_loc if detected_loc != "stay_here" else None)
 
     def analyze_image(self, image_path: Path, prompt: str, model: str) -> str:
         resolved_path = Path(image_path).resolve()
@@ -300,15 +317,17 @@ class OllamaLLMProvider(LLMProvider):
                 stream=True,
                 timeout=self.pull_timeout,
             ) as response:
+                response.encoding = "utf-8"
                 self._ensure_ok(response, f"Ollama pull model '{cleaned_name}'")
-                for raw_line in response.iter_lines(decode_unicode=True):
+                for raw_line in response.iter_lines(decode_unicode=False):
                     if not raw_line:
                         continue
+                    line_str = self._decode_utf8_line(raw_line)
                     try:
-                        event = json.loads(raw_line)
+                        event = json.loads(line_str)
                     except json.JSONDecodeError as exc:
                         raise InfrastructureError(
-                            f"Invalid JSON status received during model pull: {raw_line}"
+                            f"Invalid JSON status received during model pull: {line_str}"
                         ) from exc
                     if "error" in event:
                         raise InfrastructureError(
@@ -391,6 +410,12 @@ class OllamaLLMProvider(LLMProvider):
         return None
 
     @staticmethod
+    def _decode_utf8_line(raw_line: bytes | bytearray | str) -> str:
+        if isinstance(raw_line, (bytes, bytearray)):
+            return raw_line.decode("utf-8", errors="replace")
+        return str(raw_line)
+
+    @staticmethod
     def _build_options(params: ModelParameters) -> dict[str, int | float]:
         return {
             "num_ctx": params.num_ctx,
@@ -398,30 +423,3 @@ class OllamaLLMProvider(LLMProvider):
             "top_p": params.top_p,
             "repeat_penalty": params.repeat_penalty,
         }
-
-    @staticmethod
-    def _ensure_ok(response: requests.Response, context: str) -> None:
-        if response.status_code >= 400:
-            detail = response.text.strip()
-            raise InfrastructureError(
-                f"{context} failed with HTTP {response.status_code}: {detail}"
-            )
-
-    @staticmethod
-    def _match_candidate(raw_output: str, candidates: list[str]) -> str:
-        normalized_output = raw_output.strip().strip("`'\".,:;!?()[]{}").lower()
-        lower_map = {candidate.lower(): candidate for candidate in candidates}
-
-        if normalized_output in lower_map:
-            return lower_map[normalized_output]
-
-        for candidate in candidates:
-            pattern = rf"\b{re.escape(candidate.lower())}\b"
-            if re.search(pattern, normalized_output):
-                return candidate
-
-        for candidate in candidates:
-            if candidate.lower() in normalized_output:
-                return candidate
-
-        return candidates[0]

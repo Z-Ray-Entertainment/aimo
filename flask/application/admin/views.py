@@ -2,6 +2,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from application.admin.forms import AdminPromptsForm, AdminServicesForm, AdminUserForm
 from application.auth.decorators import require_permission
+from application.ui_helpers import mask_secret
 from domain.auth.services import AuthService
 from domain.permissions.models import (
     PRESET_PERMISSIONS,
@@ -12,22 +13,20 @@ from domain.permissions.models import (
 from domain.permissions.services import PermissionService
 from domain.personas.models import Gender
 from domain.personas.services import PersonaService
-from domain.settings.models import (
-    RECOMMENDED_ASSISTANT_MODEL,
-    RECOMMENDED_CLASSIFICATION_MODEL,
-    RECOMMENDED_MEMORY_MODEL,
-    RECOMMENDED_MODELS,
-    RECOMMENDED_ROLEPLAY_MODEL,
-    RECOMMENDED_VISION_MODEL,
-    SystemPrompts,
-)
+from domain.settings.models import SystemPrompts
 from domain.settings.services import SettingsService
+from infrastructure.image_gen.comfyui import ComfyUIImageGenProvider
 from infrastructure.image_gen.factory import get_image_gen_provider
-from infrastructure.llm.factory import get_llm_provider
+from infrastructure.image_gen.google_ai import GoogleAIImageGenProvider
+from infrastructure.llm.factory import get_llm_provider, get_llm_provider_class
+from infrastructure.llm.google_ai import GoogleAILLMProvider
+from infrastructure.llm.ollama import OllamaLLMProvider
+from infrastructure.provider_registry import ProviderRegistry
 from infrastructure.repositories.persona_repository import PersonaRepository
 from infrastructure.repositories.settings_repository import SettingsRepository
 from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
+from infrastructure.search.stub import SearXNGSearchStubProvider
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
 
@@ -208,31 +207,63 @@ def services_config():
         action = request.form.get("action")
         if action == "apply_recommended":
             try:
-                settings = settings_service.apply_recommended_task_models(settings)
+                settings = ProviderRegistry.apply_recommended_models(settings)
                 settings = settings_repo.save_settings(settings)
                 flash(
                     "Vorgeschlagene Modelle für alle 5 Rollen erfolgreich zugewiesen!",
                     "success",
                 )
+                return redirect(url_for("admin.services_config"))
             except AimoError as exc:
                 flash(str(exc), "error")
         else:
             form = AdminServicesForm.from_request(request.form)
             try:
-                settings_service.update_service_urls(
-                    settings=settings,
-                    ollama_url=form.ollama_url,
-                    comfyui_url=form.comfyui_url,
-                    searxng_url=form.searxng_url,
-                    searxng_enabled=form.searxng_enabled,
+                previous_backend = settings.llm_backend
+                clear_secrets = (
+                    {GoogleAILLMProvider.PROVIDER_ID}
+                    if form.clear_google_ai_api_key
+                    else set()
                 )
+                ProviderRegistry.update_backend_configuration(
+                    settings=settings,
+                    llm_backend=form.llm_backend,
+                    llm_configs={
+                        OllamaLLMProvider.PROVIDER_ID: {"base_url": form.ollama_url},
+                        GoogleAILLMProvider.PROVIDER_ID: {"api_key": form.google_ai_api_key},
+                    },
+                    clear_llm_secrets=clear_secrets,
+                    image_gen_backend=form.image_gen_backend,
+                    image_gen_configs={
+                        ComfyUIImageGenProvider.PROVIDER_ID: {"base_url": form.comfyui_url},
+                        GoogleAIImageGenProvider.PROVIDER_ID: {"model": form.google_ai_image_model},
+                    },
+                    search_backend=form.search_backend,
+                    search_configs={
+                        SearXNGSearchStubProvider.PROVIDER_ID: {"base_url": form.searxng_url},
+                    },
+                )
+
+                target_llm_cls = get_llm_provider_class(settings.llm_backend)
+                rec = target_llm_cls.get_recommended_task_models()
+
+                def _resolve_submitted_model(submitted: str, role: str) -> str:
+                    if (
+                        previous_backend != settings.llm_backend
+                        and not target_llm_cls.is_model_compatible(submitted)
+                    ):
+                        return rec[role]
+                    return submitted or rec[role]
+
                 settings_service.update_task_models(
                     settings=settings,
-                    roleplay_model=form.roleplay_model,
-                    memory_model=form.memory_model,
-                    assistant_model=form.assistant_model,
-                    vision_model=form.vision_model,
-                    classification_model=form.classification_model,
+                    roleplay_model=_resolve_submitted_model(form.roleplay_model, "roleplay"),
+                    memory_model=_resolve_submitted_model(form.memory_model, "memory"),
+                    assistant_model=_resolve_submitted_model(form.assistant_model, "assistant"),
+                    vision_model=_resolve_submitted_model(form.vision_model, "vision"),
+                    classification_model=_resolve_submitted_model(
+                        form.classification_model, "classification"
+                    ),
                 )
                 settings_service.update_parameters(
                     settings=settings,
@@ -243,47 +274,102 @@ def services_config():
                 )
                 settings = settings_repo.save_settings(settings)
                 flash("Service-Einstellungen und Modelle erfolgreich gespeichert.", "success")
+                return redirect(url_for("admin.services_config"))
             except AimoError as exc:
                 flash(str(exc), "error")
 
     llm = get_llm_provider(settings)
+    llm_cls = get_llm_provider_class(settings.llm_backend)
     img_gen = get_image_gen_provider(settings)
 
-    ollama_healthy = llm.check_health()
-    comfy_healthy = img_gen.check_health()
+    llm_healthy = llm.check_health()
+    image_gen_healthy = img_gen.check_health()
     installed_models: list[str] = []
-    if ollama_healthy:
+    available_image_models: list[str] = []
+    if llm_healthy:
         try:
-            installed_models = llm.list_models()
+            installed_models, available_image_models = llm.list_model_catalog()
         except AimoError:
             installed_models = []
 
-    unique_recommended = [
-        RECOMMENDED_ROLEPLAY_MODEL,
-        RECOMMENDED_ASSISTANT_MODEL,
-        RECOMMENDED_CLASSIFICATION_MODEL,
-    ]
-
+    active_rec = llm_cls.get_recommended_task_models()
     for assigned in (
-        *unique_recommended,
+        *active_rec.values(),
         settings.tasks.roleplay_model,
         settings.tasks.memory_model,
         settings.tasks.assistant_model,
         settings.tasks.classification_model,
         settings.tasks.vision_model,
     ):
-        if assigned and assigned not in installed_models:
+        if (
+            assigned
+            and assigned not in installed_models
+            and llm_cls.is_model_compatible(assigned)
+        ):
             installed_models.append(assigned)
+
+    rec_google_img_model = GoogleAIImageGenProvider.get_recommended_model() or ""
+    saved_google_img_model = settings.get_image_gen_config(
+        GoogleAIImageGenProvider.PROVIDER_ID
+    ).get("model", rec_google_img_model)
+    for img_model in (rec_google_img_model, saved_google_img_model):
+        if img_model and img_model not in available_image_models:
+            available_image_models.append(img_model)
+
+    google_api_key = settings.get_llm_config(GoogleAILLMProvider.PROVIDER_ID).get("api_key", "")
+    ollama_url = settings.get_llm_config(OllamaLLMProvider.PROVIDER_ID).get(
+        "base_url", OllamaLLMProvider.DEFAULT_BASE_URL
+    )
+    comfyui_url = settings.get_image_gen_config(ComfyUIImageGenProvider.PROVIDER_ID).get(
+        "base_url", ComfyUIImageGenProvider.DEFAULT_BASE_URL
+    )
+    searxng_url = settings.get_search_config(SearXNGSearchStubProvider.PROVIDER_ID).get(
+        "base_url", SearXNGSearchStubProvider.DEFAULT_BASE_URL
+    )
+
+    ollama_grouped_recommended = _group_recommended_models_for_ui(
+        OllamaLLMProvider.get_recommended_models()
+    )
 
     return render_template(
         "admin/services.html",
         settings=settings,
+        ollama_url=ollama_url,
+        comfyui_url=comfyui_url,
+        searxng_url=searxng_url,
+        google_ai_image_model=saved_google_img_model,
         installed_models=installed_models,
-        recommended_models=RECOMMENDED_MODELS,
-        unique_recommended=unique_recommended,
-        ollama_healthy=ollama_healthy,
-        comfy_healthy=comfy_healthy,
+        available_image_models=available_image_models,
+        ollama_grouped_recommended=ollama_grouped_recommended,
+        ollama_unique_models=OllamaLLMProvider.get_unique_recommended_models(),
+        google_recommended_models=GoogleAILLMProvider.get_recommended_models(),
+        recommended_by_backend=ProviderRegistry.get_recommended_task_models_by_backend(),
+        recommended_google_image_model=rec_google_img_model,
+        llm_healthy=llm_healthy,
+        ollama_healthy=(
+            llm_healthy if llm_cls.supports_model_management() else False
+        ),
+        comfy_healthy=(
+            image_gen_healthy
+            if settings.image_gen_backend == ComfyUIImageGenProvider.PROVIDER_ID
+            else False
+        ),
+        image_gen_healthy=image_gen_healthy,
+        has_google_ai_api_key=bool(google_api_key),
+        google_ai_api_key_hint=mask_secret(google_api_key),
     )
+
+
+def _group_recommended_models_for_ui(
+    role_models: dict[str, dict[str, str]],
+) -> list[dict[str, object]]:
+    grouped: dict[str, list[str]] = {}
+    for info in role_models.values():
+        model_id = info.get("model", "")
+        role_name = info.get("role_name", "")
+        if model_id:
+            grouped.setdefault(model_id, []).append(role_name)
+    return [{"model": model_id, "roles": roles} for model_id, roles in grouped.items()]
 
 
 @admin_bp.route("/prompts", methods=["GET", "POST"])

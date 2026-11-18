@@ -29,6 +29,16 @@ def get_safe_back_url(fallback: str) -> str:
     return fallback
 
 
+def mask_secret(raw: str | None) -> str:
+    """Return a masked hint for an API key or secret without exposing it."""
+    cleaned = (raw or "").strip()
+    if not cleaned:
+        return ""
+    if len(cleaned) <= 8:
+        return "••••••••"
+    return f"••••{cleaned[-4:]}"
+
+
 def render_new_button(
     text: str,
     href: str | None = None,

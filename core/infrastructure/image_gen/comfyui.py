@@ -1,19 +1,55 @@
 import time
 import uuid
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 import requests
 
+from domain.settings.models import ServiceSettings
+from domain.settings.services import SettingsService
 from infrastructure.image_gen.interface import ImageGenProvider
 from shared.config import Config
 from shared.exceptions import InfrastructureError
 
 
 class ComfyUIImageGenProvider(ImageGenProvider):
+    PROVIDER_ID: ClassVar[str] = "comfyui"
+    DISPLAY_NAME: ClassVar[str] = "ComfyUI (Lokal)"
+    DEFAULT_BASE_URL: ClassVar[str] = Config.DEFAULT_COMFYUI_URL
+
+    @classmethod
+    def get_default_config(cls) -> dict[str, str]:
+        return {"base_url": cls.DEFAULT_BASE_URL}
+
+    @classmethod
+    def validate_active_config(
+        cls,
+        submitted: dict[str, str],
+        existing: dict[str, str],
+    ) -> dict[str, str]:
+        raw_url = (submitted.get("base_url") or "").strip() or (existing.get("base_url") or "").strip()
+        return {"base_url": SettingsService.validate_url("comfyui_url", raw_url)}
+
+    @classmethod
+    def validate_inactive_config(
+        cls,
+        submitted: dict[str, str],
+        existing: dict[str, str],
+    ) -> dict[str, str]:
+        raw_url = (submitted.get("base_url") or "").strip()
+        if raw_url:
+            return {"base_url": SettingsService.validate_url("comfyui_url", raw_url)}
+        return {"base_url": (existing.get("base_url") or "").strip() or cls.DEFAULT_BASE_URL}
+
+    @classmethod
+    def from_settings(cls, settings: ServiceSettings) -> "ComfyUIImageGenProvider":
+        cfg = settings.get_image_gen_config(cls.PROVIDER_ID)
+        base_url = cfg.get("base_url") or cls.DEFAULT_BASE_URL
+        return cls(base_url=base_url)
+
     def __init__(
         self,
-        base_url: str = Config.DEFAULT_COMFYUI_URL,
+        base_url: str = DEFAULT_BASE_URL,
         checkpoint_name: str = "v1-5-pruned-emaonly.safetensors",
         request_timeout: tuple[float, float] = (10.0, 30.0),
         generation_timeout_seconds: float = 300.0,
