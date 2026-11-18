@@ -1,0 +1,202 @@
+{# =============================================================================
+   AIMO Reusable Event Manager Component
+   Unified Random Event Editor for WorldInfo Detail and Character Designer
+   ============================================================================= #}
+{% from "macros/buttons.html" import action_button, new_button, modal_close_button %}
+
+{% macro _event_location_select(scope_type, selected_location_id=none, locations=none) %}
+<select name="location_id">
+  {% if scope_type == 'character' %}
+    <option value="" {% if not selected_location_id %}selected{% endif %}>
+      🎭 Gesamter Charakter (Ortsunabhängig){% if not locations %} — Keine empfohlene Welt mit Orten verknüpft{% endif %}
+    </option>
+    {% for loc in (locations or []) %}
+      <option value="{{ loc.id }}" {% if selected_location_id == loc.id %}selected{% endif %}>📍 Ort: {{ loc.name }}</option>
+    {% endfor %}
+  {% else %}
+    <option value="world" {% if not selected_location_id %}selected{% endif %}>🌍 Gesamte Welt</option>
+    {% for loc in (locations or []) %}
+      <option value="{{ loc.id }}" {% if selected_location_id == loc.id %}selected{% endif %}>📍 Ort: {{ loc.name }}</option>
+    {% endfor %}
+  {% endif %}
+</select>
+{% endmacro %}
+
+{% macro _event_form_fields(scope_type, ev=none, locations=none, ev_translations=none, modal_prefix='ev', tier_names_map=none) %}
+{% set ev_id = ev.id if ev else 'new' %}
+{% set i18n_id = 'i18n-' ~ modal_prefix ~ '-ev-' ~ ev_id %}
+<div>
+  <label>
+    Titel *
+    <span class="field-help-btn" title="Event-Titel:&#10;Name des Zufallsereignisses (z. B. 'Plötzlicher Gewittersturm', 'Brieftaube trifft ein').">?</span>
+  </label>
+  <input type="text" name="title" value="{{ ev.title if ev else '' }}" required>
+</div>
+<div style="display: flex; gap: 1rem; align-items: center;">
+  <div style="flex: 1;">
+    <label>
+      Wahrscheinlichkeit (0 - 100%) *
+      <span class="field-help-btn" title="Wahrscheinlichkeit (1-100%):&#10;Relative Gewichtung im gemeinsamen Ereignis-Pool. Alle 10 bis 100 Nachrichten (Cooldown-Zähler) wird ein Ereignis gewichtet ausgelöst.">?</span>
+    </label>
+    <input type="number" name="probability" min="0" max="100" value="{{ ev.probability if ev else 50 }}" required>
+  </div>
+  <div style="flex: 1; padding-top: 1.2rem;">
+    <label>
+      <input type="checkbox" name="one_shot" value="1" {% if ev and ev.one_shot %}checked{% endif %}> One-Shot (Max. 1x pro Session)
+      <span class="field-help-btn" title="One-Shot (Einmaliges Ereignis):&#10;Wenn aktiviert, wird dieses Ereignis pro Chat-Sitzung maximal ein einziges Mal ausgelöst und danach aus dem aktiven Pool entfernt.">?</span>
+    </label>
+  </div>
+</div>
+<div>
+  <label>
+    {% if scope_type == 'character' %}
+      Zugehörigkeit (Ortsunabhängig oder an konkreten Ort gebunden)
+      <span class="field-help-btn" title="Orts-Eingrenzung:&#10;Wähle, ob dieses Charakter-Event überall in Chats mit diesem Charakter eintreten darf oder zusätzlich an einen bestimmten Schauplatz gebunden ist.">?</span>
+    {% else %}
+      Zugehörigkeit (Exklusiv: Entweder Gesamte Welt ODER konkreter Ort)
+      <span class="field-help-btn" title="Orts-Zuordnung:&#10;Wähle, ob dieses Ereignis nur an einem bestimmten Schauplatz auftreten kann oder als globales Ereignis für die gesamte Welt gilt.">?</span>
+    {% endif %}
+  </label>
+  {{ _event_location_select(scope_type, selected_location_id=(ev.location_id if ev else none), locations=locations) }}
+</div>
+{% if scope_type == 'character' %}
+  {% set init_min = ev.min_relationship if (ev and ev.min_relationship is not none) else -100 %}
+  {% set init_max = ev.max_relationship if (ev and ev.max_relationship is not none) else 100 %}
+  {% set min_name = tier_names_map.get(init_min, init_min) if tier_names_map else init_min %}
+  {% set max_name = tier_names_map.get(init_max, init_max) if tier_names_map else init_max %}
+  <div>
+    <label>
+      Beziehungsbereich (Von – Bis)
+      <span class="field-help-btn" title="Beziehungsbereich:&#10;Grenzt das Event optional auf einen Beziehungsbereich ein. Stehen beide Regler ganz außen, ist das Event auf allen Beziehungsstufen aktiv.">?</span>
+    </label>
+    <div class="aimo-dual-range" data-tiers='{{ (tier_names_map or {}) | tojson }}'>
+      <div class="aimo-dual-range-label">{{ min_name }} – {{ max_name }}</div>
+      <div class="aimo-dual-range-wrap">
+        <div class="aimo-dual-range-track">
+          <div class="aimo-dual-range-fill"></div>
+        </div>
+        <input
+          type="range"
+          name="min_relationship"
+          class="aimo-dual-range-input aimo-dual-range-min"
+          min="-100"
+          max="100"
+          step="10"
+          value="{{ init_min }}"
+          aria-label="Mindest-Beziehungsstufe">
+        <input
+          type="range"
+          name="max_relationship"
+          class="aimo-dual-range-input aimo-dual-range-max"
+          min="-100"
+          max="100"
+          step="10"
+          value="{{ init_max }}"
+          aria-label="Höchst-Beziehungsstufe">
+      </div>
+    </div>
+  </div>
+{% endif %}
+<div>
+  <label>
+    Szenische Beschreibung des Ereignisses *
+    <span class="field-help-btn" title="Event-Beschreibung:&#10;Der narrative Vorfall. Bei Auslösung wird diese Beschreibung für den nächsten Zug im [WORLD_INFO]-Bereich des Prompts platziert, damit die KI passend darauf reagiert.">?</span>
+  </label>
+  <input
+    type="hidden"
+    name="i18n_description"
+    id="{{ i18n_id }}"
+    value='{{ (ev_translations.get(ev.id, {}).get("description", {}) if (ev and ev_translations is defined and ev_translations) else {}) | tojson }}'>
+  <textarea
+    name="description"
+    rows="5"
+    required
+    data-i18n-field="description"
+    data-i18n-entity-type="worldinfo_event"
+    data-i18n-entity-id="{{ ev.id if ev else '' }}"
+    data-i18n-hidden="{{ i18n_id }}">{{ ev.description if ev else '' }}</textarea>
+</div>
+{% endmacro %}
+
+{% macro event_editor(events, is_editable, add_url, edit_endpoint, delete_endpoint, entity_id_param, entity_id, loc_map, ev_translations, scope_type='worldinfo', locations=none, modal_prefix='ev', relationship_tiers=none, tier_names_map=none) %}
+<div class="card-grid">
+  {% if is_editable %}
+    {{ new_button("Neues Event", modal="new-event-modal-" ~ modal_prefix) }}
+  {% endif %}
+
+  {% for ev in events %}
+    <div class="card-tile" style="padding: 1.2rem; justify-content: space-between; {% if is_editable %}cursor: pointer;{% endif %}" {% if is_editable %}data-modal-open="edit-event-modal-{{ modal_prefix }}-{{ ev.id }}"{% endif %}>
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.6rem;">
+          <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
+            {% if ev.location_id and loc_map and ev.location_id in loc_map %}
+              <span style="background: rgba(110, 71, 42, 0.9); border: 1px solid var(--gold-accent); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem;">
+                📍 Ort: {{ loc_map[ev.location_id].name }}
+              </span>
+            {% elif scope_type == 'character' %}
+              <span style="background: rgba(45, 70, 95, 0.9); border: 1px solid var(--gold-accent); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem;">
+                🎭 Charakterweit (Überall)
+              </span>
+            {% else %}
+              <span style="background: rgba(45, 70, 95, 0.9); border: 1px solid var(--gold-accent); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem;">
+                🌍 Gesamte Welt
+              </span>
+            {% endif %}
+            {% if scope_type == 'character' and (ev.min_relationship is not none or ev.max_relationship is not none) %}
+              <span style="background: rgba(95, 35, 45, 0.9); border: 1px solid var(--gold-accent); padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.75rem; line-height: 1;" title="Beziehungsgebunden">❤️</span>
+            {% endif %}
+          </div>
+          <span style="font-size: 0.8rem; font-weight: 700; color: var(--gold-accent);">{{ ev.probability }}%</span>
+        </div>
+
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.4rem;">{{ ev.title }}</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">{{ ev.description[:140] }}{% if ev.description|length > 140 %}...{% endif %}</p>
+      </div>
+
+      <div style="margin-top: 0.75rem; font-size: 0.78rem; color: var(--text-muted);">
+        {% if ev.one_shot %}⚡ One-Shot (Max. 1x pro Session){% else %}🔄 Wiederholbar{% endif %}
+      </div>
+    </div>
+
+    {% if is_editable %}
+      <div class="modal-backdrop" id="edit-event-modal-{{ modal_prefix }}-{{ ev.id }}" aria-hidden="true">
+        <div class="modal-frame">
+          <div class="modal-header">
+            <h3 style="color: var(--gold-accent);">Event bearbeiten: {{ ev.title }}</h3>
+            {{ modal_close_button("edit-event-modal-" ~ modal_prefix ~ "-" ~ ev.id) }}
+          </div>
+          <form method="POST" action="{{ url_for(edit_endpoint, **{entity_id_param: entity_id, 'event_id': ev.id}) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
+            {{ _event_form_fields(scope_type, ev=ev, locations=locations, ev_translations=ev_translations, modal_prefix=modal_prefix, tier_names_map=tier_names_map) }}
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
+              {{ action_button("Löschen", type="submit", form="delete-ev-form-" ~ modal_prefix ~ "-" ~ ev.id, variant="danger", icon="🗑️") }}
+              <div style="display: flex; gap: 0.5rem;">
+                {{ action_button("Abbrechen", modal_close="edit-event-modal-" ~ modal_prefix ~ "-" ~ ev.id) }}
+                {{ action_button("Speichern", type="submit", variant="primary", icon="💾") }}
+              </div>
+            </div>
+          </form>
+          <form id="delete-ev-form-{{ modal_prefix }}-{{ ev.id }}" method="POST" action="{{ url_for(delete_endpoint, **{entity_id_param: entity_id, 'event_id': ev.id}) }}" style="display: none;"></form>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% if is_editable %}
+  <div class="modal-backdrop" id="new-event-modal-{{ modal_prefix }}" aria-hidden="true">
+    <div class="modal-frame">
+      <div class="modal-header">
+        <h3 style="color: var(--gold-accent);">Neues Event anlegen</h3>
+        {{ modal_close_button("new-event-modal-" ~ modal_prefix) }}
+      </div>
+      <form method="POST" action="{{ add_url }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
+        {{ _event_form_fields(scope_type, ev=none, locations=locations, ev_translations=ev_translations, modal_prefix=modal_prefix, tier_names_map=tier_names_map) }}
+        <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
+          {{ action_button("Abbrechen", modal_close="new-event-modal-" ~ modal_prefix) }}
+          {{ action_button("Event speichern", type="submit", variant="primary", icon="💾") }}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endif %}
+{% endmacro %}

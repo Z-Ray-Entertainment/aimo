@@ -374,7 +374,14 @@ class PromptBuilder:
         compact_mode: bool = False,
     ) -> str:
         if worldinfo is None:
-            return "Active World: None (Neutral setting, no specific world events)."
+            lines = ["Active World: None (Neutral setting, no specific world events)."]
+            if triggered_event is not None:
+                lines.append(
+                    f"Active Narrative Event ({triggered_event.title}): "
+                    f"{triggered_event.description.strip()} "
+                    f"(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"
+                )
+            return "\n".join(lines)
 
         lines = [f"World Name: {worldinfo.name}"]
         if current_location is not None:

@@ -220,6 +220,38 @@ class CharacterRepository(BaseRepository[Character]):
                 ),
             )
 
+        # Deep-copy character-specific events
+        with get_db_session() as conn:
+            ev_rows = conn.execute(
+                """
+                SELECT worldinfo_id, location_id, title, probability, one_shot, description,
+                       min_relationship, max_relationship
+                FROM events WHERE character_id = ? ORDER BY id ASC
+                """,
+                (character_id,),
+            ).fetchall()
+            for ev in ev_rows:
+                conn.execute(
+                    """
+                    INSERT INTO events (
+                        worldinfo_id, character_id, location_id, title, probability, one_shot, description,
+                        min_relationship, max_relationship
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        ev["worldinfo_id"],
+                        saved.id,
+                        ev["location_id"],
+                        ev["title"],
+                        ev["probability"],
+                        ev["one_shot"],
+                        ev["description"],
+                        ev["min_relationship"],
+                        ev["max_relationship"],
+                    ),
+                )
+
         reloaded = self.get_by_id(saved.id)
         assert reloaded is not None
         return reloaded

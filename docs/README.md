@@ -25,10 +25,11 @@ This manual is intended for end users, story creators, and administrators, detai
    - Deletion protection for active personas
 
 4. [**AI Characters & Designer**](characters.md)
-   - 7-tab character creation suite with 1-click duplication
+   - 8-tab character creation suite with 1-click duplication
    - AI Writing Assistant ✨ (Sparkle) for description optimization
    - Transparent emotional sprites & variant stacks
    - Unlockable 9:16 gallery images with affection thresholds
+   - Character-specific random events with optional location binding
    - Linked lorebooks with optional world-specific conditions
    - Collaborator management via private Creator-Tags
 

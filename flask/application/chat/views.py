@@ -398,6 +398,11 @@ def view_session(session_id: int):
         if worldinfo and worldinfo.id is not None
         else []
     )
+    character_events = (
+        wi_repo.list_character_events(character.id)
+        if character and character.id is not None
+        else []
+    )
     all_worldinfos = wi_repo.list_all(user.id)
 
     last_char_msg = next((m for m in reversed(messages) if m.role.value == "character"), None)
@@ -425,7 +430,11 @@ def view_session(session_id: int):
     )
 
     is_admin = bool(user and (user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS)))
-    can_view_event_counter = is_admin or bool(worldinfo and worldinfo.user_id == user.id)
+    can_view_event_counter = (
+        is_admin
+        or bool(worldinfo and worldinfo.is_editable_by_user(user.id, is_admin, user.creator_tag))
+        or bool(character and character.is_editable_by_user(user.id, is_admin, user.creator_tag))
+    )
 
     lorebook_data = _build_lorebook_view_data(
         user.id, character, worldinfo=worldinfo, chat_session=chat_session, is_admin=is_admin
@@ -455,6 +464,7 @@ def view_session(session_id: int):
         initial_location=initial_location,
         worldinfo_locations=worldinfo_locations,
         worldinfo_events=worldinfo_events,
+        character_events=character_events,
         all_worldinfos=all_worldinfos,
         active_sprite=active_sprite,
         unlocked_gallery=unlocked_gallery,

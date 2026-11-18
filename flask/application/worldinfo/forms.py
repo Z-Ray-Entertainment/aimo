@@ -25,6 +25,18 @@ class LocationForm:
         )
 
 
+def _parse_opt_rel_int(form_data, key: str) -> int | None:
+    if not hasattr(form_data, "get"):
+        return None
+    raw = form_data.get(key)
+    if raw in (None, "", "none"):
+        return None
+    try:
+        return int(raw)
+    except (ValueError, TypeError):
+        return None
+
+
 @dataclass
 class EventForm:
     title: str = ""
@@ -32,6 +44,8 @@ class EventForm:
     one_shot: bool = False
     location_id: int | None = None
     description: str = ""
+    min_relationship: int | None = None
+    max_relationship: int | None = None
 
     @classmethod
     def from_request(cls, form_data) -> "EventForm":
@@ -42,4 +56,6 @@ class EventForm:
             one_shot=p.to_bool(form_data, "one_shot"),
             location_id=p.to_opt_int(form_data, "location_id"),
             description=p.to_str(form_data, "description"),
+            min_relationship=_parse_opt_rel_int(form_data, "min_relationship"),
+            max_relationship=_parse_opt_rel_int(form_data, "max_relationship"),
         )

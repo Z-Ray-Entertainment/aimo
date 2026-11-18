@@ -3914,3 +3914,107 @@ span.persona-star-btn:hover {
 .conditional-service-box[hidden] {
   display: none !important;
 }
+
+/* Reusable Dual-Thumb Range Slider (.aimo-dual-range) */
+.aimo-dual-range {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.65rem 0.85rem 0.75rem 0.85rem;
+  background: var(--bg-input);
+  border: 2px solid var(--border-wood-dark);
+  border-radius: 10px;
+}
+
+.aimo-dual-range-label {
+  text-align: center;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--gold-accent);
+  letter-spacing: 0.01em;
+}
+
+.aimo-dual-range-wrap {
+  position: relative;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.aimo-dual-range-track {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: #241911;
+  border-radius: 6px;
+  border: 1px solid var(--border-wood-dark);
+  overflow: hidden;
+}
+
+.aimo-dual-range-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--heart-broken), var(--heart-neutral), var(--heart-love));
+}
+
+.aimo-dual-range-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.aimo-dual-range-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.aimo-dual-range-input::-webkit-slider-runnable-track {
+  height: 8px;
+  background: transparent;
+}
+
+.aimo-dual-range-input::-moz-range-track {
+  height: 8px;
+  background: transparent;
+}
+
+.aimo-dual-range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg-leather);
+  border: 2px solid var(--gold-accent);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.7), 0 0 6px var(--gold-glow);
+  cursor: pointer;
+  margin-top: -5px;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.aimo-dual-range-input::-moz-range-thumb {
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg-leather);
+  border: 2px solid var(--gold-accent);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.7), 0 0 6px var(--gold-glow);
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.aimo-dual-range-input::-webkit-slider-thumb:hover,
+.aimo-dual-range-input::-moz-range-thumb:hover {
+  background: var(--bg-leather-hover);
+  transform: scale(1.12);
+}

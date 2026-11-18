@@ -35,7 +35,7 @@ When starting a new conversation with a character:
   - Character portrait / transparent emotion sprite (dynamically scaled in 9:16 aspect ratio to fit the display height), equipped with an aesthetic Brain overlay icon (🧠) in the top-right corner with a live hover tooltip. The icon visually indicates whether Thinking is active (in color with a soft glow) or inactive (in monochrome gray).
   - Dynamic relationship bar displaying the current qualitative status title (e.g. *„Neutral“*, *„Friendly“*, *„Affection“*, *„Blind Devotion“*) with visual progress fill and dynamic heart icon.
   - Player persona badge / selector (locked after the first message).
-  - Unified World & Setting block: Active WorldInfo with switch button, manual location selector, random events toggle checkbox, and a live event cooldown counter for administrators and world authors (integrated without separating divider, updating dynamically as messages are exchanged).
+  - Unified World & Setting block: Active WorldInfo with switch button, manual location selector, random events toggle checkbox (shown whenever world or character events exist), and a live event cooldown counter for administrators as well as authors and collaborators of the active world or character (integrated without separating divider, updating dynamically as messages are exchanged).
 
 ---
 
@@ -82,9 +82,10 @@ Because modern LLMs write with the greatest depth and nuance in English while th
 
 ## ⚡ Random Events & System Notifications
 
-- **Persistent Event Notices in Chat:** When a random event from the active world setting triggers, it is saved directly into the chat history as a persistent system message with a bolt badge (*"⚡ Ereignis: [Event-Titel]"*) and its narrative description. The notification appears right before the AI character's response, and the character weaves the event into their dialogue.
+- **Unified Event Pool:** Eligible random events are drawn from a single combined pool containing global world events, location-specific world events for the current venue, character-specific events (which also work when chatting without an active WorldInfo), and character events additionally restricted to the current location. Character-specific events can also be restricted to a relationship tier range and only enter the active pool while the session's current relationship tier falls within that range.
+- **Persistent Event Notices in Chat:** When a random event triggers, it is saved directly into the chat history as a persistent system message with a bolt badge (*"⚡ Ereignis: [Event-Titel]"*) and its narrative description. The notification appears right before the AI character's response, and the character weaves the event into their dialogue.
 - **Rewinding & Cascading Deletions:** Each event message features a trash icon (`🗑️`). Clicking it deletes the chat history from that point forward and returns any consumed one-shot events back to the active pool.
-- **Live Event Cooldown Indicator (Admins & World Creators):** In the right chat sidebar directly below the *🎲 Zufalls-Events aktivieren* checkbox, administrators and the author of the active world see a live countdown indicator showing the exact number of messages remaining until the next event (*"⏳ Nächstes Event: in X Nachrichten"* or *"nächste Nachricht"*). When events are paused via the checkbox, the indicator preserves the current count and displays *(pausiert)*.
+- **Live Event Cooldown Indicator (Admins, World & Character Creators/Collaborators):** In the right chat sidebar directly below the *🎲 Zufalls-Events aktivieren* checkbox, administrators as well as authors and collaborators of the active world or active character see a live countdown indicator showing the exact number of messages remaining until the next event (*"⏳ Nächstes Event: in X Nachrichten"* or *"nächste Nachricht"*). When events are paused via the checkbox, the indicator preserves the current count and displays *(pausiert)*.
 
 ---
 

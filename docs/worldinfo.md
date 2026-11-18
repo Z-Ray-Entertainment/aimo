@@ -51,7 +51,7 @@ A gallery of all locales in this world:
   - **Character Binding (Optional):** Creators can optionally restrict this location to a specific character. Only chats played with this designated character can visit or enter this venue. For all other characters, the location is inaccessible and omitted from their in-chat location options.
   - **16:9 Background Image:** Landscape image upload (PNG, JPG, WEBP). Serves as the atmospheric chat background and is passed to ComfyUI for consistent image generation.
   - **Vision-ALT Tag & Interactive Text Expansion:** Upon image upload, a Vision model generates a visual scene description. The system then prompts interactively: *"Would you like to expand the location description with this AI image description?"*.
-  - **Event Assignment:** List of events tied specifically to this location.
+  - **Event Assignment:** List of world events tied specifically to this location.
 
 ---
 
@@ -79,11 +79,15 @@ Events inject unexpected life into the world (e.g., sudden storm, wandering band
 
 ## 🔄 In-Chat Cooldown & Trigger Mechanics
 
-- **Unified Pool:** World events and location events for the current venue form a single combined pool.
+- **Unified Pool:** For every chat turn, the active pool of eligible random events combines up to four scopes:
+  1. **World Global Events** (bound to the active world without a specific location)
+  2. **World Location Events** (bound to the active world and the current location)
+  3. **Character-Bound Events** (bound to the active character without a location constraint; optionally restricted to a relationship tier range)
+  4. **Character & Location-Bound Events** (bound to both the active character and the current location; optionally restricted to a relationship tier range)
 - **Message Counter (10–100):** When a chat starts, a random integer between 10 and 100 is rolled. Each player message sent decrements the counter by 1 dynamically during chatting.
 - **Trigger at 0:** When the counter reaches 0, exactly one eligible event is drawn weighted by probability. Immediately afterward, a new counter is rolled (10–100). If no eligible event exists in the pool, a silent re-roll occurs.
 - **Persistent Event Notice:** Upon trigger, the event is immediately displayed as a permanent system message in the chat history with a bolt icon (*"⚡ Ereignis: [Event-Titel]"*) and its narrative description without requiring a page reload. The AI character receives this event context and weaves it into its immediate reaction.
-- **Live Cooldown Counter:** Administrators and the world's author can view the live remaining messages until the next event directly in the chat sidebar, which counts down dynamically as you chat.
+- **Live Cooldown Counter:** Administrators, authors and collaborators of the active world, and authors and collaborators of the active character can view the live remaining messages until the next event directly in the chat sidebar, which counts down dynamically as you chat.
 - **Opt-Out & Pausing:** A toggle checkbox in the chat sidebar allows you to disable events at any time if you prefer uninterrupted scenes. The cooldown counter pauses and retains its current value.
 
 Continue to: [**The Chat & Roleplay Interface →**](chat.md)

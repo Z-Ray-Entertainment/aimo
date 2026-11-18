@@ -3,9 +3,11 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from application.auth.decorators import get_current_user, is_admin, require_permission
 from application.character_helpers import save_and_persist_sprite
 from application.characters.forms import CharacterForm
+from application.worldinfo.forms import EventForm
 from domain.characters.models import Emotion
 from domain.characters.services import CharacterService
 from domain.permissions.models import FunctionPermission
+from domain.worldinfo.services import WorldInfoService
 from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.lorebook_repository import LorebookRepository
 from infrastructure.repositories.relationship_repository import RelationshipRepository
@@ -15,6 +17,8 @@ from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
 
 characters_bp = Blueprint("characters", __name__, url_prefix="/characters")
+
+_VALID_CHARACTER_TABS = ("info", "gallery", "sprites", "dialogue", "world", "events", "lorebooks", "collab")
 
 STANDARD_28_EMOTIONS: list[str] = [
     Emotion.ADMIRE.value,
@@ -55,10 +59,20 @@ def _render_creator(character=None, form=None):
     wi_repo = WorldInfoRepository()
     lorebooks = lb_repo.list_for_user(uid)
     worldinfos = wi_repo.list_all(uid)
+    world_map = {wi.id: wi for wi in worldinfos if wi.id is not None}
+    suggested_wi_id = (
+        character.suggested_worldinfo_id
+        if character
+        else (form.suggested_worldinfo_id if form else None)
+    )
+    ordered_worldinfos = sorted(
+        worldinfos,
+        key=lambda w: (0 if suggested_wi_id and w.id == suggested_wi_id else 1, w.name.lower()),
+    )
     all_locations = []
     locations_by_world = {}
     target_char_id = character.id if character and character.id else None
-    for wi in worldinfos:
+    for wi in ordered_worldinfos:
         if wi.id is not None:
             raw_locs = wi_repo.list_locations(wi.id)
             locs = [
@@ -71,14 +85,43 @@ def _render_creator(character=None, form=None):
             ]
             all_locations.extend(locs)
 
+    event_locations = []
+    if character and character.suggested_worldinfo_id:
+        suggested_wi = (
+            world_map.get(character.suggested_worldinfo_id)
+            or wi_repo.get_by_id(character.suggested_worldinfo_id)
+        )
+        if suggested_wi and suggested_wi.id is not None and suggested_wi.is_visible_to_user(uid or 0, is_admin()):
+            raw_ev_locs = wi_repo.list_locations(suggested_wi.id)
+            event_locations = [
+                loc for loc in raw_ev_locs
+                if loc.character_id is None or loc.character_id == target_char_id
+            ]
+
+    loc_map = {loc.id: loc for loc in event_locations if loc.id is not None}
+    character_events = (
+        wi_repo.list_character_events(character.id)
+        if character and character.id is not None
+        else []
+    )
+
+    trans_repo = TranslationRepository()
+    event_translations = {
+        ev.id: (
+            trans_repo.get_entity_translations_map("worldinfo_event", ev.id)
+            or trans_repo.get_entity_translations_map("event", ev.id)
+        )
+        for ev in character_events
+        if ev.id is not None
+    }
+
     sprites_by_emotion: dict[str, list] = {em: [] for em in STANDARD_28_EMOTIONS}
     if character is not None:
         for sp in character.sprites:
             sprites_by_emotion.setdefault(sp.emotion.value, []).append(sp)
 
-    valid_tabs = ("info", "gallery", "sprites", "dialogue", "world", "lorebooks", "collab")
     active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
-    if active_tab not in valid_tabs:
+    if active_tab not in _VALID_CHARACTER_TABS:
         active_tab = "info"
 
     is_author = (character.user_id == user.id or is_admin()) if (character and user) else True
@@ -101,8 +144,15 @@ def _render_creator(character=None, form=None):
         is_editable=is_editable,
         lorebooks=lorebooks,
         worldinfos=worldinfos,
+        ordered_worldinfos=ordered_worldinfos,
+        world_map=world_map,
         all_locations=all_locations,
+        event_locations=event_locations,
+        loc_map=loc_map,
         locations_by_world=locations_by_world,
+        events=character_events,
+        ev_translations=event_translations,
+        event_translations=event_translations,
         emotions=STANDARD_28_EMOTIONS,
         sprites_by_emotion=sprites_by_emotion,
         relationship_tiers=rel_tiers,
@@ -163,7 +213,7 @@ def new_character():
             saved = char_repo.save(character)
             flash(f"Charakter '{saved.name}' erfolgreich angelegt!", "success")
             active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
-            if active_tab not in ("info", "gallery", "sprites", "dialogue", "world", "lorebooks", "collab"):
+            if active_tab not in _VALID_CHARACTER_TABS:
                 active_tab = "info"
             return redirect(url_for("characters.edit_character", character_id=saved.id, tab=active_tab))
         except AimoError as exc:
@@ -236,9 +286,13 @@ def edit_character(character_id: int):
                 collaborator_creator_tags=collaborator_tags,
             )
             character = char_repo.save(character)
+            if character.id is not None:
+                WorldInfoRepository().clear_character_event_locations_outside_world(
+                    character.id, character.suggested_worldinfo_id
+                )
             flash(f"Charakter '{character.name}' gespeichert.", "success")
             active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
-            if active_tab not in ("info", "gallery", "sprites", "dialogue", "world", "lorebooks", "collab"):
+            if active_tab not in _VALID_CHARACTER_TABS:
                 active_tab = "info"
             return redirect(url_for("characters.edit_character", character_id=character.id, tab=active_tab))
         except AimoError as exc:
@@ -395,3 +449,122 @@ def delete_sprite(character_id: int, emotion: str, variant: int):
     char_repo.delete_sprite(character_id, emotion, variant)
     flash(f"Sprite {emotion}_{variant} gelöscht.", "success")
     return redirect(url_for("characters.edit_character", character_id=character_id, tab="sprites"))
+
+
+def _validate_character_event_location(
+    wi_repo: WorldInfoRepository,
+    location_id: int | None,
+    character,
+    user_id: int,
+) -> bool:
+    if location_id is None:
+        return True
+    if not character.suggested_worldinfo_id:
+        return False
+    loc = wi_repo.get_location(location_id)
+    if loc is None or loc.worldinfo_id != character.suggested_worldinfo_id:
+        return False
+    wi = wi_repo.get_by_id(loc.worldinfo_id)
+    if wi is None or not wi.is_visible_to_user(user_id, is_admin()):
+        return False
+    return loc.is_accessible_by_character(character.id)
+
+
+@characters_bp.route("/<int:character_id>/events/add", methods=["POST"])
+@require_permission(FunctionPermission.CHARACTER_EDIT)
+def add_event(character_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    char_repo = CharacterRepository()
+    character = char_repo.get_by_id(character_id)
+    if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
+    form = EventForm.from_request(request.form)
+    wi_repo = WorldInfoRepository()
+    if not _validate_character_event_location(wi_repo, form.location_id, character, user.id):
+        flash("Ungültiger oder nicht zugänglicher Ort ausgewählt.", "error")
+        return redirect(url_for("characters.edit_character", character_id=character_id, tab="events"))
+
+    service = WorldInfoService()
+    try:
+        ev = service.add_event(
+            worldinfo_id=None,
+            character_id=character_id,
+            title=form.title,
+            description=form.description,
+            probability=form.probability,
+            one_shot=form.one_shot,
+            location_id=form.location_id,
+            min_relationship=form.min_relationship,
+            max_relationship=form.max_relationship,
+        )
+        saved_ev = wi_repo.add_event(ev)
+        TranslationRepository().save_field_variants_json(
+            "worldinfo_event", saved_ev.id, "description", request.form.get("i18n_description")
+        )
+        flash(f"Event '{ev.title}' hinzugefügt.", "success")
+    except AimoError as exc:
+        flash(str(exc), "error")
+    return redirect(url_for("characters.edit_character", character_id=character_id, tab="events"))
+
+
+@characters_bp.route("/<int:character_id>/events/<int:event_id>/edit", methods=["POST"])
+@require_permission(FunctionPermission.CHARACTER_EDIT)
+def edit_event(character_id: int, event_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    char_repo = CharacterRepository()
+    character = char_repo.get_by_id(character_id)
+    if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
+    form = EventForm.from_request(request.form)
+    wi_repo = WorldInfoRepository()
+    if not _validate_character_event_location(wi_repo, form.location_id, character, user.id):
+        flash("Ungültiger oder nicht zugänglicher Ort ausgewählt.", "error")
+        return redirect(url_for("characters.edit_character", character_id=character_id, tab="events"))
+
+    service = WorldInfoService()
+    ev = wi_repo.get_event(event_id)
+    if ev is not None and ev.character_id == character_id:
+        try:
+            service.update_event(
+                event=ev,
+                title=form.title,
+                description=form.description,
+                probability=form.probability,
+                one_shot=form.one_shot,
+                location_id=form.location_id,
+                min_relationship=form.min_relationship,
+                max_relationship=form.max_relationship,
+            )
+            wi_repo.update_event(ev)
+            TranslationRepository().save_field_variants_json(
+                "worldinfo_event", ev.id, "description", request.form.get("i18n_description")
+            )
+            flash("Event aktualisiert.", "success")
+        except AimoError as exc:
+            flash(str(exc), "error")
+    return redirect(url_for("characters.edit_character", character_id=character_id, tab="events"))
+
+
+@characters_bp.route("/<int:character_id>/events/<int:event_id>/delete", methods=["POST"])
+@require_permission(FunctionPermission.CHARACTER_EDIT)
+def delete_event(character_id: int, event_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    char_repo = CharacterRepository()
+    character = char_repo.get_by_id(character_id)
+    if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+        return redirect(url_for("overview.index"))
+
+    wi_repo = WorldInfoRepository()
+    ev = wi_repo.get_event(event_id)
+    if ev is not None and ev.character_id == character_id:
+        wi_repo.delete_event(event_id)
+        flash("Event gelöscht.", "success")
+    return redirect(url_for("characters.edit_character", character_id=character_id, tab="events"))

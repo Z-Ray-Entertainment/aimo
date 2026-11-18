@@ -11,14 +11,15 @@ The **Character Designer** allows creators to craft detailed interactive AI char
 The Character Designer uses a modern two-column layout consistent with the Administration and Settings panels:
 - **Left Sidebar Navigation:**
   - **Sidebar Header:** Displays the character's name and icon (`🎭`).
-  - **Vertical Navigation Menu:** Direct access to all seven functional areas:
+  - **Vertical Navigation Menu:** Direct access to all eight functional areas:
     1. **📋 Main Information (`Hauptinformationen`):** Core persona details, name, gender, bio, and welcome message.
     2. **🖼️ Unlockable Gallery Images (`Galeriebilder`):** High-resolution 9:16 artwork tied to affection thresholds.
     3. **🎭 Emotional Sprites (`Emotionale Sprites`):** Dynamic 28-emotion sprites that adapt during chat.
     4. **💬 Dialogue Styles (`Gesprächsstile`):** Representative conversation examples.
     5. **🗺️ World Settings (`World`):** Recommended world and location preferences.
-    6. **📖 Linked Lorebooks (`Lorebooks`):** Encyclopedias bound directly to the character.
-    7. **👥 Collaboration (`Kollaboration`):** Co-creator access management.
+    6. **🎲 Random Events (`Zufalls-Events`):** Character-specific dynamic random events with optional location constraints.
+    7. **📖 Linked Lorebooks (`Lorebooks`):** Encyclopedias bound directly to the character.
+    8. **👥 Collaboration (`Kollaboration`):** Co-creator access management.
   - **Sidebar Footer:** Includes a quick return button (`← Zurück zur Übersicht`) to navigate back to the character gallery or creations overview.
 - **Right Main Stage:**
   - **Header Bar:** Shows the character title, read-only status (for non-editable characters), and action buttons:
@@ -81,7 +82,21 @@ Representative conversation snippets (Few-Shot trigger and response pairs) that 
 
 ---
 
-## 📖 6. Linked Lorebooks & World Conditions (`📖 Lorebooks`)
+## 🎲 6. Random Events (`🎲 Zufalls-Events`)
+
+Character-specific random events introduce dynamic situations exclusive to chats with this character (for example, an old acquaintance suddenly appearing, a secret personal memory resurfacing, or an unexpected character habit triggering).
+- **Tile Grid & Modal Editor:** Uses the same unified event editor as [WorldInfo](worldinfo.md). Click the `+` tile to create a new character event or click any existing event tile to edit or delete it.
+- **Scope & Optional Location Binding:**
+  - `🎭 Charakterweit (Überall)`: The event can trigger anywhere during chats with this character, regardless of the active location or whether a world is selected.
+  - `📍 Ort: [Location Name]`: Optionally restricts the character event so it can only trigger when chatting with this character at that specific location. Only locations belonging to the character's currently configured *Recommended WorldInfo* (and accessible to this character) are available. If the recommended WorldInfo is changed or removed, existing location bindings on character events automatically reset to location-independent while preserving the events themselves.
+- **Relationship Range (Optional):** Inside the event modal, a dual-ended slider lets you optionally restrict the event to a specific relationship tier range (displayed as `[From Tier] – [To Tier]` above the slider, from *Pure Hatred* to *Blind Devotion*). Leaving both ends at the outer limits allows the event at any relationship stage. Event tiles with an active relationship restriction display a compact `❤️` pill badge (with the tooltip *"Beziehungsgebunden"*).
+- **Probability (0–100%):** Relative weight inside the chat's combined event pool.
+- **One-Shot:** When enabled, the event triggers at most once per chat session.
+- **Scenic Description:** When triggered, the narrative description is revealed in the chat history and woven organically into the character's next response.
+
+---
+
+## 📖 7. Linked Lorebooks & World Conditions (`📖 Lorebooks`)
 
 Under the **Lorebooks** section in the Character Designer, creators can bind one or more [Lorebooks](lorebooks.md) directly to the character:
 - **Binding Lorebooks:** Click *„➕ Lorebook hinzufügen“* to attach thematic encyclopedias to this character.
@@ -95,7 +110,7 @@ Under the **Lorebooks** section in the Character Designer, creators can bind one
 
 ---
 
-## 👥 7. Collaboration (`👥 Kollaboration`)
+## 👥 8. Collaboration (`👥 Kollaboration`)
 
 - **Collaborator Management:** Authors can invite other creators by adding their private **Creator-Tag** (UUID4).
 - **Shared Creation:** Collaborators can edit all tabs, upload sprites, add gallery images, and adjust prompts.

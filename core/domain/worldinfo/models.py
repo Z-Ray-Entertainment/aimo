@@ -54,12 +54,15 @@ class Location:
 @dataclass
 class Event:
     id: int | None
-    worldinfo_id: int
+    worldinfo_id: int | None
     title: str
     probability: int
     one_shot: bool
     description: str
     location_id: int | None = None
+    character_id: int | None = None
+    min_relationship: int | None = None
+    max_relationship: int | None = None
 
 
 @dataclass

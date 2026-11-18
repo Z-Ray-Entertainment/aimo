@@ -186,17 +186,58 @@ class WorldInfoService:
             )
         return location
 
+    @staticmethod
+    def _normalize_relationship_bounds(
+        min_rel: int | None,
+        max_rel: int | None,
+    ) -> tuple[int | None, int | None]:
+        for val in (min_rel, max_rel):
+            if val is not None:
+                if (
+                    isinstance(val, bool)
+                    or not isinstance(val, int)
+                    or not (-100 <= val <= 100)
+                    or (val % 10 != 0)
+                ):
+                    raise InvalidWorldInfoDataError(
+                        "Relationship level must be a valid tier between -100 and 100 in steps of 10."
+                    )
+
+        eff_min = min_rel if min_rel is not None else -100
+        eff_max = max_rel if max_rel is not None else 100
+        if eff_min > eff_max:
+            raise InvalidWorldInfoDataError(
+                "Minimum relationship level must not exceed maximum relationship level."
+            )
+
+        if eff_min == -100 and eff_max == 100:
+            return None, None
+        if eff_min == -100 and eff_max < 100:
+            return None, eff_max
+        if eff_min > -100 and eff_max == 100:
+            return eff_min, None
+        return eff_min, eff_max
+
     def add_event(
         self,
-        worldinfo_id: int,
+        worldinfo_id: int | None,
         title: str,
         description: str,
         probability: int,
         one_shot: bool = False,
         location_id: int | None = None,
+        character_id: int | None = None,
+        min_relationship: int | None = None,
+        max_relationship: int | None = None,
     ) -> Event:
-        if isinstance(worldinfo_id, bool) or not isinstance(worldinfo_id, int) or worldinfo_id <= 0:
+        if worldinfo_id is not None and (isinstance(worldinfo_id, bool) or not isinstance(worldinfo_id, int) or worldinfo_id <= 0):
             raise InvalidWorldInfoDataError("A valid positive worldinfo_id is required.")
+
+        if character_id is not None and (isinstance(character_id, bool) or not isinstance(character_id, int) or character_id <= 0):
+            raise InvalidWorldInfoDataError("A valid positive character_id is required.")
+
+        if worldinfo_id is None and character_id is None:
+            raise InvalidWorldInfoDataError("A valid positive worldinfo_id or character_id is required.")
 
         cleaned_title = title.strip() if isinstance(title, str) else ""
         if not cleaned_title:
@@ -212,6 +253,11 @@ class WorldInfoService:
         if location_id is not None and (isinstance(location_id, bool) or not isinstance(location_id, int) or location_id <= 0):
             raise InvalidWorldInfoDataError("location_id must be None (World Event) or a positive integer.")
 
+        if character_id is not None:
+            norm_min_rel, norm_max_rel = self._normalize_relationship_bounds(min_relationship, max_relationship)
+        else:
+            norm_min_rel, norm_max_rel = None, None
+
         return Event(
             id=None,
             worldinfo_id=worldinfo_id,
@@ -220,6 +266,9 @@ class WorldInfoService:
             probability=probability,
             one_shot=bool(one_shot),
             description=cleaned_desc,
+            character_id=character_id,
+            min_relationship=norm_min_rel,
+            max_relationship=norm_max_rel,
         )
 
     def update_event(
@@ -230,6 +279,8 @@ class WorldInfoService:
         probability: int,
         one_shot: bool = False,
         location_id: int | None = None,
+        min_relationship: int | None = None,
+        max_relationship: int | None = None,
     ) -> Event:
         cleaned_title = title.strip() if isinstance(title, str) else ""
         if not cleaned_title:
@@ -242,11 +293,21 @@ class WorldInfoService:
         if isinstance(probability, bool) or not isinstance(probability, int) or not (0 <= probability <= 100):
             raise InvalidWorldInfoDataError("Event probability must be an integer between 0 and 100.")
 
+        if location_id is not None and (isinstance(location_id, bool) or not isinstance(location_id, int) or location_id <= 0):
+            raise InvalidWorldInfoDataError("location_id must be None or a positive integer.")
+
+        if event.character_id is not None:
+            norm_min_rel, norm_max_rel = self._normalize_relationship_bounds(min_relationship, max_relationship)
+        else:
+            norm_min_rel, norm_max_rel = None, None
+
         event.title = cleaned_title
         event.description = cleaned_desc
         event.probability = probability
         event.one_shot = bool(one_shot)
         event.location_id = location_id
+        event.min_relationship = norm_min_rel
+        event.max_relationship = norm_max_rel
         return event
 
     def initialize_cooldown(self) -> int:
@@ -261,13 +322,22 @@ class WorldInfoService:
         worldinfo_events: list[Event],
         current_location_id: int | None,
         state: EventCooldownState,
+        current_relationship_level: int | None = None,
     ) -> Event | None:
         state.current_counter = self.initialize_cooldown()
 
         pool = [
             ev
             for ev in worldinfo_events
-            if (ev.location_id is None or ev.location_id == current_location_id)
+            if (ev.location_id is None or (current_location_id is not None and ev.location_id == current_location_id))
+            and (
+                ev.min_relationship is None
+                or (current_relationship_level is not None and current_relationship_level >= ev.min_relationship)
+            )
+            and (
+                ev.max_relationship is None
+                or (current_relationship_level is not None and current_relationship_level <= ev.max_relationship)
+            )
             and ev.probability > 0
             and not (ev.one_shot and ev.id is not None and ev.id in state.triggered_event_ids)
         ]
