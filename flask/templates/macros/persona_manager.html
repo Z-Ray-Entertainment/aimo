@@ -25,12 +25,13 @@
 
 {% macro persona_text_fields(prefix) %}
   <div>
-    <label>Hintergrund / Persönlichkeit</label>
+    <label>Hintergrund / Persönlichkeit <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal;">(max. 1.200 Zeichen)</span></label>
     <input type="hidden" name="i18n_description" id="i18n-persona-{{ prefix }}-desc" value="{}">
     <textarea
       id="{{ prefix }}-persona-description"
       name="description"
       rows="2"
+      maxlength="1200"
       data-i18n-field="description"
       data-i18n-entity-type="persona"
       data-i18n-entity-id=""

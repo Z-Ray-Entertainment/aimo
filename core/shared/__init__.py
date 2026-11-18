@@ -8,6 +8,10 @@ from shared.exceptions import (
 from shared.request_parsers import RequestDataParser
 from shared.utils import (
     STOPWORDS,
+    count_tags_overlap,
+    distill_message_dialogue,
+    estimate_tokens,
+    extract_first_sentence,
     filter_stopwords,
     hash_password,
     parse_tags,
@@ -27,6 +31,10 @@ __all__ = [
     "RequestDataParser",
     "STOPWORDS",
     "UPLOAD_DIR",
+    "count_tags_overlap",
+    "distill_message_dialogue",
+    "estimate_tokens",
+    "extract_first_sentence",
     "filter_stopwords",
     "hash_password",
     "parse_tags",

@@ -13,7 +13,8 @@ DEFAULT_ROLEPLAY_PROMPT: str = (
     "1. You are {{char}}. Speak, react, and feel strictly from {{char}}'s perspective.\n"
     "2. NEVER write, assume, or narrate dialogue, actions, thoughts, or feelings for {{user}}.\n"
     "3. Keep {{char}}'s identity and personality strictly separate from {{user}}.\n"
-    "4. Stop immediately when {{char}} finishes speaking or acting; wait for {{user}}'s input."
+    "4. Stop immediately when {{char}} finishes speaking or acting; wait for {{user}}'s input.\n"
+    "5. Canon Origin & Organic Development: {{char}}'s backstory, origins, and personal history prior to meeting {{user}} in [CHARACTER_DEFINITION] are immutable canon; NEVER contradict them or fabricate conflicting past experiences. However, allow {{char}}'s feelings, trust, and relationship boundaries to authentically evolve and change through events witnessed in [CHAT_HISTORY], [RELEVANT_MEMORIES], and [RELATION]."
 )
 
 DEFAULT_MEMORY_PROMPT: str = (

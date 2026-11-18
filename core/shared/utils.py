@@ -1,3 +1,4 @@
+import math
 import re
 import unicodedata
 
@@ -85,9 +86,80 @@ def parse_tags(raw: str | list[str]) -> list[str]:
 
 
 def tags_overlap(tags_a: list[str], tags_b: list[str]) -> bool:
-    set_a = {tag.strip().lower() for tag in tags_a if tag.strip()}
-    set_b = {tag.strip().lower() for tag in tags_b if tag.strip()}
-    return len(set_a & set_b) >= 1
+    return count_tags_overlap(tags_a, tags_b) >= 1
+
+
+def count_tags_overlap(tags_a: list[str], tags_b: list[str]) -> int:
+    set_a = {tag.strip().lower() for tag in tags_a if tag and tag.strip()}
+    set_b = {tag.strip().lower() for tag in tags_b if tag and tag.strip()}
+    return len(set_a & set_b)
+
+
+def estimate_tokens(text: str) -> int:
+    if not text:
+        return 0
+    char_based = math.ceil(len(text) / 3.2)
+    word_based = math.ceil(len(text.split()) * 1.35)
+    return max(char_based, word_based)
+
+
+def extract_first_sentence(text: str, max_chars: int = 180) -> str:
+    if not text or not text.strip():
+        return ""
+    cleaned = re.sub(r"\s+", " ", text.strip())
+    match = re.match(r"^(.+?[.!?])(?:\s|$)", cleaned)
+    first_sent = match.group(1).strip() if match else cleaned
+    if len(first_sent) <= max_chars:
+        return first_sent
+    truncated = first_sent[:max_chars].rsplit(" ", 1)[0].rstrip(",;:-")
+    return f"{truncated}..."
+
+
+_SPEECH_QUOTE_RE = re.compile(r'(?:["“”„‟«»].+?["“”„‟«»])', re.DOTALL)
+_ACTION_BLOCK_RE = re.compile(r"\*([^*]+)\*", re.DOTALL)
+
+
+def _condense_action_block(match: re.Match, max_len: int = 100) -> str:
+    inner = re.sub(r"\s+", " ", match.group(1).strip())
+    if not inner:
+        return ""
+    if len(inner) <= max_len:
+        return f"*{inner}*"
+    short_sent = extract_first_sentence(inner, max_chars=max_len)
+    return f"*{short_sent}*"
+
+
+def distill_message_dialogue(text: str, max_chars: int = 380) -> str:
+    if not text or not text.strip():
+        return ""
+    raw = text.strip()
+    if len(raw) <= max_chars:
+        return raw
+
+    paragraphs = [p.strip() for p in re.split(r"\n\s*\n|\n", raw) if p.strip()]
+    distilled_parts: list[str] = []
+
+    for idx, para in enumerate(paragraphs):
+        has_speech = bool(_SPEECH_QUOTE_RE.search(para))
+        if has_speech:
+            condensed = _ACTION_BLOCK_RE.sub(
+                lambda m: _condense_action_block(m, max_len=75),
+                para,
+            )
+            distilled_parts.append(re.sub(r"\s+", " ", condensed).strip())
+        elif idx == 0 and not distilled_parts:
+            first_action = _ACTION_BLOCK_RE.search(para)
+            if first_action:
+                distilled_parts.append(_condense_action_block(first_action, max_len=75))
+
+    combined = " ".join(distilled_parts) if distilled_parts else re.sub(r"\s+", " ", raw)
+    if len(combined) <= max_chars:
+        return combined
+
+    half = (max_chars - 5) // 2
+    head = combined[:half].rsplit(" ", 1)[0].rstrip(",;:-")
+    tail = combined[-half:].split(" ", 1)[-1].lstrip(",;:-")
+    return f"{head} [...] {tail}"
 
 
 def sanitize_filename(filename: str) -> str:

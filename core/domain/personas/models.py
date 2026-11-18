@@ -23,6 +23,9 @@ class Gender(StrEnum):
         raise ValueError(f"Unknown gender: '{raw}'")
 
 
+MAX_PERSONA_DESCRIPTION_LENGTH: int = 1200
+
+
 @dataclass
 class UserPersona:
     id: int | None
