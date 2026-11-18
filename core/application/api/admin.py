@@ -4,17 +4,16 @@ from flask import Blueprint, Response, jsonify, request, stream_with_context
 
 from application.api.auth import require_permission
 from domain.permissions.models import FunctionPermission
-from domain.settings.models import (
-    RECOMMENDED_GOOGLE_AI_IMAGE_MODEL,
-    ImageGenBackend,
-    LLMBackend,
-    get_recommended_models_for_backend,
-    get_recommended_task_models,
+from infrastructure.image_gen.factory import (
+    get_image_gen_provider,
+    get_image_gen_provider_class,
 )
-from domain.settings.services import SettingsService
-from infrastructure.image_gen.factory import get_image_gen_provider
-from infrastructure.llm.factory import get_llm_provider, probe_llm_backend
-from infrastructure.llm.google_ai import GoogleAILLMProvider
+from infrastructure.llm.factory import (
+    get_llm_provider,
+    get_llm_provider_class,
+    probe_llm_backend,
+)
+from infrastructure.provider_registry import ProviderRegistry
 from infrastructure.repositories.settings_repository import SettingsRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
@@ -28,14 +27,10 @@ def list_models():
     settings = SettingsRepository().get_settings()
     llm = get_llm_provider(settings)
     try:
-        if isinstance(llm, GoogleAILLMProvider):
-            models, image_models = llm.list_model_catalog()
-        else:
-            models = llm.list_models()
-            image_models = []
+        models, image_models = llm.list_model_catalog()
         return jsonify(
             {
-                "backend": settings.llm_backend.value,
+                "backend": settings.llm_backend,
                 "models": models,
                 "image_models": image_models,
                 "healthy": True,
@@ -44,7 +39,7 @@ def list_models():
     except AimoError as exc:
         return jsonify(
             {
-                "backend": settings.llm_backend.value,
+                "backend": settings.llm_backend,
                 "models": [],
                 "image_models": [],
                 "healthy": False,
@@ -58,48 +53,34 @@ def list_models():
 def get_recommended_models():
     settings = SettingsRepository().get_settings()
     llm = get_llm_provider(settings)
+    llm_cls = get_llm_provider_class(settings.llm_backend)
+    img_cls = get_image_gen_provider_class(settings.image_gen_backend)
+
     installed: list[str] = []
     image_models: list[str] = []
     healthy = False
     try:
-        if isinstance(llm, GoogleAILLMProvider):
-            installed, image_models = llm.list_model_catalog()
-        else:
-            installed = llm.list_models()
+        installed, image_models = llm.list_model_catalog()
         healthy = True
     except AimoError:
         installed = []
 
-    rec_by_role = get_recommended_task_models(settings.llm_backend)
-    roles_detail = get_recommended_models_for_backend(settings.llm_backend)
-    unique_models = list(
-        dict.fromkeys(
-            [
-                rec_by_role["roleplay"],
-                rec_by_role["memory"],
-                rec_by_role["assistant"],
-                rec_by_role["vision"],
-                rec_by_role["classification"],
-            ]
-        )
-    )
+    rec_by_role = llm_cls.get_recommended_task_models()
+    roles_detail = llm_cls.get_recommended_models()
+    unique_models = llm_cls.get_unique_recommended_models()
     model_statuses = {m: (m in installed) for m in unique_models}
 
     return jsonify(
         {
-            "backend": settings.llm_backend.value,
+            "backend": settings.llm_backend,
             "recommended_by_role": rec_by_role,
             "roles_detail": roles_detail,
             "unique_models": unique_models,
             "model_statuses": model_statuses,
             "image_models": image_models,
-            "recommended_image_model": (
-                RECOMMENDED_GOOGLE_AI_IMAGE_MODEL
-                if settings.llm_backend == LLMBackend.GOOGLE_AI
-                else None
-            ),
+            "recommended_image_model": img_cls.get_recommended_model(),
             "llm_healthy": healthy,
-            "ollama_healthy": healthy if settings.llm_backend == LLMBackend.OLLAMA else False,
+            "ollama_healthy": healthy if llm_cls.supports_model_management() else False,
         }
     )
 
@@ -109,12 +90,12 @@ def get_recommended_models():
 def apply_recommended_models_endpoint():
     settings_repo = SettingsRepository()
     settings = settings_repo.get_settings()
-    settings = SettingsService().apply_recommended_task_models(settings)
+    settings = ProviderRegistry.apply_recommended_models(settings)
     settings_repo.save_settings(settings)
     return jsonify(
         {
             "status": "success",
-            "backend": settings.llm_backend.value,
+            "backend": settings.llm_backend,
             "tasks": {
                 "roleplay_model": settings.tasks.roleplay_model,
                 "memory_model": settings.tasks.memory_model,
@@ -122,7 +103,7 @@ def apply_recommended_models_endpoint():
                 "vision_model": settings.tasks.vision_model,
                 "classification_model": settings.tasks.classification_model,
             },
-            "google_ai_image_model": settings.google_ai_image_model,
+            "image_gen_config": settings.get_image_gen_config(),
         }
     )
 
@@ -132,15 +113,25 @@ def apply_recommended_models_endpoint():
 def verify_llm_connection():
     data = request.get_json(silent=True) or request.form.to_dict()
     settings = SettingsRepository().get_settings()
-    raw_backend = str(data.get("llm_backend") or settings.llm_backend.value).strip()
-    ollama_url = str(data.get("ollama_url") or settings.ollama_url).strip()
-    raw_api_key = str(data.get("google_ai_api_key") or "").strip()
-    effective_key = raw_api_key or settings.google_ai_api_key
+    raw_backend = str(data.get("llm_backend") or settings.llm_backend).strip().lower()
+
+    submitted_cfg: dict[str, str] = {}
+    if isinstance(data.get("config"), dict):
+        submitted_cfg = {str(k): str(v) for k, v in data["config"].items()}
+    else:
+        if "ollama_url" in data:
+            submitted_cfg["base_url"] = str(data.get("ollama_url") or "").strip()
+        if "base_url" in data:
+            submitted_cfg["base_url"] = str(data.get("base_url") or "").strip()
+        if "google_ai_api_key" in data:
+            submitted_cfg["api_key"] = str(data.get("google_ai_api_key") or "").strip()
+        if "api_key" in data:
+            submitted_cfg["api_key"] = str(data.get("api_key") or "").strip()
 
     result = probe_llm_backend(
         backend=raw_backend,
-        ollama_url=ollama_url,
-        google_ai_api_key=effective_key,
+        submitted_config=submitted_cfg,
+        existing_config=settings.get_llm_config(raw_backend),
     )
     return jsonify(result)
 
@@ -149,11 +140,12 @@ def verify_llm_connection():
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def pull_model():
     settings = SettingsRepository().get_settings()
-    if settings.llm_backend != LLMBackend.OLLAMA:
+    llm = get_llm_provider(settings)
+    if not type(llm).supports_model_management():
         return (
             jsonify(
                 {
-                    "error": "Model pull is only supported when Ollama is the active backend."
+                    "error": "Model pull is not supported by the active LLM backend."
                 }
             ),
             400,
@@ -163,8 +155,6 @@ def pull_model():
     model_name = str(data.get("name", "")).strip()
     if not model_name:
         return jsonify({"error": "Model name is required."}), 400
-
-    llm = get_llm_provider(settings)
 
     def generate():
         try:
@@ -181,17 +171,17 @@ def pull_model():
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def delete_model(model_name: str):
     settings = SettingsRepository().get_settings()
-    if settings.llm_backend != LLMBackend.OLLAMA:
+    llm = get_llm_provider(settings)
+    if not type(llm).supports_model_management():
         return (
             jsonify(
                 {
-                    "error": "Model deletion is only supported when Ollama is the active backend."
+                    "error": "Model deletion is not supported by the active LLM backend."
                 }
             ),
             400,
         )
 
-    llm = get_llm_provider(settings)
     try:
         deleted = llm.delete_model(model_name)
         return jsonify({"deleted": deleted, "model": model_name})
@@ -209,13 +199,12 @@ def check_services_health():
     img_ok = img_gen.check_health()
     return jsonify(
         {
-            "backend": settings.llm_backend.value,
+            "backend": settings.llm_backend,
             "llm": llm_ok,
-            "ollama": llm_ok if settings.llm_backend == LLMBackend.OLLAMA else False,
-            "google_ai": llm_ok if settings.llm_backend == LLMBackend.GOOGLE_AI else False,
-            "image_gen_backend": settings.image_gen_backend.value,
+            "image_gen_backend": settings.image_gen_backend,
             "image_gen": img_ok,
-            "comfyui": img_ok if settings.image_gen_backend == ImageGenBackend.COMFYUI else False,
+            "comfyui": img_ok if settings.image_gen_backend == "comfyui" else False,
+            "ollama": llm_ok if settings.llm_backend == "ollama" else False,
         }
     )
 
@@ -235,6 +224,8 @@ def get_backdrop():
 @api_admin_bp.route("/backdrop", methods=["POST"])
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def update_backdrop():
+    from domain.settings.services import SettingsService
+
     settings_repo = SettingsRepository()
     settings_service = SettingsService()
     settings = settings_repo.get_settings()

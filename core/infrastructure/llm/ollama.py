@@ -3,20 +3,132 @@ import json
 import re
 from collections.abc import Iterator
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 import requests
 
-from domain.settings.models import ModelParameters
+from domain.settings.models import ModelParameters, ServiceSettings
+from domain.settings.services import SettingsService
 from infrastructure.llm.base import BaseLLMProvider
 from shared.config import Config
 from shared.exceptions import InfrastructureError
 
 
 class OllamaLLMProvider(BaseLLMProvider):
+    PROVIDER_ID: ClassVar[str] = "ollama"
+    DISPLAY_NAME: ClassVar[str] = "Ollama (Lokal / Self-Hosted)"
+    BADGE_LABEL: ClassVar[str] = "Lokal"
+    DESCRIPTION: ClassVar[str] = (
+        "Volle Datenkontrolle auf eigener Hardware oder einem eigenen Ollama-Server. "
+        "Modelle werden lokal geladen und verwaltet."
+    )
+    DEFAULT_BASE_URL: ClassVar[str] = Config.DEFAULT_OLLAMA_URL
+
+    RECOMMENDED_ROLEPLAY_MODEL: ClassVar[str] = (
+        "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest"
+    )
+    RECOMMENDED_MEMORY_MODEL: ClassVar[str] = (
+        "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest"
+    )
+    RECOMMENDED_ASSISTANT_MODEL: ClassVar[str] = "gemma4:e4b"
+    RECOMMENDED_VISION_MODEL: ClassVar[str] = "gemma4:e4b"
+    RECOMMENDED_CLASSIFICATION_MODEL: ClassVar[str] = "llama3.2:1b"
+
+    DEFAULT_MODEL_ROLES: ClassVar[dict[str, dict[str, str]]] = {
+        "roleplay": {
+            "role_name": "Roleplay",
+            "model": RECOMMENDED_ROLEPLAY_MODEL,
+            "description": "Narrative Dialog-Generierung und Rollenspiel im Chat.",
+        },
+        "memory": {
+            "role_name": "Memory",
+            "model": RECOMMENDED_MEMORY_MODEL,
+            "description": "Erstellt alle 10 Nachrichten episodische Zusammenfassungen und aktualisiert den Chat-Titel.",
+        },
+        "assistant": {
+            "role_name": "Assistant",
+            "model": RECOMMENDED_ASSISTANT_MODEL,
+            "description": "Zuständig für Sparkle-Optimierung (✨), Übersetzungen und Bild-Prompts.",
+        },
+        "vision": {
+            "role_name": "Vision",
+            "model": RECOMMENDED_VISION_MODEL,
+            "description": "Optische Analyse von Porträts, Schauplatz-Hintergründen und Chat-Bildern.",
+        },
+        "classification": {
+            "role_name": "Classification",
+            "model": RECOMMENDED_CLASSIFICATION_MODEL,
+            "description": "Schnelle Erkennung von Emotionen (Avatar-Sprites) und Ortswechsel-Vorschlägen.",
+        },
+    }
+
+    @classmethod
+    def supports_model_management(cls) -> bool:
+        return True
+
+    @classmethod
+    def is_model_compatible(cls, model_name: str) -> bool:
+        cleaned = (model_name or "").strip().lower()
+        if not cleaned:
+            return False
+        return not cleaned.startswith("gemini-") and not cleaned.startswith("models/gemini-")
+
+    @classmethod
+    def get_default_config(cls) -> dict[str, str]:
+        return {"base_url": cls.DEFAULT_BASE_URL}
+
+    @classmethod
+    def validate_active_config(
+        cls,
+        submitted: dict[str, str],
+        existing: dict[str, str],
+        clear_secret: bool = False,
+    ) -> dict[str, str]:
+        raw_url = (submitted.get("base_url") or "").strip() or (existing.get("base_url") or "").strip()
+        validated = SettingsService.validate_url("ollama_url", raw_url)
+        return {"base_url": validated}
+
+    @classmethod
+    def validate_inactive_config(
+        cls,
+        submitted: dict[str, str],
+        existing: dict[str, str],
+        clear_secret: bool = False,
+    ) -> dict[str, str]:
+        raw_url = (submitted.get("base_url") or "").strip()
+        if raw_url:
+            return {"base_url": SettingsService.validate_url("ollama_url", raw_url)}
+        existing_url = (existing.get("base_url") or "").strip() or cls.DEFAULT_BASE_URL
+        return {"base_url": existing_url}
+
+    @classmethod
+    def from_settings(cls, settings: ServiceSettings) -> "OllamaLLMProvider":
+        cfg = settings.get_llm_config(cls.PROVIDER_ID)
+        base_url = cfg.get("base_url") or cls.DEFAULT_BASE_URL
+        return cls(base_url=base_url)
+
+    def format_stream_error(self, exc: Exception, model: str) -> str:
+        raw_err = str(exc)
+        if (
+            "Failed to stream response from Ollama" in raw_err
+            or "Connection refused" in raw_err
+            or "Failed to establish a new connection" in raw_err
+            or "Max retries exceeded" in raw_err
+        ):
+            return (
+                f"Verbindung zu Ollama ({model}) fehlgeschlagen oder unterbrochen. "
+                "Bitte stelle sicher, dass der Ollama-Dienst läuft."
+            )
+        if "not found" in raw_err.lower():
+            return (
+                f"Ollama-Modell '{model}' wurde nicht gefunden. "
+                f"Bitte in Ollama laden (ollama run {model})."
+            )
+        return f"Ollama-Verbindungsfehler ({model}): {raw_err}"
+
     def __init__(
         self,
-        base_url: str = Config.DEFAULT_OLLAMA_URL,
+        base_url: str = DEFAULT_BASE_URL,
         request_timeout: tuple[float, float] = (10.0, 120.0),
         pull_timeout: tuple[float, float] = (10.0, 600.0),
     ) -> None:

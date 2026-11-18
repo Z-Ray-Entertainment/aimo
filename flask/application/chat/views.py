@@ -10,7 +10,6 @@ from domain.memories.services import MemoryService
 from domain.permissions.models import FunctionPermission
 from domain.personas.models import Gender
 from domain.personas.services import PersonaService
-from domain.settings.models import ImageGenBackend
 from infrastructure.image_gen.factory import get_image_gen_provider
 from infrastructure.llm.factory import get_llm_provider
 from infrastructure.repositories.character_repository import CharacterRepository
@@ -417,12 +416,8 @@ def view_session(session_id: int):
     ]
 
     settings = SettingsRepository().get_settings()
-    image_gen_available = False
-    if settings.image_gen_backend != ImageGenBackend.DISABLED:
-        if settings.image_gen_backend != ImageGenBackend.COMFYUI or (
-            settings.comfyui_url and settings.comfyui_url.strip()
-        ):
-            image_gen_available = get_image_gen_provider(settings).check_health()
+    img_gen = get_image_gen_provider(settings)
+    image_gen_available = type(img_gen).is_enabled() and img_gen.check_health()
     persona_trans = (
         trans_repo.get_entity_translations_map("persona", persona.id)
         if persona and persona.id

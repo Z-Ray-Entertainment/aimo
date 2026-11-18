@@ -1,16 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from enum import StrEnum
 
 from domain.settings.exceptions import (
-    InvalidImageGenBackendError,
-    InvalidLLMBackendError,
     InvalidModelParametersError,
-    InvalidSearchBackendError,
     InvalidSystemPromptError,
 )
-from shared.config import Config
 
 DEFAULT_ROLEPLAY_PROMPT: str = (
     "Write {{char}}'s next reply in a fictional chat between {{char}} and {{user}}. "
@@ -112,159 +107,13 @@ class ModelParameters:
         self.repeat_penalty = float(self.repeat_penalty)
 
 
-class LLMBackend(StrEnum):
-    OLLAMA = "ollama"
-    GOOGLE_AI = "google_ai"
-
-    @classmethod
-    def resolve(cls, raw: str | "LLMBackend") -> "LLMBackend":
-        if isinstance(raw, cls):
-            return raw
-        if not isinstance(raw, str):
-            raise InvalidLLMBackendError(f"Unsupported LLM backend: '{raw}'")
-        cleaned = raw.strip().lower()
-        for member in cls:
-            if cleaned == member.value or cleaned.upper() == member.name:
-                return member
-        raise InvalidLLMBackendError(f"Unsupported LLM backend: '{raw}'")
-
-
-class ImageGenBackend(StrEnum):
-    COMFYUI = "comfyui"
-    GOOGLE_AI = "google_ai"
-    DISABLED = "disabled"
-
-    @classmethod
-    def resolve(cls, raw: str | "ImageGenBackend") -> "ImageGenBackend":
-        if isinstance(raw, cls):
-            return raw
-        if not isinstance(raw, str):
-            raise InvalidImageGenBackendError(f"Unsupported image generation backend: '{raw}'")
-        cleaned = raw.strip().lower()
-        for member in cls:
-            if cleaned == member.value or cleaned.upper() == member.name:
-                return member
-        raise InvalidImageGenBackendError(f"Unsupported image generation backend: '{raw}'")
-
-
-class SearchBackend(StrEnum):
-    DISABLED = "disabled"
-    SEARXNG = "searxng"
-    GOOGLE_AI = "google_ai"
-
-    @classmethod
-    def resolve(cls, raw: str | "SearchBackend") -> "SearchBackend":
-        if isinstance(raw, cls):
-            return raw
-        if not isinstance(raw, str):
-            raise InvalidSearchBackendError(f"Unsupported search backend: '{raw}'")
-        cleaned = raw.strip().lower()
-        for member in cls:
-            if cleaned == member.value or cleaned.upper() == member.name:
-                return member
-        raise InvalidSearchBackendError(f"Unsupported search backend: '{raw}'")
-
-
-RECOMMENDED_ROLEPLAY_MODEL: str = (
-    "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest"
-)
-RECOMMENDED_MEMORY_MODEL: str = (
-    "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest"
-)
-RECOMMENDED_ASSISTANT_MODEL: str = "gemma4:e4b"
-RECOMMENDED_VISION_MODEL: str = "gemma4:e4b"
-RECOMMENDED_CLASSIFICATION_MODEL: str = "llama3.2:1b"
-
-RECOMMENDED_DEFAULT_MODEL: str = RECOMMENDED_ROLEPLAY_MODEL
-
-RECOMMENDED_MODELS: dict[str, dict[str, str]] = {
-    "roleplay": {
-        "role_name": "Roleplay",
-        "model": RECOMMENDED_ROLEPLAY_MODEL,
-        "description": "Narrative Dialog-Generierung und Rollenspiel im Chat.",
-    },
-    "memory": {
-        "role_name": "Memory",
-        "model": RECOMMENDED_MEMORY_MODEL,
-        "description": "Erstellt alle 10 Nachrichten episodische Zusammenfassungen und aktualisiert den Chat-Titel.",
-    },
-    "assistant": {
-        "role_name": "Assistant",
-        "model": RECOMMENDED_ASSISTANT_MODEL,
-        "description": "Zuständig für Sparkle-Optimierung (✨), Übersetzungen und Diffuser-Prompts.",
-    },
-    "vision": {
-        "role_name": "Vision",
-        "model": RECOMMENDED_VISION_MODEL,
-        "description": "Optische Analyse von Porträts, Schauplatz-Hintergründen und Chat-Bildern.",
-    },
-    "classification": {
-        "role_name": "Classification",
-        "model": RECOMMENDED_CLASSIFICATION_MODEL,
-        "description": "Schnelle Erkennung von Emotionen (Avatar-Sprites) und Ortswechsel-Vorschlägen.",
-    },
-}
-
-RECOMMENDED_GOOGLE_AI_ROLEPLAY_MODEL: str = "gemini-4-hydrogen"
-RECOMMENDED_GOOGLE_AI_MEMORY_MODEL: str = "gemini-4-hydrogen"
-RECOMMENDED_GOOGLE_AI_ASSISTANT_MODEL: str = "gemini-4-hydrogen"
-RECOMMENDED_GOOGLE_AI_VISION_MODEL: str = "gemini-4-hydrogen"
-RECOMMENDED_GOOGLE_AI_CLASSIFICATION_MODEL: str = "gemini-3.1-flash-lite"
-RECOMMENDED_GOOGLE_AI_IMAGE_MODEL: str = "gemini-3.1-flash-image-preview"
-
-RECOMMENDED_GOOGLE_AI_MODELS: dict[str, dict[str, str]] = {
-    "roleplay": {
-        "role_name": "Roleplay",
-        "model": RECOMMENDED_GOOGLE_AI_ROLEPLAY_MODEL,
-        "description": "Schnelles Cloud-Sprachmodell für narrative Dialoge und Rollenspiel.",
-    },
-    "memory": {
-        "role_name": "Memory",
-        "model": RECOMMENDED_GOOGLE_AI_MEMORY_MODEL,
-        "description": "Erstellt alle 10 Nachrichten episodische Zusammenfassungen und aktualisiert den Chat-Titel.",
-    },
-    "assistant": {
-        "role_name": "Assistant",
-        "model": RECOMMENDED_GOOGLE_AI_ASSISTANT_MODEL,
-        "description": "Zuständig für Sparkle-Optimierung (✨), Übersetzungen und Bild-Prompts.",
-    },
-    "vision": {
-        "role_name": "Vision",
-        "model": RECOMMENDED_GOOGLE_AI_VISION_MODEL,
-        "description": "Multimodale Analyse von Porträts, Schauplatz-Hintergründen und Chat-Bildern.",
-    },
-    "classification": {
-        "role_name": "Classification",
-        "model": RECOMMENDED_GOOGLE_AI_CLASSIFICATION_MODEL,
-        "description": "Ultraschnelle und kosteneffiziente Erkennung von Emotionen und Ortswechseln.",
-    },
-}
-
-RECOMMENDED_MODELS_BY_BACKEND: dict[str, dict[str, dict[str, str]]] = {
-    LLMBackend.OLLAMA.value: RECOMMENDED_MODELS,
-    LLMBackend.GOOGLE_AI.value: RECOMMENDED_GOOGLE_AI_MODELS,
-}
-
-
-def get_recommended_models_for_backend(
-    backend: LLMBackend | str,
-) -> dict[str, dict[str, str]]:
-    resolved = LLMBackend.resolve(backend)
-    return RECOMMENDED_MODELS_BY_BACKEND[resolved.value]
-
-
-def get_recommended_task_models(backend: LLMBackend | str) -> dict[str, str]:
-    detail = get_recommended_models_for_backend(backend)
-    return {role: info["model"] for role, info in detail.items()}
-
-
 @dataclass
 class TaskAssignment:
-    roleplay_model: str = RECOMMENDED_ROLEPLAY_MODEL
-    memory_model: str = RECOMMENDED_MEMORY_MODEL
-    assistant_model: str = RECOMMENDED_ASSISTANT_MODEL
-    classification_model: str = RECOMMENDED_CLASSIFICATION_MODEL
-    vision_model: str = RECOMMENDED_VISION_MODEL
+    roleplay_model: str = ""
+    memory_model: str = ""
+    assistant_model: str = ""
+    classification_model: str = ""
+    vision_model: str = ""
 
 
 @dataclass
@@ -298,15 +147,12 @@ class SystemPrompts:
 @dataclass
 class ServiceSettings:
     id: int = 1
-    llm_backend: LLMBackend = LLMBackend.OLLAMA
-    ollama_url: str = Config.DEFAULT_OLLAMA_URL
-    google_ai_api_key: str = Config.DEFAULT_GOOGLE_AI_API_KEY
-    image_gen_backend: ImageGenBackend = ImageGenBackend.COMFYUI
-    google_ai_image_model: str = RECOMMENDED_GOOGLE_AI_IMAGE_MODEL
-    comfyui_url: str = Config.DEFAULT_COMFYUI_URL
-    search_backend: SearchBackend = SearchBackend.DISABLED
-    searxng_url: str = Config.DEFAULT_SEARXNG_URL
-    searxng_enabled: bool = False
+    llm_backend: str = ""
+    image_gen_backend: str = ""
+    search_backend: str = ""
+    llm_configs: dict[str, dict[str, str]] = field(default_factory=dict)
+    image_gen_configs: dict[str, dict[str, str]] = field(default_factory=dict)
+    search_configs: dict[str, dict[str, str]] = field(default_factory=dict)
     tasks: TaskAssignment = field(default_factory=TaskAssignment)
     params: ModelParameters = field(default_factory=ModelParameters)
     prompts: SystemPrompts = field(default_factory=SystemPrompts)
@@ -315,3 +161,30 @@ class ServiceSettings:
     @property
     def parameters(self) -> ModelParameters:
         return self.params
+
+    def get_llm_config(self, backend: str | None = None) -> dict[str, str]:
+        key = (backend or self.llm_backend).strip().lower()
+        return dict(self.llm_configs.get(key, {}))
+
+    def set_llm_config(self, backend: str, values: dict[str, str]) -> None:
+        key = backend.strip().lower()
+        if key:
+            self.llm_configs[key] = {str(k): str(v) for k, v in values.items()}
+
+    def get_image_gen_config(self, backend: str | None = None) -> dict[str, str]:
+        key = (backend or self.image_gen_backend).strip().lower()
+        return dict(self.image_gen_configs.get(key, {}))
+
+    def set_image_gen_config(self, backend: str, values: dict[str, str]) -> None:
+        key = backend.strip().lower()
+        if key:
+            self.image_gen_configs[key] = {str(k): str(v) for k, v in values.items()}
+
+    def get_search_config(self, backend: str | None = None) -> dict[str, str]:
+        key = (backend or self.search_backend).strip().lower()
+        return dict(self.search_configs.get(key, {}))
+
+    def set_search_config(self, backend: str, values: dict[str, str]) -> None:
+        key = backend.strip().lower()
+        if key:
+            self.search_configs[key] = {str(k): str(v) for k, v in values.items()}

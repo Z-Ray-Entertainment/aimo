@@ -18,18 +18,17 @@ from domain.permissions.services import PermissionService
 from domain.personas.models import Gender
 from domain.personas.services import PersonaService
 from domain.settings.exceptions import InvalidLLMBackendError, SettingsError
-from domain.settings.models import (
-    RECOMMENDED_GOOGLE_AI_IMAGE_MODEL,
-    LLMBackend,
-    get_recommended_models_for_backend,
-    get_recommended_task_models,
-)
 from domain.settings.services import SettingsService
-from infrastructure.llm.factory import probe_llm_backend
+from infrastructure.image_gen.comfyui import ComfyUIImageGenProvider
+from infrastructure.image_gen.google_ai import GoogleAIImageGenProvider
+from infrastructure.llm.factory import get_llm_provider_class, probe_llm_backend
+from infrastructure.llm.google_ai import GoogleAILLMProvider
+from infrastructure.llm.ollama import OllamaLLMProvider
+from infrastructure.provider_registry import ProviderRegistry
 from infrastructure.repositories.persona_repository import PersonaRepository
 from infrastructure.repositories.settings_repository import SettingsRepository
 from infrastructure.repositories.user_repository import UserRepository
-from shared.config import Config
+from infrastructure.search.stub import SearXNGSearchStubProvider
 from shared.exceptions import AimoError
 
 setup_bp = Blueprint("setup", __name__, url_prefix="/setup")
@@ -42,7 +41,7 @@ def first_boot():
         return redirect(url_for("auth.login"))
 
     form = FirstBootForm.from_request(request.form if request.method == "POST" else {})
-    env_google_key = Config.DEFAULT_GOOGLE_AI_API_KEY.strip()
+    env_google_key = GoogleAILLMProvider.DEFAULT_API_KEY.strip()
 
     if request.method == "POST":
         auth_service = AuthService()
@@ -67,19 +66,25 @@ def first_boot():
         try:
             settings = settings_repo.get_settings()
             effective_google_key = form.google_ai_api_key or env_google_key
-            settings_service.update_backend_configuration(
+            ProviderRegistry.update_backend_configuration(
                 settings=settings,
                 llm_backend=form.llm_backend,
-                ollama_url=form.ollama_url,
-                google_ai_api_key=effective_google_key,
+                llm_configs={
+                    OllamaLLMProvider.PROVIDER_ID: {"base_url": form.ollama_url},
+                    GoogleAILLMProvider.PROVIDER_ID: {"api_key": effective_google_key},
+                },
                 image_gen_backend=form.image_gen_backend,
-                comfyui_url=form.comfyui_url,
-                google_ai_image_model=form.google_ai_image_model,
+                image_gen_configs={
+                    ComfyUIImageGenProvider.PROVIDER_ID: {"base_url": form.comfyui_url},
+                    GoogleAIImageGenProvider.PROVIDER_ID: {"model": form.google_ai_image_model},
+                },
                 search_backend=form.search_backend,
-                searxng_url=form.searxng_url,
+                search_configs={
+                    SearXNGSearchStubProvider.PROVIDER_ID: {"base_url": form.searxng_url},
+                },
             )
 
-            rec = get_recommended_task_models(settings.llm_backend)
+            rec = get_llm_provider_class(settings.llm_backend).get_recommended_task_models()
             settings_service.update_task_models(
                 settings=settings,
                 roleplay_model=form.roleplay_model or rec["roleplay"],
@@ -131,15 +136,16 @@ def verify_backend():
         abort(404)
 
     data = request.get_json(silent=True) or request.form.to_dict()
-    raw_backend = str(data.get("llm_backend") or LLMBackend.OLLAMA.value).strip()
-    ollama_url = str(data.get("ollama_url") or "").strip()
-    raw_key = str(data.get("google_ai_api_key") or "").strip()
-    effective_key = raw_key or Config.DEFAULT_GOOGLE_AI_API_KEY.strip()
+    raw_backend = str(data.get("llm_backend") or OllamaLLMProvider.PROVIDER_ID).strip().lower()
+    submitted_cfg = {
+        "base_url": str(data.get("ollama_url") or data.get("base_url") or "").strip(),
+        "api_key": str(data.get("google_ai_api_key") or data.get("api_key") or "").strip()
+        or GoogleAILLMProvider.DEFAULT_API_KEY.strip(),
+    }
 
     result = probe_llm_backend(
         backend=raw_backend,
-        ollama_url=ollama_url,
-        google_ai_api_key=effective_key,
+        submitted_config=submitted_cfg,
     )
     return jsonify(result)
 
@@ -150,14 +156,9 @@ def _render_first_boot(form: FirstBootForm, env_google_key: str):
         form=form,
         has_env_google_key=bool(env_google_key),
         env_google_key_hint=mask_secret(env_google_key),
-        ollama_recommended=get_recommended_models_for_backend(LLMBackend.OLLAMA),
-        google_recommended=get_recommended_models_for_backend(LLMBackend.GOOGLE_AI),
-        recommended_by_backend={
-            LLMBackend.OLLAMA.value: get_recommended_task_models(LLMBackend.OLLAMA),
-            LLMBackend.GOOGLE_AI.value: get_recommended_task_models(LLMBackend.GOOGLE_AI),
-        },
-        recommended_google_image_model=RECOMMENDED_GOOGLE_AI_IMAGE_MODEL,
-        ollama_unique_models=list(
-            dict.fromkeys(get_recommended_task_models(LLMBackend.OLLAMA).values())
-        ),
+        ollama_recommended=OllamaLLMProvider.get_recommended_models(),
+        google_recommended=GoogleAILLMProvider.get_recommended_models(),
+        recommended_by_backend=ProviderRegistry.get_recommended_task_models_by_backend(),
+        recommended_google_image_model=GoogleAIImageGenProvider.get_recommended_model() or "",
+        ollama_unique_models=OllamaLLMProvider.get_unique_recommended_models(),
     )

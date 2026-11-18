@@ -1,11 +1,13 @@
 import json
 from collections.abc import Iterator
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 import requests
 
-from domain.settings.models import ModelParameters
+from domain.settings.exceptions import InvalidServiceCredentialsError
+from domain.settings.models import ModelParameters, ServiceSettings
+from domain.settings.services import SettingsService
 from infrastructure.google_ai_common import (
     DEFAULT_GOOGLE_AI_SAFETY_SETTINGS,
     build_google_headers,
@@ -19,12 +21,130 @@ from shared.exceptions import InfrastructureError
 
 
 class GoogleAILLMProvider(BaseLLMProvider):
+    PROVIDER_ID: ClassVar[str] = "google_ai"
+    DISPLAY_NAME: ClassVar[str] = "Google AI Cloud (Gemini API)"
+    BADGE_LABEL: ClassVar[str] = "Cloud"
+    DESCRIPTION: ClassVar[str] = (
+        "Sofort startklar ohne eigene GPU über einen API-Key aus Google AI Studio. "
+        "Unterstützt Text, Vision und optional Bildgenerierung."
+    )
+    DEFAULT_BASE_URL: ClassVar[str] = Config.GOOGLE_AI_BASE_URL
+    DEFAULT_API_KEY: ClassVar[str] = Config.DEFAULT_GOOGLE_AI_API_KEY
+
+    RECOMMENDED_ROLEPLAY_MODEL: ClassVar[str] = "gemini-4-hydrogen"
+    RECOMMENDED_MEMORY_MODEL: ClassVar[str] = "gemini-4-hydrogen"
+    RECOMMENDED_ASSISTANT_MODEL: ClassVar[str] = "gemini-4-hydrogen"
+    RECOMMENDED_VISION_MODEL: ClassVar[str] = "gemini-4-hydrogen"
+    RECOMMENDED_CLASSIFICATION_MODEL: ClassVar[str] = "gemini-3.1-flash-lite"
+
+    DEFAULT_MODEL_ROLES: ClassVar[dict[str, dict[str, str]]] = {
+        "roleplay": {
+            "role_name": "Roleplay",
+            "model": RECOMMENDED_ROLEPLAY_MODEL,
+            "description": "Schnelles Cloud-Sprachmodell für narrative Dialoge und Rollenspiel.",
+        },
+        "memory": {
+            "role_name": "Memory",
+            "model": RECOMMENDED_MEMORY_MODEL,
+            "description": "Erstellt alle 10 Nachrichten episodische Zusammenfassungen und aktualisiert den Chat-Titel.",
+        },
+        "assistant": {
+            "role_name": "Assistant",
+            "model": RECOMMENDED_ASSISTANT_MODEL,
+            "description": "Zuständig für Sparkle-Optimierung (✨), Übersetzungen und Bild-Prompts.",
+        },
+        "vision": {
+            "role_name": "Vision",
+            "model": RECOMMENDED_VISION_MODEL,
+            "description": "Multimodale Analyse von Porträts, Schauplatz-Hintergründen und Chat-Bildern.",
+        },
+        "classification": {
+            "role_name": "Classification",
+            "model": RECOMMENDED_CLASSIFICATION_MODEL,
+            "description": "Ultraschnelle und kosteneffiziente Erkennung von Emotionen und Ortswechseln.",
+        },
+    }
+
     _MODEL_CTX_CACHE: dict[str, int] = {}
+
+    @classmethod
+    def supports_model_management(cls) -> bool:
+        return False
+
+    @classmethod
+    def is_model_compatible(cls, model_name: str) -> bool:
+        cleaned = (model_name or "").strip().lower()
+        if not cleaned:
+            return False
+        return ":" not in cleaned and not cleaned.startswith("llama")
+
+    @classmethod
+    def get_default_config(cls) -> dict[str, str]:
+        return {"api_key": cls.DEFAULT_API_KEY}
+
+    @classmethod
+    def validate_active_config(
+        cls,
+        submitted: dict[str, str],
+        existing: dict[str, str],
+        clear_secret: bool = False,
+    ) -> dict[str, str]:
+        if clear_secret:
+            raise InvalidServiceCredentialsError(
+                "Google AI API-Key darf nicht gelöscht werden, solange Google AI aktiv ist."
+            )
+        raw_key = (
+            (submitted.get("api_key") or "").strip()
+            or (existing.get("api_key") or "").strip()
+            or cls.DEFAULT_API_KEY.strip()
+        )
+        validated = SettingsService.validate_secret("google_ai_api_key", raw_key)
+        return {"api_key": validated}
+
+    @classmethod
+    def validate_inactive_config(
+        cls,
+        submitted: dict[str, str],
+        existing: dict[str, str],
+        clear_secret: bool = False,
+    ) -> dict[str, str]:
+        if clear_secret:
+            return {"api_key": ""}
+        raw_key = (submitted.get("api_key") or "").strip()
+        if raw_key:
+            return {"api_key": SettingsService.validate_secret("google_ai_api_key", raw_key)}
+        return {"api_key": (existing.get("api_key") or "").strip()}
+
+    @classmethod
+    def from_settings(cls, settings: ServiceSettings) -> "GoogleAILLMProvider":
+        cfg = settings.get_llm_config(cls.PROVIDER_ID)
+        api_key = cfg.get("api_key") or cls.DEFAULT_API_KEY
+        return cls(api_key=api_key, base_url=cls.DEFAULT_BASE_URL)
+
+    def format_stream_error(self, exc: Exception, model: str) -> str:
+        raw_err = str(exc)
+        lower_err = raw_err.lower()
+        if "401" in lower_err or "403" in lower_err or "api key" in lower_err or "api_key" in lower_err:
+            return (
+                "Google AI API-Key ungültig oder Berechtigung fehlt. "
+                "Bitte im Admin-Panel unter 'Services & Modelle' prüfen."
+            )
+        if "404" in lower_err or "not found" in lower_err:
+            return (
+                f"Google AI Modell '{model}' wurde nicht gefunden oder wird nicht unterstützt."
+            )
+        if "429" in lower_err or "quota" in lower_err or "rate" in lower_err:
+            return (
+                "Google AI Rate-Limit oder Kontingent erschöpft. Bitte kurz warten und erneut versuchen."
+            )
+        if "blocked" in lower_err or "safety" in lower_err:
+            return "Google AI hat die Antwort aufgrund von Sicherheitsrichtlinien blockiert."
+        return f"Google AI Verbindungsfehler ({model}): {raw_err}"
 
     def __init__(
         self,
         api_key: str,
-        base_url: str = Config.GOOGLE_AI_BASE_URL,
+        base_url: str = DEFAULT_BASE_URL,
         request_timeout: tuple[float, float] = (10.0, 120.0),
     ) -> None:
         self.api_key: str = (api_key or "").strip()

@@ -1,12 +1,13 @@
 from dataclasses import dataclass
 from typing import Any
 
-from domain.settings.models import (
-    RECOMMENDED_GOOGLE_AI_IMAGE_MODEL,
-    ImageGenBackend,
-    LLMBackend,
-    SearchBackend,
-    get_recommended_task_models,
+from infrastructure.image_gen.comfyui import ComfyUIImageGenProvider
+from infrastructure.image_gen.google_ai import GoogleAIImageGenProvider
+from infrastructure.llm.factory import LLM_PROVIDER_CLASSES, get_llm_provider_class
+from infrastructure.llm.ollama import OllamaLLMProvider
+from infrastructure.search.stub import (
+    DisabledSearchProvider,
+    SearXNGSearchStubProvider,
 )
 from shared.config import Config
 from shared.request_parsers import RequestDataParser
@@ -17,14 +18,14 @@ class FirstBootForm:
     username: str = ""
     email: str = ""
     password: str = ""
-    llm_backend: str = LLMBackend.OLLAMA.value
-    ollama_url: str = Config.DEFAULT_OLLAMA_URL
+    llm_backend: str = OllamaLLMProvider.PROVIDER_ID
+    ollama_url: str = OllamaLLMProvider.DEFAULT_BASE_URL
     google_ai_api_key: str = ""
-    image_gen_backend: str = ImageGenBackend.COMFYUI.value
-    comfyui_url: str = Config.DEFAULT_COMFYUI_URL
-    google_ai_image_model: str = RECOMMENDED_GOOGLE_AI_IMAGE_MODEL
-    search_backend: str = SearchBackend.DISABLED.value
-    searxng_url: str = Config.DEFAULT_SEARXNG_URL
+    image_gen_backend: str = ComfyUIImageGenProvider.PROVIDER_ID
+    comfyui_url: str = ComfyUIImageGenProvider.DEFAULT_BASE_URL
+    google_ai_image_model: str = GoogleAIImageGenProvider.RECOMMENDED_MODEL or ""
+    search_backend: str = DisabledSearchProvider.PROVIDER_ID
+    searxng_url: str = SearXNGSearchStubProvider.DEFAULT_BASE_URL
     roleplay_model: str = ""
     memory_model: str = ""
     assistant_model: str = ""
@@ -33,37 +34,38 @@ class FirstBootForm:
     active_step: int = 1
 
     def __post_init__(self) -> None:
-        rec = get_recommended_task_models(
+        backend_id = (
             self.llm_backend
-            if self.llm_backend in (LLMBackend.OLLAMA.value, LLMBackend.GOOGLE_AI.value)
-            else LLMBackend.OLLAMA.value
+            if self.llm_backend in LLM_PROVIDER_CLASSES
+            else OllamaLLMProvider.PROVIDER_ID
         )
+        rec = get_llm_provider_class(backend_id).get_recommended_task_models()
         if not self.roleplay_model:
-            self.roleplay_model = rec["roleplay"]
+            self.roleplay_model = rec.get("roleplay", "")
         if not self.memory_model:
-            self.memory_model = rec["memory"]
+            self.memory_model = rec.get("memory", "")
         if not self.assistant_model:
-            self.assistant_model = rec["assistant"]
+            self.assistant_model = rec.get("assistant", "")
         if not self.vision_model:
-            self.vision_model = rec["vision"]
+            self.vision_model = rec.get("vision", "")
         if not self.classification_model:
-            self.classification_model = rec["classification"]
+            self.classification_model = rec.get("classification", "")
 
     @classmethod
     def from_request(cls, form_data: Any) -> "FirstBootForm":
         p = RequestDataParser
         raw_backend = p.to_str(form_data, "llm_backend", Config.DEFAULT_LLM_BACKEND).lower()
-        if raw_backend not in (LLMBackend.OLLAMA.value, LLMBackend.GOOGLE_AI.value):
-            raw_backend = LLMBackend.OLLAMA.value
+        if raw_backend not in LLM_PROVIDER_CLASSES:
+            raw_backend = OllamaLLMProvider.PROVIDER_ID
 
         default_img = (
-            ImageGenBackend.GOOGLE_AI.value
-            if raw_backend == LLMBackend.GOOGLE_AI.value
-            else ImageGenBackend.COMFYUI.value
+            GoogleAIImageGenProvider.PROVIDER_ID
+            if raw_backend == GoogleAIImageGenProvider.REQUIRES_LLM_BACKEND
+            else ComfyUIImageGenProvider.PROVIDER_ID
         )
         raw_img_backend = p.to_str(form_data, "image_gen_backend", default_img).lower()
         raw_search_backend = p.to_str(
-            form_data, "search_backend", SearchBackend.DISABLED.value
+            form_data, "search_backend", DisabledSearchProvider.PROVIDER_ID
         ).lower()
 
         return cls(
@@ -71,16 +73,16 @@ class FirstBootForm:
             email=p.to_str(form_data, "email").lower(),
             password=p.to_str(form_data, "password", strip=False),
             llm_backend=raw_backend,
-            ollama_url=p.to_str(form_data, "ollama_url") or Config.DEFAULT_OLLAMA_URL,
+            ollama_url=p.to_str(form_data, "ollama_url") or OllamaLLMProvider.DEFAULT_BASE_URL,
             google_ai_api_key=p.to_str(form_data, "google_ai_api_key"),
             image_gen_backend=raw_img_backend,
-            comfyui_url=p.to_str(form_data, "comfyui_url") or Config.DEFAULT_COMFYUI_URL,
+            comfyui_url=p.to_str(form_data, "comfyui_url") or ComfyUIImageGenProvider.DEFAULT_BASE_URL,
             google_ai_image_model=(
                 p.to_str(form_data, "google_ai_image_model")
-                or RECOMMENDED_GOOGLE_AI_IMAGE_MODEL
+                or (GoogleAIImageGenProvider.RECOMMENDED_MODEL or "")
             ),
             search_backend=raw_search_backend,
-            searxng_url=p.to_str(form_data, "searxng_url") or Config.DEFAULT_SEARXNG_URL,
+            searxng_url=p.to_str(form_data, "searxng_url") or SearXNGSearchStubProvider.DEFAULT_BASE_URL,
             roleplay_model=p.to_str(form_data, "roleplay_model"),
             memory_model=p.to_str(form_data, "memory_model"),
             assistant_model=p.to_str(form_data, "assistant_model"),

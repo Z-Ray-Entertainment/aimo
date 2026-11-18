@@ -2,12 +2,13 @@ import base64
 from io import BytesIO
 from pathlib import Path
 import time
-from typing import Any
+from typing import Any, ClassVar
 
 from PIL import Image
 import requests
 
-from domain.settings.models import RECOMMENDED_GOOGLE_AI_IMAGE_MODEL
+from domain.settings.models import ServiceSettings
+from domain.settings.services import SettingsService
 from infrastructure.google_ai_common import (
     DEFAULT_GOOGLE_AI_SAFETY_SETTINGS,
     build_google_headers,
@@ -21,20 +22,83 @@ from shared.exceptions import InfrastructureError
 
 
 class GoogleAIImageGenProvider(ImageGenProvider):
+    PROVIDER_ID: ClassVar[str] = "google_ai"
+    DISPLAY_NAME: ClassVar[str] = "Google AI Image"
+    REQUIRES_LLM_BACKEND: ClassVar[str | None] = "google_ai"
+    RECOMMENDED_MODEL: ClassVar[str | None] = "gemini-3.1-flash-image-preview"
+    DEFAULT_BASE_URL: ClassVar[str] = Config.GOOGLE_AI_BASE_URL
+
     _HEALTH_CACHE: dict[tuple[str, str], tuple[float, bool]] = {}
     _HEALTH_TTL_SECONDS: float = 60.0
     _CANCELLED_TASKS: set[str] = set()
 
+    @classmethod
+    def get_default_config(cls) -> dict[str, str]:
+        return {"model": cls.RECOMMENDED_MODEL or ""}
+
+    @classmethod
+    def validate_active_config(
+        cls,
+        submitted: dict[str, str],
+        existing: dict[str, str],
+    ) -> dict[str, str]:
+        raw_model = (
+            (submitted.get("model") or "").strip()
+            or (existing.get("model") or "").strip()
+            or (cls.RECOMMENDED_MODEL or "")
+        )
+        return {"model": SettingsService.validate_model_name("google_ai_image_model", raw_model)}
+
+    @classmethod
+    def validate_inactive_config(
+        cls,
+        submitted: dict[str, str],
+        existing: dict[str, str],
+    ) -> dict[str, str]:
+        raw_model = (
+            (submitted.get("model") or "").strip()
+            or (existing.get("model") or "").strip()
+            or (cls.RECOMMENDED_MODEL or "")
+        )
+        return {"model": raw_model}
+
+    @classmethod
+    def from_settings(cls, settings: ServiceSettings) -> "GoogleAIImageGenProvider":
+        llm_cfg = settings.get_llm_config(cls.REQUIRES_LLM_BACKEND)
+        api_key = llm_cfg.get("api_key") or Config.DEFAULT_GOOGLE_AI_API_KEY
+        img_cfg = settings.get_image_gen_config(cls.PROVIDER_ID)
+        model = img_cfg.get("model") or (cls.RECOMMENDED_MODEL or "")
+        return cls(api_key=api_key, model=model, base_url=cls.DEFAULT_BASE_URL)
+
+    def build_scene_prompt_instruction(
+        self,
+        diffuser_prompt: str,
+        character_summary: str,
+        persona_summary: str,
+        location_desc: str,
+        scene_text: str,
+    ) -> str:
+        return (
+            "Write a vivid, cohesive, natural-language English visual scene description "
+            "(no Stable Diffusion comma tags, weights, or meta-commentary) capturing the atmosphere, "
+            "lighting, framing, clothing, expressions, and environment for a 16:9 cinematic illustration "
+            "of this roleplay moment.\n\n"
+            f"Character: {character_summary}\n"
+            f"Player Persona Appearance: {persona_summary}\n"
+            f"Location: {location_desc}\n"
+            f"Recent Scene:\n{scene_text}"
+        )
+
     def __init__(
         self,
         api_key: str,
-        model: str = RECOMMENDED_GOOGLE_AI_IMAGE_MODEL,
-        base_url: str = Config.GOOGLE_AI_BASE_URL,
+        model: str = RECOMMENDED_MODEL or "",
+        base_url: str = DEFAULT_BASE_URL,
         request_timeout: tuple[float, float] = (10.0, 120.0),
     ) -> None:
         self.api_key: str = (api_key or "").strip()
         self.model: str = normalize_google_model_id(
-            model or RECOMMENDED_GOOGLE_AI_IMAGE_MODEL
+            model or (self.RECOMMENDED_MODEL or "")
         )
         self.base_url: str = base_url.strip().rstrip("/")
         self.request_timeout: tuple[float, float] = request_timeout

@@ -1,59 +1,54 @@
 from typing import Any
 
-from domain.settings.models import LLMBackend, ServiceSettings
-from domain.settings.services import SettingsService
+from domain.settings.exceptions import InvalidLLMBackendError
+from domain.settings.models import ServiceSettings
 from infrastructure.llm.google_ai import GoogleAILLMProvider
 from infrastructure.llm.interface import LLMProvider
 from infrastructure.llm.ollama import OllamaLLMProvider
-from shared.config import Config
 from shared.exceptions import AimoError
+
+LLM_PROVIDER_CLASSES: dict[str, type[LLMProvider]] = {
+    OllamaLLMProvider.PROVIDER_ID: OllamaLLMProvider,
+    GoogleAILLMProvider.PROVIDER_ID: GoogleAILLMProvider,
+}
+
+
+def get_llm_provider_class(backend: str) -> type[LLMProvider]:
+    cleaned = (backend or "").strip().lower()
+    provider_cls = LLM_PROVIDER_CLASSES.get(cleaned)
+    if provider_cls is None:
+        raise InvalidLLMBackendError(f"Unsupported LLM backend: '{backend}'")
+    return provider_cls
 
 
 def get_llm_provider(settings: ServiceSettings) -> LLMProvider:
-    if settings.llm_backend == LLMBackend.GOOGLE_AI:
-        return GoogleAILLMProvider(
-            api_key=settings.google_ai_api_key,
-            base_url=Config.GOOGLE_AI_BASE_URL,
-        )
-    return OllamaLLMProvider(base_url=settings.ollama_url)
+    backend = settings.llm_backend or OllamaLLMProvider.PROVIDER_ID
+    provider_cls = get_llm_provider_class(backend)
+    return provider_cls.from_settings(settings)
 
 
 def probe_llm_backend(
-    backend: LLMBackend | str,
-    ollama_url: str = "",
-    google_ai_api_key: str = "",
+    backend: str,
+    submitted_config: dict[str, str] | None = None,
+    existing_config: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Validate credentials/endpoint and return available models without exposing secrets."""
     try:
-        resolved = LLMBackend.resolve(backend)
-        if resolved == LLMBackend.GOOGLE_AI:
-            cleaned_key = SettingsService._validate_api_key(
-                "google_ai_api_key", google_ai_api_key
-            )
-            provider = GoogleAILLMProvider(
-                api_key=cleaned_key,
-                base_url=Config.GOOGLE_AI_BASE_URL,
-                request_timeout=(5.0, 15.0),
-            )
-            text_models, image_models = provider.list_model_catalog()
-            return {
-                "healthy": True,
-                "backend": resolved.value,
-                "models": text_models,
-                "image_models": image_models,
-            }
-
-        cleaned_url = SettingsService._validate_url("ollama_url", ollama_url)
-        ollama_provider = OllamaLLMProvider(
-            base_url=cleaned_url,
-            request_timeout=(5.0, 15.0),
+        provider_cls = get_llm_provider_class(backend)
+        validated_cfg = provider_cls.validate_active_config(
+            submitted_config or {},
+            existing_config or {},
         )
-        models = ollama_provider.list_models()
+        temp_settings = ServiceSettings(llm_backend=provider_cls.PROVIDER_ID)
+        temp_settings.set_llm_config(provider_cls.PROVIDER_ID, validated_cfg)
+        provider = provider_cls.from_settings(temp_settings)
+        provider.request_timeout = (5.0, 15.0)
+        models, image_models = provider.list_model_catalog()
         return {
             "healthy": True,
-            "backend": resolved.value,
+            "backend": provider_cls.PROVIDER_ID,
             "models": models,
-            "image_models": [],
+            "image_models": image_models,
         }
     except AimoError as exc:
         return {

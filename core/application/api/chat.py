@@ -18,7 +18,7 @@ from domain.chat.services import ChatService
 from domain.lorebooks.services import LorebookService
 from domain.memories.services import MemoryService
 from domain.permissions.models import FunctionPermission
-from domain.settings.models import ImageGenBackend, LLMBackend, ModelParameters
+from domain.settings.models import ModelParameters
 from domain.translation.services import TranslationService
 from domain.worldinfo.models import EventCooldownState
 from domain.worldinfo.services import WorldInfoService
@@ -572,47 +572,7 @@ def _start_background_turn(
             except Exception as exc:
                 if task.is_aborted:
                     return
-                raw_err = str(exc)
-                if settings.llm_backend == LLMBackend.GOOGLE_AI:
-                    lower_err = raw_err.lower()
-                    if "401" in lower_err or "403" in lower_err or "api key" in lower_err or "api_key" in lower_err:
-                        user_friendly_err = (
-                            "Google AI API-Key ungültig oder Berechtigung fehlt. "
-                            "Bitte im Admin-Panel unter 'Services & Modelle' prüfen."
-                        )
-                    elif "404" in lower_err or "not found" in lower_err:
-                        user_friendly_err = (
-                            f"Google AI Modell '{settings.tasks.roleplay_model}' wurde nicht gefunden oder wird nicht unterstützt."
-                        )
-                    elif "429" in lower_err or "quota" in lower_err or "rate" in lower_err:
-                        user_friendly_err = (
-                            "Google AI Rate-Limit oder Kontingent erschöpft. Bitte kurz warten und erneut versuchen."
-                        )
-                    elif "blocked" in lower_err or "safety" in lower_err:
-                        user_friendly_err = (
-                            "Google AI hat die Antwort aufgrund von Sicherheitsrichtlinien blockiert."
-                        )
-                    else:
-                        user_friendly_err = (
-                            f"Google AI Verbindungsfehler ({settings.tasks.roleplay_model}): {raw_err}"
-                        )
-                elif (
-                    "Failed to stream response from Ollama" in raw_err
-                    or "Connection refused" in raw_err
-                    or "Failed to establish a new connection" in raw_err
-                    or "Max retries exceeded" in raw_err
-                ):
-                    user_friendly_err = (
-                        f"Verbindung zu Ollama ({settings.tasks.roleplay_model}) fehlgeschlagen oder unterbrochen. "
-                        "Bitte stelle sicher, dass der Ollama-Dienst läuft."
-                    )
-                elif "not found" in raw_err.lower():
-                    user_friendly_err = (
-                        f"Ollama-Modell '{settings.tasks.roleplay_model}' wurde nicht gefunden. "
-                        f"Bitte in Ollama laden (ollama run {settings.tasks.roleplay_model})."
-                    )
-                else:
-                    user_friendly_err = f"Ollama-Verbindungsfehler ({settings.tasks.roleplay_model}): {raw_err}"
+                user_friendly_err = llm.format_stream_error(exc, settings.tasks.roleplay_model)
 
                 with task.condition:
                     task.error_message = user_friendly_err
@@ -1276,10 +1236,10 @@ def generate_scene_image(session_id: int):
         )
 
     settings = settings_repo.get_settings()
-    if settings.image_gen_backend == ImageGenBackend.DISABLED:
+    img_gen = get_image_gen_provider(settings)
+    if not type(img_gen).is_enabled():
         return jsonify({"error": "Bildgenerierung ist deaktiviert."}), 400
     llm = get_llm_provider(settings)
-    img_gen = get_image_gen_provider(settings)
 
     recent_msgs = chat_repo.get_messages(session_id, limit=4)
     scene_text = "\n".join(f"{m.role.value}: {m.english_content}" for m in recent_msgs)
@@ -1312,27 +1272,13 @@ def generate_scene_image(session_id: int):
                 except Exception:
                     pass
 
-    if (
-        settings.image_gen_backend == ImageGenBackend.GOOGLE_AI
-        and settings.llm_backend == LLMBackend.GOOGLE_AI
-    ):
-        diffuser_instruction = (
-            "Write a vivid, cohesive, natural-language English visual scene description (no Stable Diffusion comma tags, "
-            "weights, or meta-commentary) capturing the atmosphere, lighting, framing, clothing, expressions, and environment "
-            "for a 16:9 cinematic illustration of this roleplay moment.\n\n"
-            f"Character: {character.name} ({getattr(character, 'appearance', '') or character.description})\n"
-            f"Player Persona Appearance: {persona.appearance or persona.description}\n"
-            f"Location: {location_desc}\n"
-            f"Recent Scene:\n{scene_text}"
-        )
-    else:
-        diffuser_instruction = (
-            f"{settings.prompts.diffuser_prompt}\n\n"
-            f"Character: {character.name} ({getattr(character, 'appearance', '') or character.description})\n"
-            f"Player Persona Appearance: {persona.appearance or persona.description}\n"
-            f"Location: {location_desc}\n"
-            f"Recent Scene:\n{scene_text}"
-        )
+    diffuser_instruction = img_gen.build_scene_prompt_instruction(
+        diffuser_prompt=settings.prompts.diffuser_prompt,
+        character_summary=f"{character.name} ({getattr(character, 'appearance', '') or character.description})",
+        persona_summary=persona.appearance or persona.description,
+        location_desc=location_desc,
+        scene_text=scene_text,
+    )
 
     try:
         sd_prompt = llm.generate(
