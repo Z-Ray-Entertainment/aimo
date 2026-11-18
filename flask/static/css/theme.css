@@ -3914,3 +3914,185 @@ span.persona-star-btn:hover {
 .conditional-service-box[hidden] {
   display: none !important;
 }
+
+/* Reusable Dual-Thumb Range Slider (.aimo-dual-range) */
+.aimo-dual-range {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.65rem 0.85rem 0.75rem 0.85rem;
+  background: var(--bg-input);
+  border: 2px solid var(--border-wood-dark);
+  border-radius: 10px;
+}
+
+.aimo-dual-range-label {
+  text-align: center;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--gold-accent);
+  letter-spacing: 0.01em;
+}
+
+.aimo-dual-range-wrap {
+  position: relative;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.aimo-dual-range-track {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: #241911;
+  border-radius: 6px;
+  border: 1px solid var(--border-wood-dark);
+  overflow: hidden;
+}
+
+.aimo-dual-range-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--heart-broken), var(--heart-neutral), var(--heart-love));
+}
+
+.aimo-dual-range-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.aimo-dual-range-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.aimo-dual-range-input::-webkit-slider-runnable-track {
+  height: 8px;
+  background: transparent;
+}
+
+.aimo-dual-range-input::-moz-range-track {
+  height: 8px;
+  background: transparent;
+}
+
+.aimo-dual-range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg-leather);
+  border: 2px solid var(--gold-accent);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.7), 0 0 6px var(--gold-glow);
+  cursor: pointer;
+  margin-top: -5px;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.aimo-dual-range-input::-moz-range-thumb {
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg-leather);
+  border: 2px solid var(--gold-accent);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.7), 0 0 6px var(--gold-glow);
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.aimo-dual-range-input::-webkit-slider-thumb:hover,
+.aimo-dual-range-input::-moz-range-thumb:hover {
+  background: var(--bg-leather-hover);
+  transform: scale(1.12);
+}
+
+/* Reusable Pill Badge Component (.aimo-pill-badge) */
+.aimo-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-height: 1.55rem;
+  padding: 0.18rem 0.6rem;
+  background: rgba(45, 70, 95, 0.9);
+  border: 1px solid var(--gold-accent);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  color: var(--text-main);
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.aimo-pill-badge-icon {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.aimo-pill-badge--wood {
+  background: rgba(110, 71, 42, 0.9);
+  border-color: var(--gold-accent);
+  color: var(--text-main);
+}
+
+.aimo-pill-badge--heart {
+  background: rgba(95, 35, 45, 0.9);
+  border-color: var(--gold-accent);
+  color: var(--text-main);
+}
+
+.aimo-pill-badge--danger {
+  background: rgba(100, 30, 22, 0.85);
+  border-color: #E74C3C;
+  color: #ff7675;
+}
+
+.aimo-pill-badge--dark {
+  background: rgba(18, 13, 9, 0.85);
+  border-color: var(--border-wood);
+  color: var(--text-muted);
+}
+
+.aimo-pill-badge--leather {
+  background: rgba(45, 32, 22, 0.8);
+  border-color: var(--border-wood);
+  color: var(--text-main);
+}
+
+.aimo-pill-badge--outline {
+  background: transparent;
+  border-color: var(--border-wood);
+  color: var(--text-main);
+}
+
+.aimo-pill-badge--gold {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: var(--gold-accent);
+  color: var(--gold-accent);
+}
+
+.aimo-pill-badge--success {
+  background: rgba(18, 13, 9, 0.85);
+  border-color: rgba(104, 211, 145, 0.4);
+  color: #68d391;
+}
+
+.aimo-pill-badge--info {
+  background: rgba(18, 13, 9, 0.85);
+  border-color: rgba(99, 179, 237, 0.4);
+  color: #63b3ed;
+}

@@ -94,14 +94,18 @@ CREATE INDEX IF NOT EXISTS ix_locations_character_id ON locations (character_id)
 
 CREATE TABLE IF NOT EXISTS events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    worldinfo_id INTEGER NOT NULL REFERENCES worldinfos(id) ON DELETE CASCADE,
+    worldinfo_id INTEGER REFERENCES worldinfos(id) ON DELETE CASCADE,
+    character_id INTEGER REFERENCES characters(id) ON DELETE CASCADE,
     location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL,
     title TEXT NOT NULL,
     probability INTEGER NOT NULL DEFAULT 50,
     one_shot INTEGER NOT NULL DEFAULT 0,
-    description TEXT NOT NULL DEFAULT ''
+    description TEXT NOT NULL DEFAULT '',
+    min_relationship INTEGER,
+    max_relationship INTEGER
 );
 CREATE INDEX IF NOT EXISTS ix_events_worldinfo_id ON events (worldinfo_id);
+CREATE INDEX IF NOT EXISTS ix_events_character_id ON events (character_id);
 
 CREATE TABLE IF NOT EXISTS characters (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -445,6 +449,8 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE system_settings ADD COLUMN google_ai_image_model TEXT NOT NULL DEFAULT ''",
         "ALTER TABLE system_settings ADD COLUMN search_backend TEXT NOT NULL DEFAULT 'disabled'",
         "ALTER TABLE system_settings ADD COLUMN provider_configs_json TEXT NOT NULL DEFAULT '{}'",
+        "ALTER TABLE events ADD COLUMN min_relationship INTEGER",
+        "ALTER TABLE events ADD COLUMN max_relationship INTEGER",
     ):
         try:
             conn.execute(stmt)
@@ -508,6 +514,46 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
                 """,
                 (tier.level, tier.name, tier.description, tier.behavior_rules, now_str),
             )
+    except sqlite3.OperationalError:
+        pass
+
+    try:
+        ev_cols = conn.execute("PRAGMA table_info(events)").fetchall()
+        if ev_cols:
+            has_char_col = any(c["name"] == "character_id" for c in ev_cols)
+            wi_notnull = any(c["name"] == "worldinfo_id" and int(c["notnull"]) == 1 for c in ev_cols)
+            if not has_char_col or wi_notnull:
+                has_min_rel = any(c["name"] == "min_relationship" for c in ev_cols)
+                has_max_rel = any(c["name"] == "max_relationship" for c in ev_cols)
+                conn.execute(
+                    """
+                    CREATE TABLE events_new (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        worldinfo_id INTEGER REFERENCES worldinfos(id) ON DELETE CASCADE,
+                        character_id INTEGER REFERENCES characters(id) ON DELETE CASCADE,
+                        location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL,
+                        title TEXT NOT NULL,
+                        probability INTEGER NOT NULL DEFAULT 50,
+                        one_shot INTEGER NOT NULL DEFAULT 0,
+                        description TEXT NOT NULL DEFAULT '',
+                        min_relationship INTEGER,
+                        max_relationship INTEGER
+                    )
+                    """
+                )
+                char_expr = "character_id" if has_char_col else "NULL"
+                min_rel_expr = "min_relationship" if has_min_rel else "NULL"
+                max_rel_expr = "max_relationship" if has_max_rel else "NULL"
+                conn.execute(
+                    f"""
+                    INSERT INTO events_new (id, worldinfo_id, character_id, location_id, title, probability, one_shot, description, min_relationship, max_relationship)
+                    SELECT id, worldinfo_id, {char_expr}, location_id, title, probability, one_shot, description, {min_rel_expr}, {max_rel_expr} FROM events
+                    """
+                )
+                conn.execute("DROP TABLE events")
+                conn.execute("ALTER TABLE events_new RENAME TO events")
+                conn.execute("CREATE INDEX IF NOT EXISTS ix_events_worldinfo_id ON events (worldinfo_id)")
+                conn.execute("CREATE INDEX IF NOT EXISTS ix_events_character_id ON events (character_id)")
     except sqlite3.OperationalError:
         pass
 

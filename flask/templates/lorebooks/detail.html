@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button, new_button, tab_button, modal_close_button %}
+{% from "macros/badges.html" import pill_badge %}
 {% from "macros/editor_header.html" import editor_header %}
 {% from "macros/collaboration.html" import collaboration_manager %}
 {% block title %}AIMO — Lorebook: {{ lorebook.name }}{% endblock %}
@@ -108,14 +109,12 @@
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.4rem;">
           <h3 style="color: var(--gold-accent); margin: 0;">{{ entry.title }}</h3>
           {% if entry.visibility == 'private' %}
-            <span class="aimo-card-badge danger" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;" title="Privater Eintrag: Nur für den Ersteller sichtbar. Wird im Rollenspiel über RAG injiziert.">
-              🔒 Privat (Geheimwissen)
-            </span>
+            {{ pill_badge("Privat (Geheimwissen)", icon="🔒", variant="danger", title="Privater Eintrag: Nur für den Ersteller sichtbar. Wird im Rollenspiel über RAG injiziert.") }}
           {% endif %}
         </div>
         <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.75rem;">
           {% for tag in entry.tags %}
-            <span style="font-size: 0.75rem; padding: 0.15rem 0.5rem; border: 1px solid var(--border-wood); border-radius: 10px;">#{{ tag }}</span>
+            {{ pill_badge("#" ~ tag, variant="dark") }}
           {% endfor %}
         </div>
         <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.4;">

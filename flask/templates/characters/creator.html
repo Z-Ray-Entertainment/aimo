@@ -3,6 +3,7 @@
 {% from "macros/editor_header.html" import editor_header %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
 {% from "macros/collaboration.html" import collaboration_manager %}
+{% from "macros/event_manager.html" import event_editor %}
 {% block title %}AIMO — Character Designer{% endblock %}
 
 {% block extra_head %}
@@ -27,6 +28,7 @@
       {{ tab_button("Emotionale Sprites", "tab-char-sprites", icon="🎭", active=(active_tab == 'sprites'), disabled=(not character), title=("Bitte zuerst Grunddaten speichern" if not character else none), extra_class="aimo-sidebar-nav-item") }}
       {{ tab_button("Gesprächsstile", "tab-char-dialogue", icon="💬", active=(active_tab == 'dialogue'), extra_class="aimo-sidebar-nav-item") }}
       {{ tab_button("World", "tab-char-world", icon="🗺️", active=(active_tab == 'world'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button("Zufalls-Events", "tab-char-events", icon="🎲", active=(active_tab == 'events'), count=(events|length if character else none), disabled=(not character), title=("Bitte zuerst Grunddaten speichern" if not character else none), extra_class="aimo-sidebar-nav-item") }}
       {{ tab_button("Lorebooks", "tab-char-lorebooks", icon="📖", active=(active_tab == 'lorebooks'), extra_class="aimo-sidebar-nav-item") }}
       {{ tab_button("Kollaboration", "tab-char-collab", icon="👥", active=(active_tab == 'collab'), extra_class="aimo-sidebar-nav-item") }}
     </nav>
@@ -517,6 +519,45 @@
         <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">Emotionale Sprites</h3>
         <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
           Bitte speichere die Grunddaten des Charakters zuerst ab, um Sprites für die 28 Emotionen hochzuladen.
+        </p>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- TAB: Charakter-Events (Separater Frame & Forms außerhalb von character-main-form) -->
+  <section id="tab-char-events" class="tab-pane {% if active_tab == 'events' %}active{% endif %}">
+    {% if character %}
+      <div class="aimo-frame" style="padding: 1.5rem; margin-bottom: 1.25rem;">
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
+          🎲 Charakter-spezifische Zufalls-Events
+          <span class="field-help-btn" title="Charakter-Events:&#10;Dynamische Ereignisse, die exklusiv in Chats mit {{ character.name }} eintreten können. Optional kann jedes Event zusätzlich auf einen konkreten Ort eingegrenzt werden.">?</span>
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
+          Diese Ereignisse stehen ausschließlich in Sitzungen mit <strong>{{ character.name }}</strong> im gemeinsamen Zufalls-Pool zur Verfügung (wahlweise ortsunabhängig oder zusätzlich an einen bestimmten Ort gebunden).
+        </p>
+      </div>
+      {{ event_editor(
+          events=events,
+          is_editable=is_editable,
+          add_url=url_for('characters.add_event', character_id=character.id),
+          edit_endpoint='characters.edit_event',
+          delete_endpoint='characters.delete_event',
+          entity_id_param='character_id',
+          entity_id=character.id,
+          loc_map=loc_map,
+          ev_translations=ev_translations,
+          scope_type='character',
+          locations=event_locations,
+          modal_prefix='char',
+          relationship_tiers=relationship_tiers,
+          tier_names_map=gallery_threshold_names
+      ) }}
+    {% else %}
+      <div class="aimo-frame" style="padding: 2.5rem; text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎲</div>
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">Zufalls-Events</h3>
+        <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
+          Bitte speichere die Grunddaten des Charakters zuerst ab, um charakter-spezifische Zufalls-Events anzulegen.
         </p>
       </div>
     {% endif %}

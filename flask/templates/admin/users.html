@@ -1,5 +1,6 @@
 {% extends "admin/layout.html" %}
 {% from "macros/buttons.html" import action_button %}
+{% from "macros/badges.html" import pill_badge %}
 
 {% block admin_content %}
 <div class="aimo-frame" style="padding: 1.5rem;">
@@ -20,17 +21,13 @@
             <strong style="font-size: 1.05rem; color: var(--gold-accent);">{{ u.username }}</strong>
             <span style="font-size: 0.85rem; color: var(--text-muted);">({{ u.email }})</span>
             {% if u.is_initial_admin %}
-              <span style="font-size: 0.75rem; padding: 0.15rem 0.55rem; background: var(--bg-leather); border: 1px solid var(--gold-accent); border-radius: 12px; color: var(--gold-accent);">
-                🛡️ Initialer Super-Admin (Unentziehbar)
-              </span>
+              {{ pill_badge("Initialer Super-Admin (Unentziehbar)", icon="🛡️", variant="gold") }}
             {% endif %}
           </div>
 
           <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.4rem;">
             {% for perm in item.permissions %}
-              <span style="font-size: 0.74rem; padding: 0.15rem 0.5rem; border: 1px solid var(--border-wood); border-radius: 8px; background: rgba(45, 32, 22, 0.8);">
-                {{ perm }}
-              </span>
+              {{ pill_badge(perm, variant="leather") }}
             {% else %}
               <span style="font-size: 0.8rem; color: var(--text-muted);">Keine Berechtigungen zugewiesen</span>
             {% endfor %}

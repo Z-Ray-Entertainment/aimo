@@ -14,6 +14,7 @@ from domain.characters.services import CharacterService
 from domain.chat.focus_analyzer import PythonFocusAnalyzer, SceneFocus
 from domain.chat.models import ChatSession, Message, MessageRole
 from domain.chat.prompt_builder import PromptBuilder
+from domain.chat.relationship import get_relationship_tier
 from domain.chat.services import ChatService
 from domain.lorebooks.services import LorebookService
 from domain.memories.services import MemoryService
@@ -32,6 +33,7 @@ from infrastructure.repositories.persona_repository import PersonaRepository
 from infrastructure.repositories.relationship_repository import RelationshipRepository
 from infrastructure.repositories.settings_repository import SettingsRepository
 from infrastructure.repositories.translation_repository import TranslationRepository
+from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
@@ -237,21 +239,40 @@ def _start_background_turn(
         if chat_session.active_worldinfo_id
         else None
     )
-    can_view_event_counter = is_admin or bool(worldinfo and worldinfo.user_id == chat_session.user_id)
+    worldinfo_events = (
+        wi_repo.list_events(worldinfo.id)
+        if worldinfo and worldinfo.id is not None
+        else []
+    )
+    character_events = (
+        wi_repo.list_character_events(character.id)
+        if character and character.id is not None
+        else []
+    )
+    all_session_events = worldinfo_events + character_events
+    session_user = UserRepository().get_by_id(chat_session.user_id)
+    session_user_tag = session_user.creator_tag if session_user else None
+    can_view_event_counter = (
+        is_admin
+        or bool(worldinfo and worldinfo.is_editable_by_user(chat_session.user_id, is_admin, session_user_tag))
+        or bool(character and character.is_editable_by_user(chat_session.user_id, is_admin, session_user_tag))
+    )
 
     triggered_event = None
     saved_event_msg: Message | None = None
-    if existing_user_msg is None and worldinfo and worldinfo.id is not None and chat_session.events_enabled:
+    if existing_user_msg is None and chat_session.events_enabled and all_session_events:
         cooldown_state = EventCooldownState(
             current_counter=chat_session.cooldown_counter,
             triggered_event_ids=set(chat_session.triggered_event_ids),
         )
         if wi_service.decrement_cooldown(cooldown_state):
-            all_events = wi_repo.list_events(worldinfo.id)
+            active_loc_id = chat_session.current_location_id if worldinfo else None
+            current_rel_level = get_relationship_tier(chat_session.relationship_value).level
             triggered_event = wi_service.draw_event(
-                worldinfo_events=all_events,
-                current_location_id=chat_session.current_location_id,
+                worldinfo_events=all_session_events,
+                current_location_id=active_loc_id,
                 state=cooldown_state,
+                current_relationship_level=current_rel_level,
             )
             if triggered_event and triggered_event.id is not None:
                 trans_repo = TranslationRepository()

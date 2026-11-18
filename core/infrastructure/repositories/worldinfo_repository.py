@@ -269,17 +269,21 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             cursor = conn.execute(
                 """
                 INSERT INTO events (
-                    worldinfo_id, location_id, title, probability, one_shot, description
+                    worldinfo_id, character_id, location_id, title, probability, one_shot, description,
+                    min_relationship, max_relationship
                 )
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     event.worldinfo_id,
+                    event.character_id,
                     event.location_id,
                     event.title,
                     event.probability,
                     1 if event.one_shot else 0,
                     event.description,
+                    event.min_relationship,
+                    event.max_relationship,
                 ),
             )
             new_id = int(cursor.lastrowid or 0)
@@ -302,7 +306,8 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             conn.execute(
                 """
                 UPDATE events
-                SET location_id = ?, title = ?, probability = ?, one_shot = ?, description = ?
+                SET location_id = ?, title = ?, probability = ?, one_shot = ?, description = ?,
+                    min_relationship = ?, max_relationship = ?
                 WHERE id = ?
                 """,
                 (
@@ -311,6 +316,8 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     event.probability,
                     1 if event.one_shot else 0,
                     event.description,
+                    event.min_relationship,
+                    event.max_relationship,
                     event.id,
                 ),
             )
@@ -325,10 +332,42 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
 
     def list_events(self, worldinfo_id: int) -> list[Event]:
         return self._fetch_all(
-            "SELECT * FROM events WHERE worldinfo_id = ? ORDER BY id ASC",
+            "SELECT * FROM events WHERE worldinfo_id = ? AND character_id IS NULL ORDER BY id ASC",
             (worldinfo_id,),
             self._ev_to_entity,
         )
+
+    def list_character_events(self, character_id: int) -> list[Event]:
+        return self._fetch_all(
+            "SELECT * FROM events WHERE character_id = ? ORDER BY id ASC",
+            (character_id,),
+            self._ev_to_entity,
+        )
+
+    def clear_character_event_locations_outside_world(
+        self,
+        character_id: int,
+        worldinfo_id: int | None,
+    ) -> None:
+        with get_db_session() as conn:
+            if worldinfo_id is None:
+                conn.execute(
+                    "UPDATE events SET location_id = NULL WHERE character_id = ? AND location_id IS NOT NULL",
+                    (character_id,),
+                )
+            else:
+                conn.execute(
+                    """
+                    UPDATE events
+                    SET location_id = NULL
+                    WHERE character_id = ?
+                      AND location_id IS NOT NULL
+                      AND location_id NOT IN (
+                          SELECT id FROM locations WHERE worldinfo_id = ?
+                      )
+                    """,
+                    (character_id, worldinfo_id),
+                )
 
     def delete_event(self, event_id: int) -> bool:
         return self._delete_by_id("events", event_id)
@@ -395,12 +434,16 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
 
     @staticmethod
     def _ev_to_entity(row: sqlite3.Row) -> Event:
+        keys = row.keys()
         return Event(
             id=int(row["id"]),
-            worldinfo_id=int(row["worldinfo_id"]),
+            worldinfo_id=int(row["worldinfo_id"]) if row["worldinfo_id"] is not None else None,
             location_id=int(row["location_id"]) if row["location_id"] is not None else None,
             title=str(row["title"]),
             probability=int(row["probability"]),
             one_shot=bool(row["one_shot"]),
             description=str(row["description"]),
+            character_id=int(row["character_id"]) if ("character_id" in keys and row["character_id"] is not None) else None,
+            min_relationship=int(row["min_relationship"]) if ("min_relationship" in keys and row["min_relationship"] is not None) else None,
+            max_relationship=int(row["max_relationship"]) if ("max_relationship" in keys and row["max_relationship"] is not None) else None,
         )

@@ -4,6 +4,7 @@
    Used in both the New Chat Dialog and the active Chat Session Interface
    ============================================================================= #}
 {% from "macros/buttons.html" import action_button, modal_close_button %}
+{% from "macros/badges.html" import pill_badge %}
 
 {% macro lorebook_manager(lorebook_data, is_new_chat=false, session_id=none, modal_id="chat-add-lorebook-modal") %}
 <div class="lorebook-manager-root"
@@ -63,13 +64,9 @@
               <span style="font-weight: 700; color: var(--text-color); font-size: 0.95rem;">
                 <span class="icon-mono">📜</span> {{ lb.name }}
               </span>
-              <span class="aimo-card-badge" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;" title="Herkunft des Lorebooks">
-                {{ lb.source }}
-              </span>
+              {{ pill_badge(lb.source, variant="dark", title="Herkunft des Lorebooks", extra_class="aimo-card-badge") }}
               {% if lb.is_private_to_user %}
-                <span class="aimo-card-badge danger" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;" title="Ersteller-Wissen: Inhalt ist vor anderen Spielern verborgen, wird aber von der KI im Chat genutzt.">
-                  🔒 Ersteller-Wissen
-                </span>
+                {{ pill_badge("Ersteller-Wissen", icon="🔒", variant="danger", title="Ersteller-Wissen: Inhalt ist vor anderen Spielern verborgen, wird aber von der KI im Chat genutzt.", extra_class="aimo-card-badge danger") }}
               {% endif %}
             </div>
             {% if lb.description %}
@@ -91,9 +88,7 @@
           <!-- Rechtsbündiges, vertikal zentriertes Overlay -->
           <div class="lorebook-item-actions-overlay">
             {% if lb.is_locked %}
-              <span class="aimo-card-badge danger lorebook-condition-badge" style="font-size: 0.72rem; padding: 0.2rem 0.5rem;" title="Dieses Lorebook erfordert die Welt '{{ lb.required_worldinfo_name }}' und kann in dieser Welt nicht aktiviert werden.">
-                🔒 Inaktiv — Benötigt Welt: {{ lb.required_worldinfo_name }}
-              </span>
+              {{ pill_badge("Inaktiv — Benötigt Welt: " ~ lb.required_worldinfo_name, icon="🔒", variant="danger", title="Dieses Lorebook erfordert die Welt '" ~ lb.required_worldinfo_name ~ "' und kann in dieser Welt nicht aktiviert werden.", extra_class="aimo-card-badge danger lorebook-condition-badge") }}
               <label class="aimo-switch disabled" title="Gesperrt: Passende Welt '{{ lb.required_worldinfo_name }}' ist nicht aktiv.">
                 <input type="checkbox"
                        class="lorebook-toggle-input"
@@ -142,13 +137,9 @@
               <span style="font-weight: 700; color: var(--text-color); font-size: 0.95rem;">
                 <span class="icon-mono">📜</span> {{ lb.name }}
               </span>
-              <span class="aimo-card-badge" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;">
-                Benutzerdefiniert
-              </span>
+              {{ pill_badge("Benutzerdefiniert", variant="dark", extra_class="aimo-card-badge") }}
               {% if lb.is_private_to_user %}
-                <span class="aimo-card-badge danger" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;" title="Ersteller-Wissen: Inhalt ist vor anderen Spielern verborgen, wird aber von der KI im Chat genutzt.">
-                  🔒 Ersteller-Wissen
-                </span>
+                {{ pill_badge("Ersteller-Wissen", icon="🔒", variant="danger", title="Ersteller-Wissen: Inhalt ist vor anderen Spielern verborgen, wird aber von der KI im Chat genutzt.", extra_class="aimo-card-badge danger") }}
               {% endif %}
             </div>
             {% if lb.description %}
@@ -225,7 +216,7 @@
               <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">{{ lb.description }}</p>
               <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
                 {% for tag in lb.tags %}
-                  <span style="font-size: 0.75rem; padding: 0.15rem 0.5rem; border: 1px solid var(--border-wood); border-radius: 10px; color: var(--text-main);">#{{ tag }}</span>
+                  {{ pill_badge("#" ~ tag, variant="outline") }}
                 {% endfor %}
               </div>
             </div>

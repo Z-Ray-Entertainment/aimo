@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button, new_button, tab_button, modal_close_button %}
+{% from "macros/badges.html" import pill_badge %}
 {% from "macros/editor_header.html" import editor_header %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
 {% from "macros/collaboration.html" import collaboration_manager %}
+{% from "macros/event_manager.html" import event_editor %}
 {% block title %}AIMO — WorldInfo: {{ worldinfo.name }}{% endblock %}
 
 {% block content %}
@@ -154,9 +156,7 @@
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.4rem;">
               <h3 style="color: var(--gold-accent); margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">📍 {{ loc.name }}</h3>
               {% if bound_char %}
-                <span class="aimo-card-badge" style="font-size: 0.72rem; padding: 0.15rem 0.45rem; flex-shrink: 0;" title="Dieser Ort ist an {{ bound_char.name }} gebunden">
-                  🔒 {{ bound_char.name }}
-                </span>
+                {{ pill_badge(bound_char.name, icon="🔒", variant="dark", title="Dieser Ort ist an " ~ bound_char.name ~ " gebunden") }}
               {% endif %}
             </div>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">{{ loc.description[:120] }}{% if loc.description|length > 120 %}...{% endif %}</p>
@@ -265,106 +265,20 @@
 
   <!-- TAB 3: Events -->
   <section id="tab-events" class="tab-pane {% if active_tab == 'events' %}active{% endif %}">
-    <div class="card-grid">
-      {% if is_editable %}
-        {{ new_button("Neues Event", modal="new-event-modal") }}
-      {% endif %}
-
-      {% for ev in events %}
-        <div class="card-tile" style="padding: 1.2rem; justify-content: space-between; {% if is_editable %}cursor: pointer;{% endif %}" {% if is_editable %}data-modal-open="edit-event-modal-{{ ev.id }}"{% endif %}>
-          <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
-              {% if ev.location_id and ev.location_id in loc_map %}
-                <span style="background: rgba(110, 71, 42, 0.9); border: 1px solid var(--gold-accent); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem;">
-                  📍 Ort: {{ loc_map[ev.location_id].name }}
-                </span>
-              {% else %}
-                <span style="background: rgba(45, 70, 95, 0.9); border: 1px solid var(--gold-accent); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem;">
-                  🌍 Gesamte Welt
-                </span>
-              {% endif %}
-              <span style="font-size: 0.8rem; font-weight: 700; color: var(--gold-accent);">{{ ev.probability }}%</span>
-            </div>
-
-            <h3 style="color: var(--gold-accent); margin-bottom: 0.4rem;">{{ ev.title }}</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">{{ ev.description[:140] }}{% if ev.description|length > 140 %}...{% endif %}</p>
-          </div>
-
-          <div style="margin-top: 0.75rem; font-size: 0.78rem; color: var(--text-muted);">
-            {% if ev.one_shot %}⚡ One-Shot (Max. 1x pro Session){% else %}🔄 Wiederholbar{% endif %}
-          </div>
-        </div>
-
-        <!-- Modal: Event bearbeiten -->
-        <div class="modal-backdrop" id="edit-event-modal-{{ ev.id }}" aria-hidden="true">
-          <div class="modal-frame">
-            <div class="modal-header">
-              <h3 style="color: var(--gold-accent);">Event bearbeiten: {{ ev.title }}</h3>
-              {{ modal_close_button("edit-event-modal-" ~ ev.id) }}
-            </div>
-            <form method="POST" action="{{ url_for('worldinfo.edit_event', worldinfo_id=worldinfo.id, event_id=ev.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
-              <div>
-                <label>
-                  Titel *
-                  <span class="field-help-btn" title="Event-Titel:&#10;Name des Zufallsereignisses (z. B. 'Plötzlicher Gewittersturm', 'Brieftaube trifft ein').">?</span>
-                </label>
-                <input type="text" name="title" value="{{ ev.title }}" required>
-              </div>
-              <div style="display: gap: 1rem; align-items: center;">
-                <div style="flex: 1;">
-                  <label>
-                    Wahrscheinlichkeit (0 - 100%) *
-                    <span class="field-help-btn" title="Wahrscheinlichkeit (1-100%):&#10;Relative Gewichtung im gemeinsamen Ereignis-Pool. Alle 10 bis 100 Nachrichten (Cooldown-Zähler) wird ein Ereignis gewichtet ausgelöst.">?</span>
-                  </label>
-                  <input type="number" name="probability" min="0" max="100" value="{{ ev.probability }}" required>
-                </div>
-                <div style="flex: 1; padding-top: 1.2rem;">
-                  <label>
-                    <input type="checkbox" name="one_shot" value="1" {% if ev.one_shot %}checked{% endif %}> One-Shot (Max. 1x pro Session)
-                    <span class="field-help-btn" title="One-Shot (Einmaliges Ereignis):&#10;Wenn aktiviert, wird dieses Ereignis pro Chat-Sitzung maximal ein einziges Mal ausgelöst und danach aus dem aktiven Pool entfernt.">?</span>
-                  </label>
-                </div>
-              </div>
-              <div>
-                <label>
-                  Zugehörigkeit (Exklusiv: Entweder Gesamte Welt ODER konkreter Ort)
-                  <span class="field-help-btn" title="Orts-Zuordnung:&#10;Wähle, ob dieses Ereignis nur an einem bestimmten Schauplatz auftreten kann oder als globales Ereignis für die gesamte Welt gilt.">?</span>
-                </label>
-                <select name="location_id">
-                  <option value="world" {% if not ev.location_id %}selected{% endif %}>🌍 Gesamte Welt</option>
-                  {% for loc in locations %}
-                    <option value="{{ loc.id }}" {% if ev.location_id == loc.id %}selected{% endif %}>📍 Ort: {{ loc.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div>
-                <label>
-                  Szenische Beschreibung des Ereignisses *
-                  <span class="field-help-btn" title="Event-Beschreibung:&#10;Der narrative Vorfall. Bei Auslösung wird diese Beschreibung für den nächsten Zug im [WORLD_INFO]-Bereich des Prompts platziert, damit die KI passend darauf reagiert.">?</span>
-                </label>
-                <input type="hidden" name="i18n_description" id="i18n-wi-ev-{{ ev.id }}" value='{{ (ev_translations.get(ev.id, {}).get("description", {}) if ev_translations is defined else {}) | tojson }}'>
-                <textarea
-                  name="description"
-                  rows="5"
-                  required
-                  data-i18n-field="description"
-                  data-i18n-entity-type="worldinfo_event"
-                  data-i18n-entity-id="{{ ev.id }}"
-                  data-i18n-hidden="i18n-wi-ev-{{ ev.id }}">{{ ev.description }}</textarea>
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
-                {{ action_button("Löschen", type="submit", form="delete-ev-form-" ~ ev.id, variant="danger", icon="🗑️") }}
-                <div style="display: flex; gap: 0.5rem;">
-                  {{ action_button("Abbrechen", modal_close="edit-event-modal-" ~ ev.id) }}
-                  {{ action_button("Speichern", type="submit", variant="primary", icon="💾") }}
-                </div>
-              </div>
-            </form>
-            <form id="delete-ev-form-{{ ev.id }}" method="POST" action="{{ url_for('worldinfo.delete_event', worldinfo_id=worldinfo.id, event_id=ev.id) }}" style="display: none;"></form>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
+    {{ event_editor(
+        events=events,
+        is_editable=is_editable,
+        add_url=url_for('worldinfo.add_event', worldinfo_id=worldinfo.id),
+        edit_endpoint='worldinfo.edit_event',
+        delete_endpoint='worldinfo.delete_event',
+        entity_id_param='worldinfo_id',
+        entity_id=worldinfo.id,
+        loc_map=loc_map,
+        ev_translations=ev_translations,
+        scope_type='worldinfo',
+        locations=locations,
+        modal_prefix='wi'
+    ) }}
   </section>
 
   <!-- TAB 4: Kollaboration -->
@@ -451,72 +365,6 @@
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
         {{ action_button("Abbrechen", modal_close="new-location-modal") }}
         {{ action_button("Ort speichern", type="submit", variant="primary", icon="💾") }}
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- Modal: Neues Event -->
-<div class="modal-backdrop" id="new-event-modal" aria-hidden="true">
-  <div class="modal-frame">
-    <div class="modal-header">
-      <h3 style="color: var(--gold-accent);">Neues Event anlegen</h3>
-      {{ modal_close_button("new-event-modal") }}
-    </div>
-    <form method="POST" action="{{ url_for('worldinfo.add_event', worldinfo_id=worldinfo.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
-      <div>
-        <label>
-          Titel *
-          <span class="field-help-btn" title="Event-Titel:&#10;Name des Zufallsereignisses (z. B. 'Plötzlicher Gewittersturm', 'Brieftaube trifft ein').">?</span>
-        </label>
-        <input type="text" name="title" required>
-      </div>
-      <div style="display: flex; gap: 1rem; align-items: center;">
-        <div style="flex: 1;">
-          <label>
-            Wahrscheinlichkeit (0 - 100%) *
-            <span class="field-help-btn" title="Wahrscheinlichkeit (1-100%):&#10;Relative Gewichtung im gemeinsamen Ereignis-Pool. Alle 10 bis 100 Nachrichten (Cooldown-Zähler) wird ein Ereignis gewichtet ausgelöst.">?</span>
-          </label>
-          <input type="number" name="probability" min="0" max="100" value="50" required>
-        </div>
-        <div style="flex: 1; padding-top: 1.2rem;">
-          <label>
-            <input type="checkbox" name="one_shot" value="1"> One-Shot (Max. 1x pro Session)
-            <span class="field-help-btn" title="One-Shot (Einmaliges Ereignis):&#10;Wenn aktiviert, wird dieses Ereignis pro Chat-Sitzung maximal ein einziges Mal ausgelöst und danach aus dem aktiven Pool entfernt.">?</span>
-          </label>
-        </div>
-      </div>
-      <div>
-        <label>
-          Zugehörigkeit (Entweder Gesamte Welt oder konkreter Ort)
-          <span class="field-help-btn" title="Orts-Zuordnung:&#10;Wähle, ob dieses Ereignis nur an einem bestimmten Schauplatz auftreten kann oder als globales Ereignis für die gesamte Welt gilt.">?</span>
-        </label>
-        <select name="location_id">
-          <option value="world">🌍 Gesamte Welt</option>
-          {% for loc in locations %}
-            <option value="{{ loc.id }}">📍 Ort: {{ loc.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div>
-        <label>
-          Szenische Beschreibung des Ereignisses *
-          <span class="field-help-btn" title="Event-Beschreibung:&#10;Der narrative Vorfall. Bei Auslösung wird diese Beschreibung für den nächsten Zug im [WORLD_INFO]-Bereich des Prompts platziert, damit die KI passend darauf reagiert.">?</span>
-        </label>
-        <input type="hidden" name="i18n_description" id="i18n-wi-ev-new" value="{}">
-        <textarea
-          name="description"
-          rows="5"
-          required
-          data-i18n-field="description"
-          data-i18n-entity-type="worldinfo_event"
-          data-i18n-entity-id=""
-          data-i18n-hidden="i18n-wi-ev-new"></textarea>
-      </div>
-
-      <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
-        {{ action_button("Abbrechen", modal_close="new-event-modal") }}
-        {{ action_button("Event speichern", type="submit", variant="primary", icon="💾") }}
       </div>
     </form>
   </div>

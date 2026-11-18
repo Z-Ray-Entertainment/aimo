@@ -391,7 +391,7 @@
       {% endif %}
 
       <!-- Checkbox: Zufalls-Events aktivieren/deaktivieren (gehört zur Welt, ohne Trennstrich) -->
-      {% if worldinfo and worldinfo_events %}
+      {% if (worldinfo and worldinfo_events) or character_events %}
         <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" class="chat-sidebar-events-toggle">
           <input type="hidden" name="action" value="toggle_events">
           <label>

@@ -8,6 +8,7 @@
      - Unified action buttons: Speichern (💾), Kopieren (📄), Löschen (🗑️)
    ============================================================================= #}
 {% from "macros/buttons.html" import action_button %}
+{% from "macros/badges.html" import pill_badge %}
 
 {% macro editor_header(
     title,
@@ -30,9 +31,7 @@
     {% endif %}
     <h2 style="color: var(--gold-accent); margin: 0; font-size: 1.35rem;">{{ title }}</h2>
     {% if not is_editable and readonly_badge_text %}
-      <span class="aimo-card-badge" style="background: rgba(212, 175, 55, 0.15); border: 1px solid var(--gold-accent); color: var(--gold-accent); padding: 0.35rem 0.75rem;">
-        🔒 {{ readonly_badge_text }}
-      </span>
+      {{ pill_badge(readonly_badge_text, icon="🔒", variant="gold", extra_class="aimo-card-badge") }}
     {% endif %}
     {% if caller is defined and caller %}{{ caller() }}{% endif %}
   </div>
