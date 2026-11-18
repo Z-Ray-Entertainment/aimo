@@ -164,7 +164,7 @@ def pull_model():
         except AimoError as exc:
             yield f"data: {json.dumps({'status': 'error', 'error': str(exc)})}\n\n"
 
-    return Response(stream_with_context(generate()), mimetype="text/event-stream")
+    return Response(stream_with_context(generate()), content_type="text/event-stream; charset=utf-8")
 
 
 @api_admin_bp.route("/models/<path:model_name>", methods=["DELETE"])

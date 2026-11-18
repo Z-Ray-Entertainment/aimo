@@ -177,12 +177,18 @@ class GoogleAILLMProvider(BaseLLMProvider):
                 url=url, headers=headers, payload=payload, stream=True
             )
             with response:
+                response.encoding = "utf-8"
                 ensure_google_response_ok(response, "Google AI streaming generation")
                 emitted_any = False
-                for raw_line in response.iter_lines(decode_unicode=True):
+                for raw_line in response.iter_lines(decode_unicode=False):
                     if not raw_line:
                         continue
-                    line = raw_line.strip()
+                    decoded_line = (
+                        raw_line.decode("utf-8", errors="replace")
+                        if isinstance(raw_line, (bytes, bytearray))
+                        else str(raw_line)
+                    )
+                    line = decoded_line.strip()
                     if not line or line.startswith(":"):
                         continue
                     if not line.startswith("data:"):
@@ -296,6 +302,7 @@ class GoogleAILLMProvider(BaseLLMProvider):
                     params=params,
                     timeout=self.request_timeout,
                 )
+                response.encoding = "utf-8"
                 ensure_google_response_ok(response, "Google AI list models")
                 data = response.json()
 
@@ -381,6 +388,7 @@ class GoogleAILLMProvider(BaseLLMProvider):
                 headers={"x-goog-api-key": self.api_key},
                 timeout=(3.0, 5.0),
             )
+            response.encoding = "utf-8"
             if response.status_code != 200:
                 return None
             data = response.json()
@@ -406,6 +414,7 @@ class GoogleAILLMProvider(BaseLLMProvider):
             stream=stream,
             timeout=self.request_timeout,
         )
+        response.encoding = "utf-8"
         if (
             response.status_code == 400
             and "thinkingConfig" in (payload.get("generationConfig") or {})
@@ -423,6 +432,7 @@ class GoogleAILLMProvider(BaseLLMProvider):
                 stream=stream,
                 timeout=self.request_timeout,
             )
+            response.encoding = "utf-8"
         return response
 
     @staticmethod

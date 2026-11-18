@@ -921,7 +921,7 @@ def post_message(session_id: int):
 
     return Response(
         stream_with_context(_stream_from_task(task)),
-        mimetype="text/event-stream",
+        content_type="text/event-stream; charset=utf-8",
     )
 
 
@@ -955,7 +955,7 @@ def stream_session_response(session_id: int):
 
     return Response(
         stream_with_context(_stream_from_task(task)),
-        mimetype="text/event-stream",
+        content_type="text/event-stream; charset=utf-8",
     )
 
 

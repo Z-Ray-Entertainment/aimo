@@ -162,6 +162,7 @@ class OllamaLLMProvider(BaseLLMProvider):
                 stream=True,
                 timeout=self.request_timeout,
             )
+            response.encoding = "utf-8"
             if response.status_code == 400 and think is not None and "think" in response.text.lower():
                 payload.pop("think", None)
                 response = requests.post(
@@ -170,16 +171,19 @@ class OllamaLLMProvider(BaseLLMProvider):
                     stream=True,
                     timeout=self.request_timeout,
                 )
+                response.encoding = "utf-8"
             with response:
+                response.encoding = "utf-8"
                 self._ensure_ok(response, "Ollama streaming generation")
-                for raw_line in response.iter_lines(decode_unicode=True):
+                for raw_line in response.iter_lines(decode_unicode=False):
                     if not raw_line:
                         continue
+                    line_str = self._decode_utf8_line(raw_line)
                     try:
-                        chunk = json.loads(raw_line)
+                        chunk = json.loads(line_str)
                     except json.JSONDecodeError as exc:
                         raise InfrastructureError(
-                            f"Invalid JSON chunk received from Ollama stream: {raw_line}"
+                            f"Invalid JSON chunk received from Ollama stream: {line_str}"
                         ) from exc
                     if "error" in chunk:
                         raise InfrastructureError(
@@ -313,15 +317,17 @@ class OllamaLLMProvider(BaseLLMProvider):
                 stream=True,
                 timeout=self.pull_timeout,
             ) as response:
+                response.encoding = "utf-8"
                 self._ensure_ok(response, f"Ollama pull model '{cleaned_name}'")
-                for raw_line in response.iter_lines(decode_unicode=True):
+                for raw_line in response.iter_lines(decode_unicode=False):
                     if not raw_line:
                         continue
+                    line_str = self._decode_utf8_line(raw_line)
                     try:
-                        event = json.loads(raw_line)
+                        event = json.loads(line_str)
                     except json.JSONDecodeError as exc:
                         raise InfrastructureError(
-                            f"Invalid JSON status received during model pull: {raw_line}"
+                            f"Invalid JSON status received during model pull: {line_str}"
                         ) from exc
                     if "error" in event:
                         raise InfrastructureError(
@@ -402,6 +408,12 @@ class OllamaLLMProvider(BaseLLMProvider):
                     return val
 
         return None
+
+    @staticmethod
+    def _decode_utf8_line(raw_line: bytes | bytearray | str) -> str:
+        if isinstance(raw_line, (bytes, bytearray)):
+            return raw_line.decode("utf-8", errors="replace")
+        return str(raw_line)
 
     @staticmethod
     def _build_options(params: ModelParameters) -> dict[str, int | float]:

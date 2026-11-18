@@ -56,6 +56,7 @@ def encode_image_inline_part(image_path: Path) -> dict[str, Any]:
 
 
 def extract_google_error_detail(response: requests.Response) -> str:
+    response.encoding = "utf-8"
     raw_text = (response.text or "").strip()
     try:
         payload = response.json()
