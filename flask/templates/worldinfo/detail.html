@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button, new_button, tab_button, modal_close_button %}
+{% from "macros/badges.html" import pill_badge %}
 {% from "macros/editor_header.html" import editor_header %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
 {% from "macros/collaboration.html" import collaboration_manager %}
@@ -155,9 +156,7 @@
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.4rem;">
               <h3 style="color: var(--gold-accent); margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">📍 {{ loc.name }}</h3>
               {% if bound_char %}
-                <span class="aimo-card-badge" style="font-size: 0.72rem; padding: 0.15rem 0.45rem; flex-shrink: 0;" title="Dieser Ort ist an {{ bound_char.name }} gebunden">
-                  🔒 {{ bound_char.name }}
-                </span>
+                {{ pill_badge(bound_char.name, icon="🔒", variant="dark", title="Dieser Ort ist an " ~ bound_char.name ~ " gebunden") }}
               {% endif %}
             </div>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">{{ loc.description[:120] }}{% if loc.description|length > 120 %}...{% endif %}</p>

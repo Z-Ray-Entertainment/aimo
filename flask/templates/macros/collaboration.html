@@ -4,6 +4,7 @@
    Used in Character Designer, WorldInfo Detail, and Lorebook Detail
    ============================================================================= #}
 {% from "macros/buttons.html" import action_button %}
+{% from "macros/badges.html" import pill_badge %}
 
 {% macro collaboration_manager(collaborator_tags, is_author=true, is_editable=true, form_id=none, input_name="collaborator_creator_tags") %}
 <div class="collaboration-manager-root aimo-frame" data-form-id="{{ form_id or '' }}" style="padding: 1.5rem;">
@@ -72,9 +73,7 @@
               </div>
             </td>
             <td>
-              <span class="aimo-card-badge" style="font-size: 0.78rem; padding: 0.2rem 0.55rem; background: rgba(212, 175, 55, 0.12); border-color: var(--gold-accent);">
-                ✏️ Bearbeiten erlaubt
-              </span>
+              {{ pill_badge("Bearbeiten erlaubt", icon="✏️", variant="gold", extra_class="aimo-card-badge") }}
             </td>
             {% if is_author %}
               <td style="text-align: right;">

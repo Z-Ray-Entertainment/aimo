@@ -1,0 +1,12 @@
+{# =============================================================================
+   AIMO Reusable Pill Badge Component (.aimo-pill-badge)
+   Variants: default, wood, heart, danger, dark, leather, outline, gold, success, info
+   ============================================================================= #}
+{% macro pill_badge(text="", icon=none, variant="default", title=none, extra_class="", icon_mono=false) %}
+  {% set valid_variants = ["default", "wood", "heart", "danger", "dark", "leather", "outline", "gold", "success", "info"] %}
+  {% set badge_variant = variant if variant in valid_variants else "default" %}
+  <span class="aimo-pill-badge{% if badge_variant != 'default' %} aimo-pill-badge--{{ badge_variant }}{% endif %}{% if extra_class %} {{ extra_class }}{% endif %}"{% if title %} title="{{ title }}"{% endif %}>
+    {%- if icon %}<span class="aimo-pill-badge-icon{% if icon_mono %} icon-mono{% endif %}">{{ icon }}</span>{% endif -%}
+    {%- if text %}<span>{{ text }}</span>{% endif -%}
+  </span>
+{% endmacro %}

@@ -4018,3 +4018,81 @@ span.persona-star-btn:hover {
   background: var(--bg-leather-hover);
   transform: scale(1.12);
 }
+
+/* Reusable Pill Badge Component (.aimo-pill-badge) */
+.aimo-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-height: 1.55rem;
+  padding: 0.18rem 0.6rem;
+  background: rgba(45, 70, 95, 0.9);
+  border: 1px solid var(--gold-accent);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  color: var(--text-main);
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.aimo-pill-badge-icon {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.aimo-pill-badge--wood {
+  background: rgba(110, 71, 42, 0.9);
+  border-color: var(--gold-accent);
+  color: var(--text-main);
+}
+
+.aimo-pill-badge--heart {
+  background: rgba(95, 35, 45, 0.9);
+  border-color: var(--gold-accent);
+  color: var(--text-main);
+}
+
+.aimo-pill-badge--danger {
+  background: rgba(100, 30, 22, 0.85);
+  border-color: #E74C3C;
+  color: #ff7675;
+}
+
+.aimo-pill-badge--dark {
+  background: rgba(18, 13, 9, 0.85);
+  border-color: var(--border-wood);
+  color: var(--text-muted);
+}
+
+.aimo-pill-badge--leather {
+  background: rgba(45, 32, 22, 0.8);
+  border-color: var(--border-wood);
+  color: var(--text-main);
+}
+
+.aimo-pill-badge--outline {
+  background: transparent;
+  border-color: var(--border-wood);
+  color: var(--text-main);
+}
+
+.aimo-pill-badge--gold {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: var(--gold-accent);
+  color: var(--gold-accent);
+}
+
+.aimo-pill-badge--success {
+  background: rgba(18, 13, 9, 0.85);
+  border-color: rgba(104, 211, 145, 0.4);
+  color: #68d391;
+}
+
+.aimo-pill-badge--info {
+  background: rgba(18, 13, 9, 0.85);
+  border-color: rgba(99, 179, 237, 0.4);
+  color: #63b3ed;
+}

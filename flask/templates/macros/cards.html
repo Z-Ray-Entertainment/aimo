@@ -3,6 +3,7 @@
    Unified Full-Background Card & Grid Components for Character and World Grids
    ============================================================================= #}
 {% from "macros/buttons.html" import new_button %}
+{% from "macros/badges.html" import pill_badge %}
 
 {# Reusable AIMO Card Grid Container #}
 {% macro aimo_card_grid(extra_class='') %}
@@ -55,17 +56,16 @@
   {% set chat_url = url_for('chat.open_character_chat', character_id=char.id) %}
   {% call aimo_card_container(chat_url, char.name ~ ' (' ~ char.gender.value ~ ')', bg_style, description=char.description) %}
     <div class="aimo-card-header">
-      <span class="aimo-card-badge" title="Geschlecht">
-        {% if char.gender.value == 'female' %}♀️ Weiblich
-        {% elif char.gender.value == 'male' %}♂️ Männlich
-        {% else %}⚧️ {{ char.gender.value }}
-        {% endif %}
-      </span>
+      {% if char.gender.value == 'female' %}
+        {{ pill_badge("Weiblich", icon="♀️", variant="dark", title="Geschlecht", extra_class="aimo-card-badge") }}
+      {% elif char.gender.value == 'male' %}
+        {{ pill_badge("Männlich", icon="♂️", variant="dark", title="Geschlecht", extra_class="aimo-card-badge") }}
+      {% else %}
+        {{ pill_badge(char.gender.value, icon="⚧️", variant="dark", title="Geschlecht", extra_class="aimo-card-badge") }}
+      {% endif %}
       <div style="display: flex; gap: 0.35rem; align-items: center;">
         {% if item.message_count > 0 %}
-          <span class="aimo-card-badge" title="Ausgetauschte Nachrichten">
-            <span class="icon-mono">💬</span> {{ item.message_count }}
-          </span>
+          {{ pill_badge(item.message_count, icon="💬", icon_mono=true, variant="dark", title="Ausgetauschte Nachrichten", extra_class="aimo-card-badge") }}
         {% endif %}
         {% if item.is_editable and has_edit_perm %}
           <a href="{{ url_for('characters.edit_character', character_id=char.id) }}" class="aimo-card-action-btn" title="Charakter bearbeiten">
@@ -105,9 +105,9 @@
     <div class="aimo-card-header">
       <div style="flex: 1;"></div>
       {% if wi.visibility == 'public' %}
-        <span class="aimo-card-badge" title="Öffentliche Welt">🌍 Öffentlich</span>
+        {{ pill_badge("Öffentlich", icon="🌍", variant="dark", title="Öffentliche Welt", extra_class="aimo-card-badge") }}
       {% else %}
-        <span class="aimo-card-badge" title="Private Welt">🔒 Privat</span>
+        {{ pill_badge("Privat", icon="🔒", variant="dark", title="Private Welt", extra_class="aimo-card-badge") }}
       {% endif %}
     </div>
 
@@ -145,12 +145,13 @@
   } %}
   {% call aimo_card_container(none, p.name, bg_style, description=(p.description or p.appearance), onclick=("openEditPersonaFromBtn(this)" if can_manage else none), click_attrs=click_attrs) %}
     <div class="aimo-card-header">
-      <span class="aimo-card-badge" title="Geschlecht">
-        {% if p.gender.value == 'female' %}♀️ Weiblich
-        {% elif p.gender.value == 'male' %}♂️ Männlich
-        {% else %}⚧️ {{ p.gender.value }}
-        {% endif %}
-      </span>
+      {% if p.gender.value == 'female' %}
+        {{ pill_badge("Weiblich", icon="♀️", variant="dark", title="Geschlecht", extra_class="aimo-card-badge") }}
+      {% elif p.gender.value == 'male' %}
+        {{ pill_badge("Männlich", icon="♂️", variant="dark", title="Geschlecht", extra_class="aimo-card-badge") }}
+      {% else %}
+        {{ pill_badge(p.gender.value, icon="⚧️", variant="dark", title="Geschlecht", extra_class="aimo-card-badge") }}
+      {% endif %}
       {% if p.is_default %}
         <span class="aimo-card-action-btn persona-star-btn is-default" title="Standard-Persona" aria-label="Standard-Persona">★</span>
       {% elif can_manage %}

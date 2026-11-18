@@ -3,6 +3,7 @@
    Unified Random Event Editor for WorldInfo Detail and Character Designer
    ============================================================================= #}
 {% from "macros/buttons.html" import action_button, new_button, modal_close_button %}
+{% from "macros/badges.html" import pill_badge %}
 
 {% macro _event_location_select(scope_type, selected_location_id=none, locations=none) %}
 <select name="location_id">
@@ -130,20 +131,14 @@
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.6rem;">
           <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
             {% if ev.location_id and loc_map and ev.location_id in loc_map %}
-              <span style="background: rgba(110, 71, 42, 0.9); border: 1px solid var(--gold-accent); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem;">
-                📍 Ort: {{ loc_map[ev.location_id].name }}
-              </span>
+              {{ pill_badge("Ort: " ~ loc_map[ev.location_id].name, icon="📍", variant="wood") }}
             {% elif scope_type == 'character' %}
-              <span style="background: rgba(45, 70, 95, 0.9); border: 1px solid var(--gold-accent); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem;">
-                🎭 Charakterweit (Überall)
-              </span>
+              {{ pill_badge("Charakterweit (Überall)", icon="🎭", variant="default") }}
             {% else %}
-              <span style="background: rgba(45, 70, 95, 0.9); border: 1px solid var(--gold-accent); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem;">
-                🌍 Gesamte Welt
-              </span>
+              {{ pill_badge("Gesamte Welt", icon="🌍", variant="default") }}
             {% endif %}
             {% if scope_type == 'character' and (ev.min_relationship is not none or ev.max_relationship is not none) %}
-              <span style="background: rgba(95, 35, 45, 0.9); border: 1px solid var(--gold-accent); padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.75rem; line-height: 1;" title="Beziehungsgebunden">❤️</span>
+              {{ pill_badge(icon="❤️", variant="heart", title="Beziehungsgebunden") }}
             {% endif %}
           </div>
           <span style="font-size: 0.8rem; font-weight: 700; color: var(--gold-accent);">{{ ev.probability }}%</span>

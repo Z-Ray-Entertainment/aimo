@@ -1,5 +1,6 @@
 {% extends "settings/layout.html" %}
 {% from "macros/buttons.html" import action_button %}
+{% from "macros/badges.html" import pill_badge %}
 {% block title %}AIMO — My Creations{% endblock %}
 
 {% block settings_content %}
@@ -10,9 +11,7 @@
       <p class="text-muted" style="font-size: 0.88rem;">Übersicht aller von dir erstellten Charaktere, Welten und Lorebooks sowie deiner Kollaborationen. Ein Klick öffnet direkt den passenden Editor.</p>
     </div>
     <div style="display: flex; gap: 0.5rem; align-items: center;">
-      <span class="aimo-card-badge" style="font-size: 0.82rem; padding: 0.25rem 0.65rem; color: var(--gold-accent); border-color: var(--gold-accent);">
-        Gesamt: {{ total_count }}
-      </span>
+      {{ pill_badge("Gesamt: " ~ total_count, variant="gold") }}
     </div>
   </div>
 
@@ -81,9 +80,7 @@
                 data-role="{{ 'owner' if item.is_owner else 'collaboration' }}"
                 data-name="{{ item.name|lower }}">
               <td>
-                <span class="aimo-card-badge" style="font-size: 0.78rem;">
-                  <span class="icon-mono">{{ item.type_icon }}</span> {{ item.type_label }}
-                </span>
+                {{ pill_badge(item.type_label, icon=item.type_icon, icon_mono=true, variant="dark") }}
               </td>
               <td style="text-align: center;">
                 {% if item.image_path %}
@@ -106,24 +103,16 @@
               </td>
               <td class="col-creations-visibility">
                 {% if item.visibility == 'public' %}
-                  <span class="aimo-card-badge" style="color: #68d391; border-color: rgba(104, 211, 145, 0.4); font-size: 0.76rem;">
-                    Öffentlich
-                  </span>
+                  {{ pill_badge("Öffentlich", variant="success") }}
                 {% else %}
-                  <span class="aimo-card-badge" style="color: var(--text-muted); border-color: var(--border-wood-dark); font-size: 0.76rem;">
-                    Privat
-                  </span>
+                  {{ pill_badge("Privat", variant="dark") }}
                 {% endif %}
               </td>
               <td>
                 {% if item.is_owner %}
-                  <span class="aimo-card-badge" style="color: var(--gold-accent); border-color: rgba(212, 175, 55, 0.4); font-size: 0.76rem;">
-                    👑 Eigentümer
-                  </span>
+                  {{ pill_badge("Eigentümer", icon="👑", variant="gold") }}
                 {% else %}
-                  <span class="aimo-card-badge" style="color: #63b3ed; border-color: rgba(99, 179, 237, 0.4); font-size: 0.76rem;">
-                    🤝 Kollaborateur
-                  </span>
+                  {{ pill_badge("Kollaborateur", icon="🤝", variant="info") }}
                 {% endif %}
               </td>
               <td class="col-creations-created">
