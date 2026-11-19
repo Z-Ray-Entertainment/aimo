@@ -690,6 +690,24 @@ class AimoChatStream {
                 heartIcon.style.color = "#FF69B4";
               }
             }
+
+            const pulseClassMap = {
+              positive: "relationship-pulse-positive",
+              very_positive: "relationship-pulse-positive",
+              negative: "relationship-pulse-negative",
+              very_negative: "relationship-pulse-negative",
+            };
+            const pulseClass = pulseClassMap[data.relationship_impact];
+            if (pulseClass) {
+              relWrap.classList.remove("relationship-pulse-positive", "relationship-pulse-negative");
+              void relWrap.offsetWidth;
+              relWrap.classList.add(pulseClass);
+              relWrap.addEventListener(
+                "animationend",
+                () => relWrap.classList.remove(pulseClass),
+                { once: true }
+              );
+            }
           }
         }
 

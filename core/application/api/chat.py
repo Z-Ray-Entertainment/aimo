@@ -14,7 +14,7 @@ from domain.characters.services import CharacterService
 from domain.chat.focus_analyzer import PythonFocusAnalyzer, SceneFocus
 from domain.chat.models import ChatSession, Message, MessageRole
 from domain.chat.prompt_builder import PromptBuilder
-from domain.chat.relationship import get_relationship_tier
+from domain.chat.relationship import RelationshipImpact, get_relationship_tier
 from domain.chat.services import ChatService
 from domain.lorebooks.services import LorebookService
 from domain.memories.services import MemoryService
@@ -245,7 +245,7 @@ def _start_background_turn(
             )
 
         chat_service.apply_time_decay(chat_session)
-        chat_service.apply_user_message_affection(chat_session)
+        chat_session.last_message_at = datetime.now(timezone.utc)
         chat_service.lock_persona(chat_session)
 
         cleaned_user_text = user_text.strip()
@@ -750,19 +750,26 @@ def _start_background_turn(
 
             detected_emotion_str = Emotion.NEUTRAL.value
             matched_loc_name = None
-            if emotion_candidates is not None or loc_candidates is not None:
-                try:
-                    detected_emotion_str, matched_loc_name = llm.classify_turn(
-                        text=english_reply,
-                        emotion_candidates=emotion_candidates,
-                        location_candidates=loc_candidates,
-                        model=classification_model,
-                    )
-                except Exception:
-                    detected_emotion_str = Emotion.NEUTRAL.value
-                    matched_loc_name = None
+            raw_impact = RelationshipImpact.NEUTRAL.value
+            current_tier_en = w_rel_repo.get_tier(w_session.relationship_value, language="en")
+            try:
+                detected_emotion_str, matched_loc_name, raw_impact = llm.classify_turn(
+                    text=english_reply,
+                    emotion_candidates=emotion_candidates,
+                    location_candidates=loc_candidates,
+                    model=classification_model,
+                    user_text=cleaned_user_text,
+                    character_name=w_character.name,
+                    relationship_tier=current_tier_en.name,
+                    evaluate_relationship=True,
+                )
+            except Exception:
+                detected_emotion_str = Emotion.NEUTRAL.value
+                matched_loc_name = None
+                raw_impact = RelationshipImpact.NEUTRAL.value
 
             detected_emotion = Emotion.resolve(detected_emotion_str)
+            impact = RelationshipImpact.resolve(raw_impact)
             selected_sprite = w_char_service.select_sprite_for_emotion(w_character, detected_emotion)
 
             suggested_location = None
@@ -785,6 +792,10 @@ def _start_background_turn(
                     task.condition.notify_all()
                 return
 
+            latest_session = w_chat_repo.get_session(session_id) or w_session
+            applied_delta = w_chat_service.apply_relationship_impact(latest_session, impact)
+            w_chat_repo.update_session(latest_session)
+
             ai_next_idx = target_ai_idx if target_ai_idx is not None else w_chat_repo.get_next_message_idx(session_id)
             ai_msg = Message(
                 id=None,
@@ -794,13 +805,15 @@ def _start_background_turn(
                 english_content=english_reply,
                 localized_content=localized_reply,
                 emotion_tag=detected_emotion.value,
+                metadata={
+                    "relationship_impact": impact.value,
+                    "relationship_delta": applied_delta,
+                },
                 created_at=datetime.now(timezone.utc),
             )
             saved_ai_msg = w_chat_repo.add_message(ai_msg)
             if task.is_admin and task.assembled_prompt:
                 _record_admin_prompt(session_id, saved_ai_msg.message_idx, task.assembled_prompt)
-
-            latest_session = w_chat_repo.get_session(session_id) or w_session
 
             _run_async_memory_extraction(session_id)
 
@@ -816,6 +829,7 @@ def _start_background_turn(
                 "sprite_path": selected_sprite.file_path,
                 "relationship_value": latest_session.relationship_value,
                 "relationship_tier_name": tier.name,
+                "relationship_impact": impact.value,
                 "suggested_location": suggested_location,
             }
             if task.can_view_event_counter:
@@ -1115,6 +1129,22 @@ def abort_generation(session_id: int):
     return jsonify({"aborted": False, "status": task.status if task else "idle"})
 
 
+def _revert_relationship_for_messages(
+    chat_service: ChatService,
+    chat_session: ChatSession,
+    messages: list[Message],
+) -> bool:
+    reverted = False
+    for msg in messages:
+        if msg.role != MessageRole.CHARACTER:
+            continue
+        raw_delta = msg.metadata.get("relationship_delta") if msg.metadata else None
+        if isinstance(raw_delta, (int, float)) and not isinstance(raw_delta, bool):
+            chat_service.revert_relationship_delta(chat_session, float(raw_delta))
+            reverted = True
+    return reverted
+
+
 @api_chat_bp.route("/<int:session_id>/regenerate", methods=["POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def regenerate_turn(session_id: int):
@@ -1129,6 +1159,7 @@ def regenerate_turn(session_id: int):
 
     chat_repo = ChatRepository()
     mem_repo = MemoryRepository()
+    chat_service = ChatService()
 
     all_messages = chat_repo.get_messages(session_id, limit=None)
     narrative_msgs = [
@@ -1144,6 +1175,9 @@ def regenerate_turn(session_id: int):
     if last_msg.role == MessageRole.CHARACTER:
         if last_msg.message_idx == 0:
             return jsonify({"error": "Die Begrüßung der KI kann nicht neu generiert werden."}), 400
+
+        if _revert_relationship_for_messages(chat_service, chat_session, [last_msg]):
+            chat_repo.update_session(chat_session)
 
         if last_msg.id is not None:
             chat_repo.delete_single_message(last_msg.id)
@@ -1509,6 +1543,10 @@ def delete_messages_from_idx(session_id: int, message_idx: int):
     mem_repo = MemoryRepository()
     chat_service = ChatService()
     wi_repo = WorldInfoRepository()
+
+    all_before_delete = chat_repo.get_messages(session_id, limit=None)
+    msgs_to_delete = [m for m in all_before_delete if m.message_idx >= message_idx]
+    _revert_relationship_for_messages(chat_service, chat_session, msgs_to_delete)
 
     deleted_msgs = chat_repo.delete_messages_after(
         session_id=session_id,
