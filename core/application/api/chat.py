@@ -19,7 +19,7 @@ from domain.chat.services import ChatService
 from domain.lorebooks.services import LorebookService
 from domain.memories.services import MemoryService
 from domain.permissions.models import FunctionPermission
-from domain.settings.models import ModelParameters
+from domain.settings.models import ModelParameters, get_default_prompt, is_default_prompt
 from domain.translation.services import TranslationService
 from domain.worldinfo.models import EventCooldownState
 from domain.worldinfo.services import WorldInfoService
@@ -88,6 +88,15 @@ _ADMIN_PROMPT_CACHE: dict[tuple[int, int], str] = {}
 _ADMIN_PROMPT_MAX_ENTRIES: int = 150
 
 
+def has_active_chat_tasks() -> bool:
+    with _TASKS_LOCK:
+        return any(
+            t.status in ("analyzing_image", "thinking", "streaming", "translating")
+            and not t.is_aborted
+            for t in _BACKGROUND_TASKS.values()
+        )
+
+
 def _record_admin_prompt(session_id: int, message_idx: int, prompt: str) -> None:
     with _TASKS_LOCK:
         if len(_ADMIN_PROMPT_CACHE) >= _ADMIN_PROMPT_MAX_ENTRIES:
@@ -128,13 +137,23 @@ def _run_async_memory_extraction(session_id: int) -> None:
             settings = settings_repo.get_settings()
             llm = get_llm_provider(settings)
 
+            session_user = UserRepository().get_by_id(chat_session.user_id)
+            user_lang = (session_user.language if session_user and session_user.language else "en")[:2].lower()
+            raw_mem_prompt = settings.prompts.memory_prompt
+            if is_default_prompt("memory_prompt", raw_mem_prompt):
+                resolved_mem_prompt = get_default_prompt("memory_prompt", user_lang)
+            else:
+                resolved_mem_prompt = TranslationRepository().get_localized_field(
+                    "system_prompt", 1, "memory_prompt", user_lang, raw_mem_prompt
+                )
+
             msg_dicts = [
-                {"role": m.role.value, "content": m.english_content or m.localized_content or ""}
+                {"role": m.role.value, "content": m.localized_content or m.english_content or ""}
                 for m in chunk
             ]
             title, tags, summary, new_chat_title = mem_service.extract_memory_and_title(
                 last_10_messages=msg_dicts,
-                memory_prompt=settings.prompts.memory_prompt,
+                memory_prompt=resolved_mem_prompt,
                 llm_provider=llm,
                 model=settings.tasks.memory_model,
                 params=settings.params,
@@ -394,13 +413,15 @@ def _start_background_turn(
                     saved_user_msg.english_content = cleaned_user_text
                     w_chat_repo.update_message(saved_user_msg)
 
+            target_lang = (task.user_language or "en").strip().lower()[:2]
+
             if w_character.id is not None:
                 w_character.description = w_trans_repo.get_localized_field(
-                    "character", w_character.id, "description", "en", w_character.description
+                    "character", w_character.id, "description", target_lang, w_character.description
                 )
                 if getattr(w_character, "appearance", None):
                     w_character.appearance = w_trans_repo.get_localized_field(
-                        "character", w_character.id, "appearance", "en", w_character.appearance
+                        "character", w_character.id, "appearance", target_lang, w_character.appearance
                     )
                 raw_default_examples = (
                     "\n\n".join([
@@ -414,7 +435,7 @@ def _start_background_turn(
                     "character",
                     w_character.id,
                     "dialogue_examples",
-                    "en",
+                    target_lang,
                     raw_default_examples,
                 )
                 if isinstance(localized_dialogue, str):
@@ -437,10 +458,10 @@ def _start_background_turn(
 
             if w_persona.id is not None:
                 w_persona.description = w_trans_repo.get_localized_field(
-                    "persona", w_persona.id, "description", "en", w_persona.description
+                    "persona", w_persona.id, "description", target_lang, w_persona.description
                 )
                 w_persona.appearance = w_trans_repo.get_localized_field(
-                    "persona", w_persona.id, "appearance", "en", w_persona.appearance
+                    "persona", w_persona.id, "appearance", target_lang, w_persona.appearance
                 )
 
             w_worldinfo = (
@@ -456,35 +477,58 @@ def _start_background_turn(
                 if w_worldinfo and w_worldinfo.id is not None
                 else []
             )
+            for avail_loc in available_locations:
+                if avail_loc.id is not None:
+                    avail_loc.name = w_trans_repo.get_localized_field(
+                        "worldinfo_location", avail_loc.id, "name", target_lang, avail_loc.name
+                    )
             current_location = (
                 w_wi_repo.get_location(w_session.current_location_id)
                 if w_session.current_location_id
                 else None
             )
             if current_location and current_location.id is not None:
+                current_location.name = w_trans_repo.get_localized_field(
+                    "worldinfo_location",
+                    current_location.id,
+                    "name",
+                    target_lang,
+                    current_location.name,
+                )
                 current_location.description = w_trans_repo.get_localized_field(
                     "worldinfo_location",
                     current_location.id,
                     "description",
-                    "en",
+                    target_lang,
                     current_location.description,
                 )
 
             if triggered_event and triggered_event.id is not None:
+                triggered_event.title = w_trans_repo.get_localized_field(
+                    "worldinfo_event",
+                    triggered_event.id,
+                    "title",
+                    target_lang,
+                    triggered_event.title,
+                )
                 triggered_event.description = w_trans_repo.get_localized_field(
                     "worldinfo_event",
                     triggered_event.id,
                     "description",
-                    "en",
+                    target_lang,
                     triggered_event.description,
                 )
 
             recent_messages = w_chat_repo.get_messages(session_id, limit=10)
             combined_context_text = " ".join(
-                m.english_content for m in recent_messages[-2:]
+                (m.localized_content or m.english_content or "") for m in recent_messages[-2:]
             )
             active_tags = _extract_active_tags(combined_context_text)
-            latest_user_text = recent_messages[-1].english_content if recent_messages else ""
+            latest_user_text = (
+                (recent_messages[-1].localized_content or recent_messages[-1].english_content or "")
+                if recent_messages
+                else ""
+            )
             latest_user_tags = _extract_active_tags(latest_user_text)
 
             focus_analyzer = PythonFocusAnalyzer()
@@ -516,6 +560,19 @@ def _start_background_turn(
                 preferred_lb_ids = {w_worldinfo.lorebook_id}
 
             all_lorebook_entries = w_lb_repo.list_entries_for_lorebooks(effective_lb_ids)
+            for lb_entry in all_lorebook_entries:
+                if lb_entry.id is not None:
+                    lb_entry.title = w_trans_repo.get_localized_field(
+                        "lorebook_entry", lb_entry.id, "title", target_lang, lb_entry.title
+                    )
+                    lb_entry.content = w_trans_repo.get_localized_field(
+                        "lorebook_entry", lb_entry.id, "content", target_lang, lb_entry.content
+                    )
+                    raw_tags = w_trans_repo.get_localized_field(
+                        "lorebook_entry", lb_entry.id, "tags", target_lang, ""
+                    )
+                    if raw_tags:
+                        lb_entry.tags = [t.strip() for t in raw_tags.split(",") if t.strip()]
             matched_lorebooks = w_lb_service.search_entries_by_tags(
                 all_lorebook_entries,
                 active_tags,
@@ -523,19 +580,21 @@ def _start_background_turn(
                 focus_keywords=focus_keywords,
                 preferred_lorebook_ids=preferred_lb_ids,
             )
-            for lb_entry in matched_lorebooks:
-                if lb_entry.id is not None:
-                    lb_entry.content = w_trans_repo.get_localized_field(
-                        "lorebook_entry", lb_entry.id, "content", "en", lb_entry.content
-                    )
 
             effective_num_ctx = settings.params.num_ctx
             if effective_num_ctx <= 0:
                 effective_num_ctx = llm.get_model_context_length(settings.tasks.roleplay_model) or 4096
 
-            relation_trans = w_rel_repo.get_translations_map(task.user_language)
+            raw_rp_prompt = settings.prompts.roleplay_prompt
+            if is_default_prompt("roleplay_prompt", raw_rp_prompt):
+                resolved_rp_prompt = get_default_prompt("roleplay_prompt", target_lang)
+            else:
+                resolved_rp_prompt = w_trans_repo.get_localized_field(
+                    "system_prompt", 1, "roleplay_prompt", target_lang, raw_rp_prompt
+                )
+
             assembled_prompt = w_prompt_builder.build_roleplay_prompt(
-                roleplay_system_prompt=settings.prompts.roleplay_prompt,
+                roleplay_system_prompt=resolved_rp_prompt,
                 character=w_character,
                 persona=w_persona,
                 worldinfo=w_worldinfo,
@@ -546,11 +605,12 @@ def _start_background_turn(
                 matched_lorebooks=matched_lorebooks,
                 available_locations=available_locations,
                 relationship_value=w_session.relationship_value,
-                relation_translations=relation_trans,
+                relation_translations=None,
                 scene_focus=scene_focus,
                 effective_num_ctx=effective_num_ctx,
                 thinking_enabled=bool(w_session.thinking_enabled),
                 active_tags=active_tags,
+                language=target_lang,
             )
             if task.is_admin:
                 if w_prompt_builder.last_budget_report is not None:
@@ -656,6 +716,11 @@ def _start_background_turn(
                     if loc.id != w_session.current_location_id
                     and (loc.character_id is None or loc.character_id == w_session.character_id)
                 ]
+                for oloc in other_locations:
+                    if oloc.id is not None:
+                        oloc.name = w_trans_repo.get_localized_field(
+                            "worldinfo_location", oloc.id, "name", target_lang, oloc.name
+                        )
                 if other_locations:
                     loc_candidates = ["stay_here"] + [loc.name for loc in other_locations]
 
@@ -693,9 +758,8 @@ def _start_background_turn(
                         }
                         break
 
-            source_hash = w_trans_service.compute_source_hash(english_reply)
-            cached_rec = w_trans_repo.get_translation(source_hash, user_language)
-            localized_reply = cached_rec.translated_text if cached_rec else english_reply
+            # Direct native-language chat: LLM already streamed in user_language
+            localized_reply = english_reply
 
             if task.is_aborted:
                 with task.condition:
@@ -1710,6 +1774,97 @@ def recalculate_memory(session_id: int, memory_id: int):
             "tags": target_memory.tags,
             "summary": target_memory.summary,
             "messages_count": len(chunk),
+        }
+    )
+
+
+@api_chat_bp.route("/<int:session_id>/memories/<int:memory_id>/translate", methods=["POST"])
+@require_permission(FunctionPermission.CHAT_ACCESS)
+def translate_memory(session_id: int, memory_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
+    mem_repo = MemoryRepository()
+    settings_repo = SettingsRepository()
+    mem_service = MemoryService()
+    trans_service = TranslationService()
+
+    target_memory = mem_repo.get_by_id(memory_id)
+    if target_memory is None or target_memory.chat_session_id != session_id:
+        return jsonify({"error": "Memory not found."}), 404
+
+    data = request.get_json(silent=True) or {}
+    target_lang = str(data.get("target_language") or user.language or "en").strip().lower()[:2]
+
+    settings = settings_repo.get_settings()
+    llm = get_llm_provider(settings)
+    model = settings.tasks.assistant_model
+
+    try:
+        translated_title = (
+            trans_service.translate_text_or_none(
+                text=target_memory.title,
+                target_language=target_lang,
+                llm_provider=llm,
+                model=model,
+            )
+            if target_memory.title
+            else None
+        )
+        translated_summary = (
+            trans_service.translate_text_or_none(
+                text=target_memory.summary,
+                target_language=target_lang,
+                llm_provider=llm,
+                model=model,
+            )
+            if target_memory.summary
+            else None
+        )
+        translated_tags = list(target_memory.tags)
+        if target_memory.tags:
+            raw_tags = trans_service.translate_text_or_none(
+                text=", ".join(target_memory.tags),
+                target_language=target_lang,
+                llm_provider=llm,
+                model=model,
+            )
+            if raw_tags:
+                from shared.utils import parse_tags
+                parsed = parse_tags(raw_tags)
+                if parsed:
+                    translated_tags = parsed
+    except Exception as exc:
+        return jsonify({"error": f"LLM memory translation failed: {exc}"}), 502
+
+    new_title = translated_title or target_memory.title
+    new_summary = translated_summary or target_memory.summary
+    if target_memory.summary and translated_summary is None and translated_title is None:
+        return jsonify({"error": "Translation failed. Please check the Assistant LLM."}), 502
+
+    try:
+        mem_service.update_memory(
+            memory=target_memory,
+            title=new_title,
+            tags=translated_tags,
+            summary=new_summary,
+        )
+        mem_repo.update_memory(target_memory)
+    except AimoError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+    return jsonify(
+        {
+            "id": target_memory.id,
+            "chat_session_id": target_memory.chat_session_id,
+            "message_idx": target_memory.message_idx,
+            "title": target_memory.title,
+            "tags": target_memory.tags,
+            "summary": target_memory.summary,
+            "target_language": target_lang,
         }
     )
 

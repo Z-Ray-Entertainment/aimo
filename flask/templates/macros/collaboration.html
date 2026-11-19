@@ -20,7 +20,7 @@
       </p>
     </div>
     {% if is_author and form_id %}
-      {{ action_button("Kollaboratoren speichern", type="submit", form=form_id, variant="primary", icon="💾", extra_class="collab-save-btn", title="Speichert alle Änderungen des Formulars") }}
+      {{ action_button(_("Save collaborators"), type="submit", form=form_id, variant="primary", icon="💾", extra_class="collab-save-btn", title=_("Saves all changes in the form")) }}
     {% endif %}
   </div>
 
@@ -69,7 +69,7 @@
             <td>
               <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
                 <code class="collab-tag-code" style="font-family: monospace; font-size: 0.88rem; background: rgba(0, 0, 0, 0.4); padding: 0.22rem 0.55rem; border-radius: 6px; border: 1px solid var(--border-wood-dark); color: var(--gold-accent); letter-spacing: 0.5px;">{{ tag }}</code>
-                {{ action_button("Kopieren", icon="📋", layout="icon", size="sm", extra_class="copy-collab-tag-btn", data={"tag": tag}, title="Creator-Tag kopieren") }}
+                {{ action_button(_("Copy"), icon="📋", layout="icon", size="sm", extra_class="copy-collab-tag-btn", data={"tag": tag}, title=_("Copy creator tag")) }}
               </div>
             </td>
             <td>
@@ -77,7 +77,7 @@
             </td>
             {% if is_author %}
               <td style="text-align: right;">
-                {{ action_button("Entfernen", icon="🗑️", variant="danger", size="sm", extra_class="remove-collab-tag-btn", data={"tag": tag}, title="Kollaborator entfernen") }}
+                {{ action_button(_("Remove"), icon="🗑️", variant="danger", size="sm", extra_class="remove-collab-tag-btn", data={"tag": tag}, title=_("Remove collaborator")) }}
               </td>
             {% endif %}
           </tr>
@@ -114,7 +114,7 @@
         </div>
         {{ action_button("Hinzufügen", icon="➕", variant="primary", extra_class="add-collab-tag-btn") }}
         {% if form_id %}
-          {{ action_button("Speichern", type="submit", form=form_id, variant="primary", icon="💾", extra_class="collab-save-btn", title="Speichert alle Änderungen des Formulars") }}
+          {{ action_button(_("Save"), type="submit", form=form_id, variant="primary", icon="💾", extra_class="collab-save-btn", title=_("Saves all changes in the form")) }}
         {% endif %}
       </div>
       <div class="collab-feedback-msg" style="margin-top: 0.65rem; font-size: 0.84rem; display: none;"></div>
@@ -122,4 +122,5 @@
   {% endif %}
 
 </div>
+<script src="{{ url_for('static', filename='js/collaboration.js') }}" defer></script>
 {% endmacro %}

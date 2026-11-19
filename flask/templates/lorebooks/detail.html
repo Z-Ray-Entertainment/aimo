@@ -14,17 +14,17 @@
         <span class="icon-mono">📖</span>
         <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ lorebook.name }}</span>
       </div>
-      <p class="aimo-sidebar-subtitle">Lorebook & Enzyklopädie</p>
+      <p class="aimo-sidebar-subtitle">{{ _("Lorebook & Encyclopedia") }}</p>
     </div>
 
     <nav class="aimo-sidebar-nav">
-      {{ tab_button("Grundeinstellungen", "tab-info", icon="📋", active=((active_tab|default('info')) == 'info'), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button("Einträge", "tab-entries", icon="📜", active=(active_tab == 'entries'), count=(entries|length), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button("Kollaboration", "tab-collab", icon="👥", active=(active_tab == 'collab'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Basic Settings"), "tab-info", icon="📋", active=((active_tab|default('info')) == 'info'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Entries"), "tab-entries", icon="📜", active=(active_tab == 'entries'), count=(entries|length), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Collaboration"), "tab-collab", icon="👥", active=(active_tab == 'collab'), extra_class="aimo-sidebar-nav-item") }}
     </nav>
 
     <div class="aimo-sidebar-footer">
-      {{ action_button("Zurück zur Übersicht", href=get_safe_back_url(url_for('overview.index', tab='lorebooks')), arrow="left", extra_class="aimo-sidebar-back-btn") }}
+      {{ action_button(_("Back to Overview"), href=get_safe_back_url(url_for('overview.index', tab='lorebooks')), arrow="left", extra_class="aimo-sidebar-back-btn") }}
     </div>
   </aside>
 
@@ -39,9 +39,9 @@
         can_copy=has_perm('lorebook_create'),
         delete_url=url_for('lorebooks.delete_lorebook', lorebook_id=lorebook.id),
         can_delete=(has_perm('lorebook_delete') and is_author),
-        delete_confirm_msg="Lorebook wirklich löschen?",
-        readonly_badge_text="Schreibgeschützt (Fremdes Lorebook)",
-        save_title="Lorebook speichern",
+        delete_confirm_msg=_("Really delete Lorebook?"),
+        readonly_badge_text=_("Read-only (External Lorebook)"),
+        save_title=_("Save Lorebook"),
         show_back=false
     ) }}
 
@@ -52,44 +52,48 @@
       <input type="hidden" name="active_tab" value="{{ active_tab }}">
       <div class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; max-width: 800px;">
         <h3 style="color: var(--gold-accent); margin-top: 0; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-          <span class="icon-mono">📋</span> Grundeinstellungen
+          <span class="icon-mono">📋</span> {{ _("Basic Settings") }}
         </h3>
 
         <div>
           <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">
-            Name des Lorebooks *
-            <span class="field-help-btn" title="Lorebook-Name:&#10;Der Titel dieses Wissenskompendiums (z. B. 'Flora &amp; Fauna des Düsterwalds' oder 'Magische Fraktionen').">?</span>
+            {{ _("Lorebook Name") }} *
+            <span class="field-help-btn" title="{{ _('The title of this knowledge compendium.') }}">?</span>
           </label>
           <input type="text" name="name" value="{{ lorebook.name }}" required style="width: 100%; font-size: 1rem; font-weight: 700;" {% if not is_editable %}disabled readonly{% endif %}>
+          <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.4rem; font-size: 0.85rem; color: var(--text-muted); cursor: pointer;">
+            <input type="checkbox" name="is_proper_noun" value="1" {% if lorebook.is_proper_noun %}checked{% endif %} {% if not is_editable %}disabled{% endif %}>
+            <span>{{ _("Proper Noun (Do not translate)") }}</span>
+          </label>
         </div>
 
         <div>
           <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">
-            Sichtbarkeit
-            <span class="field-help-btn" title="Sichtbarkeit:&#10;Privat = Nur von dir nutzbar.&#10;Öffentlich = Auch für andere Nutzer in deren Charakteren verlinkbar.">?</span>
+            {{ _("Visibility") }}
+            <span class="field-help-btn" title="{{ _('Private = only usable by you. Public = linkable by other users in their characters.') }}">?</span>
           </label>
           <select name="visibility" style="width: 220px;" {% if not is_editable %}disabled{% endif %}>
-            <option value="private" {% if lorebook.visibility != 'public' %}selected{% endif %}>🔒 Privat</option>
-            <option value="public" {% if lorebook.visibility == 'public' %}selected{% endif %}>🌍 Öffentlich</option>
+            <option value="private" {% if lorebook.visibility != 'public' %}selected{% endif %}>🔒 {{ _("Private") }}</option>
+            <option value="public" {% if lorebook.visibility == 'public' %}selected{% endif %}>🌍 {{ _("Public") }}</option>
           </select>
         </div>
 
         <div>
           <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">
-            Kurzbeschreibung
-            <span class="field-help-btn" title="Kurzbeschreibung:&#10;Eine knappe Zusammenfassung des Themenbereichs zur Orientierung in der Bibliotheksübersicht.">?</span>
+            {{ _("Short Description") }}
+            <span class="field-help-btn" title="{{ _('A brief summary of the topic for quick orientation in the overview.') }}">?</span>
           </label>
           <textarea
             name="description"
             rows="5"
-            placeholder="Kurze Übersicht über den Inhalt des Lorebooks..."
+            placeholder="{{ _('Short overview of the lorebook content...') }}"
             style="width: 100%; resize: vertical;"
             {% if not is_editable %}disabled readonly{% endif %}>{{ lorebook.description }}</textarea>
         </div>
 
         {% if is_editable %}
           <div style="margin-top: 0.5rem;">
-            {{ action_button("Speichern", type="submit", variant="primary", icon="💾") }}
+            {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
           </div>
         {% endif %}
       </div>
@@ -100,7 +104,7 @@
   <section id="tab-entries" class="tab-pane {% if active_tab == 'entries' %}active{% endif %}">
     <div class="card-grid">
       {% if is_editable %}
-        {{ new_button("Neuer Eintrag", modal="new-entry-modal") }}
+        {{ new_button(_("New Entry"), modal="new-entry-modal") }}
       {% endif %}
 
   {% for entry in entries %}
@@ -109,7 +113,7 @@
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.4rem;">
           <h3 style="color: var(--gold-accent); margin: 0;">{{ entry.title }}</h3>
           {% if entry.visibility == 'private' %}
-            {{ pill_badge("Privat (Geheimwissen)", icon="🔒", variant="danger", title="Privater Eintrag: Nur für den Ersteller sichtbar. Wird im Rollenspiel über RAG injiziert.") }}
+            {{ pill_badge(_("Private (Secret Lore)"), icon="🔒", variant="danger", title=_("Private entry: hidden from other players, but injected via RAG in roleplay.")) }}
           {% endif %}
         </div>
         <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.75rem;">
@@ -123,7 +127,7 @@
       </div>
       {% if is_editable %}
         <div style="margin-top: 0.85rem; font-size: 0.8rem; color: var(--gold-accent);">
-          <span class="icon-mono">✏️</span> Klicken zum Bearbeiten
+          <span class="icon-mono">✏️</span> {{ _("Click to edit") }}
         </div>
       {% endif %}
     </div>
@@ -132,41 +136,45 @@
     <div class="modal-backdrop" id="edit-entry-modal-{{ entry.id }}" aria-hidden="true">
       <div class="modal-frame">
         <div class="modal-header">
-          <h3 style="color: var(--gold-accent);">Lorebook-Eintrag: {{ entry.title }}</h3>
+          <h3 style="color: var(--gold-accent);">{{ _("Lorebook Entry:") }} {{ entry.title }}</h3>
           {{ modal_close_button("edit-entry-modal-" ~ entry.id) }}
         </div>
         <form method="POST" action="{{ url_for('lorebooks.edit_entry', lorebook_id=lorebook.id, entry_id=entry.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
           <div>
             <label>
-              Titel *
-              <span class="field-help-btn" title="Eintrag-Titel:&#10;Die prägnante Bezeichnung des Wissensartikels (z. B. 'Der Orden der Dämmerung').">?</span>
+              {{ _("Title") }} *
+              <span class="field-help-btn" title="{{ _('Concise title of the lore entry.') }}">?</span>
             </label>
             <input type="text" id="title-input-{{ entry.id }}" name="title" value="{{ entry.title }}" required>
+            <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; font-size: 0.82rem; color: var(--text-muted); cursor: pointer;">
+              <input type="checkbox" name="is_proper_noun" value="1" {% if entry.is_proper_noun %}checked{% endif %}>
+              <span>{{ _("Proper Noun (Do not translate)") }}</span>
+            </label>
           </div>
           <div>
             <label>
-              Sichtbarkeit
-              <span class="field-help-btn" title="Sichtbarkeit des Eintrags:&#10;Öffentlich: In der Lorebook-Übersicht für alle Spieler sichtbar.&#10;Privat (Geheimwissen): In der Übersicht für andere Spieler verborgen, wird aber bei verknüpften Charakteren/Welten im Rollenspiel via RAG injiziert.">?</span>
+              {{ _("Visibility") }}
+              <span class="field-help-btn" title="{{ _('Public: readable in overview. Private: hidden in overview, still injected via RAG in roleplay.') }}">?</span>
             </label>
             <select name="visibility">
-              <option value="public" {% if entry.visibility != 'private' %}selected{% endif %}>🌍 Öffentlich (In Übersicht lesbar)</option>
-              <option value="private" {% if entry.visibility == 'private' %}selected{% endif %}>🔒 Privat (Geheimwissen / Spoiler-Schutz)</option>
+              <option value="public" {% if entry.visibility != 'private' %}selected{% endif %}>🌍 {{ _("Public (Readable in overview)") }}</option>
+              <option value="private" {% if entry.visibility == 'private' %}selected{% endif %}>🔒 {{ _("Private (Secret Lore / Spoiler Protection)") }}</option>
             </select>
           </div>
           <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
               <label style="margin: 0;">
-                Tags (Kommagetrennt für vektorloses RAG) *
-                <span class="field-help-btn" title="Tags (vektorloses RAG):&#10;Kommagetrennte Stichwörter (z. B. orden, dämmerung, zauberer). Sobald ein Wort im Chat fällt, wird dieser Eintrag automatisch in [RELEVANT_LOREBOOKS] geladen.">?</span>
+                {{ _("Tags (Comma-separated for vectorless RAG)") }} *
+                <span class="field-help-btn" title="{{ _('Keywords that trigger loading this entry into [RELEVANT_LOREBOOKS] when mentioned in chat.') }}">?</span>
               </label>
-              {{ action_button("Tags vorschlagen", icon="✨", extra_class="btn-sparkle suggest-tags-btn", size="sm", data={"tags-id": "tags-input-" ~ entry.id, "title-id": "title-input-" ~ entry.id, "content-id": "content-input-" ~ entry.id}) }}
+              {{ action_button(_("Suggest Tags"), icon="✨", extra_class="btn-sparkle suggest-tags-btn", size="sm", data={"tags-id": "tags-input-" ~ entry.id, "title-id": "title-input-" ~ entry.id, "content-id": "content-input-" ~ entry.id}) }}
             </div>
             <input type="text" id="tags-input-{{ entry.id }}" name="tags" value="{{ entry.tags|join(', ') }}" required>
           </div>
           <div>
             <label>
-              Fließtext / Wissensinhalt *
-              <span class="field-help-btn" title="Fließtext / Wissensinhalt:&#10;Informationstext in Reinschrift. Kompakte Fakten, Geschichten oder Regeln, die die KI bei Bedarf abrufen und im Dialog verwenden soll.">?</span>
+              {{ _("Prose Text / Lore Content") }} *
+              <span class="field-help-btn" title="{{ _('Compact facts, history, or rules the AI can retrieve and use in dialogue.') }}">?</span>
             </label>
             <input type="hidden" name="i18n_content" id="i18n-lb-entry-{{ entry.id }}" value='{{ (entry_translations.get(entry.id, {}).get("content", {}) if entry_translations is defined else {}) | tojson }}'>
             <textarea
@@ -177,13 +185,14 @@
               data-i18n-field="content"
               data-i18n-entity-type="lorebook_entry"
               data-i18n-entity-id="{{ entry.id }}"
+              data-i18n-origin="{{ lorebook.origin_language if lorebook else ui_language }}"
               data-i18n-hidden="i18n-lb-entry-{{ entry.id }}">{{ entry.content }}</textarea>
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
-            {{ action_button("Löschen", type="submit", form="delete-entry-form-" ~ entry.id, variant="danger", icon="🗑️") }}
+            {{ action_button(_("Delete"), type="submit", form="delete-entry-form-" ~ entry.id, variant="danger", icon="🗑️") }}
             <div style="display: flex; gap: 0.5rem;">
-              {{ action_button("Abbrechen", modal_close="edit-entry-modal-" ~ entry.id) }}
-              {{ action_button("Speichern", type="submit", variant="primary", icon="💾") }}
+              {{ action_button(_("Cancel"), modal_close="edit-entry-modal-" ~ entry.id) }}
+              {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
             </div>
           </div>
         </form>
@@ -197,41 +206,45 @@
 <div class="modal-backdrop" id="new-entry-modal" aria-hidden="true">
   <div class="modal-frame">
     <div class="modal-header">
-      <h3 style="color: var(--gold-accent);">Neuen Lorebook-Eintrag anlegen</h3>
+      <h3 style="color: var(--gold-accent);">{{ _("Create New Lorebook Entry") }}</h3>
       {{ modal_close_button("new-entry-modal") }}
     </div>
     <form method="POST" action="{{ url_for('lorebooks.add_entry', lorebook_id=lorebook.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
       <div>
         <label>
-          Titel *
-          <span class="field-help-btn" title="Eintrag-Titel:&#10;Die prägnante Bezeichnung des Wissensartikels (z. B. 'Der Orden der Dämmerung').">?</span>
+          {{ _("Title") }} *
+          <span class="field-help-btn" title="{{ _('Concise title of the lore entry.') }}">?</span>
         </label>
         <input type="text" id="new-entry-title" name="title" required>
+        <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; font-size: 0.82rem; color: var(--text-muted); cursor: pointer;">
+          <input type="checkbox" name="is_proper_noun" value="1">
+          <span>{{ _("Proper Noun (Do not translate)") }}</span>
+        </label>
       </div>
       <div>
         <label>
-          Sichtbarkeit
-          <span class="field-help-btn" title="Sichtbarkeit des Eintrags:&#10;Öffentlich: In der Lorebook-Übersicht für alle Spieler sichtbar.&#10;Privat (Geheimwissen): In der Übersicht für andere Spieler verborgen, wird aber bei verknüpften Charakteren/Welten im Rollenspiel via RAG injiziert.">?</span>
+          {{ _("Visibility") }}
+          <span class="field-help-btn" title="{{ _('Public: readable in overview. Private: hidden in overview, still injected via RAG in roleplay.') }}">?</span>
         </label>
         <select name="visibility">
-          <option value="public" selected>🌍 Öffentlich (In Übersicht lesbar)</option>
-          <option value="private">🔒 Privat (Geheimwissen / Spoiler-Schutz)</option>
+          <option value="public" selected>🌍 {{ _("Public (Readable in overview)") }}</option>
+          <option value="private">🔒 {{ _("Private (Secret Lore / Spoiler Protection)") }}</option>
         </select>
       </div>
       <div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
           <label style="margin: 0;">
-            Tags (Kommagetrennt) *
-            <span class="field-help-btn" title="Tags (vektorloses RAG):&#10;Kommagetrennte Stichwörter (z. B. orden, dämmerung, zauberer). Sobald ein Wort im Chat fällt, wird dieser Eintrag automatisch in [RELEVANT_LOREBOOKS] geladen.">?</span>
+            {{ _("Tags (Comma-separated)") }} *
+            <span class="field-help-btn" title="{{ _('Keywords that trigger loading this entry into [RELEVANT_LOREBOOKS] when mentioned in chat.') }}">?</span>
           </label>
-          {{ action_button("Tags vorschlagen", icon="✨", extra_class="btn-sparkle suggest-tags-btn", size="sm", data={"tags-id": "new-entry-tags", "title-id": "new-entry-title", "content-id": "new-entry-content"}) }}
+          {{ action_button(_("Suggest Tags"), icon="✨", extra_class="btn-sparkle suggest-tags-btn", size="sm", data={"tags-id": "new-entry-tags", "title-id": "new-entry-title", "content-id": "new-entry-content"}) }}
         </div>
-        <input type="text" id="new-entry-tags" name="tags" placeholder="magie, gilde, hauptstadt" required>
+        <input type="text" id="new-entry-tags" name="tags" placeholder="{{ _('magic, guild, capital') }}" required>
       </div>
       <div>
         <label>
-          Fließtext / Wissensinhalt *
-          <span class="field-help-btn" title="Fließtext / Wissensinhalt:&#10;Informationstext in Reinschrift. Kompakte Fakten, Geschichten oder Regeln, die die KI bei Bedarf abrufen und im Dialog verwenden soll.">?</span>
+          {{ _("Prose Text / Lore Content") }} *
+          <span class="field-help-btn" title="{{ _('Compact facts, history, or rules the AI can retrieve and use in dialogue.') }}">?</span>
         </label>
         <input type="hidden" name="i18n_content" id="i18n-lb-entry-new" value="{}">
         <textarea
@@ -242,11 +255,12 @@
           data-i18n-field="content"
           data-i18n-entity-type="lorebook_entry"
           data-i18n-entity-id=""
+          data-i18n-origin="{{ lorebook.origin_language if lorebook else ui_language }}"
           data-i18n-hidden="i18n-lb-entry-new"></textarea>
       </div>
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
-        {{ action_button("Abbrechen", modal_close="new-entry-modal") }}
-        {{ action_button("Eintrag speichern", type="submit", variant="primary", icon="💾") }}
+        {{ action_button(_("Cancel"), modal_close="new-entry-modal") }}
+        {{ action_button(_("Save Entry"), type="submit", variant="primary", icon="💾") }}
       </div>
     </form>
   </div>
@@ -262,5 +276,6 @@
 {% endblock %}
 
 {% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/i18n_editor.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/lorebook_detail.js') }}" defer></script>
 {% endblock %}

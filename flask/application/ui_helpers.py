@@ -1,5 +1,5 @@
 from urllib.parse import urlparse
-from flask import request
+from flask import flash, g, request
 from markupsafe import Markup, escape
 
 
@@ -69,3 +69,40 @@ def render_new_button(
         f'  <div class="tile-label">{escape(text)}</div>\n'
         f'</button>'
     )
+
+
+def tr(msgid: str, language: str | None = None, **kwargs: object) -> str:
+    from i18n import t
+
+    lang = language or getattr(g, "ui_language", "en")
+    text = t(msgid, lang)
+    return text % kwargs if kwargs else text
+
+
+def notify_author_translation_hint(entity_type: str, entity_id: int | None, field_name: str) -> None:
+    if not entity_id:
+        return
+    import requests as http_requests
+    from application.core_client import build_core_headers, get_core_base_url
+    from i18n import gettext_noop as _, t
+
+    try:
+        resp = http_requests.post(
+            f"{get_core_base_url()}/api/admin/translations/notify",
+            json={"entity_type": entity_type, "entity_id": entity_id, "field_name": field_name},
+            headers=build_core_headers(),
+            timeout=2,
+        )
+        if resp.ok:
+            data = resp.json()
+            if data.get("is_cloud") and data.get("has_missing"):
+                lang = getattr(g, "ui_language", "en")
+                flash(
+                    t(
+                        _("Cloud AI mode: automatic background translation is disabled. Use the greyed-out flag pill-badges to translate into other registered user languages."),
+                        lang,
+                    ),
+                    "info",
+                )
+    except Exception:
+        pass

@@ -181,6 +181,50 @@ class TranslationService:
         except Exception:
             return cleaned
 
+    def translate_text_or_none(
+        self,
+        text: str,
+        target_language: str,
+        llm_provider: TranslationLLMProvider,
+        model: str,
+    ) -> str | None:
+        if not isinstance(text, str) or not text.strip():
+            return None
+        cleaned = text.strip()
+        lang = target_language.strip().lower()[:2] if isinstance(target_language, str) else "en"
+        lang_label = LANGUAGE_METADATA.get(lang, {}).get("label", lang)
+
+        prompt = (
+            f"Translate the following roleplay text accurately and naturally into {lang_label} ('{lang}').\n"
+            "Preserve the narrative tone, character voice, Markdown formatting, and keep any "
+            "{{char}} or {{user}} placeholders completely unchanged.\n"
+            "Output ONLY the translated text without quotes, explanations, or commentary.\n\n"
+            f"Text:\n{cleaned}"
+        )
+        try:
+            try:
+                translated = llm_provider.generate(
+                    prompt=prompt,
+                    model=model,
+                    params=self._default_params,
+                    think=False,
+                ).strip()
+            except TypeError:
+                translated = llm_provider.generate(
+                    prompt=prompt,
+                    model=model,
+                    params=self._default_params,
+                ).strip()
+            translated = re.sub(
+                r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
+                "",
+                translated,
+                flags=re.DOTALL | re.IGNORECASE,
+            ).strip()
+            return translated or None
+        except Exception:
+            return None
+
     def create_record(
         self,
         english_text: str,

@@ -6,10 +6,10 @@
 <div class="aimo-frame" style="padding: 1.5rem;">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.75rem;">
     <div>
-      <h2 style="color: var(--gold-accent);">Benutzer & Funktionale Berechtigungen</h2>
-      <p style="font-size: 0.86rem; color: var(--text-muted);">Granulare Steuerung einzelner Funktionsrechte. Der initiale Administrator ist dauerhaft geschützt.</p>
+      <h2 style="color: var(--gold-accent);">{{ _('Users & Functional Permissions') }}</h2>
+      <p style="font-size: 0.86rem; color: var(--text-muted);">{{ _('Granular control of individual function permissions. The initial administrator is permanently protected.') }}</p>
     </div>
-    {{ action_button("Neuer Benutzer", href=url_for('admin.create_user'), icon="➕", variant="primary") }}
+    {{ action_button(_("New User"), href=url_for('admin.create_user'), icon="➕", variant="primary") }}
   </div>
 
   <div style="display: flex; flex-direction: column; gap: 0.85rem;">
@@ -21,7 +21,7 @@
             <strong style="font-size: 1.05rem; color: var(--gold-accent);">{{ u.username }}</strong>
             <span style="font-size: 0.85rem; color: var(--text-muted);">({{ u.email }})</span>
             {% if u.is_initial_admin %}
-              {{ pill_badge("Initialer Super-Admin (Unentziehbar)", icon="🛡️", variant="gold") }}
+              {{ pill_badge(_("Initial Super-Admin (Non-revocable)"), icon="🛡️", variant="gold") }}
             {% endif %}
           </div>
 
@@ -29,18 +29,18 @@
             {% for perm in item.permissions %}
               {{ pill_badge(perm, variant="leather") }}
             {% else %}
-              <span style="font-size: 0.8rem; color: var(--text-muted);">Keine Berechtigungen zugewiesen</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">{{ _('No permissions assigned') }}</span>
             {% endfor %}
           </div>
         </div>
 
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-          {{ action_button("Bearbeiten", href=url_for('admin.edit_user', user_id=u.id), icon="✏️") }}
+          {{ action_button(_("Edit"), href=url_for('admin.edit_user', user_id=u.id), icon="✏️") }}
           {% if u.is_initial_admin %}
-            {{ action_button("Geschützt", icon="🔒", disabled=true, title="Initialer Administrator kann nicht gelöscht werden") }}
+            {{ action_button(_("Protected"), icon="🔒", disabled=true, title=_("Initial administrator cannot be deleted")) }}
           {% else %}
-            <form method="POST" action="{{ url_for('admin.delete_user', user_id=u.id) }}" onsubmit="return confirm('Benutzer {{ u.username }} wirklich löschen?');">
-              {{ action_button("Löschen", type="submit", variant="danger", icon="🗑️") }}
+            <form method="POST" action="{{ url_for('admin.delete_user', user_id=u.id) }}" onsubmit="return confirm({{ _('Really delete user %(username)s?', username=u.username) | tojson | string | escape }});">
+              {{ action_button(_("Delete"), type="submit", variant="danger", icon="🗑️") }}
             </form>
           {% endif %}
         </div>

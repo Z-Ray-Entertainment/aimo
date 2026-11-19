@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS personas (
     portrait_path TEXT NOT NULL,
     description TEXT NOT NULL DEFAULT '',
     appearance TEXT NOT NULL DEFAULT '',
+    origin_language TEXT NOT NULL DEFAULT 'en',
     is_default INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL
 );
@@ -49,7 +50,9 @@ CREATE TABLE IF NOT EXISTS lorebooks (
     name TEXT NOT NULL,
     description TEXT NOT NULL DEFAULT '',
     visibility TEXT NOT NULL DEFAULT 'private',
+    origin_language TEXT NOT NULL DEFAULT 'en',
     collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]',
+    is_proper_noun INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_lorebooks_user_id ON lorebooks (user_id);
@@ -61,6 +64,7 @@ CREATE TABLE IF NOT EXISTS lorebook_entries (
     tags_json TEXT NOT NULL DEFAULT '[]',
     content TEXT NOT NULL DEFAULT '',
     visibility TEXT NOT NULL DEFAULT 'public',
+    is_proper_noun INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );
@@ -74,7 +78,9 @@ CREATE TABLE IF NOT EXISTS worldinfos (
     visibility TEXT NOT NULL DEFAULT 'private',
     cover_image_path TEXT,
     lorebook_id INTEGER REFERENCES lorebooks(id) ON DELETE SET NULL,
+    origin_language TEXT NOT NULL DEFAULT 'en',
     collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]',
+    is_proper_noun INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_worldinfos_user_id ON worldinfos (user_id);
@@ -87,7 +93,8 @@ CREATE TABLE IF NOT EXISTS locations (
     description TEXT NOT NULL DEFAULT '',
     background_image_path TEXT,
     vision_alt_text TEXT,
-    character_id INTEGER REFERENCES characters(id) ON DELETE SET NULL
+    character_id INTEGER REFERENCES characters(id) ON DELETE SET NULL,
+    is_proper_noun INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS ix_locations_worldinfo_id ON locations (worldinfo_id);
 CREATE INDEX IF NOT EXISTS ix_locations_character_id ON locations (character_id);
@@ -100,6 +107,7 @@ CREATE TABLE IF NOT EXISTS events (
     title TEXT NOT NULL,
     probability INTEGER NOT NULL DEFAULT 50,
     one_shot INTEGER NOT NULL DEFAULT 0,
+    is_proper_noun INTEGER NOT NULL DEFAULT 0,
     description TEXT NOT NULL DEFAULT '',
     min_relationship INTEGER,
     max_relationship INTEGER
@@ -113,6 +121,7 @@ CREATE TABLE IF NOT EXISTS characters (
     name TEXT NOT NULL,
     gender TEXT NOT NULL DEFAULT 'non-binary',
     visibility TEXT NOT NULL DEFAULT 'private',
+    origin_language TEXT NOT NULL DEFAULT 'en',
     collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]',
     primary_portrait_path TEXT NOT NULL,
     avatar_path TEXT,
@@ -451,6 +460,11 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE system_settings ADD COLUMN provider_configs_json TEXT NOT NULL DEFAULT '{}'",
         "ALTER TABLE events ADD COLUMN min_relationship INTEGER",
         "ALTER TABLE events ADD COLUMN max_relationship INTEGER",
+        "ALTER TABLE lorebooks ADD COLUMN is_proper_noun INTEGER NOT NULL DEFAULT 0",
+        "ALTER TABLE lorebook_entries ADD COLUMN is_proper_noun INTEGER NOT NULL DEFAULT 0",
+        "ALTER TABLE worldinfos ADD COLUMN is_proper_noun INTEGER NOT NULL DEFAULT 0",
+        "ALTER TABLE locations ADD COLUMN is_proper_noun INTEGER NOT NULL DEFAULT 0",
+        "ALTER TABLE events ADD COLUMN is_proper_noun INTEGER NOT NULL DEFAULT 0",
     ):
         try:
             conn.execute(stmt)
@@ -554,6 +568,104 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
                 conn.execute("ALTER TABLE events_new RENAME TO events")
                 conn.execute("CREATE INDEX IF NOT EXISTS ix_events_worldinfo_id ON events (worldinfo_id)")
                 conn.execute("CREATE INDEX IF NOT EXISTS ix_events_character_id ON events (character_id)")
+    except sqlite3.OperationalError:
+        pass
+
+    _migrate_origin_language_and_seed_translations(conn)
+
+
+def _migrate_origin_language_and_seed_translations(conn: sqlite3.Connection) -> None:
+    try:
+        admin_row = conn.execute(
+            "SELECT language FROM users WHERE is_initial_admin = 1 ORDER BY id ASC LIMIT 1"
+        ).fetchone()
+        default_origin = (
+            str(admin_row["language"]).strip().lower()[:2]
+            if admin_row and admin_row["language"]
+            else "en"
+        )
+        if not default_origin:
+            default_origin = "en"
+
+        migrated_any = False
+        for table in ("characters", "worldinfos", "lorebooks", "personas"):
+            cols = {
+                row["name"]
+                for row in conn.execute(f"PRAGMA table_info({table})").fetchall()
+            }
+            if cols and "origin_language" not in cols:
+                conn.execute(
+                    f"ALTER TABLE {table} ADD COLUMN origin_language TEXT NOT NULL DEFAULT 'en'"
+                )
+                if default_origin != "en":
+                    conn.execute(
+                        f"UPDATE {table} SET origin_language = ?",
+                        (default_origin,),
+                    )
+                migrated_any = True
+
+        if not migrated_any:
+            return
+
+        now_str = format_datetime(datetime.now(timezone.utc))
+
+        def _seed_field(entity_type: str, entity_id: int, field_name: str, lang: str, text: str) -> None:
+            cleaned = (text or "").strip()
+            if not cleaned:
+                return
+            conn.execute(
+                """
+                INSERT OR IGNORE INTO entity_field_translations (
+                    entity_type, entity_id, field_name, language, text_content, is_outdated, updated_at
+                ) VALUES (?, ?, ?, ?, ?, 0, ?)
+                """,
+                (entity_type, entity_id, field_name, lang, cleaned, now_str),
+            )
+
+        for row in conn.execute("SELECT id, origin_language, description, appearance, first_message, dialogue_examples_json FROM characters").fetchall():
+            lang = str(row["origin_language"] or default_origin)[:2]
+            cid = int(row["id"])
+            _seed_field("character", cid, "description", lang, str(row["description"] or ""))
+            _seed_field("character", cid, "appearance", lang, str(row["appearance"] or ""))
+            _seed_field("character", cid, "first_message", lang, str(row["first_message"] or ""))
+            raw_dlg = str(row["dialogue_examples_json"] or "").strip()
+            if raw_dlg and raw_dlg != "[]":
+                _seed_field("character", cid, "dialogue_examples", lang, raw_dlg)
+
+        for row in conn.execute("SELECT id, origin_language, name FROM worldinfos").fetchall():
+            lang = str(row["origin_language"] or default_origin)[:2]
+            _seed_field("worldinfo", int(row["id"]), "name", lang, str(row["name"] or ""))
+
+        for row in conn.execute("SELECT l.id, w.origin_language, l.name, l.description FROM locations l JOIN worldinfos w ON w.id = l.worldinfo_id").fetchall():
+            lang = str(row["origin_language"] or default_origin)[:2]
+            lid = int(row["id"])
+            _seed_field("worldinfo_location", lid, "name", lang, str(row["name"] or ""))
+            _seed_field("worldinfo_location", lid, "description", lang, str(row["description"] or ""))
+
+        for row in conn.execute("SELECT e.id, COALESCE(w.origin_language, c.origin_language, ?) AS olang, e.title, e.description FROM events e LEFT JOIN worldinfos w ON w.id = e.worldinfo_id LEFT JOIN characters c ON c.id = e.character_id", (default_origin,)).fetchall():
+            lang = str(row["olang"] or default_origin)[:2]
+            eid = int(row["id"])
+            _seed_field("worldinfo_event", eid, "title", lang, str(row["title"] or ""))
+            _seed_field("worldinfo_event", eid, "description", lang, str(row["description"] or ""))
+
+        for row in conn.execute("SELECT id, origin_language, name, description FROM lorebooks").fetchall():
+            lang = str(row["origin_language"] or default_origin)[:2]
+            lbid = int(row["id"])
+            _seed_field("lorebook", lbid, "name", lang, str(row["name"] or ""))
+            _seed_field("lorebook", lbid, "description", lang, str(row["description"] or ""))
+
+        for row in conn.execute("SELECT le.id, lb.origin_language, le.title, le.content, le.tags_json FROM lorebook_entries le JOIN lorebooks lb ON lb.id = le.lorebook_id").fetchall():
+            lang = str(row["origin_language"] or default_origin)[:2]
+            leid = int(row["id"])
+            _seed_field("lorebook_entry", leid, "title", lang, str(row["title"] or ""))
+            _seed_field("lorebook_entry", leid, "content", lang, str(row["content"] or ""))
+            _seed_field("lorebook_entry", leid, "tags", lang, str(row["tags_json"] or ""))
+
+        for row in conn.execute("SELECT id, origin_language, description, appearance FROM personas").fetchall():
+            lang = str(row["origin_language"] or default_origin)[:2]
+            pid = int(row["id"])
+            _seed_field("persona", pid, "description", lang, str(row["description"] or ""))
+            _seed_field("persona", pid, "appearance", lang, str(row["appearance"] or ""))
     except sqlite3.OperationalError:
         pass
 

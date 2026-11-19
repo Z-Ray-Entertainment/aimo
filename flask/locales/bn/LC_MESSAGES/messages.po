@@ -1,0 +1,2844 @@
+msgid ""
+msgstr ""
+"Language: bn\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: flask/application/admin/views.py:130 flask/application/admin/views.py:187
+msgid "User not found."
+msgstr "ব্যবহারকারী পাওয়া যায়নি।"
+
+#: flask/application/admin/views.py:193
+msgid "User '%(username)s' deleted."
+msgstr "ব্যবহারকারী '%(username)s' মুছে ফেলা হয়েছে।"
+
+#: flask/application/admin/views.py:106
+msgid "User '%(username)s' created successfully."
+msgstr "ব্যবহারকারী '%(username)s' সফলভাবে তৈরি হয়েছে।"
+
+#: flask/application/admin/views.py:158
+msgid "User '%(username)s' updated."
+msgstr "ব্যবহারকারী '%(username)s' আপডেট করা হয়েছে।"
+
+#: flask/application/admin/views.py:421
+msgid "System prompts saved successfully."
+msgstr "সিস্টেম প্রম্পট সফলভাবে সংরক্ষিত হয়েছে।"
+
+#: flask/application/admin/views.py:214
+msgid "Suggested models assigned for all 5 roles successfully!"
+msgstr "৫টি ভূমিকার সবকটিতে প্রস্তাবিত মডেল সফলভাবে নির্ধারণ করা হয়েছে!"
+
+#: flask/application/admin/views.py:277
+msgid "Service settings and models saved successfully."
+msgstr "পরিষেবা সেটিংস এবং মডেল সফলভাবে সংরক্ষিত হয়েছে।"
+
+#: flask/application/admin/views.py:470
+msgid "System-wide default backdrop reset (default theme active)."
+msgstr "সিস্টেম-ব্যাপী ডিফল্ট ব্যাকড্রপ রিসেট করা হয়েছে (ডিফল্ট থিম সক্রিয়)।"
+
+#: flask/application/admin/views.py:487
+msgid "Please select an image file (PNG, JPG, WEBP) to upload."
+msgstr "আপলোড করার জন্য অনুগ্রহ করে একটি ছবির ফাইল (PNG, JPG, WEBP) নির্বাচন করুন।"
+
+#: flask/application/admin/views.py:482
+msgid "New system-wide default backdrop saved successfully."
+msgstr "নতুন সিস্টেম-ব্যাপী ডিফল্ট ব্যাকড্রপ সফলভাবে সংরক্ষিত হয়েছে।"
+
+#: flask/application/admin/views.py:495
+msgid "System-wide default backdrop assigned successfully."
+msgstr "সিস্টেম-ব্যাপী ডিফল্ট ব্যাকড্রপ সফলভাবে নির্ধারণ করা হয়েছে।"
+
+#: flask/application/auth/views.py:33
+msgid "Invalid email address or password."
+msgstr "অবৈধ ইমেল ঠিকানা বা পাসওয়ার্ড।"
+
+#: flask/application/characters/views.py:392
+msgid "Copy '%(name)s' created as draft."
+msgstr "অনুলিপি '%(name)s' খসড়া হিসেবে তৈরি হয়েছে।"
+
+#: flask/application/characters/views.py:408
+msgid "Character deleted."
+msgstr "চরিত্র মুছে ফেলা হয়েছে।"
+
+#: flask/application/characters/views.py:452
+msgid "Gallery image removed."
+msgstr "গ্যালারির ছবি সরানো হয়েছে।"
+
+#: flask/application/characters/views.py:502
+msgid "Sprite %(name)s deleted."
+msgstr "স্প্রাইট %(name)s মুছে ফেলা হয়েছে।"
+
+#: flask/application/characters/views.py:283 flask/application/characters/views.py:388 flask/application/chat/views.py:181 flask/application/chat/views.py:205
+msgid "Character not found."
+msgstr "চরিত্র পাওয়া যায়নি।"
+
+#: flask/application/characters/views.py:287
+msgid "Access denied: You can only edit your own characters or creations shared with you."
+msgstr "প্রবেশাধিকার প্রত্যাখ্যাত: আপনি কেবল আপনার নিজের চরিত্র বা আপনার সাথে শেয়ার করা সৃষ্টি সম্পাদনা করতে পারেন।"
+
+#: flask/application/characters/views.py:404
+msgid "Character not found or no permission to delete."
+msgstr "চরিত্র পাওয়া যায়নি বা মুছে ফেলার অনুমতি নেই।"
+
+#: flask/application/characters/views.py:423 flask/application/characters/views.py:448 flask/application/characters/views.py:467 flask/application/characters/views.py:498 flask/application/characters/views.py:533
+msgid "Character not found or no permission."
+msgstr "চরিত্র পাওয়া যায়নি বা অনুমতি নেই।"
+
+#: flask/application/characters/views.py:539 flask/application/characters/views.py:584
+msgid "Invalid or inaccessible location selected."
+msgstr "অবৈধ বা অগম্য স্থান নির্বাচিত হয়েছে।"
+
+#: flask/application/characters/views.py:564 flask/application/worldinfo/views.py:383
+msgid "Event '%(title)s' added."
+msgstr "ঘটনা '%(title)s' যোগ করা হয়েছে।"
+
+#: flask/application/characters/views.py:631 flask/application/worldinfo/views.py:440
+msgid "Event deleted."
+msgstr "ঘটনা মুছে ফেলা হয়েছে।"
+
+#: flask/application/characters/views.py:259
+msgid "Character '%(name)s' created successfully!"
+msgstr "চরিত্র '%(name)s' সফলভাবে তৈরি হয়েছে!"
+
+#: flask/application/characters/views.py:345
+msgid "Character '%(name)s' saved."
+msgstr "চরিত্র '%(name)s' সংরক্ষিত হয়েছে।"
+
+#: flask/application/characters/views.py:433
+msgid "9:16 gallery image added."
+msgstr "৯:১৬ গ্যালারি ছবি যোগ করা হয়েছে।"
+
+#: flask/application/characters/views.py:483
+msgid "Sprite '%(name)s' uploaded."
+msgstr "স্প্রাইট '%(name)s' আপলোড করা হয়েছে।"
+
+#: flask/application/characters/views.py:610 flask/application/worldinfo/views.py:422
+msgid "Event updated."
+msgstr "ঘটনা আপডেট করা হয়েছে।"
+
+#: flask/application/chat/views.py:605
+msgid "Chat session deleted."
+msgstr "চ্যাট সেশন মুছে ফেলা হয়েছে।"
+
+#: flask/application/chat/views.py:357 flask/application/chat/views.py:688
+msgid "Chat session not found."
+msgstr "চ্যাট সেশন পাওয়া যায়নি।"
+
+#: flask/application/chat/views.py:365
+msgid "Associated character not found."
+msgstr "সংশ্লিষ্ট চরিত্র পাওয়া যায়নি।"
+
+#: flask/application/chat/views.py:529
+msgid "Session not found."
+msgstr "সেশন পাওয়া যায়নি।"
+
+#: flask/application/chat/views.py:669
+msgid "Memory deleted."
+msgstr "স্মৃতি মুছে ফেলা হয়েছে।"
+
+#: flask/application/chat/views.py:695
+msgid "Memory not found."
+msgstr "স্মৃতি পাওয়া যায়নি।"
+
+#: flask/application/chat/views.py:711
+msgid "No messages found for this memory episode."
+msgstr "এই স্মৃতি পর্বের জন্য কোনো বার্তা পাওয়া যায়নি।"
+
+#: flask/application/chat/views.py:742
+msgid "Memory recalculated successfully."
+msgstr "স্মৃতি সফলভাবে পুনরায় গণনা করা হয়েছে।"
+
+#: flask/application/chat/views.py:541
+msgid "Persona updated for this session."
+msgstr "এই সেশনের জন্য পার্সোনা আপডেট করা হয়েছে।"
+
+#: flask/application/chat/views.py:647
+msgid "Memory updated."
+msgstr "স্মৃতি আপডেট করা হয়েছে।"
+
+#: flask/application/chat/views.py:746
+msgid "Recalculation error: %(error)s"
+msgstr "পুনরায় গণনা ত্রুটি: %(error)s"
+
+#: flask/application/chat/views.py:237 flask/application/chat/views.py:549
+msgid "Invalid WorldInfo."
+msgstr "অবৈধ WorldInfo।"
+
+#: flask/application/chat/views.py:242 flask/application/chat/views.py:556 flask/application/worldinfo/views.py:120 flask/application/worldinfo/views.py:228
+msgid "This world is not yet available in your language."
+msgstr "এই বিশ্বটি এখনও আপনার ভাষায় উপলব্ধ নয়।"
+
+#: flask/application/chat/views.py:538
+msgid "Invalid persona."
+msgstr "অবৈধ পার্সোনা।"
+
+#: flask/application/chat/views.py:565
+msgid "WorldInfo changed for this chat."
+msgstr "এই চ্যাটের জন্য WorldInfo পরিবর্তন করা হয়েছে।"
+
+#: flask/application/chat/views.py:568
+msgid "Event setting saved."
+msgstr "ঘটনা সেটিং সংরক্ষিত হয়েছে।"
+
+#: flask/application/chat/views.py:576
+msgid "Thinking enabled."
+msgstr "চিন্তা সক্রিয় করা হয়েছে।"
+
+#: flask/application/chat/views.py:578
+msgid "Thinking disabled."
+msgstr "চিন্তা নিষ্ক্রিয় করা হয়েছে।"
+
+#: flask/application/chat/views.py:583
+msgid "Chat title updated."
+msgstr "চ্যাট শিরোনাম আপডেট করা হয়েছে।"
+
+#: flask/application/lorebooks/views.py:135 flask/application/worldinfo/views.py:231
+msgid "Copy '%(name)s' created successfully."
+msgstr "অনুলিপি '%(name)s' সফলভাবে তৈরি হয়েছে।"
+
+#: flask/application/lorebooks/views.py:150
+msgid "Lorebook deleted."
+msgstr "লোরবুক মুছে ফেলা হয়েছে।"
+
+#: flask/application/lorebooks/views.py:232
+msgid "Entry deleted."
+msgstr "এন্ট্রি মুছে ফেলা হয়েছে।"
+
+#: flask/application/lorebooks/views.py:31
+msgid "Lorebook '%(name)s' created."
+msgstr "লোরবুক '%(name)s' তৈরি হয়েছে।"
+
+#: flask/application/lorebooks/views.py:48 flask/application/lorebooks/views.py:132
+msgid "Lorebook not found."
+msgstr "লোরবুক পাওয়া যায়নি।"
+
+#: flask/application/lorebooks/views.py:147
+msgid "Lorebook not found or no permission to delete."
+msgstr "লোরবুক পাওয়া যায়নি বা মুছে ফেলার অনুমতি নেই।"
+
+#: flask/application/lorebooks/views.py:162 flask/application/lorebooks/views.py:194 flask/application/lorebooks/views.py:228
+msgid "Lorebook not found or no permission."
+msgstr "লোরবুক পাওয়া যায়নি বা অনুমতি নেই।"
+
+#: flask/application/lorebooks/views.py:180
+msgid "Entry '%(title)s' added."
+msgstr "এন্ট্রি '%(title)s' যোগ করা হয়েছে।"
+
+#: flask/application/lorebooks/views.py:56
+msgid "Access denied: You can only edit your own lorebooks or creations shared with you."
+msgstr "প্রবেশাধিকার প্রত্যাখ্যাত: আপনি কেবল আপনার নিজের লোরবুক বা আপনার সাথে শেয়ার করা সৃষ্টি সম্পাদনা করতে পারেন।"
+
+#: flask/application/lorebooks/views.py:73
+msgid "Lorebook updated."
+msgstr "লোরবুক আপডেট করা হয়েছে।"
+
+#: flask/application/lorebooks/views.py:88
+msgid "This lorebook is not yet available in your language."
+msgstr "এই লোরবুকটি এখনও আপনার ভাষায় উপলব্ধ নয়।"
+
+#: flask/application/lorebooks/views.py:214
+msgid "Entry saved."
+msgstr "এন্ট্রি সংরক্ষিত হয়েছে।"
+
+#: flask/application/personas/views.py:62
+msgid "Persona '%(name)s' created successfully."
+msgstr "পার্সোনা '%(name)s' সফলভাবে তৈরি হয়েছে।"
+
+#: flask/application/personas/views.py:81 flask/application/personas/views.py:141
+msgid "Persona not found."
+msgstr "পার্সোনা পাওয়া যায়নি।"
+
+#: flask/application/personas/views.py:111
+msgid "Persona '%(name)s' updated."
+msgstr "পার্সোনা '%(name)s' আপডেট করা হয়েছে।"
+
+#: flask/application/personas/views.py:127
+msgid "'%(name)s' is now your default persona."
+msgstr "'%(name)s' এখন আপনার ডিফল্ট পার্সোনা।"
+
+#: flask/application/personas/views.py:148
+msgid "Persona '%(name)s' deleted."
+msgstr "পার্সোনা '%(name)s' মুছে ফেলা হয়েছে।"
+
+#: flask/application/settings/views.py:63 flask/templates/characters/creator.html:87 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:155 flask/templates/macros/persona_manager.html:69
+msgid "Female"
+msgstr ""
+
+#: flask/application/settings/views.py:64 flask/templates/characters/creator.html:88 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:157 flask/templates/macros/persona_manager.html:70
+msgid "Male"
+msgstr ""
+
+#: flask/application/settings/views.py:65 flask/templates/characters/creator.html:89 flask/templates/macros/persona_manager.html:71 flask/templates/macros/persona_manager.html:97 flask/templates/overview/tabs/characters.html:11
+msgid "Non-Binary"
+msgstr ""
+
+#: flask/application/settings/views.py:244
+msgid "Account settings saved."
+msgstr ""
+
+#: flask/application/settings/views.py:74 flask/i18n.py:117 flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:257 flask/templates/characters/creator.html:258
+msgid "Character"
+msgstr ""
+
+#: flask/application/settings/views.py:100 flask/i18n.py:120 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:362
+msgid "World"
+msgstr "বিশ্ব"
+
+#: flask/application/settings/views.py:125 flask/i18n.py:118
+msgid "Lorebook"
+msgstr ""
+
+#: flask/application/settings/views.py:227
+msgid "The new passwords do not match."
+msgstr ""
+
+#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:113
+msgid "Owner"
+msgstr ""
+
+#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:115
+msgid "Collaborator"
+msgstr ""
+
+#: flask/application/settings/views.py:221
+msgid "The current password is incorrect."
+msgstr ""
+
+#: flask/application/settings/views.py:225
+msgid "A user with this email address already exists."
+msgstr ""
+
+#: flask/application/settings/views.py:111 flask/templates/macros/cards.html:129
+msgid "Locations"
+msgstr ""
+
+#: flask/application/settings/views.py:111 flask/templates/macros/cards.html:130
+msgid "Events"
+msgstr ""
+
+#: flask/application/settings/views.py:136 flask/templates/lorebooks/detail.html:22 flask/templates/macros/lorebook_manager.html:78 flask/templates/macros/lorebook_manager.html:151 flask/templates/macros/lorebook_manager.html:224
+msgid "Entries"
+msgstr ""
+
+#: flask/application/setup/views.py:127
+msgid "Initial administrator and AI backend configured successfully!"
+msgstr "প্রাথমিক অ্যাডমিন এবং AI ব্যাকএন্ড সফলভাবে কনফিগার করা হয়েছে!"
+
+#: flask/application/ui_helpers.py:102
+msgid "Cloud AI mode: automatic background translation is disabled. Use the greyed-out flag pill-badges to translate into other registered user languages."
+msgstr "ক্লাউড AI মোড: স্বয়ংক্রিয় ব্যাকগ্রাউন্ড অনুবাদ নিষ্ক্রিয়। অন্যান্য নিবন্ধিত ব্যবহারকারীর ভাষায় অনুবাদ করতে ধূসর পতাকা ব্যাজ ব্যবহার করুন।"
+
+#: flask/application/worldinfo/views.py:246
+msgid "WorldInfo deleted."
+msgstr "WorldInfo মুছে ফেলা হয়েছে।"
+
+#: flask/application/worldinfo/views.py:348
+msgid "Location deleted."
+msgstr "স্থান মুছে ফেলা হয়েছে।"
+
+#: flask/application/worldinfo/views.py:37
+msgid "WorldInfo '%(name)s' created."
+msgstr "WorldInfo '%(name)s' তৈরি হয়েছে।"
+
+#: flask/application/worldinfo/views.py:54 flask/application/worldinfo/views.py:220
+msgid "WorldInfo not found."
+msgstr "WorldInfo পাওয়া যায়নি।"
+
+#: flask/application/worldinfo/views.py:243
+msgid "WorldInfo not found or no permission to delete."
+msgstr "WorldInfo পাওয়া যায়নি বা মুছে ফেলার অনুমতি নেই।"
+
+#: flask/application/worldinfo/views.py:258 flask/application/worldinfo/views.py:300 flask/application/worldinfo/views.py:344 flask/application/worldinfo/views.py:360 flask/application/worldinfo/views.py:397
+msgid "WorldInfo not found or no permission."
+msgstr "WorldInfo পাওয়া যায়নি বা অনুমতি নেই।"
+
+#: flask/application/worldinfo/views.py:285
+msgid "Location '%(name)s' created."
+msgstr "স্থান '%(name)s' তৈরি হয়েছে।"
+
+#: flask/application/worldinfo/views.py:62
+msgid "Access denied: You can only edit your own WorldInfos or creations shared with you."
+msgstr "প্রবেশাধিকার প্রত্যাখ্যাত: আপনি কেবল আপনার নিজের WorldInfo বা আপনার সাথে শেয়ার করা সৃষ্টি সম্পাদনা করতে পারেন।"
+
+#: flask/application/worldinfo/views.py:90
+msgid "WorldInfo saved."
+msgstr "WorldInfo সংরক্ষিত হয়েছে।"
+
+#: flask/application/worldinfo/views.py:329
+msgid "Location updated."
+msgstr "স্থান আপডেট করা হয়েছে।"
+
+#: flask/i18n.py:51
+msgid "Error adding lorebook."
+msgstr "লোরবুক যোগ করতে ত্রুটি।"
+
+#: flask/i18n.py:52
+msgid "Network error while adding lorebook."
+msgstr "লোরবুক যোগ করার সময় নেটওয়ার্ক ত্রুটি।"
+
+#: flask/i18n.py:53
+msgid "Error toggling lorebook."
+msgstr "লোরবুক পরিবর্তন করতে ত্রুটি।"
+
+#: flask/i18n.py:54
+msgid "Network error while toggling lorebook."
+msgstr "লোরবুক পরিবর্তন করার সময় নেটওয়ার্ক ত্রুটি।"
+
+#: flask/i18n.py:55
+msgid "Error removing lorebook."
+msgstr "লোরবুক সরাতে ত্রুটি।"
+
+#: flask/i18n.py:56
+msgid "Network error while removing lorebook."
+msgstr "লোরবুক সরানোর সময় নেটওয়ার্ক ত্রুটি।"
+
+#: flask/i18n.py:57
+msgid "Reset this prompt in all languages back to the built-in default?"
+msgstr "এই প্রম্পটটি কি সব ভাষায় ডিফল্টে রিসেট করবেন?"
+
+#: flask/i18n.py:58
+msgid "Please select a portrait image first."
+msgstr "অনুগ্রহ করে প্রথমে একটি পোর্ট্রেট ছবি নির্বাচন করুন।"
+
+#: flask/i18n.py:59
+msgid "Image analysis error: {error}"
+msgstr "ছবি বিশ্লেষণ ত্রুটি: {error}"
+
+#: flask/i18n.py:60
+msgid "Please enter at least one trigger or response."
+msgstr "অনুগ্রহ করে অন্তত একটি ট্রিগার বা উত্তর লিখুন।"
+
+#: flask/i18n.py:61
+msgid "Please enter a meaningful character description in the 'Basic Info' tab first."
+msgstr "অনুগ্রহ করে প্রথমে 'মূল তথ্য' ট্যাবে একটি অর্থবহ চরিত্রের বিবরণ লিখুন।"
+
+#: flask/i18n.py:62
+msgid "Please enter a title or prose text first so the assistant can derive relevant tags."
+msgstr "অনুগ্রহ করে প্রথমে একটি শিরোনাম বা পাঠ্য লিখুন যাতে সহকারী প্রাসঙ্গিক ট্যাগ বের করতে পারে।"
+
+#: flask/i18n.py:63
+msgid "Error deriving tags: {error}"
+msgstr "ট্যাগ নির্ণয়ে ত্রুটি: {error}"
+
+#: flask/i18n.py:64
+msgid "Connection error: {error}"
+msgstr "সংযোগ ত্রুটি: {error}"
+
+#: flask/i18n.py:65
+msgid "Timeout while sending."
+msgstr "পাঠানোর সময় সময়সীমা শেষ হয়েছে।"
+
+#: flask/i18n.py:66
+msgid "Timeout"
+msgstr "সময়সীমা শেষ"
+
+#: flask/i18n.py:67
+msgid "Connection to backend (aimo-core) lost."
+msgstr "ব্যাকএন্ড (aimo-core)-এর সাথে সংযোগ বিচ্ছিন্ন হয়েছে।"
+
+#: flask/i18n.py:68
+msgid "Backend connection error"
+msgstr "ব্যাকএন্ড সংযোগ ত্রুটি"
+
+#: flask/i18n.py:69
+msgid "Connection to AI backend lost."
+msgstr "AI ব্যাকএন্ডের সাথে সংযোগ বিচ্ছিন্ন হয়েছে।"
+
+#: flask/i18n.py:70
+msgid "AI connection error"
+msgstr "AI সংযোগ ত্রুটি"
+
+#: flask/i18n.py:71
+msgid "Error sending message."
+msgstr "বার্তা পাঠাতে ত্রুটি।"
+
+#: flask/i18n.py:72
+msgid "Error"
+msgstr "ত্রুটি"
+
+#: flask/i18n.py:73
+msgid "Connection to backend lost: {error}"
+msgstr "ব্যাকএন্ডের সাথে সংযোগ বিচ্ছিন্ন হয়েছে: {error}"
+
+#: flask/i18n.py:74
+msgid "Timeout: {error}"
+msgstr "সময়সীমা শেষ: {error}"
+
+#: flask/i18n.py:75
+msgid "Ollama connection error: {error}"
+msgstr "Ollama সংযোগ ত্রুটি: {error}"
+
+#: flask/i18n.py:76
+msgid "Connection to Ollama (or LLMProvider) lost."
+msgstr "Ollama (বা LLMProvider)-এর সাথে সংযোগ বিচ্ছিন্ন হয়েছে।"
+
+#: flask/i18n.py:77
+msgid "Ollama connection error"
+msgstr "Ollama সংযোগ ত্রুটি"
+
+#: flask/i18n.py:78
+msgid "Timeout while regenerating."
+msgstr "পুনরায় তৈরি করার সময় সময়সীমা শেষ হয়েছে।"
+
+#: flask/i18n.py:79
+msgid "Error while regenerating."
+msgstr "পুনরায় তৈরি করতে ত্রুটি।"
+
+#: flask/i18n.py:80
+msgid "Ollama error"
+msgstr "Ollama ত্রুটি"
+
+#: flask/i18n.py:81
+msgid "Success"
+msgstr "সফল"
+
+#: flask/i18n.py:82
+msgid "Warning"
+msgstr "সতর্কতা"
+
+#: flask/i18n.py:83
+msgid "Notice"
+msgstr "বিজ্ঞপ্তি"
+
+#: flask/i18n.py:84 flask/templates/macros/buttons.html:79 flask/templates/macros/buttons.html:80 flask/templates/macros/lorebook_manager.html:239 flask/templates/macros/persona_manager.html:55
+msgid "Close"
+msgstr "বন্ধ করুন"
+
+#: flask/i18n.py:85 flask/templates/characters/creator.html:134
+msgid "Crops active"
+msgstr "ক্রপ সক্রিয়"
+
+#: flask/i18n.py:86 flask/templates/worldinfo/detail.html:97
+msgid "1:1 Cover active"
+msgstr "১:১ কভার সক্রিয়"
+
+#: flask/i18n.py:87
+msgid "Analyzing image"
+msgstr "ছবি বিশ্লেষণ করা হচ্ছে"
+
+#: flask/i18n.py:88
+msgid "✨ Analyzing portrait and extracting appearance"
+msgstr "✨ পোর্ট্রেট বিশ্লেষণ ও চেহারা বের করা হচ্ছে"
+
+#: flask/i18n.py:89
+msgid "Drafting dialogue"
+msgstr "সংলাপ তৈরি করা হচ্ছে"
+
+#: flask/i18n.py:90
+msgid "✨ Analyzing character description"
+msgstr "✨ চরিত্রের বিবরণ বিশ্লেষণ করা হচ্ছে"
+
+#: flask/i18n.py:91
+msgid "✨ Formulating response"
+msgstr "✨ উত্তর তৈরি করা হচ্ছে"
+
+#: flask/i18n.py:92
+msgid "⏳ Analyzing image (Save & Close locked)"
+msgstr "⏳ ছবি বিশ্লেষণ করা হচ্ছে (সংরক্ষণ ও বন্ধ লক করা)"
+
+#: flask/i18n.py:93
+msgid "Not translated yet (click to enter manually or AI translate)"
+msgstr "এখনও অনূদিত হয়নি (হাতে লিখতে বা AI অনুবাদ করতে ক্লিক করুন)"
+
+#: flask/i18n.py:94
+msgid "Translation may be outdated (click to review)"
+msgstr "অনুবাদ পুরনো হতে পারে (পর্যালোচনা করতে ক্লিক করুন)"
+
+#: flask/i18n.py:95
+msgid "Appearance extracted from image successfully."
+msgstr "ছবি থেকে সফলভাবে চেহারা বের করা হয়েছে।"
+
+#: flask/i18n.py:96
+msgid "No appearance extracted."
+msgstr "কোনো চেহারা বের করা যায়নি।"
+
+#: flask/i18n.py:97
+msgid "Server error ({status}): Could not extract appearance."
+msgstr "সার্ভার ত্রুটি ({status}): চেহারা বের করা যায়নি।"
+
+#: flask/i18n.py:98
+msgid "Please select a portrait image first to extract image features."
+msgstr "ছবির বৈশিষ্ট্য বের করতে অনুগ্রহ করে প্রথমে একটি পোর্ট্রেট ছবি নির্বাচন করুন।"
+
+#: flask/i18n.py:99
+msgid "Image features extracted"
+msgstr "ছবির বৈশিষ্ট্য বের করা হয়েছে"
+
+#: flask/i18n.py:100
+msgid "Image analysis failed."
+msgstr "ছবি বিশ্লেষণ ব্যর্থ হয়েছে।"
+
+#: flask/i18n.py:101
+msgid "Image analysis error"
+msgstr "ছবি বিশ্লেষণ ত্রুটি"
+
+#: flask/i18n.py:102
+msgid "Connection error during image analysis."
+msgstr "ছবি বিশ্লেষণের সময় সংযোগ ত্রুটি।"
+
+#: flask/i18n.py:103
+msgid "Connection error"
+msgstr "সংযোগ ত্রুটি"
+
+#: flask/i18n.py:104
+msgid "Create New Persona"
+msgstr "নতুন পার্সোনা তৈরি করুন"
+
+#: flask/i18n.py:105
+msgid "Edit Persona"
+msgstr "পার্সোনা সম্পাদনা করুন"
+
+#: flask/i18n.py:106
+msgid "Used in active chats (deletion protection)"
+msgstr "সক্রিয় চ্যাটে ব্যবহৃত (মুছে ফেলার সুরক্ষা)"
+
+#: flask/i18n.py:107
+msgid "Delete persona"
+msgstr "পার্সোনা মুছুন"
+
+#: flask/i18n.py:108
+msgid "Deletion locked"
+msgstr "মুছে ফেলা লক করা"
+
+#: flask/i18n.py:109 flask/templates/admin/services.html:254 flask/templates/admin/users.html:43 flask/templates/characters/creator.html:247 flask/templates/characters/creator.html:430
+msgid "Delete"
+msgstr "মুছুন"
+
+#: flask/i18n.py:110 flask/templates/chat/session.html:929
+msgid "Translating..."
+msgstr "অনুবাদ হচ্ছে..."
+
+#: flask/i18n.py:111
+msgid "Translation paused"
+msgstr "অনুবাদ বিরতিতে আছে"
+
+#: flask/i18n.py:112
+msgid "Cloud AI Mode (On-Demand)"
+msgstr "ক্লাউড AI মোড (চাহিদা অনুযায়ী)"
+
+#: flask/i18n.py:113
+msgid "Idle"
+msgstr "নিষ্ক্রিয়"
+
+#: flask/i18n.py:114
+msgid "No active translation"
+msgstr "কোনো সক্রিয় অনুবাদ নেই"
+
+#: flask/i18n.py:115
+msgid "Last finished:"
+msgstr "সর্বশেষ সমাপ্তি:"
+
+#: flask/i18n.py:116
+msgid "Error:"
+msgstr "ত্রুটি:"
+
+#: flask/i18n.py:119
+msgid "Lorebook Entry"
+msgstr "লোরবুক এন্ট্রি"
+
+#: flask/i18n.py:121
+msgid "Location"
+msgstr "স্থান"
+
+#: flask/i18n.py:122
+msgid "Location Tags"
+msgstr "স্থানের ট্যাগ"
+
+#: flask/i18n.py:123
+msgid "Event"
+msgstr "ঘটনা"
+
+#: flask/i18n.py:124
+msgid "Character Event"
+msgstr "চরিত্রের ঘটনা"
+
+#: flask/templates/admin/backdrop.html:10
+msgid "System-Wide Default Backdrop"
+msgstr "সিস্টেম-ব্যাপী ডিফল্ট ব্যাকড্রপ"
+
+#: flask/templates/admin/backdrop.html:12
+msgid "Global atmospheric background for all pages and base fallback for roleplay chats."
+msgstr "সমস্ত পৃষ্ঠার জন্য বৈশ্বিক আবহমান পটভূমি এবং রোলপ্লে চ্যাটের মূল ফলব্যাক।"
+
+#: flask/templates/admin/backdrop.html:17
+msgid "Custom backdrop is active"
+msgstr "কাস্টম ব্যাকড্রপ সক্রিয়"
+
+#: flask/templates/admin/backdrop.html:18
+msgid "Custom backdrop active"
+msgstr "কাস্টম ব্যাকড্রপ সক্রিয়"
+
+#: flask/templates/admin/backdrop.html:21
+msgid "Default RPG theme cover is active"
+msgstr "ডিফল্ট RPG থিম কভার সক্রিয়"
+
+#: flask/templates/admin/backdrop.html:22
+msgid "Default Theme (Cover)"
+msgstr "ডিফল্ট থিম (কভার)"
+
+#: flask/templates/admin/backdrop.html:36
+msgid "No custom backdrop set"
+msgstr "কোনো কাস্টম ব্যাকড্রপ সেট করা নেই"
+
+#: flask/templates/admin/backdrop.html:38
+msgid "Currently using the dark RPG default cover. Upload a 16:9 image on the right or select an existing location."
+msgstr "বর্তমানে ডার্ক RPG ডিফল্ট কভার ব্যবহৃত হচ্ছে। ডানদিকে একটি ১৬:৯ ছবি আপলোড করুন অথবা একটি বিদ্যমান স্থান নির্বাচন করুন।"
+
+#: flask/templates/admin/backdrop.html:47
+msgid "Rule: Priority in Chat"
+msgstr "নিয়ম: চ্যাটে অগ্রাধিকার"
+
+#: flask/templates/admin/backdrop.html:50
+msgid "This default backdrop forms the foundational background. In chat, it is only overridden when the current location has its own background image. If a location has no image or roleplay switches to a neutral setting, this system default automatically applies again."
+msgstr "এই ডিফল্ট ব্যাকড্রপটি মূল ভিত্তি তৈরি করে। চ্যাটে এটি কেবল তখনই পরিবর্তিত হয় যখন বর্তমান স্থানের নিজস্ব পটভূমির ছবি থাকে। কোনো স্থানের ছবি না থাকলে বা রোলপ্লে নিরপেক্ষ পরিবেশে গেলে এই সিস্টেম ডিফল্ট স্বয়ংক্রিয়ভাবে আবার প্রযোজ্য হয়।"
+
+#: flask/templates/admin/backdrop.html:56
+msgid "Do you really want to remove the custom default backdrop and reset to the default theme?"
+msgstr "আপনি কি সত্যিই কাস্টম ডিফল্ট ব্যাকড্রপ সরিয়ে ডিফল্ট থিমে ফিরে যেতে চান?"
+
+#: flask/templates/admin/backdrop.html:58
+msgid "Remove Backdrop (Reset to Default)"
+msgstr "ব্যাকড্রপ সরান (ডিফল্টে রিসেট করুন)"
+
+#: flask/templates/admin/backdrop.html:71
+msgid "Upload New Background Image"
+msgstr "নতুন পটভূমির ছবি আপলোড করুন"
+
+#: flask/templates/admin/backdrop.html:74
+msgid "Recommended: 16:9 widescreen (e.g., 1920×1080 or 2560×1440). Supported formats: PNG, JPG, WEBP."
+msgstr "প্রস্তাবিত: ১৬:৯ ওয়াইডস্ক্রিন (যেমন, ১৯২০×১০৮০ বা ২৫৬০×১৪৪০)। সমর্থিত ফরম্যাট: PNG, JPG, WEBP।"
+
+#: flask/templates/admin/backdrop.html:79
+msgid "Select image file:"
+msgstr "ছবির ফাইল নির্বাচন করুন:"
+
+#: flask/templates/admin/backdrop.html:85
+msgid "Save as System Backdrop"
+msgstr "সিস্টেম ব্যাকড্রপ হিসেবে সংরক্ষণ করুন"
+
+#: flask/templates/admin/backdrop.html:94
+msgid "Choose from Existing Locations"
+msgstr "বিদ্যমান স্থান থেকে বেছে নিন"
+
+#: flask/templates/admin/backdrop.html:96
+msgid "available"
+msgstr "উপলব্ধ"
+
+#: flask/templates/admin/backdrop.html:101
+msgid "Click on an existing location to adopt its background image as the system default:"
+msgstr "সিস্টেম ডিফল্ট হিসেবে এর পটভূমির ছবি গ্রহণ করতে একটি বিদ্যমান স্থানে ক্লিক করুন:"
+
+#: flask/templates/admin/backdrop.html:119
+msgid "No locations with background images have been saved in WorldInfos yet."
+msgstr "WorldInfos-এ এখনও পটভূমির ছবিসহ কোনো স্থান সংরক্ষিত হয়নি।"
+
+#: flask/templates/admin/layout.html:12 flask/templates/macros/top_header.html:58
+msgid "Administration"
+msgstr "প্রশাসন"
+
+#: flask/templates/admin/layout.html:14
+msgid "System & Configuration"
+msgstr ""
+
+#: flask/templates/admin/layout.html:18
+msgid "User Management"
+msgstr ""
+
+#: flask/templates/admin/layout.html:19
+msgid "Services & Models"
+msgstr ""
+
+#: flask/templates/admin/layout.html:20 flask/templates/admin/prompts.html:34
+msgid "System Prompts"
+msgstr ""
+
+#: flask/templates/admin/layout.html:21 flask/templates/admin/translations.html:9
+msgid "Content Translations"
+msgstr "বিষয়বস্তু অনুবাদ"
+
+#: flask/templates/admin/layout.html:22
+msgid "System Backdrop"
+msgstr ""
+
+#: flask/templates/admin/layout.html:26 flask/templates/chat/select_worldinfo.html:88 flask/templates/settings/layout.html:26
+msgid "Back to Hub"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:14
+msgid "System-Wide Content Translations"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:18
+msgid "Cloud AI provider active: automatic background translation is disabled to protect your token quota. Use the button to translate missing content on demand."
+msgstr ""
+
+#: flask/templates/admin/prompts.html:20
+msgid "Local LLM provider active: missing content translations run automatically in the background, or can be triggered manually here."
+msgstr ""
+
+#: flask/templates/admin/prompts.html:25
+msgid "Synchronize Missing Translations"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:26 flask/templates/admin/translations.html:16 flask/templates/admin/user_form.html:72 flask/templates/characters/creator.html:614 flask/templates/characters/creator.html:651
+msgid "Cancel"
+msgstr "বাতিল"
+
+#: flask/templates/admin/prompts.html:39
+msgid "Prompt Placeholders"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:42
+msgid "You can use"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:42
+msgid "(character name) and"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:42
+msgid "(player persona name) in prompts. These are replaced dynamically at runtime."
+msgstr ""
+
+#: flask/templates/admin/prompts.html:47
+msgid "Roleplay Prompt"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:48
+msgid "Memory Prompt"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:49
+msgid "Diffuser Prompt"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:50
+msgid "AI Author Prompt"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:51
+msgid "Vision Prompt"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:52
+msgid "AI Dialogue Author Prompt"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:59
+msgid "Restore Default"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:59
+msgid "Resets all languages of this prompt to factory default"
+msgstr ""
+
+#: flask/templates/admin/prompts.html:77
+msgid "Save Prompts"
+msgstr ""
+
+#: flask/templates/admin/services.html:10
+msgid "Service Endpoints & Model Tasks"
+msgstr "পরিষেবা এন্ডপয়েন্ট ও মডেল কাজ"
+
+#: flask/templates/admin/services.html:14
+msgid "1. Active AI Backend (Exclusive)"
+msgstr "১. সক্রিয় AI ব্যাকএন্ড (একচেটিয়া)"
+
+#: flask/templates/admin/services.html:16
+msgid "AIMO always operates exactly one AI backend (either Ollama or Google AI Cloud) – no parallel operation."
+msgstr "AIMO সর্বদা ঠিক একটি AI ব্যাকএন্ড (Ollama বা Google AI Cloud) পরিচালনা করে – কোনো সমান্তরাল পরিচালনা নয়।"
+
+#: flask/templates/admin/services.html:22
+msgid "Ollama API URL"
+msgstr "Ollama API URL"
+
+#: flask/templates/admin/services.html:24 flask/templates/admin/services.html:37 flask/templates/admin/services.html:59
+msgid "Connected"
+msgstr "সংযুক্ত"
+
+#: flask/templates/admin/services.html:24
+msgid "Unreachable"
+msgstr "অগম্য"
+
+#: flask/templates/admin/services.html:29
+msgid "Test"
+msgstr "পরীক্ষা করুন"
+
+#: flask/templates/admin/services.html:35
+msgid "Google AI API Key"
+msgstr "Google AI API কী"
+
+#: flask/templates/admin/services.html:37
+msgid "Unreachable / invalid"
+msgstr "অগম্য / অবৈধ"
+
+#: flask/templates/admin/services.html:37
+msgid "Not configured"
+msgstr "কনফিগার করা হয়নি"
+
+#: flask/templates/admin/services.html:42
+msgid "Test API Key & Models"
+msgstr "API কী ও মডেল পরীক্ষা করুন"
+
+#: flask/templates/admin/services.html:49
+msgid "2. Image Generation & Web Search"
+msgstr "২. ছবি তৈরি ও ওয়েব অনুসন্ধান"
+
+#: flask/templates/admin/services.html:53
+msgid "Image Generation (Scene images in chat)"
+msgstr "ছবি তৈরি (চ্যাটে দৃশ্যের ছবি)"
+
+#: flask/templates/admin/services.html:57
+msgid "ComfyUI API URL"
+msgstr "ComfyUI API URL"
+
+#: flask/templates/admin/services.html:59
+msgid "Offline"
+msgstr "অফলাইন"
+
+#: flask/templates/admin/services.html:66
+msgid "Google AI Image Model"
+msgstr "Google AI ছবির মডেল"
+
+#: flask/templates/admin/services.html:68 flask/templates/admin/services.html:219
+msgid "Ready"
+msgstr "প্রস্তুত"
+
+#: flask/templates/admin/services.html:68
+msgid "Not checked / Offline"
+msgstr "পরীক্ষিত নয় / অফলাইন"
+
+#: flask/templates/admin/services.html:80
+msgid "Web Search (Prepared)"
+msgstr "ওয়েব অনুসন্ধান (প্রস্তুত)"
+
+#: flask/templates/admin/services.html:84
+msgid "SearXNG URL (Prepared)"
+msgstr "SearXNG URL (প্রস্তুত)"
+
+#: flask/templates/admin/services.html:93
+msgid "3. Task-Specific Model Assignment"
+msgstr "৩. কাজ-ভিত্তিক মডেল নির্ধারণ"
+
+#: flask/templates/admin/services.html:94
+msgid "Assign suggested models"
+msgstr "প্রস্তাবিত মডেল নির্ধারণ করুন"
+
+#: flask/templates/admin/services.html:94
+msgid "Sets all 5 dropdowns to the recommended default models for the selected backend"
+msgstr "নির্বাচিত ব্যাকএন্ডের জন্য প্রস্তাবিত ডিফল্ট মডেলে ৫টি ড্রপডাউন সেট করে"
+
+#: flask/templates/admin/services.html:100
+msgid ""
+"Roleplay Model:\n"
+"Primary language model for narrative dialogue generation and roleplay in chat."
+msgstr ""
+"রোলপ্লে মডেল:\n"
+"চ্যাটে বর্ণনামূলক সংলাপ তৈরি এবং রোলপ্লে করার প্রধান ভাষা মডেল।"
+
+#: flask/templates/admin/services.html:111
+msgid ""
+"Classification Model:\n"
+"Fast, lightweight model for downstream detection of emotions (avatar sprites) and location change suggestions in a single pass."
+msgstr ""
+"শ্রেণিবিন্যাস মডেল:\n"
+"একবারে আবেগ (অবতার স্প্রাইট) এবং অবস্থান পরিবর্তনের পরামর্শ শনাক্ত করার দ্রুত ও হালকা মডেল।"
+
+#: flask/templates/admin/services.html:122
+msgid ""
+"Memory Model:\n"
+"Automatically creates episodic summaries (memories) every 10 messages and updates the chat title."
+msgstr ""
+"মেমরি মডেল:\n"
+"প্রতি ১০টি বার্তায় স্বয়ংক্রিয়ভাবে এপিসোডিক সারাংশ (স্মৃতি) তৈরি করে এবং চ্যাট শিরোনাম আপডেট করে।"
+
+#: flask/templates/admin/services.html:133
+msgid ""
+"Assistant Model:\n"
+"Responsible for AI author optimization (Sparkle ✨), text translations, and scene image prompts."
+msgstr ""
+"সহকারী মডেল:\n"
+"AI লেখক অপ্টিমাইজেশন (Sparkle ✨), পাঠ্য অনুবাদ এবং দৃশ্যের ছবির প্রম্পটের জন্য দায়ী।"
+
+#: flask/templates/admin/services.html:144
+msgid ""
+"Vision Model:\n"
+"Multimodal model for visual analysis of persona portraits, 16:9 location images, and image uploads in chat."
+msgstr ""
+"ভিশন মডেল:\n"
+"পার্সোনা পোর্ট্রেট, ১৬:৯ স্থানের ছবি এবং চ্যাটে আপলোড করা ছবির ভিজ্যুয়াল বিশ্লেষণের জন্য মাল্টিমডাল মডেল।"
+
+#: flask/templates/admin/services.html:156
+msgid "4. LLM Inference Hyperparameters"
+msgstr "৪. LLM ইনফারেন্স হাইপারপ্যারামিটার"
+
+#: flask/templates/admin/services.html:161
+msgid "Controls the token budget for history, memories, and lorebooks (also active for Google AI as a cost/history limit)."
+msgstr "ইতিহাস, স্মৃতি এবং লোরবুকের জন্য টোকেন বাজেট নিয়ন্ত্রণ করে (Google AI-তেও খরচ/ইতিহাস সীমা হিসেবে সক্রিয়)।"
+
+#: flask/templates/admin/services.html:176
+msgid "Repetition penalty for local Ollama models."
+msgstr "স্থানীয় Ollama মডেলের জন্য পুনরাবৃত্তি জরিমানা।"
+
+#: flask/templates/admin/services.html:184
+msgid "Save Services & Model Settings"
+msgstr "পরিষেবা ও মডেল সেটিংস সংরক্ষণ করুন"
+
+#: flask/templates/admin/services.html:190
+msgid "Ollama Model Manager"
+msgstr "Ollama মডেল ম্যানেজার"
+
+#: flask/templates/admin/services.html:196
+msgid "Setup Helper for Ollama"
+msgstr "Ollama-এর জন্য সেটআপ সহায়ক"
+
+#: flask/templates/admin/services.html:198
+msgid "Install missing"
+msgstr "অনুপস্থিতগুলো ইনস্টল করুন"
+
+#: flask/templates/admin/services.html:201
+msgid "Recommended models per role:"
+msgstr "প্রতি ভূমিকার জন্য প্রস্তাবিত মডেল:"
+
+#: flask/templates/admin/services.html:208
+msgid "Click to copy into pull input"
+msgstr "পুল ইনপুটে কপি করতে ক্লিক করুন"
+
+#: flask/templates/admin/services.html:221
+msgid "Missing"
+msgstr "অনুপস্থিত"
+
+#: flask/templates/admin/services.html:222 flask/templates/admin/services.html:234
+msgid "Pull"
+msgstr "পুল (Pull)"
+
+#: flask/templates/admin/services.html:231
+msgid "Install new model (Pull)"
+msgstr "নতুন মডেল ইনস্টল করুন (Pull)"
+
+#: flask/templates/admin/services.html:233
+msgid "Enter model tag..."
+msgstr "মডেল ট্যাগ লিখুন..."
+
+#: flask/templates/admin/services.html:237
+msgid "Quick select:"
+msgstr "দ্রুত নির্বাচন:"
+
+#: flask/templates/admin/services.html:244
+msgid "Starting download..."
+msgstr "ডাউনলোড শুরু হচ্ছে..."
+
+#: flask/templates/admin/services.html:249
+msgid "Installed Models"
+msgstr "ইনস্টল করা মডেল"
+
+#: flask/templates/admin/services.html:254
+msgid "Delete model"
+msgstr "মডেল মুছুন"
+
+#: flask/templates/admin/services.html:257
+msgid "No models found or Ollama offline."
+msgstr "কোনো মডেল পাওয়া যায়নি বা Ollama অফলাইন।"
+
+#: flask/templates/admin/services.html:265
+msgid "Google AI Cloud Setup"
+msgstr "Google AI Cloud সেটআপ"
+
+#: flask/templates/admin/services.html:272
+msgid "Recommended Google AI Models"
+msgstr "প্রস্তাবিত Google AI মডেল"
+
+#: flask/templates/admin/services.html:282
+msgid "Image Generation"
+msgstr "ছবি তৈরি"
+
+#: flask/templates/admin/services.html:290
+msgid "Available Cloud Models"
+msgstr "উপলব্ধ ক্লাউড মডেল"
+
+#: flask/templates/admin/services.html:301
+msgid "Click \"Test API Key & Models\" to load the Gemini models available with your key."
+msgstr "আপনার কী দিয়ে উপলব্ধ Gemini মডেলগুলো লোড করতে \"API কী ও মডেল পরীক্ষা করুন\"-এ ক্লিক করুন।"
+
+#: flask/templates/admin/services.html:557
+msgid "All recommended models are already installed on the Ollama server!"
+msgstr "সমস্ত প্রস্তাবিত মডেল ইতিমধ্যেই Ollama সার্ভারে ইনস্টল করা আছে!"
+
+#: flask/templates/admin/services.html:566
+msgid "Download the following %(count)s recommended model(s) sequentially?"
+msgstr "নিম্নলিখিত %(count)sটি প্রস্তাবিত মডেল কি একে একে ডাউনলোড করবেন?"
+
+#: flask/templates/admin/services.html:577
+msgid "Download of '%(model)s' failed. Continue with the next model anyway?"
+msgstr "'%(model)s' ডাউনলোড ব্যর্থ হয়েছে। তবুও পরবর্তী মডেল দিয়ে চালিয়ে যাবেন?"
+
+#: flask/templates/admin/services.html:647
+msgid "Really delete model '%(model)s' from Ollama?"
+msgstr "আপনি কি সত্যিই Ollama থেকে '%(model)s' মডেলটি মুছে ফেলতে চান?"
+
+#: flask/templates/admin/services.html:656
+msgid "Deletion failed."
+msgstr "মুছে ফেলা ব্যর্থ হয়েছে।"
+
+#: flask/templates/admin/translations.html:11
+msgid "Background translation status for characters, lorebooks, worlds, locations, and events."
+msgstr "চরিত্র, লোরবুক, বিশ্ব, স্থান এবং ঘটনার ব্যাকগ্রাউন্ড অনুবাদের অবস্থা।"
+
+#: flask/templates/admin/translations.html:15
+msgid "Start Translation Sync"
+msgstr "অনুবাদ সিঙ্ক শুরু করুন"
+
+#: flask/templates/admin/translations.html:23
+msgid "Status:"
+msgstr "অবস্থা:"
+
+#: flask/templates/admin/translations.html:24
+msgid "Loading..."
+msgstr "লোড হচ্ছে..."
+
+#: flask/templates/admin/translations.html:37
+msgid "Currently translating:"
+msgstr "বর্তমানে অনূদিত হচ্ছে:"
+
+#: flask/templates/admin/user_form.html:8
+msgid "Edit User:"
+msgstr "ব্যবহারকারী সম্পাদনা করুন:"
+
+#: flask/templates/admin/user_form.html:10
+msgid "Create New User"
+msgstr "নতুন ব্যবহারকারী তৈরি করুন"
+
+#: flask/templates/admin/user_form.html:16
+msgid "Super-Admin Protection:"
+msgstr "সুপার-অ্যাডমিন সুরক্ষা:"
+
+#: flask/templates/admin/user_form.html:16
+msgid "This is the initial administrator. Their permissions are permanently locked to full access (Admin) and cannot be revoked."
+msgstr "ইনি প্রাথমিক প্রশাসক। তাঁর অনুমতিগুলো স্থায়ীভাবে সম্পূর্ণ অ্যাক্সেসে (Admin) লক করা আছে এবং প্রত্যাহার করা যাবে না।"
+
+#: flask/templates/admin/user_form.html:23
+msgid "Username"
+msgstr "ব্যবহারকারীর নাম"
+
+#: flask/templates/admin/user_form.html:27 flask/templates/auth/login.html:14 flask/templates/settings/account.html:20
+msgid "Email address"
+msgstr "ইমেল ঠিকানা"
+
+#: flask/templates/admin/user_form.html:35
+msgid "New Password (leave blank to keep current password)"
+msgstr "নতুন পাসওয়ার্ড (বর্তমান পাসওয়ার্ড রাখতে ফাঁকা রাখুন)"
+
+#: flask/templates/admin/user_form.html:37
+msgid "Initial Password"
+msgstr "প্রাথমিক পাসওয়ার্ড"
+
+#: flask/templates/admin/user_form.html:45
+msgid "Quick Select via Preset"
+msgstr "প্রিসেটের মাধ্যমে দ্রুত নির্বাচন"
+
+#: flask/templates/admin/user_form.html:48
+msgid "Preset:"
+msgstr "প্রিসেট:"
+
+#: flask/templates/admin/user_form.html:56
+msgid "Individual functional permissions (FunctionPermission):"
+msgstr "পৃথক কার্যকরী অনুমতি (FunctionPermission):"
+
+#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:269 flask/templates/chat/session.html:802 flask/templates/lorebooks/detail.html:96
+msgid "Save"
+msgstr "সংরক্ষণ"
+
+#: flask/templates/admin/users.html:9
+msgid "Users & Functional Permissions"
+msgstr "ব্যবহারকারী ও কার্যকরী অনুমতি"
+
+#: flask/templates/admin/users.html:10
+msgid "Granular control of individual function permissions. The initial administrator is permanently protected."
+msgstr "পৃথক ফাংশন অনুমতির সূক্ষ্ম নিয়ন্ত্রণ। প্রাথমিক অ্যাডমিন স্থায়ীভাবে সুরক্ষিত।"
+
+#: flask/templates/admin/users.html:12
+msgid "New User"
+msgstr "নতুন ব্যবহারকারী"
+
+#: flask/templates/admin/users.html:24
+msgid "Initial Super-Admin (Non-revocable)"
+msgstr "প্রাথমিক সুপার-অ্যাডমিন (অপ্রত্যাহারযোগ্য)"
+
+#: flask/templates/admin/users.html:32
+msgid "No permissions assigned"
+msgstr "কোনো অনুমতি নির্ধারিত হয়নি"
+
+#: flask/templates/admin/users.html:38 flask/templates/characters/creator.html:246
+msgid "Edit"
+msgstr ""
+
+#: flask/templates/admin/users.html:40
+msgid "Protected"
+msgstr "সুরক্ষিত"
+
+#: flask/templates/admin/users.html:40
+msgid "Initial administrator cannot be deleted"
+msgstr "প্রাথমিক অ্যাডমিন মুছে ফেলা যাবে না"
+
+#: flask/templates/admin/users.html:42
+msgid "Really delete user %(username)s?"
+msgstr "আপনি কি সত্যিই ব্যবহারকারী %(username)s কে মুছে ফেলতে চান?"
+
+#: flask/templates/auth/login.html:3
+msgid "AIMO — Login"
+msgstr "AIMO — লগইন"
+
+#: flask/templates/auth/login.html:7
+msgid "AIMO Login"
+msgstr "AIMO লগইন"
+
+#: flask/templates/auth/login.html:9
+msgid "Sign in to enter your roleplay worlds."
+msgstr "আপনার রোলপ্লে জগতে প্রবেশ করতে সাইন ইন করুন।"
+
+#: flask/templates/auth/login.html:18 flask/templates/settings/account.html:25
+msgid "Password"
+msgstr "পাসওয়ার্ড"
+
+#: flask/templates/auth/login.html:22
+msgid "Enter"
+msgstr "প্রবেশ করুন"
+
+#: flask/templates/characters/creator.html:7 flask/templates/characters/creator.html:22
+msgid "Character Designer"
+msgstr ""
+
+#: flask/templates/characters/creator.html:20 flask/templates/characters/creator.html:45 flask/templates/macros/cards.html:194
+msgid "New Character"
+msgstr ""
+
+#: flask/templates/characters/creator.html:26
+msgid "Main Info"
+msgstr ""
+
+#: flask/templates/characters/creator.html:27 flask/templates/characters/creator.html:443
+msgid "Gallery Images"
+msgstr ""
+
+#: flask/templates/characters/creator.html:27 flask/templates/characters/creator.html:28 flask/templates/characters/creator.html:31
+msgid "Please save basic info first"
+msgstr ""
+
+#: flask/templates/characters/creator.html:28 flask/templates/characters/creator.html:534
+msgid "Emotional Sprites"
+msgstr ""
+
+#: flask/templates/characters/creator.html:29
+msgid "Dialogue Styles"
+msgstr ""
+
+#: flask/templates/characters/creator.html:31 flask/templates/characters/creator.html:576 flask/templates/worldinfo/detail.html:25
+msgid "Random Events"
+msgstr ""
+
+#: flask/templates/characters/creator.html:32 flask/templates/chat/select_worldinfo.html:19 flask/templates/macros/top_header.html:18 flask/templates/macros/top_header.html:45 flask/templates/settings/creations.html:26
+msgid "Lorebooks"
+msgstr ""
+
+#: flask/templates/characters/creator.html:33 flask/templates/lorebooks/detail.html:23 flask/templates/worldinfo/detail.html:26
+msgid "Collaboration"
+msgstr ""
+
+#: flask/templates/characters/creator.html:37 flask/templates/lorebooks/detail.html:27 flask/templates/worldinfo/detail.html:30
+msgid "Back to Overview"
+msgstr ""
+
+#: flask/templates/characters/creator.html:53
+msgid "Really delete character permanently?"
+msgstr ""
+
+#: flask/templates/characters/creator.html:54
+msgid "Save character"
+msgstr ""
+
+#: flask/templates/characters/creator.html:75
+msgid "Character Name"
+msgstr ""
+
+#: flask/templates/characters/creator.html:76
+msgid "The unique name of your AI character. Replaces {{char}} in prompts."
+msgstr ""
+
+#: flask/templates/characters/creator.html:83 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:64 flask/templates/macros/cards.html:155
+msgid "Gender"
+msgstr ""
+
+#: flask/templates/characters/creator.html:84
+msgid "Sets gender and derived pronouns for the system prompt."
+msgstr ""
+
+#: flask/templates/characters/creator.html:94 flask/templates/lorebooks/detail.html:72 flask/templates/lorebooks/detail.html:156 flask/templates/lorebooks/detail.html:226 flask/templates/settings/creations.html:69
+msgid "Visibility"
+msgstr ""
+
+#: flask/templates/characters/creator.html:95
+msgid "Private = only playable in your account. Public = visible to all users in the Hub."
+msgstr ""
+
+#: flask/templates/characters/creator.html:98 flask/templates/lorebooks/detail.html:76 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:108 flask/templates/worldinfo/detail.html:110
+msgid "Private"
+msgstr "ব্যক্তিগত"
+
+#: flask/templates/characters/creator.html:99 flask/templates/lorebooks/detail.html:77 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:106 flask/templates/worldinfo/detail.html:111
+msgid "Public"
+msgstr "সর্বজনীন"
+
+#: flask/templates/characters/creator.html:106
+msgid "Primary Portrait (9:16) & Avatar (1:1) (Required upload)"
+msgstr "প্রাথমিক পোর্ট্রেট (9:16) ও অবতার (1:1) (আবশ্যক আপলোড)"
+
+#: flask/templates/characters/creator.html:107
+msgid ""
+"Character images:\n"
+"• 9:16 Portrait: Chat sidebar & fullscreen view\n"
+"• 1:1 Avatar: Character cards in Hub & chat bubbles"
+msgstr ""
+"চরিত্রের ছবি:\n"
+"• ৯:১৬ পোর্ট্রেট: চ্যাট সাইডবার এবং পূর্ণস্ক্রিন ভিউ\n"
+"• ১:১ অবতার: হাবের চরিত্র কার্ড এবং চ্যাট বাবল"
+
+#: flask/templates/characters/creator.html:113 flask/templates/characters/creator.html:114 flask/templates/characters/creator.html:116 flask/templates/characters/creator.html:694 flask/templates/macros/persona_manager.html:12
+msgid "Portrait"
+msgstr "পোর্ট্রেট"
+
+#: flask/templates/characters/creator.html:121 flask/templates/characters/creator.html:122 flask/templates/characters/creator.html:124 flask/templates/characters/creator.html:695
+msgid "Avatar"
+msgstr "অবতার"
+
+#: flask/templates/characters/creator.html:133
+msgid "Adjust crops"
+msgstr "ক্রপ সামঞ্জস্য করুন"
+
+#: flask/templates/characters/creator.html:142
+msgid "Initial Relationship Status"
+msgstr "প্রাথমিক সম্পর্কের অবস্থা"
+
+#: flask/templates/characters/creator.html:143
+msgid ""
+"Initial Relationship Status:\n"
+"Starting level of affection (e.g., Pure Hatred, Neutral, Blind Devotion). Controls the initial roleplay behavior of {{char}} toward the player."
+msgstr ""
+"প্রাথমিক সম্পর্কের অবস্থা:\n"
+"স্নেহের শুরুর স্তর (যেমন, বিশুদ্ধ ঘৃণা, নিরপেক্ষ, অন্ধ ভক্তি)। খেলোয়াড়ের প্রতি {{char}}-এর প্রাথমিক রোলপ্লে আচরণ নিয়ন্ত্রণ করে।"
+
+#: flask/templates/characters/creator.html:158
+msgid "Character Description & Personality"
+msgstr ""
+
+#: flask/templates/characters/creator.html:159
+msgid "Core identity, traits, backstory, fears, and motivations."
+msgstr ""
+
+#: flask/templates/characters/creator.html:161
+msgid "AI Author Optimization"
+msgstr ""
+
+#: flask/templates/characters/creator.html:181 flask/templates/macros/persona_manager.html:37
+msgid "Physical Appearance"
+msgstr ""
+
+#: flask/templates/characters/creator.html:182
+msgid "Detailed visual appearance for prompts and AI image generation."
+msgstr ""
+
+#: flask/templates/characters/creator.html:184
+msgid "Extract Appearance from Image"
+msgstr ""
+
+#: flask/templates/characters/creator.html:184
+msgid "Analyzes the portrait image using a Vision LLM"
+msgstr ""
+
+#: flask/templates/characters/creator.html:196
+msgid "Physical appearance (e.g. emerald eyes, shoulder-length black hair, silver armor)..."
+msgstr ""
+
+#: flask/templates/characters/creator.html:202
+msgid "First Message (Welcome Message)"
+msgstr ""
+
+#: flask/templates/characters/creator.html:203
+msgid "The character's direct opening greeting to the player."
+msgstr ""
+
+#: flask/templates/characters/creator.html:230
+msgid "Dialogue Styles (Few-Shot Examples)"
+msgstr ""
+
+#: flask/templates/characters/creator.html:231
+msgid "Typical player trigger and character response pairs injected into the prompt."
+msgstr ""
+
+#: flask/templates/characters/creator.html:234
+msgid "Define typical trigger-response examples to guide the AI's tone, dialect, and reactions."
+msgstr ""
+
+#: flask/templates/characters/creator.html:237
+msgid "Add Dialogue Style"
+msgstr ""
+
+#: flask/templates/characters/creator.html:244
+msgid "Example"
+msgstr ""
+
+#: flask/templates/characters/creator.html:246
+msgid "Edit example"
+msgstr ""
+
+#: flask/templates/characters/creator.html:247
+msgid "Delete example"
+msgstr ""
+
+#: flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:253 flask/templates/characters/creator.html:258 flask/templates/characters/creator.html:633
+msgid "You"
+msgstr ""
+
+#: flask/templates/characters/creator.html:265
+msgid "No dialogue styles added yet. Click 'Add Dialogue Style' to create examples."
+msgstr ""
+
+#: flask/templates/characters/creator.html:275
+msgid "Game World & Locations"
+msgstr ""
+
+#: flask/templates/characters/creator.html:276
+msgid "Links a recommended world. Once selected, initial, preferred, and disliked locations can be chosen."
+msgstr ""
+
+#: flask/templates/characters/creator.html:279
+msgid "Select a recommended world for this character. It will be pre-selected when starting a new chat."
+msgstr ""
+
+#: flask/templates/characters/creator.html:284
+msgid "Recommended WorldInfo"
+msgstr ""
+
+#: flask/templates/characters/creator.html:285
+msgid "Locations and events of this world are included in roleplay."
+msgstr ""
+
+#: flask/templates/characters/creator.html:288
+msgid "No WorldInfo linked"
+msgstr ""
+
+#: flask/templates/characters/creator.html:300
+msgid "Initial Location of First Message"
+msgstr ""
+
+#: flask/templates/characters/creator.html:301
+msgid "Starting location for the conversation within the linked world."
+msgstr ""
+
+#: flask/templates/characters/creator.html:304
+msgid "No fixed starting location"
+msgstr ""
+
+#: flask/templates/characters/creator.html:318
+msgid "Preferred Locations (from linked world)"
+msgstr ""
+
+#: flask/templates/characters/creator.html:319
+msgid "Locations where the character feels comfortable or likes to spend time."
+msgstr ""
+
+#: flask/templates/characters/creator.html:331 flask/templates/characters/creator.html:350
+msgid "Tip: Hold Ctrl/Cmd to select multiple."
+msgstr ""
+
+#: flask/templates/characters/creator.html:337
+msgid "Disliked Locations (from linked world)"
+msgstr ""
+
+#: flask/templates/characters/creator.html:338
+msgid "Locations the character avoids, fears, or dislikes."
+msgstr ""
+
+#: flask/templates/characters/creator.html:364
+msgid "Linked Lorebooks (Knowledge Compendiums)"
+msgstr ""
+
+#: flask/templates/characters/creator.html:365
+msgid "Knowledge compendiums for this character. Matching entries are automatically loaded into the prompt via tags."
+msgstr ""
+
+#: flask/templates/characters/creator.html:368
+msgid "Attach knowledge compendiums. Relevant entries are automatically injected via tag matching."
+msgstr ""
+
+#: flask/templates/characters/creator.html:371 flask/templates/macros/lorebook_manager.html:24
+msgid "Add Lorebook"
+msgstr ""
+
+#: flask/templates/characters/creator.html:386
+msgid "When should this lorebook be active?"
+msgstr ""
+
+#: flask/templates/characters/creator.html:387
+msgid "All Worlds (Always active)"
+msgstr ""
+
+#: flask/templates/characters/creator.html:389
+msgid "Only in world:"
+msgstr ""
+
+#: flask/templates/characters/creator.html:392
+msgid "Unlink"
+msgstr ""
+
+#: flask/templates/characters/creator.html:392
+msgid "Unlink lorebook"
+msgstr ""
+
+#: flask/templates/characters/creator.html:400
+msgid "No lorebooks linked. Click 'Add Lorebook' to select compendiums."
+msgstr ""
+
+#: flask/templates/characters/creator.html:416
+msgid "Unlockable 9:16 Gallery Images (Threshold -100 to +100)"
+msgstr ""
+
+#: flask/templates/characters/creator.html:417
+msgid "Exclusive portrait graphics unlocked when reaching a relationship threshold in chat."
+msgstr ""
+
+#: flask/templates/characters/creator.html:420
+msgid "Reward the player with exclusive character graphics as the relationship grows in chat."
+msgstr ""
+
+#: flask/templates/characters/creator.html:424
+msgid "Add 9:16 Image"
+msgstr ""
+
+#: flask/templates/characters/creator.html:430
+msgid "Delete image"
+msgstr ""
+
+#: flask/templates/characters/creator.html:434
+msgid "Unlocks at relationship:"
+msgstr ""
+
+#: flask/templates/characters/creator.html:445
+msgid "Please save the character's basic info first to upload and manage 9:16 gallery images."
+msgstr ""
+
+#: flask/templates/characters/creator.html:456
+msgid "Emotional Sprites (28 Emotions with Variant Stack View)"
+msgstr ""
+
+#: flask/templates/characters/creator.html:457
+msgid "Image variants for 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait."
+msgstr ""
+
+#: flask/templates/characters/creator.html:460
+msgid "When an emotion is detected, a random variant is selected. If none exists, neutral is used as fallback."
+msgstr ""
+
+#: flask/templates/characters/creator.html:472
+msgid "Choose PNG/WEBP"
+msgstr ""
+
+#: flask/templates/characters/creator.html:482
+msgid "Upload another variant"
+msgstr ""
+
+#: flask/templates/characters/creator.html:489
+msgid "View all variants"
+msgstr ""
+
+#: flask/templates/characters/creator.html:492
+msgid "Delete sprite"
+msgstr ""
+
+#: flask/templates/characters/creator.html:500
+msgid "Fallback"
+msgstr ""
+
+#: flask/templates/characters/creator.html:509
+msgid "Variants for emotion:"
+msgstr ""
+
+#: flask/templates/characters/creator.html:517
+msgid "Delete variant"
+msgstr ""
+
+#: flask/templates/characters/creator.html:536
+msgid "Please save the character's basic info first to upload sprites for the 28 emotions."
+msgstr ""
+
+#: flask/templates/characters/creator.html:547
+msgid "Character-Specific Random Events"
+msgstr ""
+
+#: flask/templates/characters/creator.html:548
+msgid "Dynamic events that can trigger exclusively in chats with this character."
+msgstr ""
+
+#: flask/templates/characters/creator.html:551
+msgid "These events are available exclusively in sessions with"
+msgstr ""
+
+#: flask/templates/characters/creator.html:551
+msgid "in the shared random event pool."
+msgstr ""
+
+#: flask/templates/characters/creator.html:578
+msgid "Please save the character's basic info first to create character-specific random events."
+msgstr ""
+
+#: flask/templates/characters/creator.html:589
+msgid "Upload 9:16 Gallery Image"
+msgstr ""
+
+#: flask/templates/characters/creator.html:595
+msgid "Image File (9:16 Portrait)"
+msgstr ""
+
+#: flask/templates/characters/creator.html:596
+msgid "Exclusive portrait image for this character."
+msgstr ""
+
+#: flask/templates/characters/creator.html:602
+msgid "Unlock Relationship Level"
+msgstr ""
+
+#: flask/templates/characters/creator.html:603
+msgid "Required relationship level to unlock this image in chat."
+msgstr ""
+
+#: flask/templates/characters/creator.html:615
+msgid "Upload"
+msgstr ""
+
+#: flask/templates/characters/creator.html:627
+msgid "Add New Dialogue Style"
+msgstr ""
+
+#: flask/templates/characters/creator.html:634
+msgid "Trigger (Player Input)"
+msgstr ""
+
+#: flask/templates/characters/creator.html:636
+msgid "e.g. Hello! What are you doing out here so late?"
+msgstr ""
+
+#: flask/templates/characters/creator.html:641
+msgid "Response (Character Reply)"
+msgstr ""
+
+#: flask/templates/characters/creator.html:643
+msgid "e.g. Greetings, wanderer. The woods hold secrets at night..."
+msgstr ""
+
+#: flask/templates/characters/creator.html:648
+msgid "Fill with AI"
+msgstr ""
+
+#: flask/templates/characters/creator.html:648
+msgid "Generates trigger and response based on character description"
+msgstr ""
+
+#: flask/templates/characters/creator.html:652 flask/templates/characters/creator.html:680 flask/templates/macros/lorebook_manager.html:226
+msgid "Add"
+msgstr ""
+
+#: flask/templates/characters/creator.html:662
+msgid "Link Lorebook"
+msgstr ""
+
+#: flask/templates/characters/creator.html:666 flask/templates/macros/lorebook_manager.html:197
+msgid "Filter by lorebook name..."
+msgstr ""
+
+#: flask/templates/characters/creator.html:680
+msgid "Linked"
+msgstr ""
+
+#: flask/templates/characters/creator.html:693
+msgid "Set Image Crops"
+msgstr "ছবির ক্রপ সেট করুন"
+
+#: flask/templates/chat/select_worldinfo.html:4
+msgid "New Adventure with"
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:11
+msgid "New Chat with"
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:12
+msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:18 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
+msgid "Settings"
+msgstr "সেটিংস"
+
+#: flask/templates/chat/select_worldinfo.html:27
+msgid "Select Player Persona"
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:32
+msgid "Default"
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:37
+msgid "Note: After sending the first message, the persona is permanently locked for this chat."
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:42
+msgid "Automatically assigned"
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:48
+msgid "Active WorldInfo (At most one per session)"
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:50
+msgid "No WorldInfo (Default — Neutral background, no events)"
+msgstr "কোনো WorldInfo নেই (ডিফল্ট — নিরপেক্ষ পটভূমি, কোনো ঘটনা নেই)"
+
+#: flask/templates/chat/select_worldinfo.html:54
+msgid "Recommended for"
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:60
+msgid "This character recommends a WorldInfo, but you can freely choose another or start without one."
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:66
+msgid "Optional Session Title"
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:67
+msgid "Chat with"
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:73
+msgid "Enable Thinking (Reasoning)"
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:76
+msgid "Enables extended chain-of-thought reasoning for compatible models (e.g. Gemma 4, DeepSeek-R1). Disable for faster replies without thinking steps."
+msgstr ""
+
+#: flask/templates/chat/select_worldinfo.html:89
+msgid "Start Adventure"
+msgstr ""
+
+#: flask/templates/chat/session.html:33
+msgid "Info"
+msgstr "তথ্য"
+
+#: flask/templates/chat/session.html:33
+msgid "Sidebar / Character Info"
+msgstr "সাইডবার / চরিত্রের তথ্য"
+
+#: flask/templates/chat/session.html:39 flask/templates/chat/session.html:63 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
+msgid "Location:"
+msgstr ""
+
+#: flask/templates/chat/session.html:41
+msgid "World:"
+msgstr ""
+
+#: flask/templates/chat/session.html:43
+msgid "Neutral Setting"
+msgstr ""
+
+#: flask/templates/chat/session.html:79
+msgid "View LLM prompt (Admin)"
+msgstr "LLM প্রম্পট দেখুন (অ্যাডমিন)"
+
+#: flask/templates/chat/session.html:81 flask/templates/chat/session.html:101
+msgid "Translate message (on-demand)"
+msgstr "বার্তা অনুবাদ করুন (চাহিদা অনুযায়ী)"
+
+#: flask/templates/chat/session.html:82 flask/templates/chat/session.html:102
+msgid "Edit message"
+msgstr "বার্তা সম্পাদনা করুন"
+
+#: flask/templates/chat/session.html:83 flask/templates/chat/session.html:103
+msgid "Duplicate chat from here (Fork)"
+msgstr "এখান থেকে চ্যাট ডুপ্লিকেট করুন (ফর্ক)"
+
+#: flask/templates/chat/session.html:85 flask/templates/chat/session.html:104 flask/templates/macros/system_message.html:27
+msgid "Delete from here"
+msgstr "এখান থেকে মুছুন"
+
+#: flask/templates/chat/session.html:111
+msgid "Show/hide ALT text (image description)"
+msgstr "ALT পাঠ্য (ছবির বিবরণ) দেখান/লুকান"
+
+#: flask/templates/chat/session.html:132
+msgid "AI system notice"
+msgstr "AI সিস্টেম বিজ্ঞপ্তি"
+
+#: flask/templates/chat/session.html:134
+msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
+msgstr "এটি একটি AI চ্যাটবট। উত্তরগুলি স্থানীয় বা বাহ্যিক ভাষা মডেল দ্বারা স্বয়ংক্রিয়ভাবে তৈরি হয় এবং অসম্পূর্ণ বা ভুল হতে পারে।"
+
+#: flask/templates/chat/session.html:141
+msgid "Chat options & sessions"
+msgstr "চ্যাট বিকল্প ও সেশন"
+
+#: flask/templates/chat/session.html:141
+msgid "Chat options"
+msgstr "চ্যাট বিকল্প"
+
+#: flask/templates/chat/session.html:147
+msgid "Sessions"
+msgstr "সেশন"
+
+#: flask/templates/chat/session.html:148
+msgid "Start new chat"
+msgstr "নতুন চ্যাট শুরু করুন"
+
+#: flask/templates/chat/session.html:150
+msgid "Delete chat"
+msgstr "চ্যাট মুছুন"
+
+#: flask/templates/chat/session.html:150
+msgid "Do you really want to permanently delete this chat?"
+msgstr "আপনি কি সত্যিই এই চ্যাটটি স্থায়ীভাবে মুছে ফেলতে চান?"
+
+#: flask/templates/chat/session.html:154
+msgid "Attach image (Vision ALT analysis)"
+msgstr "ছবি সংযুক্ত করুন (Vision ALT বিশ্লেষণ)"
+
+#: flask/templates/chat/session.html:162
+msgid "Generate scene image"
+msgstr "দৃশ্যের ছবি তৈরি করুন"
+
+#: flask/templates/chat/session.html:169
+msgid "Cancel image generation"
+msgstr "ছবি তৈরি বাতিল করুন"
+
+#: flask/templates/chat/session.html:180
+msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
+msgstr "আপনার উত্তর বা কাজ লিখুন... (পাঠাতে Enter, নতুন লাইনের জন্য Shift+Enter)"
+
+#: flask/templates/chat/session.html:186
+msgid "Regenerate response – replaces the last AI reply or retries generation"
+msgstr "উত্তর পুনরায় তৈরি করুন – শেষ AI উত্তর প্রতিস্থাপন করে বা পুনরায় চেষ্টা করে"
+
+#: flask/templates/chat/session.html:193
+msgid "Cancel response generation"
+msgstr "উত্তর তৈরি বাতিল করুন"
+
+#: flask/templates/chat/session.html:199
+msgid "Send message (Enter)"
+msgstr "বার্তা পাঠান (Enter)"
+
+#: flask/templates/chat/session.html:257 flask/templates/chat/session.html:786 flask/templates/lorebooks/detail.html:167
+msgid "Tags (Comma-separated for vectorless RAG)"
+msgstr ""
+
+#: flask/templates/chat/session.html:261 flask/templates/chat/session.html:790
+msgid "Summary"
+msgstr "সারসংক্ষেপ"
+
+#: flask/templates/chat/session.html:266 flask/templates/chat/session.html:796
+msgid "Recalculate"
+msgstr "পুনরায় গণনা করুন"
+
+#: flask/templates/chat/session.html:266 flask/templates/chat/session.html:795
+msgid "Recalculate memory from associated episode messages"
+msgstr "সংশ্লিষ্ট এপিসোড বার্তা থেকে স্মৃতি পুনরায় গণনা করুন"
+
+#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:799
+msgid "Translate"
+msgstr "অনুবাদ করুন"
+
+#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:798
+msgid "Translate memory in-place to your language"
+msgstr "স্মৃতিটি সরাসরি আপনার ভাষায় অনুবাদ করুন"
+
+#: flask/templates/chat/session.html:297
+msgid "Thinking: Enabled (Click to disable)"
+msgstr "চিন্তা: সক্রিয় (নিষ্ক্রিয় করতে ক্লিক করুন)"
+
+#: flask/templates/chat/session.html:297
+msgid "Thinking: Disabled (Click to enable)"
+msgstr "চিন্তা: নিষ্ক্রিয় (সক্রিয় করতে ক্লিক করুন)"
+
+#: flask/templates/chat/session.html:298
+msgid "Disable thinking"
+msgstr "চিন্তা নিষ্ক্রিয় করুন"
+
+#: flask/templates/chat/session.html:298
+msgid "Enable thinking"
+msgstr "চিন্তা সক্রিয় করুন"
+
+#: flask/templates/chat/session.html:311 flask/templates/macros/cards.html:91
+msgid "Relationship:"
+msgstr "সম্পর্ক:"
+
+#: flask/templates/chat/session.html:322
+msgid "Active Persona"
+msgstr "সক্রিয় পার্সোনা"
+
+#: flask/templates/chat/session.html:327
+msgid "Edit player persona"
+msgstr "খেলোয়াড়ের পার্সোনা সম্পাদনা করুন"
+
+#: flask/templates/chat/session.html:344
+msgid "Unknown"
+msgstr "অজানা"
+
+#: flask/templates/chat/session.html:345
+msgid "Persona is locked for this chat after the 1st message"
+msgstr "১ম বার্তার পর এই চ্যাটের জন্য পার্সোনা লক হয়ে যায়"
+
+#: flask/templates/chat/session.html:368
+msgid "No World (Neutral)"
+msgstr "কোনো বিশ্ব নেই (নিরপেক্ষ)"
+
+#: flask/templates/chat/session.html:371
+msgid "Switch world"
+msgstr "বিশ্ব পরিবর্তন করুন"
+
+#: flask/templates/chat/session.html:382
+msgid "Current Location"
+msgstr "বর্তমান স্থান"
+
+#: flask/templates/chat/session.html:384
+msgid "-- Choose location --"
+msgstr "-- স্থান নির্বাচন করুন --"
+
+#: flask/templates/chat/session.html:402
+msgid "Enable random events"
+msgstr "এলোমেলো ঘটনা সক্রিয় করুন"
+
+#: flask/templates/chat/session.html:407
+msgid "Admin & creator info: Cooldown until the next random event"
+msgstr "অ্যাডমিন ও নির্মাতার তথ্য: পরবর্তী এলোমেলো ঘটনার আগে অপেক্ষা"
+
+#: flask/templates/chat/session.html:408
+msgid "Next event:"
+msgstr "পরবর্তী ঘটনা:"
+
+#: flask/templates/chat/session.html:411 flask/templates/chat/session.html:415
+msgid "in"
+msgstr "আর"
+
+#: flask/templates/chat/session.html:411
+msgid "message"
+msgstr "বার্তা"
+
+#: flask/templates/chat/session.html:411 flask/templates/chat/session.html:415
+msgid "messages"
+msgstr "বার্তা"
+
+#: flask/templates/chat/session.html:411
+msgid "paused"
+msgstr "বিরতি"
+
+#: flask/templates/chat/session.html:413
+msgid "next message"
+msgstr "পরবর্তী বার্তা"
+
+#: flask/templates/chat/session.html:488
+msgid "Do you really want to delete this session?"
+msgstr "আপনি কি সত্যিই এই সেশনটি মুছে ফেলতে চান?"
+
+#: flask/templates/chat/session.html:490
+msgid "Delete session"
+msgstr "সেশন মুছুন"
+
+#: flask/templates/chat/session.html:714
+msgid "Permanently delete this message and all subsequent messages (including associated memories)?"
+msgstr "এই বার্তা এবং পরবর্তী সমস্ত বার্তা (সংশ্লিষ্ট স্মৃতি সহ) স্থায়ীভাবে মুছে ফেলবেন?"
+
+#: flask/templates/chat/session.html:913
+msgid "Recalculation error"
+msgstr "পুনরায় গণনা ত্রুটি"
+
+#: flask/templates/chat/session.html:915
+msgid "Recalculation error:"
+msgstr "পুনরায় গণনা ত্রুটি:"
+
+#: flask/templates/chat/session.html:952
+msgid "Translated!"
+msgstr "অনূদিত!"
+
+#: flask/templates/chat/session.html:964
+msgid "Translation error"
+msgstr "অনুবাদ ত্রুটি"
+
+#: flask/templates/chat/session.html:966
+msgid "Translation error:"
+msgstr "অনুবাদ ত্রুটি:"
+
+#: flask/templates/lorebooks/detail.html:17
+msgid "Lorebook & Encyclopedia"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:21 flask/templates/lorebooks/detail.html:55 flask/templates/worldinfo/detail.html:23 flask/templates/worldinfo/detail.html:58
+msgid "Basic Settings"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:42
+msgid "Really delete Lorebook?"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:43
+msgid "Read-only (External Lorebook)"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:44
+msgid "Save Lorebook"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:60
+msgid "Lorebook Name"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:61
+msgid "The title of this knowledge compendium."
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:66 flask/templates/lorebooks/detail.html:151 flask/templates/lorebooks/detail.html:221 flask/templates/macros/event_manager.html:54 flask/templates/worldinfo/detail.html:70
+msgid "Proper Noun (Do not translate)"
+msgstr "নামবাচক বিশেষ্য (অনুবাদ করবেন না)"
+
+#: flask/templates/lorebooks/detail.html:73
+msgid "Private = only usable by you. Public = linkable by other users in their characters."
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:83
+msgid "Short Description"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:84
+msgid "A brief summary of the topic for quick orientation in the overview."
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:89
+msgid "Short overview of the lorebook content..."
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:107
+msgid "New Entry"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:116
+msgid "Private (Secret Lore)"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:116
+msgid "Private entry: hidden from other players, but injected via RAG in roleplay."
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:130
+msgid "Click to edit"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:139
+msgid "Lorebook Entry:"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:145 flask/templates/lorebooks/detail.html:215 flask/templates/macros/event_manager.html:34
+msgid "Title"
+msgstr "শিরোনাম"
+
+#: flask/templates/lorebooks/detail.html:146 flask/templates/lorebooks/detail.html:216
+msgid "Concise title of the lore entry."
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:157 flask/templates/lorebooks/detail.html:227
+msgid "Public: readable in overview. Private: hidden in overview, still injected via RAG in roleplay."
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:160 flask/templates/lorebooks/detail.html:230
+msgid "Public (Readable in overview)"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:161 flask/templates/lorebooks/detail.html:231
+msgid "Private (Secret Lore / Spoiler Protection)"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:168 flask/templates/lorebooks/detail.html:238
+msgid "Keywords that trigger loading this entry into [RELEVANT_LOREBOOKS] when mentioned in chat."
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:170 flask/templates/lorebooks/detail.html:240
+msgid "Suggest Tags"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:176 flask/templates/lorebooks/detail.html:246
+msgid "Prose Text / Lore Content"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:177 flask/templates/lorebooks/detail.html:247
+msgid "Compact facts, history, or rules the AI can retrieve and use in dialogue."
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:209
+msgid "Create New Lorebook Entry"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:237 flask/templates/worldinfo/detail.html:196 flask/templates/worldinfo/detail.html:329
+msgid "Tags (Comma-separated)"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:242
+msgid "magic, guild, capital"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:263
+msgid "Save Entry"
+msgstr ""
+
+#: flask/templates/macros/backend_selector.html:122
+msgid "Show"
+msgstr "দেখান"
+
+#: flask/templates/macros/backend_selector.html:122
+msgid "Show/hide API key"
+msgstr "API কী দেখান/লুকান"
+
+#: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111
+msgid "Translation pending"
+msgstr ""
+
+#: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111
+msgid "Translation into your language is pending"
+msgstr ""
+
+#: flask/templates/macros/cards.html:71
+msgid "Exchanged messages"
+msgstr ""
+
+#: flask/templates/macros/cards.html:74
+msgid "Edit character"
+msgstr ""
+
+#: flask/templates/macros/cards.html:79
+msgid "Duplicate character"
+msgstr ""
+
+#: flask/templates/macros/cards.html:114
+msgid "Public world"
+msgstr ""
+
+#: flask/templates/macros/cards.html:116
+msgid "Private world"
+msgstr ""
+
+#: flask/templates/macros/cards.html:162
+msgid "Default Persona"
+msgstr "ডিফল্ট পার্সোনা"
+
+#: flask/templates/macros/cards.html:165
+msgid "Set as default persona"
+msgstr "ডিফল্ট পার্সোনা হিসেবে সেট করুন"
+
+#: flask/templates/macros/cards.html:182
+msgid "New Persona"
+msgstr ""
+
+#: flask/templates/macros/cards.html:206
+msgid "New World"
+msgstr ""
+
+#: flask/templates/macros/collaboration.html:23
+msgid "Save collaborators"
+msgstr "সহযোগীদের সংরক্ষণ করুন"
+
+#: flask/templates/macros/collaboration.html:23 flask/templates/macros/collaboration.html:117
+msgid "Saves all changes in the form"
+msgstr "ফর্মের সমস্ত পরিবর্তন সংরক্ষণ করে"
+
+#: flask/templates/macros/collaboration.html:72 flask/templates/macros/editor_header.html:47
+msgid "Copy"
+msgstr ""
+
+#: flask/templates/macros/collaboration.html:72
+msgid "Copy creator tag"
+msgstr "নির্মাতা ট্যাগ কপি করুন"
+
+#: flask/templates/macros/collaboration.html:80 flask/templates/macros/lorebook_manager.html:170
+msgid "Remove"
+msgstr ""
+
+#: flask/templates/macros/collaboration.html:80
+msgid "Remove collaborator"
+msgstr "সহযোগী সরান"
+
+#: flask/templates/macros/editor_header.html:27
+msgid "Really delete permanently?"
+msgstr ""
+
+#: flask/templates/macros/editor_header.html:32
+msgid "Back"
+msgstr "ফিরে যান"
+
+#: flask/templates/macros/event_manager.html:12
+msgid "Entire Character (Location-independent)"
+msgstr "সম্পূর্ণ চরিত্র (অবস্থান-নিরপেক্ষ)"
+
+#: flask/templates/macros/event_manager.html:12
+msgid "No recommended world with locations linked"
+msgstr "অবস্থানসহ কোনো প্রস্তাবিত জগৎ সংযুক্ত নেই"
+
+#: flask/templates/macros/event_manager.html:19 flask/templates/macros/event_manager.html:164
+msgid "Entire World"
+msgstr "সম্পূর্ণ জগৎ"
+
+#: flask/templates/macros/event_manager.html:35
+msgid ""
+"Event Title:\n"
+"Name of the random event (e.g., 'Sudden Thunderstorm', 'Carrier Pigeon Arrives')."
+msgstr ""
+"ঘটনার শিরোনাম:\n"
+"এলোমেলো ঘটনার নাম (যেমন, 'হঠাৎ বজ্রঝড়', 'বার্তাবাহী কবুতর এল')।"
+
+#: flask/templates/macros/event_manager.html:60
+msgid "Probability (0 - 100%%)"
+msgstr "সম্ভাবনা (0 - 100%%)"
+
+#: flask/templates/macros/event_manager.html:61
+msgid ""
+"Probability (1-100%%):\n"
+"Relative weight in the shared event pool. Every 10 to 100 messages (cooldown counter), one event is triggered by weight."
+msgstr ""
+"সম্ভাবনা (১-১০০%%):\n"
+"শেয়ার করা ইভেন্ট পুলে আপেক্ষিক গুরুত্ব। প্রতি ১০ থেকে ১০০ বার্তায় (কুলডাউন কাউন্টার) গুরুত্ব অনুযায়ী একটি ঘটনা ঘটে।"
+
+#: flask/templates/macros/event_manager.html:67 flask/templates/macros/event_manager.html:178
+msgid "One-Shot (Max. 1x per session)"
+msgstr "ওয়ান-শট (প্রতি সেশনে সর্বোচ্চ ১ বার)"
+
+#: flask/templates/macros/event_manager.html:68
+msgid ""
+"One-Shot (Single Event):\n"
+"When enabled, this event triggers at most once per chat session and is then removed from the active pool."
+msgstr ""
+"ওয়ান-শট (এককালীন ঘটনা):\n"
+"সক্রিয় থাকলে, এই ঘটনাটি প্রতি চ্যাট সেশনে সর্বোচ্চ একবার ঘটে এবং তারপর সক্রিয় পুল থেকে সরিয়ে দেওয়া হয়।"
+
+#: flask/templates/macros/event_manager.html:75
+msgid "Assignment (Location-independent or bound to a specific location)"
+msgstr "নির্ধারণ (অবস্থান-নিরপেক্ষ বা নির্দিষ্ট স্থানে আবদ্ধ)"
+
+#: flask/templates/macros/event_manager.html:76
+msgid ""
+"Location Restriction:\n"
+"Choose whether this character event can occur anywhere in chats with this character or is additionally bound to a specific location."
+msgstr ""
+"স্থানের সীমাবদ্ধতা:\n"
+"এই চরিত্রের ঘটনাটি চরিত্রটির সাথে যেকোনো চ্যাটে ঘটতে পারে নাকি নির্দিষ্ট স্থানের সাথে যুক্ত তা নির্বাচন করুন।"
+
+#: flask/templates/macros/event_manager.html:78
+msgid "Assignment (Exclusive: Either Entire World OR specific location)"
+msgstr "নির্ধারণ (স্বতন্ত্র: হয় সম্পূর্ণ জগৎ অথবা নির্দিষ্ট স্থান)"
+
+#: flask/templates/macros/event_manager.html:79
+msgid ""
+"Location Assignment:\n"
+"Choose whether this event can only occur at a specific location or applies as a global event for the entire world."
+msgstr ""
+"স্থান নির্ধারণ:\n"
+"এই ঘটনাটি কেবল নির্দিষ্ট স্থানেই ঘটতে পারে নাকি সমগ্র বিশ্বের জন্য বৈশ্বিক ঘটনা হিসেবে প্রযোজ্য তা নির্বাচন করুন।"
+
+#: flask/templates/macros/event_manager.html:91
+msgid "Relationship Range (From – To)"
+msgstr "সম্পর্কের সীমা (থেকে – পর্যন্ত)"
+
+#: flask/templates/macros/event_manager.html:92
+msgid ""
+"Relationship Range:\n"
+"Optionally restricts the event to a relationship range. If both sliders are at the outer ends, the event is active at all relationship tiers."
+msgstr ""
+"সম্পর্কের পরিসীমা:\n"
+"ঐচ্ছিকভাবে ঘটনাটিকে একটি সম্পর্কের পরিসীমায় সীমাবদ্ধ করে। উভয় স্লাইডার প্রান্তে থাকলে সব স্তরে সক্রিয় থাকে।"
+
+#: flask/templates/macros/event_manager.html:108
+msgid "Minimum relationship tier"
+msgstr "সর্বনিম্ন সম্পর্কের স্তর"
+
+#: flask/templates/macros/event_manager.html:117
+msgid "Maximum relationship tier"
+msgstr "সর্বোচ্চ সম্পর্কের স্তর"
+
+#: flask/templates/macros/event_manager.html:124
+msgid "Scenic Event Description"
+msgstr "ঘটনার দৃশ্যগত বিবরণ"
+
+#: flask/templates/macros/event_manager.html:125
+msgid ""
+"Event Description:\n"
+"The narrative occurrence. When triggered, this description is placed in the [WORLD_INFO] section of the prompt for the next turn so the AI reacts appropriately."
+msgstr ""
+"ঘটনার বিবরণ:\n"
+"বর্ণনামূলক ঘটনা। সক্রিয় হলে, পরবর্তী দানের জন্য প্রম্পটের [WORLD_INFO] অংশে এই বিবরণ রাখা হয় যাতে AI উপযুক্ত প্রতিক্রিয়া জানায়।"
+
+#: flask/templates/macros/event_manager.html:147
+msgid "New Event"
+msgstr "নতুন ঘটনা"
+
+#: flask/templates/macros/event_manager.html:162
+msgid "Character-wide (Everywhere)"
+msgstr "চরিত্র-ব্যাপী (সর্বত্র)"
+
+#: flask/templates/macros/event_manager.html:167
+msgid "Relationship-bound"
+msgstr "সম্পর্ক-নির্ভর"
+
+#: flask/templates/macros/event_manager.html:178
+msgid "Repeatable"
+msgstr "পুনরাবৃত্তিযোগ্য"
+
+#: flask/templates/macros/event_manager.html:186
+msgid "Edit Event:"
+msgstr "ঘটনা সম্পাদনা:"
+
+#: flask/templates/macros/event_manager.html:210
+msgid "Create New Event"
+msgstr "নতুন ঘটনা তৈরি করুন"
+
+#: flask/templates/macros/event_manager.html:217
+msgid "Save Event"
+msgstr "ঘটনা সংরক্ষণ করুন"
+
+#: flask/templates/macros/image_cropper.html:4 flask/templates/macros/persona_manager.html:115 flask/templates/macros/persona_manager.html:118
+msgid "Set image crop"
+msgstr "ছবি ক্রপ সেট করুন"
+
+#: flask/templates/macros/image_cropper.html:16
+msgid "Crop Source"
+msgstr "ক্রপ উৎস"
+
+#: flask/templates/macros/image_cropper.html:18
+msgid "Resize"
+msgstr "আকার পরিবর্তন করুন"
+
+#: flask/templates/macros/image_cropper.html:26
+msgid "Click to adjust %(label)s"
+msgstr "%(label)s সামঞ্জস্য করতে ক্লিক করুন"
+
+#: flask/templates/macros/image_cropper.html:38
+msgid "Apply crops"
+msgstr "ক্রপ প্রয়োগ করুন"
+
+#: flask/templates/macros/image_cropper.html:38
+msgid "Apply crop"
+msgstr "ক্রপ প্রয়োগ করুন"
+
+#: flask/templates/macros/lorebook_manager.html:18
+msgid "Active Knowledge Books (Lorebooks)"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:20
+msgid "Lorebooks expand the model's context with relevant world and background knowledge via keyword tags."
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:49
+msgid "Default Lorebooks (Character & World)"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:52
+msgid "Session Toggle (Slider)"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:67
+msgid "Lorebook source"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:69 flask/templates/macros/lorebook_manager.html:142
+msgid "Creator Lore"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:69 flask/templates/macros/lorebook_manager.html:142
+msgid "Creator Lore: hidden from other players, but used by the AI in chat."
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:91
+msgid "Inactive — Requires world:"
+msgstr "নিষ্ক্রিয় — বিশ্ব প্রয়োজন:"
+
+#: flask/templates/macros/lorebook_manager.html:91
+msgid "This lorebook requires the world"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:92
+msgid "Locked: matching world is not active."
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:101 flask/templates/macros/lorebook_manager.html:163
+msgid "Deactivate lorebook"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:101 flask/templates/macros/lorebook_manager.html:163
+msgid "Activate lorebook"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:113
+msgid "No default lorebooks assigned for this session."
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:122
+msgid "Custom Lorebooks (Chat-specific)"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:125
+msgid "Actions (Toggle & Delete)"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:134 flask/templates/macros/lorebook_manager.html:140
+msgid "Custom"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:170
+msgid "Remove lorebook from chat"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:175
+msgid "No additional custom lorebooks added. Click 'Add Lorebook' to add knowledge."
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:188
+msgid "Add Lorebook to Chat"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:226
+msgid "Already active"
+msgstr ""
+
+#: flask/templates/macros/lorebook_manager.html:232
+msgid "No lorebooks available."
+msgstr ""
+
+#: flask/templates/macros/persona_manager.html:18
+msgid "Adjust crop"
+msgstr "ক্রপ সামঞ্জস্য করুন"
+
+#: flask/templates/macros/persona_manager.html:19
+msgid "Crop active"
+msgstr "ক্রপ সক্রিয়"
+
+#: flask/templates/macros/persona_manager.html:28
+msgid "Background / Personality"
+msgstr "পটভূমি / ব্যক্তিত্ব"
+
+#: flask/templates/macros/persona_manager.html:28
+msgid "max. 1,200 characters"
+msgstr "সর্বোচ্চ ১,২০০ অক্ষর"
+
+#: flask/templates/macros/persona_manager.html:40
+msgid "Extract image features"
+msgstr "ছবির বৈশিষ্ট্য বের করুন"
+
+#: flask/templates/macros/persona_manager.html:40
+msgid "Automatically extract appearance from portrait image via vision model"
+msgstr "ভিশন মডেলের মাধ্যমে পোর্ট্রেট ছবি থেকে স্বয়ংক্রিয়ভাবে চেহারা বের করুন"
+
+#: flask/templates/macros/persona_manager.html:54
+msgid "Persona"
+msgstr "পার্সোনা"
+
+#: flask/templates/macros/persona_manager.html:63 flask/templates/macros/persona_manager.html:89 flask/templates/settings/account.html:17 flask/templates/settings/creations.html:67
+msgid "Name"
+msgstr ""
+
+#: flask/templates/macros/persona_manager.html:74
+msgid "Portrait image (PNG/JPG/WEBP)"
+msgstr "পোর্ট্রেট ছবি (PNG/JPG/WEBP)"
+
+#: flask/templates/macros/persona_manager.html:78
+msgid "Save Persona"
+msgstr "পার্সোনা সংরক্ষণ করুন"
+
+#: flask/templates/macros/persona_manager.html:100
+msgid "New portrait image (optional, PNG/JPG/WEBP)"
+msgstr "নতুন পোর্ট্রেট ছবি (ঐচ্ছিক, PNG/JPG/WEBP)"
+
+#: flask/templates/macros/persona_manager.html:106
+msgid "Save changes"
+msgstr "পরিবর্তন সংরক্ষণ করুন"
+
+#: flask/templates/macros/persona_manager.html:110
+msgid "Really delete persona?"
+msgstr "আপনি কি সত্যিই পার্সোনা মুছে ফেলতে চান?"
+
+#: flask/templates/macros/top_header.html:17 flask/templates/macros/top_header.html:44
+msgid "AI Characters"
+msgstr ""
+
+#: flask/templates/macros/top_header.html:19 flask/templates/macros/top_header.html:46 flask/templates/settings/creations.html:25
+msgid "Worlds"
+msgstr ""
+
+#: flask/templates/macros/top_header.html:30
+msgid "Open menu"
+msgstr "মেনু খুলুন"
+
+#: flask/templates/macros/top_header.html:62
+msgid "Logout"
+msgstr "লগ আউট"
+
+#: flask/templates/overview/index.html:7
+msgid "Some content is still being translated into your language. The selection of available content may still change."
+msgstr ""
+
+#: flask/templates/overview/index.html:8
+msgid "Translations in Progress"
+msgstr ""
+
+#: flask/templates/overview/tabs/characters.html:8
+msgid "All Genders"
+msgstr ""
+
+#: flask/templates/overview/tabs/characters.html:15
+msgid "Chat Status"
+msgstr ""
+
+#: flask/templates/overview/tabs/characters.html:17 flask/templates/overview/tabs/characters.html:34
+msgid "All Characters"
+msgstr ""
+
+#: flask/templates/overview/tabs/characters.html:18
+msgid "Already Chatted"
+msgstr ""
+
+#: flask/templates/overview/tabs/characters.html:19
+msgid "Not Chatted Yet"
+msgstr ""
+
+#: flask/templates/overview/tabs/characters.html:23 flask/templates/settings/creations.html:40
+msgid "Sort Order"
+msgstr ""
+
+#: flask/templates/overview/tabs/characters.html:25 flask/templates/settings/creations.html:43
+msgid "Newest First"
+msgstr ""
+
+#: flask/templates/overview/tabs/characters.html:26
+msgid "Most Messages"
+msgstr ""
+
+#: flask/templates/overview/tabs/characters.html:27
+msgid "Best Relationship"
+msgstr ""
+
+#: flask/templates/overview/tabs/characters.html:32 flask/templates/settings/creations.html:31
+msgid "Author"
+msgstr ""
+
+#: flask/templates/overview/tabs/characters.html:35 flask/templates/settings/creations.html:34
+msgid "Only Mine (Creator)"
+msgstr ""
+
+#: flask/templates/overview/tabs/characters.html:36 flask/templates/settings/creations.html:35
+msgid "Collaborations"
+msgstr ""
+
+#: flask/templates/overview/tabs/lorebooks.html:6
+msgid "New Lorebook"
+msgstr ""
+
+#: flask/templates/settings/account.html:8 flask/templates/settings/layout.html:22
+msgid "Account"
+msgstr "অ্যাকাউন্ট"
+
+#: flask/templates/settings/account.html:10
+msgid "Creator Tag"
+msgstr ""
+
+#: flask/templates/settings/account.html:10
+msgid "Other creators can add you as a collaborator using this tag."
+msgstr ""
+
+#: flask/templates/settings/account.html:11
+msgid "Copy Creator Tag"
+msgstr ""
+
+#: flask/templates/settings/account.html:14
+msgid "Name & Email Address"
+msgstr ""
+
+#: flask/templates/settings/account.html:25
+msgid "Your current password is only required when changing your email address or password. Leave the new password fields empty to keep your current password."
+msgstr ""
+
+#: flask/templates/settings/account.html:28
+msgid "Current password"
+msgstr ""
+
+#: flask/templates/settings/account.html:31
+msgid "New password"
+msgstr ""
+
+#: flask/templates/settings/account.html:34
+msgid "Confirm new password"
+msgstr ""
+
+#: flask/templates/settings/account.html:39
+msgid "Language"
+msgstr "ভাষা"
+
+#: flask/templates/settings/account.html:39
+msgid "Language of the interface and displayed content translations."
+msgstr ""
+
+#: flask/templates/settings/creations.html:4 flask/templates/settings/creations.html:10 flask/templates/settings/layout.html:20
+msgid "My Creations"
+msgstr ""
+
+#: flask/templates/settings/creations.html:11
+msgid "Overview of all characters, worlds, and lorebooks you created or collaborate on. Click any item to open its editor."
+msgstr ""
+
+#: flask/templates/settings/creations.html:14
+msgid "Total:"
+msgstr ""
+
+#: flask/templates/settings/creations.html:21 flask/templates/settings/creations.html:65
+msgid "Type"
+msgstr ""
+
+#: flask/templates/settings/creations.html:23
+msgid "All Types"
+msgstr ""
+
+#: flask/templates/settings/creations.html:24
+msgid "Characters"
+msgstr ""
+
+#: flask/templates/settings/creations.html:33
+msgid "All Works"
+msgstr ""
+
+#: flask/templates/settings/creations.html:42
+msgid "Name (A-Z)"
+msgstr ""
+
+#: flask/templates/settings/creations.html:48
+msgid "Search"
+msgstr ""
+
+#: flask/templates/settings/creations.html:53
+msgid "Search name..."
+msgstr ""
+
+#: flask/templates/settings/creations.html:55
+msgid "Search creations"
+msgstr ""
+
+#: flask/templates/settings/creations.html:66
+msgid "Preview"
+msgstr ""
+
+#: flask/templates/settings/creations.html:68
+msgid "Details"
+msgstr ""
+
+#: flask/templates/settings/creations.html:70
+msgid "Role"
+msgstr ""
+
+#: flask/templates/settings/creations.html:71
+msgid "Created"
+msgstr ""
+
+#: flask/templates/settings/creations.html:72
+msgid "Action"
+msgstr ""
+
+#: flask/templates/settings/creations.html:122
+msgid "Editor"
+msgstr ""
+
+#: flask/templates/settings/creations.html:122
+msgid "Open editor"
+msgstr ""
+
+#: flask/templates/settings/creations.html:132
+msgid "No creations found"
+msgstr ""
+
+#: flask/templates/settings/creations.html:134
+msgid "No works were found matching the selected filters or created/shared with you."
+msgstr ""
+
+#: flask/templates/settings/creations.html:137
+msgid "Reset all filters"
+msgstr ""
+
+#: flask/templates/settings/index.html:7
+msgid "Player Personas"
+msgstr ""
+
+#: flask/templates/settings/index.html:8
+msgid "Manage your roleplay identities. The star marks your default persona."
+msgstr ""
+
+#: flask/templates/settings/layout.html:14
+msgid "User & Personalization"
+msgstr ""
+
+#: flask/templates/settings/layout.html:18
+msgid "Personas"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:14
+msgid "Setup steps"
+msgstr "সেটআপ ধাপ"
+
+#: flask/templates/worldinfo/detail.html:19
+msgid "WorldInfo & Locations"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:24
+msgid "Locations & Backgrounds"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:45
+msgid "Really delete WorldInfo?"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:46
+msgid "Read-only (External World)"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:47
+msgid "Save WorldInfo"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:64
+msgid "World Name"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:65
+msgid "The name of the universe or setting. Included as primary world in the prompt context."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:77
+msgid "Cover Image (1:1)"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:78
+msgid "Square cover image for the world card in the Hub and world selection."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:81
+msgid "1:1 World Cover"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:93
+msgid "Choose Cover"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:95
+msgid "Crop"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:107
+msgid "Private = only accessible to you. Public = accessible to all users for chats."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:118
+msgid "Linked Lorebook (Optional)"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:119
+msgid "An optional lorebook automatically included alongside character lorebooks in all chats using this world."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:122
+msgid "No lorebook linked"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:144
+msgid "New Location"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:151 flask/templates/worldinfo/detail.html:154 flask/templates/worldinfo/detail.html:166
+msgid "This location is bound to"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:177
+msgid "Edit Location:"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:183 flask/templates/worldinfo/detail.html:316
+msgid "Location Name"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:184 flask/templates/worldinfo/detail.html:317
+msgid "Name of the location (e.g. Old Library, Griffin Tavern)."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:197 flask/templates/worldinfo/detail.html:330
+msgid "Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet)."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:199 flask/templates/worldinfo/detail.html:332
+msgid "Extract Tags"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:207 flask/templates/worldinfo/detail.html:340
+msgid "16:9 Background Image (PNG, JPG, WEBP)"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:208 flask/templates/worldinfo/detail.html:341
+msgid "Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:214 flask/templates/worldinfo/detail.html:347
+msgid "Analyze & Describe Image"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:221 flask/templates/worldinfo/detail.html:354
+msgid "Location Description"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:222 flask/templates/worldinfo/detail.html:355
+msgid "Atmospheric description of the environment, sounds, and mood."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:239 flask/templates/worldinfo/detail.html:372
+msgid "Character Binding (Optional)"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:373
+msgid "If selected, this location can only be entered when chatting with that specific character."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:376
+msgid "No character (Freely accessible)"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:253
+msgid "Assigned Location Events:"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:258
+msgid "No specific location events assigned."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:310
+msgid "Create New Location"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:334
+msgid "tavern, forest, castle"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:387
+msgid "Save Location"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:394
+msgid "Set 1:1 World Cover"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:394
+msgid "1:1 Cover"
+msgstr ""
+

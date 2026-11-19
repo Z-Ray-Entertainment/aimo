@@ -11,6 +11,7 @@ class LocationForm:
     background_image_path: str = ""
     vision_alt_text: str = ""
     character_id: int | None = None
+    is_proper_noun: bool = False
 
     @classmethod
     def from_request(cls, form_data) -> "LocationForm":
@@ -22,6 +23,7 @@ class LocationForm:
             background_image_path=p.to_str(form_data, "background_image_path"),
             vision_alt_text=p.to_str(form_data, "vision_alt_text"),
             character_id=p.to_opt_int(form_data, "character_id"),
+            is_proper_noun=p.to_bool(form_data, "is_proper_noun"),
         )
 
 
@@ -46,6 +48,7 @@ class EventForm:
     description: str = ""
     min_relationship: int | None = None
     max_relationship: int | None = None
+    is_proper_noun: bool = False
 
     @classmethod
     def from_request(cls, form_data) -> "EventForm":
@@ -58,4 +61,5 @@ class EventForm:
             description=p.to_str(form_data, "description"),
             min_relationship=_parse_opt_rel_int(form_data, "min_relationship"),
             max_relationship=_parse_opt_rel_int(form_data, "max_relationship"),
+            is_proper_noun=p.to_bool(form_data, "is_proper_noun"),
         )

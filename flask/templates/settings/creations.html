@@ -1,58 +1,58 @@
 {% extends "settings/layout.html" %}
 {% from "macros/buttons.html" import action_button %}
 {% from "macros/badges.html" import pill_badge %}
-{% block title %}AIMO — My Creations{% endblock %}
+{% block title %}AIMO — {{ _("My Creations") }}{% endblock %}
 
 {% block settings_content %}
 <div class="aimo-frame" style="padding: 1.5rem;">
   <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.85rem; flex-wrap: wrap; gap: 0.75rem;">
     <div>
-      <h1 style="font-size: 1.4rem; color: var(--gold-accent); margin-bottom: 0.25rem;">My Creations</h1>
-      <p class="text-muted" style="font-size: 0.88rem;">Übersicht aller von dir erstellten Charaktere, Welten und Lorebooks sowie deiner Kollaborationen. Ein Klick öffnet direkt den passenden Editor.</p>
+      <h1 style="font-size: 1.4rem; color: var(--gold-accent); margin-bottom: 0.25rem;">{{ _("My Creations") }}</h1>
+      <p class="text-muted" style="font-size: 0.88rem;">{{ _("Overview of all characters, worlds, and lorebooks you created or collaborate on. Click any item to open its editor.") }}</p>
     </div>
     <div style="display: flex; gap: 0.5rem; align-items: center;">
-      {{ pill_badge("Gesamt: " ~ total_count, variant="gold") }}
+      {{ pill_badge(_("Total:") ~ " " ~ total_count, variant="gold") }}
     </div>
   </div>
 
   <!-- Filterleiste (im gleichen Layout wie im Hub-Dashboard) -->
   <form method="GET" action="{{ url_for('settings.creations') }}" id="creations-filter-form" class="aimo-frame" style="padding: 0.85rem 1.2rem; margin-bottom: 1.25rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
     <div style="flex: 1; min-width: 160px;">
-      <label style="font-size: 0.8rem; color: var(--text-muted);">Typ</label>
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Type") }}</label>
       <select name="type" onchange="this.form.submit()">
-        <option value="all" {% if type_filter == 'all' %}selected{% endif %}>Alle Typen ({{ total_count }})</option>
-        <option value="characters" {% if type_filter == 'characters' %}selected{% endif %}>Charaktere ({{ char_count }})</option>
-        <option value="worldinfo" {% if type_filter == 'worldinfo' %}selected{% endif %}>Welten ({{ world_count }})</option>
-        <option value="lorebooks" {% if type_filter == 'lorebooks' %}selected{% endif %}>Lorebooks ({{ lorebook_count }})</option>
+        <option value="all" {% if type_filter == 'all' %}selected{% endif %}>{{ _("All Types") }} ({{ total_count }})</option>
+        <option value="characters" {% if type_filter == 'characters' %}selected{% endif %}>{{ _("Characters") }} ({{ char_count }})</option>
+        <option value="worldinfo" {% if type_filter == 'worldinfo' %}selected{% endif %}>{{ _("Worlds") }} ({{ world_count }})</option>
+        <option value="lorebooks" {% if type_filter == 'lorebooks' %}selected{% endif %}>{{ _("Lorebooks") }} ({{ lorebook_count }})</option>
       </select>
     </div>
 
     <div style="flex: 1; min-width: 160px;">
-      <label style="font-size: 0.8rem; color: var(--text-muted);">Urheber</label>
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Author") }}</label>
       <select name="role" onchange="this.form.submit()">
-        <option value="all" {% if role_filter == 'all' %}selected{% endif %}>Alle Werke</option>
-        <option value="owner" {% if role_filter in ('owner', 'mine') %}selected{% endif %}>Nur eigene (Ersteller)</option>
-        <option value="collaboration" {% if role_filter in ('collaboration', 'collaborations') %}selected{% endif %}>Kollaborationen</option>
+        <option value="all" {% if role_filter == 'all' %}selected{% endif %}>{{ _("All Works") }}</option>
+        <option value="owner" {% if role_filter in ('owner', 'mine') %}selected{% endif %}>{{ _("Only Mine (Creator)") }}</option>
+        <option value="collaboration" {% if role_filter in ('collaboration', 'collaborations') %}selected{% endif %}>{{ _("Collaborations") }}</option>
       </select>
     </div>
 
     <div style="flex: 1; min-width: 160px;">
-      <label style="font-size: 0.8rem; color: var(--text-muted);">Sortierung</label>
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Sort Order") }}</label>
       <select name="sort" onchange="this.form.submit()">
-        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name (A-Z)</option>
-        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Neueste zuerst</option>
+        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>{{ _("Name (A-Z)") }}</option>
+        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>{{ _("Newest First") }}</option>
       </select>
     </div>
 
     <div style="flex: 1.5; min-width: 200px;">
-      <label style="font-size: 0.8rem; color: var(--text-muted);">Suche</label>
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Search") }}</label>
       <input type="text"
              name="q"
              id="creations-search-input"
              value="{{ q }}"
-             placeholder="Name suchen..."
+             placeholder="{{ _('Search name...') }}"
              autocomplete="off"
-             aria-label="Kreationen durchsuchen">
+             aria-label="{{ _('Search creations') }}">
     </div>
   </form>
 
@@ -62,14 +62,14 @@
       <table class="aimo-table creations-table" id="creations-table">
         <thead>
           <tr>
-            <th style="width: 130px;">Typ</th>
-            <th style="width: 55px; text-align: center;">Vorschau</th>
-            <th>Name</th>
-            <th>Details</th>
-            <th class="col-creations-visibility" style="width: 120px;">Sichtbarkeit</th>
-            <th style="width: 140px;">Rolle</th>
-            <th class="col-creations-created" style="width: 110px;">Erstellt</th>
-            <th style="width: 110px; text-align: right;">Aktion</th>
+            <th style="width: 130px;">{{ _("Type") }}</th>
+            <th style="width: 55px; text-align: center;">{{ _("Preview") }}</th>
+            <th>{{ _("Name") }}</th>
+            <th>{{ _("Details") }}</th>
+            <th class="col-creations-visibility" style="width: 120px;">{{ _("Visibility") }}</th>
+            <th style="width: 140px;">{{ _("Role") }}</th>
+            <th class="col-creations-created" style="width: 110px;">{{ _("Created") }}</th>
+            <th style="width: 110px; text-align: right;">{{ _("Action") }}</th>
           </tr>
         </thead>
         <tbody id="creations-table-body">
@@ -103,23 +103,23 @@
               </td>
               <td class="col-creations-visibility">
                 {% if item.visibility == 'public' %}
-                  {{ pill_badge("Öffentlich", variant="success") }}
+                  {{ pill_badge(_("Public"), variant="success") }}
                 {% else %}
-                  {{ pill_badge("Privat", variant="dark") }}
+                  {{ pill_badge(_("Private"), variant="dark") }}
                 {% endif %}
               </td>
               <td>
                 {% if item.is_owner %}
-                  {{ pill_badge("Eigentümer", icon="👑", variant="gold") }}
+                  {{ pill_badge(_("Owner"), icon="👑", variant="gold") }}
                 {% else %}
-                  {{ pill_badge("Kollaborateur", icon="🤝", variant="info") }}
+                  {{ pill_badge(_("Collaborator"), icon="🤝", variant="info") }}
                 {% endif %}
               </td>
               <td class="col-creations-created">
                 <span style="font-size: 0.82rem; color: var(--text-muted);">{{ item.created_at_formatted }}</span>
               </td>
               <td style="text-align: right;">
-                {{ action_button("Editor", href=item.editor_url, icon="✏️", size="sm", title="Editor öffnen") }}
+                {{ action_button(_("Editor"), href=item.editor_url, icon="✏️", size="sm", title=_("Open editor")) }}
               </td>
             </tr>
           {% endfor %}
@@ -129,14 +129,18 @@
   {% else %}
     <div class="creations-empty-frame">
       <div class="creations-empty-icon">📜</div>
-      <h3 style="font-size: 1.1rem; color: var(--gold-accent); margin-bottom: 0.35rem;">Keine Kreationen gefunden</h3>
+      <h3 style="font-size: 1.1rem; color: var(--gold-accent); margin-bottom: 0.35rem;">{{ _("No creations found") }}</h3>
       <p style="font-size: 0.88rem; max-width: 480px; margin: 0 auto 1rem auto;">
-        Es wurden keine Werke gefunden, die den gewählten Filtern entsprechen oder von dir erstellt bzw. mit dir geteilt wurden.
+        {{ _("No works were found matching the selected filters or created/shared with you.") }}
       </p>
       {% if type_filter != 'all' or role_filter != 'all' or q %}
-        {{ action_button("Alle Filter zurücksetzen", href=url_for('settings.creations')) }}
+        {{ action_button(_("Reset all filters"), href=url_for('settings.creations')) }}
       {% endif %}
     </div>
   {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/creations_table.js') }}"></script>
 {% endblock %}

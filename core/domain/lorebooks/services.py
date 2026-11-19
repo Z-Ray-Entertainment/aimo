@@ -14,6 +14,7 @@ class LorebookService:
         description: str = "",
         visibility: str = "private",
         collaborator_creator_tags: list[str] | None = None,
+        is_proper_noun: bool = False,
     ) -> Lorebook:
         DomainValidator.validate_positive_user_id(user_id, InvalidLorebookDataError)
         cleaned_name = DomainValidator.validate_required_string(name, "Lorebook name", InvalidLorebookDataError)
@@ -30,6 +31,7 @@ class LorebookService:
                 t.strip().lower() for t in collaborator_creator_tags
                 if isinstance(t, str) and t.strip()
             ] if collaborator_creator_tags else [],
+            is_proper_noun=bool(is_proper_noun),
             created_at=datetime.now(timezone.utc),
         )
 
@@ -40,6 +42,7 @@ class LorebookService:
         description: str,
         visibility: str | None = None,
         collaborator_creator_tags: list[str] | None = None,
+        is_proper_noun: bool | None = None,
     ) -> Lorebook:
         lorebook.name = DomainValidator.validate_required_string(name, "Lorebook name", InvalidLorebookDataError)
         lorebook.description = description.strip() if isinstance(description, str) else ""
@@ -50,6 +53,8 @@ class LorebookService:
                 t.strip().lower() for t in collaborator_creator_tags
                 if isinstance(t, str) and t.strip()
             ]
+        if is_proper_noun is not None:
+            lorebook.is_proper_noun = bool(is_proper_noun)
         return lorebook
 
     def add_entry(
@@ -59,6 +64,7 @@ class LorebookService:
         tags: list[str] | str,
         content: str,
         visibility: str = "public",
+        is_proper_noun: bool = False,
     ) -> LorebookEntry:
         if isinstance(lorebook_id, bool) or not isinstance(lorebook_id, int) or lorebook_id <= 0:
             raise InvalidLorebookDataError("A valid positive lorebook_id is required.")
@@ -85,6 +91,7 @@ class LorebookService:
             tags=normalized_tags,
             content=cleaned_content,
             visibility=cleaned_vis,
+            is_proper_noun=bool(is_proper_noun),
             created_at=now,
             updated_at=now,
         )
@@ -96,6 +103,7 @@ class LorebookService:
         tags: list[str] | str,
         content: str,
         visibility: str | None = None,
+        is_proper_noun: bool | None = None,
     ) -> LorebookEntry:
         cleaned_title = title.strip() if isinstance(title, str) else ""
         if not cleaned_title:
@@ -114,6 +122,8 @@ class LorebookService:
         entry.content = cleaned_content
         if visibility is not None:
             entry.visibility = DomainValidator.normalize_visibility(visibility)
+        if is_proper_noun is not None:
+            entry.is_proper_noun = bool(is_proper_noun)
         entry.updated_at = datetime.now(timezone.utc)
         return entry
 

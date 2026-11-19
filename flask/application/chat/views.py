@@ -2,6 +2,9 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from application.auth.decorators import get_current_user, has_perm, is_admin as is_admin_user, require_permission
 from application.chat.forms import MemoryEditForm, StartChatForm
+from application.translation_helpers import is_worldinfo_ready_for_language
+from application.ui_helpers import tr
+from i18n import gettext_noop as _
 from domain.characters.models import Emotion
 from domain.characters.services import CharacterService
 from domain.chat.models import MessageRole
@@ -175,7 +178,7 @@ def open_character_chat(character_id: int):
 
     character = char_repo.get_by_id(character_id)
     if character is None or not character.is_visible_to_user(user.id, is_admin_user()):
-        flash("Charakter nicht gefunden.", "error")
+        flash(tr(_("Character not found.")), "error")
         return redirect(url_for("overview.index"))
 
     sessions = chat_repo.list_sessions_for_character(character_id, user.id)
@@ -199,7 +202,7 @@ def new_character_chat(character_id: int):
 
     character = char_repo.get_by_id(character_id)
     if character is None or not character.is_visible_to_user(user.id, is_admin_user()):
-        flash("Charakter nicht gefunden.", "error")
+        flash(tr(_("Character not found.")), "error")
         return redirect(url_for("overview.index"))
 
     personas = persona_repo.list_for_user(user.id)
@@ -216,12 +219,28 @@ def new_character_chat(character_id: int):
         )
         personas = [persona_repo.create(fallback_p)]
 
-    worldinfos = wi_repo.list_all(user.id)
     trans_repo = TranslationRepository()
     sys_lang = _get_user_system_language()
+    admin_flag = is_admin_user()
+    worldinfos = [
+        wi
+        for wi in wi_repo.list_all(user.id)
+        if wi.is_editable_by_user(user.id, admin_flag, user.creator_tag)
+        or is_worldinfo_ready_for_language(wi, sys_lang, trans_repo, wi_repo)
+    ]
 
     if request.method == "POST":
         form = StartChatForm.from_request(request.form)
+        if form.worldinfo_id:
+            selected_wi = wi_repo.get_by_id(form.worldinfo_id)
+            if selected_wi is None or not selected_wi.is_visible_to_user(user.id, admin_flag):
+                flash(tr(_("Invalid WorldInfo.")), "error")
+                return redirect(url_for("chat.new_character_chat", character_id=character_id))
+            if not selected_wi.is_editable_by_user(
+                user.id, admin_flag, user.creator_tag
+            ) and not is_worldinfo_ready_for_language(selected_wi, sys_lang, trans_repo, wi_repo):
+                flash(tr(_("This world is not yet available in your language.")), "warning")
+                return redirect(url_for("chat.new_character_chat", character_id=character_id))
         selected_persona_id = form.persona_id or (personas[0].id or 0)
         selected_persona = next((p for p in personas if p.id == selected_persona_id), personas[0])
         localized_welcome = trans_repo.get_localized_field(
@@ -335,7 +354,7 @@ def view_session(session_id: int):
 
     chat_session = chat_repo.get_session(session_id)
     if chat_session is None or chat_session.user_id != user.id:
-        flash("Chat-Session nicht gefunden.", "error")
+        flash(tr(_("Chat session not found.")), "error")
         return redirect(url_for("overview.index"))
 
     chat_service.apply_time_decay(chat_session)
@@ -343,7 +362,7 @@ def view_session(session_id: int):
 
     character = char_repo.get_by_id(chat_session.character_id)
     if character is None or not character.is_visible_to_user(user.id, is_admin_user()):
-        flash("Zugehöriger Charakter nicht gefunden.", "error")
+        flash(tr(_("Associated character not found.")), "error")
         return redirect(url_for("overview.index"))
 
     persona = persona_repo.get_by_id(chat_session.persona_id)
@@ -393,6 +412,14 @@ def view_session(session_id: int):
         loc for loc in raw_locations
         if loc.character_id is None or loc.character_id == character.id
     ]
+    for loc_obj in [current_location, initial_location, *worldinfo_locations]:
+        if loc_obj is not None and loc_obj.id is not None:
+            loc_obj.name = trans_repo.get_localized_field(
+                "worldinfo_location", loc_obj.id, "name", sys_lang, loc_obj.name
+            )
+            loc_obj.description = trans_repo.get_localized_field(
+                "worldinfo_location", loc_obj.id, "description", sys_lang, loc_obj.description
+            )
     worldinfo_events = (
         wi_repo.list_events(worldinfo.id)
         if worldinfo and worldinfo.id is not None
@@ -403,7 +430,13 @@ def view_session(session_id: int):
         if character and character.id is not None
         else []
     )
-    all_worldinfos = wi_repo.list_all(user.id)
+    is_admin = bool(user and (user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS)))
+    all_worldinfos = [
+        wi
+        for wi in wi_repo.list_all(user.id)
+        if wi.is_editable_by_user(user.id, is_admin, user.creator_tag)
+        or is_worldinfo_ready_for_language(wi, sys_lang, trans_repo, wi_repo)
+    ]
 
     last_char_msg = next((m for m in reversed(messages) if m.role.value == "character"), None)
     last_emotion = (
@@ -493,7 +526,7 @@ def update_session_settings(session_id: int):
 
     chat_session = chat_repo.get_session(session_id)
     if chat_session is None or chat_session.user_id != user.id:
-        flash("Session nicht gefunden.", "error")
+        flash(tr(_("Session not found.")), "error")
         return redirect(url_for("overview.index"))
 
     action = request.form.get("action", "")
@@ -502,10 +535,10 @@ def update_session_settings(session_id: int):
             new_persona_id = int(request.form.get("persona_id", 0))
             new_persona = persona_repo.get_by_id(new_persona_id)
             if new_persona is None or (new_persona.user_id != user.id and not user.is_initial_admin):
-                flash("Ungültige Persona.", "error")
+                flash(tr(_("Invalid persona.")), "error")
                 return redirect(url_for("chat.view_session", session_id=session_id))
             chat_service.change_persona(chat_session, new_persona_id)
-            flash("Persona für diese Session aktualisiert.", "success")
+            flash(tr(_("Persona updated for this session.")), "success")
         elif action == "switch_worldinfo":
             raw_wi = request.form.get("worldinfo_id", "").strip()
             new_wi_id = int(raw_wi) if raw_wi and raw_wi != "none" else None
@@ -513,7 +546,14 @@ def update_session_settings(session_id: int):
             if new_wi_id:
                 wi = wi_repo.get_by_id(new_wi_id)
                 if wi is None or not wi.is_visible_to_user(user.id, is_admin_user()):
-                    flash("Ungültige WorldInfo.", "error")
+                    flash(tr(_("Invalid WorldInfo.")), "error")
+                    return redirect(url_for("chat.view_session", session_id=session_id))
+                if not wi.is_editable_by_user(
+                    user.id, is_admin_user(), user.creator_tag
+                ) and not is_worldinfo_ready_for_language(
+                    wi, _get_user_system_language(), TranslationRepository(), wi_repo
+                ):
+                    flash(tr(_("This world is not yet available in your language.")), "warning")
                     return redirect(url_for("chat.view_session", session_id=session_id))
                 char = char_repo.get_by_id(chat_session.character_id)
                 if char and char.initial_location_id:
@@ -522,23 +562,25 @@ def update_session_settings(session_id: int):
                         if loc.character_id is None or loc.character_id == char.id:
                             init_loc = char.initial_location_id
             chat_service.switch_worldinfo(chat_session, new_wi_id, init_loc)
-            flash("WorldInfo für diesen Chat gewechselt.", "success")
+            flash(tr(_("WorldInfo changed for this chat.")), "success")
         elif action == "toggle_events":
             chat_session.events_enabled = bool(request.form.get("events_enabled"))
-            flash("Event-Einstellung gespeichert.", "success")
+            flash(tr(_("Event setting saved.")), "success")
         elif action == "toggle_thinking":
             raw_val = request.form.get("thinking_enabled")
             if raw_val is not None:
                 chat_session.thinking_enabled = str(raw_val).strip() in ("1", "true", "True", "on")
             else:
                 chat_session.thinking_enabled = not chat_session.thinking_enabled
-            status_text = "aktiviert" if chat_session.thinking_enabled else "deaktiviert"
-            flash(f"Thinking {status_text}.", "success")
+            if chat_session.thinking_enabled:
+                flash(tr(_("Thinking enabled.")), "success")
+            else:
+                flash(tr(_("Thinking disabled.")), "success")
         elif action == "rename_title":
             new_title = request.form.get("title", "").strip()
             if new_title:
                 chat_session.title = new_title
-                flash("Chat-Titel aktualisiert.", "success")
+                flash(tr(_("Chat title updated.")), "success")
 
         chat_repo.update_session(chat_session)
     except AimoError as exc:
@@ -560,7 +602,7 @@ def delete_session(session_id: int):
 
     char_id = chat_session.character_id
     chat_repo.delete_session(session_id)
-    flash("Chat-Session gelöscht.", "success")
+    flash(tr(_("Chat session deleted.")), "success")
 
     redirect_to = request.form.get("redirect_to") or request.args.get("redirect_to")
     current_session_id = request.form.get("current_session_id")
@@ -602,7 +644,7 @@ def edit_memory(session_id: int, memory_id: int):
                 summary=form.summary,
             )
             mem_repo.update_memory(mem)
-            flash("Erinnerung aktualisiert.", "success")
+            flash(tr(_("Memory updated.")), "success")
         except AimoError as exc:
             flash(str(exc), "error")
 
@@ -624,7 +666,7 @@ def delete_memory(session_id: int, memory_id: int):
     mem = mem_repo.get_by_id(memory_id)
     if mem is not None and mem.chat_session_id == session_id:
         mem_repo.delete_memory(memory_id)
-        flash("Erinnerung gelöscht.", "success")
+        flash(tr(_("Memory deleted.")), "success")
     return redirect(url_for("chat.view_session", session_id=session_id))
 
 
@@ -643,14 +685,14 @@ def recalculate_memory(session_id: int, memory_id: int):
     if chat_session is None or (chat_session.user_id != user.id and not user.is_initial_admin):
         if request.is_json or request.headers.get("Accept") == "application/json":
             return {"error": "Session not found."}, 404
-        flash("Chat-Session nicht gefunden.", "error")
+        flash(tr(_("Chat session not found.")), "error")
         return redirect(url_for("overview.index"))
 
     target_memory = mem_repo.get_by_id(memory_id)
     if target_memory is None or target_memory.chat_session_id != session_id:
         if request.is_json or request.headers.get("Accept") == "application/json":
             return {"error": "Memory not found."}, 404
-        flash("Erinnerung nicht gefunden.", "error")
+        flash(tr(_("Memory not found.")), "error")
         return redirect(url_for("chat.view_session", session_id=session_id))
 
     all_messages = chat_repo.get_messages(session_id, limit=None)
@@ -666,7 +708,7 @@ def recalculate_memory(session_id: int, memory_id: int):
     if not chunk:
         if request.is_json or request.headers.get("Accept") == "application/json":
             return {"error": "No narrative messages found for this memory episode."}, 400
-        flash("Keine Nachrichten für diese Erinnerungsepisode gefunden.", "error")
+        flash(tr(_("No messages found for this memory episode.")), "error")
         return redirect(url_for("chat.view_session", session_id=session_id))
 
     try:
@@ -697,11 +739,11 @@ def recalculate_memory(session_id: int, memory_id: int):
                 "tags": target_memory.tags,
                 "summary": target_memory.summary,
             }
-        flash("Erinnerung erfolgreich neu berechnet.", "success")
+        flash(tr(_("Memory recalculated successfully.")), "success")
     except Exception as exc:
         if request.is_json or request.headers.get("Accept") == "application/json":
             return {"error": str(exc)}, 500
-        flash(f"Fehler bei der Neuberechnung: {exc}", "error")
+        flash(tr(_("Recalculation error: %(error)s"), error=exc), "error")
 
     return redirect(url_for("chat.view_session", session_id=session_id))
 

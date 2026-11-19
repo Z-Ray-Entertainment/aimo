@@ -38,8 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!file) return;
 
     const statusEl = document.getElementById("new-loc-analyze-status");
-    window.setButtonLoading(newLocAnalyzeBtn, "Analysiere Bild");
-    if (statusEl) statusEl.textContent = "Analysiere Bild";
+    window.setButtonLoading(newLocAnalyzeBtn, window.t("Analyzing image"));
+    if (statusEl) statusEl.textContent = window.t("Analyzing image");
 
     const formData = new FormData();
     formData.append("background", file);
@@ -103,8 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const existingPath = document.getElementById(pathId)?.value || "";
       const statusEl = document.getElementById(statusId);
 
-      window.setButtonLoading(btn, "Analysiere Bild");
-      if (statusEl) statusEl.textContent = "Analysiere Bild";
+      window.setButtonLoading(btn, window.t("Analyzing image"));
+      if (statusEl) statusEl.textContent = window.t("Analyzing image");
 
       const formData = new FormData();
       if (file) {

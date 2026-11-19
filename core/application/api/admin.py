@@ -269,3 +269,57 @@ def update_backdrop():
         )
 
     return jsonify({"error": "No backdrop file or path provided."}), 400
+
+
+@api_admin_bp.route("/translations/status", methods=["GET"])
+@require_permission(FunctionPermission.ADMIN_ACCESS)
+def translation_sync_status():
+    from infrastructure.translation.worker import get_translation_worker
+
+    return jsonify(get_translation_worker().get_status())
+
+
+@api_admin_bp.route("/translations/sync", methods=["POST"])
+@require_permission(FunctionPermission.ADMIN_ACCESS)
+def trigger_manual_translation_sync():
+    from infrastructure.translation.worker import get_translation_worker
+
+    worker = get_translation_worker()
+    worker.trigger_sync(manual=True)
+    return jsonify({"status": "started", "worker": worker.get_status()})
+
+
+@api_admin_bp.route("/translations/cancel", methods=["POST"])
+@require_permission(FunctionPermission.ADMIN_ACCESS)
+def cancel_translation_sync():
+    from infrastructure.translation.worker import get_translation_worker
+
+    worker = get_translation_worker()
+    worker.cancel_sync()
+    return jsonify({"status": "cancelling", "worker": worker.get_status()})
+
+
+@api_admin_bp.route("/translations/notify", methods=["POST"])
+def notify_translation_worker():
+    from application.api.auth import require_auth as _req_auth
+    from infrastructure.llm.factory import get_llm_provider_class
+    from infrastructure.repositories.translation_repository import TranslationRepository
+    from infrastructure.repositories.user_repository import UserRepository
+    from infrastructure.translation.worker import trigger_translation_sync
+
+    settings = SettingsRepository().get_settings()
+    is_cloud = get_llm_provider_class(settings.llm_backend).is_cloud_provider()
+    if not is_cloud:
+        trigger_translation_sync(manual=False)
+        return jsonify({"is_cloud": False, "has_missing": False})
+
+    data = request.get_json(silent=True) or {}
+    etype = str(data.get("entity_type") or "").strip()
+    eid = data.get("entity_id")
+    fname = str(data.get("field_name") or "").strip()
+    has_missing = False
+    if etype and eid and fname:
+        target_langs = UserRepository().list_distinct_languages()
+        missing = TranslationRepository().get_missing_languages(etype, int(eid), fname, target_langs)
+        has_missing = bool(missing)
+    return jsonify({"is_cloud": True, "has_missing": has_missing})

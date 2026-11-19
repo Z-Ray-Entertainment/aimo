@@ -30,17 +30,17 @@
 
             <!-- Mobil: Seitenleiste als Tab rechts von Erinnerungen mit vertikalem Trennstrich davor -->
             <div class="chat-header-vdivider mobile-tab-only"></div>
-            {{ tab_button("Info", "chat-pane-sidebar", icon="👤", extra_class="mobile-tab-only", title="Seitenleiste / Charakterinfo") }}
+            {{ tab_button(_("Info"), "chat-pane-sidebar", icon="👤", extra_class="mobile-tab-only", title=_("Sidebar / Character Info")) }}
           </div>
         </div>
 
         <div id="chat-location-indicator" style="font-size: 0.85rem; color: var(--gold-accent);">
           {% if current_location %}
-            📍 Ort: <strong>{{ current_location.name }}</strong>
+            📍 {{ _("Location:") }} <strong>{{ current_location.name }}</strong>
           {% elif worldinfo %}
-            🌐 Welt: <strong>{{ worldinfo.name }}</strong>
+            🌐 {{ _("World:") }} <strong>{{ worldinfo.name }}</strong>
           {% else %}
-            🕯️ Neutraler Schauplatz
+            🕯️ {{ _("Neutral Setting") }}
           {% endif %}
         </div>
       </div>
@@ -60,7 +60,7 @@
           {% if initial_location %}
             <div class="system-ui-notice location-intro-notice" style="margin: 0.25rem auto 1rem auto; max-width: 88%; text-align: left; padding: 0.65rem 1rem;">
               <div style="font-weight: 700; color: var(--gold-accent); margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.4rem;">
-                <span class="icon-mono">📍</span> <span>Ort: {{ initial_location.name }}</span>
+                <span class="icon-mono">📍</span> <span>{{ _("Location:") }} {{ initial_location.name }}</span>
               </div>
               {% if initial_location.description %}
                 <div style="font-size: 0.86rem; color: var(--text-color); opacity: 0.95; line-height: 1.45; white-space: pre-wrap;">{{ initial_location.description }}</div>
@@ -76,13 +76,13 @@
                     <strong>{{ character.name }}</strong>
                     <div style="display: flex; gap: 0.4rem;">
                       {% if is_admin and msg.message_idx > 0 %}
-                        <button type="button" class="btn-prompt-debug" onclick="window.openPromptDebugModal({{ msg.message_idx }})" style="background:none; border:none; color:var(--gold-accent); cursor:pointer; font-family:monospace; font-weight:bold; font-size:0.85rem;" title="LLM-Prompt ansehen (Admin)"><span class="icon-mono">{ }</span></button>
+                        <button type="button" class="btn-prompt-debug" onclick="window.openPromptDebugModal({{ msg.message_idx }})" style="background:none; border:none; color:var(--gold-accent); cursor:pointer; font-family:monospace; font-weight:bold; font-size:0.85rem;" title="{{ _('View LLM prompt (Admin)') }}"><span class="icon-mono">{ }</span></button>
                       {% endif %}
-                      <button type="button" onclick="window.translateChatMessage({{ msg.message_idx }}, this)" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht übersetzen (On-Demand)"><span class="icon-mono">🌐</span></button>
-                      <button type="button" onclick="openEditMessageModal({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht bearbeiten"><span class="icon-mono">✏️</span></button>
-                      <button type="button" onclick="forkChatAt({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Chat ab hier duplizieren (Fork)"><span class="icon-mono">🌿</span></button>
+                      <button type="button" onclick="window.translateChatMessage({{ msg.message_idx }}, this)" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Translate message (on-demand)') }}"><span class="icon-mono">🌐</span></button>
+                      <button type="button" onclick="openEditMessageModal({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Edit message') }}"><span class="icon-mono">✏️</span></button>
+                      <button type="button" onclick="forkChatAt({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Duplicate chat from here (Fork)') }}"><span class="icon-mono">🌿</span></button>
                       {% if msg.message_idx > 0 %}
-                        <button type="button" onclick="deleteMessagesFrom({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Ab hier löschen"><span class="icon-mono">🗑️</span></button>
+                        <button type="button" onclick="deleteMessagesFrom({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Delete from here') }}"><span class="icon-mono">🗑️</span></button>
                       {% endif %}
                     </div>
                   </div>
@@ -98,17 +98,17 @@
                   <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem; font-size: 0.76rem; color: var(--gold-accent);">
                     <strong>{{ persona.name if persona else 'Du' }}</strong>
                     <div style="display: flex; gap: 0.4rem;">
-                      <button type="button" onclick="window.translateChatMessage({{ msg.message_idx }}, this)" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht übersetzen (On-Demand)"><span class="icon-mono">🌐</span></button>
-                      <button type="button" onclick="openEditMessageModal({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Nachricht bearbeiten"><span class="icon-mono">✏️</span></button>
-                      <button type="button" onclick="forkChatAt({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Chat ab hier duplizieren (Fork)"><span class="icon-mono">🌿</span></button>
-                      <button type="button" onclick="deleteMessagesFrom({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="Ab hier löschen"><span class="icon-mono">🗑️</span></button>
+                      <button type="button" onclick="window.translateChatMessage({{ msg.message_idx }}, this)" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Translate message (on-demand)') }}"><span class="icon-mono">🌐</span></button>
+                      <button type="button" onclick="openEditMessageModal({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Edit message') }}"><span class="icon-mono">✏️</span></button>
+                      <button type="button" onclick="forkChatAt({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Duplicate chat from here (Fork)') }}"><span class="icon-mono">🌿</span></button>
+                      <button type="button" onclick="deleteMessagesFrom({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Delete from here') }}"><span class="icon-mono">🗑️</span></button>
                     </div>
                   </div>
                   {% if msg.image_path %}
                     <div class="chat-uploaded-image-wrap" style="margin-bottom: 0.45rem;">
                       <img src="{{ url_for('uploaded_file', filename=msg.image_path) }}" alt="Upload" style="max-width: 220px; border-radius: 8px; border: 1px solid var(--gold-accent); display: block;">
                       <div style="margin-top: 0.25rem;">
-                        <button type="button" class="btn-eye-alt" onclick="window.toggleImageAltText({{ msg.message_idx }})" title="ALT-Text (Bildbeschreibung) ein-/ausblenden">
+                        <button type="button" class="btn-eye-alt" onclick="window.toggleImageAltText({{ msg.message_idx }})" title="{{ _('Show/hide ALT text (image description)') }}">
                           <span class="icon-mono">👁️</span>
                         </button>
                       </div>
@@ -129,29 +129,29 @@
 
         <!-- Eingabeleiste unten: Angedockter KI-Systemhinweis + Vereinheitlichter Kasten mit Overlay-Buttons -->
         <div class="chat-input-wrapper">
-          <div class="chat-input-disclaimer" role="note" aria-label="KI-Systemhinweis">
+          <div class="chat-input-disclaimer" role="note" aria-label="{{ _('AI system notice') }}">
             <span class="chat-input-disclaimer-icon">ℹ️</span>
-            <span class="chat-input-disclaimer-text">Dies ist ein KI-Chatbot. Antworten werden automatisiert durch lokale oder externe Sprachmodelle generiert und können unvollständig oder fehlerhaft sein.</span>
+            <span class="chat-input-disclaimer-text">{{ _('This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate.') }}</span>
           </div>
 
           <form id="chat-input-form" class="chat-input-box">
           <!-- Links bündig: Hamburger-Menü (Sitzungen, Neuer Chat, Löschen), Attach & ComfyUI -->
           <div class="chat-input-actions-left">
             <div class="chat-menu-dropdown-wrapper" id="chat-menu-dropdown-wrapper">
-              <button type="button" class="chat-input-btn" id="chat-menu-toggle-btn" title="Chat-Optionen & Sitzungen" aria-label="Chat-Optionen" aria-expanded="false">
+              <button type="button" class="chat-input-btn" id="chat-menu-toggle-btn" title="{{ _('Chat options & sessions') }}" aria-label="{{ _('Chat options') }}" aria-expanded="false">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
                   <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
                 </svg>
               </button>
               <div class="chat-menu-dropdown" id="chat-menu-dropdown" role="menu">
-                {{ menu_item('Sitzungen', icon='💬', modal='chat-sessions-modal') }}
-                {{ menu_item('Neuer Chat starten', icon='➕', href=url_for('chat.new_character_chat', character_id=character.id, configure=1)) }}
+                {{ menu_item(_('Sessions'), icon='💬', modal='chat-sessions-modal') }}
+                {{ menu_item(_('Start new chat'), icon='➕', href=url_for('chat.new_character_chat', character_id=character.id, configure=1)) }}
                 <div class="chat-menu-dropdown-divider"></div>
-                {{ menu_item('Chat löschen', icon='🗑️', danger=true, onclick="if (confirm('Wollen Sie diesen Chat wirklich unwiderruflich löschen?')) { document.getElementById('delete-current-chat-form').submit(); }") }}
+                {{ menu_item(_('Delete chat'), icon='🗑️', danger=true, onclick="if (confirm('" ~ _('Do you really want to permanently delete this chat?') ~ "')) { document.getElementById('delete-current-chat-form').submit(); }") }}
               </div>
             </div>
 
-            <label class="chat-input-btn chat-overlay-btn" title="Bild anhängen (Vision ALT-Analyse)">
+            <label class="chat-input-btn chat-overlay-btn" title="{{ _('Attach image (Vision ALT analysis)') }}">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
                 <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5a2.5 2.5 0 0 1 5 0v10.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5V6H9v9.5a3 3 0 0 0 6 0V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/>
               </svg>
@@ -159,14 +159,14 @@
             </label>
 
             {% if image_gen_available %}
-              <button type="button" class="chat-input-btn chat-overlay-btn" onclick="window.chatStream.triggerComfyUIGeneration()" title="Szenenbild generieren">
+              <button type="button" class="chat-input-btn chat-overlay-btn" onclick="window.chatStream.triggerComfyUIGeneration()" title="{{ _('Generate scene image') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
                   <path d="m19 9 1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/>
                 </svg>
               </button>
 
               <!-- Abbrechen-Button während ComfyUI-Bildgenerierung -->
-              <button type="button" id="cancel-image-gen-btn" class="chat-input-btn chat-overlay-btn btn-abort-turn" style="display: none;" onclick="window.chatStream.cancelComfyUIGeneration()" title="Bildgenerierung abbrechen">
+              <button type="button" id="cancel-image-gen-btn" class="chat-input-btn chat-overlay-btn btn-abort-turn" style="display: none;" onclick="window.chatStream.cancelComfyUIGeneration()" title="{{ _('Cancel image generation') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
                   <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
                 </svg>
@@ -177,26 +177,26 @@
           <!-- Mitte: Textarea ohne eigenen Rahmen & Datei-Indikator -->
           <div class="chat-input-content">
             <div id="upload-file-indicator"></div>
-            <textarea id="chat-message-textarea" name="message" rows="5" placeholder="Schreibe deine Antwort oder Handlung... (Enter zum Senden, Shift+Enter für Zeilenumbruch)"></textarea>
+            <textarea id="chat-message-textarea" name="message" rows="5" placeholder="{{ _('Write your response or action... (Enter to send, Shift+Enter for new line)') }}"></textarea>
           </div>
 
           <!-- Rechts: Re-Generate, Abort & Senden als Overlay-Buttons -->
           <div class="chat-input-actions-right">
             <!-- Re-Generate Button -->
-            <button type="button" id="chat-regenerate-btn" class="chat-input-btn chat-overlay-btn btn-regenerate-icon" onclick="window.chatStream.regenerateLastTurn()" title="Antwort neu generieren (Re-Generate) – Ersetzt die letzte KI-Antwort bzw. wiederholt die Generierung">
+            <button type="button" id="chat-regenerate-btn" class="chat-input-btn chat-overlay-btn btn-regenerate-icon" onclick="window.chatStream.regenerateLastTurn()" title="{{ _('Regenerate response – replaces the last AI reply or retries generation') }}">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" class="icon-regenerate" aria-hidden="true">
                 <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
               </svg>
             </button>
 
             <!-- Abbrechen-Button während aktiver Antwort-Generierung -->
-            <button type="button" id="chat-abort-btn" class="chat-input-btn chat-overlay-btn btn-abort-turn" style="display: none;" onclick="window.chatStream.abortTurn()" title="Antwort-Generierung abbrechen">
+            <button type="button" id="chat-abort-btn" class="chat-input-btn chat-overlay-btn btn-abort-turn" style="display: none;" onclick="window.chatStream.abortTurn()" title="{{ _('Cancel response generation') }}">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
                 <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
               </svg>
             </button>
 
-            <button type="submit" id="chat-send-btn" class="chat-input-btn chat-overlay-btn" title="Nachricht senden (Enter)">
+            <button type="submit" id="chat-send-btn" class="chat-input-btn chat-overlay-btn" title="{{ _('Send message (Enter)') }}">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
                 <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
               </svg>
@@ -254,16 +254,19 @@
                 <span style="font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;">Nachricht #{{ mem.message_idx }}</span>
               </div>
               <div>
-                <label style="font-size: 0.78rem; color: var(--text-muted);">Tags (kommagetrennt für RAG)</label>
+                <label style="font-size: 0.78rem; color: var(--text-muted);">{{ _("Tags (Comma-separated for vectorless RAG)") }}</label>
                 <input type="text" name="tags" value="{{ mem.tags|join(', ') }}">
               </div>
               <div>
-                <label style="font-size: 0.78rem; color: var(--text-muted);">Zusammenfassung (Englischer Kanon)</label>
+                <label style="font-size: 0.78rem; color: var(--text-muted);">{{ _("Summary") }}</label>
                 <textarea name="summary" rows="3" required>{{ mem.summary }}</textarea>
               </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                {{ action_button("Neu berechnen", icon="🔄", size="sm", onclick="window.recalculateMemory(" ~ chat_session.id ~ ", " ~ mem.id ~ ", this)", title="Erinnerung aus den zugehörigen Episoden-Nachrichten neu berechnen") }}
-                {{ action_button("Speichern", type="submit", variant="primary", size="sm", icon="💾") }}
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 0.25rem; flex-wrap: wrap;">
+                <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+                  {{ action_button(_("Recalculate"), icon="🔄", size="sm", onclick="window.recalculateMemory(" ~ chat_session.id ~ ", " ~ mem.id ~ ", this)", title=_("Recalculate memory from associated episode messages")) }}
+                  {{ action_button(_("Translate"), icon="🌐", size="sm", onclick="window.translateMemory(" ~ chat_session.id ~ ", " ~ mem.id ~ ", this)", title=_("Translate memory in-place to your language")) }}
+                </div>
+                {{ action_button(_("Save"), type="submit", variant="primary", size="sm", icon="💾") }}
               </div>
             </form>
           {% endfor %}
@@ -291,8 +294,8 @@
         <button
           type="submit"
           class="chat-thinking-badge-btn {% if chat_session.thinking_enabled %}is-active{% else %}is-inactive{% endif %}"
-          title="Thinking: {{ 'Aktiviert (Klicken zum Deaktivieren)' if chat_session.thinking_enabled else 'Deaktiviert (Klicken zum Aktivieren)' }}"
-          aria-label="Thinking {{ 'deaktivieren' if chat_session.thinking_enabled else 'aktivieren' }}">
+          title="{{ _('Thinking: Enabled (Click to disable)') if chat_session.thinking_enabled else _('Thinking: Disabled (Click to enable)') }}"
+          aria-label="{{ _('Disable thinking') if chat_session.thinking_enabled else _('Enable thinking') }}">
           <span class="chat-thinking-brain-icon" aria-hidden="true">🧠</span>
         </button>
       </form>
@@ -305,7 +308,7 @@
     <!-- Beziehungsbalken (-100 bis +100) -->
     <div class="relationship-bar-wrap aimo-frame chat-glass-panel" data-relationship-score="{{ chat_session.relationship_value }}" style="border-radius: 10px; padding: 0.65rem;">
       <div class="relationship-header">
-        <span>Beziehung: <strong id="rel-score-label">{{ relationship_tier_name }}</strong></span>
+        <span>{{ _('Relationship:') }} <strong id="rel-score-label">{{ relationship_tier_name }}</strong></span>
         <span class="heart-icon">❤️</span>
       </div>
       <div class="relationship-track">
@@ -316,12 +319,12 @@
     <!-- Aktive Spieler-Persona (gesperrt nach 1. Nachricht) -->
     <div class="chat-sidebar-section">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-        <span class="chat-sidebar-label" style="margin-bottom: 0;">Aktive Persona</span>
+        <span class="chat-sidebar-label" style="margin-bottom: 0;">{{ _('Active Persona') }}</span>
         {% if persona %}
           <button
             type="button"
             style="background: none; border: none; cursor: pointer; color: var(--gold-accent);"
-            title="Spieler-Persona bearbeiten"
+            title="{{ _('Edit player persona') }}"
             data-persona-id="{{ persona.id }}"
             data-persona-name="{{ persona.name }}"
             data-persona-gender="{{ persona.gender.value }}"
@@ -338,8 +341,8 @@
       </div>
       {% if chat_session.persona_locked %}
         <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.45rem 0.65rem; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--border-wood-dark);">
-          <span>👤 {{ persona.name if persona else 'Unbekannt' }}</span>
-          <span title="Persona ist nach der 1. Nachricht für diesen Chat gesperrt">🔒</span>
+          <span>👤 {{ persona.name if persona else _('Unknown') }}</span>
+          <span title="{{ _('Persona is locked for this chat after the 1st message') }}">🔒</span>
         </div>
       {% else %}
         <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}">
@@ -356,16 +359,16 @@
     <!-- Welt, Aktueller Ort & Zufalls-Events (Gemeinsamer Block ohne interne Trennstriche) -->
     <div class="chat-sidebar-world-section">
       <div>
-        <span class="chat-sidebar-label">Welt</span>
+        <span class="chat-sidebar-label">{{ _('World') }}</span>
         <div class="chat-field-box">
           <div class="chat-field-content">
             {% if worldinfo %}
               {{ worldinfo.icon or '🌐' }} {{ worldinfo.name }}
             {% else %}
-              Ohne Welt (Neutral)
+              {{ _('No World (Neutral)') }}
             {% endif %}
           </div>
-          <button type="button" class="chat-input-btn" data-modal-open="switch-worldinfo-modal" title="Welt wechseln" aria-label="Welt wechseln">
+          <button type="button" class="chat-input-btn" data-modal-open="switch-worldinfo-modal" title="{{ _('Switch world') }}" aria-label="{{ _('Switch world') }}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
               <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
             </svg>
@@ -376,9 +379,9 @@
       <!-- Aktueller Ort (Direkt unter Welt ohne Trennstrich) -->
       {% if worldinfo and worldinfo_locations %}
         <div>
-          <label for="chat-location-select" class="chat-sidebar-label">Aktueller Ort</label>
+          <label for="chat-location-select" class="chat-sidebar-label">{{ _('Current Location') }}</label>
           <select id="chat-location-select" class="chat-sidebar-select" onchange="manualSwitchLocation(this.value)">
-            <option value="">-- Ort wählen --</option>
+            <option value="">{{ _('-- Choose location --') }}</option>
             {% for loc in worldinfo_locations %}
               {% if not loc.character_id or loc.character_id == character.id %}
                 <option value="{{ loc.id }}" {% if current_location and loc.id == current_location.id %}selected{% endif %}>
@@ -396,20 +399,20 @@
           <input type="hidden" name="action" value="toggle_events">
           <label>
             <input type="checkbox" name="events_enabled" value="1" {% if chat_session.events_enabled %}checked{% endif %} onchange="this.form.submit()">
-            <span>🎲 Zufalls-Events aktivieren</span>
+            <span>🎲 {{ _('Enable random events') }}</span>
           </label>
         </form>
 
         {% if can_view_event_counter %}
-          <div class="chat-sidebar-admin-event-counter" id="admin-event-counter-box" title="Admin- &amp; Ersteller-Info: Cooldown bis zum nächsten Zufalls-Event">
-            <span class="icon-mono">⏳</span> Nächstes Event: 
+          <div class="chat-sidebar-admin-event-counter" id="admin-event-counter-box" title="{{ _('Admin & creator info: Cooldown until the next random event') }}">
+            <span class="icon-mono">⏳</span> {{ _('Next event:') }} 
             <span id="admin-event-counter-status">
               {%- if not chat_session.events_enabled -%}
-                in <strong id="admin-event-counter-val">{{ chat_session.cooldown_counter }}</strong> {{ 'Nachricht' if chat_session.cooldown_counter == 1 else 'Nachrichten' }} <span class="counter-paused-label">(pausiert)</span>
+                {{ _('in') }} <strong id="admin-event-counter-val">{{ chat_session.cooldown_counter }}</strong> {{ _('message') if chat_session.cooldown_counter == 1 else _('messages') }} <span class="counter-paused-label">({{ _('paused') }})</span>
               {%- elif chat_session.cooldown_counter <= 1 -%}
-                <strong id="admin-event-counter-val">nächste Nachricht</strong>
+                <strong id="admin-event-counter-val">{{ _('next message') }}</strong>
               {%- else -%}
-                in <strong id="admin-event-counter-val">{{ chat_session.cooldown_counter }}</strong> Nachrichten
+                {{ _('in') }} <strong id="admin-event-counter-val">{{ chat_session.cooldown_counter }}</strong> {{ _('messages') }}
               {%- endif -%}
             </span>
           </div>
@@ -482,9 +485,9 @@
             {% if s.id != chat_session.id %}
               {{ action_button("Wechseln", href=url_for('chat.view_session', session_id=s.id), size="sm") }}
             {% endif %}
-            <form method="POST" action="{{ url_for('chat.delete_session', session_id=s.id) }}" onsubmit="return confirm('Wollen Sie diese Sitzung wirklich löschen?');" style="margin: 0;">
+            <form method="POST" action="{{ url_for('chat.delete_session', session_id=s.id) }}" onsubmit="return confirm({{ _('Do you really want to delete this session?') | tojson | string | escape }});" style="margin: 0;">
               <input type="hidden" name="redirect_to" value="{% if s.id == chat_session.id %}overview{% else %}session{% endif %}">
-              {{ action_button("Löschen", type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title="Sitzung löschen") }}
+              {{ action_button(_("Delete"), type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title=_("Delete session")) }}
             </form>
           </div>
         </div>
@@ -708,7 +711,7 @@
   }
 
   async function deleteMessagesFrom(msgIdx) {
-    if (!confirm("Diese Nachricht und alle darauffolgenden Nachrichten (inkl. zugehöriger Erinnerungen) unwiderruflich löschen?")) return;
+    if (!confirm({{ _("Permanently delete this message and all subsequent messages (including associated memories)?") | tojson }})) return;
     const resp = await fetch(`/api/chat/{{ chat_session.id }}/messages/${msgIdx}`, {
       method: "DELETE",
     });
@@ -780,18 +783,23 @@
               <span style="font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;">Nachricht #${mem.message_idx}</span>
             </div>
             <div>
-              <label style="font-size: 0.78rem; color: var(--text-muted);">Tags (kommagetrennt für RAG)</label>
+              <label style="font-size: 0.78rem; color: var(--text-muted);">{{ _("Tags (Comma-separated for vectorless RAG)") }}</label>
               <input type="text" name="tags" value="${escapeHtml(tagsStr)}">
             </div>
             <div>
-              <label style="font-size: 0.78rem; color: var(--text-muted);">Zusammenfassung (Englischer Kanon)</label>
+              <label style="font-size: 0.78rem; color: var(--text-muted);">{{ _("Summary") }}</label>
               <textarea name="summary" rows="3" required>${escapeHtml(mem.summary || '')}</textarea>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-              <button type="button" class="aimo-btn aimo-btn-sm" onclick="window.recalculateMemory({{ chat_session.id }}, ${mem.id}, this)" title="Erinnerung aus den zugehörigen Episoden-Nachrichten neu berechnen">
-                <span class="icon-mono">🔄</span> <span>Neu berechnen</span>
-              </button>
-              <button type="submit" class="aimo-btn primary aimo-btn-sm"><span class="icon-mono">💾</span> <span>Speichern</span></button>
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 0.25rem; flex-wrap: wrap;">
+              <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+                <button type="button" class="aimo-btn aimo-btn-sm" onclick="window.recalculateMemory({{ chat_session.id }}, ${mem.id}, this)" title="{{ _('Recalculate memory from associated episode messages') }}">
+                  <span class="icon-mono">🔄</span> <span>{{ _('Recalculate') }}</span>
+                </button>
+                <button type="button" class="aimo-btn aimo-btn-sm" onclick="window.translateMemory({{ chat_session.id }}, ${mem.id}, this)" title="{{ _('Translate memory in-place to your language') }}">
+                  <span class="icon-mono">🌐</span> <span>{{ _('Translate') }}</span>
+                </button>
+              </div>
+              <button type="submit" class="aimo-btn primary aimo-btn-sm"><span class="icon-mono">💾</span> <span>{{ _('Save') }}</span></button>
             </div>
           </form>
         `;
@@ -902,9 +910,60 @@
       }, 3000);
     } catch (err) {
       if (window.showToastError) {
-        window.showToastError(err.message, "Fehler bei Neuberechnung");
+        window.showToastError(err.message, {{ _("Recalculation error") | tojson }});
       } else {
-        alert("Fehler bei Neuberechnung: " + err.message);
+        alert({{ _("Recalculation error:") | tojson }} + " " + err.message);
+      }
+      btnEl.disabled = false;
+      btnEl.innerHTML = originalBtnHtml;
+    }
+  };
+
+  window.translateMemory = async function(sessionId, memoryId, btnEl) {
+    if (!sessionId || !memoryId) return;
+    const form = document.getElementById(`memory-form-${memoryId}`) || (btnEl ? btnEl.closest("form") : null);
+    if (!form) return;
+
+    const originalBtnHtml = btnEl.innerHTML;
+    btnEl.disabled = true;
+    btnEl.innerHTML = '<span class="icon-mono">⏳</span> ' + {{ _("Translating...") | tojson }};
+
+    const titleInput = form.querySelector('input[name="title"]');
+    const tagsInput = form.querySelector('input[name="tags"]');
+    const summaryInput = form.querySelector('textarea[name="summary"]');
+
+    try {
+      const resp = await fetch(`/api/chat/${sessionId}/memories/${memoryId}/translate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({})
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        throw new Error(data.error || `HTTP ${resp.status}`);
+      }
+
+      if (titleInput && data.title) titleInput.value = data.title;
+      if (tagsInput && data.tags) {
+        tagsInput.value = Array.isArray(data.tags) ? data.tags.join(", ") : data.tags;
+      }
+      if (summaryInput && data.summary) summaryInput.value = data.summary;
+
+      btnEl.innerHTML = '<span class="icon-mono">✓</span> ' + {{ _("Translated!") | tojson }};
+      btnEl.style.borderColor = "var(--gold-accent)";
+      btnEl.style.color = "var(--gold-accent)";
+
+      setTimeout(() => {
+        btnEl.disabled = false;
+        btnEl.innerHTML = originalBtnHtml;
+        btnEl.style.borderColor = "";
+        btnEl.style.color = "";
+      }, 3000);
+    } catch (err) {
+      if (window.showToastError) {
+        window.showToastError(err.message, {{ _("Translation error") | tojson }});
+      } else {
+        alert({{ _("Translation error:") | tojson }} + " " + err.message);
       }
       btnEl.disabled = false;
       btnEl.innerHTML = originalBtnHtml;

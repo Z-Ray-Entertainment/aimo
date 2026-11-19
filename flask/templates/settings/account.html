@@ -5,38 +5,38 @@
 
 {% block settings_content %}
 <form method="POST" action="{{ url_for('settings.update_account') }}" class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
-  <h2 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">Account</h2>
+  <h2 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">{{ _("Account") }}</h2>
 
-  {% call form_section("Creator-Tag", "Mit diesem Tag können dich andere Creator als Mitbearbeiter eintragen.") %}
-    {{ copy_field(g.current_user.creator_tag, "Creator Tag kopieren", id="account-creator-tag") }}
+  {% call form_section(_("Creator Tag"), _("Other creators can add you as a collaborator using this tag.")) %}
+    {{ copy_field(g.current_user.creator_tag, _("Copy Creator Tag"), id="account-creator-tag") }}
   {% endcall %}
 
-  {% call form_section("Name & E-Mail-Adresse") %}
+  {% call form_section(_("Name & Email Address")) %}
     <div class="account-form">
       <div>
-        <input type="text" id="account-username" name="username" value="{{ g.current_user.username }}" required placeholder="Name">
+        <input type="text" id="account-username" name="username" value="{{ g.current_user.username }}" required placeholder="{{ _('Name') }}">
       </div>
       <div>
-        <input type="email" id="account-email" name="email" value="{{ g.current_user.email }}" required placeholder="E-Mail-Adresse">
+        <input type="email" id="account-email" name="email" value="{{ g.current_user.email }}" required placeholder="{{ _('Email address') }}">
       </div>
     </div>
   {% endcall %}
 
-  {% call form_section("Passwort", "Das aktuelle Passwort wird nur benötigt, wenn du die E-Mail-Adresse oder das Passwort änderst. Neue Passwortfelder leer lassen, um das Passwort zu behalten.") %}
+  {% call form_section(_("Password"), _("Your current password is only required when changing your email address or password. Leave the new password fields empty to keep your current password.")) %}
     <div class="account-form">
       <div>
-        <input type="password" id="account-current-password" name="current_password" autocomplete="current-password" placeholder="Aktuelles Passwort">
+        <input type="password" id="account-current-password" name="current_password" autocomplete="current-password" placeholder="{{ _('Current password') }}">
       </div>
       <div>
-        <input type="password" id="account-new-password" name="new_password" autocomplete="new-password" placeholder="Neues Passwort">
+        <input type="password" id="account-new-password" name="new_password" autocomplete="new-password" placeholder="{{ _('New password') }}">
       </div>
       <div>
-        <input type="password" id="account-confirm-password" name="confirm_password" autocomplete="new-password" placeholder="Neues Passwort wiederholen">
+        <input type="password" id="account-confirm-password" name="confirm_password" autocomplete="new-password" placeholder="{{ _('Confirm new password') }}">
       </div>
     </div>
   {% endcall %}
 
-  {% call form_section("Sprache", "Sprache der Oberfläche und der angezeigten Übersetzungen.") %}
+  {% call form_section(_("Language"), _("Language of the interface and displayed content translations.")) %}
     <div class="account-form">
       <div>
         <select id="account-language" name="language">
@@ -49,7 +49,7 @@
   {% endcall %}
 
   <div style="display: flex; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid var(--border-wood-dark);">
-    {{ action_button("Speichern", type="submit", variant="primary", icon="💾") }}
+    {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
   </div>
 </form>
 {% endblock %}

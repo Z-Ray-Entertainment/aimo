@@ -17,9 +17,12 @@ from application.api import (
     api_worldinfo_bp,
 )
 from application.api.auth import get_expected_client_key, verify_client_key
+from application.api.chat import has_active_chat_tasks
 from infrastructure.database import init_db
 from infrastructure.storage.file_storage import FileStorage
+from infrastructure.translation.worker import get_translation_worker
 from shared.config import Config
+from shared.i18n import ensure_compiled_locales
 
 
 def create_core_app(config_class: type[Config] = Config) -> Flask:
@@ -33,8 +36,10 @@ def create_core_app(config_class: type[Config] = Config) -> Flask:
     app.config.from_object(config_class)
     app.secret_key = config_class.SECRET_KEY
 
+    ensure_compiled_locales(CORE_DIR / "locales")
     init_db()
     FileStorage(config_class.UPLOAD_DIR)
+    get_translation_worker(is_busy_fn=has_active_chat_tasks).start()
 
     app.register_blueprint(api_admin_bp)
     app.register_blueprint(api_characters_bp)

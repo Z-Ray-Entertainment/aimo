@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button, tab_button %}
 {% from "macros/lorebook_manager.html" import lorebook_manager, lorebook_picker_modal %}
-{% block title %}AIMO — Neues Abenteuer mit {{ character.name }}{% endblock %}
+{% block title %}AIMO — {{ _("New Adventure with") }} {{ character.name }}{% endblock %}
 
 {% block content %}
 <div class="aimo-frame" data-tab-group style="max-width: 720px; margin: 2rem auto; padding: 1.75rem;">
   <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 1rem;">
     <img src="{{ url_for('uploaded_file', filename=character.avatar_path or character.primary_portrait_path) }}" alt="{{ character.name }}" style="width: 72px; height: 72px; border-radius: 12px; object-fit: cover; border: 2px solid var(--gold-accent);" onerror="this.src='/static/img/cover.svg'">
     <div>
-      <h2 style="color: var(--gold-accent); margin-bottom: 0.25rem;">Neuer Chat mit {{ character.name }}</h2>
-      <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">Konfiguriere deine Spieler-Persona, die aktive WorldInfo und Lorebooks für diese Sitzung.</p>
+      <h2 style="color: var(--gold-accent); margin-bottom: 0.25rem;">{{ _("New Chat with") }} {{ character.name }}</h2>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">{{ _("Configure your player persona, active WorldInfo, and lorebooks for this session.") }}</p>
     </div>
   </div>
 
   <!-- Reiter-Navigation für Neuen Chat -->
   <div class="rpg-tabs" style="margin-bottom: 1.5rem; gap: 0.5rem;">
-    {{ tab_button("Einstellungen", "new-chat-tab-settings", icon="⚙️", active=true) }}
-    {{ tab_button(('Lorebooks (<span id="new-chat-lorebooks-count">' ~ lorebook_data.active_count ~ '</span>)')|safe, "new-chat-tab-lorebooks", icon="📜") }}
+    {{ tab_button(_("Settings"), "new-chat-tab-settings", icon="⚙️", active=true) }}
+    {{ tab_button((_("Lorebooks") ~ ' (<span id="new-chat-lorebooks-count">' ~ lorebook_data.active_count ~ '</span>)')|safe, "new-chat-tab-lorebooks", icon="📜") }}
   </div>
 
   <form method="POST" action="{{ url_for('chat.new_character_chat', character_id=character.id) }}">
@@ -24,56 +24,56 @@
     <div id="new-chat-tab-settings" class="tab-pane active">
       <div style="display: flex; flex-direction: column; gap: 1.2rem;">
         <div>
-          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">Spieler-Persona auswählen</label>
+          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">{{ _("Select Player Persona") }}</label>
           {% if personas|length > 1 %}
             <select name="persona_id" required>
               {% for p in personas %}
                 <option value="{{ p.id }}" {% if p.id == default_persona.id %}selected{% endif %}>
-                  {{ p.name }} ({{ p.gender.value }}){% if p.is_default %} — ★ Standard{% endif %}
+                  {{ p.name }} ({{ p.gender.value }}){% if p.is_default %} — ★ {{ _("Default") }}{% endif %}
                 </option>
               {% endfor %}
             </select>
             <small style="color: var(--text-muted); display: block; margin-top: 0.3rem;">
-              Hinweis: Nach dem Absenden der ersten Nachricht wird die Persona für diesen Chat fest gesperrt.
+              {{ _("Note: After sending the first message, the persona is permanently locked for this chat.") }}
             </small>
           {% else %}
             <input type="hidden" name="persona_id" value="{{ default_persona.id }}">
             <div style="padding: 0.65rem 0.85rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 10px;">
-              👤 <strong>{{ default_persona.name }}</strong> ({{ default_persona.gender.value }}) — Automatisch zugewiesen
+              👤 <strong>{{ default_persona.name }}</strong> ({{ default_persona.gender.value }}) — {{ _("Automatically assigned") }}
             </div>
           {% endif %}
         </div>
 
         <div>
-          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">Aktive WorldInfo (Maximal eine pro Session)</label>
+          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">{{ _("Active WorldInfo (At most one per session)") }}</label>
           <select name="worldinfo_id" id="new-chat-worldinfo-select">
-            <option value="none" {% if not character.suggested_worldinfo_id %}selected{% endif %}>Ohne WorldInfo (Standard — Neutraler Hintergrund, keine Events)</option>
+            <option value="none" {% if not character.suggested_worldinfo_id %}selected{% endif %}>{{ _("No WorldInfo (Default — Neutral background, no events)") }}</option>
             {% for wi in worldinfos %}
               <option value="{{ wi.id }}" {% if character.suggested_worldinfo_id == wi.id %}selected{% endif %}>
                 {{ wi.icon or '🌐' }} {{ wi.name }}
-                {% if character.suggested_worldinfo_id == wi.id %} (Empfohlen für {{ character.name }}){% endif %}
+                {% if character.suggested_worldinfo_id == wi.id %} ({{ _("Recommended for") }} {{ character.name }}){% endif %}
               </option>
             {% endfor %}
           </select>
           {% if character.suggested_worldinfo_id %}
             <small style="color: var(--gold-accent); display: block; margin-top: 0.3rem;">
-              💡 Dieser Charakter empfiehlt eine WorldInfo, du kannst jedoch frei wählen oder ohne WorldInfo starten.
+              💡 {{ _("This character recommends a WorldInfo, but you can freely choose another or start without one.") }}
             </small>
           {% endif %}
         </div>
 
         <div>
-          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">Optionaler Sitzungstitel</label>
-          <input type="text" name="title" placeholder="Chat with {{ character.name }}">
+          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">{{ _("Optional Session Title") }}</label>
+          <input type="text" name="title" placeholder="{{ _('Chat with') }} {{ character.name }}">
         </div>
 
         <div>
           <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-weight: 600;">
             <input type="checkbox" name="thinking_enabled" value="1">
-            <span>🧠 Thinking (Reasoning) aktivieren</span>
+            <span>🧠 {{ _("Enable Thinking (Reasoning)") }}</span>
           </label>
           <small style="color: var(--text-muted); display: block; margin-top: 0.25rem;">
-            Aktiviert erweitertes Chain-of-Thought-Denken für kompatible Modelle (z. B. Gemma 4, DeepSeek-R1). Deaktiviert für schnellere Antworten ohne Denkschritte.
+            {{ _("Enables extended chain-of-thought reasoning for compatible models (e.g. Gemma 4, DeepSeek-R1). Disable for faster replies without thinking steps.") }}
           </small>
         </div>
       </div>
@@ -85,8 +85,8 @@
     </div>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
-      {{ action_button("Zurück zum Hub", href=url_for('overview.index'), arrow="left", size="lg") }}
-      {{ action_button("Abenteuer starten", type="submit", arrow="right", variant="primary", size="lg") }}
+      {{ action_button(_("Back to Hub"), href=url_for('overview.index'), arrow="left", size="lg") }}
+      {{ action_button(_("Start Adventure"), type="submit", arrow="right", variant="primary", size="lg") }}
     </div>
   </form>
 </div>

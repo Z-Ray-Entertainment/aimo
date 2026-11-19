@@ -2,7 +2,8 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from application.admin.forms import AdminPromptsForm, AdminServicesForm, AdminUserForm
 from application.auth.decorators import require_permission
-from application.ui_helpers import mask_secret
+from application.ui_helpers import mask_secret, tr
+from i18n import gettext_noop as _
 from domain.auth.services import AuthService
 from domain.permissions.models import (
     PRESET_PERMISSIONS,
@@ -102,7 +103,7 @@ def create_user():
             )
             persona_repo.create(default_persona)
 
-            flash(f"Benutzer '{saved_user.username}' erfolgreich angelegt.", "success")
+            flash(tr(_("User '%(username)s' created successfully."), username=saved_user.username), "success")
             return redirect(url_for("admin.users_list"))
         except (AimoError, ValueError) as exc:
             flash(str(exc), "error")
@@ -126,7 +127,7 @@ def edit_user(user_id: int):
 
     target_user = user_repo.get_by_id(user_id)
     if target_user is None:
-        flash("Benutzer nicht gefunden.", "error")
+        flash(tr(_("User not found.")), "error")
         return redirect(url_for("admin.users_list"))
 
     current_perms = user_repo.get_permissions(user_id)
@@ -154,7 +155,7 @@ def edit_user(user_id: int):
 
             user_repo.update(target_user)
             user_repo.save_permissions(new_perms)
-            flash(f"Benutzer '{target_user.username}' aktualisiert.", "success")
+            flash(tr(_("User '%(username)s' updated."), username=target_user.username), "success")
             return redirect(url_for("admin.users_list"))
         except (AimoError, ValueError) as exc:
             flash(str(exc), "error")
@@ -183,13 +184,13 @@ def delete_user(user_id: int):
 
     target_user = user_repo.get_by_id(user_id)
     if target_user is None:
-        flash("Benutzer nicht gefunden.", "error")
+        flash(tr(_("User not found.")), "error")
         return redirect(url_for("admin.users_list"))
 
     try:
         perm_service.assert_modifiable_user(target_user)
         user_repo.delete(user_id)
-        flash(f"Benutzer '{target_user.username}' gelöscht.", "success")
+        flash(tr(_("User '%(username)s' deleted."), username=target_user.username), "success")
     except AimoError as exc:
         flash(str(exc), "error")
 
@@ -210,7 +211,7 @@ def services_config():
                 settings = ProviderRegistry.apply_recommended_models(settings)
                 settings = settings_repo.save_settings(settings)
                 flash(
-                    "Vorgeschlagene Modelle für alle 5 Rollen erfolgreich zugewiesen!",
+                    tr(_("Suggested models assigned for all 5 roles successfully!")),
                     "success",
                 )
                 return redirect(url_for("admin.services_config"))
@@ -273,7 +274,7 @@ def services_config():
                     repeat_penalty=form.repeat_penalty,
                 )
                 settings = settings_repo.save_settings(settings)
-                flash("Service-Einstellungen und Modelle erfolgreich gespeichert.", "success")
+                flash(tr(_("Service settings and models saved successfully.")), "success")
                 return redirect(url_for("admin.services_config"))
             except AimoError as exc:
                 flash(str(exc), "error")
@@ -375,8 +376,16 @@ def _group_recommended_models_for_ui(
 @admin_bp.route("/prompts", methods=["GET", "POST"])
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def prompts_config():
+    from domain.settings.models import PROMPT_KEYS, get_default_prompt, is_default_prompt
+    from domain.translation.models import SUPPORTED_LANGUAGES
+    from infrastructure.llm.factory import get_llm_provider_class
+    from infrastructure.repositories.translation_repository import TranslationRepository
+    import requests as http_requests
+    from application.core_client import build_core_headers, get_core_base_url
+
     settings_repo = SettingsRepository()
     settings_service = SettingsService()
+    trans_repo = TranslationRepository()
     settings = settings_repo.get_settings()
     defaults = SystemPrompts()
 
@@ -393,15 +402,53 @@ def prompts_config():
                 dialogue_author_prompt=form.dialogue_author_prompt,
             )
             settings = settings_repo.save_settings(settings)
-            flash("System-Prompts erfolgreich gespeichert.", "success")
+            for key in PROMPT_KEYS:
+                current_val = getattr(settings.prompts, key, "")
+                if is_default_prompt(key, current_val):
+                    trans_repo.delete_field_translations("system_prompt", 1, key)
+                else:
+                    raw_i18n = request.form.get(f"i18n_{key}", "").strip()
+                    if raw_i18n:
+                        trans_repo.save_field_variants_json("system_prompt", 1, key, raw_i18n)
+            try:
+                http_requests.post(
+                    f"{get_core_base_url()}/api/admin/translations/notify",
+                    headers=build_core_headers(),
+                    timeout=2,
+                )
+            except Exception:
+                pass
+            flash(tr(_("System prompts saved successfully.")), "success")
             return redirect(url_for("admin.prompts_config"))
         except AimoError as exc:
             flash(str(exc), "error")
+
+    prompt_variants: dict[str, dict[str, dict]] = {}
+    default_prompt_variants: dict[str, dict[str, dict]] = {}
+    for key in PROMPT_KEYS:
+        default_map = {
+            lang: {"content": get_default_prompt(key, lang), "text": get_default_prompt(key, lang), "is_outdated": False, "outdated": False}
+            for lang in SUPPORTED_LANGUAGES
+        }
+        default_prompt_variants[key] = default_map
+        current_val = getattr(settings.prompts, key, "")
+        if is_default_prompt(key, current_val):
+            prompt_variants[key] = default_map
+        else:
+            stored = trans_repo.get_field_translations("system_prompt", 1, key)
+            if "en" not in stored and current_val:
+                stored["en"] = {"content": current_val, "text": current_val, "is_outdated": False, "outdated": False}
+            prompt_variants[key] = stored
+
+    is_cloud_llm = get_llm_provider_class(settings.llm_backend).is_cloud_provider()
 
     return render_template(
         "admin/prompts.html",
         settings=settings,
         defaults=defaults,
+        prompt_variants=prompt_variants,
+        default_prompt_variants=default_prompt_variants,
+        is_cloud_llm=is_cloud_llm,
     )
 
 
@@ -420,7 +467,7 @@ def backdrop_config():
             try:
                 settings = settings_service.update_default_backdrop(settings, None)
                 settings_repo.save_settings(settings)
-                flash("Systemweiter Standard-Backdrop zurückgesetzt (Standard-Design aktiv).", "success")
+                flash(tr(_("System-wide default backdrop reset (default theme active).")), "success")
                 return redirect(url_for("admin.backdrop_config"))
             except AimoError as exc:
                 flash(str(exc), "error")
@@ -432,12 +479,12 @@ def backdrop_config():
                     rel_path = storage.save_background(file_obj.stream, file_obj.filename)
                     settings = settings_service.update_default_backdrop(settings, rel_path)
                     settings_repo.save_settings(settings)
-                    flash("Neuer systemweiter Standard-Backdrop erfolgreich gespeichert.", "success")
+                    flash(tr(_("New system-wide default backdrop saved successfully.")), "success")
                     return redirect(url_for("admin.backdrop_config"))
                 except AimoError as exc:
                     flash(str(exc), "error")
             else:
-                flash("Bitte wählen Sie eine Bilddatei (PNG, JPG, WEBP) zum Hochladen aus.", "error")
+                flash(tr(_("Please select an image file (PNG, JPG, WEBP) to upload.")), "error")
 
         elif action == "select":
             selected_path = request.form.get("selected_backdrop_path", "").strip()
@@ -445,7 +492,7 @@ def backdrop_config():
                 try:
                     settings = settings_service.update_default_backdrop(settings, selected_path)
                     settings_repo.save_settings(settings)
-                    flash("Systemweiter Standard-Backdrop erfolgreich zugewiesen.", "success")
+                    flash(tr(_("System-wide default backdrop assigned successfully.")), "success")
                     return redirect(url_for("admin.backdrop_config"))
                 except AimoError as exc:
                     flash(str(exc), "error")
@@ -470,3 +517,9 @@ def backdrop_config():
         settings=settings,
         existing_locations_with_bg=existing_locations_with_bg,
     )
+
+
+@admin_bp.route("/translations", methods=["GET"])
+@require_permission(FunctionPermission.ADMIN_ACCESS)
+def translations_config():
+    return render_template("admin/translations.html")

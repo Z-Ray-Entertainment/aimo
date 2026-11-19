@@ -3,7 +3,9 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from application.auth.decorators import get_current_user, is_admin, require_permission
 from application.character_helpers import save_and_persist_sprite
 from application.characters.forms import CharacterForm
+from application.ui_helpers import tr
 from application.worldinfo.forms import EventForm
+from i18n import gettext_noop as _
 from domain.characters.models import Emotion
 from domain.characters.services import CharacterService
 from domain.permissions.models import FunctionPermission
@@ -136,6 +138,37 @@ def _render_creator(character=None, form=None):
     rel_tiers = rel_repo.list_tiers(sys_lang)
     gallery_threshold_names = {t.level: t.name for t in rel_tiers}
 
+    char_translations = (
+        trans_repo.get_entity_translations_map("character", character.id)
+        if character and character.id is not None
+        else {}
+    )
+    loc_display = {
+        loc.id: {
+            "name": (
+                loc.name
+                if getattr(loc, "is_proper_noun", False)
+                else trans_repo.get_localized_field("worldinfo_location", loc.id, "name", sys_lang, loc.name)
+            ),
+        }
+        for loc in event_locations
+        if loc.id is not None
+    }
+    ev_display = {
+        ev.id: {
+            "title": (
+                ev.title
+                if getattr(ev, "is_proper_noun", False)
+                else trans_repo.get_localized_field("worldinfo_event", ev.id, "title", sys_lang, ev.title)
+            ),
+            "description": trans_repo.get_localized_field(
+                "worldinfo_event", ev.id, "description", sys_lang, ev.description
+            ),
+        }
+        for ev in character_events
+        if ev.id is not None
+    }
+
     return render_template(
         "characters/creator.html",
         character=character,
@@ -149,10 +182,13 @@ def _render_creator(character=None, form=None):
         all_locations=all_locations,
         event_locations=event_locations,
         loc_map=loc_map,
+        loc_display=loc_display,
+        ev_display=ev_display,
         locations_by_world=locations_by_world,
         events=character_events,
         ev_translations=event_translations,
         event_translations=event_translations,
+        char_translations=char_translations,
         emotions=STANDARD_28_EMOTIONS,
         sprites_by_emotion=sprites_by_emotion,
         relationship_tiers=rel_tiers,
@@ -210,8 +246,17 @@ def new_character():
                 disliked_location_ids=form.disliked_location_ids,
                 collaborator_creator_tags=form.collaborator_creator_tags,
             )
+            character.origin_language = (user.language or "en")[:2].lower()
             saved = char_repo.save(character)
-            flash(f"Charakter '{saved.name}' erfolgreich angelegt!", "success")
+            if saved.id is not None:
+                from application.ui_helpers import notify_author_translation_hint
+
+                trans_repo = TranslationRepository()
+                trans_repo.save_field_variants_json("character", saved.id, "description", request.form.get("i18n_description"))
+                trans_repo.save_field_variants_json("character", saved.id, "appearance", request.form.get("i18n_appearance"))
+                trans_repo.save_field_variants_json("character", saved.id, "first_message", request.form.get("i18n_first_message"))
+                notify_author_translation_hint("character", saved.id, "description")
+            flash(tr(_("Character '%(name)s' created successfully!"), name=saved.name), "success")
             active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
             if active_tab not in _VALID_CHARACTER_TABS:
                 active_tab = "info"
@@ -235,11 +280,11 @@ def edit_character(character_id: int):
 
     character = char_repo.get_by_id(character_id)
     if character is None or not character.is_visible_to_user(user.id, is_admin()):
-        flash("Charakter nicht gefunden.", "error")
+        flash(tr(_("Character not found.")), "error")
         return redirect(url_for("overview.index"))
 
     if not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("Zugriff verweigert: Du kannst nur deine eigenen Charaktere oder für dich freigegebene Kreationen bearbeiten.", "error")
+        flash(tr(_("Access denied: You can only edit your own characters or creations shared with you.")), "error")
         return redirect(url_for("overview.index"))
 
     is_author = (character.user_id == user.id or is_admin())
@@ -287,10 +332,17 @@ def edit_character(character_id: int):
             )
             character = char_repo.save(character)
             if character.id is not None:
+                from application.ui_helpers import notify_author_translation_hint
+
                 WorldInfoRepository().clear_character_event_locations_outside_world(
                     character.id, character.suggested_worldinfo_id
                 )
-            flash(f"Charakter '{character.name}' gespeichert.", "success")
+                trans_repo = TranslationRepository()
+                trans_repo.save_field_variants_json("character", character.id, "description", request.form.get("i18n_description"))
+                trans_repo.save_field_variants_json("character", character.id, "appearance", request.form.get("i18n_appearance"))
+                trans_repo.save_field_variants_json("character", character.id, "first_message", request.form.get("i18n_first_message"))
+                notify_author_translation_hint("character", character.id, "description")
+            flash(tr(_("Character '%(name)s' saved."), name=character.name), "success")
             active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
             if active_tab not in _VALID_CHARACTER_TABS:
                 active_tab = "info"
@@ -333,11 +385,11 @@ def copy_character(character_id: int):
     char_repo = CharacterRepository()
     orig = char_repo.get_by_id(character_id)
     if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
-        flash("Charakter nicht gefunden.", "error")
+        flash(tr(_("Character not found.")), "error")
         return redirect(url_for("overview.index", tab="characters"))
 
     copied = char_repo.duplicate(character_id, user.id)
-    flash(f"Kopie '{copied.name}' als Entwurf erstellt.", "success")
+    flash(tr(_("Copy '%(name)s' created as draft."), name=copied.name), "success")
     return redirect(url_for("characters.edit_character", character_id=copied.id))
 
 
@@ -349,11 +401,11 @@ def delete_character(character_id: int):
     char_repo = CharacterRepository()
     char = char_repo.get_by_id(character_id)
     if char is None or not char.is_deletable_by_user(user.id, is_admin()):
-        flash("Charakter nicht gefunden oder keine Berechtigung zum Löschen.", "error")
+        flash(tr(_("Character not found or no permission to delete.")), "error")
         return redirect(url_for("overview.index", tab="characters"))
 
     char_repo.delete(character_id)
-    flash("Charakter gelöscht.", "success")
+    flash(tr(_("Character deleted.")), "success")
     return redirect(url_for("overview.index", tab="characters"))
 
 
@@ -368,7 +420,7 @@ def add_gallery_image(character_id: int):
 
     character = char_repo.get_by_id(character_id)
     if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("Character not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     img_file = request.files.get("gallery_image")
@@ -378,7 +430,7 @@ def add_gallery_image(character_id: int):
             saved_path = storage.save_portrait(img_file.stream, img_file.filename)
             img_entity = char_service.add_gallery_image(character, saved_path, threshold)
             char_repo.add_gallery_image(character_id, img_entity)
-            flash("9:16-Galeriebild hinzugefügt.", "success")
+            flash(tr(_("9:16 gallery image added.")), "success")
         except AimoError as exc:
             flash(str(exc), "error")
 
@@ -393,11 +445,11 @@ def delete_gallery_image(character_id: int, image_id: int):
     char_repo = CharacterRepository()
     char = char_repo.get_by_id(character_id)
     if char is None or not char.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("Character not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     char_repo.delete_gallery_image(image_id)
-    flash("Galeriebild entfernt.", "success")
+    flash(tr(_("Gallery image removed.")), "success")
     return redirect(url_for("characters.edit_character", character_id=character_id, tab="gallery"))
 
 
@@ -412,7 +464,7 @@ def upload_sprite(character_id: int):
 
     character = char_repo.get_by_id(character_id)
     if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("Character not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     emotion = Emotion.resolve(request.form.get("emotion", "neutral"))
@@ -428,7 +480,7 @@ def upload_sprite(character_id: int):
                 char_repo=char_repo,
                 storage=storage,
             )
-            flash(f"Sprite '{emotion.value}_{persisted.variant}' hochgeladen.", "success")
+            flash(tr(_("Sprite '%(name)s' uploaded."), name=f"{emotion.value}_{persisted.variant}"), "success")
         except AimoError as exc:
             flash(str(exc), "error")
 
@@ -443,11 +495,11 @@ def delete_sprite(character_id: int, emotion: str, variant: int):
     char_repo = CharacterRepository()
     char = char_repo.get_by_id(character_id)
     if char is None or not char.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("Character not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     char_repo.delete_sprite(character_id, emotion, variant)
-    flash(f"Sprite {emotion}_{variant} gelöscht.", "success")
+    flash(tr(_("Sprite %(name)s deleted."), name=f"{emotion}_{variant}"), "success")
     return redirect(url_for("characters.edit_character", character_id=character_id, tab="sprites"))
 
 
@@ -478,13 +530,13 @@ def add_event(character_id: int):
     char_repo = CharacterRepository()
     character = char_repo.get_by_id(character_id)
     if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("Character not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     form = EventForm.from_request(request.form)
     wi_repo = WorldInfoRepository()
     if not _validate_character_event_location(wi_repo, form.location_id, character, user.id):
-        flash("Ungültiger oder nicht zugänglicher Ort ausgewählt.", "error")
+        flash(tr(_("Invalid or inaccessible location selected.")), "error")
         return redirect(url_for("characters.edit_character", character_id=character_id, tab="events"))
 
     service = WorldInfoService()
@@ -499,12 +551,17 @@ def add_event(character_id: int):
             location_id=form.location_id,
             min_relationship=form.min_relationship,
             max_relationship=form.max_relationship,
+            is_proper_noun=form.is_proper_noun,
         )
         saved_ev = wi_repo.add_event(ev)
-        TranslationRepository().save_field_variants_json(
+        trans_repo = TranslationRepository()
+        trans_repo.save_field_variants_json(
+            "worldinfo_event", saved_ev.id, "title", request.form.get("i18n_title")
+        )
+        trans_repo.save_field_variants_json(
             "worldinfo_event", saved_ev.id, "description", request.form.get("i18n_description")
         )
-        flash(f"Event '{ev.title}' hinzugefügt.", "success")
+        flash(tr(_("Event '%(title)s' added."), title=ev.title), "success")
     except AimoError as exc:
         flash(str(exc), "error")
     return redirect(url_for("characters.edit_character", character_id=character_id, tab="events"))
@@ -518,13 +575,13 @@ def edit_event(character_id: int, event_id: int):
     char_repo = CharacterRepository()
     character = char_repo.get_by_id(character_id)
     if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("Character not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     form = EventForm.from_request(request.form)
     wi_repo = WorldInfoRepository()
     if not _validate_character_event_location(wi_repo, form.location_id, character, user.id):
-        flash("Ungültiger oder nicht zugänglicher Ort ausgewählt.", "error")
+        flash(tr(_("Invalid or inaccessible location selected.")), "error")
         return redirect(url_for("characters.edit_character", character_id=character_id, tab="events"))
 
     service = WorldInfoService()
@@ -540,12 +597,17 @@ def edit_event(character_id: int, event_id: int):
                 location_id=form.location_id,
                 min_relationship=form.min_relationship,
                 max_relationship=form.max_relationship,
+                is_proper_noun=form.is_proper_noun,
             )
             wi_repo.update_event(ev)
-            TranslationRepository().save_field_variants_json(
+            trans_repo = TranslationRepository()
+            trans_repo.save_field_variants_json(
+                "worldinfo_event", ev.id, "title", request.form.get("i18n_title")
+            )
+            trans_repo.save_field_variants_json(
                 "worldinfo_event", ev.id, "description", request.form.get("i18n_description")
             )
-            flash("Event aktualisiert.", "success")
+            flash(tr(_("Event updated.")), "success")
         except AimoError as exc:
             flash(str(exc), "error")
     return redirect(url_for("characters.edit_character", character_id=character_id, tab="events"))
@@ -559,12 +621,12 @@ def delete_event(character_id: int, event_id: int):
     char_repo = CharacterRepository()
     character = char_repo.get_by_id(character_id)
     if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("Charakter nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("Character not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     wi_repo = WorldInfoRepository()
     ev = wi_repo.get_event(event_id)
     if ev is not None and ev.character_id == character_id:
         wi_repo.delete_event(event_id)
-        flash("Event gelöscht.", "success")
+        flash(tr(_("Event deleted.")), "success")
     return redirect(url_for("characters.edit_character", character_id=character_id, tab="events"))

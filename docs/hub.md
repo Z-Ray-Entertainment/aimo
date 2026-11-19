@@ -64,4 +64,9 @@ System notifications, confirmations, and alerts appear as floating rectangular b
 - **Portraits & Action Buttons:** Character notifications can include the character's portrait image and a direct *„Zum Chat →“* button to jump straight into the dialogue.
 - **Closing:** Banderoles close automatically after a few seconds, or you can dismiss them immediately by clicking the close button (`✕`) in the upper-right corner.
 
+### Language Availability
+- You see characters, worlds, and lorebooks that are already available in your selected account language.
+- If additional content is still being translated into your language, an info notification informs you that the selection may still grow.
+- Authors, collaborators, and administrators always see their own or editable creations—with a **Translation pending** badge if a translation into their current language has not yet been completed.
+
 Continue to: [**Player Personas →**](personas.md)

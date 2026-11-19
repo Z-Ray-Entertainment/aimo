@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="{{ ui_language | default('en') }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
   {% block extra_head %}{% endblock %}
 </head>
-<body class="has-system-backdrop{% block body_class %}{% endblock %}" style="--system-backdrop-url: url('{%- block backdrop_image %}{{ system_backdrop_url }}{% endblock -%}');">
+<body class="has-system-backdrop{% block body_class %}{% endblock %}" data-user-language="{{ ui_language | default('en') }}" style="--system-backdrop-url: url('{%- block backdrop_image %}{{ system_backdrop_url }}{% endblock -%}');">
   <div class="app-overlay">
     {% block page_backdrop %}
       <div id="system-default-backdrop"
@@ -34,6 +34,19 @@
 
   {% include "macros/persona_manager.html" %}
 
+  <script>
+    window.AIMO_LANGUAGES = {{ aimo_languages | tojson }};
+    window.AIMO_I18N = {{ aimo_js_i18n | tojson }};
+    window.t = function(key, vars) {
+      let s = (window.AIMO_I18N && window.AIMO_I18N[key]) || key;
+      if (vars) {
+        for (const [k, v] of Object.entries(vars)) {
+          s = s.replaceAll(`{${k}}`, String(v));
+        }
+      }
+      return s;
+    };
+  </script>
   <script src="{{ url_for('static', filename='js/modals.js') }}"></script>
   <script src="{{ url_for('static', filename='js/image_cropper.js') }}"></script>
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>

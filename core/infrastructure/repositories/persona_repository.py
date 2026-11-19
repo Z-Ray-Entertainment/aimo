@@ -14,6 +14,13 @@ class PersonaRepository(BaseRepository[UserPersona]):
             self._to_entity,
         )
 
+    def list_all(self) -> list[UserPersona]:
+        return self._fetch_all(
+            "SELECT * FROM personas ORDER BY id ASC",
+            (),
+            self._to_entity,
+        )
+
     def get_by_id(self, persona_id: int) -> UserPersona | None:
         return self._get_by_id("personas", persona_id, self._to_entity)
 
@@ -37,9 +44,9 @@ class PersonaRepository(BaseRepository[UserPersona]):
             cursor = conn.execute(
                 """
                 INSERT INTO personas (
-                    user_id, name, gender, portrait_path, description, appearance, is_default, created_at
+                    user_id, name, gender, portrait_path, description, appearance, origin_language, is_default, created_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     persona.user_id,
@@ -48,6 +55,7 @@ class PersonaRepository(BaseRepository[UserPersona]):
                     persona.portrait_path,
                     persona.description,
                     persona.appearance,
+                    getattr(persona, "origin_language", "en") or "en",
                     1 if persona.is_default else 0,
                     created_str,
                 ),
@@ -77,7 +85,7 @@ class PersonaRepository(BaseRepository[UserPersona]):
             conn.execute(
                 """
                 UPDATE personas
-                SET name = ?, gender = ?, portrait_path = ?, description = ?, appearance = ?, is_default = ?
+                SET name = ?, gender = ?, portrait_path = ?, description = ?, appearance = ?, origin_language = ?, is_default = ?
                 WHERE id = ?
                 """,
                 (
@@ -86,6 +94,7 @@ class PersonaRepository(BaseRepository[UserPersona]):
                     persona.portrait_path,
                     persona.description,
                     persona.appearance,
+                    getattr(persona, "origin_language", "en") or "en",
                     1 if persona.is_default else 0,
                     persona.id,
                 ),
@@ -123,6 +132,11 @@ class PersonaRepository(BaseRepository[UserPersona]):
             portrait_path=str(row["portrait_path"]),
             description=str(row["description"]),
             appearance=str(row["appearance"]),
+            origin_language=(
+                str(row["origin_language"])
+                if ("origin_language" in row.keys() and row["origin_language"])
+                else "en"
+            ),
             is_default=bool(row["is_default"]),
             created_at=parse_datetime(row["created_at"]),
         )

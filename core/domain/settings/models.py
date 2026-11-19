@@ -6,8 +6,9 @@ from domain.settings.exceptions import (
     InvalidModelParametersError,
     InvalidSystemPromptError,
 )
+from shared.i18n import gettext_noop as _, t
 
-DEFAULT_ROLEPLAY_PROMPT: str = (
+DEFAULT_ROLEPLAY_PROMPT: str = _(
     "Write {{char}}'s next reply in a fictional chat between {{char}} and {{user}}. "
     "Write all your replies as {{char}} in first person. Only one reply, do not advance the story.\n"
     "Strict Roleplay Rules:\n"
@@ -18,8 +19,8 @@ DEFAULT_ROLEPLAY_PROMPT: str = (
     "5. Canon Origin & Organic Development: {{char}}'s backstory, origins, and personal history prior to meeting {{user}} in [CHARACTER_DEFINITION] are immutable canon; NEVER contradict them or fabricate conflicting past experiences. However, allow {{char}}'s feelings, trust, and relationship boundaries to authentically evolve and change through events witnessed in [CHAT_HISTORY], [RELEVANT_MEMORIES], and [RELATION]."
 )
 
-DEFAULT_MEMORY_PROMPT: str = (
-    "Analyze the last 10 roleplay messages and extract a structured episodic memory in English. "
+DEFAULT_MEMORY_PROMPT: str = _(
+    "Analyze the last 10 roleplay messages and extract a structured episodic memory in the language of the conversation. "
     "Provide:\n"
     "1. A concise section title.\n"
     "2. Comma-separated keywords/tags for tag-based retrieval.\n"
@@ -27,14 +28,14 @@ DEFAULT_MEMORY_PROMPT: str = (
     "4. An updated short title for the overall chat session."
 )
 
-DEFAULT_DIFFUSER_PROMPT: str = (
+DEFAULT_DIFFUSER_PROMPT: str = _(
     "Convert the current roleplay scene, character appearance, user persona appearance, and "
     "location details into a high-quality, comma-separated English image generation prompt "
     "optimized for Stable Diffusion / Flux in ComfyUI. Focus strictly on visual composition, "
     "lighting, expressions, clothing, and environment without meta-text."
 )
 
-DEFAULT_SPARKLE_ASSISTANT_PROMPT: str = (
+DEFAULT_SPARKLE_ASSISTANT_PROMPT: str = _(
     "You are a professional creative author and roleplay character designer. "
     "Your task is to craft a vivid, psychologically deep, and immersive character description that serves "
     "directly as the roleplay AI's core persona definition. "
@@ -45,13 +46,13 @@ DEFAULT_SPARKLE_ASSISTANT_PROMPT: str = (
     "Do NOT use markdown formatting, headings, bullet points, or meta-commentary."
 )
 
-DEFAULT_VISION_PERSONA_PROMPT: str = (
-    "Analyze the portrait image and describe only the character's physical appearance in English: "
+DEFAULT_VISION_PERSONA_PROMPT: str = _(
+    "Analyze the portrait image and describe only the character's physical appearance: "
     "facial features, eye color, hairstyle and hair color, skin tone, build, and distinctive "
     "physical traits. Strictly ignore image backgrounds, lighting effects, and situational body poses."
 )
 
-DEFAULT_DIALOGUE_AUTHOR_PROMPT: str = (
+DEFAULT_DIALOGUE_AUTHOR_PROMPT: str = _(
     "You are a professional creative dialogue author and voice designer for roleplay characters. "
     "Your task is to analyze {{char}}'s identity, personality, speech quirks, tone, and worldview from their description, "
     "and generate a single vivid, authentic dialogue example showcasing how {{char}} naturally speaks and reacts to {{user}}.\n"
@@ -61,6 +62,38 @@ DEFAULT_DIALOGUE_AUTHOR_PROMPT: str = (
     "3. Format the response using roleplay dialogue style: spoken words in quotes, narrative actions, gestures, and facial expressions in asterisks (e.g. *actions* \"speech\").\n"
     "4. Respect the requested language and do not repeat scenarios from existing dialogue examples."
 )
+
+PROMPT_KEYS: tuple[str, ...] = (
+    "roleplay_prompt",
+    "memory_prompt",
+    "diffuser_prompt",
+    "sparkle_assistant_prompt",
+    "vision_persona_prompt",
+    "dialogue_author_prompt",
+)
+
+DEFAULT_PROMPTS_BY_KEY: dict[str, str] = {
+    "roleplay_prompt": DEFAULT_ROLEPLAY_PROMPT,
+    "memory_prompt": DEFAULT_MEMORY_PROMPT,
+    "diffuser_prompt": DEFAULT_DIFFUSER_PROMPT,
+    "sparkle_assistant_prompt": DEFAULT_SPARKLE_ASSISTANT_PROMPT,
+    "vision_persona_prompt": DEFAULT_VISION_PERSONA_PROMPT,
+    "dialogue_author_prompt": DEFAULT_DIALOGUE_AUTHOR_PROMPT,
+}
+
+
+def get_default_prompt(prompt_key: str, language: str = "en") -> str:
+    msgid = DEFAULT_PROMPTS_BY_KEY.get(prompt_key, "")
+    if not msgid:
+        return ""
+    return t(msgid, language)
+
+
+def is_default_prompt(prompt_key: str, text: str) -> bool:
+    msgid = DEFAULT_PROMPTS_BY_KEY.get(prompt_key, "")
+    if not msgid or not isinstance(text, str):
+        return False
+    return text.strip() == msgid.strip()
 
 
 @dataclass

@@ -75,7 +75,9 @@
 {% endmacro %}
 
 {# Reusable Modal Header Close Button (✕ Icon) #}
-{% macro modal_close_button(modal_id, text="Schließen", title="Schließen", id=none, extra_class="") %}
+{% macro modal_close_button(modal_id, text=none, title=none, id=none, extra_class="") %}
+  {% set text = text if text is not none else _("Close") %}
+  {% set title = title if title is not none else _("Close") %}
   {{ action_button(text, icon="✕", layout="icon", modal_close=modal_id, title=title, id=id, extra_class=extra_class) }}
 {% endmacro %}
 

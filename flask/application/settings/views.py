@@ -56,10 +56,13 @@ def creations():
 
     all_items: list[dict] = []
 
+    from i18n import gettext_noop as _, t
+    ui_lang = (user.language or "en")[:2].lower()
+
     gender_labels = {
-        Gender.FEMALE: "Weiblich",
-        Gender.MALE: "Männlich",
-        Gender.NON_BINARY: "Nicht-Binär",
+        Gender.FEMALE: t(_("Female"), ui_lang),
+        Gender.MALE: t(_("Male"), ui_lang),
+        Gender.NON_BINARY: t(_("Non-Binary"), ui_lang),
     }
 
     for c in characters:
@@ -68,13 +71,13 @@ def creations():
         g_label = gender_labels.get(c.gender, c.gender.value if hasattr(c.gender, "value") else str(c.gender))
         all_items.append({
             "type": "character",
-            "type_label": "Charakter",
+            "type_label": t(_("Character"), ui_lang),
             "type_icon": "👤",
             "id": c.id,
             "name": c.name,
             "visibility": c.visibility,
             "is_owner": c.user_id == user.id,
-            "role_label": "Eigentümer" if c.user_id == user.id else "Kollaborateur",
+            "role_label": t(_("Owner"), ui_lang) if c.user_id == user.id else t(_("Collaborator"), ui_lang),
             "created_at": c.created_at,
             "created_at_formatted": c.created_at.strftime("%d.%m.%Y") if c.created_at else "",
             "image_path": c.avatar_path or c.primary_portrait_path or None,
@@ -94,18 +97,18 @@ def creations():
         evt_count = len(wi_repo.list_events(w.id))
         all_items.append({
             "type": "worldinfo",
-            "type_label": "Welt",
+            "type_label": t(_("World"), ui_lang),
             "type_icon": "🌐",
             "id": w.id,
             "name": w.name,
             "visibility": w.visibility,
             "is_owner": w.user_id == user.id,
-            "role_label": "Eigentümer" if w.user_id == user.id else "Kollaborateur",
+            "role_label": t(_("Owner"), ui_lang) if w.user_id == user.id else t(_("Collaborator"), ui_lang),
             "created_at": w.created_at,
             "created_at_formatted": w.created_at.strftime("%d.%m.%Y") if w.created_at else "",
             "image_path": w.cover_image_path or None,
             "icon": w.icon or "🌐",
-            "details": f"{loc_count} Orte · {evt_count} Events",
+            "details": f"{loc_count} {t(_('Locations'), ui_lang)} · {evt_count} {t(_('Events'), ui_lang)}",
             "editor_url": url_for(
                 "worldinfo.detail",
                 worldinfo_id=w.id,
@@ -119,18 +122,18 @@ def creations():
         entries = lb_repo.list_entries(lb.id, user_id=user.id, is_admin=is_admin())
         all_items.append({
             "type": "lorebook",
-            "type_label": "Lorebook",
+            "type_label": t(_("Lorebook"), ui_lang),
             "type_icon": "📜",
             "id": lb.id,
             "name": lb.name,
             "visibility": lb.visibility,
             "is_owner": lb.user_id == user.id,
-            "role_label": "Eigentümer" if lb.user_id == user.id else "Kollaborateur",
+            "role_label": t(_("Owner"), ui_lang) if lb.user_id == user.id else t(_("Collaborator"), ui_lang),
             "created_at": lb.created_at,
             "created_at_formatted": lb.created_at.strftime("%d.%m.%Y") if lb.created_at else "",
             "image_path": None,
             "icon": "📜",
-            "details": f"{len(entries)} Einträge",
+            "details": f"{len(entries)} {t(_('Entries'), ui_lang)}",
             "editor_url": url_for(
                 "lorebooks.detail",
                 lorebook_id=lb.id,
@@ -205,18 +208,23 @@ def update_account():
     form = AccountForm.from_request(request.form)
     auth_service = AuthService()
     user_repo = UserRepository()
+    import requests as http_requests
+    from application.core_client import build_core_headers, get_core_base_url
+    from i18n import gettext_noop as _, t
+
+    ui_lang = (user.language or "en")[:2].lower()
     try:
         email_changed = form.email != user.email
         password_changed = bool(form.new_password)
         if email_changed or password_changed:
             if not auth_service.authenticate_user(user, form.current_password):
-                raise AimoError("Das aktuelle Passwort ist falsch.")
+                raise AimoError(t(_("The current password is incorrect."), ui_lang))
         if email_changed:
             existing = user_repo.get_by_email(form.email)
             if existing is not None and existing.id != user.id:
-                raise AimoError("Ein Benutzer mit dieser E-Mail-Adresse existiert bereits.")
+                raise AimoError(t(_("A user with this email address already exists."), ui_lang))
         if password_changed and form.new_password != form.confirm_password:
-            raise AimoError("Die neuen Passwörter stimmen nicht überein.")
+            raise AimoError(t(_("The new passwords do not match."), ui_lang))
 
         auth_service.update_name(user, form.username)
         auth_service.update_email(user, form.email)
@@ -224,7 +232,16 @@ def update_account():
         if password_changed:
             auth_service.change_password(user, form.new_password)
         user_repo.update(user)
-        flash("Account-Einstellungen gespeichert.", "success")
+        try:
+            http_requests.post(
+                f"{get_core_base_url()}/api/admin/translations/notify",
+                headers=build_core_headers(),
+                timeout=2,
+            )
+        except Exception:
+            pass
+        new_lang = (user.language or "en")[:2].lower()
+        flash(t(_("Account settings saved."), new_lang), "success")
     except AimoError as exc:
         flash(str(exc), "error")
         return redirect(url_for("settings.account"))

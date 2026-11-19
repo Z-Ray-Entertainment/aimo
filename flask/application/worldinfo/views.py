@@ -1,7 +1,9 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from application.auth.decorators import get_current_user, is_admin, require_auth, require_permission
+from application.ui_helpers import tr
 from application.worldinfo.forms import EventForm, LocationForm
+from i18n import gettext_noop as _
 from domain.permissions.models import FunctionPermission
 from domain.worldinfo.services import WorldInfoService
 from infrastructure.repositories.character_repository import CharacterRepository
@@ -32,7 +34,7 @@ def create_worldinfo():
             lorebook_id=lb_id,
         )
         saved = repo.create(wi)
-        flash(f"WorldInfo '{saved.name}' erstellt.", "success")
+        flash(tr(_("WorldInfo '%(name)s' created."), name=saved.name), "success")
         return redirect(url_for("worldinfo.detail", worldinfo_id=saved.id))
     except AimoError as exc:
         flash(str(exc), "error")
@@ -49,7 +51,7 @@ def detail(worldinfo_id: int):
     service = WorldInfoService()
     worldinfo = repo.get_by_id(worldinfo_id)
     if worldinfo is None or not worldinfo.is_visible_to_user(user.id, is_admin()):
-        flash("WorldInfo nicht gefunden.", "error")
+        flash(tr(_("WorldInfo not found.")), "error")
         return redirect(url_for("overview.index"))
 
     is_editable = worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag)
@@ -57,7 +59,7 @@ def detail(worldinfo_id: int):
 
     if request.method == "POST":
         if not is_editable:
-            flash("Zugriff verweigert: Du kannst nur deine eigenen WorldInfos oder für dich freigegebene Kreationen bearbeiten.", "error")
+            flash(tr(_("Access denied: You can only edit your own WorldInfos or creations shared with you.")), "error")
             return redirect(url_for("overview.index"))
         try:
             storage = FileStorage()
@@ -82,9 +84,10 @@ def detail(worldinfo_id: int):
                 cover_image_path=cover_path,
                 lorebook_id=lb_id,
                 collaborator_creator_tags=collaborator_tags,
+                is_proper_noun=bool(request.form.get("is_proper_noun")),
             )
             worldinfo = repo.update(worldinfo)
-            flash("WorldInfo gespeichert.", "success")
+            flash(tr(_("WorldInfo saved.")), "success")
             active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
             if active_tab not in ("info", "places", "events", "collab"):
                 active_tab = "info"
@@ -109,6 +112,31 @@ def detail(worldinfo_id: int):
                 character_map[c.id] = c
 
     trans_repo = TranslationRepository()
+    user_lang = (user.language or "en")[:2].lower()
+    if not is_editable:
+        from application.translation_helpers import is_worldinfo_ready_for_language
+
+        if not is_worldinfo_ready_for_language(worldinfo, user_lang, trans_repo, repo):
+            flash(tr(_("This world is not yet available in your language.")), "warning")
+            return redirect(url_for("overview.index", tab="worldinfo"))
+        for loc in locations:
+            if loc.id is not None:
+                if not getattr(loc, "is_proper_noun", False):
+                    loc.name = trans_repo.get_localized_field("worldinfo_location", loc.id, "name", user_lang, loc.name)
+                loc.description = trans_repo.get_localized_field(
+                    "worldinfo_location", loc.id, "description", user_lang, loc.description
+                )
+                raw_tags = trans_repo.get_localized_field("worldinfo_location", loc.id, "tags", user_lang, "")
+                if raw_tags:
+                    loc.tags = [t.strip() for t in raw_tags.split(",") if t.strip()]
+        for ev in events:
+            if ev.id is not None:
+                if not getattr(ev, "is_proper_noun", False):
+                    ev.title = trans_repo.get_localized_field("worldinfo_event", ev.id, "title", user_lang, ev.title)
+                ev.description = trans_repo.get_localized_field(
+                    "worldinfo_event", ev.id, "description", user_lang, ev.description
+                )
+
     location_translations = {
         loc.id: (
             trans_repo.get_entity_translations_map("worldinfo_location", loc.id)
@@ -122,6 +150,35 @@ def detail(worldinfo_id: int):
             trans_repo.get_entity_translations_map("worldinfo_event", ev.id)
             or trans_repo.get_entity_translations_map("event", ev.id)
         )
+        for ev in events
+        if ev.id is not None
+    }
+
+    loc_display = {
+        loc.id: {
+            "name": (
+                loc.name
+                if getattr(loc, "is_proper_noun", False)
+                else trans_repo.get_localized_field("worldinfo_location", loc.id, "name", user_lang, loc.name)
+            ),
+            "description": trans_repo.get_localized_field(
+                "worldinfo_location", loc.id, "description", user_lang, loc.description
+            ),
+        }
+        for loc in locations
+        if loc.id is not None
+    }
+    ev_display = {
+        ev.id: {
+            "title": (
+                ev.title
+                if getattr(ev, "is_proper_noun", False)
+                else trans_repo.get_localized_field("worldinfo_event", ev.id, "title", user_lang, ev.title)
+            ),
+            "description": trans_repo.get_localized_field(
+                "worldinfo_event", ev.id, "description", user_lang, ev.description
+            ),
+        }
         for ev in events
         if ev.id is not None
     }
@@ -143,6 +200,8 @@ def detail(worldinfo_id: int):
         available_characters=available_characters,
         character_map=character_map,
         loc_map=loc_map,
+        loc_display=loc_display,
+        ev_display=ev_display,
         loc_translations=location_translations,
         ev_translations=event_translations,
         location_translations=location_translations,
@@ -158,10 +217,18 @@ def duplicate_worldinfo(worldinfo_id: int):
     repo = WorldInfoRepository()
     orig = repo.get_by_id(worldinfo_id)
     if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
-        flash("WorldInfo nicht gefunden.", "error")
+        flash(tr(_("WorldInfo not found.")), "error")
         return redirect(url_for("overview.index", tab="worldinfo"))
+    if not orig.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        from application.translation_helpers import is_worldinfo_ready_for_language
+
+        trans_repo = TranslationRepository()
+        user_lang = (user.language or "en")[:2].lower()
+        if not is_worldinfo_ready_for_language(orig, user_lang, trans_repo, repo):
+            flash(tr(_("This world is not yet available in your language.")), "warning")
+            return redirect(url_for("overview.index", tab="worldinfo"))
     copied = repo.duplicate(worldinfo_id, user.id)
-    flash(f"Kopie '{copied.name}' erfolgreich angelegt.", "success")
+    flash(tr(_("Copy '%(name)s' created successfully."), name=copied.name), "success")
     return redirect(url_for("worldinfo.detail", worldinfo_id=copied.id))
 
 
@@ -173,10 +240,10 @@ def delete_worldinfo(worldinfo_id: int):
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
     if worldinfo is None or not worldinfo.is_deletable_by_user(user.id, is_admin()):
-        flash("WorldInfo nicht gefunden oder keine Berechtigung zum Löschen.", "error")
+        flash(tr(_("WorldInfo not found or no permission to delete.")), "error")
         return redirect(url_for("overview.index", tab="worldinfo"))
     repo.delete(worldinfo_id)
-    flash("WorldInfo gelöscht.", "success")
+    flash(tr(_("WorldInfo deleted.")), "success")
     return redirect(url_for("overview.index", tab="worldinfo"))
 
 
@@ -188,7 +255,7 @@ def add_location(worldinfo_id: int):
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
     if worldinfo is None or not worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("WorldInfo not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     form = LocationForm.from_request(request.form)
@@ -209,12 +276,13 @@ def add_location(worldinfo_id: int):
             bg_path=bg_path,
             vision_alt_text=form.vision_alt_text or None,
             character_id=form.character_id,
+            is_proper_noun=form.is_proper_noun,
         )
         saved_loc = repo.add_location(loc)
         TranslationRepository().save_field_variants_json(
             "worldinfo_location", saved_loc.id, "description", request.form.get("i18n_description")
         )
-        flash(f"Ort '{loc.name}' angelegt.", "success")
+        flash(tr(_("Location '%(name)s' created."), name=loc.name), "success")
     except AimoError as exc:
         flash(str(exc), "error")
 
@@ -229,7 +297,7 @@ def edit_location(worldinfo_id: int, location_id: int):
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
     if worldinfo is None or not worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("WorldInfo not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     form = LocationForm.from_request(request.form)
@@ -252,12 +320,13 @@ def edit_location(worldinfo_id: int, location_id: int):
                 bg_path=bg_path,
                 vision_alt_text=form.vision_alt_text or loc.vision_alt_text,
                 character_id=form.character_id,
+                is_proper_noun=form.is_proper_noun,
             )
             repo.update_location(loc)
             TranslationRepository().save_field_variants_json(
                 "worldinfo_location", loc.id, "description", request.form.get("i18n_description")
             )
-            flash("Ort aktualisiert.", "success")
+            flash(tr(_("Location updated.")), "success")
         except AimoError as exc:
             flash(str(exc), "error")
 
@@ -272,11 +341,11 @@ def delete_location(worldinfo_id: int, location_id: int):
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
     if worldinfo is None or not worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("WorldInfo not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     repo.delete_location(location_id)
-    flash("Ort gelöscht.", "success")
+    flash(tr(_("Location deleted.")), "success")
     return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="places"))
 
 
@@ -288,7 +357,7 @@ def add_event(worldinfo_id: int):
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
     if worldinfo is None or not worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("WorldInfo not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     form = EventForm.from_request(request.form)
@@ -301,12 +370,17 @@ def add_event(worldinfo_id: int):
             probability=form.probability,
             one_shot=form.one_shot,
             location_id=form.location_id,
+            is_proper_noun=form.is_proper_noun,
         )
         saved_ev = repo.add_event(ev)
-        TranslationRepository().save_field_variants_json(
+        trans_repo = TranslationRepository()
+        trans_repo.save_field_variants_json(
+            "worldinfo_event", saved_ev.id, "title", request.form.get("i18n_title")
+        )
+        trans_repo.save_field_variants_json(
             "worldinfo_event", saved_ev.id, "description", request.form.get("i18n_description")
         )
-        flash(f"Event '{ev.title}' hinzugefügt.", "success")
+        flash(tr(_("Event '%(title)s' added."), title=ev.title), "success")
     except AimoError as exc:
         flash(str(exc), "error")
     return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="events"))
@@ -320,7 +394,7 @@ def edit_event(worldinfo_id: int, event_id: int):
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
     if worldinfo is None or not worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("WorldInfo not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     form = EventForm.from_request(request.form)
@@ -335,12 +409,17 @@ def edit_event(worldinfo_id: int, event_id: int):
                 probability=form.probability,
                 one_shot=form.one_shot,
                 location_id=form.location_id,
+                is_proper_noun=form.is_proper_noun,
             )
             repo.update_event(ev)
-            TranslationRepository().save_field_variants_json(
+            trans_repo = TranslationRepository()
+            trans_repo.save_field_variants_json(
+                "worldinfo_event", ev.id, "title", request.form.get("i18n_title")
+            )
+            trans_repo.save_field_variants_json(
                 "worldinfo_event", ev.id, "description", request.form.get("i18n_description")
             )
-            flash("Event aktualisiert.", "success")
+            flash(tr(_("Event updated.")), "success")
         except AimoError as exc:
             flash(str(exc), "error")
     return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="events"))
@@ -354,9 +433,9 @@ def delete_event(worldinfo_id: int, event_id: int):
     repo = WorldInfoRepository()
     worldinfo = repo.get_by_id(worldinfo_id)
     if worldinfo is None or not worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("WorldInfo nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("WorldInfo not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     repo.delete_event(event_id)
-    flash("Event gelöscht.", "success")
+    flash(tr(_("Event deleted.")), "success")
     return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="events"))

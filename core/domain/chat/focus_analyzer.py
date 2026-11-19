@@ -2,6 +2,7 @@ from enum import Enum
 import re
 
 from domain.chat.models import Message, MessageRole
+from shared.i18n import gettext_noop as _, t
 
 
 class SceneFocus(str, Enum):
@@ -155,30 +156,42 @@ class PythonFocusAnalyzer:
         return SceneFocus.GENERAL_ROLEPLAY
 
     @staticmethod
-    def get_focus_directive(focus: SceneFocus, character_name: str) -> str:
+    def get_focus_directive(focus: SceneFocus, character_name: str, language: str = "en") -> str:
         if focus == SceneFocus.INTIMACY_BIO:
-            return (
-                f"Active Scene Focus — Personal History & Intimacy:\n"
-                f"The conversation centers on personal feelings, intimacy, or {character_name}'s past. "
-                f"Strictly honor {character_name}'s canon origin, sexual history, and intimacy traits defined in [CHARACTER_DEFINITION]. "
-                f"NEVER invent or admit to past sexual or romantic experiences that contradict [CHARACTER_DEFINITION], "
-                f"while allowing authentic emotional responses to the current moment."
-            )
+            return t(
+                _(
+                    "Active Scene Focus — Personal History & Intimacy:\n"
+                    "The conversation centers on personal feelings, intimacy, or {character_name}'s past. "
+                    "Strictly honor {character_name}'s canon origin, sexual history, and intimacy traits defined in [CHARACTER_DEFINITION]. "
+                    "NEVER invent or admit to past sexual or romantic experiences that contradict [CHARACTER_DEFINITION], "
+                    "while allowing authentic emotional responses to the current moment."
+                ),
+                language,
+            ).format(character_name=character_name)
         if focus == SceneFocus.WORLD_EXPLORATION:
-            return (
-                f"Active Scene Focus — Environment & Exploration:\n"
-                f"Pay close attention to the current location, sensory atmosphere, and {character_name}'s location preferences in [WORLD_INFO]."
-            )
+            return t(
+                _(
+                    "Active Scene Focus — Environment & Exploration:\n"
+                    "Pay close attention to the current location, sensory atmosphere, and {character_name}'s location preferences in [WORLD_INFO]."
+                ),
+                language,
+            ).format(character_name=character_name)
         if focus == SceneFocus.EVENT_ACTION:
-            return (
-                f"Active Scene Focus — Immediate Narrative Event:\n"
-                f"React directly and organically to the unfolding event or acute action described in [WORLD_INFO] and [CHAT_HISTORY]."
+            return t(
+                _(
+                    "Active Scene Focus — Immediate Narrative Event:\n"
+                    "React directly and organically to the unfolding event or acute action described in [WORLD_INFO] and [CHAT_HISTORY]."
+                ),
+                language,
             )
         if focus == SceneFocus.LORE_MYSTERY:
-            return (
-                f"Active Scene Focus — World Lore & Background Knowledge:\n"
-                f"Incorporate relevant facts and canon details from [RELEVANT_LOREBOOKS] and [RELEVANT_MEMORIES] naturally into {character_name}'s perspective."
-            )
+            return t(
+                _(
+                    "Active Scene Focus — World Lore & Background Knowledge:\n"
+                    "Incorporate relevant facts and canon details from [RELEVANT_LOREBOOKS] and [RELEVANT_MEMORIES] naturally into {character_name}'s perspective."
+                ),
+                language,
+            ).format(character_name=character_name)
         return ""
 
     @staticmethod

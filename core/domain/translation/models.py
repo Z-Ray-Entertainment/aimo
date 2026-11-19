@@ -8,33 +8,63 @@ import hashlib
 
 class Language(StrEnum):
     EN = "en"
-    DE = "de"
-    FR = "fr"
+    ZH = "zh"
+    HI = "hi"
     ES = "es"
-    IT = "it"
+    FR = "fr"
+    AR = "ar"
+    BN = "bn"
+    PT = "pt"
+    RU = "ru"
+    UR = "ur"
+    ID = "id"
+    DE = "de"
     JA = "ja"
+    TR = "tr"
+    KO = "ko"
+    VI = "vi"
+    IT = "it"
+    PL = "pl"
+    NL = "nl"
+    TH = "th"
 
     @classmethod
     def resolve(cls, raw: str | "Language") -> "Language":
         if isinstance(raw, cls):
             return raw
         if not isinstance(raw, str):
-            return cls.DE
+            return cls.EN
         cleaned = raw.strip().lower()[:2]
         for member in cls:
             if cleaned == member.value:
                 return member
-        return cls.DE
+        return cls.EN
 
 
 LANGUAGE_METADATA: dict[str, dict[str, str]] = {
-    "de": {"flag": "🇩🇪", "label": "Deutsch"},
     "en": {"flag": "🇬🇧", "label": "English"},
-    "fr": {"flag": "🇫🇷", "label": "Français"},
+    "zh": {"flag": "🇨🇳", "label": "中文"},
+    "hi": {"flag": "🇮🇳", "label": "हिन्दी"},
     "es": {"flag": "🇪🇸", "label": "Español"},
-    "it": {"flag": "🇮🇹", "label": "Italiano"},
+    "fr": {"flag": "🇫🇷", "label": "Français"},
+    "ar": {"flag": "🇸🇦", "label": "العربية"},
+    "bn": {"flag": "🇧🇩", "label": "বাংলা"},
+    "pt": {"flag": "🇵🇹", "label": "Português"},
+    "ru": {"flag": "🇷🇺", "label": "Русский"},
+    "ur": {"flag": "🇵🇰", "label": "اردو"},
+    "id": {"flag": "🇮🇩", "label": "Bahasa Indonesia"},
+    "de": {"flag": "🇩🇪", "label": "Deutsch"},
     "ja": {"flag": "🇯🇵", "label": "日本語"},
+    "tr": {"flag": "🇹🇷", "label": "Türkçe"},
+    "ko": {"flag": "🇰🇷", "label": "한국어"},
+    "vi": {"flag": "🇻🇳", "label": "Tiếng Việt"},
+    "it": {"flag": "🇮🇹", "label": "Italiano"},
+    "pl": {"flag": "🇵🇱", "label": "Polski"},
+    "nl": {"flag": "🇳🇱", "label": "Nederlands"},
+    "th": {"flag": "🇹🇭", "label": "ไทย"},
 }
+
+SUPPORTED_LANGUAGES: tuple[str, ...] = tuple(LANGUAGE_METADATA.keys())
 
 
 def compute_source_hash(text: str) -> str:

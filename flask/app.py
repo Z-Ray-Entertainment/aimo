@@ -31,6 +31,7 @@ from application.settings import settings_bp
 from application.setup import setup_bp
 from application.ui_helpers import get_safe_back_url, render_new_button
 from application.worldinfo import worldinfo_bp
+from domain.translation.models import LANGUAGE_METADATA
 from infrastructure.database import init_db
 from infrastructure.repositories.persona_repository import PersonaRepository
 from infrastructure.repositories.settings_repository import SettingsRepository
@@ -39,6 +40,7 @@ from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.config import Config
 from shared.exceptions import InfrastructureError
+from i18n import ensure_compiled_locales, get_translator, normalize_language
 
 
 def create_webui_app(config_class: type[Config] = Config) -> Flask:
@@ -51,6 +53,7 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
     app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 86400
     app.secret_key = config_class.SECRET_KEY
 
+    ensure_compiled_locales()
     init_db()
     FileStorage(config_class.UPLOAD_DIR)
 
@@ -65,6 +68,20 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
     app.register_blueprint(settings_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(core_proxy_bp)
+
+    def _jinja_gettext(msgid: str, **kwargs) -> str:
+        lang = getattr(g, "ui_language", "en")
+        text = get_translator(lang).gettext(msgid)
+        return text.format(**kwargs) if kwargs else text
+
+    def _jinja_ngettext(singular: str, plural: str, n: int, **kwargs) -> str:
+        lang = getattr(g, "ui_language", "en")
+        text = get_translator(lang).ngettext(singular, plural, n)
+        return text.format(**kwargs) if kwargs else text
+
+    app.jinja_env.globals["_"] = _jinja_gettext
+    app.jinja_env.globals["gettext"] = _jinja_gettext
+    app.jinja_env.globals["ngettext"] = _jinja_ngettext
 
     @app.route("/uploads/<path:filename>")
     def uploaded_file(filename: str):
@@ -92,6 +109,11 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
 
         user = get_current_user()
         get_current_permissions()
+        if user is not None and user.language:
+            g.ui_language = normalize_language(user.language, default="en")
+        else:
+            best_lang = request.accept_languages.best_match(list(LANGUAGE_METADATA.keys()))
+            g.ui_language = normalize_language(best_lang, default="en")
         if user is not None and user.id is not None:
             persona_repo = PersonaRepository()
             trans_repo = TranslationRepository()
@@ -128,6 +150,12 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
             except Exception:
                 settings = None
         default_bg = settings.default_backdrop_path if settings else None
+        aimo_languages = [
+            {"code": code, "flag": meta["flag"], "label": meta["label"]}
+            for code, meta in LANGUAGE_METADATA.items()
+        ]
+        from i18n import get_js_translations
+        ui_lang = getattr(g, "ui_language", "en")
         return {
             "has_perm": has_perm,
             "has_creator_permission": has_creator_permission,
@@ -135,6 +163,9 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
             "get_safe_back_url": get_safe_back_url,
             "system_backdrop_path": default_bg,
             "system_backdrop_url": url_for("uploaded_file", filename=default_bg) if default_bg else url_for("static", filename="img/cover.svg"),
+            "ui_language": ui_lang,
+            "aimo_languages": aimo_languages,
+            "aimo_js_i18n": get_js_translations(ui_lang),
         }
 
     return app

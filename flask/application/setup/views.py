@@ -11,8 +11,9 @@ from flask import (
 )
 
 from application.setup.forms import FirstBootForm
-from application.ui_helpers import mask_secret
+from application.ui_helpers import mask_secret, tr
 from domain.auth.services import AuthService
+from i18n import gettext_noop as _
 from domain.permissions.models import Preset, UserPermissions
 from domain.permissions.services import PermissionService
 from domain.personas.models import Gender
@@ -123,7 +124,7 @@ def first_boot():
         persona_repo.create(default_persona)
 
         session["user_id"] = saved_user.id
-        flash("Initialer Administrator und KI-Backend erfolgreich eingerichtet!", "success")
+        flash(tr(_("Initial administrator and AI backend configured successfully!")), "success")
         return redirect(url_for("overview.index"))
 
     return _render_first_boot(form, env_google_key)

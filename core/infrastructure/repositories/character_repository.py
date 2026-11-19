@@ -81,19 +81,20 @@ class CharacterRepository(BaseRepository[Character]):
                 cursor = conn.execute(
                     """
                     INSERT INTO characters (
-                        user_id, name, gender, visibility, collaborator_creator_tags_json, primary_portrait_path,
+                        user_id, name, gender, visibility, origin_language, collaborator_creator_tags_json, primary_portrait_path,
                         avatar_path, card_image_path, appearance, description, dialogue_examples_json, linked_lorebook_ids_json,
                         lorebook_world_conditions_json, suggested_worldinfo_id, first_message, initial_location_id,
                         initial_relationship, preferred_location_ids_json,
                         disliked_location_ids_json, created_at
                     )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         character.user_id,
                         character.name,
                         character.gender.value,
                         character.visibility,
+                        getattr(character, "origin_language", "en") or "en",
                         json.dumps(getattr(character, "collaborator_creator_tags", []) or []),
                         character.primary_portrait_path,
                         character.avatar_path,
@@ -124,7 +125,7 @@ class CharacterRepository(BaseRepository[Character]):
                 conn.execute(
                     """
                     UPDATE characters
-                    SET name = ?, gender = ?, visibility = ?, collaborator_creator_tags_json = ?, primary_portrait_path = ?,
+                    SET name = ?, gender = ?, visibility = ?, origin_language = ?, collaborator_creator_tags_json = ?, primary_portrait_path = ?,
                         avatar_path = ?, card_image_path = ?, appearance = ?, description = ?, dialogue_examples_json = ?, linked_lorebook_ids_json = ?,
                         lorebook_world_conditions_json = ?, suggested_worldinfo_id = ?, first_message = ?, initial_location_id = ?,
                         initial_relationship = ?, preferred_location_ids_json = ?,
@@ -135,6 +136,7 @@ class CharacterRepository(BaseRepository[Character]):
                         character.name,
                         character.gender.value,
                         character.visibility,
+                        getattr(character, "origin_language", "en") or "en",
                         json.dumps(getattr(character, "collaborator_creator_tags", []) or []),
                         character.primary_portrait_path,
                         character.avatar_path,
@@ -163,28 +165,55 @@ class CharacterRepository(BaseRepository[Character]):
         return self._delete_by_id("characters", character_id)
 
     def duplicate(self, character_id: int, target_user_id: int) -> Character:
+        from infrastructure.repositories.translation_repository import TranslationRepository
+        from shared.i18n import gettext_noop as _, t
+
         orig = self.get_by_id(character_id)
         if orig is None:
             raise ValueError(f"Character {character_id} not found.")
 
-        copy_name = f"{orig.name} (Kopie)"
+        with get_db_session() as conn:
+            u_row = conn.execute(
+                "SELECT language FROM users WHERE id = ?",
+                (target_user_id,),
+            ).fetchone()
+        target_lang = (
+            str(u_row["language"]).strip().lower()[:2]
+            if u_row and u_row["language"]
+            else "en"
+        ) or "en"
+
+        trans_repo = TranslationRepository()
+        orig_trans = trans_repo.get_entity_translations_map("character", character_id)
+        has_target_desc = bool(orig_trans.get("description", {}).get(target_lang, {}).get("text", "").strip())
+
+        copy_suffix = t(_("Copy"), target_lang)
+        copy_name = f"{orig.name} ({copy_suffix})"
+        clone_origin_lang = target_lang if has_target_desc else (getattr(orig, "origin_language", "en") or "en")
+        clone_desc = trans_repo.get_localized_field("character", character_id, "description", target_lang, orig.description)
+        clone_app = trans_repo.get_localized_field(
+            "character", character_id, "appearance", target_lang, getattr(orig, "appearance", "") or ""
+        )
+        clone_first = trans_repo.get_localized_field("character", character_id, "first_message", target_lang, orig.first_message)
+
         clone = Character(
             id=None,
             user_id=target_user_id,
             name=copy_name,
             gender=orig.gender,
             visibility="private",
+            origin_language=clone_origin_lang,
             collaborator_creator_tags=[],
             primary_portrait_path=orig.primary_portrait_path,
             avatar_path=orig.avatar_path,
             card_image_path=orig.card_image_path,
-            appearance=getattr(orig, "appearance", "") or "",
-            description=orig.description,
+            appearance=clone_app,
+            description=clone_desc,
             dialogue_examples=list(orig.dialogue_examples),
             linked_lorebook_ids=list(orig.linked_lorebook_ids),
             lorebook_world_conditions=dict(getattr(orig, "lorebook_world_conditions", {}) or {}),
             suggested_worldinfo_id=orig.suggested_worldinfo_id,
-            first_message=orig.first_message,
+            first_message=clone_first,
             initial_location_id=orig.initial_location_id,
             initial_relationship=orig.initial_relationship,
             preferred_location_ids=list(orig.preferred_location_ids),
@@ -194,6 +223,20 @@ class CharacterRepository(BaseRepository[Character]):
         )
         saved = self.save(clone)
         assert saved.id is not None
+
+        # Copy existing field translations
+        with get_db_session() as conn:
+            conn.execute(
+                """
+                INSERT OR IGNORE INTO entity_field_translations (
+                    entity_type, entity_id, field_name, language, text_content, is_outdated, updated_at
+                )
+                SELECT entity_type, ?, field_name, language, text_content, is_outdated, updated_at
+                FROM entity_field_translations
+                WHERE entity_type = 'character' AND entity_id = ?
+                """,
+                (saved.id, character_id),
+            )
 
         # Deep-copy gallery images
         for img in orig.gallery_images:
@@ -368,6 +411,28 @@ class CharacterRepository(BaseRepository[Character]):
             ).fetchone()
             return int(row["cnt"] if row is not None and row["cnt"] is not None else 0)
 
+    def list_popularity_ordered_ids(self) -> list[tuple[int, int | None]]:
+        with get_db_session() as conn:
+            rows = conn.execute(
+                """
+                SELECT c.id, c.suggested_worldinfo_id,
+                       COUNT(DISTINCT cs.id) AS session_cnt,
+                       COUNT(cm.id) AS msg_cnt
+                FROM characters c
+                LEFT JOIN chat_sessions cs ON cs.character_id = c.id
+                LEFT JOIN chat_messages cm ON cm.session_id = cs.id
+                GROUP BY c.id
+                ORDER BY session_cnt DESC, msg_cnt DESC, c.id ASC
+                """
+            ).fetchall()
+            return [
+                (
+                    int(r["id"]),
+                    int(r["suggested_worldinfo_id"]) if r["suggested_worldinfo_id"] is not None else None,
+                )
+                for r in rows
+            ]
+
     @staticmethod
     def _to_entity(conn: sqlite3.Connection, row: sqlite3.Row) -> Character:
         def _load_list(raw: str) -> list:
@@ -422,6 +487,11 @@ class CharacterRepository(BaseRepository[Character]):
             name=str(row["name"]),
             gender=Gender.resolve(str(row["gender"])),
             visibility=str(row["visibility"]),
+            origin_language=(
+                str(row["origin_language"])
+                if ("origin_language" in row.keys() and row["origin_language"])
+                else "en"
+            ),
             collaborator_creator_tags=[
                 str(t) for t in _load_list(str(row["collaborator_creator_tags_json"]))
             ] if "collaborator_creator_tags_json" in row.keys() and row["collaborator_creator_tags_json"] else [],
