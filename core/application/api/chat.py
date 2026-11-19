@@ -37,6 +37,13 @@ from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
+from shared.llm_activity import (
+    begin_interactive_llm,
+    end_interactive_llm,
+    interactive_llm_guard,
+    is_interactive_llm_busy,
+    touch_interactive_llm,
+)
 from shared.utils import filter_stopwords, parse_tags, replace_roleplay_placeholders
 
 api_chat_bp = Blueprint("api_chat", __name__, url_prefix="/api/chat")
@@ -89,6 +96,8 @@ _ADMIN_PROMPT_MAX_ENTRIES: int = 150
 
 
 def has_active_chat_tasks() -> bool:
+    if is_interactive_llm_busy():
+        return True
     with _TASKS_LOCK:
         return any(
             t.status in ("analyzing_image", "thinking", "streaming", "translating")
@@ -151,13 +160,14 @@ def _run_async_memory_extraction(session_id: int) -> None:
                 {"role": m.role.value, "content": m.localized_content or m.english_content or ""}
                 for m in chunk
             ]
-            title, tags, summary, new_chat_title = mem_service.extract_memory_and_title(
-                last_10_messages=msg_dicts,
-                memory_prompt=resolved_mem_prompt,
-                llm_provider=llm,
-                model=settings.tasks.memory_model,
-                params=settings.params,
-            )
+            with interactive_llm_guard():
+                title, tags, summary, new_chat_title = mem_service.extract_memory_and_title(
+                    last_10_messages=msg_dicts,
+                    memory_prompt=resolved_mem_prompt,
+                    llm_provider=llm,
+                    model=settings.tasks.memory_model,
+                    params=settings.params,
+                )
             memory = mem_service.create_memory(
                 chat_session_id=session_id,
                 message_idx=target_idx,
@@ -339,8 +349,16 @@ def _start_background_turn(
     task.events_enabled = chat_session.events_enabled
     with _TASKS_LOCK:
         _BACKGROUND_TASKS[session_id] = task
+    touch_interactive_llm()
 
     def _worker() -> None:
+        begin_interactive_llm()
+        try:
+            _run_worker()
+        finally:
+            end_interactive_llm()
+
+    def _run_worker() -> None:
         w_chat_repo = ChatRepository()
         w_char_repo = CharacterRepository()
         w_persona_repo = PersonaRepository()
@@ -1366,12 +1384,13 @@ def generate_scene_image(session_id: int):
     )
 
     try:
-        sd_prompt = llm.generate(
-            prompt=diffuser_instruction,
-            model=settings.tasks.assistant_model,
-            params=ModelParameters(num_ctx=4096, temperature=0.5, top_p=0.9, repeat_penalty=1.05),
-            think=False,
-        ).strip()
+        with interactive_llm_guard():
+            sd_prompt = llm.generate(
+                prompt=diffuser_instruction,
+                model=settings.tasks.assistant_model,
+                params=ModelParameters(num_ctx=4096, temperature=0.5, top_p=0.9, repeat_penalty=1.05),
+                think=False,
+            ).strip()
         sd_prompt = re.sub(
             r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
             "",

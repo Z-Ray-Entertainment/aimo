@@ -130,6 +130,8 @@ class BackgroundTranslationWorker:
         return False
 
     def _execute_cycle(self, settings, model: str) -> None:
+        if not self._wait_if_busy():
+            return
         user_repo = UserRepository()
         char_repo = CharacterRepository()
         wi_repo = WorldInfoRepository()
@@ -293,20 +295,27 @@ class BackgroundTranslationWorker:
             # Translate to English first if missing, so all subsequent targets have a clean English pivot
             ordered_missing = (["en"] + [m for m in missing_langs if m != "en"]) if "en" in missing_langs else missing_langs
             for target_lang in ordered_missing:
-                if not self._wait_if_busy():
-                    return
-                item_type, _, item_title = label.partition(": ")
-                with self._lock:
-                    self._current_item = f"{label} ({target_lang.upper()})"
-                    self._current_type = item_type.strip()
-                    self._current_title = item_title.strip() or label
-                    self._current_language = target_lang.upper()
-                translated = trans_service.translate_text_or_none(
-                    text=source_text,
-                    target_language=target_lang,
-                    llm_provider=llm,
-                    model=model,
-                )
+                while True:
+                    if not self._wait_if_busy():
+                        return
+                    item_type, _, item_title = label.partition(": ")
+                    with self._lock:
+                        self._current_item = f"{label} ({target_lang.upper()})"
+                        self._current_type = item_type.strip()
+                        self._current_title = item_title.strip() or label
+                        self._current_language = target_lang.upper()
+                    translated = trans_service.translate_text_or_none(
+                        text=source_text,
+                        target_language=target_lang,
+                        llm_provider=llm,
+                        model=model,
+                        should_abort=lambda: self._cancel_event.is_set() or self._is_busy_fn(),
+                    )
+                    if self._cancel_event.is_set():
+                        return
+                    if translated is None and self._is_busy_fn():
+                        continue
+                    break
                 if translated and translated.strip():
                     trans_repo.save_field_translation(
                         entity_type=etype,

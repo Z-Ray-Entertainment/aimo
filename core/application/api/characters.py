@@ -18,6 +18,7 @@ from infrastructure.repositories.translation_repository import TranslationReposi
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
+from shared.llm_activity import interactive_llm_guard
 from shared.request_parsers import RequestDataParser
 
 api_characters_bp = Blueprint("api_characters", __name__, url_prefix="/api/characters")
@@ -250,17 +251,18 @@ def sparkle_description():
         "- Do NOT include meta-text, introductions, or instructions; output only the final character description."
     )
     try:
-        raw_output = llm_provider.generate(
-            prompt=prompt,
-            model=settings.tasks.assistant_model,
-            params=ModelParameters(
-                num_ctx=settings.params.num_ctx,
-                temperature=0.75,
-                top_p=0.9,
-                repeat_penalty=1.1,
-            ),
-            think=False,
-        ).strip()
+        with interactive_llm_guard():
+            raw_output = llm_provider.generate(
+                prompt=prompt,
+                model=settings.tasks.assistant_model,
+                params=ModelParameters(
+                    num_ctx=settings.params.num_ctx,
+                    temperature=0.75,
+                    top_p=0.9,
+                    repeat_penalty=1.1,
+                ),
+                think=False,
+            ).strip()
         improved = _clean_sparkle_prose(raw_output)
         return jsonify({"description": improved})
     except AimoError as exc:
@@ -411,17 +413,18 @@ def sparkle_dialogue():
     )
 
     try:
-        raw_output = llm_provider.generate(
-            prompt=prompt,
-            model=settings.tasks.assistant_model,
-            params=ModelParameters(
-                num_ctx=settings.params.num_ctx,
-                temperature=0.75,
-                top_p=0.9,
-                repeat_penalty=1.1,
-            ),
-            think=False,
-        ).strip()
+        with interactive_llm_guard():
+            raw_output = llm_provider.generate(
+                prompt=prompt,
+                model=settings.tasks.assistant_model,
+                params=ModelParameters(
+                    num_ctx=settings.params.num_ctx,
+                    temperature=0.75,
+                    top_p=0.9,
+                    repeat_penalty=1.1,
+                ),
+                think=False,
+            ).strip()
         parsed_trigger, parsed_response = _parse_dialogue_pair(
             raw_output,
             current_trigger=current_trigger,

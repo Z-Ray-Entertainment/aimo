@@ -8,6 +8,7 @@ from infrastructure.llm.factory import get_llm_provider
 from infrastructure.repositories.lorebook_repository import LorebookRepository
 from infrastructure.repositories.settings_repository import SettingsRepository
 from shared.exceptions import AimoError
+from shared.llm_activity import interactive_llm_guard
 from shared.utils import filter_stopwords, parse_tags
 
 api_lorebooks_bp = Blueprint("api_lorebooks", __name__, url_prefix="/api/lorebooks")
@@ -166,17 +167,18 @@ def suggest_tags():
     )
 
     try:
-        raw_output = llm_provider.generate(
-            prompt=prompt,
-            model=settings.tasks.assistant_model,
-            params=ModelParameters(
-                num_ctx=2048,
-                temperature=0.3,
-                top_p=0.9,
-                repeat_penalty=1.1,
-            ),
-            think=False,
-        ).strip()
+        with interactive_llm_guard():
+            raw_output = llm_provider.generate(
+                prompt=prompt,
+                model=settings.tasks.assistant_model,
+                params=ModelParameters(
+                    num_ctx=2048,
+                    temperature=0.3,
+                    top_p=0.9,
+                    repeat_penalty=1.1,
+                ),
+                think=False,
+            ).strip()
         tags = parse_tags(raw_output)
         clean_tags = filter_stopwords(tags)
         return jsonify({"tags": clean_tags, "tags_string": ", ".join(clean_tags)})

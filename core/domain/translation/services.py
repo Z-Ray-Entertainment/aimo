@@ -187,6 +187,7 @@ class TranslationService:
         target_language: str,
         llm_provider: TranslationLLMProvider,
         model: str,
+        should_abort=None,
     ) -> str | None:
         if not isinstance(text, str) or not text.strip():
             return None
@@ -202,19 +203,48 @@ class TranslationService:
             f"Text:\n{cleaned}"
         )
         try:
-            try:
-                translated = llm_provider.generate(
-                    prompt=prompt,
-                    model=model,
-                    params=self._default_params,
-                    think=False,
-                ).strip()
-            except TypeError:
-                translated = llm_provider.generate(
-                    prompt=prompt,
-                    model=model,
-                    params=self._default_params,
-                ).strip()
+            if should_abort is not None and hasattr(llm_provider, "generate_stream"):
+                if should_abort():
+                    return None
+                chunks: list[str] = []
+                try:
+                    stream = llm_provider.generate_stream(
+                        prompt=prompt,
+                        model=model,
+                        params=self._default_params,
+                        think=False,
+                    )
+                except TypeError:
+                    stream = llm_provider.generate_stream(
+                        prompt=prompt,
+                        model=model,
+                        params=self._default_params,
+                    )
+                try:
+                    for token in stream:
+                        if should_abort():
+                            return None
+                        if token:
+                            chunks.append(str(token))
+                finally:
+                    close_fn = getattr(stream, "close", None)
+                    if callable(close_fn):
+                        close_fn()
+                translated = "".join(chunks).strip()
+            else:
+                try:
+                    translated = llm_provider.generate(
+                        prompt=prompt,
+                        model=model,
+                        params=self._default_params,
+                        think=False,
+                    ).strip()
+                except TypeError:
+                    translated = llm_provider.generate(
+                        prompt=prompt,
+                        model=model,
+                        params=self._default_params,
+                    ).strip()
             translated = re.sub(
                 r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
                 "",

@@ -10,6 +10,7 @@ from infrastructure.repositories.translation_repository import TranslationReposi
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
+from shared.llm_activity import interactive_llm_guard
 
 api_worldinfo_bp = Blueprint("api_worldinfo", __name__, url_prefix="/api/worldinfo")
 
@@ -168,11 +169,12 @@ def analyze_location_background():
         from domain.translation.models import LANGUAGE_METADATA
         lang_label = LANGUAGE_METADATA.get(target_lang, {}).get("label", target_lang)
         resolved = storage.resolve_path(bg_path)
-        alt_text = llm.analyze_image(
-            image_path=resolved,
-            prompt=f"Describe this 16:9 location background atmosphere, architecture, lighting, and scenery concisely in {lang_label} ({target_lang}) for a roleplay setting.",
-            model=settings.tasks.vision_model,
-        ).strip()
+        with interactive_llm_guard():
+            alt_text = llm.analyze_image(
+                image_path=resolved,
+                prompt=f"Describe this 16:9 location background atmosphere, architecture, lighting, and scenery concisely in {lang_label} ({target_lang}) for a roleplay setting.",
+                model=settings.tasks.vision_model,
+            ).strip()
         return jsonify(
             {
                 "background_image_path": bg_path,
