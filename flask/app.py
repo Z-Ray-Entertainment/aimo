@@ -40,7 +40,7 @@ from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.config import Config
 from shared.exceptions import InfrastructureError
-from i18n import ensure_compiled_locales, get_translator, normalize_language
+from i18n import ensure_compiled_locales, get_text_direction, get_translator, normalize_language
 
 
 def create_webui_app(config_class: type[Config] = Config) -> Flask:
@@ -164,6 +164,7 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
             "system_backdrop_path": default_bg,
             "system_backdrop_url": url_for("uploaded_file", filename=default_bg) if default_bg else url_for("static", filename="img/cover.svg"),
             "ui_language": ui_lang,
+            "ui_dir": get_text_direction(ui_lang),
             "aimo_languages": aimo_languages,
             "aimo_js_i18n": get_js_translations(ui_lang),
         }

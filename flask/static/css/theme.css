@@ -4135,3 +4135,36 @@ span.persona-star-btn:hover {
   border-color: rgba(99, 179, 237, 0.4);
   color: #63b3ed;
 }
+
+/* Bidirectional & RTL Support (ar, ur) */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+textarea,
+.chat-msg-text {
+  unicode-bidi: plaintext;
+}
+
+[dir="rtl"] body,
+[dir="rtl"] th,
+[dir="rtl"] td,
+[dir="rtl"] .aimo-frame,
+[dir="rtl"] .modal-frame {
+  text-align: start;
+}
+
+[dir="rtl"] .aimo-copy-field input {
+  padding-right: 0.75rem;
+  padding-left: 2.75rem;
+}
+
+[dir="rtl"] .aimo-copy-field .aimo-copy-field-btn {
+  right: auto;
+  left: 0.35rem;
+}
+
+[dir="rtl"] .user-menu-dropdown,
+[dir="rtl"] .mobile-dropdown-menu {
+  right: auto;
+  left: 0;
+}

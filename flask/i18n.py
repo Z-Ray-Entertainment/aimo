@@ -5,6 +5,7 @@ from pathlib import Path
 from threading import Lock
 
 FLASK_LOCALES_DIR = Path(__file__).resolve().parent / "locales"
+RTL_LANGUAGES: frozenset[str] = frozenset({"ar", "ur"})
 _TRANSLATOR_CACHE: dict[str, tuple[float, gettext.NullTranslations]] = {}
 _CACHE_LOCK = Lock()
 
@@ -14,6 +15,10 @@ def normalize_language(raw: str | None, default: str = "en") -> str:
         return default
     cleaned = raw.strip().lower()[:2]
     return cleaned if cleaned else default
+
+
+def get_text_direction(language: str | None = "en") -> str:
+    return "rtl" if normalize_language(language) in RTL_LANGUAGES else "ltr"
 
 
 def get_translator(language: str | None = "en") -> gettext.NullTranslations:
