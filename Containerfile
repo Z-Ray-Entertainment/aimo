@@ -17,7 +17,7 @@ WORKDIR /app
 
 COPY --chown=aimo:aimo requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r /app/requirements.txt
+    pip install --no-cache-dir --require-hashes -r /app/requirements.txt
 
 COPY --chown=aimo:aimo . /app
 

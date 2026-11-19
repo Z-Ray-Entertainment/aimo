@@ -22,6 +22,7 @@ from infrastructure.database import init_db
 from infrastructure.storage.file_storage import FileStorage
 from infrastructure.translation.worker import get_translation_worker
 from shared.config import Config
+from shared.http_compression import register_gzip_compression
 from shared.i18n import ensure_compiled_locales
 
 
@@ -60,6 +61,9 @@ def create_core_app(config_class: type[Config] = Config) -> Flask:
     @app.route("/api/ping", methods=["GET"])
     def ping():
         return jsonify({"status": "ok", "service": "aimo-core"})
+
+    if config_class.GZIP_ENABLED:
+        register_gzip_compression(app, min_size=config_class.GZIP_MIN_BYTES)
 
     return app
 
