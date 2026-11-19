@@ -40,6 +40,8 @@ from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.config import Config
 from shared.exceptions import InfrastructureError
+from shared.http_compression import register_gzip_compression
+from asset_minifier import ensure_minified_assets
 from i18n import ensure_compiled_locales, get_text_direction, get_translator, normalize_language
 
 
@@ -54,6 +56,10 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
     app.secret_key = config_class.SECRET_KEY
 
     ensure_compiled_locales()
+    is_debug = os.getenv("AIMO_DEBUG", "false").lower() in ("1", "true", "yes")
+    use_minified_assets = config_class.MINIFY_ASSETS and not is_debug
+    if use_minified_assets:
+        ensure_minified_assets(FLASK_DIR / "static")
     init_db()
     FileStorage(config_class.UPLOAD_DIR)
 
@@ -82,6 +88,14 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
     app.jinja_env.globals["_"] = _jinja_gettext
     app.jinja_env.globals["gettext"] = _jinja_gettext
     app.jinja_env.globals["ngettext"] = _jinja_ngettext
+
+    @app.route("/static/<any('css', 'js'):subdir>/<path:filename>")
+    def minified_static_asset(subdir: str, filename: str):
+        if use_minified_assets:
+            min_dir = FLASK_DIR / "static" / ".min" / subdir
+            if (min_dir / filename).is_file():
+                return send_from_directory(str(min_dir), filename, max_age=86400)
+        return send_from_directory(str(FLASK_DIR / "static" / subdir), filename, max_age=86400)
 
     @app.route("/uploads/<path:filename>")
     def uploaded_file(filename: str):
@@ -168,6 +182,9 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
             "aimo_languages": aimo_languages,
             "aimo_js_i18n": get_js_translations(ui_lang),
         }
+
+    if config_class.GZIP_ENABLED:
+        register_gzip_compression(app, min_size=config_class.GZIP_MIN_BYTES)
 
     return app
 

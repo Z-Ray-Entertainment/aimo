@@ -71,3 +71,7 @@ class Config:
     )
     DEFAULT_COMFYUI_URL: str = os.getenv("AIMO_COMFYUI_URL", "http://localhost:8188")
     DEFAULT_SEARXNG_URL: str = os.getenv("AIMO_SEARXNG_URL", "http://localhost:8080")
+
+    GZIP_ENABLED: bool = os.getenv("AIMO_GZIP_ENABLED", "true").lower() in ("1", "true", "yes")
+    GZIP_MIN_BYTES: int = int(os.getenv("AIMO_GZIP_MIN_BYTES", "500"))
+    MINIFY_ASSETS: bool = os.getenv("AIMO_MINIFY_ASSETS", "true").lower() in ("1", "true", "yes")

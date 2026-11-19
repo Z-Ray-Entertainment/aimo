@@ -8,3 +8,4 @@ aimo-uploads/
 data/
 uploads/
 *.mo
+flask/static/.min/
