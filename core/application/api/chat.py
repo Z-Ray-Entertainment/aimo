@@ -722,11 +722,9 @@ def _start_background_turn(
             if w_character.sprites:
                 distinct_emotions = {sp.emotion for sp in w_character.sprites}
                 if len(distinct_emotions) > 1 or (len(distinct_emotions) == 1 and Emotion.NEUTRAL not in distinct_emotions):
-                    emotion_candidates = [
-                        e.value
-                        for e in Emotion
-                        if e.name not in ("EMBERASSED", "RELIFE", "SUPRISE")
-                    ]
+                    emotion_candidates = sorted(
+                        {e.value for e in distinct_emotions} | {Emotion.NEUTRAL.value}
+                    )
 
             # 2. Ortsanalyse nur durchführen, wenn eine WorldInfo mit alternativen Orten am Chat hängt
             other_locations = []
@@ -751,6 +749,11 @@ def _start_background_turn(
                 if getattr(settings.tasks, "classification_model", None)
                 else settings.tasks.roleplay_model
             )
+            effective_cls_ctx = (
+                settings.params.num_ctx
+                if classification_model == settings.tasks.roleplay_model
+                else 2048
+            )
 
             detected_emotion_str = Emotion.NEUTRAL.value
             matched_loc_name = None
@@ -766,6 +769,7 @@ def _start_background_turn(
                     character_name=w_character.name,
                     relationship_tier=current_tier_en.name,
                     evaluate_relationship=True,
+                    num_ctx=effective_cls_ctx,
                 )
             except Exception:
                 detected_emotion_str = Emotion.NEUTRAL.value
@@ -1277,9 +1281,7 @@ def recalculate_relationship(session_id: int):
 
     messages = chat_repo.get_messages(session_id, limit=None)
     pending_user_msg: Message | None = None
-    evaluated_turns = 0
-    turn_results: list[dict[str, object]] = []
-
+    turns: list[tuple[Message, str, str]] = []
     for msg in messages:
         if msg.role == MessageRole.USER:
             pending_user_msg = msg
@@ -1290,41 +1292,61 @@ def recalculate_relationship(session_id: int):
                 else ""
             )
             ai_text = msg.english_content or msg.localized_content
-            current_tier_en = rel_repo.get_tier(chat_session.relationship_value, language="en")
-
-            try:
-                _, _, raw_impact = llm.classify_turn(
-                    text=ai_text,
-                    emotion_candidates=None,
-                    location_candidates=None,
-                    model=classification_model,
-                    user_text=user_text,
-                    character_name=character.name,
-                    relationship_tier=current_tier_en.name,
-                    evaluate_relationship=True,
-                )
-            except Exception:
-                raw_impact = RelationshipImpact.NEUTRAL.value
-
-            impact = RelationshipImpact.resolve(raw_impact)
-            applied_delta = chat_service.apply_relationship_impact(
-                chat_session, impact, update_timestamp=False
-            )
-
-            msg.metadata = dict(msg.metadata or {})
-            msg.metadata["relationship_impact"] = impact.value
-            msg.metadata["relationship_delta"] = applied_delta
-            chat_repo.update_message(msg)
-
+            turns.append((msg, user_text, ai_text))
             pending_user_msg = None
-            evaluated_turns += 1
-            turn_results.append(
-                {
-                    "message_idx": msg.message_idx,
-                    "impact": impact.value,
-                    "delta": applied_delta,
-                }
+
+    effective_cls_ctx = (
+        settings.params.num_ctx
+        if classification_model == settings.tasks.roleplay_model
+        else 2048
+    )
+
+    def _classify_single_turn(turn: tuple[Message, str, str]) -> str:
+        _, u_text, a_text = turn
+        try:
+            _, _, impact_str = llm.classify_turn(
+                text=a_text,
+                emotion_candidates=None,
+                location_candidates=None,
+                model=classification_model,
+                user_text=u_text,
+                character_name=character.name,
+                evaluate_relationship=True,
+                num_ctx=effective_cls_ctx,
             )
+            return impact_str
+        except Exception:
+            return RelationshipImpact.NEUTRAL.value
+
+    if llm.is_cloud_provider() and len(turns) > 1:
+        from concurrent.futures import ThreadPoolExecutor
+
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            raw_impacts = list(executor.map(_classify_single_turn, turns))
+    else:
+        raw_impacts = [_classify_single_turn(t) for t in turns]
+
+    evaluated_turns = 0
+    turn_results: list[dict[str, object]] = []
+    for (msg, _, _), raw_impact in zip(turns, raw_impacts):
+        impact = RelationshipImpact.resolve(raw_impact)
+        applied_delta = chat_service.apply_relationship_impact(
+            chat_session, impact, update_timestamp=False
+        )
+
+        msg.metadata = dict(msg.metadata or {})
+        msg.metadata["relationship_impact"] = impact.value
+        msg.metadata["relationship_delta"] = applied_delta
+        chat_repo.update_message(msg)
+
+        evaluated_turns += 1
+        turn_results.append(
+            {
+                "message_idx": msg.message_idx,
+                "impact": impact.value,
+                "delta": applied_delta,
+            }
+        )
 
     chat_repo.update_session(chat_session)
     tier = rel_repo.get_tier(chat_session.relationship_value, language=user_lang)

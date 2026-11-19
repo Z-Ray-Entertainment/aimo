@@ -116,6 +116,7 @@ class LLMProvider(ABC):
         character_name: str | None = None,
         relationship_tier: str | None = None,
         evaluate_relationship: bool = False,
+        num_ctx: int = 2048,
     ) -> tuple[str, str | None, str]:
         raise NotImplementedError
 

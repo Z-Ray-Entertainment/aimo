@@ -102,6 +102,7 @@ class ModelParameters:
     temperature: float = 0.7
     top_p: float = 0.9
     repeat_penalty: float = 1.1
+    max_tokens: int | None = None
 
     def __post_init__(self) -> None:
         self.validate()
@@ -110,6 +111,14 @@ class ModelParameters:
         if isinstance(self.num_ctx, bool) or not isinstance(self.num_ctx, int) or self.num_ctx <= 0:
             raise InvalidModelParametersError(
                 "Context size (num_ctx) must be a positive integer."
+            )
+        if self.max_tokens is not None and (
+            isinstance(self.max_tokens, bool)
+            or not isinstance(self.max_tokens, int)
+            or self.max_tokens <= 0
+        ):
+            raise InvalidModelParametersError(
+                "max_tokens must be a positive integer."
             )
         if (
             isinstance(self.temperature, bool)
