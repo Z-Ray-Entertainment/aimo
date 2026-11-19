@@ -116,11 +116,11 @@ msgstr "स्प्राइट '%(name)s' अपलोड किया गय�
 msgid "Event updated."
 msgstr "घटना अपडेट की गई।"
 
-#: flask/application/chat/views.py:605
+#: flask/application/chat/views.py:609
 msgid "Chat session deleted."
 msgstr "चैट सत्र हटाया गया।"
 
-#: flask/application/chat/views.py:357 flask/application/chat/views.py:688
+#: flask/application/chat/views.py:357 flask/application/chat/views.py:692
 msgid "Chat session not found."
 msgstr "चैट सत्र नहीं मिला।"
 
@@ -128,67 +128,67 @@ msgstr "चैट सत्र नहीं मिला।"
 msgid "Associated character not found."
 msgstr "संबंधित चरित्र नहीं मिला।"
 
-#: flask/application/chat/views.py:529
+#: flask/application/chat/views.py:533
 msgid "Session not found."
 msgstr "सत्र नहीं मिला।"
 
-#: flask/application/chat/views.py:669
+#: flask/application/chat/views.py:673
 msgid "Memory deleted."
 msgstr "स्मृति हटाई गई।"
 
-#: flask/application/chat/views.py:695
+#: flask/application/chat/views.py:699
 msgid "Memory not found."
 msgstr "स्मृति नहीं मिली।"
 
-#: flask/application/chat/views.py:711
+#: flask/application/chat/views.py:715
 msgid "No messages found for this memory episode."
 msgstr "इस स्मृति एपिसोड के लिए कोई संदेश नहीं मिला।"
 
-#: flask/application/chat/views.py:742
+#: flask/application/chat/views.py:746
 msgid "Memory recalculated successfully."
 msgstr "स्मृति सफलतापूर्वक पुनः गणना की गई।"
 
-#: flask/application/chat/views.py:541
+#: flask/application/chat/views.py:545
 msgid "Persona updated for this session."
 msgstr "इस सत्र के लिए व्यक्तित्व अपडेट किया गया।"
 
-#: flask/application/chat/views.py:647
+#: flask/application/chat/views.py:651
 msgid "Memory updated."
 msgstr "स्मृति अपडेट की गई।"
 
-#: flask/application/chat/views.py:746
+#: flask/application/chat/views.py:750
 msgid "Recalculation error: %(error)s"
 msgstr "पुनर्गणना त्रुटि: %(error)s"
 
-#: flask/application/chat/views.py:237 flask/application/chat/views.py:549
+#: flask/application/chat/views.py:237 flask/application/chat/views.py:553
 msgid "Invalid WorldInfo."
 msgstr "अमान्य WorldInfo।"
 
-#: flask/application/chat/views.py:242 flask/application/chat/views.py:556 flask/application/worldinfo/views.py:120 flask/application/worldinfo/views.py:228
+#: flask/application/chat/views.py:242 flask/application/chat/views.py:560 flask/application/worldinfo/views.py:120 flask/application/worldinfo/views.py:228
 msgid "This world is not yet available in your language."
 msgstr "यह दुनिया अभी आपकी भाषा में उपलब्ध नहीं है।"
 
-#: flask/application/chat/views.py:538
+#: flask/application/chat/views.py:542
 msgid "Invalid persona."
 msgstr "अमान्य व्यक्तित्व।"
 
-#: flask/application/chat/views.py:565
+#: flask/application/chat/views.py:569
 msgid "WorldInfo changed for this chat."
 msgstr "इस चैट के लिए WorldInfo बदला गया।"
 
-#: flask/application/chat/views.py:568
+#: flask/application/chat/views.py:572
 msgid "Event setting saved."
 msgstr "घटना सेटिंग सहेजी गई।"
 
-#: flask/application/chat/views.py:576
+#: flask/application/chat/views.py:580
 msgid "Thinking enabled."
 msgstr "सोच सक्रिय की गई।"
 
-#: flask/application/chat/views.py:578
+#: flask/application/chat/views.py:582
 msgid "Thinking disabled."
 msgstr "सोच निष्क्रिय की गई।"
 
-#: flask/application/chat/views.py:583
+#: flask/application/chat/views.py:587
 msgid "Chat title updated."
 msgstr "चैट शीर्षक अपडेट किया गया।"
 
@@ -276,15 +276,15 @@ msgstr "नॉन-बाइनरी"
 msgid "Account settings saved."
 msgstr "खाता सेटिंग्स सहेजी गईं।"
 
-#: flask/application/settings/views.py:74 flask/i18n.py:117 flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:257 flask/templates/characters/creator.html:258
+#: flask/application/settings/views.py:74 flask/i18n.py:132 flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:257 flask/templates/characters/creator.html:258
 msgid "Character"
 msgstr "पात्र"
 
-#: flask/application/settings/views.py:100 flask/i18n.py:120 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:362
+#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:404
 msgid "World"
 msgstr "दुनिया"
 
-#: flask/application/settings/views.py:125 flask/i18n.py:118
+#: flask/application/settings/views.py:125 flask/i18n.py:133
 msgid "Lorebook"
 msgstr "लोरबुक"
 
@@ -368,287 +368,287 @@ msgstr "WorldInfo सहेजा गया।"
 msgid "Location updated."
 msgstr "स्थान अपडेट किया गया।"
 
-#: flask/i18n.py:51
+#: flask/i18n.py:66
 msgid "Error adding lorebook."
 msgstr "लोरबुक जोड़ने में त्रुटि।"
 
-#: flask/i18n.py:52
+#: flask/i18n.py:67
 msgid "Network error while adding lorebook."
 msgstr "लोरबुक जोड़ते समय नेटवर्क त्रुटि।"
 
-#: flask/i18n.py:53
+#: flask/i18n.py:68
 msgid "Error toggling lorebook."
 msgstr "लोरबुक टॉगल करने में त्रुटि।"
 
-#: flask/i18n.py:54
+#: flask/i18n.py:69
 msgid "Network error while toggling lorebook."
 msgstr "लोरबुक टॉगल करते समय नेटवर्क त्रुटि।"
 
-#: flask/i18n.py:55
+#: flask/i18n.py:70
 msgid "Error removing lorebook."
 msgstr "लोरबुक हटाने में त्रुटि।"
 
-#: flask/i18n.py:56
+#: flask/i18n.py:71
 msgid "Network error while removing lorebook."
 msgstr "लोरबुक हटाते समय नेटवर्क त्रुटि।"
 
-#: flask/i18n.py:57
+#: flask/i18n.py:72
 msgid "Reset this prompt in all languages back to the built-in default?"
 msgstr "क्या इस प्रॉम्प्ट को सभी भाषाओं में डिफ़ॉल्ट पर रीसेट करें?"
 
-#: flask/i18n.py:58
+#: flask/i18n.py:73
 msgid "Please select a portrait image first."
 msgstr "कृपया पहले एक पोर्ट्रेट छवि चुनें।"
 
-#: flask/i18n.py:59
+#: flask/i18n.py:74
 msgid "Image analysis error: {error}"
 msgstr "छवि विश्लेषण त्रुटि: {error}"
 
-#: flask/i18n.py:60
+#: flask/i18n.py:75
 msgid "Please enter at least one trigger or response."
 msgstr "कृपया कम से कम एक ट्रिगर या उत्तर दर्ज करें।"
 
-#: flask/i18n.py:61
+#: flask/i18n.py:76
 msgid "Please enter a meaningful character description in the 'Basic Info' tab first."
 msgstr "कृपया पहले 'मूल जानकारी' टैब में एक सार्थक चरित्र विवरण दर्ज करें।"
 
-#: flask/i18n.py:62
+#: flask/i18n.py:77
 msgid "Please enter a title or prose text first so the assistant can derive relevant tags."
 msgstr "कृपया पहले एक शीर्षक या पाठ दर्ज करें ताकि सहायक प्रासंगिक टैग निकाल सके।"
 
-#: flask/i18n.py:63
+#: flask/i18n.py:78
 msgid "Error deriving tags: {error}"
 msgstr "टैग निकालने में त्रुटि: {error}"
 
-#: flask/i18n.py:64
+#: flask/i18n.py:79
 msgid "Connection error: {error}"
 msgstr "कनेक्शन त्रुटि: {error}"
 
-#: flask/i18n.py:65
+#: flask/i18n.py:80
 msgid "Timeout while sending."
 msgstr "भेजते समय समय समाप्त हो गया।"
 
-#: flask/i18n.py:66
+#: flask/i18n.py:81
 msgid "Timeout"
 msgstr "समय समाप्त"
 
-#: flask/i18n.py:67
+#: flask/i18n.py:82
 msgid "Connection to backend (aimo-core) lost."
 msgstr "बैकएंड (aimo-core) से कनेक्शन टूट गया।"
 
-#: flask/i18n.py:68
+#: flask/i18n.py:83
 msgid "Backend connection error"
 msgstr "बैकएंड कनेक्शन त्रुटि"
 
-#: flask/i18n.py:69
+#: flask/i18n.py:84
 msgid "Connection to AI backend lost."
 msgstr "AI बैकएंड से कनेक्शन टूट गया।"
 
-#: flask/i18n.py:70
+#: flask/i18n.py:85
 msgid "AI connection error"
 msgstr "AI कनेक्शन त्रुटि"
 
-#: flask/i18n.py:71
+#: flask/i18n.py:86
 msgid "Error sending message."
 msgstr "संदेश भेजने में त्रुटि।"
 
-#: flask/i18n.py:72
+#: flask/i18n.py:87
 msgid "Error"
 msgstr "त्रुटि"
 
-#: flask/i18n.py:73
+#: flask/i18n.py:88
 msgid "Connection to backend lost: {error}"
 msgstr "बैकएंड से कनेक्शन टूट गया: {error}"
 
-#: flask/i18n.py:74
+#: flask/i18n.py:89
 msgid "Timeout: {error}"
 msgstr "समय समाप्त: {error}"
 
-#: flask/i18n.py:75
+#: flask/i18n.py:90
 msgid "Ollama connection error: {error}"
 msgstr "Ollama कनेक्शन त्रुटि: {error}"
 
-#: flask/i18n.py:76
+#: flask/i18n.py:91
 msgid "Connection to Ollama (or LLMProvider) lost."
 msgstr "Ollama (या LLMProvider) से कनेक्शन टूट गया।"
 
-#: flask/i18n.py:77
+#: flask/i18n.py:92
 msgid "Ollama connection error"
 msgstr "Ollama कनेक्शन त्रुटि"
 
-#: flask/i18n.py:78
+#: flask/i18n.py:93
 msgid "Timeout while regenerating."
 msgstr "पुनः बनाते समय समय समाप्त हो गया।"
 
-#: flask/i18n.py:79
+#: flask/i18n.py:94
 msgid "Error while regenerating."
 msgstr "पुनः बनाने में त्रुटि।"
 
-#: flask/i18n.py:80
+#: flask/i18n.py:95
 msgid "Ollama error"
 msgstr "Ollama त्रुटि"
 
-#: flask/i18n.py:81
+#: flask/i18n.py:96
 msgid "Success"
 msgstr "सफलता"
 
-#: flask/i18n.py:82
+#: flask/i18n.py:97
 msgid "Warning"
 msgstr "चेतावनी"
 
-#: flask/i18n.py:83
+#: flask/i18n.py:98
 msgid "Notice"
 msgstr "सूचना"
 
-#: flask/i18n.py:84 flask/templates/macros/buttons.html:79 flask/templates/macros/buttons.html:80 flask/templates/macros/lorebook_manager.html:239 flask/templates/macros/persona_manager.html:55
+#: flask/i18n.py:99 flask/templates/macros/buttons.html:79 flask/templates/macros/buttons.html:80 flask/templates/macros/lorebook_manager.html:239 flask/templates/macros/persona_manager.html:55
 msgid "Close"
 msgstr "बंद करें"
 
-#: flask/i18n.py:85 flask/templates/characters/creator.html:134
+#: flask/i18n.py:100 flask/templates/characters/creator.html:134
 msgid "Crops active"
 msgstr "क्रॉप सक्रिय"
 
-#: flask/i18n.py:86 flask/templates/worldinfo/detail.html:97
+#: flask/i18n.py:101 flask/templates/worldinfo/detail.html:97
 msgid "1:1 Cover active"
 msgstr "1:1 कवर सक्रिय"
 
-#: flask/i18n.py:87
+#: flask/i18n.py:102
 msgid "Analyzing image"
 msgstr "छवि का विश्लेषण हो रहा है"
 
-#: flask/i18n.py:88
+#: flask/i18n.py:103
 msgid "✨ Analyzing portrait and extracting appearance"
 msgstr "✨ पोर्ट्रेट का विश्लेषण और रूप-रंग निकाला जा रहा है"
 
-#: flask/i18n.py:89
+#: flask/i18n.py:104
 msgid "Drafting dialogue"
 msgstr "संवाद तैयार किया जा रहा है"
 
-#: flask/i18n.py:90
+#: flask/i18n.py:105
 msgid "✨ Analyzing character description"
 msgstr "✨ चरित्र विवरण का विश्लेषण हो रहा है"
 
-#: flask/i18n.py:91
+#: flask/i18n.py:106
 msgid "✨ Formulating response"
 msgstr "✨ उत्तर तैयार किया जा रहा है"
 
-#: flask/i18n.py:92
+#: flask/i18n.py:107
 msgid "⏳ Analyzing image (Save & Close locked)"
 msgstr "⏳ छवि का विश्लेषण हो रहा है (सहेजें और बंद करें लॉक)"
 
-#: flask/i18n.py:93
+#: flask/i18n.py:108
 msgid "Not translated yet (click to enter manually or AI translate)"
 msgstr "अभी तक अनुवादित नहीं (मैन्युअल रूप से दर्ज करने या AI अनुवाद के लिए क्लिक करें)"
 
-#: flask/i18n.py:94
+#: flask/i18n.py:109
 msgid "Translation may be outdated (click to review)"
 msgstr "अनुवाद पुराना हो सकता है (समीक्षा के लिए क्लिक करें)"
 
-#: flask/i18n.py:95
+#: flask/i18n.py:110
 msgid "Appearance extracted from image successfully."
 msgstr "छवि से रूप-रंग सफलतापूर्वक निकाला गया।"
 
-#: flask/i18n.py:96
+#: flask/i18n.py:111
 msgid "No appearance extracted."
 msgstr "कोई रूप-रंग नहीं निकाला गया।"
 
-#: flask/i18n.py:97
+#: flask/i18n.py:112
 msgid "Server error ({status}): Could not extract appearance."
 msgstr "सर्वर त्रुटि ({status}): रूप-रंग नहीं निकाला जा सका।"
 
-#: flask/i18n.py:98
+#: flask/i18n.py:113
 msgid "Please select a portrait image first to extract image features."
 msgstr "छवि विशेषताएँ निकालने के लिए कृपया पहले एक पोर्ट्रेट छवि चुनें।"
 
-#: flask/i18n.py:99
+#: flask/i18n.py:114
 msgid "Image features extracted"
 msgstr "छवि विशेषताएँ निकाली गईं"
 
-#: flask/i18n.py:100
+#: flask/i18n.py:115
 msgid "Image analysis failed."
 msgstr "छवि विश्लेषण विफल रहा।"
 
-#: flask/i18n.py:101
+#: flask/i18n.py:116
 msgid "Image analysis error"
 msgstr "छवि विश्लेषण त्रुटि"
 
-#: flask/i18n.py:102
+#: flask/i18n.py:117
 msgid "Connection error during image analysis."
 msgstr "छवि विश्लेषण के दौरान कनेक्शन त्रुटि।"
 
-#: flask/i18n.py:103
+#: flask/i18n.py:118
 msgid "Connection error"
 msgstr "कनेक्शन त्रुटि"
 
-#: flask/i18n.py:104
+#: flask/i18n.py:119
 msgid "Create New Persona"
 msgstr "नया व्यक्तित्व बनाएं"
 
-#: flask/i18n.py:105
+#: flask/i18n.py:120
 msgid "Edit Persona"
 msgstr "व्यक्तित्व संपादित करें"
 
-#: flask/i18n.py:106
+#: flask/i18n.py:121
 msgid "Used in active chats (deletion protection)"
 msgstr "सक्रिय चैट में उपयोग किया गया (हटाने से सुरक्षा)"
 
-#: flask/i18n.py:107
+#: flask/i18n.py:122
 msgid "Delete persona"
 msgstr "व्यक्तित्व हटाएं"
 
-#: flask/i18n.py:108
+#: flask/i18n.py:123
 msgid "Deletion locked"
 msgstr "हटाना लॉक है"
 
-#: flask/i18n.py:109 flask/templates/admin/services.html:254 flask/templates/admin/users.html:43 flask/templates/characters/creator.html:247 flask/templates/characters/creator.html:430
+#: flask/i18n.py:124 flask/templates/admin/services.html:254 flask/templates/admin/users.html:43 flask/templates/characters/creator.html:247 flask/templates/characters/creator.html:430
 msgid "Delete"
 msgstr "हटाएँ"
 
-#: flask/i18n.py:110 flask/templates/chat/session.html:929
+#: flask/i18n.py:125 flask/templates/chat/session.html:971
 msgid "Translating..."
 msgstr "अनुवाद हो रहा है..."
 
-#: flask/i18n.py:111
+#: flask/i18n.py:126
 msgid "Translation paused"
 msgstr "अनुवाद रुका हुआ है"
 
-#: flask/i18n.py:112
+#: flask/i18n.py:127
 msgid "Cloud AI Mode (On-Demand)"
 msgstr "क्लाउड AI मोड (मांग पर)"
 
-#: flask/i18n.py:113
+#: flask/i18n.py:128
 msgid "Idle"
 msgstr "निष्क्रिय"
 
-#: flask/i18n.py:114
+#: flask/i18n.py:129
 msgid "No active translation"
 msgstr "कोई सक्रिय अनुवाद नहीं"
 
-#: flask/i18n.py:115
+#: flask/i18n.py:130
 msgid "Last finished:"
 msgstr "अंतिम पूर्ण:"
 
-#: flask/i18n.py:116
+#: flask/i18n.py:131
 msgid "Error:"
 msgstr "त्रुटि:"
 
-#: flask/i18n.py:119
+#: flask/i18n.py:134
 msgid "Lorebook Entry"
 msgstr "लोरबुक प्रविष्टि"
 
-#: flask/i18n.py:121
+#: flask/i18n.py:136
 msgid "Location"
 msgstr "स्थान"
 
-#: flask/i18n.py:122
+#: flask/i18n.py:137
 msgid "Location Tags"
 msgstr "स्थान टैग"
 
-#: flask/i18n.py:123
+#: flask/i18n.py:138
 msgid "Event"
 msgstr "घटना"
 
-#: flask/i18n.py:124
+#: flask/i18n.py:139
 msgid "Character Event"
 msgstr "चरित्र घटना"
 
@@ -748,7 +748,7 @@ msgstr "उपयोगकर्ता प्रबंधन"
 msgid "Services & Models"
 msgstr "सेवाएँ और मॉडल"
 
-#: flask/templates/admin/layout.html:20 flask/templates/admin/prompts.html:34
+#: flask/templates/admin/layout.html:20 flask/templates/admin/prompts.html:12
 msgid "System Prompts"
 msgstr "सिस्टम प्रॉम्प्ट"
 
@@ -764,75 +764,55 @@ msgstr "सिस्टम पृष्ठभूमि"
 msgid "Back to Hub"
 msgstr "हब पर वापस जाएँ"
 
-#: flask/templates/admin/prompts.html:14
-msgid "System-Wide Content Translations"
-msgstr "सिस्टम-व्यापी सामग्री अनुवाद"
-
-#: flask/templates/admin/prompts.html:18
-msgid "Cloud AI provider active: automatic background translation is disabled to protect your token quota. Use the button to translate missing content on demand."
-msgstr "क्लाउड AI प्रदाता सक्रिय है: आपके टोकन कोटा की सुरक्षा के लिए स्वचालित पृष्ठभूमि अनुवाद अक्षम है। मांग पर अनुपलब्ध सामग्री का अनुवाद करने के लिए बटन का उपयोग करें।"
-
-#: flask/templates/admin/prompts.html:20
-msgid "Local LLM provider active: missing content translations run automatically in the background, or can be triggered manually here."
-msgstr "स्थानीय LLM प्रदाता सक्रिय है: अनुपलब्ध सामग्री अनुवाद पृष्ठभूमि में स्वचालित रूप से चलते हैं, या यहाँ से मैन्युअल रूप से शुरू किए जा सकते हैं।"
-
-#: flask/templates/admin/prompts.html:25
-msgid "Synchronize Missing Translations"
-msgstr "अनुपलब्ध अनुवाद सिंक्रनाइज़ करें"
-
-#: flask/templates/admin/prompts.html:26 flask/templates/admin/translations.html:16 flask/templates/admin/user_form.html:72 flask/templates/characters/creator.html:614 flask/templates/characters/creator.html:651
-msgid "Cancel"
-msgstr "रद्द करें"
-
-#: flask/templates/admin/prompts.html:39
+#: flask/templates/admin/prompts.html:17
 msgid "Prompt Placeholders"
 msgstr "प्रॉम्प्ट प्लेसहोल्डर"
 
-#: flask/templates/admin/prompts.html:42
+#: flask/templates/admin/prompts.html:20
 msgid "You can use"
 msgstr "आप उपयोग कर सकते हैं"
 
-#: flask/templates/admin/prompts.html:42
+#: flask/templates/admin/prompts.html:20
 msgid "(character name) and"
 msgstr "(पात्र का नाम) और"
 
-#: flask/templates/admin/prompts.html:42
+#: flask/templates/admin/prompts.html:20
 msgid "(player persona name) in prompts. These are replaced dynamically at runtime."
 msgstr "(खिलाड़ी पर्सोना का नाम) प्रॉम्प्ट में। इन्हें रनटाइम पर गतिशील रूप से बदल दिया जाता है।"
 
-#: flask/templates/admin/prompts.html:47
+#: flask/templates/admin/prompts.html:25
 msgid "Roleplay Prompt"
 msgstr "रोलप्ले प्रॉम्प्ट"
 
-#: flask/templates/admin/prompts.html:48
+#: flask/templates/admin/prompts.html:26
 msgid "Memory Prompt"
 msgstr "मेमोरी प्रॉम्प्ट"
 
-#: flask/templates/admin/prompts.html:49
+#: flask/templates/admin/prompts.html:27
 msgid "Diffuser Prompt"
 msgstr "डिफ्यूज़र प्रॉम्प्ट"
 
-#: flask/templates/admin/prompts.html:50
+#: flask/templates/admin/prompts.html:28
 msgid "AI Author Prompt"
 msgstr "AI लेखक प्रॉम्प्ट"
 
-#: flask/templates/admin/prompts.html:51
+#: flask/templates/admin/prompts.html:29
 msgid "Vision Prompt"
 msgstr "विज़न प्रॉम्प्ट"
 
-#: flask/templates/admin/prompts.html:52
+#: flask/templates/admin/prompts.html:30
 msgid "AI Dialogue Author Prompt"
 msgstr "AI संवाद लेखक प्रॉम्प्ट"
 
-#: flask/templates/admin/prompts.html:59
+#: flask/templates/admin/prompts.html:37
 msgid "Restore Default"
 msgstr "डिफ़ॉल्ट पुनर्स्थापित करें"
 
-#: flask/templates/admin/prompts.html:59
+#: flask/templates/admin/prompts.html:37
 msgid "Resets all languages of this prompt to factory default"
 msgstr "इस प्रॉम्प्ट की सभी भाषाओं को फ़ैक्टरी डिफ़ॉल्ट पर रीसेट करता है"
 
-#: flask/templates/admin/prompts.html:77
+#: flask/templates/admin/prompts.html:55
 msgid "Save Prompts"
 msgstr "प्रॉम्प्ट सहेजें"
 
@@ -1088,6 +1068,10 @@ msgstr "पात्रों, लोरबुक्स, दुनिया, स
 msgid "Start Translation Sync"
 msgstr "अनुवाद सिंक शुरू करें"
 
+#: flask/templates/admin/translations.html:16 flask/templates/admin/user_form.html:72 flask/templates/characters/creator.html:614 flask/templates/characters/creator.html:651 flask/templates/characters/creator.html:687
+msgid "Cancel"
+msgstr "रद्द करें"
+
 #: flask/templates/admin/translations.html:23
 msgid "Status:"
 msgstr "स्थिति:"
@@ -1144,7 +1128,7 @@ msgstr "प्रीसेट:"
 msgid "Individual functional permissions (FunctionPermission):"
 msgstr "व्यक्तिगत कार्यात्मक अनुमतियां (FunctionPermission):"
 
-#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:269 flask/templates/chat/session.html:802 flask/templates/lorebooks/detail.html:96
+#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:279 flask/templates/chat/session.html:844 flask/templates/lorebooks/detail.html:96
 msgid "Save"
 msgstr "सहेजें"
 
@@ -1674,7 +1658,7 @@ msgstr "के साथ नई चैट"
 msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
 msgstr "इस सत्र के लिए अपना खिलाड़ी पर्सोना, सक्रिय WorldInfo और लोरबुक्स कॉन्फ़िगर करें।"
 
-#: flask/templates/chat/select_worldinfo.html:18 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
+#: flask/templates/chat/select_worldinfo.html:18 flask/templates/chat/session.html:31 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
 msgid "Settings"
 msgstr "सेटिंग्स"
 
@@ -1730,247 +1714,263 @@ msgstr "संगत मॉडल (जैसे Gemma 4, DeepSeek-R1) के ल
 msgid "Start Adventure"
 msgstr "रोमांच शुरू करें"
 
-#: flask/templates/chat/session.html:33
+#: flask/templates/chat/session.html:36
 msgid "Info"
 msgstr "जानकारी"
 
-#: flask/templates/chat/session.html:33
+#: flask/templates/chat/session.html:36
 msgid "Sidebar / Character Info"
 msgstr "साइडबार / चरित्र जानकारी"
 
-#: flask/templates/chat/session.html:39 flask/templates/chat/session.html:63 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
+#: flask/templates/chat/session.html:42 flask/templates/chat/session.html:67 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
 msgid "Location:"
 msgstr "स्थान:"
 
-#: flask/templates/chat/session.html:41
+#: flask/templates/chat/session.html:44
 msgid "World:"
 msgstr "संसार:"
 
-#: flask/templates/chat/session.html:43
+#: flask/templates/chat/session.html:46
 msgid "Neutral Setting"
 msgstr "तटस्थ परिवेश"
 
-#: flask/templates/chat/session.html:79
+#: flask/templates/chat/session.html:83
 msgid "View LLM prompt (Admin)"
 msgstr "LLM प्रॉम्प्ट देखें (एडमिन)"
 
-#: flask/templates/chat/session.html:81 flask/templates/chat/session.html:101
+#: flask/templates/chat/session.html:85 flask/templates/chat/session.html:111
 msgid "Translate message (on-demand)"
 msgstr "संदेश अनुवाद करें (मांग पर)"
 
-#: flask/templates/chat/session.html:82 flask/templates/chat/session.html:102
+#: flask/templates/chat/session.html:86 flask/templates/chat/session.html:112
 msgid "Edit message"
 msgstr "संदेश संपादित करें"
 
-#: flask/templates/chat/session.html:83 flask/templates/chat/session.html:103
+#: flask/templates/chat/session.html:87 flask/templates/chat/session.html:113
 msgid "Duplicate chat from here (Fork)"
 msgstr "यहाँ से चैट डुप्लिकेट करें (फ़ॉर्क)"
 
-#: flask/templates/chat/session.html:85 flask/templates/chat/session.html:104 flask/templates/macros/system_message.html:27
+#: flask/templates/chat/session.html:89 flask/templates/chat/session.html:114 flask/templates/macros/system_message.html:27
 msgid "Delete from here"
 msgstr "यहाँ से हटाएं"
 
-#: flask/templates/chat/session.html:111
+#: flask/templates/chat/session.html:121
 msgid "Show/hide ALT text (image description)"
 msgstr "ALT टेक्स्ट (छवि विवरण) दिखाएं/छुपाएं"
 
-#: flask/templates/chat/session.html:132
+#: flask/templates/chat/session.html:142
 msgid "AI system notice"
 msgstr "AI सिस्टम सूचना"
 
-#: flask/templates/chat/session.html:134
+#: flask/templates/chat/session.html:144
 msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
 msgstr "यह एक AI चैटबॉट है। उत्तर स्थानीय या बाहरी भाषा मॉडल द्वारा स्वचालित रूप से उत्पन्न होते हैं और अधूरे या गलत हो सकते हैं।"
 
-#: flask/templates/chat/session.html:141
+#: flask/templates/chat/session.html:151
 msgid "Chat options & sessions"
 msgstr "चैट विकल्प और सत्र"
 
-#: flask/templates/chat/session.html:141
+#: flask/templates/chat/session.html:151
 msgid "Chat options"
 msgstr "चैट विकल्प"
 
-#: flask/templates/chat/session.html:147
+#: flask/templates/chat/session.html:157
 msgid "Sessions"
 msgstr "सत्र"
 
-#: flask/templates/chat/session.html:148
+#: flask/templates/chat/session.html:158
 msgid "Start new chat"
 msgstr "नई चैट शुरू करें"
 
-#: flask/templates/chat/session.html:150
+#: flask/templates/chat/session.html:160
 msgid "Delete chat"
 msgstr "चैट हटाएं"
 
-#: flask/templates/chat/session.html:150
+#: flask/templates/chat/session.html:160
 msgid "Do you really want to permanently delete this chat?"
 msgstr "क्या आप वाकई इस चैट को स्थायी रूप से हटाना चाहते हैं?"
 
-#: flask/templates/chat/session.html:154
+#: flask/templates/chat/session.html:164
 msgid "Attach image (Vision ALT analysis)"
 msgstr "छवि संलग्न करें (Vision ALT विश्लेषण)"
 
-#: flask/templates/chat/session.html:162
+#: flask/templates/chat/session.html:172
 msgid "Generate scene image"
 msgstr "दृश्य छवि बनाएं"
 
-#: flask/templates/chat/session.html:169
+#: flask/templates/chat/session.html:179
 msgid "Cancel image generation"
 msgstr "छवि निर्माण रद्द करें"
 
-#: flask/templates/chat/session.html:180
+#: flask/templates/chat/session.html:190
 msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
 msgstr "अपना उत्तर या कार्य लिखें... (भेजने के लिए Enter, नई पंक्ति के लिए Shift+Enter)"
 
-#: flask/templates/chat/session.html:186
+#: flask/templates/chat/session.html:196
 msgid "Regenerate response – replaces the last AI reply or retries generation"
 msgstr "उत्तर पुनः बनाएं – अंतिम AI उत्तर को बदलता है या निर्माण पुनः प्रयास करता है"
 
-#: flask/templates/chat/session.html:193
+#: flask/templates/chat/session.html:203
 msgid "Cancel response generation"
 msgstr "उत्तर निर्माण रद्द करें"
 
-#: flask/templates/chat/session.html:199
+#: flask/templates/chat/session.html:209
 msgid "Send message (Enter)"
 msgstr "संदेश भेजें (Enter)"
 
-#: flask/templates/chat/session.html:257 flask/templates/chat/session.html:786 flask/templates/lorebooks/detail.html:167
+#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:828 flask/templates/lorebooks/detail.html:167
 msgid "Tags (Comma-separated for vectorless RAG)"
 msgstr "टैग (वेक्टर रहित RAG के लिए अल्पविराम से अलग)"
 
-#: flask/templates/chat/session.html:261 flask/templates/chat/session.html:790
+#: flask/templates/chat/session.html:271 flask/templates/chat/session.html:832
 msgid "Summary"
 msgstr "सारांश"
 
-#: flask/templates/chat/session.html:266 flask/templates/chat/session.html:796
+#: flask/templates/chat/session.html:276 flask/templates/chat/session.html:838
 msgid "Recalculate"
 msgstr "पुनः गणना करें"
 
-#: flask/templates/chat/session.html:266 flask/templates/chat/session.html:795
+#: flask/templates/chat/session.html:276 flask/templates/chat/session.html:837
 msgid "Recalculate memory from associated episode messages"
 msgstr "संबंधित एपिसोड संदेशों से स्मृति की पुनः गणना करें"
 
-#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:799
+#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:841
 msgid "Translate"
 msgstr "अनुवाद करें"
 
-#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:798
+#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:840
 msgid "Translate memory in-place to your language"
 msgstr "स्मृति को सीधे अपनी भाषा में अनुवाद करें"
 
-#: flask/templates/chat/session.html:297
+#: flask/templates/chat/session.html:295
+msgid "Relationship Settings"
+msgstr ""
+
+#: flask/templates/chat/session.html:298
+msgid "Show relationship debug labels"
+msgstr ""
+
+#: flask/templates/chat/session.html:309
+msgid "Reset relationship to default and recalculate from chat history"
+msgstr ""
+
+#: flask/templates/chat/session.html:316
+msgid "Recalculate relationship"
+msgstr ""
+
+#: flask/templates/chat/session.html:339
 msgid "Thinking: Enabled (Click to disable)"
 msgstr "सोच: सक्रिय (निष्क्रिय करने के लिए क्लिक करें)"
 
-#: flask/templates/chat/session.html:297
+#: flask/templates/chat/session.html:339
 msgid "Thinking: Disabled (Click to enable)"
 msgstr "सोच: निष्क्रिय (सक्रिय करने के लिए क्लिक करें)"
 
-#: flask/templates/chat/session.html:298
+#: flask/templates/chat/session.html:340
 msgid "Disable thinking"
 msgstr "सोच निष्क्रिय करें"
 
-#: flask/templates/chat/session.html:298
+#: flask/templates/chat/session.html:340
 msgid "Enable thinking"
 msgstr "सोच सक्रिय करें"
 
-#: flask/templates/chat/session.html:311 flask/templates/macros/cards.html:91
+#: flask/templates/chat/session.html:353 flask/templates/macros/cards.html:91
 msgid "Relationship:"
 msgstr "रिश्ता:"
 
-#: flask/templates/chat/session.html:322
+#: flask/templates/chat/session.html:364
 msgid "Active Persona"
 msgstr "सक्रिय व्यक्तित्व"
 
-#: flask/templates/chat/session.html:327
+#: flask/templates/chat/session.html:369
 msgid "Edit player persona"
 msgstr "खिलाड़ी व्यक्तित्व संपादित करें"
 
-#: flask/templates/chat/session.html:344
+#: flask/templates/chat/session.html:386
 msgid "Unknown"
 msgstr "अज्ञात"
 
-#: flask/templates/chat/session.html:345
+#: flask/templates/chat/session.html:387
 msgid "Persona is locked for this chat after the 1st message"
 msgstr "पहली संदेश के बाद इस चैट के लिए व्यक्तित्व लॉक हो जाता है"
 
-#: flask/templates/chat/session.html:368
+#: flask/templates/chat/session.html:410
 msgid "No World (Neutral)"
 msgstr "कोई दुनिया नहीं (तटस्थ)"
 
-#: flask/templates/chat/session.html:371
+#: flask/templates/chat/session.html:413
 msgid "Switch world"
 msgstr "दुनिया बदलें"
 
-#: flask/templates/chat/session.html:382
+#: flask/templates/chat/session.html:424
 msgid "Current Location"
 msgstr "वर्तमान स्थान"
 
-#: flask/templates/chat/session.html:384
+#: flask/templates/chat/session.html:426
 msgid "-- Choose location --"
 msgstr "-- स्थान चुनें --"
 
-#: flask/templates/chat/session.html:402
+#: flask/templates/chat/session.html:444
 msgid "Enable random events"
 msgstr "यादृच्छिक घटनाएँ सक्रिय करें"
 
-#: flask/templates/chat/session.html:407
+#: flask/templates/chat/session.html:449
 msgid "Admin & creator info: Cooldown until the next random event"
 msgstr "एडमिन व निर्माता जानकारी: अगली यादृच्छिक घटना तक की प्रतीक्षा"
 
-#: flask/templates/chat/session.html:408
+#: flask/templates/chat/session.html:450
 msgid "Next event:"
 msgstr "अगली घटना:"
 
-#: flask/templates/chat/session.html:411 flask/templates/chat/session.html:415
+#: flask/templates/chat/session.html:453 flask/templates/chat/session.html:457
 msgid "in"
 msgstr "में"
 
-#: flask/templates/chat/session.html:411
+#: flask/templates/chat/session.html:453
 msgid "message"
 msgstr "संदेश"
 
-#: flask/templates/chat/session.html:411 flask/templates/chat/session.html:415
+#: flask/templates/chat/session.html:453 flask/templates/chat/session.html:457
 msgid "messages"
 msgstr "संदेश"
 
-#: flask/templates/chat/session.html:411
+#: flask/templates/chat/session.html:453
 msgid "paused"
 msgstr "रोका गया"
 
-#: flask/templates/chat/session.html:413
+#: flask/templates/chat/session.html:455
 msgid "next message"
 msgstr "अगला संदेश"
 
-#: flask/templates/chat/session.html:488
+#: flask/templates/chat/session.html:530
 msgid "Do you really want to delete this session?"
 msgstr "क्या आप वाकई इस सत्र को हटाना चाहते हैं?"
 
-#: flask/templates/chat/session.html:490
+#: flask/templates/chat/session.html:532
 msgid "Delete session"
 msgstr "सत्र हटाएं"
 
-#: flask/templates/chat/session.html:714
+#: flask/templates/chat/session.html:756
 msgid "Permanently delete this message and all subsequent messages (including associated memories)?"
 msgstr "क्या इस संदेश और इसके बाद के सभी संदेशों (संबंधित स्मृतियों सहित) को स्थायी रूप से हटाएं?"
 
-#: flask/templates/chat/session.html:913
+#: flask/templates/chat/session.html:955
 msgid "Recalculation error"
 msgstr "पुनर्गणना त्रुटि"
 
-#: flask/templates/chat/session.html:915
+#: flask/templates/chat/session.html:957
 msgid "Recalculation error:"
 msgstr "पुनर्गणना त्रुटि:"
 
-#: flask/templates/chat/session.html:952
+#: flask/templates/chat/session.html:994
 msgid "Translated!"
 msgstr "अनुवादित!"
 
-#: flask/templates/chat/session.html:964
+#: flask/templates/chat/session.html:1006
 msgid "Translation error"
 msgstr "अनुवाद त्रुटि"
 
-#: flask/templates/chat/session.html:966
+#: flask/templates/chat/session.html:1008
 msgid "Translation error:"
 msgstr "अनुवाद त्रुटि:"
 

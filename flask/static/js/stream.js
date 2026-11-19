@@ -1132,16 +1132,17 @@ class AimoChatStream {
     );
   }
 
-  toggleRelationshipDebug(btn) {
+  setRelationshipDebug(enabled) {
     const messagesList = document.getElementById("chat-messages-list");
-    if (!messagesList) return;
-    const isVisible = messagesList.classList.toggle("show-rel-debug");
-    if (btn) {
-      btn.classList.toggle("active", isVisible);
-      btn.setAttribute("aria-pressed", isVisible ? "true" : "false");
+    const checkbox = document.getElementById("toggle-rel-debug-checkbox");
+    if (messagesList) {
+      messagesList.classList.toggle("show-rel-debug", Boolean(enabled));
+    }
+    if (checkbox) {
+      checkbox.checked = Boolean(enabled);
     }
     try {
-      localStorage.setItem("aimo_rel_debug", isVisible ? "1" : "0");
+      localStorage.setItem("aimo_rel_debug", enabled ? "1" : "0");
     } catch (_) {}
   }
 
@@ -1152,14 +1153,7 @@ class AimoChatStream {
     try {
       enabled = localStorage.getItem("aimo_rel_debug") === "1";
     } catch (_) {}
-    if (!enabled) return;
-    const messagesList = document.getElementById("chat-messages-list");
-    const btn = document.getElementById("toggle-rel-debug-btn");
-    if (messagesList) messagesList.classList.add("show-rel-debug");
-    if (btn) {
-      btn.classList.add("active");
-      btn.setAttribute("aria-pressed", "true");
-    }
+    this.setRelationshipDebug(enabled);
   }
 
   async recalculateRelationship(btn) {

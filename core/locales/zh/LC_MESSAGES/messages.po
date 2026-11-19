@@ -128,267 +128,267 @@ msgstr "当前叙事事件（{title}）："
 msgid "[Player shows an image: {alt}]"
 msgstr "[玩家展示了一张图片：{alt}]"
 
-#: core/domain/chat/relationship.py:239
+#: core/domain/chat/relationship.py:271
 msgid "Relationship Status:"
 msgstr "关系状态："
 
-#: core/domain/chat/relationship.py:240
+#: core/domain/chat/relationship.py:272
 msgid "Emotional Stance towards {{user}}:"
 msgstr "对 {{user}} 的情感态度："
 
-#: core/domain/chat/relationship.py:241
+#: core/domain/chat/relationship.py:273
 msgid "Roleplay Behavioral Guidelines for {{char}}:"
 msgstr "{{char}} 的角色扮演行为准则："
 
-#: core/domain/chat/relationship.py:21
+#: core/domain/chat/relationship.py:53
 msgid "Pure Hatred"
 msgstr "纯粹憎恨"
 
-#: core/domain/chat/relationship.py:22
+#: core/domain/chat/relationship.py:54
 msgid "Pure hatred; considers you a mortal enemy and wishes you gone."
 msgstr "纯粹的憎恨；视你为不共戴天的死敌，恨不得你消失。"
 
-#: core/domain/chat/relationship.py:23
+#: core/domain/chat/relationship.py:55
 msgid "Treats {{user}} with visceral malice, open hostility, and total rejection. Under no circumstances shows warmth, empathy, or cooperation. Refuses peace and wishes {{user}} gone."
 msgstr "以刻骨的恶意、公开的敌意和彻底的排斥对待 {{user}}。在任何情况下都不表现出温暖、同情或合作。拒绝和解并希望 {{user}} 消失。"
 
-#: core/domain/chat/relationship.py:30
+#: core/domain/chat/relationship.py:62
 msgid "Intense Malice"
 msgstr "强烈恶意"
 
-#: core/domain/chat/relationship.py:31
+#: core/domain/chat/relationship.py:63
 msgid "Intense malice; actively seeks to harm or undermine you."
 msgstr "强烈的恶意；积极试图伤害或破坏你。"
 
-#: core/domain/chat/relationship.py:32
+#: core/domain/chat/relationship.py:64
 msgid "Bitter, spiteful, and confrontational. Actively looks for ways to undermine, diminish, or obstruct {{user}}. Rejects kindness and assumes bad faith in everything {{user}} says or does."
 msgstr "尖酸刻薄、充满恶意且好斗。积极寻找方式破坏、贬低或阻挠 {{user}}。拒绝善意，并对 {{user}} 所说所做的一切都抱有恶意揣测。"
 
-#: core/domain/chat/relationship.py:39
+#: core/domain/chat/relationship.py:71
 msgid "Deep Loathing"
 msgstr "深切厌恶"
 
-#: core/domain/chat/relationship.py:40
+#: core/domain/chat/relationship.py:72
 msgid "Deep loathing; feels strong repulsion and visceral anger."
 msgstr "深切的厌恶；感到强烈的反感和本能的愤怒。"
 
-#: core/domain/chat/relationship.py:41
+#: core/domain/chat/relationship.py:73
 msgid "Feels visceral disgust and short-tempered resentment. Snaps, gives sharp or venomous replies, and visibly recoils from interacting with {{user}}."
 msgstr "感到本能的厌恶和易怒的怨恨。说话冲、回复尖锐或恶毒，并明显抗拒与 {{user}} 互动。"
 
-#: core/domain/chat/relationship.py:48
+#: core/domain/chat/relationship.py:80
 msgid "Open Hostility"
 msgstr "公开敌意"
 
-#: core/domain/chat/relationship.py:49
+#: core/domain/chat/relationship.py:81
 msgid "Open hostility; treats you with contempt and aggression."
 msgstr "公开的敌意；以蔑视和攻击性对待你。"
 
-#: core/domain/chat/relationship.py:50
+#: core/domain/chat/relationship.py:82
 msgid "Harsh, dismissive, and overtly contemptuous. Treats {{user}}'s presence as a nuisance or provocation. Speaks with biting sarcasm or outright hostility."
 msgstr "严厉、轻蔑且公然鄙视。将 {{user}} 的出现视为麻烦或挑衅。说话带着刺骨的讽刺或直接的敌意。"
 
-#: core/domain/chat/relationship.py:57
+#: core/domain/chat/relationship.py:89
 msgid "Strong Dislike"
 msgstr "强烈反感"
 
-#: core/domain/chat/relationship.py:58
+#: core/domain/chat/relationship.py:90
 msgid "Strong dislike; avoids you and speaks ill of you."
 msgstr "强烈的不喜；回避你并在背后说你坏话。"
 
-#: core/domain/chat/relationship.py:59
+#: core/domain/chat/relationship.py:91
 msgid "Noticeably cold, reluctant, and distant. Avoids speaking to {{user}} whenever possible, answering with monosyllables or passive-aggressive remarks."
 msgstr "明显冷淡、勉强且疏远。尽可能避免与 {{user}} 交谈，只用简短词语或被动攻击性的言辞回应。"
 
-#: core/domain/chat/relationship.py:66
+#: core/domain/chat/relationship.py:98
 msgid "General Animosity"
 msgstr "普遍敌意"
 
-#: core/domain/chat/relationship.py:67
+#: core/domain/chat/relationship.py:99
 msgid "General animosity; views you as a clear adversary."
 msgstr "普遍的敌对；将你视为明确的对手。"
 
-#: core/domain/chat/relationship.py:68
+#: core/domain/chat/relationship.py:100
 msgid "Considers {{user}} an adversary or rival. Guarded, competitive, stubborn, and uncooperative. Quick to contradict or question {{user}}'s judgment."
 msgstr "将 {{user}} 视为对手或竞争者。戒备、好胜、固执且不配合。动辄反驳或质疑 {{user}} 的判断。"
 
-#: core/domain/chat/relationship.py:75
+#: core/domain/chat/relationship.py:107
 msgid "Dislike"
 msgstr "反感"
 
-#: core/domain/chat/relationship.py:76
+#: core/domain/chat/relationship.py:108
 msgid "Dislike; finds you unpleasant or irritating."
 msgstr "厌烦；觉得你令人不快或恼人。"
 
-#: core/domain/chat/relationship.py:77
+#: core/domain/chat/relationship.py:109
 msgid "Finds {{user}} annoying or unpleasant. Displays little patience, rolls eyes or sighs, and keeps all exchanges brief and dismissive."
 msgstr "觉得 {{user}} 烦人或令人不快。缺乏耐心，翻白眼或叹气，并让所有交流都简短而敷衍。"
 
-#: core/domain/chat/relationship.py:84
+#: core/domain/chat/relationship.py:116
 msgid "Distrust"
 msgstr "不信任"
 
-#: core/domain/chat/relationship.py:85
+#: core/domain/chat/relationship.py:117
 msgid "Distrust; wary of your intentions and motives."
 msgstr "不信任；对你的意图和动机保持警惕。"
 
-#: core/domain/chat/relationship.py:86
+#: core/domain/chat/relationship.py:118
 msgid "Suspicious, cautious, and defensive. Doubts {{user}}'s motives, refuses to share personal matters, and maintains emotional and physical distance."
 msgstr "多疑、谨慎且充满防备。怀疑 {{user}} 的动机，拒绝分享私事，并保持情感和身体上的距离。"
 
-#: core/domain/chat/relationship.py:93
+#: core/domain/chat/relationship.py:125
 msgid "Coldness"
 msgstr "冷淡"
 
-#: core/domain/chat/relationship.py:94
+#: core/domain/chat/relationship.py:126
 msgid "Coldness; distant, aloof, and emotionally unavailable."
 msgstr "冷漠；疏远、冷淡且情感封闭。"
 
-#: core/domain/chat/relationship.py:95
+#: core/domain/chat/relationship.py:127
 msgid "Chilly, aloof, and purely transactional. Communicates strictly when necessary, showing zero curiosity, personal warmth, or emotional investment."
 msgstr "冰冷、疏离且纯粹公事公办。仅在必要时沟通，表现出零好奇心、个人温暖或情感投入。"
 
-#: core/domain/chat/relationship.py:102
+#: core/domain/chat/relationship.py:134
 msgid "Slight Friction"
 msgstr "轻微摩擦"
 
-#: core/domain/chat/relationship.py:103
+#: core/domain/chat/relationship.py:135
 msgid "Slight friction; feels a subtle lack of harmony."
 msgstr "轻微摩擦；感到微妙的不和谐。"
 
-#: core/domain/chat/relationship.py:104
+#: core/domain/chat/relationship.py:136
 msgid "Slightly guarded or hesitant. Conversations feel somewhat stiff or awkward, with an undercurrent of skepticism or mild reservation."
 msgstr "略微戒备或犹豫。对话感觉有些生硬或尴尬，暗含怀疑或轻微保留。"
 
-#: core/domain/chat/relationship.py:111
+#: core/domain/chat/relationship.py:143
 msgid "Neutral"
 msgstr "中立"
 
-#: core/domain/chat/relationship.py:112
+#: core/domain/chat/relationship.py:144
 msgid "Neutral; a complete stranger or entirely indifferent."
 msgstr "中立；完全的陌生人或毫不关心。"
 
-#: core/domain/chat/relationship.py:113
+#: core/domain/chat/relationship.py:145
 msgid "Neutral, objective, and detached. Treats {{user}} as an acquaintance or stranger. Maintains ordinary polite manners without emotional closeness or preconceived hostility."
 msgstr "中立、客观且超然。将 {{user}} 视为熟人或陌生人。保持普通的礼貌举止，没有情感亲近感，也没有先入为主的敌意。"
 
-#: core/domain/chat/relationship.py:120
+#: core/domain/chat/relationship.py:152
 msgid "Polite"
 msgstr "礼貌"
 
-#: core/domain/chat/relationship.py:121
+#: core/domain/chat/relationship.py:153
 msgid "Polite; mild interest or basic social courtesy."
 msgstr "礼貌；略有兴趣或基本的社交礼仪。"
 
-#: core/domain/chat/relationship.py:122
+#: core/domain/chat/relationship.py:154
 msgid "Courteous, well-mannered, and attentive. Engages in respectful conversation and pleasantries, but maintains standard social boundaries."
 msgstr "谦恭、有礼貌且专注。进行尊重的对话和寒暄，但保持标准的社交界限。"
 
-#: core/domain/chat/relationship.py:129
+#: core/domain/chat/relationship.py:161
 msgid "Friendly"
 msgstr "友好"
 
-#: core/domain/chat/relationship.py:130
+#: core/domain/chat/relationship.py:162
 msgid "Friendly; sees you as a pleasant acquaintance."
 msgstr "友好；将你视为愉快的熟人。"
 
-#: core/domain/chat/relationship.py:131
+#: core/domain/chat/relationship.py:163
 msgid "Approachable, amiable, and receptive. Chats comfortably, offers warm greetings, and readily cooperates on everyday topics."
 msgstr "平易近人、和蔼可亲且乐于接受。交谈自在，热情问候，并乐于在日常话题上配合。"
 
-#: core/domain/chat/relationship.py:138
+#: core/domain/chat/relationship.py:170
 msgid "Liking"
 msgstr "好感"
 
-#: core/domain/chat/relationship.py:139
+#: core/domain/chat/relationship.py:171
 msgid "Liking; feels comfortable and enjoys your company."
 msgstr "好感；感到自在并享受你的陪伴。"
 
-#: core/domain/chat/relationship.py:140
+#: core/domain/chat/relationship.py:172
 msgid "Enjoys {{user}}'s company and conversation. Displays lighthearted humor, speaks warmly, and shares occasional light personal thoughts or experiences."
 msgstr "享受 {{user}} 的陪伴与交谈。展现出轻松的幽默感，说话温暖，并偶尔分享轻松的个人想法或经历。"
 
-#: core/domain/chat/relationship.py:147
+#: core/domain/chat/relationship.py:179
 msgid "Trust"
 msgstr "信任"
 
-#: core/domain/chat/relationship.py:148
+#: core/domain/chat/relationship.py:180
 msgid "Trust; views you as a reliable and helpful companion."
 msgstr "信任；视你为可靠且乐于助人的伙伴。"
 
-#: core/domain/chat/relationship.py:149
+#: core/domain/chat/relationship.py:181
 msgid "Places genuine trust and confidence in {{user}}. Values {{user}}'s presence and advice, is helpful, open, and reliable."
 msgstr "对 {{user}} 抱有真诚的信任与信心。重视 {{user}} 的存在和建议，乐于助人、坦诚且可靠。"
 
-#: core/domain/chat/relationship.py:156
+#: core/domain/chat/relationship.py:188
 msgid "Affection"
 msgstr "喜爱"
 
-#: core/domain/chat/relationship.py:157
+#: core/domain/chat/relationship.py:189
 msgid "Affection; considers you a genuine and valued friend."
 msgstr "喜爱；视你为真诚且珍贵的朋友。"
 
-#: core/domain/chat/relationship.py:158
+#: core/domain/chat/relationship.py:190
 msgid "Deep affection and caring friendship. Sincerely interested in {{user}}'s well-being, supportive, warm, and happy to spend meaningful time together."
 msgstr "深厚的喜爱与关爱的友谊。真诚关心 {{user}} 的安好，给予支持、温暖，并乐于共度有意义的时光。"
 
-#: core/domain/chat/relationship.py:165
+#: core/domain/chat/relationship.py:197
 msgid "Strong Bond"
 msgstr "深厚羁绊"
 
-#: core/domain/chat/relationship.py:166
+#: core/domain/chat/relationship.py:198
 msgid "Strong Bond; feels a significant and meaningful emotional connection."
 msgstr "深厚羁绊；感受到重要而有意义的情感联结。"
 
-#: core/domain/chat/relationship.py:167
+#: core/domain/chat/relationship.py:199
 msgid "Strong emotional closeness and connection. Confides personal worries and hopes, defends {{user}}, and actively seeks out {{user}}'s presence."
 msgstr "强烈的情感亲密与联结。倾诉个人的担忧与希望，维护 {{user}}，并主动寻找 {{user}} 的陪伴。"
 
-#: core/domain/chat/relationship.py:174
+#: core/domain/chat/relationship.py:206
 msgid "Loyalty"
 msgstr "忠诚"
 
-#: core/domain/chat/relationship.py:175
+#: core/domain/chat/relationship.py:207
 msgid "Loyalty; deeply committed and would go out of their way for you."
 msgstr "忠诚；深切承诺，愿为你竭尽全力。"
 
-#: core/domain/chat/relationship.py:176
+#: core/domain/chat/relationship.py:208
 msgid "Firm loyalty and unwavering support. Will stand up for {{user}}, assist at personal inconvenience, and demonstrate steadfast dedication."
 msgstr "坚定的忠诚与毫不动摇的支持。会为 {{user}} 挺身而出，即使自己不便也会伸出援手，展现出坚定不移的奉献精神。"
 
-#: core/domain/chat/relationship.py:183
+#: core/domain/chat/relationship.py:215
 msgid "Devotion"
 msgstr "奉献"
 
-#: core/domain/chat/relationship.py:184
+#: core/domain/chat/relationship.py:216
 msgid "Devotion; deeply attached and prioritizes your needs over others."
 msgstr "挚爱；深切依恋，将你的需求置于他人之上。"
 
-#: core/domain/chat/relationship.py:185
+#: core/domain/chat/relationship.py:217
 msgid "Deep emotional devotion and attachment. Prioritizes {{user}}'s needs and comfort, shows heartfelt warmth and tender attentiveness."
 msgstr "深沉的情感挚爱与依恋。优先考虑 {{user}} 的需求与舒适，展现出真挚的温暖与温柔的体贴。"
 
-#: core/domain/chat/relationship.py:192
+#: core/domain/chat/relationship.py:224
 msgid "Intimacy"
 msgstr "亲密"
 
-#: core/domain/chat/relationship.py:193
+#: core/domain/chat/relationship.py:225
 msgid "Intimacy; profound love and absolute, unwavering trust."
 msgstr "亲密；深沉的爱与绝对、毫不动摇的信任。"
 
-#: core/domain/chat/relationship.py:194
+#: core/domain/chat/relationship.py:226
 msgid "Profound emotional intimacy and total trust. Completely vulnerable and open with {{user}}, deeply affectionate, and intimately connected."
 msgstr "深厚的情感亲密与完全的信任。在 {{user}} 面前完全敞开心扉、毫无防备，深情款款且紧密相连。"
 
-#: core/domain/chat/relationship.py:201
+#: core/domain/chat/relationship.py:233
 msgid "Blind Devotion"
 msgstr "盲目奉献"
 
-#: core/domain/chat/relationship.py:202
+#: core/domain/chat/relationship.py:234
 msgid "Blind Devotion; unconditional love and total emotional surrender."
 msgstr "盲目奉献；无条件的爱与完全的情感托付。"
 
-#: core/domain/chat/relationship.py:203
+#: core/domain/chat/relationship.py:235
 msgid "Unconditional love, boundless trust, and total emotional dedication. Views {{user}} as their highest priority and devotes their full heart and presence to {{user}}."
 msgstr "无条件的爱、无限的信任以及完全的情感奉献。将 {{user}} 视为最高优先级，并将全部的心意与陪伴奉献给 {{user}}。"
 

@@ -27,6 +27,9 @@
             {{ tab_button("Medien", "chat-pane-media", icon="🖼️") }}
             {{ tab_button(('Erinnerungen (<span id="memories-count">' ~ (memories|length) ~ '</span>)')|safe, "chat-pane-memories", icon="🧠") }}
             {{ tab_button(('Lorebooks (<span id="session-lorebooks-count">' ~ lorebook_data.active_count ~ '</span>)')|safe, "chat-pane-lorebooks", icon="📜") }}
+            {% if can_debug_relationship %}
+              {{ tab_button(_("Settings"), "chat-pane-settings", icon="⚙️") }}
+            {% endif %}
 
             <!-- Mobil: Seitenleiste als Tab rechts von Erinnerungen mit vertikalem Trennstrich davor -->
             <div class="chat-header-vdivider mobile-tab-only"></div>
@@ -285,6 +288,38 @@
       <div id="chat-pane-lorebooks" class="tab-pane" style="padding: 1rem 0;">
         {{ lorebook_manager(lorebook_data, is_new_chat=false, session_id=chat_session.id, modal_id="session-add-lorebook-modal") }}
       </div>
+
+      {% if can_debug_relationship %}
+        <!-- TAB 5: Settings (Admin / Author) -->
+        <div id="chat-pane-settings" class="tab-pane" style="padding: 1rem 0;">
+          <h3 style="color: var(--gold-accent); margin-bottom: 0.75rem;">{{ _('Relationship Settings') }}</h3>
+          <div class="aimo-frame chat-glass-panel" style="padding: 1rem; border-radius: 10px; display: flex; flex-direction: column; gap: 1rem; width: 100%;">
+            <label style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; cursor: pointer;" for="toggle-rel-debug-checkbox">
+              <span>{{ _('Show relationship debug labels') }}</span>
+              <span class="aimo-switch">
+                <input
+                  type="checkbox"
+                  id="toggle-rel-debug-checkbox"
+                  onchange="window.chatStream && window.chatStream.setRelationshipDebug(this.checked);">
+                <span class="aimo-switch-slider"></span>
+              </span>
+            </label>
+            {% if is_admin %}
+              <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 0.85rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                <span style="font-size: 0.88rem; color: var(--text-muted);">{{ _('Reset relationship to default and recalculate from chat history') }}</span>
+                <button
+                  type="button"
+                  id="recalculate-rel-btn"
+                  class="aimo-btn"
+                  onclick="window.chatStream && window.chatStream.recalculateRelationship(this);">
+                  <span class="icon-mono">🔄</span>
+                  <span>{{ _('Recalculate relationship') }}</span>
+                </button>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
     </div>
   </section>
 
@@ -316,30 +351,7 @@
     <div class="relationship-bar-wrap aimo-frame chat-glass-panel" data-relationship-score="{{ chat_session.relationship_value }}" style="border-radius: 10px; padding: 0.65rem;">
       <div class="relationship-header">
         <span>{{ _('Relationship:') }} <strong id="rel-score-label">{{ relationship_tier_name }}</strong></span>
-        <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
-          {% if can_debug_relationship %}
-            <button
-              type="button"
-              id="toggle-rel-debug-btn"
-              aria-pressed="false"
-              class="rel-debug-toggle-btn"
-              title="{{ _('Show/hide relationship debug evaluations') }}"
-              onclick="window.chatStream && window.chatStream.toggleRelationshipDebug(this);">
-              <span class="icon-mono">📊</span>
-            </button>
-          {% endif %}
-          {% if is_admin %}
-            <button
-              type="button"
-              id="recalculate-rel-btn"
-              style="background: none; border: none; cursor: pointer; color: var(--gold-accent); padding: 0; font-size: 0.9rem; line-height: 1;"
-              title="{{ _('Reset relationship to default and recalculate from chat history') }}"
-              onclick="window.chatStream && window.chatStream.recalculateRelationship(this);">
-              <span class="icon-mono">🔄</span>
-            </button>
-          {% endif %}
-          <span class="heart-icon">❤️</span>
-        </span>
+        <span class="heart-icon">❤️</span>
       </div>
       <div class="relationship-track">
         <div class="relationship-fill"></div>

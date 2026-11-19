@@ -116,11 +116,11 @@ msgstr "스프라이트 '%(name)s'을(를) 업로드했습니다."
 msgid "Event updated."
 msgstr "이벤트를 업데이트했습니다."
 
-#: flask/application/chat/views.py:605
+#: flask/application/chat/views.py:609
 msgid "Chat session deleted."
 msgstr "채팅 세션을 삭제했습니다."
 
-#: flask/application/chat/views.py:357 flask/application/chat/views.py:688
+#: flask/application/chat/views.py:357 flask/application/chat/views.py:692
 msgid "Chat session not found."
 msgstr "채팅 세션을 찾을 수 없습니다."
 
@@ -128,67 +128,67 @@ msgstr "채팅 세션을 찾을 수 없습니다."
 msgid "Associated character not found."
 msgstr "연결된 캐릭터를 찾을 수 없습니다."
 
-#: flask/application/chat/views.py:529
+#: flask/application/chat/views.py:533
 msgid "Session not found."
 msgstr "세션을 찾을 수 없습니다."
 
-#: flask/application/chat/views.py:669
+#: flask/application/chat/views.py:673
 msgid "Memory deleted."
 msgstr "메모리를 삭제했습니다."
 
-#: flask/application/chat/views.py:695
+#: flask/application/chat/views.py:699
 msgid "Memory not found."
 msgstr "메모리를 찾을 수 없습니다."
 
-#: flask/application/chat/views.py:711
+#: flask/application/chat/views.py:715
 msgid "No messages found for this memory episode."
 msgstr "이 메모리 에피소드에 대한 메시지를 찾을 수 없습니다."
 
-#: flask/application/chat/views.py:742
+#: flask/application/chat/views.py:746
 msgid "Memory recalculated successfully."
 msgstr "메모리를 다시 계산했습니다."
 
-#: flask/application/chat/views.py:541
+#: flask/application/chat/views.py:545
 msgid "Persona updated for this session."
 msgstr "이 세션의 페르소나를 업데이트했습니다."
 
-#: flask/application/chat/views.py:647
+#: flask/application/chat/views.py:651
 msgid "Memory updated."
 msgstr "메모리를 업데이트했습니다."
 
-#: flask/application/chat/views.py:746
+#: flask/application/chat/views.py:750
 msgid "Recalculation error: %(error)s"
 msgstr "다시 계산 오류: %(error)s"
 
-#: flask/application/chat/views.py:237 flask/application/chat/views.py:549
+#: flask/application/chat/views.py:237 flask/application/chat/views.py:553
 msgid "Invalid WorldInfo."
 msgstr "잘못된 WorldInfo입니다."
 
-#: flask/application/chat/views.py:242 flask/application/chat/views.py:556 flask/application/worldinfo/views.py:120 flask/application/worldinfo/views.py:228
+#: flask/application/chat/views.py:242 flask/application/chat/views.py:560 flask/application/worldinfo/views.py:120 flask/application/worldinfo/views.py:228
 msgid "This world is not yet available in your language."
 msgstr "이 세계는 아직 귀하의 언어로 제공되지 않습니다."
 
-#: flask/application/chat/views.py:538
+#: flask/application/chat/views.py:542
 msgid "Invalid persona."
 msgstr "잘못된 페르소나입니다."
 
-#: flask/application/chat/views.py:565
+#: flask/application/chat/views.py:569
 msgid "WorldInfo changed for this chat."
 msgstr "이 채팅의 WorldInfo를 변경했습니다."
 
-#: flask/application/chat/views.py:568
+#: flask/application/chat/views.py:572
 msgid "Event setting saved."
 msgstr "이벤트 설정을 저장했습니다."
 
-#: flask/application/chat/views.py:576
+#: flask/application/chat/views.py:580
 msgid "Thinking enabled."
 msgstr "사고가 활성화되었습니다."
 
-#: flask/application/chat/views.py:578
+#: flask/application/chat/views.py:582
 msgid "Thinking disabled."
 msgstr "사고가 비활성화되었습니다."
 
-#: flask/application/chat/views.py:583
+#: flask/application/chat/views.py:587
 msgid "Chat title updated."
 msgstr "채팅 제목을 업데이트했습니다."
 
@@ -276,15 +276,15 @@ msgstr "논바이너리"
 msgid "Account settings saved."
 msgstr "계정 설정이 저장되었습니다."
 
-#: flask/application/settings/views.py:74 flask/i18n.py:117 flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:257 flask/templates/characters/creator.html:258
+#: flask/application/settings/views.py:74 flask/i18n.py:132 flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:257 flask/templates/characters/creator.html:258
 msgid "Character"
 msgstr "캐릭터"
 
-#: flask/application/settings/views.py:100 flask/i18n.py:120 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:362
+#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:404
 msgid "World"
 msgstr "세계"
 
-#: flask/application/settings/views.py:125 flask/i18n.py:118
+#: flask/application/settings/views.py:125 flask/i18n.py:133
 msgid "Lorebook"
 msgstr "로어북"
 
@@ -368,287 +368,287 @@ msgstr "WorldInfo를 저장했습니다."
 msgid "Location updated."
 msgstr "장소를 업데이트했습니다."
 
-#: flask/i18n.py:51
+#: flask/i18n.py:66
 msgid "Error adding lorebook."
 msgstr "로어북을 추가하는 중 오류가 발생했습니다."
 
-#: flask/i18n.py:52
+#: flask/i18n.py:67
 msgid "Network error while adding lorebook."
 msgstr "로어북을 추가하는 중 네트워크 오류가 발생했습니다."
 
-#: flask/i18n.py:53
+#: flask/i18n.py:68
 msgid "Error toggling lorebook."
 msgstr "로어북을 전환하는 중 오류가 발생했습니다."
 
-#: flask/i18n.py:54
+#: flask/i18n.py:69
 msgid "Network error while toggling lorebook."
 msgstr "로어북을 전환하는 중 네트워크 오류가 발생했습니다."
 
-#: flask/i18n.py:55
+#: flask/i18n.py:70
 msgid "Error removing lorebook."
 msgstr "로어북을 제거하는 중 오류가 발생했습니다."
 
-#: flask/i18n.py:56
+#: flask/i18n.py:71
 msgid "Network error while removing lorebook."
 msgstr "로어북을 제거하는 중 네트워크 오류가 발생했습니다."
 
-#: flask/i18n.py:57
+#: flask/i18n.py:72
 msgid "Reset this prompt in all languages back to the built-in default?"
 msgstr "모든 언어에서 이 프롬프트를 기본값으로 재설정하시겠습니까?"
 
-#: flask/i18n.py:58
+#: flask/i18n.py:73
 msgid "Please select a portrait image first."
 msgstr "먼저 초상화 이미지를 선택하세요."
 
-#: flask/i18n.py:59
+#: flask/i18n.py:74
 msgid "Image analysis error: {error}"
 msgstr "이미지 분석 오류: {error}"
 
-#: flask/i18n.py:60
+#: flask/i18n.py:75
 msgid "Please enter at least one trigger or response."
 msgstr "트리거 또는 응답을 하나 이상 입력하세요."
 
-#: flask/i18n.py:61
+#: flask/i18n.py:76
 msgid "Please enter a meaningful character description in the 'Basic Info' tab first."
 msgstr "먼저 '기본 정보' 탭에서 캐릭터 설명을 입력하세요."
 
-#: flask/i18n.py:62
+#: flask/i18n.py:77
 msgid "Please enter a title or prose text first so the assistant can derive relevant tags."
 msgstr "어시스턴트가 관련 태그를 도출할 수 있도록 먼저 제목이나 본문을 입력하세요."
 
-#: flask/i18n.py:63
+#: flask/i18n.py:78
 msgid "Error deriving tags: {error}"
 msgstr "태그 추출 오류: {error}"
 
-#: flask/i18n.py:64
+#: flask/i18n.py:79
 msgid "Connection error: {error}"
 msgstr "연결 오류: {error}"
 
-#: flask/i18n.py:65
+#: flask/i18n.py:80
 msgid "Timeout while sending."
 msgstr "전송 중 시간이 초과되었습니다."
 
-#: flask/i18n.py:66
+#: flask/i18n.py:81
 msgid "Timeout"
 msgstr "시간 초과"
 
-#: flask/i18n.py:67
+#: flask/i18n.py:82
 msgid "Connection to backend (aimo-core) lost."
 msgstr "백엔드(aimo-core)와의 연결이 끊어졌습니다."
 
-#: flask/i18n.py:68
+#: flask/i18n.py:83
 msgid "Backend connection error"
 msgstr "백엔드 연결 오류"
 
-#: flask/i18n.py:69
+#: flask/i18n.py:84
 msgid "Connection to AI backend lost."
 msgstr "AI 백엔드와의 연결이 끊어졌습니다."
 
-#: flask/i18n.py:70
+#: flask/i18n.py:85
 msgid "AI connection error"
 msgstr "AI 연결 오류"
 
-#: flask/i18n.py:71
+#: flask/i18n.py:86
 msgid "Error sending message."
 msgstr "메시지 전송 중 오류가 발생했습니다."
 
-#: flask/i18n.py:72
+#: flask/i18n.py:87
 msgid "Error"
 msgstr "오류"
 
-#: flask/i18n.py:73
+#: flask/i18n.py:88
 msgid "Connection to backend lost: {error}"
 msgstr "백엔드와의 연결이 끊어졌습니다: {error}"
 
-#: flask/i18n.py:74
+#: flask/i18n.py:89
 msgid "Timeout: {error}"
 msgstr "시간 초과: {error}"
 
-#: flask/i18n.py:75
+#: flask/i18n.py:90
 msgid "Ollama connection error: {error}"
 msgstr "Ollama 연결 오류: {error}"
 
-#: flask/i18n.py:76
+#: flask/i18n.py:91
 msgid "Connection to Ollama (or LLMProvider) lost."
 msgstr "Ollama(또는 LLMProvider)와의 연결이 끊어졌습니다."
 
-#: flask/i18n.py:77
+#: flask/i18n.py:92
 msgid "Ollama connection error"
 msgstr "Ollama 연결 오류"
 
-#: flask/i18n.py:78
+#: flask/i18n.py:93
 msgid "Timeout while regenerating."
 msgstr "다시 생성하는 중 시간이 초과되었습니다."
 
-#: flask/i18n.py:79
+#: flask/i18n.py:94
 msgid "Error while regenerating."
 msgstr "다시 생성하는 중 오류가 발생했습니다."
 
-#: flask/i18n.py:80
+#: flask/i18n.py:95
 msgid "Ollama error"
 msgstr "Ollama 오류"
 
-#: flask/i18n.py:81
+#: flask/i18n.py:96
 msgid "Success"
 msgstr "성공"
 
-#: flask/i18n.py:82
+#: flask/i18n.py:97
 msgid "Warning"
 msgstr "경고"
 
-#: flask/i18n.py:83
+#: flask/i18n.py:98
 msgid "Notice"
 msgstr "알림"
 
-#: flask/i18n.py:84 flask/templates/macros/buttons.html:79 flask/templates/macros/buttons.html:80 flask/templates/macros/lorebook_manager.html:239 flask/templates/macros/persona_manager.html:55
+#: flask/i18n.py:99 flask/templates/macros/buttons.html:79 flask/templates/macros/buttons.html:80 flask/templates/macros/lorebook_manager.html:239 flask/templates/macros/persona_manager.html:55
 msgid "Close"
 msgstr "닫기"
 
-#: flask/i18n.py:85 flask/templates/characters/creator.html:134
+#: flask/i18n.py:100 flask/templates/characters/creator.html:134
 msgid "Crops active"
 msgstr "자르기 활성"
 
-#: flask/i18n.py:86 flask/templates/worldinfo/detail.html:97
+#: flask/i18n.py:101 flask/templates/worldinfo/detail.html:97
 msgid "1:1 Cover active"
 msgstr "1:1 커버 활성"
 
-#: flask/i18n.py:87
+#: flask/i18n.py:102
 msgid "Analyzing image"
 msgstr "이미지 분석 중"
 
-#: flask/i18n.py:88
+#: flask/i18n.py:103
 msgid "✨ Analyzing portrait and extracting appearance"
 msgstr "✨ 초상화를 분석하고 외모를 추출하는 중"
 
-#: flask/i18n.py:89
+#: flask/i18n.py:104
 msgid "Drafting dialogue"
 msgstr "대화 작성 중"
 
-#: flask/i18n.py:90
+#: flask/i18n.py:105
 msgid "✨ Analyzing character description"
 msgstr "✨ 캐릭터 설명 분석 중"
 
-#: flask/i18n.py:91
+#: flask/i18n.py:106
 msgid "✨ Formulating response"
 msgstr "✨ 응답 작성 중"
 
-#: flask/i18n.py:92
+#: flask/i18n.py:107
 msgid "⏳ Analyzing image (Save & Close locked)"
 msgstr "⏳ 이미지 분석 중 (저장 및 닫기 잠김)"
 
-#: flask/i18n.py:93
+#: flask/i18n.py:108
 msgid "Not translated yet (click to enter manually or AI translate)"
 msgstr "아직 번역되지 않음 (클릭하여 직접 입력하거나 AI 번역)"
 
-#: flask/i18n.py:94
+#: flask/i18n.py:109
 msgid "Translation may be outdated (click to review)"
 msgstr "번역이 오래되었을 수 있습니다 (클릭하여 검토)"
 
-#: flask/i18n.py:95
+#: flask/i18n.py:110
 msgid "Appearance extracted from image successfully."
 msgstr "이미지에서 외모를 성공적으로 추출했습니다."
 
-#: flask/i18n.py:96
+#: flask/i18n.py:111
 msgid "No appearance extracted."
 msgstr "외모가 추출되지 않았습니다."
 
-#: flask/i18n.py:97
+#: flask/i18n.py:112
 msgid "Server error ({status}): Could not extract appearance."
 msgstr "서버 오류 ({status}): 외모를 추출할 수 없습니다."
 
-#: flask/i18n.py:98
+#: flask/i18n.py:113
 msgid "Please select a portrait image first to extract image features."
 msgstr "이미지 특징을 추출하려면 먼저 초상화 이미지를 선택하세요."
 
-#: flask/i18n.py:99
+#: flask/i18n.py:114
 msgid "Image features extracted"
 msgstr "이미지 특징 추출됨"
 
-#: flask/i18n.py:100
+#: flask/i18n.py:115
 msgid "Image analysis failed."
 msgstr "이미지 분석에 실패했습니다."
 
-#: flask/i18n.py:101
+#: flask/i18n.py:116
 msgid "Image analysis error"
 msgstr "이미지 분석 오류"
 
-#: flask/i18n.py:102
+#: flask/i18n.py:117
 msgid "Connection error during image analysis."
 msgstr "이미지 분석 중 연결 오류가 발생했습니다."
 
-#: flask/i18n.py:103
+#: flask/i18n.py:118
 msgid "Connection error"
 msgstr "연결 오류"
 
-#: flask/i18n.py:104
+#: flask/i18n.py:119
 msgid "Create New Persona"
 msgstr "새 페르소나 만들기"
 
-#: flask/i18n.py:105
+#: flask/i18n.py:120
 msgid "Edit Persona"
 msgstr "페르소나 편집"
 
-#: flask/i18n.py:106
+#: flask/i18n.py:121
 msgid "Used in active chats (deletion protection)"
 msgstr "활성 채팅에서 사용 중 (삭제 보호)"
 
-#: flask/i18n.py:107
+#: flask/i18n.py:122
 msgid "Delete persona"
 msgstr "페르소나 삭제"
 
-#: flask/i18n.py:108
+#: flask/i18n.py:123
 msgid "Deletion locked"
 msgstr "삭제 잠김"
 
-#: flask/i18n.py:109 flask/templates/admin/services.html:254 flask/templates/admin/users.html:43 flask/templates/characters/creator.html:247 flask/templates/characters/creator.html:430
+#: flask/i18n.py:124 flask/templates/admin/services.html:254 flask/templates/admin/users.html:43 flask/templates/characters/creator.html:247 flask/templates/characters/creator.html:430
 msgid "Delete"
 msgstr "삭제"
 
-#: flask/i18n.py:110 flask/templates/chat/session.html:929
+#: flask/i18n.py:125 flask/templates/chat/session.html:971
 msgid "Translating..."
 msgstr "번역 중..."
 
-#: flask/i18n.py:111
+#: flask/i18n.py:126
 msgid "Translation paused"
 msgstr "번역 일시 중지됨"
 
-#: flask/i18n.py:112
+#: flask/i18n.py:127
 msgid "Cloud AI Mode (On-Demand)"
 msgstr "클라우드 AI 모드 (요청 시)"
 
-#: flask/i18n.py:113
+#: flask/i18n.py:128
 msgid "Idle"
 msgstr "대기 중"
 
-#: flask/i18n.py:114
+#: flask/i18n.py:129
 msgid "No active translation"
 msgstr "활성 번역 없음"
 
-#: flask/i18n.py:115
+#: flask/i18n.py:130
 msgid "Last finished:"
 msgstr "마지막 완료:"
 
-#: flask/i18n.py:116
+#: flask/i18n.py:131
 msgid "Error:"
 msgstr "오류:"
 
-#: flask/i18n.py:119
+#: flask/i18n.py:134
 msgid "Lorebook Entry"
 msgstr "로어북 항목"
 
-#: flask/i18n.py:121
+#: flask/i18n.py:136
 msgid "Location"
 msgstr "장소"
 
-#: flask/i18n.py:122
+#: flask/i18n.py:137
 msgid "Location Tags"
 msgstr "장소 태그"
 
-#: flask/i18n.py:123
+#: flask/i18n.py:138
 msgid "Event"
 msgstr "이벤트"
 
-#: flask/i18n.py:124
+#: flask/i18n.py:139
 msgid "Character Event"
 msgstr "캐릭터 이벤트"
 
@@ -748,7 +748,7 @@ msgstr "사용자 관리"
 msgid "Services & Models"
 msgstr "서비스 및 모델"
 
-#: flask/templates/admin/layout.html:20 flask/templates/admin/prompts.html:34
+#: flask/templates/admin/layout.html:20 flask/templates/admin/prompts.html:12
 msgid "System Prompts"
 msgstr "시스템 프롬프트"
 
@@ -764,75 +764,55 @@ msgstr "시스템 배경"
 msgid "Back to Hub"
 msgstr "허브로 돌아가기"
 
-#: flask/templates/admin/prompts.html:14
-msgid "System-Wide Content Translations"
-msgstr "시스템 전체 콘텐츠 번역"
-
-#: flask/templates/admin/prompts.html:18
-msgid "Cloud AI provider active: automatic background translation is disabled to protect your token quota. Use the button to translate missing content on demand."
-msgstr "클라우드 AI 공급자가 활성화됨: 토큰 할당량을 보호하기 위해 자동 백그라운드 번역이 비활성화되어 있습니다. 필요 시 버튼을 눌러 누락된 콘텐츠를 번역하세요."
-
-#: flask/templates/admin/prompts.html:20
-msgid "Local LLM provider active: missing content translations run automatically in the background, or can be triggered manually here."
-msgstr "로컬 LLM 공급자가 활성화됨: 누락된 콘텐츠 번역이 백그라운드에서 자동으로 실행되거나 여기에서 수동으로 시작할 수 있습니다."
-
-#: flask/templates/admin/prompts.html:25
-msgid "Synchronize Missing Translations"
-msgstr "누락된 번역 동기화"
-
-#: flask/templates/admin/prompts.html:26 flask/templates/admin/translations.html:16 flask/templates/admin/user_form.html:72 flask/templates/characters/creator.html:614 flask/templates/characters/creator.html:651
-msgid "Cancel"
-msgstr "취소"
-
-#: flask/templates/admin/prompts.html:39
+#: flask/templates/admin/prompts.html:17
 msgid "Prompt Placeholders"
 msgstr "프롬프트 플레이스홀더"
 
-#: flask/templates/admin/prompts.html:42
+#: flask/templates/admin/prompts.html:20
 msgid "You can use"
 msgstr "사용 가능한 변수:"
 
-#: flask/templates/admin/prompts.html:42
+#: flask/templates/admin/prompts.html:20
 msgid "(character name) and"
 msgstr "(캐릭터 이름) 및"
 
-#: flask/templates/admin/prompts.html:42
+#: flask/templates/admin/prompts.html:20
 msgid "(player persona name) in prompts. These are replaced dynamically at runtime."
 msgstr "(플레이어 페르소나 이름)을(를) 프롬프트에서 사용할 수 있으며 실행 시 동적으로 치환됩니다."
 
-#: flask/templates/admin/prompts.html:47
+#: flask/templates/admin/prompts.html:25
 msgid "Roleplay Prompt"
 msgstr "롤플레이 프롬프트"
 
-#: flask/templates/admin/prompts.html:48
+#: flask/templates/admin/prompts.html:26
 msgid "Memory Prompt"
 msgstr "메모리 프롬프트"
 
-#: flask/templates/admin/prompts.html:49
+#: flask/templates/admin/prompts.html:27
 msgid "Diffuser Prompt"
 msgstr "이미지 생성 프롬프트"
 
-#: flask/templates/admin/prompts.html:50
+#: flask/templates/admin/prompts.html:28
 msgid "AI Author Prompt"
 msgstr "AI 작성 도우미 프롬프트"
 
-#: flask/templates/admin/prompts.html:51
+#: flask/templates/admin/prompts.html:29
 msgid "Vision Prompt"
 msgstr "비전 분석 프롬프트"
 
-#: flask/templates/admin/prompts.html:52
+#: flask/templates/admin/prompts.html:30
 msgid "AI Dialogue Author Prompt"
 msgstr "AI 대사 예시 작성 프롬프트"
 
-#: flask/templates/admin/prompts.html:59
+#: flask/templates/admin/prompts.html:37
 msgid "Restore Default"
 msgstr "기본값 복원"
 
-#: flask/templates/admin/prompts.html:59
+#: flask/templates/admin/prompts.html:37
 msgid "Resets all languages of this prompt to factory default"
 msgstr "이 프롬프트의 모든 언어를 기본값으로 초기화합니다"
 
-#: flask/templates/admin/prompts.html:77
+#: flask/templates/admin/prompts.html:55
 msgid "Save Prompts"
 msgstr "프롬프트 저장"
 
@@ -1088,6 +1068,10 @@ msgstr "캐릭터, 로어북, 세계, 장소 및 이벤트의 백그라운드 �
 msgid "Start Translation Sync"
 msgstr "번역 동기화 시작"
 
+#: flask/templates/admin/translations.html:16 flask/templates/admin/user_form.html:72 flask/templates/characters/creator.html:614 flask/templates/characters/creator.html:651 flask/templates/characters/creator.html:687
+msgid "Cancel"
+msgstr "취소"
+
 #: flask/templates/admin/translations.html:23
 msgid "Status:"
 msgstr "상태:"
@@ -1144,7 +1128,7 @@ msgstr "프리셋:"
 msgid "Individual functional permissions (FunctionPermission):"
 msgstr "개별 기능 권한 (FunctionPermission):"
 
-#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:269 flask/templates/chat/session.html:802 flask/templates/lorebooks/detail.html:96
+#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:279 flask/templates/chat/session.html:844 flask/templates/lorebooks/detail.html:96
 msgid "Save"
 msgstr "저장"
 
@@ -1674,7 +1658,7 @@ msgstr "새 채팅:"
 msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
 msgstr "이 세션에 사용할 플레이어 페르소나, 활성 WorldInfo 및 로어북을 설정합니다."
 
-#: flask/templates/chat/select_worldinfo.html:18 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
+#: flask/templates/chat/select_worldinfo.html:18 flask/templates/chat/session.html:31 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
 msgid "Settings"
 msgstr "설정"
 
@@ -1730,247 +1714,263 @@ msgstr "호환 모델(예: Gemma 4, DeepSeek-R1)에서 확장된 사고 과정�
 msgid "Start Adventure"
 msgstr "모험 시작"
 
-#: flask/templates/chat/session.html:33
+#: flask/templates/chat/session.html:36
 msgid "Info"
 msgstr "정보"
 
-#: flask/templates/chat/session.html:33
+#: flask/templates/chat/session.html:36
 msgid "Sidebar / Character Info"
 msgstr "사이드바 / 캐릭터 정보"
 
-#: flask/templates/chat/session.html:39 flask/templates/chat/session.html:63 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
+#: flask/templates/chat/session.html:42 flask/templates/chat/session.html:67 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
 msgid "Location:"
 msgstr "위치:"
 
-#: flask/templates/chat/session.html:41
+#: flask/templates/chat/session.html:44
 msgid "World:"
 msgstr "세계:"
 
-#: flask/templates/chat/session.html:43
+#: flask/templates/chat/session.html:46
 msgid "Neutral Setting"
 msgstr "중립 배경"
 
-#: flask/templates/chat/session.html:79
+#: flask/templates/chat/session.html:83
 msgid "View LLM prompt (Admin)"
 msgstr "LLM 프롬프트 보기 (관리자)"
 
-#: flask/templates/chat/session.html:81 flask/templates/chat/session.html:101
+#: flask/templates/chat/session.html:85 flask/templates/chat/session.html:111
 msgid "Translate message (on-demand)"
 msgstr "메시지 번역 (요청 시)"
 
-#: flask/templates/chat/session.html:82 flask/templates/chat/session.html:102
+#: flask/templates/chat/session.html:86 flask/templates/chat/session.html:112
 msgid "Edit message"
 msgstr "메시지 편집"
 
-#: flask/templates/chat/session.html:83 flask/templates/chat/session.html:103
+#: flask/templates/chat/session.html:87 flask/templates/chat/session.html:113
 msgid "Duplicate chat from here (Fork)"
 msgstr "여기서부터 채팅 복제 (포크)"
 
-#: flask/templates/chat/session.html:85 flask/templates/chat/session.html:104 flask/templates/macros/system_message.html:27
+#: flask/templates/chat/session.html:89 flask/templates/chat/session.html:114 flask/templates/macros/system_message.html:27
 msgid "Delete from here"
 msgstr "여기서부터 삭제"
 
-#: flask/templates/chat/session.html:111
+#: flask/templates/chat/session.html:121
 msgid "Show/hide ALT text (image description)"
 msgstr "ALT 텍스트(이미지 설명) 표시/숨기기"
 
-#: flask/templates/chat/session.html:132
+#: flask/templates/chat/session.html:142
 msgid "AI system notice"
 msgstr "AI 시스템 안내"
 
-#: flask/templates/chat/session.html:134
+#: flask/templates/chat/session.html:144
 msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
 msgstr "이것은 AI 챗봇입니다. 응답은 로컬 또는 외부 언어 모델에 의해 자동으로 생성되며 불완전하거나 부정확할 수 있습니다."
 
-#: flask/templates/chat/session.html:141
+#: flask/templates/chat/session.html:151
 msgid "Chat options & sessions"
 msgstr "채팅 옵션 및 세션"
 
-#: flask/templates/chat/session.html:141
+#: flask/templates/chat/session.html:151
 msgid "Chat options"
 msgstr "채팅 옵션"
 
-#: flask/templates/chat/session.html:147
+#: flask/templates/chat/session.html:157
 msgid "Sessions"
 msgstr "세션"
 
-#: flask/templates/chat/session.html:148
+#: flask/templates/chat/session.html:158
 msgid "Start new chat"
 msgstr "새 채팅 시작"
 
-#: flask/templates/chat/session.html:150
+#: flask/templates/chat/session.html:160
 msgid "Delete chat"
 msgstr "채팅 삭제"
 
-#: flask/templates/chat/session.html:150
+#: flask/templates/chat/session.html:160
 msgid "Do you really want to permanently delete this chat?"
 msgstr "이 채팅을 영구적으로 삭제하시겠습니까?"
 
-#: flask/templates/chat/session.html:154
+#: flask/templates/chat/session.html:164
 msgid "Attach image (Vision ALT analysis)"
 msgstr "이미지 첨부 (Vision ALT 분석)"
 
-#: flask/templates/chat/session.html:162
+#: flask/templates/chat/session.html:172
 msgid "Generate scene image"
 msgstr "장면 이미지 생성"
 
-#: flask/templates/chat/session.html:169
+#: flask/templates/chat/session.html:179
 msgid "Cancel image generation"
 msgstr "이미지 생성 취소"
 
-#: flask/templates/chat/session.html:180
+#: flask/templates/chat/session.html:190
 msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
 msgstr "답변이나 행동을 입력하세요... (Enter로 전송, Shift+Enter로 줄바꿈)"
 
-#: flask/templates/chat/session.html:186
+#: flask/templates/chat/session.html:196
 msgid "Regenerate response – replaces the last AI reply or retries generation"
 msgstr "응답 다시 생성 – 마지막 AI 답변을 대체하거나 생성을 다시 시도합니다"
 
-#: flask/templates/chat/session.html:193
+#: flask/templates/chat/session.html:203
 msgid "Cancel response generation"
 msgstr "응답 생성 취소"
 
-#: flask/templates/chat/session.html:199
+#: flask/templates/chat/session.html:209
 msgid "Send message (Enter)"
 msgstr "메시지 전송 (Enter)"
 
-#: flask/templates/chat/session.html:257 flask/templates/chat/session.html:786 flask/templates/lorebooks/detail.html:167
+#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:828 flask/templates/lorebooks/detail.html:167
 msgid "Tags (Comma-separated for vectorless RAG)"
 msgstr "태그 (벡터리스 RAG용 쉼표 구분)"
 
-#: flask/templates/chat/session.html:261 flask/templates/chat/session.html:790
+#: flask/templates/chat/session.html:271 flask/templates/chat/session.html:832
 msgid "Summary"
 msgstr "요약"
 
-#: flask/templates/chat/session.html:266 flask/templates/chat/session.html:796
+#: flask/templates/chat/session.html:276 flask/templates/chat/session.html:838
 msgid "Recalculate"
 msgstr "다시 계산"
 
-#: flask/templates/chat/session.html:266 flask/templates/chat/session.html:795
+#: flask/templates/chat/session.html:276 flask/templates/chat/session.html:837
 msgid "Recalculate memory from associated episode messages"
 msgstr "연결된 에피소드 메시지에서 메모리 다시 계산"
 
-#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:799
+#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:841
 msgid "Translate"
 msgstr "번역"
 
-#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:798
+#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:840
 msgid "Translate memory in-place to your language"
 msgstr "메모리를 현재 언어(in-place)로 바로 번역"
 
-#: flask/templates/chat/session.html:297
+#: flask/templates/chat/session.html:295
+msgid "Relationship Settings"
+msgstr ""
+
+#: flask/templates/chat/session.html:298
+msgid "Show relationship debug labels"
+msgstr ""
+
+#: flask/templates/chat/session.html:309
+msgid "Reset relationship to default and recalculate from chat history"
+msgstr ""
+
+#: flask/templates/chat/session.html:316
+msgid "Recalculate relationship"
+msgstr ""
+
+#: flask/templates/chat/session.html:339
 msgid "Thinking: Enabled (Click to disable)"
 msgstr "사고: 활성화됨 (클릭하여 비활성화)"
 
-#: flask/templates/chat/session.html:297
+#: flask/templates/chat/session.html:339
 msgid "Thinking: Disabled (Click to enable)"
 msgstr "사고: 비활성화됨 (클릭하여 활성화)"
 
-#: flask/templates/chat/session.html:298
+#: flask/templates/chat/session.html:340
 msgid "Disable thinking"
 msgstr "사고 비활성화"
 
-#: flask/templates/chat/session.html:298
+#: flask/templates/chat/session.html:340
 msgid "Enable thinking"
 msgstr "사고 활성화"
 
-#: flask/templates/chat/session.html:311 flask/templates/macros/cards.html:91
+#: flask/templates/chat/session.html:353 flask/templates/macros/cards.html:91
 msgid "Relationship:"
 msgstr "관계:"
 
-#: flask/templates/chat/session.html:322
+#: flask/templates/chat/session.html:364
 msgid "Active Persona"
 msgstr "활성 페르소나"
 
-#: flask/templates/chat/session.html:327
+#: flask/templates/chat/session.html:369
 msgid "Edit player persona"
 msgstr "플레이어 페르소나 편집"
 
-#: flask/templates/chat/session.html:344
+#: flask/templates/chat/session.html:386
 msgid "Unknown"
 msgstr "알 수 없음"
 
-#: flask/templates/chat/session.html:345
+#: flask/templates/chat/session.html:387
 msgid "Persona is locked for this chat after the 1st message"
 msgstr "첫 번째 메시지 이후 이 채팅의 페르소나는 잠깁니다"
 
-#: flask/templates/chat/session.html:368
+#: flask/templates/chat/session.html:410
 msgid "No World (Neutral)"
 msgstr "세계 없음 (중립)"
 
-#: flask/templates/chat/session.html:371
+#: flask/templates/chat/session.html:413
 msgid "Switch world"
 msgstr "세계 전환"
 
-#: flask/templates/chat/session.html:382
+#: flask/templates/chat/session.html:424
 msgid "Current Location"
 msgstr "현재 위치"
 
-#: flask/templates/chat/session.html:384
+#: flask/templates/chat/session.html:426
 msgid "-- Choose location --"
 msgstr "-- 위치 선택 --"
 
-#: flask/templates/chat/session.html:402
+#: flask/templates/chat/session.html:444
 msgid "Enable random events"
 msgstr "무작위 이벤트 활성화"
 
-#: flask/templates/chat/session.html:407
+#: flask/templates/chat/session.html:449
 msgid "Admin & creator info: Cooldown until the next random event"
 msgstr "관리자 및 제작자 정보: 다음 무작위 이벤트까지 대기"
 
-#: flask/templates/chat/session.html:408
+#: flask/templates/chat/session.html:450
 msgid "Next event:"
 msgstr "다음 이벤트:"
 
-#: flask/templates/chat/session.html:411 flask/templates/chat/session.html:415
+#: flask/templates/chat/session.html:453 flask/templates/chat/session.html:457
 msgid "in"
 msgstr "남은"
 
-#: flask/templates/chat/session.html:411
+#: flask/templates/chat/session.html:453
 msgid "message"
 msgstr "메시지"
 
-#: flask/templates/chat/session.html:411 flask/templates/chat/session.html:415
+#: flask/templates/chat/session.html:453 flask/templates/chat/session.html:457
 msgid "messages"
 msgstr "메시지"
 
-#: flask/templates/chat/session.html:411
+#: flask/templates/chat/session.html:453
 msgid "paused"
 msgstr "일시 중지됨"
 
-#: flask/templates/chat/session.html:413
+#: flask/templates/chat/session.html:455
 msgid "next message"
 msgstr "다음 메시지"
 
-#: flask/templates/chat/session.html:488
+#: flask/templates/chat/session.html:530
 msgid "Do you really want to delete this session?"
 msgstr "이 세션을 정말 삭제하시겠습니까?"
 
-#: flask/templates/chat/session.html:490
+#: flask/templates/chat/session.html:532
 msgid "Delete session"
 msgstr "세션 삭제"
 
-#: flask/templates/chat/session.html:714
+#: flask/templates/chat/session.html:756
 msgid "Permanently delete this message and all subsequent messages (including associated memories)?"
 msgstr "이 메시지와 이후의 모든 메시지(연결된 메모리 포함)를 영구적으로 삭제하시겠습니까?"
 
-#: flask/templates/chat/session.html:913
+#: flask/templates/chat/session.html:955
 msgid "Recalculation error"
 msgstr "다시 계산 오류"
 
-#: flask/templates/chat/session.html:915
+#: flask/templates/chat/session.html:957
 msgid "Recalculation error:"
 msgstr "다시 계산 오류:"
 
-#: flask/templates/chat/session.html:952
+#: flask/templates/chat/session.html:994
 msgid "Translated!"
 msgstr "번역 완료!"
 
-#: flask/templates/chat/session.html:964
+#: flask/templates/chat/session.html:1006
 msgid "Translation error"
 msgstr "번역 오류"
 
-#: flask/templates/chat/session.html:966
+#: flask/templates/chat/session.html:1008
 msgid "Translation error:"
 msgstr "번역 오류:"
 
