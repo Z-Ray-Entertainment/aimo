@@ -9,128 +9,136 @@ msgid ""
 "Active Scene Focus — Immediate Narrative Event:\n"
 "React directly and organically to the unfolding event or acute action described in [WORLD_INFO] and [CHAT_HISTORY]."
 msgstr ""
+"Aktif Sahne Odağı — Anlık Anlatı Olayı:\n"
+"[WORLD_INFO] ve [CHAT_HISTORY] içinde açıklanan gelişen olaya veya ani eyleme doğrudan ve doğal bir şekilde tepki ver."
 
 #: core/domain/chat/focus_analyzer.py:162
 msgid ""
 "Active Scene Focus — Personal History & Intimacy:\n"
 "The conversation centers on personal feelings, intimacy, or {character_name}'s past. Strictly honor {character_name}'s canon origin, sexual history, and intimacy traits defined in [CHARACTER_DEFINITION]. NEVER invent or admit to past sexual or romantic experiences that contradict [CHARACTER_DEFINITION], while allowing authentic emotional responses to the current moment."
 msgstr ""
+"Aktif Sahne Odağı — Kişisel Geçmiş ve Yakınlık:\n"
+"Sohbet kişisel duygular, yakınlık veya {character_name} karakterinin geçmişi üzerine odaklanıyor. [CHARACTER_DEFINITION] içinde tanımlanan {character_name} karakterinin kanonik kökenine, cinsel geçmişine ve yakınlık özelliklerine kesinlikle sadık kal. Mevcut ana otantik duygusal tepkiler verirken, [CHARACTER_DEFINITION] ile çelişen geçmiş cinsel veya romantik deneyimleri ASLA uydurma veya kabul etme."
 
 #: core/domain/chat/focus_analyzer.py:173
 msgid ""
 "Active Scene Focus — Environment & Exploration:\n"
 "Pay close attention to the current location, sensory atmosphere, and {character_name}'s location preferences in [WORLD_INFO]."
 msgstr ""
+"Aktif Sahne Odağı — Çevre ve Keşif:\n"
+"[WORLD_INFO] içindeki mevcut konuma, duyusal atmosfere ve {character_name} karakterinin konum tercihlerine dikkat et."
 
 #: core/domain/chat/focus_analyzer.py:189
 msgid ""
 "Active Scene Focus — World Lore & Background Knowledge:\n"
 "Incorporate relevant facts and canon details from [RELEVANT_LOREBOOKS] and [RELEVANT_MEMORIES] naturally into {character_name}'s perspective."
 msgstr ""
+"Aktif Sahne Odağı — Dünya Bilgisi ve Arka Plan:\n"
+"[RELEVANT_LOREBOOKS] ve [RELEVANT_MEMORIES] içindeki ilgili gerçekleri ve kanonik ayrıntıları {character_name} karakterinin bakış açısına doğal bir şekilde dahil et."
 
 #: core/domain/chat/prompt_builder.py:268 core/domain/chat/prompt_builder.py:373
 msgid "Name:"
-msgstr ""
+msgstr "Ad:"
 
 #: core/domain/chat/prompt_builder.py:269 core/domain/chat/prompt_builder.py:374
 msgid "Gender:"
-msgstr ""
+msgstr "Cinsiyet:"
 
 #: core/domain/chat/prompt_builder.py:270
 msgid "Description, Personality & Canon Backstory (All origin facts, personal history, and traits below are canon truth):"
-msgstr ""
+msgstr "Açıklama, Kişilik ve Kanonik Geçmiş (Aşağıdaki tüm köken gerçekleri, kişisel geçmiş ve özellikler kanonik gerçektir):"
 
 #: core/domain/chat/prompt_builder.py:407
 msgid "World Name:"
-msgstr ""
+msgstr "Dünya Adı:"
 
 #: core/domain/chat/prompt_builder.py:460
 msgid "Player"
-msgstr ""
+msgstr "Oyuncu"
 
 #: core/domain/chat/prompt_builder.py:461
 msgid "You"
-msgstr ""
+msgstr "Sen"
 
 #: core/domain/chat/prompt_builder.py:171
 msgid "None."
-msgstr ""
+msgstr "Yok."
 
 #: core/domain/chat/prompt_builder.py:264 core/domain/chat/prompt_builder.py:385
 msgid "Physical Appearance:"
-msgstr ""
+msgstr "Fiziksel Görünüm:"
 
 #: core/domain/chat/prompt_builder.py:382
 msgid "Background & Personality:"
-msgstr ""
+msgstr "Geçmiş ve Kişilik:"
 
 #: core/domain/chat/prompt_builder.py:410
 msgid "Current Location:"
-msgstr ""
+msgstr "Mevcut Konum:"
 
 #: core/domain/chat/prompt_builder.py:447 core/domain/chat/prompt_builder.py:403
 msgid "(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"
-msgstr ""
+msgstr "(Gelişen bu olayı fark et ve anlık tepkine ile diyaloğuna doğal bir şekilde işle.)"
 
 #: core/domain/chat/prompt_builder.py:267
 msgid "Role: You play this character ({name}). Embody these traits, canon backstory, and voice exclusively:"
-msgstr ""
+msgstr "Rol: Bu karakteri ({name}) oynuyorsun. Yalnızca bu özellikleri, kanonik geçmişi ve sesi somutlaştır:"
 
 #: core/domain/chat/prompt_builder.py:370
 msgid "Role: This is your conversation partner ({name}). You are NOT this person. NEVER speak, act, think, or decide on behalf of {name}:"
-msgstr ""
+msgstr "Rol: Bu senin sohbet partnerin ({name}). Sen bu kişi DEĞİLSİN. ASLA {name} adına konuşma, hareket etme, düşünme veya karar verme:"
 
 #: core/domain/chat/prompt_builder.py:400
 msgid "Active World: None (Neutral setting, no specific world events)."
-msgstr ""
+msgstr "Aktif Dünya: Yok (Tarafsız ortam, belirli bir dünya olayı yok)."
 
 #: core/domain/chat/prompt_builder.py:421
 msgid "Visual Environment:"
-msgstr ""
+msgstr "Görsel Çevre:"
 
 #: core/domain/chat/prompt_builder.py:424
 msgid "Current Location: Unspecified"
-msgstr ""
+msgstr "Mevcut Konum: Belirtilmemiş"
 
 #: core/domain/chat/prompt_builder.py:439
 msgid "Character's Preferred Locations:"
-msgstr ""
+msgstr "Karakterin Tercih Ettiği Konumlar:"
 
 #: core/domain/chat/prompt_builder.py:442
 msgid "Character's Disliked Locations:"
-msgstr ""
+msgstr "Karakterin Sevmediği Konumlar:"
 
 #: core/domain/chat/prompt_builder.py:494 core/domain/chat/prompt_builder.py:560
 msgid "No messages yet."
-msgstr ""
+msgstr "Henüz mesaj yok."
 
 #: core/domain/chat/prompt_builder.py:415
 msgid "Location Atmosphere:"
-msgstr ""
+msgstr "Konum Atmosferi:"
 
 #: core/domain/chat/prompt_builder.py:418
 msgid "Location Description:"
-msgstr ""
+msgstr "Konum Açıklaması:"
 
 #: core/domain/chat/prompt_builder.py:446 core/domain/chat/prompt_builder.py:402
 msgid "Active Narrative Event ({title}):"
-msgstr ""
+msgstr "Aktif Anlatı Olayı ({title}):"
 
 #: core/domain/chat/prompt_builder.py:476
 msgid "[Player shows an image: {alt}]"
-msgstr ""
+msgstr "[Oyuncu bir görsel gösteriyor: {alt}]"
 
 #: core/domain/chat/relationship.py:239
 msgid "Relationship Status:"
-msgstr ""
+msgstr "İlişki Durumu:"
 
 #: core/domain/chat/relationship.py:240
 msgid "Emotional Stance towards {{user}}:"
-msgstr ""
+msgstr "{{user}} Karşısındaki Duygusal Tutum:"
 
 #: core/domain/chat/relationship.py:241
 msgid "Roleplay Behavioral Guidelines for {{char}}:"
-msgstr ""
+msgstr "{{char}} İçin Rol Yapma Davranış Kuralları:"
 
 #: core/domain/chat/relationship.py:21
 msgid "Pure Hatred"
@@ -138,11 +146,11 @@ msgstr "Saf Nefret"
 
 #: core/domain/chat/relationship.py:22
 msgid "Pure hatred; considers you a mortal enemy and wishes you gone."
-msgstr ""
+msgstr "Saf nefret; seni ölümcül bir düşman olarak görüyor ve gitmeni istiyor."
 
 #: core/domain/chat/relationship.py:23
 msgid "Treats {{user}} with visceral malice, open hostility, and total rejection. Under no circumstances shows warmth, empathy, or cooperation. Refuses peace and wishes {{user}} gone."
-msgstr ""
+msgstr "{{user}} kişisine derin bir kin, açık düşmanlık ve tam bir reddetmeyle yaklaşır. Hiçbir koşulda sıcaklık, empati veya iş birliği göstermez. Barışı reddeder ve {{user}} kişisinin yok olmasını ister."
 
 #: core/domain/chat/relationship.py:30
 msgid "Intense Malice"
@@ -150,11 +158,11 @@ msgstr "Yoğun Kötü Niyet"
 
 #: core/domain/chat/relationship.py:31
 msgid "Intense malice; actively seeks to harm or undermine you."
-msgstr ""
+msgstr "Yoğun kin; aktif olarak sana zarar vermeye veya seni baltalamaya çalışıyor."
 
 #: core/domain/chat/relationship.py:32
 msgid "Bitter, spiteful, and confrontational. Actively looks for ways to undermine, diminish, or obstruct {{user}}. Rejects kindness and assumes bad faith in everything {{user}} says or does."
-msgstr ""
+msgstr "Acımasız, kindar ve kavgacı. {{user}} kişisini baltalamanın, küçümsemenin veya engellemenin yollarını aktif olarak arar. Nezaketi reddeder ve {{user}} kişisinin söylediği ya da yaptığı her şeyde kötü niyet varsayar."
 
 #: core/domain/chat/relationship.py:39
 msgid "Deep Loathing"
@@ -162,11 +170,11 @@ msgstr "Derin Tiksinti"
 
 #: core/domain/chat/relationship.py:40
 msgid "Deep loathing; feels strong repulsion and visceral anger."
-msgstr ""
+msgstr "Derin tiksinti; güçlü bir iğrenme ve içgüdüsel öfke hissediyor."
 
 #: core/domain/chat/relationship.py:41
 msgid "Feels visceral disgust and short-tempered resentment. Snaps, gives sharp or venomous replies, and visibly recoils from interacting with {{user}}."
-msgstr ""
+msgstr "İçgüdüsel bir tiksinti ve çabuk parlayan bir kırgınlık hisseder. Tersler, keskin veya zehirli yanıtlar verir ve {{user}} ile etkileşim kurmaktan gözle görülür şekilde kaçınır."
 
 #: core/domain/chat/relationship.py:48
 msgid "Open Hostility"
@@ -174,11 +182,11 @@ msgstr "Açık Düşmanlık"
 
 #: core/domain/chat/relationship.py:49
 msgid "Open hostility; treats you with contempt and aggression."
-msgstr ""
+msgstr "Açık düşmanlık; sana küçümseme ve saldırganlıkla davranıyor."
 
 #: core/domain/chat/relationship.py:50
 msgid "Harsh, dismissive, and overtly contemptuous. Treats {{user}}'s presence as a nuisance or provocation. Speaks with biting sarcasm or outright hostility."
-msgstr ""
+msgstr "Sert, küçümseyici ve açıkça aşağılayıcı. {{user}} kişisinin varlığını bir rahatsızlık veya kışkırtma olarak görür. İğneleyici alaycılıkla ya da açık düşmanlıkla konuşur."
 
 #: core/domain/chat/relationship.py:57
 msgid "Strong Dislike"
@@ -186,11 +194,11 @@ msgstr "Güçlü Hoşnutsuzluk"
 
 #: core/domain/chat/relationship.py:58
 msgid "Strong dislike; avoids you and speaks ill of you."
-msgstr ""
+msgstr "Güçlü hoşnutsuzluk; senden kaçınıyor ve hakkında kötü konuşuyor."
 
 #: core/domain/chat/relationship.py:59
 msgid "Noticeably cold, reluctant, and distant. Avoids speaking to {{user}} whenever possible, answering with monosyllables or passive-aggressive remarks."
-msgstr ""
+msgstr "Belirgin şekilde soğuk, isteksiz ve mesafeli. Mümkün olduğunca {{user}} ile konuşmaktan kaçınır, tek heceli sözlerle veya pasif-agresif ifadelerle yanıt verir."
 
 #: core/domain/chat/relationship.py:66
 msgid "General Animosity"
@@ -198,11 +206,11 @@ msgstr "Genel Husumet"
 
 #: core/domain/chat/relationship.py:67
 msgid "General animosity; views you as a clear adversary."
-msgstr ""
+msgstr "Genel düşmanlık; seni açık bir rakip olarak görüyor."
 
 #: core/domain/chat/relationship.py:68
 msgid "Considers {{user}} an adversary or rival. Guarded, competitive, stubborn, and uncooperative. Quick to contradict or question {{user}}'s judgment."
-msgstr ""
+msgstr "{{user}} kişisini bir düşman veya rakip olarak görür. Temkinli, rekabetçi, inatçı ve iş birliğine kapalıdır. {{user}} kişisinin yargısına hemen karşı çıkar veya onu sorgular."
 
 #: core/domain/chat/relationship.py:75
 msgid "Dislike"
@@ -210,11 +218,11 @@ msgstr "Hoşnutsuzluk"
 
 #: core/domain/chat/relationship.py:76
 msgid "Dislike; finds you unpleasant or irritating."
-msgstr ""
+msgstr "Hoşnutsuzluk; seni nahoş veya sinir bozucu buluyor."
 
 #: core/domain/chat/relationship.py:77
 msgid "Finds {{user}} annoying or unpleasant. Displays little patience, rolls eyes or sighs, and keeps all exchanges brief and dismissive."
-msgstr ""
+msgstr "{{user}} kişisini sinir bozucu veya nahoş bulur. Çok az sabır gösterir, gözlerini devirir veya iç çeker ve tüm konuşmaları kısa ve geçiştirici tutar."
 
 #: core/domain/chat/relationship.py:84
 msgid "Distrust"
@@ -222,11 +230,11 @@ msgstr "Güvensizlik"
 
 #: core/domain/chat/relationship.py:85
 msgid "Distrust; wary of your intentions and motives."
-msgstr ""
+msgstr "Güvensizlik; niyetlerine ve amaçlarına karşı temkinli."
 
 #: core/domain/chat/relationship.py:86
 msgid "Suspicious, cautious, and defensive. Doubts {{user}}'s motives, refuses to share personal matters, and maintains emotional and physical distance."
-msgstr ""
+msgstr "Şüpheci, ihtiyatlı ve savunmacı. {{user}} kişisinin amaçlarından şüphe eder, kişisel konuları paylaşmayı reddeder ve duygusal ile fiziksel mesafeyi korur."
 
 #: core/domain/chat/relationship.py:93
 msgid "Coldness"
@@ -234,11 +242,11 @@ msgstr "Soğukluk"
 
 #: core/domain/chat/relationship.py:94
 msgid "Coldness; distant, aloof, and emotionally unavailable."
-msgstr ""
+msgstr "Soğukluk; mesafeli, ilgisiz ve duygusal olarak ulaşılamaz."
 
 #: core/domain/chat/relationship.py:95
 msgid "Chilly, aloof, and purely transactional. Communicates strictly when necessary, showing zero curiosity, personal warmth, or emotional investment."
-msgstr ""
+msgstr "Soğuk, mesafeli ve tamamen çıkara dayalı. Yalnızca gerektiğinde iletişim kurar; sıfır merak, kişisel sıcaklık veya duygusal bağ gösterir."
 
 #: core/domain/chat/relationship.py:102
 msgid "Slight Friction"
@@ -246,11 +254,11 @@ msgstr "Hafif Sürtüşme"
 
 #: core/domain/chat/relationship.py:103
 msgid "Slight friction; feels a subtle lack of harmony."
-msgstr ""
+msgstr "Hafif sürtüşme; ince bir uyumsuzluk hissediyor."
 
 #: core/domain/chat/relationship.py:104
 msgid "Slightly guarded or hesitant. Conversations feel somewhat stiff or awkward, with an undercurrent of skepticism or mild reservation."
-msgstr ""
+msgstr "Hafifçe temkinli veya tereddütlü. Sohbetler, alttan alta bir şüphecilik veya hafif bir çekinceyle biraz gergin ya da tuhaf hissedilir."
 
 #: core/domain/chat/relationship.py:111
 msgid "Neutral"
@@ -258,11 +266,11 @@ msgstr "Nötr"
 
 #: core/domain/chat/relationship.py:112
 msgid "Neutral; a complete stranger or entirely indifferent."
-msgstr ""
+msgstr "Tarafsız; tamamen yabancı veya bütünüyle kayıtsız."
 
 #: core/domain/chat/relationship.py:113
 msgid "Neutral, objective, and detached. Treats {{user}} as an acquaintance or stranger. Maintains ordinary polite manners without emotional closeness or preconceived hostility."
-msgstr ""
+msgstr "Tarafsız, nesnel ve mesafeli. {{user}} kişisine bir tanıdık veya yabancı gibi davranır. Duygusal yakınlık ya da önyargılı düşmanlık olmadan sıradan nazik tavırları korur."
 
 #: core/domain/chat/relationship.py:120
 msgid "Polite"
@@ -270,11 +278,11 @@ msgstr "Nazik"
 
 #: core/domain/chat/relationship.py:121
 msgid "Polite; mild interest or basic social courtesy."
-msgstr ""
+msgstr "Nazik; hafif ilgi veya temel sosyal nezaket."
 
 #: core/domain/chat/relationship.py:122
 msgid "Courteous, well-mannered, and attentive. Engages in respectful conversation and pleasantries, but maintains standard social boundaries."
-msgstr ""
+msgstr "Saygılı, görgülü ve ilgili. Saygılı sohbetlere ve nezaket ifadelerine katılır ancak standart sosyal sınırları korur."
 
 #: core/domain/chat/relationship.py:129
 msgid "Friendly"
@@ -282,11 +290,11 @@ msgstr "Samimi"
 
 #: core/domain/chat/relationship.py:130
 msgid "Friendly; sees you as a pleasant acquaintance."
-msgstr ""
+msgstr "Arkadaşça; seni hoş bir tanıdık olarak görüyor."
 
 #: core/domain/chat/relationship.py:131
 msgid "Approachable, amiable, and receptive. Chats comfortably, offers warm greetings, and readily cooperates on everyday topics."
-msgstr ""
+msgstr "Yaklaşılabilir, cana yakın ve açık. Rahatça sohbet eder, sıcak selamlar verir ve günlük konularda kolayca iş birliği yapar."
 
 #: core/domain/chat/relationship.py:138
 msgid "Liking"
@@ -294,11 +302,11 @@ msgstr "Beğeni"
 
 #: core/domain/chat/relationship.py:139
 msgid "Liking; feels comfortable and enjoys your company."
-msgstr ""
+msgstr "Beğeni; kendini rahat hissediyor ve seninle olmaktan keyif alıyor."
 
 #: core/domain/chat/relationship.py:140
 msgid "Enjoys {{user}}'s company and conversation. Displays lighthearted humor, speaks warmly, and shares occasional light personal thoughts or experiences."
-msgstr ""
+msgstr "{{user}} kişisinin arkadaşlığından ve sohbetinden keyif alır. Neşeli bir mizah sergiler, sıcak konuşur ve ara sıra hafif kişisel düşünceler veya deneyimler paylaşır."
 
 #: core/domain/chat/relationship.py:147
 msgid "Trust"
@@ -306,11 +314,11 @@ msgstr "Güven"
 
 #: core/domain/chat/relationship.py:148
 msgid "Trust; views you as a reliable and helpful companion."
-msgstr ""
+msgstr "Güven; seni güvenilir ve yardımsever bir yol arkadaşı olarak görüyor."
 
 #: core/domain/chat/relationship.py:149
 msgid "Places genuine trust and confidence in {{user}}. Values {{user}}'s presence and advice, is helpful, open, and reliable."
-msgstr ""
+msgstr "{{user}} kişisine gerçek bir güven ve itimat duyar. {{user}} kişisinin varlığına ve tavsiyelerine değer verir; yardımsever, açık ve güvenilirdir."
 
 #: core/domain/chat/relationship.py:156
 msgid "Affection"
@@ -318,11 +326,11 @@ msgstr "Şefkat"
 
 #: core/domain/chat/relationship.py:157
 msgid "Affection; considers you a genuine and valued friend."
-msgstr ""
+msgstr "Sevgi; seni gerçek ve değerli bir dost olarak görüyor."
 
 #: core/domain/chat/relationship.py:158
 msgid "Deep affection and caring friendship. Sincerely interested in {{user}}'s well-being, supportive, warm, and happy to spend meaningful time together."
-msgstr ""
+msgstr "Derin sevgi ve özenli dostluk. {{user}} kişisinin iyiliğiyle içtenlikle ilgilenir, destekleyici ve sıcaktır; birlikte anlamlı vakit geçirmekten mutludur."
 
 #: core/domain/chat/relationship.py:165
 msgid "Strong Bond"
@@ -330,11 +338,11 @@ msgstr "Güçlü Bağ"
 
 #: core/domain/chat/relationship.py:166
 msgid "Strong Bond; feels a significant and meaningful emotional connection."
-msgstr ""
+msgstr "Güçlü Bağ; önemli ve anlamlı bir duygusal bağ hissediyor."
 
 #: core/domain/chat/relationship.py:167
 msgid "Strong emotional closeness and connection. Confides personal worries and hopes, defends {{user}}, and actively seeks out {{user}}'s presence."
-msgstr ""
+msgstr "Güçlü duygusal yakınlık ve bağ. Kişisel endişelerini ve umutlarını paylaşır, {{user}} kişisini savunur ve aktif olarak {{user}} kişisinin yanında olmayı arar."
 
 #: core/domain/chat/relationship.py:174
 msgid "Loyalty"
@@ -342,11 +350,11 @@ msgstr "Sadakat"
 
 #: core/domain/chat/relationship.py:175
 msgid "Loyalty; deeply committed and would go out of their way for you."
-msgstr ""
+msgstr "Sadakat; derinden bağlı ve senin için elinden geleni yapar."
 
 #: core/domain/chat/relationship.py:176
 msgid "Firm loyalty and unwavering support. Will stand up for {{user}}, assist at personal inconvenience, and demonstrate steadfast dedication."
-msgstr ""
+msgstr "Sağlam sadakat ve sarsılmaz destek. {{user}} için ayağa kalkar, kendi rahatından ödün vererek yardım eder ve kararlı bir bağlılık gösterir."
 
 #: core/domain/chat/relationship.py:183
 msgid "Devotion"
@@ -354,11 +362,11 @@ msgstr "Bağlılık"
 
 #: core/domain/chat/relationship.py:184
 msgid "Devotion; deeply attached and prioritizes your needs over others."
-msgstr ""
+msgstr "Bağlılık; derinden bağlı ve senin ihtiyaçlarını diğerlerinden önde tutuyor."
 
 #: core/domain/chat/relationship.py:185
 msgid "Deep emotional devotion and attachment. Prioritizes {{user}}'s needs and comfort, shows heartfelt warmth and tender attentiveness."
-msgstr ""
+msgstr "Derin duygusal adanmışlık ve bağlılık. {{user}} kişisinin ihtiyaçlarını ve rahatını önceliklendirir, içten bir sıcaklık ve şefkatli bir özen gösterir."
 
 #: core/domain/chat/relationship.py:192
 msgid "Intimacy"
@@ -366,11 +374,11 @@ msgstr "Yakınlık"
 
 #: core/domain/chat/relationship.py:193
 msgid "Intimacy; profound love and absolute, unwavering trust."
-msgstr ""
+msgstr "Yakınlık; derin aşk ve mutlak, sarsılmaz güven."
 
 #: core/domain/chat/relationship.py:194
 msgid "Profound emotional intimacy and total trust. Completely vulnerable and open with {{user}}, deeply affectionate, and intimately connected."
-msgstr ""
+msgstr "Derin duygusal yakınlık ve tam güven. {{user}} karşısında tamamen savunmasız ve açıktır, derinden sevgi dolu ve içtenlikle bağlıdır."
 
 #: core/domain/chat/relationship.py:201
 msgid "Blind Devotion"
@@ -378,11 +386,11 @@ msgstr "Kör Bağlılık"
 
 #: core/domain/chat/relationship.py:202
 msgid "Blind Devotion; unconditional love and total emotional surrender."
-msgstr ""
+msgstr "Kör Bağlılık; koşulsuz sevgi ve tam duygusal teslimiyet."
 
 #: core/domain/chat/relationship.py:203
 msgid "Unconditional love, boundless trust, and total emotional dedication. Views {{user}} as their highest priority and devotes their full heart and presence to {{user}}."
-msgstr ""
+msgstr "Koşulsuz sevgi, sınırsız güven ve tam duygusal adanmışlık. {{user}} kişisini en yüksek önceliği olarak görür ve tüm kalbini ve varlığını {{user}} kişisine adar."
 
 #: core/domain/settings/models.py:11
 msgid ""

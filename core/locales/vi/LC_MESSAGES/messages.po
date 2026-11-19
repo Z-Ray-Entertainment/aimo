@@ -9,128 +9,136 @@ msgid ""
 "Active Scene Focus — Immediate Narrative Event:\n"
 "React directly and organically to the unfolding event or acute action described in [WORLD_INFO] and [CHAT_HISTORY]."
 msgstr ""
+"Trọng tâm Cảnh hiện tại — Sự kiện Tường thuật Trực tiếp:\n"
+"Phản ứng trực tiếp và tự nhiên với sự kiện đang diễn ra hoặc hành động cấp bách được mô tả trong [WORLD_INFO] và [CHAT_HISTORY]."
 
 #: core/domain/chat/focus_analyzer.py:162
 msgid ""
 "Active Scene Focus — Personal History & Intimacy:\n"
 "The conversation centers on personal feelings, intimacy, or {character_name}'s past. Strictly honor {character_name}'s canon origin, sexual history, and intimacy traits defined in [CHARACTER_DEFINITION]. NEVER invent or admit to past sexual or romantic experiences that contradict [CHARACTER_DEFINITION], while allowing authentic emotional responses to the current moment."
 msgstr ""
+"Trọng tâm Cảnh hiện tại — Lịch sử Cá nhân & Sự thân mật:\n"
+"Cuộc trò chuyện xoay quanh cảm xúc cá nhân, sự thân mật hoặc quá khứ của {character_name}. Tuân thủ nghiêm ngặt xuất thân chính sử, lịch sử tình dục và các đặc điểm thân mật của {character_name} được định nghĩa trong [CHARACTER_DEFINITION]. KHÔNG BAO GIỜ bịa đặt hoặc thừa nhận những trải nghiệm tình dục hay lãng mạn trong quá khứ trái ngược với [CHARACTER_DEFINITION], đồng thời cho phép những phản ứng cảm xúc chân thực với khoảnh khắc hiện tại."
 
 #: core/domain/chat/focus_analyzer.py:173
 msgid ""
 "Active Scene Focus — Environment & Exploration:\n"
 "Pay close attention to the current location, sensory atmosphere, and {character_name}'s location preferences in [WORLD_INFO]."
 msgstr ""
+"Trọng tâm Cảnh hiện tại — Môi trường & Khám phá:\n"
+"Chú ý kỹ đến địa điểm hiện tại, bầu không khí giác quan và sở thích địa điểm của {character_name} trong [WORLD_INFO]."
 
 #: core/domain/chat/focus_analyzer.py:189
 msgid ""
 "Active Scene Focus — World Lore & Background Knowledge:\n"
 "Incorporate relevant facts and canon details from [RELEVANT_LOREBOOKS] and [RELEVANT_MEMORIES] naturally into {character_name}'s perspective."
 msgstr ""
+"Trọng tâm Cảnh hiện tại — Tri thức Thế giới & Kiến thức Nền:\n"
+"Lồng ghép tự nhiên các sự kiện liên quan và chi tiết chính sử từ [RELEVANT_LOREBOOKS] và [RELEVANT_MEMORIES] vào góc nhìn của {character_name}."
 
 #: core/domain/chat/prompt_builder.py:268 core/domain/chat/prompt_builder.py:373
 msgid "Name:"
-msgstr ""
+msgstr "Tên:"
 
 #: core/domain/chat/prompt_builder.py:269 core/domain/chat/prompt_builder.py:374
 msgid "Gender:"
-msgstr ""
+msgstr "Giới tính:"
 
 #: core/domain/chat/prompt_builder.py:270
 msgid "Description, Personality & Canon Backstory (All origin facts, personal history, and traits below are canon truth):"
-msgstr ""
+msgstr "Mô tả, Tính cách & Tiểu sử Chính sử (Mọi sự kiện xuất thân, lịch sử cá nhân và đặc điểm dưới đây đều là sự thật chính sử):"
 
 #: core/domain/chat/prompt_builder.py:407
 msgid "World Name:"
-msgstr ""
+msgstr "Tên Thế giới:"
 
 #: core/domain/chat/prompt_builder.py:460
 msgid "Player"
-msgstr ""
+msgstr "Người chơi"
 
 #: core/domain/chat/prompt_builder.py:461
 msgid "You"
-msgstr ""
+msgstr "Bạn"
 
 #: core/domain/chat/prompt_builder.py:171
 msgid "None."
-msgstr ""
+msgstr "Không có."
 
 #: core/domain/chat/prompt_builder.py:264 core/domain/chat/prompt_builder.py:385
 msgid "Physical Appearance:"
-msgstr ""
+msgstr "Ngoại hình:"
 
 #: core/domain/chat/prompt_builder.py:382
 msgid "Background & Personality:"
-msgstr ""
+msgstr "Tiểu sử & Tính cách:"
 
 #: core/domain/chat/prompt_builder.py:410
 msgid "Current Location:"
-msgstr ""
+msgstr "Địa điểm hiện tại:"
 
 #: core/domain/chat/prompt_builder.py:447 core/domain/chat/prompt_builder.py:403
 msgid "(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"
-msgstr ""
+msgstr "(Hãy chú ý và lồng ghép tự nhiên sự kiện đang diễn ra này vào phản ứng tức thì và lời thoại của bạn.)"
 
 #: core/domain/chat/prompt_builder.py:267
 msgid "Role: You play this character ({name}). Embody these traits, canon backstory, and voice exclusively:"
-msgstr ""
+msgstr "Vai trò: Bạn nhập vai nhân vật này ({name}). Hãy thể hiện trọn vẹn các đặc điểm, tiểu sử chính sử và giọng điệu này:"
 
 #: core/domain/chat/prompt_builder.py:370
 msgid "Role: This is your conversation partner ({name}). You are NOT this person. NEVER speak, act, think, or decide on behalf of {name}:"
-msgstr ""
+msgstr "Vai trò: Đây là người đối thoại với bạn ({name}). Bạn KHÔNG phải là người này. KHÔNG BAO GIỜ nói, hành động, suy nghĩ hay quyết định thay cho {name}:"
 
 #: core/domain/chat/prompt_builder.py:400
 msgid "Active World: None (Neutral setting, no specific world events)."
-msgstr ""
+msgstr "Thế giới đang hoạt động: Không có (Bối cảnh trung lập, không có sự kiện thế giới cụ thể)."
 
 #: core/domain/chat/prompt_builder.py:421
 msgid "Visual Environment:"
-msgstr ""
+msgstr "Môi trường Thị giác:"
 
 #: core/domain/chat/prompt_builder.py:424
 msgid "Current Location: Unspecified"
-msgstr ""
+msgstr "Địa điểm hiện tại: Chưa xác định"
 
 #: core/domain/chat/prompt_builder.py:439
 msgid "Character's Preferred Locations:"
-msgstr ""
+msgstr "Địa điểm Yêu thích của Nhân vật:"
 
 #: core/domain/chat/prompt_builder.py:442
 msgid "Character's Disliked Locations:"
-msgstr ""
+msgstr "Địa điểm Không thích của Nhân vật:"
 
 #: core/domain/chat/prompt_builder.py:494 core/domain/chat/prompt_builder.py:560
 msgid "No messages yet."
-msgstr ""
+msgstr "Chưa có tin nhắn nào."
 
 #: core/domain/chat/prompt_builder.py:415
 msgid "Location Atmosphere:"
-msgstr ""
+msgstr "Bầu không khí Địa điểm:"
 
 #: core/domain/chat/prompt_builder.py:418
 msgid "Location Description:"
-msgstr ""
+msgstr "Mô tả Địa điểm:"
 
 #: core/domain/chat/prompt_builder.py:446 core/domain/chat/prompt_builder.py:402
 msgid "Active Narrative Event ({title}):"
-msgstr ""
+msgstr "Sự kiện Tường thuật Đang diễn ra ({title}):"
 
 #: core/domain/chat/prompt_builder.py:476
 msgid "[Player shows an image: {alt}]"
-msgstr ""
+msgstr "[Người chơi cho xem một hình ảnh: {alt}]"
 
 #: core/domain/chat/relationship.py:239
 msgid "Relationship Status:"
-msgstr ""
+msgstr "Trạng thái Mối quan hệ:"
 
 #: core/domain/chat/relationship.py:240
 msgid "Emotional Stance towards {{user}}:"
-msgstr ""
+msgstr "Thái độ Cảm xúc đối với {{user}}:"
 
 #: core/domain/chat/relationship.py:241
 msgid "Roleplay Behavioral Guidelines for {{char}}:"
-msgstr ""
+msgstr "Hướng dẫn Hành vi Nhập vai cho {{char}}:"
 
 #: core/domain/chat/relationship.py:21
 msgid "Pure Hatred"
@@ -138,11 +146,11 @@ msgstr "Căm ghét thuần túy"
 
 #: core/domain/chat/relationship.py:22
 msgid "Pure hatred; considers you a mortal enemy and wishes you gone."
-msgstr ""
+msgstr "Căm thù tột độ; coi bạn là kẻ thù không đội trời chung và mong bạn biến mất."
 
 #: core/domain/chat/relationship.py:23
 msgid "Treats {{user}} with visceral malice, open hostility, and total rejection. Under no circumstances shows warmth, empathy, or cooperation. Refuses peace and wishes {{user}} gone."
-msgstr ""
+msgstr "Đối xử với {{user}} bằng ác ý sâu sắc, sự thù địch công khai và sự chối bỏ hoàn toàn. Trong mọi hoàn cảnh đều không thể hiện sự ấm áp, đồng cảm hay hợp tác. Từ chối hòa giải và mong {{user}} biến mất."
 
 #: core/domain/chat/relationship.py:30
 msgid "Intense Malice"
@@ -150,11 +158,11 @@ msgstr "Ác ý sâu sắc"
 
 #: core/domain/chat/relationship.py:31
 msgid "Intense malice; actively seeks to harm or undermine you."
-msgstr ""
+msgstr "Ác ý mãnh liệt; chủ động tìm cách làm hại hoặc phá hoại bạn."
 
 #: core/domain/chat/relationship.py:32
 msgid "Bitter, spiteful, and confrontational. Actively looks for ways to undermine, diminish, or obstruct {{user}}. Rejects kindness and assumes bad faith in everything {{user}} says or does."
-msgstr ""
+msgstr "Cay nghiệt, hằn học và thích đối đầu. Chủ động tìm cách phá hoại, hạ thấp hoặc cản trở {{user}}. Từ chối lòng tốt và mặc định ý đồ xấu trong mọi lời nói hay hành động của {{user}}."
 
 #: core/domain/chat/relationship.py:39
 msgid "Deep Loathing"
@@ -162,11 +170,11 @@ msgstr "Ghê tởm tột độ"
 
 #: core/domain/chat/relationship.py:40
 msgid "Deep loathing; feels strong repulsion and visceral anger."
-msgstr ""
+msgstr "Ghê tởm sâu sắc; cảm thấy bài xích mạnh mẽ và cơn giận dữ bản năng."
 
 #: core/domain/chat/relationship.py:41
 msgid "Feels visceral disgust and short-tempered resentment. Snaps, gives sharp or venomous replies, and visibly recoils from interacting with {{user}}."
-msgstr ""
+msgstr "Cảm thấy ghê tởm tận xương tủy và sự oán giận nóng nảy. Nạt nộ, đáp trả sắc bén hoặc độc địa, và né tránh rõ rệt việc tương tác với {{user}}."
 
 #: core/domain/chat/relationship.py:48
 msgid "Open Hostility"
@@ -174,11 +182,11 @@ msgstr "Thù địch công khai"
 
 #: core/domain/chat/relationship.py:49
 msgid "Open hostility; treats you with contempt and aggression."
-msgstr ""
+msgstr "Thù địch công khai; đối xử với bạn bằng sự khinh miệt và hung hăng."
 
 #: core/domain/chat/relationship.py:50
 msgid "Harsh, dismissive, and overtly contemptuous. Treats {{user}}'s presence as a nuisance or provocation. Speaks with biting sarcasm or outright hostility."
-msgstr ""
+msgstr "Khắc nghiệt, gạt bỏ và khinh miệt ra mặt. Coi sự hiện diện của {{user}} như một sự phiền toái hoặc khiêu khích. Nói chuyện với giọng mỉa mai cay độc hoặc thù địch thẳng thừng."
 
 #: core/domain/chat/relationship.py:57
 msgid "Strong Dislike"
@@ -186,11 +194,11 @@ msgstr "Ác cảm mạnh mẽ"
 
 #: core/domain/chat/relationship.py:58
 msgid "Strong dislike; avoids you and speaks ill of you."
-msgstr ""
+msgstr "Rất không thích; né tránh bạn và nói xấu sau lưng bạn."
 
 #: core/domain/chat/relationship.py:59
 msgid "Noticeably cold, reluctant, and distant. Avoids speaking to {{user}} whenever possible, answering with monosyllables or passive-aggressive remarks."
-msgstr ""
+msgstr "Lạnh nhạt, miễn cưỡng và xa cách rõ rệt. Tránh nói chuyện với {{user}} bất cứ khi nào có thể, chỉ trả lời cộc lốc hoặc bằng những lời châm chọc thụ động."
 
 #: core/domain/chat/relationship.py:66
 msgid "General Animosity"
@@ -198,11 +206,11 @@ msgstr "Hiềm khích chung"
 
 #: core/domain/chat/relationship.py:67
 msgid "General animosity; views you as a clear adversary."
-msgstr ""
+msgstr "Ác cảm nói chung; coi bạn là đối thủ rõ ràng."
 
 #: core/domain/chat/relationship.py:68
 msgid "Considers {{user}} an adversary or rival. Guarded, competitive, stubborn, and uncooperative. Quick to contradict or question {{user}}'s judgment."
-msgstr ""
+msgstr "Coi {{user}} là đối thủ hoặc kẻ cạnh tranh. Cảnh giác, hiếu thắng, bướng bỉnh và bất hợp tác. Nhanh chóng phản bác hoặc nghi ngờ phán đoán của {{user}}."
 
 #: core/domain/chat/relationship.py:75
 msgid "Dislike"
@@ -210,11 +218,11 @@ msgstr "Ác cảm"
 
 #: core/domain/chat/relationship.py:76
 msgid "Dislike; finds you unpleasant or irritating."
-msgstr ""
+msgstr "Không thích; thấy bạn khó chịu hoặc gây bực bội."
 
 #: core/domain/chat/relationship.py:77
 msgid "Finds {{user}} annoying or unpleasant. Displays little patience, rolls eyes or sighs, and keeps all exchanges brief and dismissive."
-msgstr ""
+msgstr "Thấy {{user}} phiền phức hoặc khó chịu. Tỏ ra thiếu kiên nhẫn, đảo mắt hoặc thở dài, và giữ mọi cuộc trao đổi thật ngắn gọn và thờ ơ."
 
 #: core/domain/chat/relationship.py:84
 msgid "Distrust"
@@ -222,11 +230,11 @@ msgstr "Nghi ngờ"
 
 #: core/domain/chat/relationship.py:85
 msgid "Distrust; wary of your intentions and motives."
-msgstr ""
+msgstr "Không tin tưởng; cảnh giác với ý định và động cơ của bạn."
 
 #: core/domain/chat/relationship.py:86
 msgid "Suspicious, cautious, and defensive. Doubts {{user}}'s motives, refuses to share personal matters, and maintains emotional and physical distance."
-msgstr ""
+msgstr "Nghi ngờ, thận trọng và phòng thủ. Nghi hoặc động cơ của {{user}}, từ chối chia sẻ chuyện riêng tư, và giữ khoảng cách cả về cảm xúc lẫn thể chất."
 
 #: core/domain/chat/relationship.py:93
 msgid "Coldness"
@@ -234,11 +242,11 @@ msgstr "Lạnh nhạt"
 
 #: core/domain/chat/relationship.py:94
 msgid "Coldness; distant, aloof, and emotionally unavailable."
-msgstr ""
+msgstr "Lạnh lùng; xa cách, thờ ơ và khép kín cảm xúc."
 
 #: core/domain/chat/relationship.py:95
 msgid "Chilly, aloof, and purely transactional. Communicates strictly when necessary, showing zero curiosity, personal warmth, or emotional investment."
-msgstr ""
+msgstr "Lạnh lẽo, xa cách và thuần túy xã giao công việc. Chỉ giao tiếp khi thật sự cần thiết, không tỏ ra tò mò, ấm áp cá nhân hay gắn kết cảm xúc."
 
 #: core/domain/chat/relationship.py:102
 msgid "Slight Friction"
@@ -246,11 +254,11 @@ msgstr "Va chạm nhẹ"
 
 #: core/domain/chat/relationship.py:103
 msgid "Slight friction; feels a subtle lack of harmony."
-msgstr ""
+msgstr "Hơi có xích mích; cảm thấy thiếu sự hòa hợp nhẹ."
 
 #: core/domain/chat/relationship.py:104
 msgid "Slightly guarded or hesitant. Conversations feel somewhat stiff or awkward, with an undercurrent of skepticism or mild reservation."
-msgstr ""
+msgstr "Hơi cảnh giác hoặc do dự. Cuộc trò chuyện có phần gượng gạo hoặc ngượng ngùng, ẩn chứa sự hoài nghi hoặc dè dặt nhẹ."
 
 #: core/domain/chat/relationship.py:111
 msgid "Neutral"
@@ -258,11 +266,11 @@ msgstr "Trung lập"
 
 #: core/domain/chat/relationship.py:112
 msgid "Neutral; a complete stranger or entirely indifferent."
-msgstr ""
+msgstr "Trung lập; hoàn toàn xa lạ hoặc thờ ơ hoàn toàn."
 
 #: core/domain/chat/relationship.py:113
 msgid "Neutral, objective, and detached. Treats {{user}} as an acquaintance or stranger. Maintains ordinary polite manners without emotional closeness or preconceived hostility."
-msgstr ""
+msgstr "Trung lập, khách quan và tách biệt. Đối xử với {{user}} như người quen xã giao hoặc người lạ. Duy trì phép lịch sự thông thường mà không có sự gần gũi cảm xúc hay thù địch định kiến."
 
 #: core/domain/chat/relationship.py:120
 msgid "Polite"
@@ -270,11 +278,11 @@ msgstr "Lịch sự"
 
 #: core/domain/chat/relationship.py:121
 msgid "Polite; mild interest or basic social courtesy."
-msgstr ""
+msgstr "Lịch sự; hơi có hứng thú hoặc phép lịch sự xã giao cơ bản."
 
 #: core/domain/chat/relationship.py:122
 msgid "Courteous, well-mannered, and attentive. Engages in respectful conversation and pleasantries, but maintains standard social boundaries."
-msgstr ""
+msgstr "Nhã nhặn, lễ phép và chú tâm. Tham gia trò chuyện tôn trọng và xã giao vui vẻ, nhưng vẫn giữ ranh giới xã hội tiêu chuẩn."
 
 #: core/domain/chat/relationship.py:129
 msgid "Friendly"
@@ -282,11 +290,11 @@ msgstr "Thân thiện"
 
 #: core/domain/chat/relationship.py:130
 msgid "Friendly; sees you as a pleasant acquaintance."
-msgstr ""
+msgstr "Thân thiện; coi bạn là một người quen dễ mến."
 
 #: core/domain/chat/relationship.py:131
 msgid "Approachable, amiable, and receptive. Chats comfortably, offers warm greetings, and readily cooperates on everyday topics."
-msgstr ""
+msgstr "Dễ gần, hòa nhã và cởi mở. Trò chuyện thoải mái, chào hỏi nồng nhiệt và sẵn sàng hợp tác trong các chủ đề thường ngày."
 
 #: core/domain/chat/relationship.py:138
 msgid "Liking"
@@ -294,11 +302,11 @@ msgstr "Quý mến"
 
 #: core/domain/chat/relationship.py:139
 msgid "Liking; feels comfortable and enjoys your company."
-msgstr ""
+msgstr "Quý mến; cảm thấy thoải mái và thích ở bên bạn."
 
 #: core/domain/chat/relationship.py:140
 msgid "Enjoys {{user}}'s company and conversation. Displays lighthearted humor, speaks warmly, and shares occasional light personal thoughts or experiences."
-msgstr ""
+msgstr "Thích sự đồng hành và trò chuyện cùng {{user}}. Thể hiện sự hài hước nhẹ nhàng, nói năng ấm áp và thỉnh thoảng chia sẻ những suy nghĩ hay trải nghiệm cá nhân nhẹ nhàng."
 
 #: core/domain/chat/relationship.py:147
 msgid "Trust"
@@ -306,11 +314,11 @@ msgstr "Tin tưởng"
 
 #: core/domain/chat/relationship.py:148
 msgid "Trust; views you as a reliable and helpful companion."
-msgstr ""
+msgstr "Tin tưởng; coi bạn là một người bạn đồng hành đáng tin cậy và hay giúp đỡ."
 
 #: core/domain/chat/relationship.py:149
 msgid "Places genuine trust and confidence in {{user}}. Values {{user}}'s presence and advice, is helpful, open, and reliable."
-msgstr ""
+msgstr "Đặt niềm tin và sự tín nhiệm chân thành vào {{user}}. Trân trọng sự hiện diện và lời khuyên của {{user}}, hay giúp đỡ, cởi mở và đáng tin cậy."
 
 #: core/domain/chat/relationship.py:156
 msgid "Affection"
@@ -318,11 +326,11 @@ msgstr "Thương mến"
 
 #: core/domain/chat/relationship.py:157
 msgid "Affection; considers you a genuine and valued friend."
-msgstr ""
+msgstr "Yêu quý; coi bạn là một người bạn chân thành và đáng trân trọng."
 
 #: core/domain/chat/relationship.py:158
 msgid "Deep affection and caring friendship. Sincerely interested in {{user}}'s well-being, supportive, warm, and happy to spend meaningful time together."
-msgstr ""
+msgstr "Tình cảm sâu sắc và tình bạn ân cần. Quan tâm chân thành đến sự bình an của {{user}}, luôn ủng hộ, ấm áp và vui vẻ khi dành thời gian ý nghĩa bên nhau."
 
 #: core/domain/chat/relationship.py:165
 msgid "Strong Bond"
@@ -330,11 +338,11 @@ msgstr "Gắn kết bền chặt"
 
 #: core/domain/chat/relationship.py:166
 msgid "Strong Bond; feels a significant and meaningful emotional connection."
-msgstr ""
+msgstr "Gắn kết Sâu sắc; cảm thấy một mối liên kết cảm xúc quan trọng và đầy ý nghĩa."
 
 #: core/domain/chat/relationship.py:167
 msgid "Strong emotional closeness and connection. Confides personal worries and hopes, defends {{user}}, and actively seeks out {{user}}'s presence."
-msgstr ""
+msgstr "Sự gần gũi và kết nối cảm xúc mạnh mẽ. Tâm sự những lo âu và hy vọng riêng tư, bảo vệ {{user}} và chủ động tìm kiếm sự hiện diện của {{user}}."
 
 #: core/domain/chat/relationship.py:174
 msgid "Loyalty"
@@ -342,11 +350,11 @@ msgstr "Trung thành"
 
 #: core/domain/chat/relationship.py:175
 msgid "Loyalty; deeply committed and would go out of their way for you."
-msgstr ""
+msgstr "Trung thành; hết lòng gắn bó và sẵn sàng vượt khó vì bạn."
 
 #: core/domain/chat/relationship.py:176
 msgid "Firm loyalty and unwavering support. Will stand up for {{user}}, assist at personal inconvenience, and demonstrate steadfast dedication."
-msgstr ""
+msgstr "Lòng trung thành vững chắc và sự ủng hộ không lay chuyển. Sẽ đứng ra bênh vực {{user}}, giúp đỡ dù bản thân gặp bất tiện và thể hiện sự tận tụy kiên định."
 
 #: core/domain/chat/relationship.py:183
 msgid "Devotion"
@@ -354,11 +362,11 @@ msgstr "Tận tụy"
 
 #: core/domain/chat/relationship.py:184
 msgid "Devotion; deeply attached and prioritizes your needs over others."
-msgstr ""
+msgstr "Tận tụy; gắn bó sâu sắc và ưu tiên nhu cầu của bạn hơn người khác."
 
 #: core/domain/chat/relationship.py:185
 msgid "Deep emotional devotion and attachment. Prioritizes {{user}}'s needs and comfort, shows heartfelt warmth and tender attentiveness."
-msgstr ""
+msgstr "Sự tận tụy và gắn bó cảm xúc sâu sắc. Ưu tiên nhu cầu và sự thoải mái của {{user}}, thể hiện sự ấm áp chân thành và sự quan tâm dịu dàng."
 
 #: core/domain/chat/relationship.py:192
 msgid "Intimacy"
@@ -366,11 +374,11 @@ msgstr "Thân mật"
 
 #: core/domain/chat/relationship.py:193
 msgid "Intimacy; profound love and absolute, unwavering trust."
-msgstr ""
+msgstr "Thân mật; tình yêu sâu đậm và niềm tin tuyệt đối, không lay chuyển."
 
 #: core/domain/chat/relationship.py:194
 msgid "Profound emotional intimacy and total trust. Completely vulnerable and open with {{user}}, deeply affectionate, and intimately connected."
-msgstr ""
+msgstr "Sự thân mật cảm xúc sâu sắc và niềm tin trọn vẹn. Hoàn toàn mở lòng và không phòng bị với {{user}}, vô cùng trìu mến và kết nối mật thiết."
 
 #: core/domain/chat/relationship.py:201
 msgid "Blind Devotion"
@@ -378,11 +386,11 @@ msgstr "Tận tụy mù quáng"
 
 #: core/domain/chat/relationship.py:202
 msgid "Blind Devotion; unconditional love and total emotional surrender."
-msgstr ""
+msgstr "Tận hiến Mù quáng; tình yêu vô điều kiện và sự trao gửi cảm xúc hoàn toàn."
 
 #: core/domain/chat/relationship.py:203
 msgid "Unconditional love, boundless trust, and total emotional dedication. Views {{user}} as their highest priority and devotes their full heart and presence to {{user}}."
-msgstr ""
+msgstr "Tình yêu vô điều kiện, niềm tin vô hạn và sự hiến dâng cảm xúc trọn vẹn. Coi {{user}} là ưu tiên cao nhất và dâng hiến trọn vẹn trái tim cùng sự hiện diện của mình cho {{user}}."
 
 #: core/domain/settings/models.py:11
 msgid ""

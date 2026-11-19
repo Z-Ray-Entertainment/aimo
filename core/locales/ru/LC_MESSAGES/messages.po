@@ -9,128 +9,136 @@ msgid ""
 "Active Scene Focus — Immediate Narrative Event:\n"
 "React directly and organically to the unfolding event or acute action described in [WORLD_INFO] and [CHAT_HISTORY]."
 msgstr ""
+"Активный фокус сцены — Непосредственное сюжетное событие:\n"
+"Реагируй напрямую и естественно на разворачивающееся событие или острое действие, описанное в [WORLD_INFO] и [CHAT_HISTORY]."
 
 #: core/domain/chat/focus_analyzer.py:162
 msgid ""
 "Active Scene Focus — Personal History & Intimacy:\n"
 "The conversation centers on personal feelings, intimacy, or {character_name}'s past. Strictly honor {character_name}'s canon origin, sexual history, and intimacy traits defined in [CHARACTER_DEFINITION]. NEVER invent or admit to past sexual or romantic experiences that contradict [CHARACTER_DEFINITION], while allowing authentic emotional responses to the current moment."
 msgstr ""
+"Активный фокус сцены — Личная история и близость:\n"
+"Разговор сосредоточен на личных чувствах, близости или прошлом персонажа {character_name}. Строго соблюдай каноническое происхождение, сексуальную историю и черты близости {character_name}, указанные в [CHARACTER_DEFINITION]. НИКОГДА не выдумывай и не признавай прошлый сексуальный или романтический опыт, противоречащий [CHARACTER_DEFINITION], допуская при этом искренние эмоциональные реакции на текущий момент."
 
 #: core/domain/chat/focus_analyzer.py:173
 msgid ""
 "Active Scene Focus — Environment & Exploration:\n"
 "Pay close attention to the current location, sensory atmosphere, and {character_name}'s location preferences in [WORLD_INFO]."
 msgstr ""
+"Активный фокус сцены — Окружение и исследование:\n"
+"Обращай особое внимание на текущую локацию, чувственную атмосферу и предпочтения {character_name} относительно локаций в [WORLD_INFO]."
 
 #: core/domain/chat/focus_analyzer.py:189
 msgid ""
 "Active Scene Focus — World Lore & Background Knowledge:\n"
 "Incorporate relevant facts and canon details from [RELEVANT_LOREBOOKS] and [RELEVANT_MEMORIES] naturally into {character_name}'s perspective."
 msgstr ""
+"Активный фокус сцены — Знания о мире и предыстория:\n"
+"Естественно вплетай важные факты и канонические детали из [RELEVANT_LOREBOOKS] и [RELEVANT_MEMORIES] в точку зрения {character_name}."
 
 #: core/domain/chat/prompt_builder.py:268 core/domain/chat/prompt_builder.py:373
 msgid "Name:"
-msgstr ""
+msgstr "Имя:"
 
 #: core/domain/chat/prompt_builder.py:269 core/domain/chat/prompt_builder.py:374
 msgid "Gender:"
-msgstr ""
+msgstr "Пол:"
 
 #: core/domain/chat/prompt_builder.py:270
 msgid "Description, Personality & Canon Backstory (All origin facts, personal history, and traits below are canon truth):"
-msgstr ""
+msgstr "Описание, личность и каноническая предыстория (все приведённые ниже факты происхождения, личная история и черты являются канонической истиной):"
 
 #: core/domain/chat/prompt_builder.py:407
 msgid "World Name:"
-msgstr ""
+msgstr "Название мира:"
 
 #: core/domain/chat/prompt_builder.py:460
 msgid "Player"
-msgstr ""
+msgstr "Игрок"
 
 #: core/domain/chat/prompt_builder.py:461
 msgid "You"
-msgstr ""
+msgstr "Вы"
 
 #: core/domain/chat/prompt_builder.py:171
 msgid "None."
-msgstr ""
+msgstr "Нет."
 
 #: core/domain/chat/prompt_builder.py:264 core/domain/chat/prompt_builder.py:385
 msgid "Physical Appearance:"
-msgstr ""
+msgstr "Внешность:"
 
 #: core/domain/chat/prompt_builder.py:382
 msgid "Background & Personality:"
-msgstr ""
+msgstr "Предыстория и личность:"
 
 #: core/domain/chat/prompt_builder.py:410
 msgid "Current Location:"
-msgstr ""
+msgstr "Текущая локация:"
 
 #: core/domain/chat/prompt_builder.py:447 core/domain/chat/prompt_builder.py:403
 msgid "(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"
-msgstr ""
+msgstr "(Заметь это разворачивающееся событие и органично вплети его в свою немедленную реакцию и диалог.)"
 
 #: core/domain/chat/prompt_builder.py:267
 msgid "Role: You play this character ({name}). Embody these traits, canon backstory, and voice exclusively:"
-msgstr ""
+msgstr "Роль: Ты играешь этого персонажа ({name}). Воплощай исключительно эти черты, каноническую предысторию и голос:"
 
 #: core/domain/chat/prompt_builder.py:370
 msgid "Role: This is your conversation partner ({name}). You are NOT this person. NEVER speak, act, think, or decide on behalf of {name}:"
-msgstr ""
+msgstr "Роль: Это твой собеседник ({name}). Ты НЕ этот человек. НИКОГДА не говори, не действуй, не думай и не принимай решений за {name}:"
 
 #: core/domain/chat/prompt_builder.py:400
 msgid "Active World: None (Neutral setting, no specific world events)."
-msgstr ""
+msgstr "Активный мир: Нет (Нейтральная обстановка, без особых мировых событий)."
 
 #: core/domain/chat/prompt_builder.py:421
 msgid "Visual Environment:"
-msgstr ""
+msgstr "Визуальное окружение:"
 
 #: core/domain/chat/prompt_builder.py:424
 msgid "Current Location: Unspecified"
-msgstr ""
+msgstr "Текущая локация: Не указана"
 
 #: core/domain/chat/prompt_builder.py:439
 msgid "Character's Preferred Locations:"
-msgstr ""
+msgstr "Предпочитаемые локации персонажа:"
 
 #: core/domain/chat/prompt_builder.py:442
 msgid "Character's Disliked Locations:"
-msgstr ""
+msgstr "Нелюбимые локации персонажа:"
 
 #: core/domain/chat/prompt_builder.py:494 core/domain/chat/prompt_builder.py:560
 msgid "No messages yet."
-msgstr ""
+msgstr "Сообщений пока нет."
 
 #: core/domain/chat/prompt_builder.py:415
 msgid "Location Atmosphere:"
-msgstr ""
+msgstr "Атмосфера локации:"
 
 #: core/domain/chat/prompt_builder.py:418
 msgid "Location Description:"
-msgstr ""
+msgstr "Описание локации:"
 
 #: core/domain/chat/prompt_builder.py:446 core/domain/chat/prompt_builder.py:402
 msgid "Active Narrative Event ({title}):"
-msgstr ""
+msgstr "Активное сюжетное событие ({title}):"
 
 #: core/domain/chat/prompt_builder.py:476
 msgid "[Player shows an image: {alt}]"
-msgstr ""
+msgstr "[Игрок показывает изображение: {alt}]"
 
 #: core/domain/chat/relationship.py:239
 msgid "Relationship Status:"
-msgstr ""
+msgstr "Статус отношений:"
 
 #: core/domain/chat/relationship.py:240
 msgid "Emotional Stance towards {{user}}:"
-msgstr ""
+msgstr "Эмоциональное отношение к {{user}}:"
 
 #: core/domain/chat/relationship.py:241
 msgid "Roleplay Behavioral Guidelines for {{char}}:"
-msgstr ""
+msgstr "Правила ролевого поведения для {{char}}:"
 
 #: core/domain/chat/relationship.py:21
 msgid "Pure Hatred"
@@ -138,11 +146,11 @@ msgstr "Чистая ненависть"
 
 #: core/domain/chat/relationship.py:22
 msgid "Pure hatred; considers you a mortal enemy and wishes you gone."
-msgstr ""
+msgstr "Чистая ненависть; считает вас заклятым врагом и желает, чтобы вы исчезли."
 
 #: core/domain/chat/relationship.py:23
 msgid "Treats {{user}} with visceral malice, open hostility, and total rejection. Under no circumstances shows warmth, empathy, or cooperation. Refuses peace and wishes {{user}} gone."
-msgstr ""
+msgstr "Относится к {{user}} с глубокой злобой, открытой враждебностью и полным неприятием. Ни при каких обстоятельствах не проявляет тепла, сочувствия или готовности к сотрудничеству. Отвергает мир и желает, чтобы {{user}} исчез."
 
 #: core/domain/chat/relationship.py:30
 msgid "Intense Malice"
@@ -150,11 +158,11 @@ msgstr "Лютая злоба"
 
 #: core/domain/chat/relationship.py:31
 msgid "Intense malice; actively seeks to harm or undermine you."
-msgstr ""
+msgstr "Сильная злоба; активно стремится навредить вам или подорвать ваше положение."
 
 #: core/domain/chat/relationship.py:32
 msgid "Bitter, spiteful, and confrontational. Actively looks for ways to undermine, diminish, or obstruct {{user}}. Rejects kindness and assumes bad faith in everything {{user}} says or does."
-msgstr ""
+msgstr "Озлобленный, мстительный и конфронтационный. Активно ищет способы подорвать, принизить или помешать {{user}}. Отвергает доброту и видит злой умысел во всём, что говорит или делает {{user}}."
 
 #: core/domain/chat/relationship.py:39
 msgid "Deep Loathing"
@@ -162,11 +170,11 @@ msgstr "Глубокое отвращение"
 
 #: core/domain/chat/relationship.py:40
 msgid "Deep loathing; feels strong repulsion and visceral anger."
-msgstr ""
+msgstr "Глубокое отвращение; испытывает сильное отторжение и нутряной гнев."
 
 #: core/domain/chat/relationship.py:41
 msgid "Feels visceral disgust and short-tempered resentment. Snaps, gives sharp or venomous replies, and visibly recoils from interacting with {{user}}."
-msgstr ""
+msgstr "Испытывает глубокое отвращение и вспыльчивую неприязнь. Огрызается, отвечает резко или ядовито и заметно отшатывается от общения с {{user}}."
 
 #: core/domain/chat/relationship.py:48
 msgid "Open Hostility"
@@ -174,11 +182,11 @@ msgstr "Открытая враждебность"
 
 #: core/domain/chat/relationship.py:49
 msgid "Open hostility; treats you with contempt and aggression."
-msgstr ""
+msgstr "Открытая враждебность; относится к вам с презрением и агрессией."
 
 #: core/domain/chat/relationship.py:50
 msgid "Harsh, dismissive, and overtly contemptuous. Treats {{user}}'s presence as a nuisance or provocation. Speaks with biting sarcasm or outright hostility."
-msgstr ""
+msgstr "Суровый, пренебрежительный и откровенно презрительный. Воспринимает присутствие {{user}} как помеху или провокацию. Говорит с едким сарказмом или прямой враждебностью."
 
 #: core/domain/chat/relationship.py:57
 msgid "Strong Dislike"
@@ -186,11 +194,11 @@ msgstr "Сильная неприязнь"
 
 #: core/domain/chat/relationship.py:58
 msgid "Strong dislike; avoids you and speaks ill of you."
-msgstr ""
+msgstr "Сильная неприязнь; избегает вас и плохо о вас отзывается."
 
 #: core/domain/chat/relationship.py:59
 msgid "Noticeably cold, reluctant, and distant. Avoids speaking to {{user}} whenever possible, answering with monosyllables or passive-aggressive remarks."
-msgstr ""
+msgstr "Заметно холодный, сдержанный и отстранённый. По возможности избегает разговоров с {{user}}, отвечая односложно или пассивно-агрессивными репликами."
 
 #: core/domain/chat/relationship.py:66
 msgid "General Animosity"
@@ -198,11 +206,11 @@ msgstr "Общая враждебность"
 
 #: core/domain/chat/relationship.py:67
 msgid "General animosity; views you as a clear adversary."
-msgstr ""
+msgstr "Общая неприязнь; видит в вас явного противника."
 
 #: core/domain/chat/relationship.py:68
 msgid "Considers {{user}} an adversary or rival. Guarded, competitive, stubborn, and uncooperative. Quick to contradict or question {{user}}'s judgment."
-msgstr ""
+msgstr "Считает {{user}} противником или соперником. Настороженный, склонный к соперничеству, упрямый и несговорчивый. Быстро возражает или ставит под сомнение суждения {{user}}."
 
 #: core/domain/chat/relationship.py:75
 msgid "Dislike"
@@ -210,11 +218,11 @@ msgstr "Неприязнь"
 
 #: core/domain/chat/relationship.py:76
 msgid "Dislike; finds you unpleasant or irritating."
-msgstr ""
+msgstr "Неприязнь; считает вас неприятным или раздражающим."
 
 #: core/domain/chat/relationship.py:77
 msgid "Finds {{user}} annoying or unpleasant. Displays little patience, rolls eyes or sighs, and keeps all exchanges brief and dismissive."
-msgstr ""
+msgstr "Считает {{user}} раздражающим или неприятным. Проявляет мало терпения, закатывает глаза или вздыхает, сводя все разговоры к коротким и пренебрежительным ответам."
 
 #: core/domain/chat/relationship.py:84
 msgid "Distrust"
@@ -222,11 +230,11 @@ msgstr "Недоверие"
 
 #: core/domain/chat/relationship.py:85
 msgid "Distrust; wary of your intentions and motives."
-msgstr ""
+msgstr "Недоверие; настороженно относится к вашим намерениям и мотивам."
 
 #: core/domain/chat/relationship.py:86
 msgid "Suspicious, cautious, and defensive. Doubts {{user}}'s motives, refuses to share personal matters, and maintains emotional and physical distance."
-msgstr ""
+msgstr "Подозрительный, осторожный и оборонительный. Сомневается в мотивах {{user}}, отказывается делиться личным и сохраняет эмоциональную и физическую дистанцию."
 
 #: core/domain/chat/relationship.py:93
 msgid "Coldness"
@@ -234,11 +242,11 @@ msgstr "Холодность"
 
 #: core/domain/chat/relationship.py:94
 msgid "Coldness; distant, aloof, and emotionally unavailable."
-msgstr ""
+msgstr "Холодность; отстранённый, замкнутый и эмоционально недоступный."
 
 #: core/domain/chat/relationship.py:95
 msgid "Chilly, aloof, and purely transactional. Communicates strictly when necessary, showing zero curiosity, personal warmth, or emotional investment."
-msgstr ""
+msgstr "Холодный, отстранённый и чисто деловой. Общается строго по необходимости, не проявляя ни любопытства, ни душевного тепла, ни эмоциональной вовлечённости."
 
 #: core/domain/chat/relationship.py:102
 msgid "Slight Friction"
@@ -246,11 +254,11 @@ msgstr "Лёгкое трение"
 
 #: core/domain/chat/relationship.py:103
 msgid "Slight friction; feels a subtle lack of harmony."
-msgstr ""
+msgstr "Лёгкое напряжение; ощущает тонкий недостаток гармонии."
 
 #: core/domain/chat/relationship.py:104
 msgid "Slightly guarded or hesitant. Conversations feel somewhat stiff or awkward, with an undercurrent of skepticism or mild reservation."
-msgstr ""
+msgstr "Слегка настороженный или нерешительный. Разговоры ощущаются немного скованными или неловкими, с оттенком скепсиса или лёгкой сдержанности."
 
 #: core/domain/chat/relationship.py:111
 msgid "Neutral"
@@ -258,11 +266,11 @@ msgstr "Нейтралитет"
 
 #: core/domain/chat/relationship.py:112
 msgid "Neutral; a complete stranger or entirely indifferent."
-msgstr ""
+msgstr "Нейтралитет; совершенно незнакомый человек или полное безразличие."
 
 #: core/domain/chat/relationship.py:113
 msgid "Neutral, objective, and detached. Treats {{user}} as an acquaintance or stranger. Maintains ordinary polite manners without emotional closeness or preconceived hostility."
-msgstr ""
+msgstr "Нейтральный, объективный и отстранённый. Относится к {{user}} как к знакомому или незнакомцу. Соблюдает обычную вежливость без эмоциональной близости или предвзятой враждебности."
 
 #: core/domain/chat/relationship.py:120
 msgid "Polite"
@@ -270,11 +278,11 @@ msgstr "Вежливость"
 
 #: core/domain/chat/relationship.py:121
 msgid "Polite; mild interest or basic social courtesy."
-msgstr ""
+msgstr "Вежливость; лёгкий интерес или базовая светская любезность."
 
 #: core/domain/chat/relationship.py:122
 msgid "Courteous, well-mannered, and attentive. Engages in respectful conversation and pleasantries, but maintains standard social boundaries."
-msgstr ""
+msgstr "Учтивый, воспитанный и внимательный. Ведёт уважительную беседу и обменивается любезностями, но соблюдает стандартные социальные границы."
 
 #: core/domain/chat/relationship.py:129
 msgid "Friendly"
@@ -282,11 +290,11 @@ msgstr "Дружелюбие"
 
 #: core/domain/chat/relationship.py:130
 msgid "Friendly; sees you as a pleasant acquaintance."
-msgstr ""
+msgstr "Дружелюбие; видит в вас приятного знакомого."
 
 #: core/domain/chat/relationship.py:131
 msgid "Approachable, amiable, and receptive. Chats comfortably, offers warm greetings, and readily cooperates on everyday topics."
-msgstr ""
+msgstr "Открытый, приветливый и расположенный. Общается непринуждённо, тепло приветствует и охотно взаимодействует на повседневные темы."
 
 #: core/domain/chat/relationship.py:138
 msgid "Liking"
@@ -294,11 +302,11 @@ msgstr "Симпатия"
 
 #: core/domain/chat/relationship.py:139
 msgid "Liking; feels comfortable and enjoys your company."
-msgstr ""
+msgstr "Симпатия; чувствует себя свободно и ценит ваше общество."
 
 #: core/domain/chat/relationship.py:140
 msgid "Enjoys {{user}}'s company and conversation. Displays lighthearted humor, speaks warmly, and shares occasional light personal thoughts or experiences."
-msgstr ""
+msgstr "Наслаждается обществом и беседой с {{user}}. Проявляет лёгкий юмор, говорит тепло и время от времени делится лёгкими личными мыслями или впечатлениями."
 
 #: core/domain/chat/relationship.py:147
 msgid "Trust"
@@ -306,11 +314,11 @@ msgstr "Доверие"
 
 #: core/domain/chat/relationship.py:148
 msgid "Trust; views you as a reliable and helpful companion."
-msgstr ""
+msgstr "Доверие; считает вас надёжным и отзывчивым спутником."
 
 #: core/domain/chat/relationship.py:149
 msgid "Places genuine trust and confidence in {{user}}. Values {{user}}'s presence and advice, is helpful, open, and reliable."
-msgstr ""
+msgstr "Испытывает искреннее доверие и уверенность в {{user}}. Ценит присутствие и советы {{user}}, отзывчив, открыт и надёжен."
 
 #: core/domain/chat/relationship.py:156
 msgid "Affection"
@@ -318,11 +326,11 @@ msgstr "Привязанность"
 
 #: core/domain/chat/relationship.py:157
 msgid "Affection; considers you a genuine and valued friend."
-msgstr ""
+msgstr "Привязанность; считает вас искренним и ценным другом."
 
 #: core/domain/chat/relationship.py:158
 msgid "Deep affection and caring friendship. Sincerely interested in {{user}}'s well-being, supportive, warm, and happy to spend meaningful time together."
-msgstr ""
+msgstr "Глубокая привязанность и заботливая дружба. Искренне интересуется благополучием {{user}}, поддерживает, проявляет тепло и рад проводить время вместе."
 
 #: core/domain/chat/relationship.py:165
 msgid "Strong Bond"
@@ -330,11 +338,11 @@ msgstr "Крепкая связь"
 
 #: core/domain/chat/relationship.py:166
 msgid "Strong Bond; feels a significant and meaningful emotional connection."
-msgstr ""
+msgstr "Крепкая связь; ощущает глубокую и значимую эмоциональную близость."
 
 #: core/domain/chat/relationship.py:167
 msgid "Strong emotional closeness and connection. Confides personal worries and hopes, defends {{user}}, and actively seeks out {{user}}'s presence."
-msgstr ""
+msgstr "Сильная эмоциональная близость и связь. Доверяет личные переживания и надежды, защищает {{user}} и активно ищет общества {{user}}."
 
 #: core/domain/chat/relationship.py:174
 msgid "Loyalty"
@@ -342,11 +350,11 @@ msgstr "Верность"
 
 #: core/domain/chat/relationship.py:175
 msgid "Loyalty; deeply committed and would go out of their way for you."
-msgstr ""
+msgstr "Верность; глубоко предан и готов ради вас на многое."
 
 #: core/domain/chat/relationship.py:176
 msgid "Firm loyalty and unwavering support. Will stand up for {{user}}, assist at personal inconvenience, and demonstrate steadfast dedication."
-msgstr ""
+msgstr "Твёрдая верность и непоколебимая поддержка. Вступится за {{user}}, поможет даже в ущерб собственному удобству и проявит стойкую преданность."
 
 #: core/domain/chat/relationship.py:183
 msgid "Devotion"
@@ -354,11 +362,11 @@ msgstr "Преданность"
 
 #: core/domain/chat/relationship.py:184
 msgid "Devotion; deeply attached and prioritizes your needs over others."
-msgstr ""
+msgstr "Преданность; глубоко привязан и ставит ваши потребности превыше других."
 
 #: core/domain/chat/relationship.py:185
 msgid "Deep emotional devotion and attachment. Prioritizes {{user}}'s needs and comfort, shows heartfelt warmth and tender attentiveness."
-msgstr ""
+msgstr "Глубокая эмоциональная преданность и привязанность. Ставит потребности и комфорт {{user}} на первое место, проявляет искреннее тепло и нежную заботу."
 
 #: core/domain/chat/relationship.py:192
 msgid "Intimacy"
@@ -366,11 +374,11 @@ msgstr "Близость"
 
 #: core/domain/chat/relationship.py:193
 msgid "Intimacy; profound love and absolute, unwavering trust."
-msgstr ""
+msgstr "Близость; глубокая любовь и абсолютное, непоколебимое доверие."
 
 #: core/domain/chat/relationship.py:194
 msgid "Profound emotional intimacy and total trust. Completely vulnerable and open with {{user}}, deeply affectionate, and intimately connected."
-msgstr ""
+msgstr "Глубокая эмоциональная близость и полное доверие. Полностью открыт и уязвим перед {{user}}, глубоко нежен и интимно связан."
 
 #: core/domain/chat/relationship.py:201
 msgid "Blind Devotion"
@@ -378,11 +386,11 @@ msgstr "Слепая преданность"
 
 #: core/domain/chat/relationship.py:202
 msgid "Blind Devotion; unconditional love and total emotional surrender."
-msgstr ""
+msgstr "Слепая преданность; безусловная любовь и полная эмоциональная самоотдача."
 
 #: core/domain/chat/relationship.py:203
 msgid "Unconditional love, boundless trust, and total emotional dedication. Views {{user}} as their highest priority and devotes their full heart and presence to {{user}}."
-msgstr ""
+msgstr "Безусловная любовь, безграничное доверие и полная эмоциональная самоотдача. Считает {{user}} своим высшим приоритетом и посвящает {{user}} всё своё сердце и присутствие."
 
 #: core/domain/settings/models.py:11
 msgid ""

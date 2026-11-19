@@ -274,11 +274,11 @@ msgstr "Non binario"
 
 #: flask/application/settings/views.py:244
 msgid "Account settings saved."
-msgstr ""
+msgstr "Impostazioni account salvate."
 
 #: flask/application/settings/views.py:74 flask/i18n.py:117 flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:257 flask/templates/characters/creator.html:258
 msgid "Character"
-msgstr ""
+msgstr "Personaggio"
 
 #: flask/application/settings/views.py:100 flask/i18n.py:120 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:362
 msgid "World"
@@ -286,27 +286,27 @@ msgstr "Mondo"
 
 #: flask/application/settings/views.py:125 flask/i18n.py:118
 msgid "Lorebook"
-msgstr ""
+msgstr "Libro del sapere"
 
 #: flask/application/settings/views.py:227
 msgid "The new passwords do not match."
-msgstr ""
+msgstr "Le nuove password non corrispondono."
 
 #: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:113
 msgid "Owner"
-msgstr ""
+msgstr "Proprietario"
 
 #: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:115
 msgid "Collaborator"
-msgstr ""
+msgstr "Collaboratore"
 
 #: flask/application/settings/views.py:221
 msgid "The current password is incorrect."
-msgstr ""
+msgstr "La password attuale non è corretta."
 
 #: flask/application/settings/views.py:225
 msgid "A user with this email address already exists."
-msgstr ""
+msgstr "Esiste già un utente con questo indirizzo e-mail."
 
 #: flask/application/settings/views.py:111 flask/templates/macros/cards.html:129
 msgid "Locations"
@@ -766,15 +766,15 @@ msgstr "Torna all'Hub"
 
 #: flask/templates/admin/prompts.html:14
 msgid "System-Wide Content Translations"
-msgstr ""
+msgstr "Traduzioni dei contenuti di sistema"
 
 #: flask/templates/admin/prompts.html:18
 msgid "Cloud AI provider active: automatic background translation is disabled to protect your token quota. Use the button to translate missing content on demand."
-msgstr ""
+msgstr "Provider AI cloud attivo: la traduzione automatica in background è disabilitata per proteggere la tua quota di token. Usa il pulsante per tradurre i contenuti mancanti su richiesta."
 
 #: flask/templates/admin/prompts.html:20
 msgid "Local LLM provider active: missing content translations run automatically in the background, or can be triggered manually here."
-msgstr ""
+msgstr "Provider LLM locale attivo: le traduzioni dei contenuti mancanti vengono eseguite automaticamente in background oppure possono essere avviate manualmente qui."
 
 #: flask/templates/admin/prompts.html:25
 msgid "Synchronize Missing Translations"
@@ -786,43 +786,43 @@ msgstr "Annulla"
 
 #: flask/templates/admin/prompts.html:39
 msgid "Prompt Placeholders"
-msgstr ""
+msgstr "Segnaposto dei prompt"
 
 #: flask/templates/admin/prompts.html:42
 msgid "You can use"
-msgstr ""
+msgstr "Puoi usare"
 
 #: flask/templates/admin/prompts.html:42
 msgid "(character name) and"
-msgstr ""
+msgstr "(nome del personaggio) e"
 
 #: flask/templates/admin/prompts.html:42
 msgid "(player persona name) in prompts. These are replaced dynamically at runtime."
-msgstr ""
+msgstr "(nome del persona del giocatore) nei prompt. Vengono sostituiti dinamicamente in fase di esecuzione."
 
 #: flask/templates/admin/prompts.html:47
 msgid "Roleplay Prompt"
-msgstr ""
+msgstr "Prompt di gioco di ruolo"
 
 #: flask/templates/admin/prompts.html:48
 msgid "Memory Prompt"
-msgstr ""
+msgstr "Prompt di memoria"
 
 #: flask/templates/admin/prompts.html:49
 msgid "Diffuser Prompt"
-msgstr ""
+msgstr "Prompt del diffusore"
 
 #: flask/templates/admin/prompts.html:50
 msgid "AI Author Prompt"
-msgstr ""
+msgstr "Prompt dell'autore AI"
 
 #: flask/templates/admin/prompts.html:51
 msgid "Vision Prompt"
-msgstr ""
+msgstr "Prompt di visione"
 
 #: flask/templates/admin/prompts.html:52
 msgid "AI Dialogue Author Prompt"
-msgstr ""
+msgstr "Prompt dell'autore di dialoghi AI"
 
 #: flask/templates/admin/prompts.html:59
 msgid "Restore Default"
@@ -830,7 +830,7 @@ msgstr "Ripristina predefiniti"
 
 #: flask/templates/admin/prompts.html:59
 msgid "Resets all languages of this prompt to factory default"
-msgstr ""
+msgstr "Ripristina tutte le lingue di questo prompt ai valori predefiniti di fabbrica"
 
 #: flask/templates/admin/prompts.html:77
 msgid "Save Prompts"
@@ -1222,7 +1222,7 @@ msgstr "Immagini galleria"
 
 #: flask/templates/characters/creator.html:27 flask/templates/characters/creator.html:28 flask/templates/characters/creator.html:31
 msgid "Please save basic info first"
-msgstr ""
+msgstr "Salva prima le informazioni di base"
 
 #: flask/templates/characters/creator.html:28 flask/templates/characters/creator.html:534
 msgid "Emotional Sprites"
@@ -1250,19 +1250,19 @@ msgstr "Torna alla panoramica"
 
 #: flask/templates/characters/creator.html:53
 msgid "Really delete character permanently?"
-msgstr ""
+msgstr "Eliminare davvero il personaggio in modo permanente?"
 
 #: flask/templates/characters/creator.html:54
 msgid "Save character"
-msgstr ""
+msgstr "Salva personaggio"
 
 #: flask/templates/characters/creator.html:75
 msgid "Character Name"
-msgstr ""
+msgstr "Nome del personaggio"
 
 #: flask/templates/characters/creator.html:76
 msgid "The unique name of your AI character. Replaces {{char}} in prompts."
-msgstr ""
+msgstr "Il nome univoco del tuo personaggio AI. Sostituisce {{char}} nei prompt."
 
 #: flask/templates/characters/creator.html:83 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:64 flask/templates/macros/cards.html:155
 msgid "Gender"
@@ -1270,7 +1270,7 @@ msgstr "Genere"
 
 #: flask/templates/characters/creator.html:84
 msgid "Sets gender and derived pronouns for the system prompt."
-msgstr ""
+msgstr "Imposta il genere e i pronomi derivati per il prompt di sistema."
 
 #: flask/templates/characters/creator.html:94 flask/templates/lorebooks/detail.html:72 flask/templates/lorebooks/detail.html:156 flask/templates/lorebooks/detail.html:226 flask/templates/settings/creations.html:69
 msgid "Visibility"
@@ -1278,7 +1278,7 @@ msgstr "Visibilità"
 
 #: flask/templates/characters/creator.html:95
 msgid "Private = only playable in your account. Public = visible to all users in the Hub."
-msgstr ""
+msgstr "Privato = giocabile solo nel tuo account. Pubblico = visibile a tutti gli utenti nell'Hub."
 
 #: flask/templates/characters/creator.html:98 flask/templates/lorebooks/detail.html:76 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:108 flask/templates/worldinfo/detail.html:110
 msgid "Private"
@@ -1328,287 +1328,287 @@ msgstr ""
 
 #: flask/templates/characters/creator.html:158
 msgid "Character Description & Personality"
-msgstr ""
+msgstr "Descrizione e personalità del personaggio"
 
 #: flask/templates/characters/creator.html:159
 msgid "Core identity, traits, backstory, fears, and motivations."
-msgstr ""
+msgstr "Identità centrale, tratti, retroscena, paure e motivazioni."
 
 #: flask/templates/characters/creator.html:161
 msgid "AI Author Optimization"
-msgstr ""
+msgstr "Ottimizzazione autore AI"
 
 #: flask/templates/characters/creator.html:181 flask/templates/macros/persona_manager.html:37
 msgid "Physical Appearance"
-msgstr ""
+msgstr "Aspetto fisico"
 
 #: flask/templates/characters/creator.html:182
 msgid "Detailed visual appearance for prompts and AI image generation."
-msgstr ""
+msgstr "Aspetto visivo dettagliato per i prompt e la generazione di immagini AI."
 
 #: flask/templates/characters/creator.html:184
 msgid "Extract Appearance from Image"
-msgstr ""
+msgstr "Estrai aspetto dall'immagine"
 
 #: flask/templates/characters/creator.html:184
 msgid "Analyzes the portrait image using a Vision LLM"
-msgstr ""
+msgstr "Analizza l'immagine del ritratto utilizzando un LLM Vision"
 
 #: flask/templates/characters/creator.html:196
 msgid "Physical appearance (e.g. emerald eyes, shoulder-length black hair, silver armor)..."
-msgstr ""
+msgstr "Aspetto fisico (es. occhi color smeraldo, capelli neri alle spalle, armatura d'argento)..."
 
 #: flask/templates/characters/creator.html:202
 msgid "First Message (Welcome Message)"
-msgstr ""
+msgstr "Primo messaggio (messaggio di benvenuto)"
 
 #: flask/templates/characters/creator.html:203
 msgid "The character's direct opening greeting to the player."
-msgstr ""
+msgstr "Il saluto iniziale diretto del personaggio al giocatore."
 
 #: flask/templates/characters/creator.html:230
 msgid "Dialogue Styles (Few-Shot Examples)"
-msgstr ""
+msgstr "Stili di dialogo (esempi few-shot)"
 
 #: flask/templates/characters/creator.html:231
 msgid "Typical player trigger and character response pairs injected into the prompt."
-msgstr ""
+msgstr "Coppie tipiche di stimolo del giocatore e risposta del personaggio inserite nel prompt."
 
 #: flask/templates/characters/creator.html:234
 msgid "Define typical trigger-response examples to guide the AI's tone, dialect, and reactions."
-msgstr ""
+msgstr "Definisci esempi tipici di stimolo e risposta per guidare il tono, il dialetto e le reazioni dell'AI."
 
 #: flask/templates/characters/creator.html:237
 msgid "Add Dialogue Style"
-msgstr ""
+msgstr "Aggiungi stile di dialogo"
 
 #: flask/templates/characters/creator.html:244
 msgid "Example"
-msgstr ""
+msgstr "Esempio"
 
 #: flask/templates/characters/creator.html:246
 msgid "Edit example"
-msgstr ""
+msgstr "Modifica esempio"
 
 #: flask/templates/characters/creator.html:247
 msgid "Delete example"
-msgstr ""
+msgstr "Elimina esempio"
 
 #: flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:253 flask/templates/characters/creator.html:258 flask/templates/characters/creator.html:633
 msgid "You"
-msgstr ""
+msgstr "Tu"
 
 #: flask/templates/characters/creator.html:265
 msgid "No dialogue styles added yet. Click 'Add Dialogue Style' to create examples."
-msgstr ""
+msgstr "Nessuno stile di dialogo ancora aggiunto. Fai clic su 'Aggiungi stile di dialogo' per creare esempi."
 
 #: flask/templates/characters/creator.html:275
 msgid "Game World & Locations"
-msgstr ""
+msgstr "Mondo di gioco e luoghi"
 
 #: flask/templates/characters/creator.html:276
 msgid "Links a recommended world. Once selected, initial, preferred, and disliked locations can be chosen."
-msgstr ""
+msgstr "Collega un mondo consigliato. Una volta selezionato, è possibile scegliere i luoghi iniziali, preferiti e sgraditi."
 
 #: flask/templates/characters/creator.html:279
 msgid "Select a recommended world for this character. It will be pre-selected when starting a new chat."
-msgstr ""
+msgstr "Seleziona un mondo consigliato per questo personaggio. Verrà preselezionato all'avvio di una nuova chat."
 
 #: flask/templates/characters/creator.html:284
 msgid "Recommended WorldInfo"
-msgstr ""
+msgstr "WorldInfo consigliato"
 
 #: flask/templates/characters/creator.html:285
 msgid "Locations and events of this world are included in roleplay."
-msgstr ""
+msgstr "I luoghi e gli eventi di questo mondo sono inclusi nel gioco di ruolo."
 
 #: flask/templates/characters/creator.html:288
 msgid "No WorldInfo linked"
-msgstr ""
+msgstr "Nessun WorldInfo collegato"
 
 #: flask/templates/characters/creator.html:300
 msgid "Initial Location of First Message"
-msgstr ""
+msgstr "Luogo iniziale del primo messaggio"
 
 #: flask/templates/characters/creator.html:301
 msgid "Starting location for the conversation within the linked world."
-msgstr ""
+msgstr "Luogo di partenza della conversazione all'interno del mondo collegato."
 
 #: flask/templates/characters/creator.html:304
 msgid "No fixed starting location"
-msgstr ""
+msgstr "Nessun luogo di partenza fisso"
 
 #: flask/templates/characters/creator.html:318
 msgid "Preferred Locations (from linked world)"
-msgstr ""
+msgstr "Luoghi preferiti (dal mondo collegato)"
 
 #: flask/templates/characters/creator.html:319
 msgid "Locations where the character feels comfortable or likes to spend time."
-msgstr ""
+msgstr "Luoghi in cui il personaggio si sente a proprio agio o ama trascorrere del tempo."
 
 #: flask/templates/characters/creator.html:331 flask/templates/characters/creator.html:350
 msgid "Tip: Hold Ctrl/Cmd to select multiple."
-msgstr ""
+msgstr "Suggerimento: tieni premuto Ctrl/Cmd per selezionarne più di uno."
 
 #: flask/templates/characters/creator.html:337
 msgid "Disliked Locations (from linked world)"
-msgstr ""
+msgstr "Luoghi sgraditi (dal mondo collegato)"
 
 #: flask/templates/characters/creator.html:338
 msgid "Locations the character avoids, fears, or dislikes."
-msgstr ""
+msgstr "Luoghi che il personaggio evita, teme o non gradisce."
 
 #: flask/templates/characters/creator.html:364
 msgid "Linked Lorebooks (Knowledge Compendiums)"
-msgstr ""
+msgstr "Libri del sapere collegati (compendi di conoscenza)"
 
 #: flask/templates/characters/creator.html:365
 msgid "Knowledge compendiums for this character. Matching entries are automatically loaded into the prompt via tags."
-msgstr ""
+msgstr "Compendi di conoscenza per questo personaggio. Le voci corrispondenti vengono caricate automaticamente nel prompt tramite tag."
 
 #: flask/templates/characters/creator.html:368
 msgid "Attach knowledge compendiums. Relevant entries are automatically injected via tag matching."
-msgstr ""
+msgstr "Allega compendi di conoscenza. Le voci rilevanti vengono inserite automaticamente tramite corrispondenza dei tag."
 
 #: flask/templates/characters/creator.html:371 flask/templates/macros/lorebook_manager.html:24
 msgid "Add Lorebook"
-msgstr ""
+msgstr "Aggiungi libro del sapere"
 
 #: flask/templates/characters/creator.html:386
 msgid "When should this lorebook be active?"
-msgstr ""
+msgstr "Quando dovrebbe essere attivo questo libro del sapere?"
 
 #: flask/templates/characters/creator.html:387
 msgid "All Worlds (Always active)"
-msgstr ""
+msgstr "Tutti i mondi (sempre attivo)"
 
 #: flask/templates/characters/creator.html:389
 msgid "Only in world:"
-msgstr ""
+msgstr "Solo nel mondo:"
 
 #: flask/templates/characters/creator.html:392
 msgid "Unlink"
-msgstr ""
+msgstr "Scollega"
 
 #: flask/templates/characters/creator.html:392
 msgid "Unlink lorebook"
-msgstr ""
+msgstr "Scollega libro del sapere"
 
 #: flask/templates/characters/creator.html:400
 msgid "No lorebooks linked. Click 'Add Lorebook' to select compendiums."
-msgstr ""
+msgstr "Nessun libro del sapere collegato. Fai clic su 'Aggiungi libro del sapere' per selezionare i compendi."
 
 #: flask/templates/characters/creator.html:416
 msgid "Unlockable 9:16 Gallery Images (Threshold -100 to +100)"
-msgstr ""
+msgstr "Immagini galleria 9:16 sbloccabili (soglia da -100 a +100)"
 
 #: flask/templates/characters/creator.html:417
 msgid "Exclusive portrait graphics unlocked when reaching a relationship threshold in chat."
-msgstr ""
+msgstr "Illustrazioni di ritratto esclusive sbloccate raggiungendo una soglia di relazione nella chat."
 
 #: flask/templates/characters/creator.html:420
 msgid "Reward the player with exclusive character graphics as the relationship grows in chat."
-msgstr ""
+msgstr "Ricompensa il giocatore con grafiche esclusive del personaggio man mano che la relazione cresce nella chat."
 
 #: flask/templates/characters/creator.html:424
 msgid "Add 9:16 Image"
-msgstr ""
+msgstr "Aggiungi immagine 9:16"
 
 #: flask/templates/characters/creator.html:430
 msgid "Delete image"
-msgstr ""
+msgstr "Elimina immagine"
 
 #: flask/templates/characters/creator.html:434
 msgid "Unlocks at relationship:"
-msgstr ""
+msgstr "Si sblocca a livello di relazione:"
 
 #: flask/templates/characters/creator.html:445
 msgid "Please save the character's basic info first to upload and manage 9:16 gallery images."
-msgstr ""
+msgstr "Salva prima le informazioni di base del personaggio per caricare e gestire le immagini della galleria 9:16."
 
 #: flask/templates/characters/creator.html:456
 msgid "Emotional Sprites (28 Emotions with Variant Stack View)"
-msgstr ""
+msgstr "Sprite emotivi (28 emozioni con vista a pila delle varianti)"
 
 #: flask/templates/characters/creator.html:457
 msgid "Image variants for 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait."
-msgstr ""
+msgstr "Varianti di immagine per 28 emozioni. Il sistema classifica l'emozione dell'AI dopo ogni risposta e aggiorna il ritratto della chat."
 
 #: flask/templates/characters/creator.html:460
 msgid "When an emotion is detected, a random variant is selected. If none exists, neutral is used as fallback."
-msgstr ""
+msgstr "Quando viene rilevata un'emozione, viene selezionata una variante casuale. Se non ne esiste alcuna, viene usata quella neutrale come ripiego."
 
 #: flask/templates/characters/creator.html:472
 msgid "Choose PNG/WEBP"
-msgstr ""
+msgstr "Scegli PNG/WEBP"
 
 #: flask/templates/characters/creator.html:482
 msgid "Upload another variant"
-msgstr ""
+msgstr "Carica un'altra variante"
 
 #: flask/templates/characters/creator.html:489
 msgid "View all variants"
-msgstr ""
+msgstr "Visualizza tutte le varianti"
 
 #: flask/templates/characters/creator.html:492
 msgid "Delete sprite"
-msgstr ""
+msgstr "Elimina sprite"
 
 #: flask/templates/characters/creator.html:500
 msgid "Fallback"
-msgstr ""
+msgstr "Ripiego"
 
 #: flask/templates/characters/creator.html:509
 msgid "Variants for emotion:"
-msgstr ""
+msgstr "Varianti per l'emozione:"
 
 #: flask/templates/characters/creator.html:517
 msgid "Delete variant"
-msgstr ""
+msgstr "Elimina variante"
 
 #: flask/templates/characters/creator.html:536
 msgid "Please save the character's basic info first to upload sprites for the 28 emotions."
-msgstr ""
+msgstr "Salva prima le informazioni di base del personaggio per caricare gli sprite per le 28 emozioni."
 
 #: flask/templates/characters/creator.html:547
 msgid "Character-Specific Random Events"
-msgstr ""
+msgstr "Eventi casuali specifici del personaggio"
 
 #: flask/templates/characters/creator.html:548
 msgid "Dynamic events that can trigger exclusively in chats with this character."
-msgstr ""
+msgstr "Eventi dinamici che possono attivarsi esclusivamente nelle chat con questo personaggio."
 
 #: flask/templates/characters/creator.html:551
 msgid "These events are available exclusively in sessions with"
-msgstr ""
+msgstr "Questi eventi sono disponibili esclusivamente nelle sessioni con"
 
 #: flask/templates/characters/creator.html:551
 msgid "in the shared random event pool."
-msgstr ""
+msgstr "nel pool condiviso di eventi casuali."
 
 #: flask/templates/characters/creator.html:578
 msgid "Please save the character's basic info first to create character-specific random events."
-msgstr ""
+msgstr "Salva prima le informazioni di base del personaggio per creare eventi casuali specifici del personaggio."
 
 #: flask/templates/characters/creator.html:589
 msgid "Upload 9:16 Gallery Image"
-msgstr ""
+msgstr "Carica immagine galleria 9:16"
 
 #: flask/templates/characters/creator.html:595
 msgid "Image File (9:16 Portrait)"
-msgstr ""
+msgstr "File immagine (ritratto 9:16)"
 
 #: flask/templates/characters/creator.html:596
 msgid "Exclusive portrait image for this character."
-msgstr ""
+msgstr "Immagine di ritratto esclusiva per questo personaggio."
 
 #: flask/templates/characters/creator.html:602
 msgid "Unlock Relationship Level"
-msgstr ""
+msgstr "Livello di relazione per lo sblocco"
 
 #: flask/templates/characters/creator.html:603
 msgid "Required relationship level to unlock this image in chat."
-msgstr ""
+msgstr "Livello di relazione richiesto per sbloccare questa immagine nella chat."
 
 #: flask/templates/characters/creator.html:615
 msgid "Upload"
@@ -1616,31 +1616,31 @@ msgstr "Carica"
 
 #: flask/templates/characters/creator.html:627
 msgid "Add New Dialogue Style"
-msgstr ""
+msgstr "Aggiungi nuovo stile di dialogo"
 
 #: flask/templates/characters/creator.html:634
 msgid "Trigger (Player Input)"
-msgstr ""
+msgstr "Stimolo (input del giocatore)"
 
 #: flask/templates/characters/creator.html:636
 msgid "e.g. Hello! What are you doing out here so late?"
-msgstr ""
+msgstr "es. Ciao! Cosa ci fai qui fuori così tardi?"
 
 #: flask/templates/characters/creator.html:641
 msgid "Response (Character Reply)"
-msgstr ""
+msgstr "Risposta (replica del personaggio)"
 
 #: flask/templates/characters/creator.html:643
 msgid "e.g. Greetings, wanderer. The woods hold secrets at night..."
-msgstr ""
+msgstr "es. Salve, viandante. I boschi custodiscono segreti di notte..."
 
 #: flask/templates/characters/creator.html:648
 msgid "Fill with AI"
-msgstr ""
+msgstr "Compila con AI"
 
 #: flask/templates/characters/creator.html:648
 msgid "Generates trigger and response based on character description"
-msgstr ""
+msgstr "Genera stimolo e risposta in base alla descrizione del personaggio"
 
 #: flask/templates/characters/creator.html:652 flask/templates/characters/creator.html:680 flask/templates/macros/lorebook_manager.html:226
 msgid "Add"
@@ -1648,15 +1648,15 @@ msgstr "Aggiungi"
 
 #: flask/templates/characters/creator.html:662
 msgid "Link Lorebook"
-msgstr ""
+msgstr "Collega libro del sapere"
 
 #: flask/templates/characters/creator.html:666 flask/templates/macros/lorebook_manager.html:197
 msgid "Filter by lorebook name..."
-msgstr ""
+msgstr "Filtra per nome del libro del sapere..."
 
 #: flask/templates/characters/creator.html:680
 msgid "Linked"
-msgstr ""
+msgstr "Collegato"
 
 #: flask/templates/characters/creator.html:693
 msgid "Set Image Crops"
@@ -1672,7 +1672,7 @@ msgstr "Nuova chat con"
 
 #: flask/templates/chat/select_worldinfo.html:12
 msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
-msgstr ""
+msgstr "Configura il tuo persona del giocatore, il WorldInfo attivo e i libri del sapere per questa sessione."
 
 #: flask/templates/chat/select_worldinfo.html:18 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
 msgid "Settings"
@@ -1680,23 +1680,23 @@ msgstr "Impostazioni"
 
 #: flask/templates/chat/select_worldinfo.html:27
 msgid "Select Player Persona"
-msgstr ""
+msgstr "Seleziona persona del giocatore"
 
 #: flask/templates/chat/select_worldinfo.html:32
 msgid "Default"
-msgstr ""
+msgstr "Predefinito"
 
 #: flask/templates/chat/select_worldinfo.html:37
 msgid "Note: After sending the first message, the persona is permanently locked for this chat."
-msgstr ""
+msgstr "Nota: dopo l'invio del primo messaggio, il persona viene bloccato permanentemente per questa chat."
 
 #: flask/templates/chat/select_worldinfo.html:42
 msgid "Automatically assigned"
-msgstr ""
+msgstr "Assegnato automaticamente"
 
 #: flask/templates/chat/select_worldinfo.html:48
 msgid "Active WorldInfo (At most one per session)"
-msgstr ""
+msgstr "WorldInfo attivo (al massimo uno per sessione)"
 
 #: flask/templates/chat/select_worldinfo.html:50
 msgid "No WorldInfo (Default — Neutral background, no events)"
@@ -1704,27 +1704,27 @@ msgstr "Senza WorldInfo (Predefinito — Sfondo neutrale, nessun evento)"
 
 #: flask/templates/chat/select_worldinfo.html:54
 msgid "Recommended for"
-msgstr ""
+msgstr "Consigliato per"
 
 #: flask/templates/chat/select_worldinfo.html:60
 msgid "This character recommends a WorldInfo, but you can freely choose another or start without one."
-msgstr ""
+msgstr "Questo personaggio consiglia un WorldInfo, ma puoi sceglierne liberamente un altro o iniziare senza."
 
 #: flask/templates/chat/select_worldinfo.html:66
 msgid "Optional Session Title"
-msgstr ""
+msgstr "Titolo sessione facoltativo"
 
 #: flask/templates/chat/select_worldinfo.html:67
 msgid "Chat with"
-msgstr ""
+msgstr "Chatta con"
 
 #: flask/templates/chat/select_worldinfo.html:73
 msgid "Enable Thinking (Reasoning)"
-msgstr ""
+msgstr "Abilita riflessione (ragionamento)"
 
 #: flask/templates/chat/select_worldinfo.html:76
 msgid "Enables extended chain-of-thought reasoning for compatible models (e.g. Gemma 4, DeepSeek-R1). Disable for faster replies without thinking steps."
-msgstr ""
+msgstr "Abilita il ragionamento esteso chain-of-thought per i modelli compatibili (es. Gemma 4, DeepSeek-R1). Disattiva per risposte più rapide senza passaggi di riflessione."
 
 #: flask/templates/chat/select_worldinfo.html:89
 msgid "Start Adventure"
@@ -1740,15 +1740,15 @@ msgstr "Barra laterale / Info personaggio"
 
 #: flask/templates/chat/session.html:39 flask/templates/chat/session.html:63 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
 msgid "Location:"
-msgstr ""
+msgstr "Luogo:"
 
 #: flask/templates/chat/session.html:41
 msgid "World:"
-msgstr ""
+msgstr "Mondo:"
 
 #: flask/templates/chat/session.html:43
 msgid "Neutral Setting"
-msgstr ""
+msgstr "Ambientazione neutrale"
 
 #: flask/templates/chat/session.html:79
 msgid "View LLM prompt (Admin)"
@@ -1836,7 +1836,7 @@ msgstr "Invia messaggio (Invio)"
 
 #: flask/templates/chat/session.html:257 flask/templates/chat/session.html:786 flask/templates/lorebooks/detail.html:167
 msgid "Tags (Comma-separated for vectorless RAG)"
-msgstr ""
+msgstr "Tag (separati da virgole per RAG senza vettori)"
 
 #: flask/templates/chat/session.html:261 flask/templates/chat/session.html:790
 msgid "Summary"
@@ -1984,11 +1984,11 @@ msgstr "Impostazioni di base"
 
 #: flask/templates/lorebooks/detail.html:42
 msgid "Really delete Lorebook?"
-msgstr ""
+msgstr "Eliminare davvero il libro del sapere?"
 
 #: flask/templates/lorebooks/detail.html:43
 msgid "Read-only (External Lorebook)"
-msgstr ""
+msgstr "Sola lettura (libro del sapere esterno)"
 
 #: flask/templates/lorebooks/detail.html:44
 msgid "Save Lorebook"
@@ -1996,11 +1996,11 @@ msgstr "Salva Lorebook"
 
 #: flask/templates/lorebooks/detail.html:60
 msgid "Lorebook Name"
-msgstr ""
+msgstr "Nome del libro del sapere"
 
 #: flask/templates/lorebooks/detail.html:61
 msgid "The title of this knowledge compendium."
-msgstr ""
+msgstr "Il titolo di questo compendio di conoscenza."
 
 #: flask/templates/lorebooks/detail.html:66 flask/templates/lorebooks/detail.html:151 flask/templates/lorebooks/detail.html:221 flask/templates/macros/event_manager.html:54 flask/templates/worldinfo/detail.html:70
 msgid "Proper Noun (Do not translate)"
@@ -2008,19 +2008,19 @@ msgstr "Nome proprio (Non tradurre)"
 
 #: flask/templates/lorebooks/detail.html:73
 msgid "Private = only usable by you. Public = linkable by other users in their characters."
-msgstr ""
+msgstr "Privato = utilizzabile solo da te. Pubblico = collegabile da altri utenti nei loro personaggi."
 
 #: flask/templates/lorebooks/detail.html:83
 msgid "Short Description"
-msgstr ""
+msgstr "Descrizione breve"
 
 #: flask/templates/lorebooks/detail.html:84
 msgid "A brief summary of the topic for quick orientation in the overview."
-msgstr ""
+msgstr "Un breve riepilogo dell'argomento per orientarsi rapidamente nella panoramica."
 
 #: flask/templates/lorebooks/detail.html:89
 msgid "Short overview of the lorebook content..."
-msgstr ""
+msgstr "Breve panoramica del contenuto del libro del sapere..."
 
 #: flask/templates/lorebooks/detail.html:107
 msgid "New Entry"
@@ -2028,19 +2028,19 @@ msgstr "Nuova voce"
 
 #: flask/templates/lorebooks/detail.html:116
 msgid "Private (Secret Lore)"
-msgstr ""
+msgstr "Privato (sapere segreto)"
 
 #: flask/templates/lorebooks/detail.html:116
 msgid "Private entry: hidden from other players, but injected via RAG in roleplay."
-msgstr ""
+msgstr "Voce privata: nascosta agli altri giocatori, ma inserita tramite RAG nel gioco di ruolo."
 
 #: flask/templates/lorebooks/detail.html:130
 msgid "Click to edit"
-msgstr ""
+msgstr "Fai clic per modificare"
 
 #: flask/templates/lorebooks/detail.html:139
 msgid "Lorebook Entry:"
-msgstr ""
+msgstr "Voce del libro del sapere:"
 
 #: flask/templates/lorebooks/detail.html:145 flask/templates/lorebooks/detail.html:215 flask/templates/macros/event_manager.html:34
 msgid "Title"
@@ -2048,47 +2048,47 @@ msgstr "Titolo"
 
 #: flask/templates/lorebooks/detail.html:146 flask/templates/lorebooks/detail.html:216
 msgid "Concise title of the lore entry."
-msgstr ""
+msgstr "Titolo conciso della voce di sapere."
 
 #: flask/templates/lorebooks/detail.html:157 flask/templates/lorebooks/detail.html:227
 msgid "Public: readable in overview. Private: hidden in overview, still injected via RAG in roleplay."
-msgstr ""
+msgstr "Pubblico: leggibile nella panoramica. Privato: nascosto nella panoramica, comunque inserito tramite RAG nel gioco di ruolo."
 
 #: flask/templates/lorebooks/detail.html:160 flask/templates/lorebooks/detail.html:230
 msgid "Public (Readable in overview)"
-msgstr ""
+msgstr "Pubblico (leggibile nella panoramica)"
 
 #: flask/templates/lorebooks/detail.html:161 flask/templates/lorebooks/detail.html:231
 msgid "Private (Secret Lore / Spoiler Protection)"
-msgstr ""
+msgstr "Privato (sapere segreto / protezione spoiler)"
 
 #: flask/templates/lorebooks/detail.html:168 flask/templates/lorebooks/detail.html:238
 msgid "Keywords that trigger loading this entry into [RELEVANT_LOREBOOKS] when mentioned in chat."
-msgstr ""
+msgstr "Parole chiave che attivano il caricamento di questa voce in [RELEVANT_LOREBOOKS] quando menzionate nella chat."
 
 #: flask/templates/lorebooks/detail.html:170 flask/templates/lorebooks/detail.html:240
 msgid "Suggest Tags"
-msgstr ""
+msgstr "Suggerisci tag"
 
 #: flask/templates/lorebooks/detail.html:176 flask/templates/lorebooks/detail.html:246
 msgid "Prose Text / Lore Content"
-msgstr ""
+msgstr "Testo in prosa / contenuto di sapere"
 
 #: flask/templates/lorebooks/detail.html:177 flask/templates/lorebooks/detail.html:247
 msgid "Compact facts, history, or rules the AI can retrieve and use in dialogue."
-msgstr ""
+msgstr "Fatti concisi, storia o regole che l'AI può recuperare e utilizzare nei dialoghi."
 
 #: flask/templates/lorebooks/detail.html:209
 msgid "Create New Lorebook Entry"
-msgstr ""
+msgstr "Crea nuova voce del libro del sapere"
 
 #: flask/templates/lorebooks/detail.html:237 flask/templates/worldinfo/detail.html:196 flask/templates/worldinfo/detail.html:329
 msgid "Tags (Comma-separated)"
-msgstr ""
+msgstr "Tag (separati da virgole)"
 
 #: flask/templates/lorebooks/detail.html:242
 msgid "magic, guild, capital"
-msgstr ""
+msgstr "magia, gilda, capitale"
 
 #: flask/templates/lorebooks/detail.html:263
 msgid "Save Entry"
@@ -2108,27 +2108,27 @@ msgstr "Traduzione in sospeso"
 
 #: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111
 msgid "Translation into your language is pending"
-msgstr ""
+msgstr "La traduzione nella tua lingua è in attesa"
 
 #: flask/templates/macros/cards.html:71
 msgid "Exchanged messages"
-msgstr ""
+msgstr "Messaggi scambiati"
 
 #: flask/templates/macros/cards.html:74
 msgid "Edit character"
-msgstr ""
+msgstr "Modifica personaggio"
 
 #: flask/templates/macros/cards.html:79
 msgid "Duplicate character"
-msgstr ""
+msgstr "Duplica personaggio"
 
 #: flask/templates/macros/cards.html:114
 msgid "Public world"
-msgstr ""
+msgstr "Mondo pubblico"
 
 #: flask/templates/macros/cards.html:116
 msgid "Private world"
-msgstr ""
+msgstr "Mondo privato"
 
 #: flask/templates/macros/cards.html:162
 msgid "Default Persona"
@@ -2164,7 +2164,7 @@ msgstr "Copia tag creatore"
 
 #: flask/templates/macros/collaboration.html:80 flask/templates/macros/lorebook_manager.html:170
 msgid "Remove"
-msgstr ""
+msgstr "Rimuovi"
 
 #: flask/templates/macros/collaboration.html:80
 msgid "Remove collaborator"
@@ -2172,7 +2172,7 @@ msgstr "Rimuovi collaboratore"
 
 #: flask/templates/macros/editor_header.html:27
 msgid "Really delete permanently?"
-msgstr ""
+msgstr "Eliminare davvero in modo permanente?"
 
 #: flask/templates/macros/editor_header.html:32
 msgid "Back"
@@ -2332,31 +2332,31 @@ msgstr "Applica ritaglio"
 
 #: flask/templates/macros/lorebook_manager.html:18
 msgid "Active Knowledge Books (Lorebooks)"
-msgstr ""
+msgstr "Libri di conoscenza attivi (libri del sapere)"
 
 #: flask/templates/macros/lorebook_manager.html:20
 msgid "Lorebooks expand the model's context with relevant world and background knowledge via keyword tags."
-msgstr ""
+msgstr "I libri del sapere ampliano il contesto del modello con conoscenze rilevanti sul mondo e sul retroscena tramite tag di parole chiave."
 
 #: flask/templates/macros/lorebook_manager.html:49
 msgid "Default Lorebooks (Character & World)"
-msgstr ""
+msgstr "Libri del sapere predefiniti (personaggio e mondo)"
 
 #: flask/templates/macros/lorebook_manager.html:52
 msgid "Session Toggle (Slider)"
-msgstr ""
+msgstr "Interruttore sessione (cursore)"
 
 #: flask/templates/macros/lorebook_manager.html:67
 msgid "Lorebook source"
-msgstr ""
+msgstr "Origine libro del sapere"
 
 #: flask/templates/macros/lorebook_manager.html:69 flask/templates/macros/lorebook_manager.html:142
 msgid "Creator Lore"
-msgstr ""
+msgstr "Sapere del creatore"
 
 #: flask/templates/macros/lorebook_manager.html:69 flask/templates/macros/lorebook_manager.html:142
 msgid "Creator Lore: hidden from other players, but used by the AI in chat."
-msgstr ""
+msgstr "Sapere del creatore: nascosto agli altri giocatori, ma utilizzato dall'AI nella chat."
 
 #: flask/templates/macros/lorebook_manager.html:91
 msgid "Inactive — Requires world:"
@@ -2364,55 +2364,55 @@ msgstr "Inattivo — Richiede mondo:"
 
 #: flask/templates/macros/lorebook_manager.html:91
 msgid "This lorebook requires the world"
-msgstr ""
+msgstr "Questo libro del sapere richiede il mondo"
 
 #: flask/templates/macros/lorebook_manager.html:92
 msgid "Locked: matching world is not active."
-msgstr ""
+msgstr "Bloccato: il mondo corrispondente non è attivo."
 
 #: flask/templates/macros/lorebook_manager.html:101 flask/templates/macros/lorebook_manager.html:163
 msgid "Deactivate lorebook"
-msgstr ""
+msgstr "Disattiva libro del sapere"
 
 #: flask/templates/macros/lorebook_manager.html:101 flask/templates/macros/lorebook_manager.html:163
 msgid "Activate lorebook"
-msgstr ""
+msgstr "Attiva libro del sapere"
 
 #: flask/templates/macros/lorebook_manager.html:113
 msgid "No default lorebooks assigned for this session."
-msgstr ""
+msgstr "Nessun libro del sapere predefinito assegnato per questa sessione."
 
 #: flask/templates/macros/lorebook_manager.html:122
 msgid "Custom Lorebooks (Chat-specific)"
-msgstr ""
+msgstr "Libri del sapere personalizzati (specifici della chat)"
 
 #: flask/templates/macros/lorebook_manager.html:125
 msgid "Actions (Toggle & Delete)"
-msgstr ""
+msgstr "Azioni (attiva/disattiva ed elimina)"
 
 #: flask/templates/macros/lorebook_manager.html:134 flask/templates/macros/lorebook_manager.html:140
 msgid "Custom"
-msgstr ""
+msgstr "Personalizzato"
 
 #: flask/templates/macros/lorebook_manager.html:170
 msgid "Remove lorebook from chat"
-msgstr ""
+msgstr "Rimuovi libro del sapere dalla chat"
 
 #: flask/templates/macros/lorebook_manager.html:175
 msgid "No additional custom lorebooks added. Click 'Add Lorebook' to add knowledge."
-msgstr ""
+msgstr "Nessun libro del sapere personalizzato aggiuntivo aggiunto. Fai clic su 'Aggiungi libro del sapere' per aggiungere conoscenze."
 
 #: flask/templates/macros/lorebook_manager.html:188
 msgid "Add Lorebook to Chat"
-msgstr ""
+msgstr "Aggiungi libro del sapere alla chat"
 
 #: flask/templates/macros/lorebook_manager.html:226
 msgid "Already active"
-msgstr ""
+msgstr "Già attivo"
 
 #: flask/templates/macros/lorebook_manager.html:232
 msgid "No lorebooks available."
-msgstr ""
+msgstr "Nessun libro del sapere disponibile."
 
 #: flask/templates/macros/persona_manager.html:18
 msgid "Adjust crop"
@@ -2496,47 +2496,47 @@ msgstr "Tutti i generi"
 
 #: flask/templates/overview/tabs/characters.html:15
 msgid "Chat Status"
-msgstr ""
+msgstr "Stato chat"
 
 #: flask/templates/overview/tabs/characters.html:17 flask/templates/overview/tabs/characters.html:34
 msgid "All Characters"
-msgstr ""
+msgstr "Tutti i personaggi"
 
 #: flask/templates/overview/tabs/characters.html:18
 msgid "Already Chatted"
-msgstr ""
+msgstr "Già chattato"
 
 #: flask/templates/overview/tabs/characters.html:19
 msgid "Not Chatted Yet"
-msgstr ""
+msgstr "Non ancora chattato"
 
 #: flask/templates/overview/tabs/characters.html:23 flask/templates/settings/creations.html:40
 msgid "Sort Order"
-msgstr ""
+msgstr "Ordine"
 
 #: flask/templates/overview/tabs/characters.html:25 flask/templates/settings/creations.html:43
 msgid "Newest First"
-msgstr ""
+msgstr "Più recenti prima"
 
 #: flask/templates/overview/tabs/characters.html:26
 msgid "Most Messages"
-msgstr ""
+msgstr "Più messaggi"
 
 #: flask/templates/overview/tabs/characters.html:27
 msgid "Best Relationship"
-msgstr ""
+msgstr "Migliore relazione"
 
 #: flask/templates/overview/tabs/characters.html:32 flask/templates/settings/creations.html:31
 msgid "Author"
-msgstr ""
+msgstr "Autore"
 
 #: flask/templates/overview/tabs/characters.html:35 flask/templates/settings/creations.html:34
 msgid "Only Mine (Creator)"
-msgstr ""
+msgstr "Solo miei (creatore)"
 
 #: flask/templates/overview/tabs/characters.html:36 flask/templates/settings/creations.html:35
 msgid "Collaborations"
-msgstr ""
+msgstr "Collaborazioni"
 
 #: flask/templates/overview/tabs/lorebooks.html:6
 msgid "New Lorebook"
@@ -2548,35 +2548,35 @@ msgstr "Account"
 
 #: flask/templates/settings/account.html:10
 msgid "Creator Tag"
-msgstr ""
+msgstr "Tag creatore"
 
 #: flask/templates/settings/account.html:10
 msgid "Other creators can add you as a collaborator using this tag."
-msgstr ""
+msgstr "Altri creatori possono aggiungerti come collaboratore usando questo tag."
 
 #: flask/templates/settings/account.html:11
 msgid "Copy Creator Tag"
-msgstr ""
+msgstr "Copia tag creatore"
 
 #: flask/templates/settings/account.html:14
 msgid "Name & Email Address"
-msgstr ""
+msgstr "Nome e indirizzo e-mail"
 
 #: flask/templates/settings/account.html:25
 msgid "Your current password is only required when changing your email address or password. Leave the new password fields empty to keep your current password."
-msgstr ""
+msgstr "La tua password attuale è richiesta solo quando modifichi il tuo indirizzo e-mail o la password. Lascia vuoti i campi della nuova password per mantenere quella attuale."
 
 #: flask/templates/settings/account.html:28
 msgid "Current password"
-msgstr ""
+msgstr "Password attuale"
 
 #: flask/templates/settings/account.html:31
 msgid "New password"
-msgstr ""
+msgstr "Nuova password"
 
 #: flask/templates/settings/account.html:34
 msgid "Confirm new password"
-msgstr ""
+msgstr "Conferma nuova password"
 
 #: flask/templates/settings/account.html:39
 msgid "Language"
@@ -2584,7 +2584,7 @@ msgstr "Lingua"
 
 #: flask/templates/settings/account.html:39
 msgid "Language of the interface and displayed content translations."
-msgstr ""
+msgstr "Lingua dell'interfaccia e delle traduzioni dei contenuti visualizzati."
 
 #: flask/templates/settings/creations.html:4 flask/templates/settings/creations.html:10 flask/templates/settings/layout.html:20
 msgid "My Creations"
@@ -2592,95 +2592,95 @@ msgstr "Le mie creazioni"
 
 #: flask/templates/settings/creations.html:11
 msgid "Overview of all characters, worlds, and lorebooks you created or collaborate on. Click any item to open its editor."
-msgstr ""
+msgstr "Panoramica di tutti i personaggi, mondi e libri del sapere che hai creato o a cui collabori. Fai clic su qualsiasi elemento per aprirne l'editor."
 
 #: flask/templates/settings/creations.html:14
 msgid "Total:"
-msgstr ""
+msgstr "Totale:"
 
 #: flask/templates/settings/creations.html:21 flask/templates/settings/creations.html:65
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: flask/templates/settings/creations.html:23
 msgid "All Types"
-msgstr ""
+msgstr "Tutti i tipi"
 
 #: flask/templates/settings/creations.html:24
 msgid "Characters"
-msgstr ""
+msgstr "Personaggi"
 
 #: flask/templates/settings/creations.html:33
 msgid "All Works"
-msgstr ""
+msgstr "Tutte le opere"
 
 #: flask/templates/settings/creations.html:42
 msgid "Name (A-Z)"
-msgstr ""
+msgstr "Nome (A-Z)"
 
 #: flask/templates/settings/creations.html:48
 msgid "Search"
-msgstr ""
+msgstr "Cerca"
 
 #: flask/templates/settings/creations.html:53
 msgid "Search name..."
-msgstr ""
+msgstr "Cerca nome..."
 
 #: flask/templates/settings/creations.html:55
 msgid "Search creations"
-msgstr ""
+msgstr "Cerca creazioni"
 
 #: flask/templates/settings/creations.html:66
 msgid "Preview"
-msgstr ""
+msgstr "Anteprima"
 
 #: flask/templates/settings/creations.html:68
 msgid "Details"
-msgstr ""
+msgstr "Dettagli"
 
 #: flask/templates/settings/creations.html:70
 msgid "Role"
-msgstr ""
+msgstr "Ruolo"
 
 #: flask/templates/settings/creations.html:71
 msgid "Created"
-msgstr ""
+msgstr "Creato"
 
 #: flask/templates/settings/creations.html:72
 msgid "Action"
-msgstr ""
+msgstr "Azione"
 
 #: flask/templates/settings/creations.html:122
 msgid "Editor"
-msgstr ""
+msgstr "Editor"
 
 #: flask/templates/settings/creations.html:122
 msgid "Open editor"
-msgstr ""
+msgstr "Apri editor"
 
 #: flask/templates/settings/creations.html:132
 msgid "No creations found"
-msgstr ""
+msgstr "Nessuna creazione trovata"
 
 #: flask/templates/settings/creations.html:134
 msgid "No works were found matching the selected filters or created/shared with you."
-msgstr ""
+msgstr "Nessuna opera trovata corrispondente ai filtri selezionati o creata/condivisa con te."
 
 #: flask/templates/settings/creations.html:137
 msgid "Reset all filters"
-msgstr ""
+msgstr "Reimposta tutti i filtri"
 
 #: flask/templates/settings/index.html:7
 msgid "Player Personas"
-msgstr ""
+msgstr "Persona del giocatore"
 
 #: flask/templates/settings/index.html:8
 msgid "Manage your roleplay identities. The star marks your default persona."
-msgstr ""
+msgstr "Gestisci le tue identità di gioco di ruolo. La stella indica il tuo persona predefinito."
 
 #: flask/templates/settings/layout.html:14
 msgid "User & Personalization"
-msgstr ""
+msgstr "Utente e personalizzazione"
 
 #: flask/templates/settings/layout.html:18
 msgid "Personas"
@@ -2700,11 +2700,11 @@ msgstr "Luoghi e Sfondi"
 
 #: flask/templates/worldinfo/detail.html:45
 msgid "Really delete WorldInfo?"
-msgstr ""
+msgstr "Eliminare davvero WorldInfo?"
 
 #: flask/templates/worldinfo/detail.html:46
 msgid "Read-only (External World)"
-msgstr ""
+msgstr "Sola lettura (mondo esterno)"
 
 #: flask/templates/worldinfo/detail.html:47
 msgid "Save WorldInfo"
@@ -2712,47 +2712,47 @@ msgstr "Salva WorldInfo"
 
 #: flask/templates/worldinfo/detail.html:64
 msgid "World Name"
-msgstr ""
+msgstr "Nome del mondo"
 
 #: flask/templates/worldinfo/detail.html:65
 msgid "The name of the universe or setting. Included as primary world in the prompt context."
-msgstr ""
+msgstr "Il nome dell'universo o dell'ambientazione. Inclusa come mondo principale nel contesto del prompt."
 
 #: flask/templates/worldinfo/detail.html:77
 msgid "Cover Image (1:1)"
-msgstr ""
+msgstr "Immagine di copertina (1:1)"
 
 #: flask/templates/worldinfo/detail.html:78
 msgid "Square cover image for the world card in the Hub and world selection."
-msgstr ""
+msgstr "Immagine di copertina quadrata per la scheda del mondo nell'Hub e nella selezione del mondo."
 
 #: flask/templates/worldinfo/detail.html:81
 msgid "1:1 World Cover"
-msgstr ""
+msgstr "Copertina mondo 1:1"
 
 #: flask/templates/worldinfo/detail.html:93
 msgid "Choose Cover"
-msgstr ""
+msgstr "Scegli copertina"
 
 #: flask/templates/worldinfo/detail.html:95
 msgid "Crop"
-msgstr ""
+msgstr "Ritaglia"
 
 #: flask/templates/worldinfo/detail.html:107
 msgid "Private = only accessible to you. Public = accessible to all users for chats."
-msgstr ""
+msgstr "Privato = accessibile solo a te. Pubblico = accessibile a tutti gli utenti per le chat."
 
 #: flask/templates/worldinfo/detail.html:118
 msgid "Linked Lorebook (Optional)"
-msgstr ""
+msgstr "Libro del sapere collegato (facoltativo)"
 
 #: flask/templates/worldinfo/detail.html:119
 msgid "An optional lorebook automatically included alongside character lorebooks in all chats using this world."
-msgstr ""
+msgstr "Un libro del sapere facoltativo incluso automaticamente insieme ai libri del sapere del personaggio in tutte le chat che usano questo mondo."
 
 #: flask/templates/worldinfo/detail.html:122
 msgid "No lorebook linked"
-msgstr ""
+msgstr "Nessun libro del sapere collegato"
 
 #: flask/templates/worldinfo/detail.html:144
 msgid "New Location"
@@ -2760,75 +2760,75 @@ msgstr "Nuovo luogo"
 
 #: flask/templates/worldinfo/detail.html:151 flask/templates/worldinfo/detail.html:154 flask/templates/worldinfo/detail.html:166
 msgid "This location is bound to"
-msgstr ""
+msgstr "Questo luogo è vincolato a"
 
 #: flask/templates/worldinfo/detail.html:177
 msgid "Edit Location:"
-msgstr ""
+msgstr "Modifica luogo:"
 
 #: flask/templates/worldinfo/detail.html:183 flask/templates/worldinfo/detail.html:316
 msgid "Location Name"
-msgstr ""
+msgstr "Nome del luogo"
 
 #: flask/templates/worldinfo/detail.html:184 flask/templates/worldinfo/detail.html:317
 msgid "Name of the location (e.g. Old Library, Griffin Tavern)."
-msgstr ""
+msgstr "Nome del luogo (es. Vecchia Biblioteca, Taverna del Grifone)."
 
 #: flask/templates/worldinfo/detail.html:197 flask/templates/worldinfo/detail.html:330
 msgid "Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet)."
-msgstr ""
+msgstr "Parole chiave separate da virgole che descrivono l'ambiente (es. interno, accogliente, silenzioso)."
 
 #: flask/templates/worldinfo/detail.html:199 flask/templates/worldinfo/detail.html:332
 msgid "Extract Tags"
-msgstr ""
+msgstr "Estrai tag"
 
 #: flask/templates/worldinfo/detail.html:207 flask/templates/worldinfo/detail.html:340
 msgid "16:9 Background Image (PNG, JPG, WEBP)"
-msgstr ""
+msgstr "Immagine di sfondo 16:9 (PNG, JPG, WEBP)"
 
 #: flask/templates/worldinfo/detail.html:208 flask/templates/worldinfo/detail.html:341
 msgid "Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference."
-msgstr ""
+msgstr "Immagine orizzontale 16:9 usata come sfondo della scena della chat e riferimento ComfyUI."
 
 #: flask/templates/worldinfo/detail.html:214 flask/templates/worldinfo/detail.html:347
 msgid "Analyze & Describe Image"
-msgstr ""
+msgstr "Analizza e descrivi immagine"
 
 #: flask/templates/worldinfo/detail.html:221 flask/templates/worldinfo/detail.html:354
 msgid "Location Description"
-msgstr ""
+msgstr "Descrizione del luogo"
 
 #: flask/templates/worldinfo/detail.html:222 flask/templates/worldinfo/detail.html:355
 msgid "Atmospheric description of the environment, sounds, and mood."
-msgstr ""
+msgstr "Descrizione atmosferica dell'ambiente, dei suoni e dell'umore."
 
 #: flask/templates/worldinfo/detail.html:239 flask/templates/worldinfo/detail.html:372
 msgid "Character Binding (Optional)"
-msgstr ""
+msgstr "Vincolo personaggio (facoltativo)"
 
 #: flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:373
 msgid "If selected, this location can only be entered when chatting with that specific character."
-msgstr ""
+msgstr "Se selezionato, è possibile accedere a questo luogo solo chattando con quel personaggio specifico."
 
 #: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:376
 msgid "No character (Freely accessible)"
-msgstr ""
+msgstr "Nessun personaggio (liberamente accessibile)"
 
 #: flask/templates/worldinfo/detail.html:253
 msgid "Assigned Location Events:"
-msgstr ""
+msgstr "Eventi del luogo assegnati:"
 
 #: flask/templates/worldinfo/detail.html:258
 msgid "No specific location events assigned."
-msgstr ""
+msgstr "Nessun evento specifico del luogo assegnato."
 
 #: flask/templates/worldinfo/detail.html:310
 msgid "Create New Location"
-msgstr ""
+msgstr "Crea nuovo luogo"
 
 #: flask/templates/worldinfo/detail.html:334
 msgid "tavern, forest, castle"
-msgstr ""
+msgstr "taverna, foresta, castello"
 
 #: flask/templates/worldinfo/detail.html:387
 msgid "Save Location"
@@ -2836,9 +2836,9 @@ msgstr "Salva luogo"
 
 #: flask/templates/worldinfo/detail.html:394
 msgid "Set 1:1 World Cover"
-msgstr ""
+msgstr "Imposta copertina mondo 1:1"
 
 #: flask/templates/worldinfo/detail.html:394
 msgid "1:1 Cover"
-msgstr ""
+msgstr "Copertina 1:1"
 

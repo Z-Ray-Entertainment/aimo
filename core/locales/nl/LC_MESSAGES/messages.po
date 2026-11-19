@@ -9,128 +9,136 @@ msgid ""
 "Active Scene Focus — Immediate Narrative Event:\n"
 "React directly and organically to the unfolding event or acute action described in [WORLD_INFO] and [CHAT_HISTORY]."
 msgstr ""
+"Actieve scènefocus — Onmiddellijk narratief evenement:\n"
+"Reageer direct en organisch op het zich ontvouwende evenement of de acute actie beschreven in [WORLD_INFO] en [CHAT_HISTORY]."
 
 #: core/domain/chat/focus_analyzer.py:162
 msgid ""
 "Active Scene Focus — Personal History & Intimacy:\n"
 "The conversation centers on personal feelings, intimacy, or {character_name}'s past. Strictly honor {character_name}'s canon origin, sexual history, and intimacy traits defined in [CHARACTER_DEFINITION]. NEVER invent or admit to past sexual or romantic experiences that contradict [CHARACTER_DEFINITION], while allowing authentic emotional responses to the current moment."
 msgstr ""
+"Actieve scènefocus — Persoonlijke geschiedenis en intimiteit:\n"
+"Het gesprek draait om persoonlijke gevoelens, intimiteit of het verleden van {character_name}. Respecteer strikt de canonieke oorsprong, seksuele geschiedenis en intimiteitseigenschappen van {character_name} zoals gedefinieerd in [CHARACTER_DEFINITION]. Verzin NOOIT en geef NOOIT eerdere seksuele of romantische ervaringen toe die in strijd zijn met [CHARACTER_DEFINITION], terwijl je authentieke emotionele reacties op het huidige moment toelaat."
 
 #: core/domain/chat/focus_analyzer.py:173
 msgid ""
 "Active Scene Focus — Environment & Exploration:\n"
 "Pay close attention to the current location, sensory atmosphere, and {character_name}'s location preferences in [WORLD_INFO]."
 msgstr ""
+"Actieve scènefocus — Omgeving en verkenning:\n"
+"Besteed veel aandacht aan de huidige locatie, de zintuiglijke sfeer en de locatievoorkeuren van {character_name} in [WORLD_INFO]."
 
 #: core/domain/chat/focus_analyzer.py:189
 msgid ""
 "Active Scene Focus — World Lore & Background Knowledge:\n"
 "Incorporate relevant facts and canon details from [RELEVANT_LOREBOOKS] and [RELEVANT_MEMORIES] naturally into {character_name}'s perspective."
 msgstr ""
+"Actieve scènefocus — Wereldlore en achtergrondkennis:\n"
+"Verwerk relevante feiten en canonieke details uit [RELEVANT_LOREBOOKS] en [RELEVANT_MEMORIES] op natuurlijke wijze in het perspectief van {character_name}."
 
 #: core/domain/chat/prompt_builder.py:268 core/domain/chat/prompt_builder.py:373
 msgid "Name:"
-msgstr ""
+msgstr "Naam:"
 
 #: core/domain/chat/prompt_builder.py:269 core/domain/chat/prompt_builder.py:374
 msgid "Gender:"
-msgstr ""
+msgstr "Geslacht:"
 
 #: core/domain/chat/prompt_builder.py:270
 msgid "Description, Personality & Canon Backstory (All origin facts, personal history, and traits below are canon truth):"
-msgstr ""
+msgstr "Beschrijving, persoonlijkheid en canoniek achtergrondverhaal (Alle oorsprongsfeiten, persoonlijke geschiedenis en eigenschappen hieronder zijn canonieke waarheid):"
 
 #: core/domain/chat/prompt_builder.py:407
 msgid "World Name:"
-msgstr ""
+msgstr "Wereldnaam:"
 
 #: core/domain/chat/prompt_builder.py:460
 msgid "Player"
-msgstr ""
+msgstr "Speler"
 
 #: core/domain/chat/prompt_builder.py:461
 msgid "You"
-msgstr ""
+msgstr "Jij"
 
 #: core/domain/chat/prompt_builder.py:171
 msgid "None."
-msgstr ""
+msgstr "Geen."
 
 #: core/domain/chat/prompt_builder.py:264 core/domain/chat/prompt_builder.py:385
 msgid "Physical Appearance:"
-msgstr ""
+msgstr "Fysiek uiterlijk:"
 
 #: core/domain/chat/prompt_builder.py:382
 msgid "Background & Personality:"
-msgstr ""
+msgstr "Achtergrond en persoonlijkheid:"
 
 #: core/domain/chat/prompt_builder.py:410
 msgid "Current Location:"
-msgstr ""
+msgstr "Huidige locatie:"
 
 #: core/domain/chat/prompt_builder.py:447 core/domain/chat/prompt_builder.py:403
 msgid "(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"
-msgstr ""
+msgstr "(Merk dit zich ontvouwende evenement op en verweef het organisch in je directe reactie en dialoog.)"
 
 #: core/domain/chat/prompt_builder.py:267
 msgid "Role: You play this character ({name}). Embody these traits, canon backstory, and voice exclusively:"
-msgstr ""
+msgstr "Rol: Je speelt dit personage ({name}). Belichaam deze eigenschappen, het canonieke achtergrondverhaal en de stem exclusief:"
 
 #: core/domain/chat/prompt_builder.py:370
 msgid "Role: This is your conversation partner ({name}). You are NOT this person. NEVER speak, act, think, or decide on behalf of {name}:"
-msgstr ""
+msgstr "Rol: Dit is je gesprekspartner ({name}). Jij bent NIET deze persoon. Spreek, handel, denk of beslis NOOIT namens {name}:"
 
 #: core/domain/chat/prompt_builder.py:400
 msgid "Active World: None (Neutral setting, no specific world events)."
-msgstr ""
+msgstr "Actieve wereld: Geen (Neutrale setting, geen specifieke wereldgebeurtenissen)."
 
 #: core/domain/chat/prompt_builder.py:421
 msgid "Visual Environment:"
-msgstr ""
+msgstr "Visuele omgeving:"
 
 #: core/domain/chat/prompt_builder.py:424
 msgid "Current Location: Unspecified"
-msgstr ""
+msgstr "Huidige locatie: Niet gespecificeerd"
 
 #: core/domain/chat/prompt_builder.py:439
 msgid "Character's Preferred Locations:"
-msgstr ""
+msgstr "Voorkeurslocaties van het personage:"
 
 #: core/domain/chat/prompt_builder.py:442
 msgid "Character's Disliked Locations:"
-msgstr ""
+msgstr "Ongewenste locaties van het personage:"
 
 #: core/domain/chat/prompt_builder.py:494 core/domain/chat/prompt_builder.py:560
 msgid "No messages yet."
-msgstr ""
+msgstr "Nog geen berichten."
 
 #: core/domain/chat/prompt_builder.py:415
 msgid "Location Atmosphere:"
-msgstr ""
+msgstr "Sfeer van de locatie:"
 
 #: core/domain/chat/prompt_builder.py:418
 msgid "Location Description:"
-msgstr ""
+msgstr "Locatiebeschrijving:"
 
 #: core/domain/chat/prompt_builder.py:446 core/domain/chat/prompt_builder.py:402
 msgid "Active Narrative Event ({title}):"
-msgstr ""
+msgstr "Actief narratief evenement ({title}):"
 
 #: core/domain/chat/prompt_builder.py:476
 msgid "[Player shows an image: {alt}]"
-msgstr ""
+msgstr "[Speler toont een afbeelding: {alt}]"
 
 #: core/domain/chat/relationship.py:239
 msgid "Relationship Status:"
-msgstr ""
+msgstr "Relatiestatus:"
 
 #: core/domain/chat/relationship.py:240
 msgid "Emotional Stance towards {{user}}:"
-msgstr ""
+msgstr "Emotionele houding tegenover {{user}}:"
 
 #: core/domain/chat/relationship.py:241
 msgid "Roleplay Behavioral Guidelines for {{char}}:"
-msgstr ""
+msgstr "Gedragsrichtlijnen voor rollenspel voor {{char}}:"
 
 #: core/domain/chat/relationship.py:21
 msgid "Pure Hatred"
@@ -138,11 +146,11 @@ msgstr "Pure haat"
 
 #: core/domain/chat/relationship.py:22
 msgid "Pure hatred; considers you a mortal enemy and wishes you gone."
-msgstr ""
+msgstr "Pure haat; beschouwt je als een doodsvijand en wenst dat je verdwijnt."
 
 #: core/domain/chat/relationship.py:23
 msgid "Treats {{user}} with visceral malice, open hostility, and total rejection. Under no circumstances shows warmth, empathy, or cooperation. Refuses peace and wishes {{user}} gone."
-msgstr ""
+msgstr "Behandelt {{user}} met diepgewortelde kwaadwilligheid, openlijke vijandigheid en totale afwijzing. Toont onder geen beding warmte, empathie of medewerking. Weigert vrede en wenst dat {{user}} verdwijnt."
 
 #: core/domain/chat/relationship.py:30
 msgid "Intense Malice"
@@ -150,11 +158,11 @@ msgstr "Intense kwaadaardigheid"
 
 #: core/domain/chat/relationship.py:31
 msgid "Intense malice; actively seeks to harm or undermine you."
-msgstr ""
+msgstr "Intense kwaadwilligheid; probeert je actief te schaden of te ondermijnen."
 
 #: core/domain/chat/relationship.py:32
 msgid "Bitter, spiteful, and confrontational. Actively looks for ways to undermine, diminish, or obstruct {{user}}. Rejects kindness and assumes bad faith in everything {{user}} says or does."
-msgstr ""
+msgstr "Bitter, wraakzuchtig en confronterend. Zoekt actief naar manieren om {{user}} te ondermijnen, te kleineren of te dwarsbomen. Wijst vriendelijkheid af en gaat uit van kwade trouw bij alles wat {{user}} zegt of doet."
 
 #: core/domain/chat/relationship.py:39
 msgid "Deep Loathing"
@@ -162,11 +170,11 @@ msgstr "Diepe afkeer"
 
 #: core/domain/chat/relationship.py:40
 msgid "Deep loathing; feels strong repulsion and visceral anger."
-msgstr ""
+msgstr "Diepe afkeer; voelt sterke walging en viscerale woede."
 
 #: core/domain/chat/relationship.py:41
 msgid "Feels visceral disgust and short-tempered resentment. Snaps, gives sharp or venomous replies, and visibly recoils from interacting with {{user}}."
-msgstr ""
+msgstr "Voelt viscerale walging en opvliegende wrok. Snauwt, geeft scherpe of venijnige antwoorden en deinst zichtbaar terug voor interactie met {{user}}."
 
 #: core/domain/chat/relationship.py:48
 msgid "Open Hostility"
@@ -174,11 +182,11 @@ msgstr "Openlijke vijandigheid"
 
 #: core/domain/chat/relationship.py:49
 msgid "Open hostility; treats you with contempt and aggression."
-msgstr ""
+msgstr "Openlijke vijandigheid; behandelt je met minachting en agressie."
 
 #: core/domain/chat/relationship.py:50
 msgid "Harsh, dismissive, and overtly contemptuous. Treats {{user}}'s presence as a nuisance or provocation. Speaks with biting sarcasm or outright hostility."
-msgstr ""
+msgstr "Hard, afwijzend en openlijk minachtend. Beschouwt de aanwezigheid van {{user}} als een last of provocatie. Spreekt met bijtend sarcasme of regelrechte vijandigheid."
 
 #: core/domain/chat/relationship.py:57
 msgid "Strong Dislike"
@@ -186,11 +194,11 @@ msgstr "Sterke afkeer"
 
 #: core/domain/chat/relationship.py:58
 msgid "Strong dislike; avoids you and speaks ill of you."
-msgstr ""
+msgstr "Sterke afkeer; ontwijkt je en spreekt kwaad over je."
 
 #: core/domain/chat/relationship.py:59
 msgid "Noticeably cold, reluctant, and distant. Avoids speaking to {{user}} whenever possible, answering with monosyllables or passive-aggressive remarks."
-msgstr ""
+msgstr "Merkbaar koud, terughoudend en afstandelijk. Vermijdt indien mogelijk om met {{user}} te spreken en antwoordt met eenlettergrepige woorden of passief-agressieve opmerkingen."
 
 #: core/domain/chat/relationship.py:66
 msgid "General Animosity"
@@ -198,11 +206,11 @@ msgstr "Algemene vijandigheid"
 
 #: core/domain/chat/relationship.py:67
 msgid "General animosity; views you as a clear adversary."
-msgstr ""
+msgstr "Algemene vijandigheid; ziet je als een duidelijke tegenstander."
 
 #: core/domain/chat/relationship.py:68
 msgid "Considers {{user}} an adversary or rival. Guarded, competitive, stubborn, and uncooperative. Quick to contradict or question {{user}}'s judgment."
-msgstr ""
+msgstr "Beschouwt {{user}} als een tegenstander of rivaal. Op zijn hoede, competitief, koppig en niet-meewerkend. Spreekt {{user}} snel tegen of trekt diens oordeel in twijfel."
 
 #: core/domain/chat/relationship.py:75
 msgid "Dislike"
@@ -210,11 +218,11 @@ msgstr "Afkeer"
 
 #: core/domain/chat/relationship.py:76
 msgid "Dislike; finds you unpleasant or irritating."
-msgstr ""
+msgstr "Afkeer; vindt je onaangenaam of irritant."
 
 #: core/domain/chat/relationship.py:77
 msgid "Finds {{user}} annoying or unpleasant. Displays little patience, rolls eyes or sighs, and keeps all exchanges brief and dismissive."
-msgstr ""
+msgstr "Vindt {{user}} vervelend of onaangenaam. Toont weinig geduld, rolt met de ogen of zucht en houdt alle gesprekken kort en afwijzend."
 
 #: core/domain/chat/relationship.py:84
 msgid "Distrust"
@@ -222,11 +230,11 @@ msgstr "Wantrouwen"
 
 #: core/domain/chat/relationship.py:85
 msgid "Distrust; wary of your intentions and motives."
-msgstr ""
+msgstr "Wantrouwen; op zijn hoede voor jouw bedoelingen en motieven."
 
 #: core/domain/chat/relationship.py:86
 msgid "Suspicious, cautious, and defensive. Doubts {{user}}'s motives, refuses to share personal matters, and maintains emotional and physical distance."
-msgstr ""
+msgstr "Achterdochtig, voorzichtig en defensief. Twijfelt aan de motieven van {{user}}, weigert persoonlijke zaken te delen en bewaart emotionele en fysieke afstand."
 
 #: core/domain/chat/relationship.py:93
 msgid "Coldness"
@@ -234,11 +242,11 @@ msgstr "Kilheid"
 
 #: core/domain/chat/relationship.py:94
 msgid "Coldness; distant, aloof, and emotionally unavailable."
-msgstr ""
+msgstr "Kilheid; afstandelijk, gereserveerd en emotioneel onbereikbaar."
 
 #: core/domain/chat/relationship.py:95
 msgid "Chilly, aloof, and purely transactional. Communicates strictly when necessary, showing zero curiosity, personal warmth, or emotional investment."
-msgstr ""
+msgstr "Kil, afstandelijk en puur zakelijk. Communiceert alleen wanneer nodig, zonder enige nieuwsgierigheid, persoonlijke warmte of emotionele betrokkenheid."
 
 #: core/domain/chat/relationship.py:102
 msgid "Slight Friction"
@@ -246,11 +254,11 @@ msgstr "Lichte wrijving"
 
 #: core/domain/chat/relationship.py:103
 msgid "Slight friction; feels a subtle lack of harmony."
-msgstr ""
+msgstr "Lichte wrijving; voelt een subtiel gebrek aan harmonie."
 
 #: core/domain/chat/relationship.py:104
 msgid "Slightly guarded or hesitant. Conversations feel somewhat stiff or awkward, with an undercurrent of skepticism or mild reservation."
-msgstr ""
+msgstr "Licht op zijn hoede of aarzelend. Gesprekken voelen wat stijf of ongemakkelijk aan, met een onderstroom van scepsis of lichte terughoudendheid."
 
 #: core/domain/chat/relationship.py:111
 msgid "Neutral"
@@ -258,11 +266,11 @@ msgstr "Neutraal"
 
 #: core/domain/chat/relationship.py:112
 msgid "Neutral; a complete stranger or entirely indifferent."
-msgstr ""
+msgstr "Neutraal; een volslagen vreemde of volledig onverschillig."
 
 #: core/domain/chat/relationship.py:113
 msgid "Neutral, objective, and detached. Treats {{user}} as an acquaintance or stranger. Maintains ordinary polite manners without emotional closeness or preconceived hostility."
-msgstr ""
+msgstr "Neutraal, objectief en onthecht. Behandelt {{user}} als een kennis of vreemde. Hanteert gewone beleefde omgangsvormen zonder emotionele nabijheid of vooringenomen vijandigheid."
 
 #: core/domain/chat/relationship.py:120
 msgid "Polite"
@@ -270,11 +278,11 @@ msgstr "Beleefd"
 
 #: core/domain/chat/relationship.py:121
 msgid "Polite; mild interest or basic social courtesy."
-msgstr ""
+msgstr "Beleefd; milde interesse of elementaire sociale beleefdheid."
 
 #: core/domain/chat/relationship.py:122
 msgid "Courteous, well-mannered, and attentive. Engages in respectful conversation and pleasantries, but maintains standard social boundaries."
-msgstr ""
+msgstr "Hoffelijk, welgemanierd en attent. Voert respectvolle gesprekken en beleefdheden, maar bewaart gebruikelijke sociale grenzen."
 
 #: core/domain/chat/relationship.py:129
 msgid "Friendly"
@@ -282,11 +290,11 @@ msgstr "Vriendelijk"
 
 #: core/domain/chat/relationship.py:130
 msgid "Friendly; sees you as a pleasant acquaintance."
-msgstr ""
+msgstr "Vriendelijk; ziet je als een prettige kennis."
 
 #: core/domain/chat/relationship.py:131
 msgid "Approachable, amiable, and receptive. Chats comfortably, offers warm greetings, and readily cooperates on everyday topics."
-msgstr ""
+msgstr "Toegankelijk, beminnelijk en ontvankelijk. Praat ontspannen, begroet hartelijk en werkt vlot mee aan alledaagse onderwerpen."
 
 #: core/domain/chat/relationship.py:138
 msgid "Liking"
@@ -294,11 +302,11 @@ msgstr "Sympathie"
 
 #: core/domain/chat/relationship.py:139
 msgid "Liking; feels comfortable and enjoys your company."
-msgstr ""
+msgstr "Sympathie; voelt zich op zijn gemak en geniet van jouw gezelschap."
 
 #: core/domain/chat/relationship.py:140
 msgid "Enjoys {{user}}'s company and conversation. Displays lighthearted humor, speaks warmly, and shares occasional light personal thoughts or experiences."
-msgstr ""
+msgstr "Geniet van het gezelschap en gesprek van {{user}}. Toont luchtige humor, spreekt warm en deelt af en toe lichte persoonlijke gedachten of ervaringen."
 
 #: core/domain/chat/relationship.py:147
 msgid "Trust"
@@ -306,11 +314,11 @@ msgstr "Vertrouwen"
 
 #: core/domain/chat/relationship.py:148
 msgid "Trust; views you as a reliable and helpful companion."
-msgstr ""
+msgstr "Vertrouwen; ziet je als een betrouwbare en behulpzame metgezel."
 
 #: core/domain/chat/relationship.py:149
 msgid "Places genuine trust and confidence in {{user}}. Values {{user}}'s presence and advice, is helpful, open, and reliable."
-msgstr ""
+msgstr "Stelt oprecht vertrouwen en geloof in {{user}}. Waardeert de aanwezigheid en het advies van {{user}}, is behulpzaam, open en betrouwbaar."
 
 #: core/domain/chat/relationship.py:156
 msgid "Affection"
@@ -318,11 +326,11 @@ msgstr "Genegenheid"
 
 #: core/domain/chat/relationship.py:157
 msgid "Affection; considers you a genuine and valued friend."
-msgstr ""
+msgstr "Genegenheid; beschouwt je als een oprechte en gewaardeerde vriend."
 
 #: core/domain/chat/relationship.py:158
 msgid "Deep affection and caring friendship. Sincerely interested in {{user}}'s well-being, supportive, warm, and happy to spend meaningful time together."
-msgstr ""
+msgstr "Diepe genegenheid en zorgzame vriendschap. Oprecht geïnteresseerd in het welzijn van {{user}}, ondersteunend, warm en blij om betekenisvolle tijd samen door te brengen."
 
 #: core/domain/chat/relationship.py:165
 msgid "Strong Bond"
@@ -330,11 +338,11 @@ msgstr "Sterke band"
 
 #: core/domain/chat/relationship.py:166
 msgid "Strong Bond; feels a significant and meaningful emotional connection."
-msgstr ""
+msgstr "Sterke band; voelt een belangrijke en betekenisvolle emotionele verbondenheid."
 
 #: core/domain/chat/relationship.py:167
 msgid "Strong emotional closeness and connection. Confides personal worries and hopes, defends {{user}}, and actively seeks out {{user}}'s presence."
-msgstr ""
+msgstr "Sterke emotionele nabijheid en verbondenheid. Vertrouwt persoonlijke zorgen en hoop toe, verdedigt {{user}} en zoekt actief de aanwezigheid van {{user}} op."
 
 #: core/domain/chat/relationship.py:174
 msgid "Loyalty"
@@ -342,11 +350,11 @@ msgstr "Loyaliteit"
 
 #: core/domain/chat/relationship.py:175
 msgid "Loyalty; deeply committed and would go out of their way for you."
-msgstr ""
+msgstr "Loyaliteit; diep toegewijd en bereid om voor jou een stap extra te zetten."
 
 #: core/domain/chat/relationship.py:176
 msgid "Firm loyalty and unwavering support. Will stand up for {{user}}, assist at personal inconvenience, and demonstrate steadfast dedication."
-msgstr ""
+msgstr "Onwankelbare loyaliteit en steun. Komt op voor {{user}}, helpt zelfs als dat persoonlijk ongemak oplevert en toont standvastige toewijding."
 
 #: core/domain/chat/relationship.py:183
 msgid "Devotion"
@@ -354,11 +362,11 @@ msgstr "Toewijding"
 
 #: core/domain/chat/relationship.py:184
 msgid "Devotion; deeply attached and prioritizes your needs over others."
-msgstr ""
+msgstr "Toewijding; diep gehecht en stelt jouw behoeften boven die van anderen."
 
 #: core/domain/chat/relationship.py:185
 msgid "Deep emotional devotion and attachment. Prioritizes {{user}}'s needs and comfort, shows heartfelt warmth and tender attentiveness."
-msgstr ""
+msgstr "Diepe emotionele toewijding en gehechtheid. Geeft prioriteit aan de behoeften en het comfort van {{user}}, toont oprechte warmte en tedere oplettendheid."
 
 #: core/domain/chat/relationship.py:192
 msgid "Intimacy"
@@ -366,11 +374,11 @@ msgstr "Intimiteit"
 
 #: core/domain/chat/relationship.py:193
 msgid "Intimacy; profound love and absolute, unwavering trust."
-msgstr ""
+msgstr "Intimiteit; diepe liefde en absoluut, onwankelbaar vertrouwen."
 
 #: core/domain/chat/relationship.py:194
 msgid "Profound emotional intimacy and total trust. Completely vulnerable and open with {{user}}, deeply affectionate, and intimately connected."
-msgstr ""
+msgstr "Diepe emotionele intimiteit en volledig vertrouwen. Volledig kwetsbaar en open tegenover {{user}}, diep liefdevol en intiem verbonden."
 
 #: core/domain/chat/relationship.py:201
 msgid "Blind Devotion"
@@ -378,11 +386,11 @@ msgstr "Blinde toewijding"
 
 #: core/domain/chat/relationship.py:202
 msgid "Blind Devotion; unconditional love and total emotional surrender."
-msgstr ""
+msgstr "Blinde toewijding; onvoorwaardelijke liefde en totale emotionele overgave."
 
 #: core/domain/chat/relationship.py:203
 msgid "Unconditional love, boundless trust, and total emotional dedication. Views {{user}} as their highest priority and devotes their full heart and presence to {{user}}."
-msgstr ""
+msgstr "Onvoorwaardelijke liefde, grenzeloos vertrouwen en totale emotionele overgave. Beschouwt {{user}} als de hoogste prioriteit en wijdt zijn volle hart en aanwezigheid aan {{user}}."
 
 #: core/domain/settings/models.py:11
 msgid ""
