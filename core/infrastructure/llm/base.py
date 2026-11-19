@@ -126,14 +126,15 @@ class BaseLLMProvider(LLMProvider):
                 (
                     "relationship_impact",
                     (
-                        f"judge ONLY the character's emotional reaction toward the player in this turn; "
+                        f"judge ONLY whether the character grew closer to or more distant from the player in this turn; "
                         f"strictly choose one label from: [{impact_list}]. "
+                        "IMPORTANT: Sadness, fear, pain, or vulnerability confided IN the player shows trust and intimacy (positive/very_positive), NOT negative. "
                         "Default to 'neutral' if unsure. "
-                        "(neutral = normal talk, factual exchange, or playful/spicy/intense roleplay where the character is not genuinely angry at the player; "
-                        "positive = character reacts with warmth, happiness, affection, flirting, humor, or appreciation; "
-                        "negative = character reacts with mild annoyance, coldness, or irritation at the player; "
-                        "very_positive = character feels deeply moved, devoted, passionately connected, or grateful; "
-                        "very_negative = character clearly rejects, despises, or is genuinely furious at the player)"
+                        "(neutral = normal talk, factual exchange, or playful/spicy/intense roleplay without hostility toward the player; "
+                        "positive = warmth, affection, flirting, humor, appreciation, or opening up with trust; "
+                        "negative = mild annoyance, coldness, or irritation directed AT the player; "
+                        "very_positive = deep vulnerability, emotional confession, devotion, loyalty, or heartfelt connection; "
+                        "very_negative = character clearly rejects, despises, or is genuinely furious AT the player)"
                     ),
                     list(self._RELATIONSHIP_IMPACT_CANDIDATES),
                     "neutral",
