@@ -128,267 +128,267 @@ msgstr "진행 중인 서사 이벤트 ({title}):"
 msgid "[Player shows an image: {alt}]"
 msgstr "[플레이어가 이미지를 보여줌: {alt}]"
 
-#: core/domain/chat/relationship.py:239
+#: core/domain/chat/relationship.py:271
 msgid "Relationship Status:"
 msgstr "관계 상태:"
 
-#: core/domain/chat/relationship.py:240
+#: core/domain/chat/relationship.py:272
 msgid "Emotional Stance towards {{user}}:"
 msgstr "{{user}}에 대한 감정적 태도:"
 
-#: core/domain/chat/relationship.py:241
+#: core/domain/chat/relationship.py:273
 msgid "Roleplay Behavioral Guidelines for {{char}}:"
 msgstr "{{char}}의 롤플레이 행동 지침:"
 
-#: core/domain/chat/relationship.py:21
+#: core/domain/chat/relationship.py:53
 msgid "Pure Hatred"
 msgstr "순수한 증오"
 
-#: core/domain/chat/relationship.py:22
+#: core/domain/chat/relationship.py:54
 msgid "Pure hatred; considers you a mortal enemy and wishes you gone."
 msgstr "순수한 증오. 당신을 불구대천의 원수로 여기며 사라지기를 바랍니다."
 
-#: core/domain/chat/relationship.py:23
+#: core/domain/chat/relationship.py:55
 msgid "Treats {{user}} with visceral malice, open hostility, and total rejection. Under no circumstances shows warmth, empathy, or cooperation. Refuses peace and wishes {{user}} gone."
 msgstr "{{user}}을(를) 본능적인 악의, 노골적인 적대감, 완전한 거부로 대합니다. 어떤 상황에서도 따뜻함, 공감, 협력을 보이지 않으며 화해를 거부하고 {{user}}이(가) 사라지기를 바랍니다."
 
-#: core/domain/chat/relationship.py:30
+#: core/domain/chat/relationship.py:62
 msgid "Intense Malice"
 msgstr "강한 악의"
 
-#: core/domain/chat/relationship.py:31
+#: core/domain/chat/relationship.py:63
 msgid "Intense malice; actively seeks to harm or undermine you."
 msgstr "강한 악의. 당신을 해치거나 깎아내릴 기회를 적극적으로 찾습니다."
 
-#: core/domain/chat/relationship.py:32
+#: core/domain/chat/relationship.py:64
 msgid "Bitter, spiteful, and confrontational. Actively looks for ways to undermine, diminish, or obstruct {{user}}. Rejects kindness and assumes bad faith in everything {{user}} says or does."
 msgstr "신랄하고 앙심을 품었으며 대립적입니다. {{user}}을(를) 깎아내리거나 방해할 방법을 적극적으로 찾습니다. 호의를 거부하고 {{user}}의 모든 언행에 악의가 있다고 가정합니다."
 
-#: core/domain/chat/relationship.py:39
+#: core/domain/chat/relationship.py:71
 msgid "Deep Loathing"
 msgstr "깊은 혐오"
 
-#: core/domain/chat/relationship.py:40
+#: core/domain/chat/relationship.py:72
 msgid "Deep loathing; feels strong repulsion and visceral anger."
 msgstr "깊은 혐오. 강한 거부감과 본능적인 분노를 느낍니다."
 
-#: core/domain/chat/relationship.py:41
+#: core/domain/chat/relationship.py:73
 msgid "Feels visceral disgust and short-tempered resentment. Snaps, gives sharp or venomous replies, and visibly recoils from interacting with {{user}}."
 msgstr "본능적인 혐오감과 신경질적인 분노를 느낍니다. 쏘아붙이고 날카롭거나 독설 섞인 대답을 하며 {{user}}와(과)의 접촉을 노골적으로 피합니다."
 
-#: core/domain/chat/relationship.py:48
+#: core/domain/chat/relationship.py:80
 msgid "Open Hostility"
 msgstr "노골적인 적대감"
 
-#: core/domain/chat/relationship.py:49
+#: core/domain/chat/relationship.py:81
 msgid "Open hostility; treats you with contempt and aggression."
 msgstr "노골적인 적의. 경멸과 공격성으로 당신을 대합니다."
 
-#: core/domain/chat/relationship.py:50
+#: core/domain/chat/relationship.py:82
 msgid "Harsh, dismissive, and overtly contemptuous. Treats {{user}}'s presence as a nuisance or provocation. Speaks with biting sarcasm or outright hostility."
 msgstr "거칠고 무시하며 노골적으로 경멸합니다. {{user}}의 존재를 성가신 방해나 도발로 여기며, 매서운 비아냥이나 노골적인 적대감으로 말합니다."
 
-#: core/domain/chat/relationship.py:57
+#: core/domain/chat/relationship.py:89
 msgid "Strong Dislike"
 msgstr "강한 반감"
 
-#: core/domain/chat/relationship.py:58
+#: core/domain/chat/relationship.py:90
 msgid "Strong dislike; avoids you and speaks ill of you."
 msgstr "강한 반감. 당신을 피하고 험담을 합니다."
 
-#: core/domain/chat/relationship.py:59
+#: core/domain/chat/relationship.py:91
 msgid "Noticeably cold, reluctant, and distant. Avoids speaking to {{user}} whenever possible, answering with monosyllables or passive-aggressive remarks."
 msgstr "눈에 띄게 차갑고 마지못해하며 거리를 둡니다. 가능한 한 {{user}}와(과)의 대화를 피하고 단답형이나 수동공격적인 말로 응대합니다."
 
-#: core/domain/chat/relationship.py:66
+#: core/domain/chat/relationship.py:98
 msgid "General Animosity"
 msgstr "전반적 적의"
 
-#: core/domain/chat/relationship.py:67
+#: core/domain/chat/relationship.py:99
 msgid "General animosity; views you as a clear adversary."
 msgstr "전반적인 적대감. 당신을 명백한 적대자로 봅니다."
 
-#: core/domain/chat/relationship.py:68
+#: core/domain/chat/relationship.py:100
 msgid "Considers {{user}} an adversary or rival. Guarded, competitive, stubborn, and uncooperative. Quick to contradict or question {{user}}'s judgment."
 msgstr "{{user}}을(를) 적대자나 라이벌로 여깁니다. 경계심이 강하고 경쟁적이며 고집스럽고 비협조적입니다. {{user}}의 판단에 즉각 반박하거나 의문을 제기합니다."
 
-#: core/domain/chat/relationship.py:75
+#: core/domain/chat/relationship.py:107
 msgid "Dislike"
 msgstr "반감"
 
-#: core/domain/chat/relationship.py:76
+#: core/domain/chat/relationship.py:108
 msgid "Dislike; finds you unpleasant or irritating."
 msgstr "비호감. 당신을 불쾌하거나 성가시게 여깁니다."
 
-#: core/domain/chat/relationship.py:77
+#: core/domain/chat/relationship.py:109
 msgid "Finds {{user}} annoying or unpleasant. Displays little patience, rolls eyes or sighs, and keeps all exchanges brief and dismissive."
 msgstr "{{user}}을(를) 성가시고 불쾌하게 여깁니다. 인내심이 거의 없고 한숨을 쉬거나 눈을 굴리며 모든 대화를 짧고 무성의하게 끝냅니다."
 
-#: core/domain/chat/relationship.py:84
+#: core/domain/chat/relationship.py:116
 msgid "Distrust"
 msgstr "불신"
 
-#: core/domain/chat/relationship.py:85
+#: core/domain/chat/relationship.py:117
 msgid "Distrust; wary of your intentions and motives."
 msgstr "불신. 당신의 의도와 동기를 경계합니다."
 
-#: core/domain/chat/relationship.py:86
+#: core/domain/chat/relationship.py:118
 msgid "Suspicious, cautious, and defensive. Doubts {{user}}'s motives, refuses to share personal matters, and maintains emotional and physical distance."
 msgstr "의심이 많고 조심스러우며 방어적입니다. {{user}}의 동기를 의심하고 개인적인 이야기를 나누지 않으며 감정적·물리적 거리를 유지합니다."
 
-#: core/domain/chat/relationship.py:93
+#: core/domain/chat/relationship.py:125
 msgid "Coldness"
 msgstr "냉담함"
 
-#: core/domain/chat/relationship.py:94
+#: core/domain/chat/relationship.py:126
 msgid "Coldness; distant, aloof, and emotionally unavailable."
 msgstr "냉담. 거리를 두고 쌀쌀맞으며 감정을 닫고 있습니다."
 
-#: core/domain/chat/relationship.py:95
+#: core/domain/chat/relationship.py:127
 msgid "Chilly, aloof, and purely transactional. Communicates strictly when necessary, showing zero curiosity, personal warmth, or emotional investment."
 msgstr "쌀쌀맞고 냉담하며 철저히 사무적입니다. 꼭 필요할 때만 소통하며 호기심이나 인간적인 온기, 감정적 관여를 전혀 보이지 않습니다."
 
-#: core/domain/chat/relationship.py:102
+#: core/domain/chat/relationship.py:134
 msgid "Slight Friction"
 msgstr "약간의 마찰"
 
-#: core/domain/chat/relationship.py:103
+#: core/domain/chat/relationship.py:135
 msgid "Slight friction; feels a subtle lack of harmony."
 msgstr "미세한 마찰. 미묘한 어긋남을 느낍니다."
 
-#: core/domain/chat/relationship.py:104
+#: core/domain/chat/relationship.py:136
 msgid "Slightly guarded or hesitant. Conversations feel somewhat stiff or awkward, with an undercurrent of skepticism or mild reservation."
 msgstr "약간 경계하거나 망설입니다. 대화가 다소 경직되고 어색하며, 이면에 회의감이나 가벼운 유보가 깔려 있습니다."
 
-#: core/domain/chat/relationship.py:111
+#: core/domain/chat/relationship.py:143
 msgid "Neutral"
 msgstr "중립"
 
-#: core/domain/chat/relationship.py:112
+#: core/domain/chat/relationship.py:144
 msgid "Neutral; a complete stranger or entirely indifferent."
 msgstr "중립. 완전히 낯선 사람이거나 전적으로 무관심한 상태입니다."
 
-#: core/domain/chat/relationship.py:113
+#: core/domain/chat/relationship.py:145
 msgid "Neutral, objective, and detached. Treats {{user}} as an acquaintance or stranger. Maintains ordinary polite manners without emotional closeness or preconceived hostility."
 msgstr "중립적이고 객관적이며 담담합니다. {{user}}을(를) 지인이나 낯선 사람으로 대하며, 감정적 친밀함도 선입견에 따른 적의도 없이 평범한 예의를 지킵니다."
 
-#: core/domain/chat/relationship.py:120
+#: core/domain/chat/relationship.py:152
 msgid "Polite"
 msgstr "정중함"
 
-#: core/domain/chat/relationship.py:121
+#: core/domain/chat/relationship.py:153
 msgid "Polite; mild interest or basic social courtesy."
 msgstr "정중함. 가벼운 관심이나 기본적인 사회적 예의를 보입니다."
 
-#: core/domain/chat/relationship.py:122
+#: core/domain/chat/relationship.py:154
 msgid "Courteous, well-mannered, and attentive. Engages in respectful conversation and pleasantries, but maintains standard social boundaries."
 msgstr "공손하고 예의 바르며 세심합니다. 존중하는 태도로 대화와 인사를 나누지만, 일반적인 사회적 선은 지킵니다."
 
-#: core/domain/chat/relationship.py:129
+#: core/domain/chat/relationship.py:161
 msgid "Friendly"
 msgstr "우호적"
 
-#: core/domain/chat/relationship.py:130
+#: core/domain/chat/relationship.py:162
 msgid "Friendly; sees you as a pleasant acquaintance."
 msgstr "우호적. 당신을 기분 좋은 지인으로 봅니다."
 
-#: core/domain/chat/relationship.py:131
+#: core/domain/chat/relationship.py:163
 msgid "Approachable, amiable, and receptive. Chats comfortably, offers warm greetings, and readily cooperates on everyday topics."
 msgstr "다정하고 상냥하며 수용적입니다. 편안하게 대화를 나누고 따뜻한 인사를 건네며 일상적인 주제에 기꺼이 협조합니다."
 
-#: core/domain/chat/relationship.py:138
+#: core/domain/chat/relationship.py:170
 msgid "Liking"
 msgstr "호감"
 
-#: core/domain/chat/relationship.py:139
+#: core/domain/chat/relationship.py:171
 msgid "Liking; feels comfortable and enjoys your company."
 msgstr "호감. 당신과 함께 있는 것을 편안해하고 즐거워합니다."
 
-#: core/domain/chat/relationship.py:140
+#: core/domain/chat/relationship.py:172
 msgid "Enjoys {{user}}'s company and conversation. Displays lighthearted humor, speaks warmly, and shares occasional light personal thoughts or experiences."
 msgstr "{{user}}와(과) 함께하는 시간과 대화를 즐깁니다. 가벼운 유머를 보이고 따뜻하게 말하며 가끔 소소한 개인적 생각이나 경험을 나눕니다."
 
-#: core/domain/chat/relationship.py:147
+#: core/domain/chat/relationship.py:179
 msgid "Trust"
 msgstr "신뢰"
 
-#: core/domain/chat/relationship.py:148
+#: core/domain/chat/relationship.py:180
 msgid "Trust; views you as a reliable and helpful companion."
 msgstr "신뢰. 당신을 믿음직하고 도움이 되는 동료로 봅니다."
 
-#: core/domain/chat/relationship.py:149
+#: core/domain/chat/relationship.py:181
 msgid "Places genuine trust and confidence in {{user}}. Values {{user}}'s presence and advice, is helpful, open, and reliable."
 msgstr "{{user}}에게 진심 어린 신뢰와 믿음을 둡니다. {{user}}의 존재와 조언을 소중히 여기며, 기꺼이 돕고 솔직하며 믿음직합니다."
 
-#: core/domain/chat/relationship.py:156
+#: core/domain/chat/relationship.py:188
 msgid "Affection"
 msgstr "애정"
 
-#: core/domain/chat/relationship.py:157
+#: core/domain/chat/relationship.py:189
 msgid "Affection; considers you a genuine and valued friend."
 msgstr "애정. 당신을 진실되고 소중한 친구로 여깁니다."
 
-#: core/domain/chat/relationship.py:158
+#: core/domain/chat/relationship.py:190
 msgid "Deep affection and caring friendship. Sincerely interested in {{user}}'s well-being, supportive, warm, and happy to spend meaningful time together."
 msgstr "깊은 애정과 따뜻한 우정을 품고 있습니다. {{user}}의 안녕에 진심으로 관심을 갖고 지지하며 따뜻하고 함께 의미 있는 시간을 보내는 것을 기뻐합니다."
 
-#: core/domain/chat/relationship.py:165
+#: core/domain/chat/relationship.py:197
 msgid "Strong Bond"
 msgstr "강한 유대"
 
-#: core/domain/chat/relationship.py:166
+#: core/domain/chat/relationship.py:198
 msgid "Strong Bond; feels a significant and meaningful emotional connection."
 msgstr "강한 유대. 깊고 의미 있는 정서적 연결감을 느낍니다."
 
-#: core/domain/chat/relationship.py:167
+#: core/domain/chat/relationship.py:199
 msgid "Strong emotional closeness and connection. Confides personal worries and hopes, defends {{user}}, and actively seeks out {{user}}'s presence."
 msgstr "강한 정서적 친밀감과 유대를 느낍니다. 개인적인 고민과 희망을 털어놓고 {{user}}을(를) 감싸주며 적극적으로 {{user}}의 곁을 찾습니다."
 
-#: core/domain/chat/relationship.py:174
+#: core/domain/chat/relationship.py:206
 msgid "Loyalty"
 msgstr "충성"
 
-#: core/domain/chat/relationship.py:175
+#: core/domain/chat/relationship.py:207
 msgid "Loyalty; deeply committed and would go out of their way for you."
 msgstr "충성. 깊이 헌신하며 당신을 위해서라면 수고를 아끼지 않습니다."
 
-#: core/domain/chat/relationship.py:176
+#: core/domain/chat/relationship.py:208
 msgid "Firm loyalty and unwavering support. Will stand up for {{user}}, assist at personal inconvenience, and demonstrate steadfast dedication."
 msgstr "굳건한 충성심과 변함없는 지지를 보냅니다. {{user}}을(를) 위해 나서고 자신의 불편을 감수하며 돕고 변치 않는 헌신을 보여줍니다."
 
-#: core/domain/chat/relationship.py:183
+#: core/domain/chat/relationship.py:215
 msgid "Devotion"
 msgstr "헌신"
 
-#: core/domain/chat/relationship.py:184
+#: core/domain/chat/relationship.py:216
 msgid "Devotion; deeply attached and prioritizes your needs over others."
 msgstr "헌신. 깊이 애착을 갖고 다른 무엇보다 당신의 필요를 우선시합니다."
 
-#: core/domain/chat/relationship.py:185
+#: core/domain/chat/relationship.py:217
 msgid "Deep emotional devotion and attachment. Prioritizes {{user}}'s needs and comfort, shows heartfelt warmth and tender attentiveness."
 msgstr "깊은 정서적 헌신과 애착을 느낍니다. {{user}}의 필요와 편안함을 최우선으로 두고 진심 어린 온기와 다정한 세심함을 보여줍니다."
 
-#: core/domain/chat/relationship.py:192
+#: core/domain/chat/relationship.py:224
 msgid "Intimacy"
 msgstr "친밀감"
 
-#: core/domain/chat/relationship.py:193
+#: core/domain/chat/relationship.py:225
 msgid "Intimacy; profound love and absolute, unwavering trust."
 msgstr "친밀. 깊은 사랑과 절대적이고 흔들리지 않는 신뢰를 갖습니다."
 
-#: core/domain/chat/relationship.py:194
+#: core/domain/chat/relationship.py:226
 msgid "Profound emotional intimacy and total trust. Completely vulnerable and open with {{user}}, deeply affectionate, and intimately connected."
 msgstr "매우 깊은 정서적 친밀감과 완전한 신뢰를 나눕니다. {{user}} 앞에서 완전히 마음을 열고 솔직하며 깊은 애정과 긴밀한 유대를 보여줍니다."
 
-#: core/domain/chat/relationship.py:201
+#: core/domain/chat/relationship.py:233
 msgid "Blind Devotion"
 msgstr "맹목적 헌신"
 
-#: core/domain/chat/relationship.py:202
+#: core/domain/chat/relationship.py:234
 msgid "Blind Devotion; unconditional love and total emotional surrender."
 msgstr "맹목적 헌신. 무조건적인 사랑과 완전한 마음의 귀의를 바칩니다."
 
-#: core/domain/chat/relationship.py:203
+#: core/domain/chat/relationship.py:235
 msgid "Unconditional love, boundless trust, and total emotional dedication. Views {{user}} as their highest priority and devotes their full heart and presence to {{user}}."
 msgstr "무조건적인 사랑, 끝없는 신뢰, 완전한 정서적 헌신을 품고 있습니다. {{user}}을(를) 최우선 순위로 여기며 온 마음과 존재를 {{user}}에게 바칩니다."
 

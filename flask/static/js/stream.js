@@ -128,6 +128,7 @@ class AimoChatStream {
     this.countdownTimer = null;
     this.isGeneratingImage = false;
     this.isSending = false;
+    this.initRelationshipDebugToggle();
   }
 
   setGeneratingUIState(isGenerating) {
@@ -177,6 +178,7 @@ class AimoChatStream {
       personaName: list?.getAttribute("data-persona-name") || "Du",
       personaPortrait: list?.getAttribute("data-persona-portrait") || "/static/img/cover.svg",
       isAdmin: list?.getAttribute("data-is-admin") === "true",
+      canDebugRel: list?.getAttribute("data-can-debug-rel") === "true",
     };
   }
 
@@ -656,41 +658,16 @@ class AimoChatStream {
         }
 
         if (typeof data.relationship_value === "number") {
-          const relLabel = document.getElementById("rel-score-label");
-          if (relLabel) {
-            if (data.relationship_tier_name) {
-              relLabel.textContent = data.relationship_tier_name;
-            }
-          }
-          const galleryRelLabel = document.getElementById("gallery-rel-tier-label");
-          if (galleryRelLabel && data.relationship_tier_name) {
-            galleryRelLabel.textContent = data.relationship_tier_name;
-          }
-          const relWrap = document.querySelector(".relationship-bar-wrap[data-relationship-score]");
-          if (relWrap) {
-            relWrap.setAttribute("data-relationship-score", String(data.relationship_value));
-            const pct = Math.max(0, Math.min(100, ((data.relationship_value + 100) / 200) * 100));
-            const fill = relWrap.querySelector(".relationship-fill");
-            if (fill) fill.style.width = `${pct}%`;
-
-            const heartIcon = relWrap.querySelector(".heart-icon");
-            if (heartIcon) {
-              const score = data.relationship_value;
-              if (score <= -60) {
-                heartIcon.textContent = "💔";
-                heartIcon.style.color = "#7A1C1C";
-              } else if (score < 0) {
-                heartIcon.textContent = "❤️‍🩹";
-                heartIcon.style.color = "#A93226";
-              } else if (score < 50) {
-                heartIcon.textContent = "❤️";
-                heartIcon.style.color = "#E74C3C";
-              } else {
-                heartIcon.textContent = "💖";
-                heartIcon.style.color = "#FF69B4";
-              }
-            }
-          }
+          this.updateRelationshipUI(
+            data.relationship_value,
+            data.relationship_tier_name,
+            data.relationship_impact
+          );
+          this.setTurnRelationshipDebugNotice(
+            data.message_idx,
+            data.relationship_impact,
+            data.relationship_delta
+          );
         }
 
         if (data.suggested_location) {
@@ -915,14 +892,7 @@ class AimoChatStream {
       if (resData.system_message) {
         this.appendSystemMessage(resData.system_message);
       } else if (resData.ui_notice) {
-        const messagesList = document.getElementById("chat-messages-list");
-        if (messagesList) {
-          const notice = document.createElement("div");
-          notice.className = "system-ui-notice";
-          notice.textContent = resData.ui_notice;
-          messagesList.appendChild(notice);
-          messagesList.scrollTop = messagesList.scrollHeight;
-        }
+        this.appendUiNotice(resData.ui_notice);
       }
       const backdrop = document.getElementById("system-default-backdrop") || document.querySelector(".system-default-backdrop");
       if (backdrop) {
@@ -1050,6 +1020,188 @@ class AimoChatStream {
     this.isSending = false;
     this.activeThinkingUI = null;
     this.setGeneratingUIState(false);
+  }
+
+  updateRelationshipUI(relationshipValue, tierName, relationshipImpact) {
+    const relLabel = document.getElementById("rel-score-label");
+    if (relLabel && tierName) {
+      relLabel.textContent = tierName;
+    }
+    const galleryRelLabel = document.getElementById("gallery-rel-tier-label");
+    if (galleryRelLabel && tierName) {
+      galleryRelLabel.textContent = tierName;
+    }
+    const relWrap = document.querySelector(".relationship-bar-wrap[data-relationship-score]");
+    if (!relWrap) return;
+
+    relWrap.setAttribute("data-relationship-score", String(relationshipValue));
+    const pct = Math.max(0, Math.min(100, ((relationshipValue + 100) / 200) * 100));
+    const fill = relWrap.querySelector(".relationship-fill");
+    if (fill) fill.style.width = `${pct}%`;
+
+    const heartIcon = relWrap.querySelector(".heart-icon");
+    if (heartIcon) {
+      const score = relationshipValue;
+      if (score <= -60) {
+        heartIcon.textContent = "💔";
+        heartIcon.style.color = "#7A1C1C";
+      } else if (score < 0) {
+        heartIcon.textContent = "❤️‍🩹";
+        heartIcon.style.color = "#A93226";
+      } else if (score < 50) {
+        heartIcon.textContent = "❤️";
+        heartIcon.style.color = "#E74C3C";
+      } else {
+        heartIcon.textContent = "💖";
+        heartIcon.style.color = "#FF69B4";
+      }
+    }
+
+    const pulseClassMap = {
+      positive: "relationship-pulse-positive",
+      very_positive: "relationship-pulse-positive",
+      negative: "relationship-pulse-negative",
+      very_negative: "relationship-pulse-negative",
+    };
+    const pulseClass = pulseClassMap[relationshipImpact];
+    if (pulseClass) {
+      relWrap.classList.remove("relationship-pulse-positive", "relationship-pulse-negative");
+      void relWrap.offsetWidth;
+      relWrap.classList.add(pulseClass);
+      relWrap.addEventListener(
+        "animationend",
+        () => relWrap.classList.remove(pulseClass),
+        { once: true }
+      );
+    }
+  }
+
+  appendUiNotice(text) {
+    const messagesList = document.getElementById("chat-messages-list");
+    if (!messagesList || !text) return;
+    const notice = document.createElement("div");
+    notice.className = "system-ui-notice";
+    notice.textContent = text;
+    messagesList.appendChild(notice);
+    messagesList.scrollTop = messagesList.scrollHeight;
+  }
+
+  setTurnRelationshipDebugNotice(messageIdx, impact, delta) {
+    const meta = this.getChatMetadata();
+    if (!meta.isAdmin && !meta.canDebugRel) return;
+    if (messageIdx === undefined || messageIdx === null) return;
+    const messagesList = document.getElementById("chat-messages-list");
+    if (!messagesList) return;
+
+    const deltaText =
+      typeof delta === "number" ? ` (${delta >= 0 ? "+" : ""}${delta})` : "";
+    const text = `[Debug Relationship] ${impact || "neutral"}${deltaText}`;
+
+    let notice = messagesList.querySelector(
+      `.system-ui-notice[data-rel-debug-for="${messageIdx}"]`
+    );
+    if (!notice) {
+      notice = document.createElement("div");
+      notice.className = "system-ui-notice";
+      notice.setAttribute("data-rel-debug-for", String(messageIdx));
+      const msgRow = messagesList.querySelector(
+        `[data-message-idx="${messageIdx}"]`
+      );
+      if (msgRow && msgRow.parentNode === messagesList) {
+        msgRow.insertAdjacentElement("afterend", notice);
+      } else {
+        messagesList.appendChild(notice);
+      }
+    }
+    notice.textContent = text;
+  }
+
+  appendRelationshipDebugNotice(relationshipValue, tierName, impact, delta, evaluatedTurns = null) {
+    if (!this.getChatMetadata().isAdmin) return;
+    if (typeof relationshipValue !== "number") return;
+    const deltaText =
+      typeof delta === "number" ? `${delta >= 0 ? "+" : ""}${delta}` : "?";
+    const prefix =
+      typeof evaluatedTurns === "number"
+        ? `[Debug Relationship Recalc (${evaluatedTurns} turns)]`
+        : "[Debug Relationship]";
+    const impactLabel = impact || "neutral";
+    const tierLabel = tierName || "";
+    this.appendUiNotice(
+      `${prefix} ${impactLabel} (${deltaText}) → ${relationshipValue} (${tierLabel})`
+    );
+  }
+
+  setRelationshipDebug(enabled) {
+    const messagesList = document.getElementById("chat-messages-list");
+    const checkbox = document.getElementById("toggle-rel-debug-checkbox");
+    if (messagesList) {
+      messagesList.classList.toggle("show-rel-debug", Boolean(enabled));
+    }
+    if (checkbox) {
+      checkbox.checked = Boolean(enabled);
+    }
+    try {
+      localStorage.setItem("aimo_rel_debug", enabled ? "1" : "0");
+    } catch (_) {}
+  }
+
+  initRelationshipDebugToggle() {
+    const meta = this.getChatMetadata();
+    if (!meta.isAdmin && !meta.canDebugRel) return;
+    let enabled = false;
+    try {
+      enabled = localStorage.getItem("aimo_rel_debug") === "1";
+    } catch (_) {}
+    this.setRelationshipDebug(enabled);
+  }
+
+  async recalculateRelationship(btn) {
+    if (this.isSending || this.isGeneratingImage) return;
+    const origHtml = window.setButtonLoading ? window.setButtonLoading(btn, "⏳") : btn?.innerHTML;
+    if (btn) btn.disabled = true;
+
+    try {
+      const resp = await fetch(`/api/chat/${this.sessionId}/recalculate-relationship`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ language: this.getChatMetadata().sysLang }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) {
+        const msg = data.error || window.t("Failed to recalculate relationship.");
+        window.showToastError ? window.showToastError(msg, window.t("Error")) : alert(msg);
+        return;
+      }
+      if (Array.isArray(data.turn_results)) {
+        data.turn_results.forEach((turn) => {
+          this.setTurnRelationshipDebugNotice(turn.message_idx, turn.impact, turn.delta);
+        });
+      }
+      if (typeof data.relationship_value === "number") {
+        this.updateRelationshipUI(
+          data.relationship_value,
+          data.relationship_tier_name,
+          data.relationship_impact
+        );
+        this.appendRelationshipDebugNotice(
+          data.relationship_value,
+          data.relationship_tier_name,
+          data.relationship_impact,
+          data.relationship_delta,
+          data.evaluated_turns
+        );
+      }
+    } catch (err) {
+      const msg = window.t("Connection error: {error}", { error: err.message });
+      window.showToastError ? window.showToastError(msg, window.t("Error")) : alert(msg);
+    } finally {
+      if (window.resetButtonLoading && btn) {
+        window.resetButtonLoading(btn, origHtml);
+      } else if (btn) {
+        btn.disabled = false;
+      }
+    }
   }
 
   async regenerateLastTurn() {

@@ -5,21 +5,45 @@ from typing import Any
 from domain.characters.models import Character, Emotion
 from domain.chat.exceptions import InvalidChatDataError, PersonaLockedError
 from domain.chat.models import ChatSession, Message, MessageRole, SystemMessageType
+from domain.chat.relationship import RelationshipImpact
 from shared.utils import replace_roleplay_placeholders
 
 MIN_RELATIONSHIP: float = -100.0
 MAX_RELATIONSHIP: float = 100.0
-USER_MESSAGE_AFFECTION_DELTA: float = 0.1
 DAILY_DECAY_RATE: float = 0.1
 
 
 class ChatService:
-    def apply_user_message_affection(self, session: ChatSession) -> None:
+    def _adjust_relationship(self, session: ChatSession, delta: float) -> float:
+        previous = session.relationship_value
         session.relationship_value = round(
-            min(MAX_RELATIONSHIP, max(MIN_RELATIONSHIP, session.relationship_value + USER_MESSAGE_AFFECTION_DELTA)),
+            min(MAX_RELATIONSHIP, max(MIN_RELATIONSHIP, previous + delta)),
             4,
         )
-        session.last_message_at = datetime.now(timezone.utc)
+        return round(session.relationship_value - previous, 4)
+
+    def reset_relationship(self, session: ChatSession, character: Character) -> float:
+        session.relationship_value = round(
+            min(MAX_RELATIONSHIP, max(MIN_RELATIONSHIP, float(character.initial_relationship))),
+            4,
+        )
+        return session.relationship_value
+
+    def apply_relationship_impact(
+        self,
+        session: ChatSession,
+        impact: RelationshipImpact,
+        update_timestamp: bool = True,
+    ) -> float:
+        applied = self._adjust_relationship(session, impact.delta)
+        if update_timestamp:
+            session.last_message_at = datetime.now(timezone.utc)
+        return applied
+
+    def revert_relationship_delta(self, session: ChatSession, delta: float) -> float:
+        if delta == 0.0:
+            return 0.0
+        return self._adjust_relationship(session, -delta)
 
     def apply_time_decay(
         self,
@@ -39,10 +63,7 @@ class ChatService:
 
         days = elapsed_seconds / 86400.0
         decay = DAILY_DECAY_RATE * days
-        session.relationship_value = round(
-            max(MIN_RELATIONSHIP, min(MAX_RELATIONSHIP, session.relationship_value - decay)),
-            4,
-        )
+        self._adjust_relationship(session, -decay)
 
     def create_session(
         self,

@@ -116,11 +116,11 @@ msgstr "تم رفع الصورة '%(name)s'."
 msgid "Event updated."
 msgstr "تم تحديث الحدث."
 
-#: flask/application/chat/views.py:605
+#: flask/application/chat/views.py:609
 msgid "Chat session deleted."
 msgstr "تم حذف جلسة الدردشة."
 
-#: flask/application/chat/views.py:357 flask/application/chat/views.py:688
+#: flask/application/chat/views.py:357 flask/application/chat/views.py:692
 msgid "Chat session not found."
 msgstr "جلسة الدردشة غير موجودة."
 
@@ -128,67 +128,67 @@ msgstr "جلسة الدردشة غير موجودة."
 msgid "Associated character not found."
 msgstr "الشخصية المرتبطة غير موجودة."
 
-#: flask/application/chat/views.py:529
+#: flask/application/chat/views.py:533
 msgid "Session not found."
 msgstr "الجلسة غير موجودة."
 
-#: flask/application/chat/views.py:669
+#: flask/application/chat/views.py:673
 msgid "Memory deleted."
 msgstr "تم حذف الذاكرة."
 
-#: flask/application/chat/views.py:695
+#: flask/application/chat/views.py:699
 msgid "Memory not found."
 msgstr "الذاكرة غير موجودة."
 
-#: flask/application/chat/views.py:711
+#: flask/application/chat/views.py:715
 msgid "No messages found for this memory episode."
 msgstr "لم يتم العثور على رسائل لحلقة الذاكرة هذه."
 
-#: flask/application/chat/views.py:742
+#: flask/application/chat/views.py:746
 msgid "Memory recalculated successfully."
 msgstr "تمت إعادة حساب الذاكرة بنجاح."
 
-#: flask/application/chat/views.py:541
+#: flask/application/chat/views.py:545
 msgid "Persona updated for this session."
 msgstr "تم تحديث الشخصية لهذه الجلسة."
 
-#: flask/application/chat/views.py:647
+#: flask/application/chat/views.py:651
 msgid "Memory updated."
 msgstr "تم تحديث الذاكرة."
 
-#: flask/application/chat/views.py:746
+#: flask/application/chat/views.py:750
 msgid "Recalculation error: %(error)s"
 msgstr "خطأ في إعادة الحساب: %(error)s"
 
-#: flask/application/chat/views.py:237 flask/application/chat/views.py:549
+#: flask/application/chat/views.py:237 flask/application/chat/views.py:553
 msgid "Invalid WorldInfo."
 msgstr "WorldInfo غير صالح."
 
-#: flask/application/chat/views.py:242 flask/application/chat/views.py:556 flask/application/worldinfo/views.py:120 flask/application/worldinfo/views.py:228
+#: flask/application/chat/views.py:242 flask/application/chat/views.py:560 flask/application/worldinfo/views.py:120 flask/application/worldinfo/views.py:228
 msgid "This world is not yet available in your language."
 msgstr "هذا العالم غير متوفر بلغتك بعد."
 
-#: flask/application/chat/views.py:538
+#: flask/application/chat/views.py:542
 msgid "Invalid persona."
 msgstr "شخصية غير صالحة."
 
-#: flask/application/chat/views.py:565
+#: flask/application/chat/views.py:569
 msgid "WorldInfo changed for this chat."
 msgstr "تم تغيير WorldInfo لهذه الدردشة."
 
-#: flask/application/chat/views.py:568
+#: flask/application/chat/views.py:572
 msgid "Event setting saved."
 msgstr "تم حفظ إعدادات الأحداث."
 
-#: flask/application/chat/views.py:576
+#: flask/application/chat/views.py:580
 msgid "Thinking enabled."
 msgstr "تم تفعيل التفكير."
 
-#: flask/application/chat/views.py:578
+#: flask/application/chat/views.py:582
 msgid "Thinking disabled."
 msgstr "تم تعطيل التفكير."
 
-#: flask/application/chat/views.py:583
+#: flask/application/chat/views.py:587
 msgid "Chat title updated."
 msgstr "تم تحديث عنوان الدردشة."
 
@@ -276,15 +276,15 @@ msgstr "غير ثنائي"
 msgid "Account settings saved."
 msgstr "تم حفظ إعدادات الحساب."
 
-#: flask/application/settings/views.py:74 flask/i18n.py:117 flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:257 flask/templates/characters/creator.html:258
+#: flask/application/settings/views.py:74 flask/i18n.py:132 flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:257 flask/templates/characters/creator.html:258
 msgid "Character"
 msgstr "شخصية"
 
-#: flask/application/settings/views.py:100 flask/i18n.py:120 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:362
+#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:404
 msgid "World"
 msgstr "العالم"
 
-#: flask/application/settings/views.py:125 flask/i18n.py:118
+#: flask/application/settings/views.py:125 flask/i18n.py:133
 msgid "Lorebook"
 msgstr "كتاب المعارف"
 
@@ -368,287 +368,287 @@ msgstr "تم حفظ WorldInfo."
 msgid "Location updated."
 msgstr "تم تحديث الموقع."
 
-#: flask/i18n.py:51
+#: flask/i18n.py:66
 msgid "Error adding lorebook."
 msgstr "حدث خطأ أثناء إضافة كتاب المعرفة."
 
-#: flask/i18n.py:52
+#: flask/i18n.py:67
 msgid "Network error while adding lorebook."
 msgstr "حدث خطأ في الشبكة أثناء إضافة كتاب المعرفة."
 
-#: flask/i18n.py:53
+#: flask/i18n.py:68
 msgid "Error toggling lorebook."
 msgstr "حدث خطأ أثناء تبديل كتاب المعرفة."
 
-#: flask/i18n.py:54
+#: flask/i18n.py:69
 msgid "Network error while toggling lorebook."
 msgstr "حدث خطأ في الشبكة أثناء تبديل كتاب المعرفة."
 
-#: flask/i18n.py:55
+#: flask/i18n.py:70
 msgid "Error removing lorebook."
 msgstr "حدث خطأ أثناء إزالة كتاب المعرفة."
 
-#: flask/i18n.py:56
+#: flask/i18n.py:71
 msgid "Network error while removing lorebook."
 msgstr "حدث خطأ في الشبكة أثناء إزالة كتاب المعرفة."
 
-#: flask/i18n.py:57
+#: flask/i18n.py:72
 msgid "Reset this prompt in all languages back to the built-in default?"
 msgstr "هل تريد إعادة تعيين هذا الموجه في جميع اللغات إلى القيمة الافتراضية؟"
 
-#: flask/i18n.py:58
+#: flask/i18n.py:73
 msgid "Please select a portrait image first."
 msgstr "يرجى تحديد صورة شخصية أولاً."
 
-#: flask/i18n.py:59
+#: flask/i18n.py:74
 msgid "Image analysis error: {error}"
 msgstr "خطأ في تحليل الصورة: {error}"
 
-#: flask/i18n.py:60
+#: flask/i18n.py:75
 msgid "Please enter at least one trigger or response."
 msgstr "يرجى إدخال محفز واحد أو رد واحد على الأقل."
 
-#: flask/i18n.py:61
+#: flask/i18n.py:76
 msgid "Please enter a meaningful character description in the 'Basic Info' tab first."
 msgstr "يرجى إدخال وصف ذي معنى للشخصية في تبويب 'المعلومات الأساسية' أولاً."
 
-#: flask/i18n.py:62
+#: flask/i18n.py:77
 msgid "Please enter a title or prose text first so the assistant can derive relevant tags."
 msgstr "يرجى إدخال عنوان أو نص أولاً حتى يتمكن المساعد من استخراج الوسوم المناسبة."
 
-#: flask/i18n.py:63
+#: flask/i18n.py:78
 msgid "Error deriving tags: {error}"
 msgstr "خطأ في استخراج الوسوم: {error}"
 
-#: flask/i18n.py:64
+#: flask/i18n.py:79
 msgid "Connection error: {error}"
 msgstr "خطأ في الاتصال: {error}"
 
-#: flask/i18n.py:65
+#: flask/i18n.py:80
 msgid "Timeout while sending."
 msgstr "انتهت مهلة الإرسال."
 
-#: flask/i18n.py:66
+#: flask/i18n.py:81
 msgid "Timeout"
 msgstr "انتهت المهلة"
 
-#: flask/i18n.py:67
+#: flask/i18n.py:82
 msgid "Connection to backend (aimo-core) lost."
 msgstr "فُقد الاتصال بالخلفية (aimo-core)."
 
-#: flask/i18n.py:68
+#: flask/i18n.py:83
 msgid "Backend connection error"
 msgstr "خطأ في اتصال الخلفية"
 
-#: flask/i18n.py:69
+#: flask/i18n.py:84
 msgid "Connection to AI backend lost."
 msgstr "فُقد الاتصال بخلفية الذكاء الاصطناعي."
 
-#: flask/i18n.py:70
+#: flask/i18n.py:85
 msgid "AI connection error"
 msgstr "خطأ في اتصال الذكاء الاصطناعي"
 
-#: flask/i18n.py:71
+#: flask/i18n.py:86
 msgid "Error sending message."
 msgstr "حدث خطأ أثناء إرسال الرسالة."
 
-#: flask/i18n.py:72
+#: flask/i18n.py:87
 msgid "Error"
 msgstr "خطأ"
 
-#: flask/i18n.py:73
+#: flask/i18n.py:88
 msgid "Connection to backend lost: {error}"
 msgstr "فُقد الاتصال بالخلفية: {error}"
 
-#: flask/i18n.py:74
+#: flask/i18n.py:89
 msgid "Timeout: {error}"
 msgstr "انتهت المهلة: {error}"
 
-#: flask/i18n.py:75
+#: flask/i18n.py:90
 msgid "Ollama connection error: {error}"
 msgstr "خطأ في اتصال Ollama: {error}"
 
-#: flask/i18n.py:76
+#: flask/i18n.py:91
 msgid "Connection to Ollama (or LLMProvider) lost."
 msgstr "فُقد الاتصال بـ Ollama (أو LLMProvider)."
 
-#: flask/i18n.py:77
+#: flask/i18n.py:92
 msgid "Ollama connection error"
 msgstr "خطأ في اتصال Ollama"
 
-#: flask/i18n.py:78
+#: flask/i18n.py:93
 msgid "Timeout while regenerating."
 msgstr "انتهت مهلة إعادة التوليد."
 
-#: flask/i18n.py:79
+#: flask/i18n.py:94
 msgid "Error while regenerating."
 msgstr "حدث خطأ أثناء إعادة التوليد."
 
-#: flask/i18n.py:80
+#: flask/i18n.py:95
 msgid "Ollama error"
 msgstr "خطأ Ollama"
 
-#: flask/i18n.py:81
+#: flask/i18n.py:96
 msgid "Success"
 msgstr "نجاح"
 
-#: flask/i18n.py:82
+#: flask/i18n.py:97
 msgid "Warning"
 msgstr "تحذير"
 
-#: flask/i18n.py:83
+#: flask/i18n.py:98
 msgid "Notice"
 msgstr "ملاحظة"
 
-#: flask/i18n.py:84 flask/templates/macros/buttons.html:79 flask/templates/macros/buttons.html:80 flask/templates/macros/lorebook_manager.html:239 flask/templates/macros/persona_manager.html:55
+#: flask/i18n.py:99 flask/templates/macros/buttons.html:79 flask/templates/macros/buttons.html:80 flask/templates/macros/lorebook_manager.html:239 flask/templates/macros/persona_manager.html:55
 msgid "Close"
 msgstr "إغلاق"
 
-#: flask/i18n.py:85 flask/templates/characters/creator.html:134
+#: flask/i18n.py:100 flask/templates/characters/creator.html:134
 msgid "Crops active"
 msgstr "القص نشط"
 
-#: flask/i18n.py:86 flask/templates/worldinfo/detail.html:97
+#: flask/i18n.py:101 flask/templates/worldinfo/detail.html:97
 msgid "1:1 Cover active"
 msgstr "غلاف 1:1 نشط"
 
-#: flask/i18n.py:87
+#: flask/i18n.py:102
 msgid "Analyzing image"
 msgstr "جارٍ تحليل الصورة"
 
-#: flask/i18n.py:88
+#: flask/i18n.py:103
 msgid "✨ Analyzing portrait and extracting appearance"
 msgstr "✨ جارٍ تحليل الصورة الشخصية واستخراج المظهر"
 
-#: flask/i18n.py:89
+#: flask/i18n.py:104
 msgid "Drafting dialogue"
 msgstr "جارٍ صياغة الحوار"
 
-#: flask/i18n.py:90
+#: flask/i18n.py:105
 msgid "✨ Analyzing character description"
 msgstr "✨ جارٍ تحليل وصف الشخصية"
 
-#: flask/i18n.py:91
+#: flask/i18n.py:106
 msgid "✨ Formulating response"
 msgstr "✨ جارٍ صياغة الرد"
 
-#: flask/i18n.py:92
+#: flask/i18n.py:107
 msgid "⏳ Analyzing image (Save & Close locked)"
 msgstr "⏳ جارٍ تحليل الصورة (الحفظ والإغلاق مقفلان)"
 
-#: flask/i18n.py:93
+#: flask/i18n.py:108
 msgid "Not translated yet (click to enter manually or AI translate)"
 msgstr "لم يُترجم بعد (انقر للإدخال يدوياً أو للترجمة بالذكاء الاصطناعي)"
 
-#: flask/i18n.py:94
+#: flask/i18n.py:109
 msgid "Translation may be outdated (click to review)"
 msgstr "قد تكون الترجمة قديمة (انقر للمراجعة)"
 
-#: flask/i18n.py:95
+#: flask/i18n.py:110
 msgid "Appearance extracted from image successfully."
 msgstr "تم استخراج المظهر من الصورة بنجاح."
 
-#: flask/i18n.py:96
+#: flask/i18n.py:111
 msgid "No appearance extracted."
 msgstr "لم يتم استخراج أي مظهر."
 
-#: flask/i18n.py:97
+#: flask/i18n.py:112
 msgid "Server error ({status}): Could not extract appearance."
 msgstr "خطأ في الخادم ({status}): تعذر استخراج المظهر."
 
-#: flask/i18n.py:98
+#: flask/i18n.py:113
 msgid "Please select a portrait image first to extract image features."
 msgstr "يرجى تحديد صورة شخصية أولاً لاستخراج ميزات الصورة."
 
-#: flask/i18n.py:99
+#: flask/i18n.py:114
 msgid "Image features extracted"
 msgstr "تم استخراج ميزات الصورة"
 
-#: flask/i18n.py:100
+#: flask/i18n.py:115
 msgid "Image analysis failed."
 msgstr "فشل تحليل الصورة."
 
-#: flask/i18n.py:101
+#: flask/i18n.py:116
 msgid "Image analysis error"
 msgstr "خطأ في تحليل الصورة"
 
-#: flask/i18n.py:102
+#: flask/i18n.py:117
 msgid "Connection error during image analysis."
 msgstr "حدث خطأ في الاتصال أثناء تحليل الصورة."
 
-#: flask/i18n.py:103
+#: flask/i18n.py:118
 msgid "Connection error"
 msgstr "خطأ في الاتصال"
 
-#: flask/i18n.py:104
+#: flask/i18n.py:119
 msgid "Create New Persona"
 msgstr "إنشاء شخصية جديدة"
 
-#: flask/i18n.py:105
+#: flask/i18n.py:120
 msgid "Edit Persona"
 msgstr "تعديل الشخصية"
 
-#: flask/i18n.py:106
+#: flask/i18n.py:121
 msgid "Used in active chats (deletion protection)"
 msgstr "مستخدمة في محادثات نشطة (حماية من الحذف)"
 
-#: flask/i18n.py:107
+#: flask/i18n.py:122
 msgid "Delete persona"
 msgstr "حذف الشخصية"
 
-#: flask/i18n.py:108
+#: flask/i18n.py:123
 msgid "Deletion locked"
 msgstr "الحذف مقفل"
 
-#: flask/i18n.py:109 flask/templates/admin/services.html:254 flask/templates/admin/users.html:43 flask/templates/characters/creator.html:247 flask/templates/characters/creator.html:430
+#: flask/i18n.py:124 flask/templates/admin/services.html:254 flask/templates/admin/users.html:43 flask/templates/characters/creator.html:247 flask/templates/characters/creator.html:430
 msgid "Delete"
 msgstr "حذف"
 
-#: flask/i18n.py:110 flask/templates/chat/session.html:929
+#: flask/i18n.py:125 flask/templates/chat/session.html:971
 msgid "Translating..."
 msgstr "جارٍ الترجمة..."
 
-#: flask/i18n.py:111
+#: flask/i18n.py:126
 msgid "Translation paused"
 msgstr "تم إيقاف الترجمة مؤقتاً"
 
-#: flask/i18n.py:112
+#: flask/i18n.py:127
 msgid "Cloud AI Mode (On-Demand)"
 msgstr "وضع الذكاء الاصطناعي السحابي (عند الطلب)"
 
-#: flask/i18n.py:113
+#: flask/i18n.py:128
 msgid "Idle"
 msgstr "خامل"
 
-#: flask/i18n.py:114
+#: flask/i18n.py:129
 msgid "No active translation"
 msgstr "لا توجد ترجمة نشطة"
 
-#: flask/i18n.py:115
+#: flask/i18n.py:130
 msgid "Last finished:"
 msgstr "آخر اكتمال:"
 
-#: flask/i18n.py:116
+#: flask/i18n.py:131
 msgid "Error:"
 msgstr "خطأ:"
 
-#: flask/i18n.py:119
+#: flask/i18n.py:134
 msgid "Lorebook Entry"
 msgstr "إدخال كتاب المعرفة"
 
-#: flask/i18n.py:121
+#: flask/i18n.py:136
 msgid "Location"
 msgstr "موقع"
 
-#: flask/i18n.py:122
+#: flask/i18n.py:137
 msgid "Location Tags"
 msgstr "وسوم الموقع"
 
-#: flask/i18n.py:123
+#: flask/i18n.py:138
 msgid "Event"
 msgstr "حدث"
 
-#: flask/i18n.py:124
+#: flask/i18n.py:139
 msgid "Character Event"
 msgstr "حدث الشخصية"
 
@@ -748,7 +748,7 @@ msgstr "إدارة المستخدمين"
 msgid "Services & Models"
 msgstr "الخدمات والنماذج"
 
-#: flask/templates/admin/layout.html:20 flask/templates/admin/prompts.html:34
+#: flask/templates/admin/layout.html:20 flask/templates/admin/prompts.html:12
 msgid "System Prompts"
 msgstr "موجهات النظام"
 
@@ -764,75 +764,55 @@ msgstr "خلفية النظام"
 msgid "Back to Hub"
 msgstr "العودة إلى المركز"
 
-#: flask/templates/admin/prompts.html:14
-msgid "System-Wide Content Translations"
-msgstr "ترجمة المحتوى على مستوى النظام"
-
-#: flask/templates/admin/prompts.html:18
-msgid "Cloud AI provider active: automatic background translation is disabled to protect your token quota. Use the button to translate missing content on demand."
-msgstr "مزود الذكاء الاصطناعي السحابي نشط: تم تعطيل الترجمة التلقائية في الخلفية لحماية حصة الرموز الخاصة بك. استخدم الزر لترجمة المحتوى المفقود عند الطلب."
-
-#: flask/templates/admin/prompts.html:20
-msgid "Local LLM provider active: missing content translations run automatically in the background, or can be triggered manually here."
-msgstr "مزود LLM المحلي نشط: تعمل ترجمات المحتوى المفقود تلقائياً في الخلفية، أو يمكن تشغيلها يدوياً هنا."
-
-#: flask/templates/admin/prompts.html:25
-msgid "Synchronize Missing Translations"
-msgstr "مزامنة الترجمات المفقودة"
-
-#: flask/templates/admin/prompts.html:26 flask/templates/admin/translations.html:16 flask/templates/admin/user_form.html:72 flask/templates/characters/creator.html:614 flask/templates/characters/creator.html:651
-msgid "Cancel"
-msgstr "إلغاء"
-
-#: flask/templates/admin/prompts.html:39
+#: flask/templates/admin/prompts.html:17
 msgid "Prompt Placeholders"
 msgstr "عناصر نائب للموجه"
 
-#: flask/templates/admin/prompts.html:42
+#: flask/templates/admin/prompts.html:20
 msgid "You can use"
 msgstr "يمكنك استخدام"
 
-#: flask/templates/admin/prompts.html:42
+#: flask/templates/admin/prompts.html:20
 msgid "(character name) and"
 msgstr "(اسم الشخصية) و"
 
-#: flask/templates/admin/prompts.html:42
+#: flask/templates/admin/prompts.html:20
 msgid "(player persona name) in prompts. These are replaced dynamically at runtime."
 msgstr "(اسم شخصية اللاعب) في الموجهات. يتم استبدالها ديناميكياً أثناء التشغيل."
 
-#: flask/templates/admin/prompts.html:47
+#: flask/templates/admin/prompts.html:25
 msgid "Roleplay Prompt"
 msgstr "موجه تقمص الأدوار"
 
-#: flask/templates/admin/prompts.html:48
+#: flask/templates/admin/prompts.html:26
 msgid "Memory Prompt"
 msgstr "موجه الذاكرة"
 
-#: flask/templates/admin/prompts.html:49
+#: flask/templates/admin/prompts.html:27
 msgid "Diffuser Prompt"
 msgstr "موجه توليد الصور"
 
-#: flask/templates/admin/prompts.html:50
+#: flask/templates/admin/prompts.html:28
 msgid "AI Author Prompt"
 msgstr "موجه المؤلف الذكي"
 
-#: flask/templates/admin/prompts.html:51
+#: flask/templates/admin/prompts.html:29
 msgid "Vision Prompt"
 msgstr "موجه الرؤية"
 
-#: flask/templates/admin/prompts.html:52
+#: flask/templates/admin/prompts.html:30
 msgid "AI Dialogue Author Prompt"
 msgstr "موجه مؤلف الحوار الذكي"
 
-#: flask/templates/admin/prompts.html:59
+#: flask/templates/admin/prompts.html:37
 msgid "Restore Default"
 msgstr "استعادة الافتراضي"
 
-#: flask/templates/admin/prompts.html:59
+#: flask/templates/admin/prompts.html:37
 msgid "Resets all languages of this prompt to factory default"
 msgstr "يعيد تعيين جميع لغات هذا الموجه إلى الإعداد الافتراضي"
 
-#: flask/templates/admin/prompts.html:77
+#: flask/templates/admin/prompts.html:55
 msgid "Save Prompts"
 msgstr "حفظ الموجهات"
 
@@ -1088,6 +1068,10 @@ msgstr "حالة الترجمة في الخلفية للشخصيات وكتب ا
 msgid "Start Translation Sync"
 msgstr "بدء مزامنة الترجمات"
 
+#: flask/templates/admin/translations.html:16 flask/templates/admin/user_form.html:72 flask/templates/characters/creator.html:614 flask/templates/characters/creator.html:651 flask/templates/characters/creator.html:687
+msgid "Cancel"
+msgstr "إلغاء"
+
 #: flask/templates/admin/translations.html:23
 msgid "Status:"
 msgstr "الحالة:"
@@ -1144,7 +1128,7 @@ msgstr "إعداد مسبق:"
 msgid "Individual functional permissions (FunctionPermission):"
 msgstr "الصلاحيات الوظيفية الفردية (FunctionPermission):"
 
-#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:269 flask/templates/chat/session.html:802 flask/templates/lorebooks/detail.html:96
+#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:279 flask/templates/chat/session.html:844 flask/templates/lorebooks/detail.html:96
 msgid "Save"
 msgstr "حفظ"
 
@@ -1674,7 +1658,7 @@ msgstr "دردشة جديدة مع"
 msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
 msgstr "قم بتهيئة شخصية اللاعب ومعلومات العالم النشطة وكتب المعارف لهذه الجلسة."
 
-#: flask/templates/chat/select_worldinfo.html:18 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
+#: flask/templates/chat/select_worldinfo.html:18 flask/templates/chat/session.html:31 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
 msgid "Settings"
 msgstr "الإعدادات"
 
@@ -1730,247 +1714,263 @@ msgstr "يفعّل الاستدلال المتسلسل الممتد للنماذ
 msgid "Start Adventure"
 msgstr "بدء المغامرة"
 
-#: flask/templates/chat/session.html:33
+#: flask/templates/chat/session.html:36
 msgid "Info"
 msgstr "معلومات"
 
-#: flask/templates/chat/session.html:33
+#: flask/templates/chat/session.html:36
 msgid "Sidebar / Character Info"
 msgstr "الشريط الجانبي / معلومات الشخصية"
 
-#: flask/templates/chat/session.html:39 flask/templates/chat/session.html:63 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
+#: flask/templates/chat/session.html:42 flask/templates/chat/session.html:67 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
 msgid "Location:"
 msgstr "الموقع:"
 
-#: flask/templates/chat/session.html:41
+#: flask/templates/chat/session.html:44
 msgid "World:"
 msgstr "العالم:"
 
-#: flask/templates/chat/session.html:43
+#: flask/templates/chat/session.html:46
 msgid "Neutral Setting"
 msgstr "بيئة محايدة"
 
-#: flask/templates/chat/session.html:79
+#: flask/templates/chat/session.html:83
 msgid "View LLM prompt (Admin)"
 msgstr "عرض موجه LLM (المسؤول)"
 
-#: flask/templates/chat/session.html:81 flask/templates/chat/session.html:101
+#: flask/templates/chat/session.html:85 flask/templates/chat/session.html:111
 msgid "Translate message (on-demand)"
 msgstr "ترجمة الرسالة (عند الطلب)"
 
-#: flask/templates/chat/session.html:82 flask/templates/chat/session.html:102
+#: flask/templates/chat/session.html:86 flask/templates/chat/session.html:112
 msgid "Edit message"
 msgstr "تعديل الرسالة"
 
-#: flask/templates/chat/session.html:83 flask/templates/chat/session.html:103
+#: flask/templates/chat/session.html:87 flask/templates/chat/session.html:113
 msgid "Duplicate chat from here (Fork)"
 msgstr "تكرار الدردشة من هنا (تشعب)"
 
-#: flask/templates/chat/session.html:85 flask/templates/chat/session.html:104 flask/templates/macros/system_message.html:27
+#: flask/templates/chat/session.html:89 flask/templates/chat/session.html:114 flask/templates/macros/system_message.html:27
 msgid "Delete from here"
 msgstr "حذف من هنا"
 
-#: flask/templates/chat/session.html:111
+#: flask/templates/chat/session.html:121
 msgid "Show/hide ALT text (image description)"
 msgstr "إظهار/إخفاء النص البديل ALT (وصف الصورة)"
 
-#: flask/templates/chat/session.html:132
+#: flask/templates/chat/session.html:142
 msgid "AI system notice"
 msgstr "تنبيه نظام الذكاء الاصطناعي"
 
-#: flask/templates/chat/session.html:134
+#: flask/templates/chat/session.html:144
 msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
 msgstr "هذا روبوت دردشة بالذكاء الاصطناعي. يتم إنشاء الردود تلقائياً بواسطة نماذج لغوية محلية أو خارجية وقد تكون غير مكتملة أو غير دقيقة."
 
-#: flask/templates/chat/session.html:141
+#: flask/templates/chat/session.html:151
 msgid "Chat options & sessions"
 msgstr "خيارات الدردشة والجلسات"
 
-#: flask/templates/chat/session.html:141
+#: flask/templates/chat/session.html:151
 msgid "Chat options"
 msgstr "خيارات الدردشة"
 
-#: flask/templates/chat/session.html:147
+#: flask/templates/chat/session.html:157
 msgid "Sessions"
 msgstr "الجلسات"
 
-#: flask/templates/chat/session.html:148
+#: flask/templates/chat/session.html:158
 msgid "Start new chat"
 msgstr "بدء دردشة جديدة"
 
-#: flask/templates/chat/session.html:150
+#: flask/templates/chat/session.html:160
 msgid "Delete chat"
 msgstr "حذف الدردشة"
 
-#: flask/templates/chat/session.html:150
+#: flask/templates/chat/session.html:160
 msgid "Do you really want to permanently delete this chat?"
 msgstr "هل تريد حقاً حذف هذه الدردشة نهائياً؟"
 
-#: flask/templates/chat/session.html:154
+#: flask/templates/chat/session.html:164
 msgid "Attach image (Vision ALT analysis)"
 msgstr "إرفاق صورة (تحليل Vision ALT)"
 
-#: flask/templates/chat/session.html:162
+#: flask/templates/chat/session.html:172
 msgid "Generate scene image"
 msgstr "توليد صورة المشهد"
 
-#: flask/templates/chat/session.html:169
+#: flask/templates/chat/session.html:179
 msgid "Cancel image generation"
 msgstr "إلغاء توليد الصورة"
 
-#: flask/templates/chat/session.html:180
+#: flask/templates/chat/session.html:190
 msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
 msgstr "اكتب ردك أو فعلك... (Enter للإرسال، Shift+Enter لسطر جديد)"
 
-#: flask/templates/chat/session.html:186
+#: flask/templates/chat/session.html:196
 msgid "Regenerate response – replaces the last AI reply or retries generation"
 msgstr "إعادة توليد الرد – يستبدل آخر رد للذكاء الاصطناعي أو يعيد المحاولة"
 
-#: flask/templates/chat/session.html:193
+#: flask/templates/chat/session.html:203
 msgid "Cancel response generation"
 msgstr "إلغاء توليد الرد"
 
-#: flask/templates/chat/session.html:199
+#: flask/templates/chat/session.html:209
 msgid "Send message (Enter)"
 msgstr "إرسال الرسالة (Enter)"
 
-#: flask/templates/chat/session.html:257 flask/templates/chat/session.html:786 flask/templates/lorebooks/detail.html:167
+#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:828 flask/templates/lorebooks/detail.html:167
 msgid "Tags (Comma-separated for vectorless RAG)"
 msgstr "الوسوم (مفصولة بفواصل لنظام RAG بدون متجهات)"
 
-#: flask/templates/chat/session.html:261 flask/templates/chat/session.html:790
+#: flask/templates/chat/session.html:271 flask/templates/chat/session.html:832
 msgid "Summary"
 msgstr "ملخص"
 
-#: flask/templates/chat/session.html:266 flask/templates/chat/session.html:796
+#: flask/templates/chat/session.html:276 flask/templates/chat/session.html:838
 msgid "Recalculate"
 msgstr "إعادة حساب"
 
-#: flask/templates/chat/session.html:266 flask/templates/chat/session.html:795
+#: flask/templates/chat/session.html:276 flask/templates/chat/session.html:837
 msgid "Recalculate memory from associated episode messages"
 msgstr "إعادة حساب الذاكرة من رسائل الحلقة المرتبطة"
 
-#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:799
+#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:841
 msgid "Translate"
 msgstr "ترجمة"
 
-#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:798
+#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:840
 msgid "Translate memory in-place to your language"
 msgstr "ترجمة الذاكرة في مكانها إلى لغتك"
 
-#: flask/templates/chat/session.html:297
+#: flask/templates/chat/session.html:295
+msgid "Relationship Settings"
+msgstr ""
+
+#: flask/templates/chat/session.html:298
+msgid "Show relationship debug labels"
+msgstr ""
+
+#: flask/templates/chat/session.html:309
+msgid "Reset relationship to default and recalculate from chat history"
+msgstr ""
+
+#: flask/templates/chat/session.html:316
+msgid "Recalculate relationship"
+msgstr ""
+
+#: flask/templates/chat/session.html:339
 msgid "Thinking: Enabled (Click to disable)"
 msgstr "التفكير: مفعّل (انقر للتعطيل)"
 
-#: flask/templates/chat/session.html:297
+#: flask/templates/chat/session.html:339
 msgid "Thinking: Disabled (Click to enable)"
 msgstr "التفكير: معطّل (انقر للتفعيل)"
 
-#: flask/templates/chat/session.html:298
+#: flask/templates/chat/session.html:340
 msgid "Disable thinking"
 msgstr "تعطيل التفكير"
 
-#: flask/templates/chat/session.html:298
+#: flask/templates/chat/session.html:340
 msgid "Enable thinking"
 msgstr "تفعيل التفكير"
 
-#: flask/templates/chat/session.html:311 flask/templates/macros/cards.html:91
+#: flask/templates/chat/session.html:353 flask/templates/macros/cards.html:91
 msgid "Relationship:"
 msgstr "العلاقة:"
 
-#: flask/templates/chat/session.html:322
+#: flask/templates/chat/session.html:364
 msgid "Active Persona"
 msgstr "الشخصية النشطة"
 
-#: flask/templates/chat/session.html:327
+#: flask/templates/chat/session.html:369
 msgid "Edit player persona"
 msgstr "تعديل شخصية اللاعب"
 
-#: flask/templates/chat/session.html:344
+#: flask/templates/chat/session.html:386
 msgid "Unknown"
 msgstr "غير معروف"
 
-#: flask/templates/chat/session.html:345
+#: flask/templates/chat/session.html:387
 msgid "Persona is locked for this chat after the 1st message"
 msgstr "تُقفل الشخصية لهذه المحادثة بعد الرسالة الأولى"
 
-#: flask/templates/chat/session.html:368
+#: flask/templates/chat/session.html:410
 msgid "No World (Neutral)"
 msgstr "بدون عالم (محايد)"
 
-#: flask/templates/chat/session.html:371
+#: flask/templates/chat/session.html:413
 msgid "Switch world"
 msgstr "تغيير العالم"
 
-#: flask/templates/chat/session.html:382
+#: flask/templates/chat/session.html:424
 msgid "Current Location"
 msgstr "الموقع الحالي"
 
-#: flask/templates/chat/session.html:384
+#: flask/templates/chat/session.html:426
 msgid "-- Choose location --"
 msgstr "-- اختر موقعاً --"
 
-#: flask/templates/chat/session.html:402
+#: flask/templates/chat/session.html:444
 msgid "Enable random events"
 msgstr "تفعيل الأحداث العشوائية"
 
-#: flask/templates/chat/session.html:407
+#: flask/templates/chat/session.html:449
 msgid "Admin & creator info: Cooldown until the next random event"
 msgstr "معلومات المسؤول والمنشئ: فترة الانتظار حتى الحدث العشوائي التالي"
 
-#: flask/templates/chat/session.html:408
+#: flask/templates/chat/session.html:450
 msgid "Next event:"
 msgstr "الحدث التالي:"
 
-#: flask/templates/chat/session.html:411 flask/templates/chat/session.html:415
+#: flask/templates/chat/session.html:453 flask/templates/chat/session.html:457
 msgid "in"
 msgstr "خلال"
 
-#: flask/templates/chat/session.html:411
+#: flask/templates/chat/session.html:453
 msgid "message"
 msgstr "رسالة"
 
-#: flask/templates/chat/session.html:411 flask/templates/chat/session.html:415
+#: flask/templates/chat/session.html:453 flask/templates/chat/session.html:457
 msgid "messages"
 msgstr "رسائل"
 
-#: flask/templates/chat/session.html:411
+#: flask/templates/chat/session.html:453
 msgid "paused"
 msgstr "متوقف مؤقتاً"
 
-#: flask/templates/chat/session.html:413
+#: flask/templates/chat/session.html:455
 msgid "next message"
 msgstr "الرسالة التالية"
 
-#: flask/templates/chat/session.html:488
+#: flask/templates/chat/session.html:530
 msgid "Do you really want to delete this session?"
 msgstr "هل تريد حقاً حذف هذه الجلسة؟"
 
-#: flask/templates/chat/session.html:490
+#: flask/templates/chat/session.html:532
 msgid "Delete session"
 msgstr "حذف الجلسة"
 
-#: flask/templates/chat/session.html:714
+#: flask/templates/chat/session.html:756
 msgid "Permanently delete this message and all subsequent messages (including associated memories)?"
 msgstr "هل تريد حذف هذه الرسالة وجميع الرسائل اللاحقة (بما في ذلك الذكريات المرتبطة) نهائياً؟"
 
-#: flask/templates/chat/session.html:913
+#: flask/templates/chat/session.html:955
 msgid "Recalculation error"
 msgstr "خطأ في إعادة الحساب"
 
-#: flask/templates/chat/session.html:915
+#: flask/templates/chat/session.html:957
 msgid "Recalculation error:"
 msgstr "خطأ في إعادة الحساب:"
 
-#: flask/templates/chat/session.html:952
+#: flask/templates/chat/session.html:994
 msgid "Translated!"
 msgstr "تمت الترجمة!"
 
-#: flask/templates/chat/session.html:964
+#: flask/templates/chat/session.html:1006
 msgid "Translation error"
 msgstr "خطأ في الترجمة"
 
-#: flask/templates/chat/session.html:966
+#: flask/templates/chat/session.html:1008
 msgid "Translation error:"
 msgstr "خطأ في الترجمة:"
 

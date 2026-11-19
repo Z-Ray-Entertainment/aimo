@@ -112,7 +112,11 @@ class LLMProvider(ABC):
         emotion_candidates: list[str] | None,
         location_candidates: list[str] | None,
         model: str,
-    ) -> tuple[str, str | None]:
+        user_text: str | None = None,
+        character_name: str | None = None,
+        relationship_tier: str | None = None,
+        evaluate_relationship: bool = False,
+    ) -> tuple[str, str | None, str]:
         raise NotImplementedError
 
     @abstractmethod

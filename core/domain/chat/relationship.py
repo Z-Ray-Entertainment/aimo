@@ -1,10 +1,42 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import StrEnum
 import math
 from typing import Mapping
 
 from shared.i18n import gettext_noop as _, t
+
+
+class RelationshipImpact(StrEnum):
+    VERY_NEGATIVE = "very_negative"
+    NEGATIVE = "negative"
+    NEUTRAL = "neutral"
+    POSITIVE = "positive"
+    VERY_POSITIVE = "very_positive"
+
+    @property
+    def delta(self) -> float:
+        return RELATIONSHIP_IMPACT_DELTAS[self]
+
+    @classmethod
+    def resolve(cls, raw: str | None) -> "RelationshipImpact":
+        if not raw:
+            return cls.NEUTRAL
+        normalized = raw.strip().lower().replace("-", "_").replace(" ", "_")
+        for member in cls:
+            if member.value == normalized:
+                return member
+        return cls.NEUTRAL
+
+
+RELATIONSHIP_IMPACT_DELTAS: dict[RelationshipImpact, float] = {
+    RelationshipImpact.VERY_NEGATIVE: -2.0,
+    RelationshipImpact.NEGATIVE: -1,
+    RelationshipImpact.NEUTRAL: 0.1,
+    RelationshipImpact.POSITIVE: 1,
+    RelationshipImpact.VERY_POSITIVE: 2.0,
+}
 
 
 @dataclass(frozen=True)

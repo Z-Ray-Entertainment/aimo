@@ -127,7 +127,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 
 ### 5. Relationship Dynamics & Over-Time Decay
 - Value range: Firmly clamped between **`-100.0` and `+100.0`**.
-- Increase: Each player message increases the score by **`+0.1`**.
+- Turn-Based Interaction Evaluation: Post-streaming classification (`classify_turn`) evaluates the interaction pair (player message + character reply) in the context of the current relationship tier across five discrete categories (`very_negative`: `-2.0`, `negative`: `-0.5`, `neutral`: `+0.1`, `positive`: `+0.5`, `very_positive`: `+2.0`), storing the applied delta in `Message.metadata` so regeneration and message deletion revert it cleanly.
 - Decay: During inactivity, the score decreases by **`-0.1` per day** (calculated based on `last_message_at`).
 - Affection scores are strictly bound to the specific `ChatSession` (not statically tied to the character).
 - **21 Behavioral Tiers:** Score maps into 21 qualitative tiers (in 10-point steps from -100 "Pure Hatred" to +100 "Blind Devotion"). Instead of raw numbers, the roleplay model receives concrete narrative behavioral guidelines inside `[RELATION]...[/RELATION]`. In the UI, the player sees exclusively the relationship status title without numerical scores or hover tooltips.

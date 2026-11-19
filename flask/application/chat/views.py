@@ -463,10 +463,13 @@ def view_session(session_id: int):
     )
 
     is_admin = bool(user and (user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS)))
-    can_view_event_counter = (
+    can_debug_relationship = (
         is_admin
-        or bool(worldinfo and worldinfo.is_editable_by_user(user.id, is_admin, user.creator_tag))
         or bool(character and character.is_editable_by_user(user.id, is_admin, user.creator_tag))
+    )
+    can_view_event_counter = (
+        can_debug_relationship
+        or bool(worldinfo and worldinfo.is_editable_by_user(user.id, is_admin, user.creator_tag))
     )
 
     lorebook_data = _build_lorebook_view_data(
@@ -509,6 +512,7 @@ def view_session(session_id: int):
         comfyui_available=image_gen_available,
         is_admin=is_admin,
         can_view_event_counter=can_view_event_counter,
+        can_debug_relationship=can_debug_relationship,
     )
 
 
