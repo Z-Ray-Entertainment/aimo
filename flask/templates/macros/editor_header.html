@@ -19,15 +19,17 @@
     can_copy=false,
     delete_url=none,
     can_delete=false,
-    delete_confirm_msg="Wirklich unwiderruflich löschen?",
+    delete_confirm_msg=none,
     readonly_badge_text=none,
-    save_title="Speichern",
+    save_title=none,
     show_back=true
 ) %}
+{% set eff_delete_confirm = delete_confirm_msg if delete_confirm_msg else _("Really delete permanently?") %}
+{% set eff_save_title = save_title if save_title else _("Save") %}
 <div class="aimo-frame editor-header-bar" style="padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
   <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
     {% if show_back and back_url %}
-      {{ action_button("Zurück", href=back_url, arrow="left") }}
+      {{ action_button(_("Back"), href=back_url, arrow="left") }}
     {% endif %}
     <h2 style="color: var(--gold-accent); margin: 0; font-size: 1.35rem;">{{ title }}</h2>
     {% if not is_editable and readonly_badge_text %}
@@ -38,16 +40,16 @@
 
   <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
     {% if is_editable and form_id %}
-      {{ action_button("Speichern", type="submit", form=form_id, variant="primary", icon="💾", title=save_title) }}
+      {{ action_button(_("Save"), type="submit", form=form_id, variant="primary", icon="💾", title=eff_save_title) }}
     {% endif %}
     {% if can_copy and copy_url %}
       <form method="POST" action="{{ copy_url }}" style="display: inline;">
-        {{ action_button("Kopieren", type="submit", icon="📄") }}
+        {{ action_button(_("Copy"), type="submit", icon="📄") }}
       </form>
     {% endif %}
     {% if can_delete and delete_url %}
-      <form method="POST" action="{{ delete_url }}" style="display: inline;" onsubmit="return confirm('{{ delete_confirm_msg }}');">
-        {{ action_button("Löschen", type="submit", variant="danger", icon="🗑️") }}
+      <form method="POST" action="{{ delete_url }}" style="display: inline;" onsubmit="return confirm('{{ eff_delete_confirm }}');">
+        {{ action_button(_("Delete"), type="submit", variant="danger", icon="🗑️") }}
       </form>
     {% endif %}
   </div>

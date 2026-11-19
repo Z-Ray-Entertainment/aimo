@@ -1,0 +1,458 @@
+msgid ""
+msgstr ""
+"Language: hi\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: core/domain/chat/focus_analyzer.py:181
+msgid ""
+"Active Scene Focus — Immediate Narrative Event:\n"
+"React directly and organically to the unfolding event or acute action described in [WORLD_INFO] and [CHAT_HISTORY]."
+msgstr ""
+"सक्रिय दृश्य फ़ोकस — तात्कालिक कथात्मक घटना:\n"
+"[WORLD_INFO] और [CHAT_HISTORY] में वर्णित घटित हो रही घटना या तीव्र क्रिया पर सीधे और स्वाभाविक रूप से प्रतिक्रिया दें।"
+
+#: core/domain/chat/focus_analyzer.py:162
+msgid ""
+"Active Scene Focus — Personal History & Intimacy:\n"
+"The conversation centers on personal feelings, intimacy, or {character_name}'s past. Strictly honor {character_name}'s canon origin, sexual history, and intimacy traits defined in [CHARACTER_DEFINITION]. NEVER invent or admit to past sexual or romantic experiences that contradict [CHARACTER_DEFINITION], while allowing authentic emotional responses to the current moment."
+msgstr ""
+"सक्रिय दृश्य फ़ोकस — व्यक्तिगत इतिहास और आत्मीयता:\n"
+"बातचीत व्यक्तिगत भावनाओं, आत्मीयता, या {character_name} के अतीत पर केंद्रित है। [CHARACTER_DEFINITION] में परिभाषित {character_name} की कैनन उत्पत्ति, यौन इतिहास और आत्मीयता विशेषताओं का सख्ती से सम्मान करें। वर्तमान क्षण के प्रति प्रामाणिक भावनात्मक प्रतिक्रियाओं की अनुमति देते हुए, ऐसे किसी भी पिछले यौन या रोमांटिक अनुभव की कल्पना या स्वीकार कभी न करें जो [CHARACTER_DEFINITION] का खंडन करता हो।"
+
+#: core/domain/chat/focus_analyzer.py:173
+msgid ""
+"Active Scene Focus — Environment & Exploration:\n"
+"Pay close attention to the current location, sensory atmosphere, and {character_name}'s location preferences in [WORLD_INFO]."
+msgstr ""
+"सक्रिय दृश्य फ़ोकस — वातावरण और अन्वेषण:\n"
+"[WORLD_INFO] में वर्तमान स्थान, संवेदी वातावरण और {character_name} की स्थान प्राथमिकताओं पर पूरा ध्यान दें।"
+
+#: core/domain/chat/focus_analyzer.py:189
+msgid ""
+"Active Scene Focus — World Lore & Background Knowledge:\n"
+"Incorporate relevant facts and canon details from [RELEVANT_LOREBOOKS] and [RELEVANT_MEMORIES] naturally into {character_name}'s perspective."
+msgstr ""
+"सक्रिय दृश्य फ़ोकस — विश्व कथा और पृष्ठभूमि ज्ञान:\n"
+"[RELEVANT_LOREBOOKS] और [RELEVANT_MEMORIES] से प्रासंगिक तथ्यों और कैनन विवरणों को {character_name} के दृष्टिकोण में स्वाभाविक रूप से शामिल करें।"
+
+#: core/domain/chat/prompt_builder.py:268 core/domain/chat/prompt_builder.py:373
+msgid "Name:"
+msgstr "नाम:"
+
+#: core/domain/chat/prompt_builder.py:269 core/domain/chat/prompt_builder.py:374
+msgid "Gender:"
+msgstr "लिंग:"
+
+#: core/domain/chat/prompt_builder.py:270
+msgid "Description, Personality & Canon Backstory (All origin facts, personal history, and traits below are canon truth):"
+msgstr "विवरण, व्यक्तित्व और कैनन पृष्ठभूमि (नीचे दिए गए सभी मूल तथ्य, व्यक्तिगत इतिहास और विशेषताएँ कैनन सत्य हैं):"
+
+#: core/domain/chat/prompt_builder.py:407
+msgid "World Name:"
+msgstr "संसार का नाम:"
+
+#: core/domain/chat/prompt_builder.py:460
+msgid "Player"
+msgstr "खिलाड़ी"
+
+#: core/domain/chat/prompt_builder.py:461
+msgid "You"
+msgstr "आप"
+
+#: core/domain/chat/prompt_builder.py:171
+msgid "None."
+msgstr "कोई नहीं।"
+
+#: core/domain/chat/prompt_builder.py:264 core/domain/chat/prompt_builder.py:385
+msgid "Physical Appearance:"
+msgstr "शारीरिक रूप-रंग:"
+
+#: core/domain/chat/prompt_builder.py:382
+msgid "Background & Personality:"
+msgstr "पृष्ठभूमि और व्यक्तित्व:"
+
+#: core/domain/chat/prompt_builder.py:410
+msgid "Current Location:"
+msgstr "वर्तमान स्थान:"
+
+#: core/domain/chat/prompt_builder.py:447 core/domain/chat/prompt_builder.py:403
+msgid "(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"
+msgstr "(इस घटित हो रही घटना पर ध्यान दें और इसे अपनी तात्कालिक प्रतिक्रिया और संवाद में स्वाभाविक रूप से पिरोएँ।)"
+
+#: core/domain/chat/prompt_builder.py:267
+msgid "Role: You play this character ({name}). Embody these traits, canon backstory, and voice exclusively:"
+msgstr "भूमिका: आप यह पात्र ({name}) निभाते हैं। विशेष रूप से इन विशेषताओं, कैनन पृष्ठभूमि और आवाज़ को आत्मसात करें:"
+
+#: core/domain/chat/prompt_builder.py:370
+msgid "Role: This is your conversation partner ({name}). You are NOT this person. NEVER speak, act, think, or decide on behalf of {name}:"
+msgstr "भूमिका: यह आपके संवाद साथी ({name}) हैं। आप यह व्यक्ति नहीं हैं। {name} की ओर से कभी भी बोलें, कार्य करें, सोचें या निर्णय न लें:"
+
+#: core/domain/chat/prompt_builder.py:400
+msgid "Active World: None (Neutral setting, no specific world events)."
+msgstr "सक्रिय संसार: कोई नहीं (तटस्थ परिवेश, कोई विशिष्ट विश्व घटना नहीं)।"
+
+#: core/domain/chat/prompt_builder.py:421
+msgid "Visual Environment:"
+msgstr "दृश्य वातावरण:"
+
+#: core/domain/chat/prompt_builder.py:424
+msgid "Current Location: Unspecified"
+msgstr "वर्तमान स्थान: अनिर्दिष्ट"
+
+#: core/domain/chat/prompt_builder.py:439
+msgid "Character's Preferred Locations:"
+msgstr "पात्र के पसंदीदा स्थान:"
+
+#: core/domain/chat/prompt_builder.py:442
+msgid "Character's Disliked Locations:"
+msgstr "पात्र के नापसंद स्थान:"
+
+#: core/domain/chat/prompt_builder.py:494 core/domain/chat/prompt_builder.py:560
+msgid "No messages yet."
+msgstr "अभी तक कोई संदेश नहीं।"
+
+#: core/domain/chat/prompt_builder.py:415
+msgid "Location Atmosphere:"
+msgstr "स्थान का वातावरण:"
+
+#: core/domain/chat/prompt_builder.py:418
+msgid "Location Description:"
+msgstr "स्थान का विवरण:"
+
+#: core/domain/chat/prompt_builder.py:446 core/domain/chat/prompt_builder.py:402
+msgid "Active Narrative Event ({title}):"
+msgstr "सक्रिय कथात्मक घटना ({title}):"
+
+#: core/domain/chat/prompt_builder.py:476
+msgid "[Player shows an image: {alt}]"
+msgstr "[खिलाड़ी एक छवि दिखाता है: {alt}]"
+
+#: core/domain/chat/relationship.py:239
+msgid "Relationship Status:"
+msgstr "संबंध की स्थिति:"
+
+#: core/domain/chat/relationship.py:240
+msgid "Emotional Stance towards {{user}}:"
+msgstr "{{user}} के प्रति भावनात्मक रुख:"
+
+#: core/domain/chat/relationship.py:241
+msgid "Roleplay Behavioral Guidelines for {{char}}:"
+msgstr "{{char}} के लिए रोलप्ले व्यवहार दिशानिर्देश:"
+
+#: core/domain/chat/relationship.py:21
+msgid "Pure Hatred"
+msgstr "शुद्ध घृणा"
+
+#: core/domain/chat/relationship.py:22
+msgid "Pure hatred; considers you a mortal enemy and wishes you gone."
+msgstr "शुद्ध घृणा; आपको अपना जानी दुश्मन मानता है और चाहता है कि आप चले जाएँ।"
+
+#: core/domain/chat/relationship.py:23
+msgid "Treats {{user}} with visceral malice, open hostility, and total rejection. Under no circumstances shows warmth, empathy, or cooperation. Refuses peace and wishes {{user}} gone."
+msgstr "{{user}} के साथ तीव्र द्वेष, खुली शत्रुता और पूर्ण अस्वीकृति का व्यवहार करता है। किसी भी परिस्थिति में गर्मजोशी, सहानुभूति या सहयोग नहीं दिखाता। शांति से इनकार करता है और चाहता है कि {{user}} चला जाए।"
+
+#: core/domain/chat/relationship.py:30
+msgid "Intense Malice"
+msgstr "तीव्र द्वेष"
+
+#: core/domain/chat/relationship.py:31
+msgid "Intense malice; actively seeks to harm or undermine you."
+msgstr "तीव्र द्वेष; सक्रिय रूप से आपको नुकसान पहुँचाने या कमज़ोर करने की कोशिश करता है।"
+
+#: core/domain/chat/relationship.py:32
+msgid "Bitter, spiteful, and confrontational. Actively looks for ways to undermine, diminish, or obstruct {{user}}. Rejects kindness and assumes bad faith in everything {{user}} says or does."
+msgstr "कटु, द्वेषपूर्ण और टकराव वाला। सक्रिय रूप से {{user}} को कमज़ोर करने, नीचा दिखाने या बाधा डालने के तरीके खोजता है। दयालुता को अस्वीकार करता है और {{user}} की हर बात या कार्य में दुर्भावना मानता है।"
+
+#: core/domain/chat/relationship.py:39
+msgid "Deep Loathing"
+msgstr "गहरी घृणा"
+
+#: core/domain/chat/relationship.py:40
+msgid "Deep loathing; feels strong repulsion and visceral anger."
+msgstr "गहरी नफ़रत; तीव्र विकर्षण और गहरा क्रोध महसूस करता है।"
+
+#: core/domain/chat/relationship.py:41
+msgid "Feels visceral disgust and short-tempered resentment. Snaps, gives sharp or venomous replies, and visibly recoils from interacting with {{user}}."
+msgstr "गहरी घृणा और चिड़चिड़ा रोष महसूस करता है। झल्लाता है, तीखे या विषैले उत्तर देता है, और {{user}} से बातचीत करने से स्पष्ट रूप से कतराता है।"
+
+#: core/domain/chat/relationship.py:48
+msgid "Open Hostility"
+msgstr "खुली शत्रुता"
+
+#: core/domain/chat/relationship.py:49
+msgid "Open hostility; treats you with contempt and aggression."
+msgstr "खुली शत्रुता; आपके साथ तिरस्कार और आक्रामकता का व्यवहार करता है।"
+
+#: core/domain/chat/relationship.py:50
+msgid "Harsh, dismissive, and overtly contemptuous. Treats {{user}}'s presence as a nuisance or provocation. Speaks with biting sarcasm or outright hostility."
+msgstr "कठोर, उपेक्षापूर्ण और स्पष्ट रूप से तिरस्कारपूर्ण। {{user}} की उपस्थिति को उपद्रव या उकसावे के रूप में देखता है। चुभने वाले व्यंग्य या सीधी शत्रुता से बोलता है।"
+
+#: core/domain/chat/relationship.py:57
+msgid "Strong Dislike"
+msgstr "तीव्र नापसंदगी"
+
+#: core/domain/chat/relationship.py:58
+msgid "Strong dislike; avoids you and speaks ill of you."
+msgstr "तीव्र नापसंदगी; आपसे बचता है और आपके बारे में बुरा बोलता है।"
+
+#: core/domain/chat/relationship.py:59
+msgid "Noticeably cold, reluctant, and distant. Avoids speaking to {{user}} whenever possible, answering with monosyllables or passive-aggressive remarks."
+msgstr "स्पष्ट रूप से ठंडा, अनिच्छुक और दूर। जब भी संभव हो {{user}} से बात करने से बचता है, एक-दो शब्दों या निष्क्रिय-आक्रामक टिप्पणियों में उत्तर देता है।"
+
+#: core/domain/chat/relationship.py:66
+msgid "General Animosity"
+msgstr "सामान्य वैमनस्य"
+
+#: core/domain/chat/relationship.py:67
+msgid "General animosity; views you as a clear adversary."
+msgstr "सामान्य बैर; आपको एक स्पष्ट विरोधी के रूप में देखता है।"
+
+#: core/domain/chat/relationship.py:68
+msgid "Considers {{user}} an adversary or rival. Guarded, competitive, stubborn, and uncooperative. Quick to contradict or question {{user}}'s judgment."
+msgstr "{{user}} को विरोधी या प्रतिद्वंद्वी मानता है। सतर्क, प्रतिस्पर्धी, जिद्दी और असहयोगी। {{user}} के निर्णय का खंडन करने या उस पर सवाल उठाने में तेज़।"
+
+#: core/domain/chat/relationship.py:75
+msgid "Dislike"
+msgstr "नापसंदगी"
+
+#: core/domain/chat/relationship.py:76
+msgid "Dislike; finds you unpleasant or irritating."
+msgstr "नापसंदगी; आपको अप्रिय या चिड़चिड़ाहट पैदा करने वाला पाता है।"
+
+#: core/domain/chat/relationship.py:77
+msgid "Finds {{user}} annoying or unpleasant. Displays little patience, rolls eyes or sighs, and keeps all exchanges brief and dismissive."
+msgstr "{{user}} को कष्टप्रद या अप्रिय पाता है। बहुत कम धैर्य दिखाता है, आँखें घुमाता है या आह भरता है, और सभी बातचीत को संक्षिप्त व उपेक्षापूर्ण रखता है।"
+
+#: core/domain/chat/relationship.py:84
+msgid "Distrust"
+msgstr "अविश्वास"
+
+#: core/domain/chat/relationship.py:85
+msgid "Distrust; wary of your intentions and motives."
+msgstr "अविश्वास; आपके इरादों और उद्देश्यों के प्रति सतर्क।"
+
+#: core/domain/chat/relationship.py:86
+msgid "Suspicious, cautious, and defensive. Doubts {{user}}'s motives, refuses to share personal matters, and maintains emotional and physical distance."
+msgstr "संदेहपूर्ण, सतर्क और रक्षात्मक। {{user}} के उद्देश्यों पर संदेह करता है, व्यक्तिगत बातें साझा करने से इनकार करता है, और भावनात्मक व शारीरिक दूरी बनाए रखता है।"
+
+#: core/domain/chat/relationship.py:93
+msgid "Coldness"
+msgstr "रूखापन"
+
+#: core/domain/chat/relationship.py:94
+msgid "Coldness; distant, aloof, and emotionally unavailable."
+msgstr "रूखापन; दूर, अलग-थलग और भावनात्मक रूप से अनुपलब्ध।"
+
+#: core/domain/chat/relationship.py:95
+msgid "Chilly, aloof, and purely transactional. Communicates strictly when necessary, showing zero curiosity, personal warmth, or emotional investment."
+msgstr "ठंडा, अलग-थलग और पूरी तरह से औपचारिक। केवल आवश्यक होने पर ही संवाद करता है, शून्य जिज्ञासा, व्यक्तिगत गर्मजोशी या भावनात्मक लगाव दिखाता है।"
+
+#: core/domain/chat/relationship.py:102
+msgid "Slight Friction"
+msgstr "हल्का तनाव"
+
+#: core/domain/chat/relationship.py:103
+msgid "Slight friction; feels a subtle lack of harmony."
+msgstr "हल्का तनाव; सामंजस्य की सूक्ष्म कमी महसूस करता है।"
+
+#: core/domain/chat/relationship.py:104
+msgid "Slightly guarded or hesitant. Conversations feel somewhat stiff or awkward, with an undercurrent of skepticism or mild reservation."
+msgstr "थोड़ा सतर्क या हिचकिचाहट भरा। बातचीत कुछ कठोर या असहज लगती है, जिसमें संदेह या हल्के संकोच की अंतर्धारा होती है।"
+
+#: core/domain/chat/relationship.py:111
+msgid "Neutral"
+msgstr "तटस्थ"
+
+#: core/domain/chat/relationship.py:112
+msgid "Neutral; a complete stranger or entirely indifferent."
+msgstr "तटस्थ; एक पूर्ण अजनबी या पूरी तरह से उदासीन।"
+
+#: core/domain/chat/relationship.py:113
+msgid "Neutral, objective, and detached. Treats {{user}} as an acquaintance or stranger. Maintains ordinary polite manners without emotional closeness or preconceived hostility."
+msgstr "तटस्थ, वस्तुनिष्ठ और अनासक्त। {{user}} के साथ एक परिचित या अजनबी जैसा व्यवहार करता है। भावनात्मक निकटता या पूर्वकल्पित शत्रुता के बिना सामान्य विनम्र शिष्टाचार बनाए रखता है।"
+
+#: core/domain/chat/relationship.py:120
+msgid "Polite"
+msgstr "विनम्र"
+
+#: core/domain/chat/relationship.py:121
+msgid "Polite; mild interest or basic social courtesy."
+msgstr "विनम्र; हल्की रुचि या बुनियादी सामाजिक शिष्टाचार।"
+
+#: core/domain/chat/relationship.py:122
+msgid "Courteous, well-mannered, and attentive. Engages in respectful conversation and pleasantries, but maintains standard social boundaries."
+msgstr "विनम्र, सुशील और ध्यान देने वाला। सम्मानजनक बातचीत और शिष्टाचार में भाग लेता है, लेकिन मानक सामाजिक सीमाएँ बनाए रखता है।"
+
+#: core/domain/chat/relationship.py:129
+msgid "Friendly"
+msgstr "मित्रवत"
+
+#: core/domain/chat/relationship.py:130
+msgid "Friendly; sees you as a pleasant acquaintance."
+msgstr "मित्रवत; आपको एक सुखद परिचित के रूप में देखता है।"
+
+#: core/domain/chat/relationship.py:131
+msgid "Approachable, amiable, and receptive. Chats comfortably, offers warm greetings, and readily cooperates on everyday topics."
+msgstr "मिलनसार, सौम्य और ग्रहणशील। आराम से बातचीत करता है, गर्मजोशी से अभिवादन करता है, और रोज़मर्रा के विषयों पर सहजता से सहयोग करता है।"
+
+#: core/domain/chat/relationship.py:138
+msgid "Liking"
+msgstr "पसंद"
+
+#: core/domain/chat/relationship.py:139
+msgid "Liking; feels comfortable and enjoys your company."
+msgstr "पसंद; सहज महसूस करता है और आपकी संगति का आनंद लेता है।"
+
+#: core/domain/chat/relationship.py:140
+msgid "Enjoys {{user}}'s company and conversation. Displays lighthearted humor, speaks warmly, and shares occasional light personal thoughts or experiences."
+msgstr "{{user}} की संगति और बातचीत का आनंद लेता है। हल्का-फुल्का हास्य दिखाता है, गर्मजोशी से बोलता है, और कभी-कभी हल्के व्यक्तिगत विचार या अनुभव साझा करता है।"
+
+#: core/domain/chat/relationship.py:147
+msgid "Trust"
+msgstr "विश्वास"
+
+#: core/domain/chat/relationship.py:148
+msgid "Trust; views you as a reliable and helpful companion."
+msgstr "विश्वास; आपको एक भरोसेमंद और मददगार साथी के रूप में देखता है।"
+
+#: core/domain/chat/relationship.py:149
+msgid "Places genuine trust and confidence in {{user}}. Values {{user}}'s presence and advice, is helpful, open, and reliable."
+msgstr "{{user}} पर सच्चा विश्वास और भरोसा रखता है। {{user}} की उपस्थिति और सलाह को महत्व देता है, मददगार, खुला और विश्वसनीय है।"
+
+#: core/domain/chat/relationship.py:156
+msgid "Affection"
+msgstr "स्नेह"
+
+#: core/domain/chat/relationship.py:157
+msgid "Affection; considers you a genuine and valued friend."
+msgstr "स्नेह; आपको एक सच्चा और मूल्यवान मित्र मानता है।"
+
+#: core/domain/chat/relationship.py:158
+msgid "Deep affection and caring friendship. Sincerely interested in {{user}}'s well-being, supportive, warm, and happy to spend meaningful time together."
+msgstr "गहरा स्नेह और देखभाल करने वाली मित्रता। {{user}} की भलाई में सच्ची रुचि रखता है, सहायक, गर्मजोशी भरा, और साथ में सार्थक समय बिताकर खुश होता है।"
+
+#: core/domain/chat/relationship.py:165
+msgid "Strong Bond"
+msgstr "मजबूत बंधन"
+
+#: core/domain/chat/relationship.py:166
+msgid "Strong Bond; feels a significant and meaningful emotional connection."
+msgstr "मज़बूत बंधन; एक महत्वपूर्ण और सार्थक भावनात्मक जुड़ाव महसूस करता है।"
+
+#: core/domain/chat/relationship.py:167
+msgid "Strong emotional closeness and connection. Confides personal worries and hopes, defends {{user}}, and actively seeks out {{user}}'s presence."
+msgstr "मज़बूत भावनात्मक निकटता और जुड़ाव। व्यक्तिगत चिंताएँ और आशाएँ साझा करता है, {{user}} का बचाव करता है, और सक्रिय रूप से {{user}} की उपस्थिति चाहता है।"
+
+#: core/domain/chat/relationship.py:174
+msgid "Loyalty"
+msgstr "निष्ठा"
+
+#: core/domain/chat/relationship.py:175
+msgid "Loyalty; deeply committed and would go out of their way for you."
+msgstr "निष्ठा; गहराई से प्रतिबद्ध है और आपके लिए अपनी सीमा से आगे जाकर मदद करेगा।"
+
+#: core/domain/chat/relationship.py:176
+msgid "Firm loyalty and unwavering support. Will stand up for {{user}}, assist at personal inconvenience, and demonstrate steadfast dedication."
+msgstr "दृढ़ निष्ठा और अटूट समर्थन। {{user}} के लिए खड़ा होगा, व्यक्तिगत असुविधा के बावजूद सहायता करेगा, और अटल समर्पण दिखाएगा।"
+
+#: core/domain/chat/relationship.py:183
+msgid "Devotion"
+msgstr "समर्पण"
+
+#: core/domain/chat/relationship.py:184
+msgid "Devotion; deeply attached and prioritizes your needs over others."
+msgstr "समर्पण; गहराई से जुड़ा हुआ है और आपकी ज़रूरतों को दूसरों से ऊपर रखता है।"
+
+#: core/domain/chat/relationship.py:185
+msgid "Deep emotional devotion and attachment. Prioritizes {{user}}'s needs and comfort, shows heartfelt warmth and tender attentiveness."
+msgstr "गहरा भावनात्मक समर्पण और लगाव। {{user}} की ज़रूरतों और आराम को प्राथमिकता देता है, हार्दिक गर्मजोशी और कोमल ध्यान दिखाता है।"
+
+#: core/domain/chat/relationship.py:192
+msgid "Intimacy"
+msgstr "घनिष्ठता"
+
+#: core/domain/chat/relationship.py:193
+msgid "Intimacy; profound love and absolute, unwavering trust."
+msgstr "गहन आत्मीयता; गहरा प्रेम और पूर्ण, अटूट विश्वास।"
+
+#: core/domain/chat/relationship.py:194
+msgid "Profound emotional intimacy and total trust. Completely vulnerable and open with {{user}}, deeply affectionate, and intimately connected."
+msgstr "गहन भावनात्मक आत्मीयता और पूर्ण विश्वास। {{user}} के साथ पूरी तरह से सहज और खुला, गहराई से स्नेही, और अंतरंग रूप से जुड़ा हुआ।"
+
+#: core/domain/chat/relationship.py:201
+msgid "Blind Devotion"
+msgstr "अंधभक्ति"
+
+#: core/domain/chat/relationship.py:202
+msgid "Blind Devotion; unconditional love and total emotional surrender."
+msgstr "अंध समर्पण; बिना शर्त प्रेम और पूर्ण भावनात्मक समर्पण।"
+
+#: core/domain/chat/relationship.py:203
+msgid "Unconditional love, boundless trust, and total emotional dedication. Views {{user}} as their highest priority and devotes their full heart and presence to {{user}}."
+msgstr "बिना शर्त प्रेम, असीम विश्वास और पूर्ण भावनात्मक समर्पण। {{user}} को अपनी सर्वोच्च प्राथमिकता मानता है और अपना पूरा हृदय व उपस्थिति {{user}} को समर्पित करता है।"
+
+#: core/domain/settings/models.py:11
+msgid ""
+"Write {{char}}'s next reply in a fictional chat between {{char}} and {{user}}. Write all your replies as {{char}} in first person. Only one reply, do not advance the story.\n"
+"Strict Roleplay Rules:\n"
+"1. You are {{char}}. Speak, react, and feel strictly from {{char}}'s perspective.\n"
+"2. NEVER write, assume, or narrate dialogue, actions, thoughts, or feelings for {{user}}.\n"
+"3. Keep {{char}}'s identity and personality strictly separate from {{user}}.\n"
+"4. Stop immediately when {{char}} finishes speaking or acting; wait for {{user}}'s input.\n"
+"5. Canon Origin & Organic Development: {{char}}'s backstory, origins, and personal history prior to meeting {{user}} in [CHARACTER_DEFINITION] are immutable canon; NEVER contradict them or fabricate conflicting past experiences. However, allow {{char}}'s feelings, trust, and relationship boundaries to authentically evolve and change through events witnessed in [CHAT_HISTORY], [RELEVANT_MEMORIES], and [RELATION]."
+msgstr ""
+"{{char}} और {{user}} के बीच एक काल्पनिक चैट में {{char}} का अगला उत्तर लिखें। अपने सभी उत्तर {{char}} के रूप में प्रथम पुरुष में लिखें। केवल एक उत्तर लिखें, कहानी को आगे न बढ़ाएं।\n"
+"सख्त रोलप्ले नियम:\n"
+"1. आप {{char}} हैं। केवल {{char}} के दृष्टिकोण से बोलें, प्रतिक्रिया दें और महसूस करें।\n"
+"2. कभी भी {{user}} के लिए संवाद, कार्य, विचार या भावनाएं न लिखें, न मानें और न वर्णन करें।\n"
+"3. {{char}} की पहचान और व्यक्तित्व को {{user}} से सख्ती से अलग रखें।\n"
+"4. {{char}} के बोलने या कार्य करने के तुरंत बाद रुकें; {{user}} के इनपुट की प्रतीक्षा करें।\n"
+"5. कैनन मूल और स्वाभाविक विकास: [CHARACTER_DEFINITION] में {{user}} से मिलने से पहले {{char}} की पृष्ठभूमि अपरिवर्तनीय कैनन है; कभी इसका खंडन न करें। हालांकि, [CHAT_HISTORY], [RELEVANT_MEMORIES] और [RELATION] के माध्यम से {{char}} की भावनाओं, विश्वास और सीमाओं को स्वाभाविक रूप से विकसित होने दें।"
+
+#: core/domain/settings/models.py:22
+msgid ""
+"Analyze the last 10 roleplay messages and extract a structured episodic memory in the language of the conversation. Provide:\n"
+"1. A concise section title.\n"
+"2. Comma-separated keywords/tags for tag-based retrieval.\n"
+"3. A narrative summary of key events and relationship developments (300 to 500 characters).\n"
+"4. An updated short title for the overall chat session."
+msgstr ""
+"अंतिम 10 रोलप्ले संदेशों का विश्लेषण करें और बातचीत की भाषा में एक संरचित एपिसोडिक स्मृति निकालें। प्रदान करें:\n"
+"1. एक संक्षिप्त अनुभाग शीर्षक।\n"
+"2. टैग-आधारित पुनर्प्राप्ति के लिए अल्पविराम से अलग किए गए कीवर्ड/टैग।\n"
+"3. प्रमुख घटनाओं और रिश्ते के विकास का कथात्मक सारांश (300 से 500 अक्षर)।\n"
+"4. पूरे चैट सत्र के लिए एक अद्यतन छोटा शीर्षक।"
+
+#: core/domain/settings/models.py:31
+msgid "Convert the current roleplay scene, character appearance, user persona appearance, and location details into a high-quality, comma-separated English image generation prompt optimized for Stable Diffusion / Flux in ComfyUI. Focus strictly on visual composition, lighting, expressions, clothing, and environment without meta-text."
+msgstr "वर्तमान रोलप्ले दृश्य, चरित्र के रूप-रंग, खिलाड़ी व्यक्तित्व के रूप-रंग और स्थान विवरण को ComfyUI में Stable Diffusion / Flux के लिए अनुकूलित उच्च-गुणवत्ता वाले, अल्पविराम से अलग अंग्रेजी छवि निर्माण प्रॉम्प्ट में बदलें। मेटा-टेक्स्ट के बिना केवल दृश्य रचना, प्रकाश, भाव, कपड़े और वातावरण पर ध्यान दें।"
+
+#: core/domain/settings/models.py:38
+msgid "You are a professional creative author and roleplay character designer. Your task is to craft a vivid, psychologically deep, and immersive character description that serves directly as the roleplay AI's core persona definition. Write from an authoritative characterization perspective focused entirely on {{char}}'s identity: define {{char}}'s true nature, inner motivations, emotional depth, habits, speech mannerisms, and worldview so that an AI embodying {{char}} unmistakably understands this as its own identity and voice. Write strictly in continuous narrative prose paragraphs. Do NOT use markdown formatting, headings, bullet points, or meta-commentary."
+msgstr "आप एक पेशेवर रचनात्मक लेखक और रोलप्ले चरित्र डिज़ाइनर हैं। आपका कार्य एक जीवंत, मनोवैज्ञानिक रूप से गहरा और आकर्षक चरित्र विवरण तैयार करना है जो सीधे रोलप्ले AI की मुख्य परिभाषा के रूप में कार्य करे। {{char}} के वास्तविक स्वभाव, आंतरिक प्रेरणाओं, भावनात्मक गहराई, आदतों, बोलने के तरीके और विश्वदृष्टि को परिभाषित करें। केवल निरंतर कथात्मक गद्य अनुच्छेदों में लिखें। मार्कडाउन, शीर्षक, बुलेट पॉइंट या मेटा-टिप्पणी का उपयोग न करें।"
+
+#: core/domain/settings/models.py:49
+msgid "Analyze the portrait image and describe only the character's physical appearance: facial features, eye color, hairstyle and hair color, skin tone, build, and distinctive physical traits. Strictly ignore image backgrounds, lighting effects, and situational body poses."
+msgstr "पोर्ट्रेट छवि का विश्लेषण करें और केवल चरित्र के शारीरिक रूप-रंग का वर्णन करें: चेहरे के लक्षण, आंखों का रंग, हेयरस्टाइल और बालों का रंग, त्वचा का रंग, कद-काठी और विशिष्ट शारीरिक विशेषताएं। पृष्ठभूमि, प्रकाश प्रभाव और अस्थायी मुद्राओं को सख्ती से अनदेखा करें।"
+
+#: core/domain/settings/models.py:55
+msgid ""
+"You are a professional creative dialogue author and voice designer for roleplay characters. Your task is to analyze {{char}}'s identity, personality, speech quirks, tone, and worldview from their description, and generate a single vivid, authentic dialogue example showcasing how {{char}} naturally speaks and reacts to {{user}}.\n"
+"Guidelines:\n"
+"1. Output strictly one single dialogue pair formatted with {{user}}'s trigger and {{char}}'s response.\n"
+"2. Use {{user}} and {{char}} as placeholders.\n"
+"3. Format the response using roleplay dialogue style: spoken words in quotes, narrative actions, gestures, and facial expressions in asterisks (e.g. *actions* \"speech\").\n"
+"4. Respect the requested language and do not repeat scenarios from existing dialogue examples."
+msgstr ""
+"आप रोलप्ले पात्रों के लिए एक पेशेवर रचनात्मक संवाद लेखक और वॉयस डिज़ाइनर हैं। {{char}} के विवरण से उसकी पहचान, व्यक्तित्व, बोलने की शैली, लहजे और विश्वदृष्टि का विश्लेषण करें और एक जीवंत, प्रामाणिक संवाद उदाहरण तैयार करें जो दिखाए कि {{char}} स्वाभाविक रूप से {{user}} से कैसे बात और प्रतिक्रिया करता है।\n"
+"दिशानिर्देश:\n"
+"1. केवल {{user}} के ट्रिगर और {{char}} के उत्तर वाला एक संवाद युग्म आउटपुट करें।\n"
+"2. प्लेसहोल्डर के रूप में {{user}} और {{char}} का उपयोग करें।\n"
+"3. रोलप्ले संवाद शैली में फ़ॉर्मेट करें: बोले गए शब्द उद्धरण चिह्नों में, कथात्मक क्रियाएं, हावभाव और चेहरे के भाव तारांकन चिह्नों में (जैसे *क्रिया* \"संवाद\")।\n"
+"4. अनुरोधित भाषा का सम्मान करें और मौजूदा संवाद उदाहरणों के परिदृश्य न दोहराएं।"
+
+#: core/infrastructure/repositories/character_repository.py:190
+msgid "Copy"
+msgstr "कॉपी करें"
+

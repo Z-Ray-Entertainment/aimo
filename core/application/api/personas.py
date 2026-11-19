@@ -197,13 +197,21 @@ def analyze_uploaded_or_existing_portrait():
         if not resolved_path.is_file():
             return jsonify({"error": "Kein gültiges Porträtbild zum Analysieren vorhanden. Bitte lade zuerst ein Bild hoch."}), 400
 
+        target_lang = (user.language or "en").strip().lower()[:2]
+        from domain.translation.models import LANGUAGE_METADATA
+        lang_label = LANGUAGE_METADATA.get(target_lang, {}).get("label", target_lang)
         settings = SettingsRepository().get_settings()
+        from shared.i18n import t as core_t
+        prompt = core_t(settings.prompts.vision_persona_prompt, target_lang)
+        if target_lang != "en":
+            prompt = f"{prompt.strip()}\nRespond strictly in {lang_label} ({target_lang})."
+
         llm = get_llm_provider(settings)
         appearance = service.extract_appearance_from_image(
             image_path=resolved_path,
             vision_provider=llm,
             vision_model=settings.tasks.vision_model,
-            prompt=settings.prompts.vision_persona_prompt,
+            prompt=prompt,
         )
         return jsonify({"appearance": appearance, "portrait_path": portrait_path})
     except AimoError as exc:
@@ -227,13 +235,20 @@ def analyze_persona_portrait(persona_id: int):
 
     settings = SettingsRepository().get_settings()
     llm = get_llm_provider(settings)
+    target_lang = (user.language or "en").strip().lower()[:2]
+    from domain.translation.models import LANGUAGE_METADATA
+    lang_label = LANGUAGE_METADATA.get(target_lang, {}).get("label", target_lang)
+    prompt = settings.prompts.vision_persona_prompt
+    if target_lang != "en":
+        prompt = f"{prompt.strip()}\nRespond strictly in {lang_label} ({target_lang})."
+
     try:
         resolved_path = storage.resolve_path(persona.portrait_path)
         appearance = service.analyze_appearance(
             persona=persona,
             vision_provider=llm,
             vision_model=settings.tasks.vision_model,
-            prompt=settings.prompts.vision_persona_prompt,
+            prompt=prompt,
             resolved_image_path=resolved_path,
         )
         repo.update(persona)

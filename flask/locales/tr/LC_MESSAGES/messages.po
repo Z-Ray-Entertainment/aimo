@@ -1,0 +1,2844 @@
+msgid ""
+msgstr ""
+"Language: tr\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: flask/application/admin/views.py:130 flask/application/admin/views.py:187
+msgid "User not found."
+msgstr "Kullanıcı bulunamadı."
+
+#: flask/application/admin/views.py:193
+msgid "User '%(username)s' deleted."
+msgstr "'%(username)s' kullanıcısı silindi."
+
+#: flask/application/admin/views.py:106
+msgid "User '%(username)s' created successfully."
+msgstr "'%(username)s' kullanıcısı başarıyla oluşturuldu."
+
+#: flask/application/admin/views.py:158
+msgid "User '%(username)s' updated."
+msgstr "'%(username)s' kullanıcısı güncellendi."
+
+#: flask/application/admin/views.py:421
+msgid "System prompts saved successfully."
+msgstr "Sistem istemleri başarıyla kaydedildi."
+
+#: flask/application/admin/views.py:214
+msgid "Suggested models assigned for all 5 roles successfully!"
+msgstr "Önerilen modeller tüm 5 rol için başarıyla atandı!"
+
+#: flask/application/admin/views.py:277
+msgid "Service settings and models saved successfully."
+msgstr "Servis ayarları ve modeller başarıyla kaydedildi."
+
+#: flask/application/admin/views.py:470
+msgid "System-wide default backdrop reset (default theme active)."
+msgstr "Sistem geneli varsayılan arka plan sıfırlandı (varsayılan tema etkin)."
+
+#: flask/application/admin/views.py:487
+msgid "Please select an image file (PNG, JPG, WEBP) to upload."
+msgstr "Lütfen yüklemek için bir görsel dosyası (PNG, JPG, WEBP) seçin."
+
+#: flask/application/admin/views.py:482
+msgid "New system-wide default backdrop saved successfully."
+msgstr "Yeni sistem geneli varsayılan arka plan başarıyla kaydedildi."
+
+#: flask/application/admin/views.py:495
+msgid "System-wide default backdrop assigned successfully."
+msgstr "Sistem geneli varsayılan arka plan başarıyla atandı."
+
+#: flask/application/auth/views.py:33
+msgid "Invalid email address or password."
+msgstr "Geçersiz e-posta adresi veya şifre."
+
+#: flask/application/characters/views.py:392
+msgid "Copy '%(name)s' created as draft."
+msgstr "'%(name)s' kopyası taslak olarak oluşturuldu."
+
+#: flask/application/characters/views.py:408
+msgid "Character deleted."
+msgstr "Karakter silindi."
+
+#: flask/application/characters/views.py:452
+msgid "Gallery image removed."
+msgstr "Galeri görseli kaldırıldı."
+
+#: flask/application/characters/views.py:502
+msgid "Sprite %(name)s deleted."
+msgstr "Sprite %(name)s silindi."
+
+#: flask/application/characters/views.py:283 flask/application/characters/views.py:388 flask/application/chat/views.py:181 flask/application/chat/views.py:205
+msgid "Character not found."
+msgstr "Karakter bulunamadı."
+
+#: flask/application/characters/views.py:287
+msgid "Access denied: You can only edit your own characters or creations shared with you."
+msgstr "Erişim reddedildi: Yalnızca kendi karakterlerinizi veya sizinle paylaşılan içerikleri düzenleyebilirsiniz."
+
+#: flask/application/characters/views.py:404
+msgid "Character not found or no permission to delete."
+msgstr "Karakter bulunamadı veya silme izni yok."
+
+#: flask/application/characters/views.py:423 flask/application/characters/views.py:448 flask/application/characters/views.py:467 flask/application/characters/views.py:498 flask/application/characters/views.py:533
+msgid "Character not found or no permission."
+msgstr "Karakter bulunamadı veya izin yok."
+
+#: flask/application/characters/views.py:539 flask/application/characters/views.py:584
+msgid "Invalid or inaccessible location selected."
+msgstr "Geçersiz veya erişilemeyen konum seçildi."
+
+#: flask/application/characters/views.py:564 flask/application/worldinfo/views.py:383
+msgid "Event '%(title)s' added."
+msgstr "'%(title)s' olayı eklendi."
+
+#: flask/application/characters/views.py:631 flask/application/worldinfo/views.py:440
+msgid "Event deleted."
+msgstr "Olay silindi."
+
+#: flask/application/characters/views.py:259
+msgid "Character '%(name)s' created successfully!"
+msgstr "'%(name)s' karakteri başarıyla oluşturuldu!"
+
+#: flask/application/characters/views.py:345
+msgid "Character '%(name)s' saved."
+msgstr "'%(name)s' karakteri kaydedildi."
+
+#: flask/application/characters/views.py:433
+msgid "9:16 gallery image added."
+msgstr "9:16 galeri görseli eklendi."
+
+#: flask/application/characters/views.py:483
+msgid "Sprite '%(name)s' uploaded."
+msgstr "'%(name)s' sprite'ı yüklendi."
+
+#: flask/application/characters/views.py:610 flask/application/worldinfo/views.py:422
+msgid "Event updated."
+msgstr "Olay güncellendi."
+
+#: flask/application/chat/views.py:605
+msgid "Chat session deleted."
+msgstr "Sohbet oturumu silindi."
+
+#: flask/application/chat/views.py:357 flask/application/chat/views.py:688
+msgid "Chat session not found."
+msgstr "Sohbet oturumu bulunamadı."
+
+#: flask/application/chat/views.py:365
+msgid "Associated character not found."
+msgstr "İlgili karakter bulunamadı."
+
+#: flask/application/chat/views.py:529
+msgid "Session not found."
+msgstr "Oturum bulunamadı."
+
+#: flask/application/chat/views.py:669
+msgid "Memory deleted."
+msgstr "Anı silindi."
+
+#: flask/application/chat/views.py:695
+msgid "Memory not found."
+msgstr "Anı bulunamadı."
+
+#: flask/application/chat/views.py:711
+msgid "No messages found for this memory episode."
+msgstr "Bu anı bölümü için mesaj bulunamadı."
+
+#: flask/application/chat/views.py:742
+msgid "Memory recalculated successfully."
+msgstr "Anı başarıyla yeniden hesaplandı."
+
+#: flask/application/chat/views.py:541
+msgid "Persona updated for this session."
+msgstr "Bu oturum için persona güncellendi."
+
+#: flask/application/chat/views.py:647
+msgid "Memory updated."
+msgstr "Anı güncellendi."
+
+#: flask/application/chat/views.py:746
+msgid "Recalculation error: %(error)s"
+msgstr "Yeniden hesaplama hatası: %(error)s"
+
+#: flask/application/chat/views.py:237 flask/application/chat/views.py:549
+msgid "Invalid WorldInfo."
+msgstr "Geçersiz WorldInfo."
+
+#: flask/application/chat/views.py:242 flask/application/chat/views.py:556 flask/application/worldinfo/views.py:120 flask/application/worldinfo/views.py:228
+msgid "This world is not yet available in your language."
+msgstr "Bu dünya henüz dilinizde mevcut değil."
+
+#: flask/application/chat/views.py:538
+msgid "Invalid persona."
+msgstr "Geçersiz persona."
+
+#: flask/application/chat/views.py:565
+msgid "WorldInfo changed for this chat."
+msgstr "Bu sohbet için WorldInfo değiştirildi."
+
+#: flask/application/chat/views.py:568
+msgid "Event setting saved."
+msgstr "Olay ayarı kaydedildi."
+
+#: flask/application/chat/views.py:576
+msgid "Thinking enabled."
+msgstr "Düşünme etkinleştirildi."
+
+#: flask/application/chat/views.py:578
+msgid "Thinking disabled."
+msgstr "Düşünme devre dışı bırakıldı."
+
+#: flask/application/chat/views.py:583
+msgid "Chat title updated."
+msgstr "Sohbet başlığı güncellendi."
+
+#: flask/application/lorebooks/views.py:135 flask/application/worldinfo/views.py:231
+msgid "Copy '%(name)s' created successfully."
+msgstr "'%(name)s' kopyası başarıyla oluşturuldu."
+
+#: flask/application/lorebooks/views.py:150
+msgid "Lorebook deleted."
+msgstr "Lorebook silindi."
+
+#: flask/application/lorebooks/views.py:232
+msgid "Entry deleted."
+msgstr "Kayıt silindi."
+
+#: flask/application/lorebooks/views.py:31
+msgid "Lorebook '%(name)s' created."
+msgstr "'%(name)s' lorebook'u oluşturuldu."
+
+#: flask/application/lorebooks/views.py:48 flask/application/lorebooks/views.py:132
+msgid "Lorebook not found."
+msgstr "Lorebook bulunamadı."
+
+#: flask/application/lorebooks/views.py:147
+msgid "Lorebook not found or no permission to delete."
+msgstr "Lorebook bulunamadı veya silme izni yok."
+
+#: flask/application/lorebooks/views.py:162 flask/application/lorebooks/views.py:194 flask/application/lorebooks/views.py:228
+msgid "Lorebook not found or no permission."
+msgstr "Lorebook bulunamadı veya izin yok."
+
+#: flask/application/lorebooks/views.py:180
+msgid "Entry '%(title)s' added."
+msgstr "'%(title)s' kaydı eklendi."
+
+#: flask/application/lorebooks/views.py:56
+msgid "Access denied: You can only edit your own lorebooks or creations shared with you."
+msgstr "Erişim reddedildi: Yalnızca kendi lorebook'larınızı veya sizinle paylaşılan içerikleri düzenleyebilirsiniz."
+
+#: flask/application/lorebooks/views.py:73
+msgid "Lorebook updated."
+msgstr "Lorebook güncellendi."
+
+#: flask/application/lorebooks/views.py:88
+msgid "This lorebook is not yet available in your language."
+msgstr "Bu lorebook henüz dilinizde mevcut değil."
+
+#: flask/application/lorebooks/views.py:214
+msgid "Entry saved."
+msgstr "Kayıt kaydedildi."
+
+#: flask/application/personas/views.py:62
+msgid "Persona '%(name)s' created successfully."
+msgstr "'%(name)s' personası başarıyla oluşturuldu."
+
+#: flask/application/personas/views.py:81 flask/application/personas/views.py:141
+msgid "Persona not found."
+msgstr "Persona bulunamadı."
+
+#: flask/application/personas/views.py:111
+msgid "Persona '%(name)s' updated."
+msgstr "'%(name)s' personası güncellendi."
+
+#: flask/application/personas/views.py:127
+msgid "'%(name)s' is now your default persona."
+msgstr "'%(name)s' artık varsayılan personanız."
+
+#: flask/application/personas/views.py:148
+msgid "Persona '%(name)s' deleted."
+msgstr "'%(name)s' personası silindi."
+
+#: flask/application/settings/views.py:63 flask/templates/characters/creator.html:87 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:155 flask/templates/macros/persona_manager.html:69
+msgid "Female"
+msgstr "Kadın"
+
+#: flask/application/settings/views.py:64 flask/templates/characters/creator.html:88 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:157 flask/templates/macros/persona_manager.html:70
+msgid "Male"
+msgstr "Erkek"
+
+#: flask/application/settings/views.py:65 flask/templates/characters/creator.html:89 flask/templates/macros/persona_manager.html:71 flask/templates/macros/persona_manager.html:97 flask/templates/overview/tabs/characters.html:11
+msgid "Non-Binary"
+msgstr "Non-Binary"
+
+#: flask/application/settings/views.py:244
+msgid "Account settings saved."
+msgstr "Hesap ayarları kaydedildi."
+
+#: flask/application/settings/views.py:74 flask/i18n.py:117 flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:257 flask/templates/characters/creator.html:258
+msgid "Character"
+msgstr "Karakter"
+
+#: flask/application/settings/views.py:100 flask/i18n.py:120 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:362
+msgid "World"
+msgstr "Dünya"
+
+#: flask/application/settings/views.py:125 flask/i18n.py:118
+msgid "Lorebook"
+msgstr "Bilgi Kitabı"
+
+#: flask/application/settings/views.py:227
+msgid "The new passwords do not match."
+msgstr "Yeni şifreler eşleşmiyor."
+
+#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:113
+msgid "Owner"
+msgstr "Sahip"
+
+#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:115
+msgid "Collaborator"
+msgstr "Ortak Çalışan"
+
+#: flask/application/settings/views.py:221
+msgid "The current password is incorrect."
+msgstr "Mevcut şifre yanlış."
+
+#: flask/application/settings/views.py:225
+msgid "A user with this email address already exists."
+msgstr "Bu e-posta adresine sahip bir kullanıcı zaten var."
+
+#: flask/application/settings/views.py:111 flask/templates/macros/cards.html:129
+msgid "Locations"
+msgstr "Konumlar"
+
+#: flask/application/settings/views.py:111 flask/templates/macros/cards.html:130
+msgid "Events"
+msgstr "Olaylar"
+
+#: flask/application/settings/views.py:136 flask/templates/lorebooks/detail.html:22 flask/templates/macros/lorebook_manager.html:78 flask/templates/macros/lorebook_manager.html:151 flask/templates/macros/lorebook_manager.html:224
+msgid "Entries"
+msgstr "Girdiler"
+
+#: flask/application/setup/views.py:127
+msgid "Initial administrator and AI backend configured successfully!"
+msgstr "İlk yönetici ve yapay zeka arka ucu başarıyla yapılandırıldı!"
+
+#: flask/application/ui_helpers.py:102
+msgid "Cloud AI mode: automatic background translation is disabled. Use the greyed-out flag pill-badges to translate into other registered user languages."
+msgstr "Bulut Yapay Zeka modu: otomatik arka plan çevirisi devre dışıdır. Kayıtlı diğer kullanıcı dillerine çevirmek için gri bayrak rozetlerini kullanın."
+
+#: flask/application/worldinfo/views.py:246
+msgid "WorldInfo deleted."
+msgstr "WorldInfo silindi."
+
+#: flask/application/worldinfo/views.py:348
+msgid "Location deleted."
+msgstr "Konum silindi."
+
+#: flask/application/worldinfo/views.py:37
+msgid "WorldInfo '%(name)s' created."
+msgstr "'%(name)s' WorldInfo oluşturuldu."
+
+#: flask/application/worldinfo/views.py:54 flask/application/worldinfo/views.py:220
+msgid "WorldInfo not found."
+msgstr "WorldInfo bulunamadı."
+
+#: flask/application/worldinfo/views.py:243
+msgid "WorldInfo not found or no permission to delete."
+msgstr "WorldInfo bulunamadı veya silme izni yok."
+
+#: flask/application/worldinfo/views.py:258 flask/application/worldinfo/views.py:300 flask/application/worldinfo/views.py:344 flask/application/worldinfo/views.py:360 flask/application/worldinfo/views.py:397
+msgid "WorldInfo not found or no permission."
+msgstr "WorldInfo bulunamadı veya izin yok."
+
+#: flask/application/worldinfo/views.py:285
+msgid "Location '%(name)s' created."
+msgstr "'%(name)s' konumu oluşturuldu."
+
+#: flask/application/worldinfo/views.py:62
+msgid "Access denied: You can only edit your own WorldInfos or creations shared with you."
+msgstr "Erişim reddedildi: Yalnızca kendi WorldInfo'larınızı veya sizinle paylaşılan içerikleri düzenleyebilirsiniz."
+
+#: flask/application/worldinfo/views.py:90
+msgid "WorldInfo saved."
+msgstr "WorldInfo kaydedildi."
+
+#: flask/application/worldinfo/views.py:329
+msgid "Location updated."
+msgstr "Konum güncellendi."
+
+#: flask/i18n.py:51
+msgid "Error adding lorebook."
+msgstr "Lorebook eklenirken hata oluştu."
+
+#: flask/i18n.py:52
+msgid "Network error while adding lorebook."
+msgstr "Lorebook eklenirken ağ hatası oluştu."
+
+#: flask/i18n.py:53
+msgid "Error toggling lorebook."
+msgstr "Lorebook değiştirilirken hata oluştu."
+
+#: flask/i18n.py:54
+msgid "Network error while toggling lorebook."
+msgstr "Lorebook değiştirilirken ağ hatası oluştu."
+
+#: flask/i18n.py:55
+msgid "Error removing lorebook."
+msgstr "Lorebook kaldırılırken hata oluştu."
+
+#: flask/i18n.py:56
+msgid "Network error while removing lorebook."
+msgstr "Lorebook kaldırılırken ağ hatası oluştu."
+
+#: flask/i18n.py:57
+msgid "Reset this prompt in all languages back to the built-in default?"
+msgstr "Bu istem tüm dillerde yerleşik varsayılana sıfırlansın mı?"
+
+#: flask/i18n.py:58
+msgid "Please select a portrait image first."
+msgstr "Lütfen önce bir portre görseli seçin."
+
+#: flask/i18n.py:59
+msgid "Image analysis error: {error}"
+msgstr "Görsel analizi hatası: {error}"
+
+#: flask/i18n.py:60
+msgid "Please enter at least one trigger or response."
+msgstr "Lütfen en az bir tetikleyici veya yanıt girin."
+
+#: flask/i18n.py:61
+msgid "Please enter a meaningful character description in the 'Basic Info' tab first."
+msgstr "Lütfen önce 'Temel Bilgiler' sekmesine anlamlı bir karakter açıklaması girin."
+
+#: flask/i18n.py:62
+msgid "Please enter a title or prose text first so the assistant can derive relevant tags."
+msgstr "Asistanın ilgili etiketleri çıkarabilmesi için lütfen önce bir başlık veya düz metin girin."
+
+#: flask/i18n.py:63
+msgid "Error deriving tags: {error}"
+msgstr "Etiketler alınırken hata oluştu: {error}"
+
+#: flask/i18n.py:64
+msgid "Connection error: {error}"
+msgstr "Bağlantı hatası: {error}"
+
+#: flask/i18n.py:65
+msgid "Timeout while sending."
+msgstr "Gönderilirken zaman aşımı oluştu."
+
+#: flask/i18n.py:66
+msgid "Timeout"
+msgstr "Zaman aşımı"
+
+#: flask/i18n.py:67
+msgid "Connection to backend (aimo-core) lost."
+msgstr "Arka uç (aimo-core) bağlantısı kesildi."
+
+#: flask/i18n.py:68
+msgid "Backend connection error"
+msgstr "Arka uç bağlantı hatası"
+
+#: flask/i18n.py:69
+msgid "Connection to AI backend lost."
+msgstr "Yapay zeka arka ucu bağlantısı kesildi."
+
+#: flask/i18n.py:70
+msgid "AI connection error"
+msgstr "Yapay zeka bağlantı hatası"
+
+#: flask/i18n.py:71
+msgid "Error sending message."
+msgstr "Mesaj gönderilirken hata oluştu."
+
+#: flask/i18n.py:72
+msgid "Error"
+msgstr "Hata"
+
+#: flask/i18n.py:73
+msgid "Connection to backend lost: {error}"
+msgstr "Arka uç bağlantısı kesildi: {error}"
+
+#: flask/i18n.py:74
+msgid "Timeout: {error}"
+msgstr "Zaman aşımı: {error}"
+
+#: flask/i18n.py:75
+msgid "Ollama connection error: {error}"
+msgstr "Ollama bağlantı hatası: {error}"
+
+#: flask/i18n.py:76
+msgid "Connection to Ollama (or LLMProvider) lost."
+msgstr "Ollama (veya LLMProvider) bağlantısı kesildi."
+
+#: flask/i18n.py:77
+msgid "Ollama connection error"
+msgstr "Ollama bağlantı hatası"
+
+#: flask/i18n.py:78
+msgid "Timeout while regenerating."
+msgstr "Yeniden oluşturulurken zaman aşımı oluştu."
+
+#: flask/i18n.py:79
+msgid "Error while regenerating."
+msgstr "Yeniden oluşturulurken hata oluştu."
+
+#: flask/i18n.py:80
+msgid "Ollama error"
+msgstr "Ollama hatası"
+
+#: flask/i18n.py:81
+msgid "Success"
+msgstr "Başarılı"
+
+#: flask/i18n.py:82
+msgid "Warning"
+msgstr "Uyarı"
+
+#: flask/i18n.py:83
+msgid "Notice"
+msgstr "Bilgi"
+
+#: flask/i18n.py:84 flask/templates/macros/buttons.html:79 flask/templates/macros/buttons.html:80 flask/templates/macros/lorebook_manager.html:239 flask/templates/macros/persona_manager.html:55
+msgid "Close"
+msgstr "Kapat"
+
+#: flask/i18n.py:85 flask/templates/characters/creator.html:134
+msgid "Crops active"
+msgstr "Kırpmalar etkin"
+
+#: flask/i18n.py:86 flask/templates/worldinfo/detail.html:97
+msgid "1:1 Cover active"
+msgstr "1:1 Kapak etkin"
+
+#: flask/i18n.py:87
+msgid "Analyzing image"
+msgstr "Görsel analiz ediliyor"
+
+#: flask/i18n.py:88
+msgid "✨ Analyzing portrait and extracting appearance"
+msgstr "✨ Portre analiz ediliyor ve görünüm çıkarılıyor"
+
+#: flask/i18n.py:89
+msgid "Drafting dialogue"
+msgstr "Diyalog hazırlanıyor"
+
+#: flask/i18n.py:90
+msgid "✨ Analyzing character description"
+msgstr "✨ Karakter açıklaması analiz ediliyor"
+
+#: flask/i18n.py:91
+msgid "✨ Formulating response"
+msgstr "✨ Yanıt oluşturuluyor"
+
+#: flask/i18n.py:92
+msgid "⏳ Analyzing image (Save & Close locked)"
+msgstr "⏳ Görsel analiz ediliyor (Kaydet ve Kapat kilitli)"
+
+#: flask/i18n.py:93
+msgid "Not translated yet (click to enter manually or AI translate)"
+msgstr "Henüz çevrilmedi (elle girmek veya yapay zeka ile çevirmek için tıklayın)"
+
+#: flask/i18n.py:94
+msgid "Translation may be outdated (click to review)"
+msgstr "Çeviri güncelliğini yitirmiş olabilir (incelemek için tıklayın)"
+
+#: flask/i18n.py:95
+msgid "Appearance extracted from image successfully."
+msgstr "Görünüm görselden başarıyla çıkarıldı."
+
+#: flask/i18n.py:96
+msgid "No appearance extracted."
+msgstr "Görünüm çıkarılamadı."
+
+#: flask/i18n.py:97
+msgid "Server error ({status}): Could not extract appearance."
+msgstr "Sunucu hatası ({status}): görünüm çıkarılamadı."
+
+#: flask/i18n.py:98
+msgid "Please select a portrait image first to extract image features."
+msgstr "Görsel özelliklerini çıkarmak için lütfen önce bir portre görseli seçin."
+
+#: flask/i18n.py:99
+msgid "Image features extracted"
+msgstr "Görsel özellikleri çıkarıldı"
+
+#: flask/i18n.py:100
+msgid "Image analysis failed."
+msgstr "Görsel analizi başarısız oldu."
+
+#: flask/i18n.py:101
+msgid "Image analysis error"
+msgstr "Görsel analizi hatası"
+
+#: flask/i18n.py:102
+msgid "Connection error during image analysis."
+msgstr "Görsel analizi sırasında bağlantı hatası."
+
+#: flask/i18n.py:103
+msgid "Connection error"
+msgstr "Bağlantı hatası"
+
+#: flask/i18n.py:104
+msgid "Create New Persona"
+msgstr "Yeni Persona Oluştur"
+
+#: flask/i18n.py:105
+msgid "Edit Persona"
+msgstr "Personayı Düzenle"
+
+#: flask/i18n.py:106
+msgid "Used in active chats (deletion protection)"
+msgstr "Etkin sohbetlerde kullanılıyor (silme koruması)"
+
+#: flask/i18n.py:107
+msgid "Delete persona"
+msgstr "Personayı sil"
+
+#: flask/i18n.py:108
+msgid "Deletion locked"
+msgstr "Silme kilitli"
+
+#: flask/i18n.py:109 flask/templates/admin/services.html:254 flask/templates/admin/users.html:43 flask/templates/characters/creator.html:247 flask/templates/characters/creator.html:430
+msgid "Delete"
+msgstr "Sil"
+
+#: flask/i18n.py:110 flask/templates/chat/session.html:929
+msgid "Translating..."
+msgstr "Çevriliyor..."
+
+#: flask/i18n.py:111
+msgid "Translation paused"
+msgstr "Çeviri duraklatıldı"
+
+#: flask/i18n.py:112
+msgid "Cloud AI Mode (On-Demand)"
+msgstr "Bulut Yapay Zeka Modu (İsteğe Bağlı)"
+
+#: flask/i18n.py:113
+msgid "Idle"
+msgstr "Boşta"
+
+#: flask/i18n.py:114
+msgid "No active translation"
+msgstr "Etkin çeviri yok"
+
+#: flask/i18n.py:115
+msgid "Last finished:"
+msgstr "Son tamamlanma:"
+
+#: flask/i18n.py:116
+msgid "Error:"
+msgstr "Hata:"
+
+#: flask/i18n.py:119
+msgid "Lorebook Entry"
+msgstr "Lorebook Kaydı"
+
+#: flask/i18n.py:121
+msgid "Location"
+msgstr "Konum"
+
+#: flask/i18n.py:122
+msgid "Location Tags"
+msgstr "Konum Etiketleri"
+
+#: flask/i18n.py:123
+msgid "Event"
+msgstr "Olay"
+
+#: flask/i18n.py:124
+msgid "Character Event"
+msgstr "Karakter Olayı"
+
+#: flask/templates/admin/backdrop.html:10
+msgid "System-Wide Default Backdrop"
+msgstr "Sistem Geneli Varsayılan Arka Plan"
+
+#: flask/templates/admin/backdrop.html:12
+msgid "Global atmospheric background for all pages and base fallback for roleplay chats."
+msgstr "Tüm sayfalar için genel atmosferik arka plan ve rol yapma sohbetleri için temel yedek."
+
+#: flask/templates/admin/backdrop.html:17
+msgid "Custom backdrop is active"
+msgstr "Özel arka plan etkin"
+
+#: flask/templates/admin/backdrop.html:18
+msgid "Custom backdrop active"
+msgstr "Özel arka plan etkin"
+
+#: flask/templates/admin/backdrop.html:21
+msgid "Default RPG theme cover is active"
+msgstr "Varsayılan RPG tema kapağı etkin"
+
+#: flask/templates/admin/backdrop.html:22
+msgid "Default Theme (Cover)"
+msgstr "Varsayılan Tema (Kapak)"
+
+#: flask/templates/admin/backdrop.html:36
+msgid "No custom backdrop set"
+msgstr "Özel arka plan ayarlanmadı"
+
+#: flask/templates/admin/backdrop.html:38
+msgid "Currently using the dark RPG default cover. Upload a 16:9 image on the right or select an existing location."
+msgstr "Şu anda koyu RPG varsayılan kapağı kullanılıyor. Sağdan 16:9 bir görsel yükleyin veya mevcut bir konum seçin."
+
+#: flask/templates/admin/backdrop.html:47
+msgid "Rule: Priority in Chat"
+msgstr "Kural: Sohbette Öncelik"
+
+#: flask/templates/admin/backdrop.html:50
+msgid "This default backdrop forms the foundational background. In chat, it is only overridden when the current location has its own background image. If a location has no image or roleplay switches to a neutral setting, this system default automatically applies again."
+msgstr "Bu varsayılan arka plan temel zemini oluşturur. Sohbette yalnızca mevcut konumun kendi arka plan görseli varsa geçersiz kılınır. Bir konumun görseli yoksa veya rol yapma nötr bir ortama geçerse bu sistem varsayılanı otomatik olarak tekrar uygulanır."
+
+#: flask/templates/admin/backdrop.html:56
+msgid "Do you really want to remove the custom default backdrop and reset to the default theme?"
+msgstr "Özel varsayılan arka planı gerçekten kaldırıp varsayılan temaya dönmek istiyor musunuz?"
+
+#: flask/templates/admin/backdrop.html:58
+msgid "Remove Backdrop (Reset to Default)"
+msgstr "Arka Planı Kaldır (Varsayılana Sıfırla)"
+
+#: flask/templates/admin/backdrop.html:71
+msgid "Upload New Background Image"
+msgstr "Yeni Arka Plan Görseli Yükle"
+
+#: flask/templates/admin/backdrop.html:74
+msgid "Recommended: 16:9 widescreen (e.g., 1920×1080 or 2560×1440). Supported formats: PNG, JPG, WEBP."
+msgstr "Önerilen: 16:9 geniş ekran (ör. 1920×1080 veya 2560×1440). Desteklenen biçimler: PNG, JPG, WEBP."
+
+#: flask/templates/admin/backdrop.html:79
+msgid "Select image file:"
+msgstr "Görsel dosyası seçin:"
+
+#: flask/templates/admin/backdrop.html:85
+msgid "Save as System Backdrop"
+msgstr "Sistem Arka Planı Olarak Kaydet"
+
+#: flask/templates/admin/backdrop.html:94
+msgid "Choose from Existing Locations"
+msgstr "Mevcut Konumlardan Seç"
+
+#: flask/templates/admin/backdrop.html:96
+msgid "available"
+msgstr "mevcut"
+
+#: flask/templates/admin/backdrop.html:101
+msgid "Click on an existing location to adopt its background image as the system default:"
+msgstr "Arka plan görselini sistem varsayılanı olarak kullanmak için mevcut bir konuma tıklayın:"
+
+#: flask/templates/admin/backdrop.html:119
+msgid "No locations with background images have been saved in WorldInfos yet."
+msgstr "WorldInfo'larda henüz arka plan görselli bir konum kaydedilmedi."
+
+#: flask/templates/admin/layout.html:12 flask/templates/macros/top_header.html:58
+msgid "Administration"
+msgstr "Yönetim"
+
+#: flask/templates/admin/layout.html:14
+msgid "System & Configuration"
+msgstr "Sistem ve Yapılandırma"
+
+#: flask/templates/admin/layout.html:18
+msgid "User Management"
+msgstr "Kullanıcı Yönetimi"
+
+#: flask/templates/admin/layout.html:19
+msgid "Services & Models"
+msgstr "Servisler ve Modeller"
+
+#: flask/templates/admin/layout.html:20 flask/templates/admin/prompts.html:34
+msgid "System Prompts"
+msgstr "Sistem İstemleri"
+
+#: flask/templates/admin/layout.html:21 flask/templates/admin/translations.html:9
+msgid "Content Translations"
+msgstr "İçerik Çevirileri"
+
+#: flask/templates/admin/layout.html:22
+msgid "System Backdrop"
+msgstr "Sistem Arka Planı"
+
+#: flask/templates/admin/layout.html:26 flask/templates/chat/select_worldinfo.html:88 flask/templates/settings/layout.html:26
+msgid "Back to Hub"
+msgstr "Hub'a Dön"
+
+#: flask/templates/admin/prompts.html:14
+msgid "System-Wide Content Translations"
+msgstr "Sistem Genelinde İçerik Çevirileri"
+
+#: flask/templates/admin/prompts.html:18
+msgid "Cloud AI provider active: automatic background translation is disabled to protect your token quota. Use the button to translate missing content on demand."
+msgstr "Bulut AI sağlayıcısı etkin: token kotanızı korumak için otomatik arka plan çevirisi devre dışı bırakıldı. Eksik içerikleri isteğe bağlı olarak çevirmek için düğmeyi kullanın."
+
+#: flask/templates/admin/prompts.html:20
+msgid "Local LLM provider active: missing content translations run automatically in the background, or can be triggered manually here."
+msgstr "Yerel LLM sağlayıcısı etkin: eksik içerik çevirileri arka planda otomatik olarak çalışır veya buradan manuel olarak tetiklenebilir."
+
+#: flask/templates/admin/prompts.html:25
+msgid "Synchronize Missing Translations"
+msgstr "Eksik Çevirileri Senkronize Et"
+
+#: flask/templates/admin/prompts.html:26 flask/templates/admin/translations.html:16 flask/templates/admin/user_form.html:72 flask/templates/characters/creator.html:614 flask/templates/characters/creator.html:651
+msgid "Cancel"
+msgstr "İptal"
+
+#: flask/templates/admin/prompts.html:39
+msgid "Prompt Placeholders"
+msgstr "İstem Yer Tutucuları"
+
+#: flask/templates/admin/prompts.html:42
+msgid "You can use"
+msgstr "Kullanabilirsiniz"
+
+#: flask/templates/admin/prompts.html:42
+msgid "(character name) and"
+msgstr "(karakter adı) ve"
+
+#: flask/templates/admin/prompts.html:42
+msgid "(player persona name) in prompts. These are replaced dynamically at runtime."
+msgstr "(oyuncu persona adı) istemlerde. Bunlar çalışma zamanında dinamik olarak değiştirilir."
+
+#: flask/templates/admin/prompts.html:47
+msgid "Roleplay Prompt"
+msgstr "Rol Yapma İstemi"
+
+#: flask/templates/admin/prompts.html:48
+msgid "Memory Prompt"
+msgstr "Hafıza İstemi"
+
+#: flask/templates/admin/prompts.html:49
+msgid "Diffuser Prompt"
+msgstr "Difüzör İstemi"
+
+#: flask/templates/admin/prompts.html:50
+msgid "AI Author Prompt"
+msgstr "AI Yazar İstemi"
+
+#: flask/templates/admin/prompts.html:51
+msgid "Vision Prompt"
+msgstr "Görüş İstemi"
+
+#: flask/templates/admin/prompts.html:52
+msgid "AI Dialogue Author Prompt"
+msgstr "AI Diyalog Yazarı İstemi"
+
+#: flask/templates/admin/prompts.html:59
+msgid "Restore Default"
+msgstr "Varsayılana Sıfırla"
+
+#: flask/templates/admin/prompts.html:59
+msgid "Resets all languages of this prompt to factory default"
+msgstr "Bu istemin tüm dillerini fabrika varsayılanına sıfırlar"
+
+#: flask/templates/admin/prompts.html:77
+msgid "Save Prompts"
+msgstr "İstemleri Kaydet"
+
+#: flask/templates/admin/services.html:10
+msgid "Service Endpoints & Model Tasks"
+msgstr "Servis Uç Noktaları ve Model Görevleri"
+
+#: flask/templates/admin/services.html:14
+msgid "1. Active AI Backend (Exclusive)"
+msgstr "1. Etkin Yapay Zeka Arka Ucu (Özel)"
+
+#: flask/templates/admin/services.html:16
+msgid "AIMO always operates exactly one AI backend (either Ollama or Google AI Cloud) – no parallel operation."
+msgstr "AIMO her zaman tam olarak bir yapay zeka arka ucu çalıştırır (Ollama veya Google AI Cloud) – paralel çalışma yoktur."
+
+#: flask/templates/admin/services.html:22
+msgid "Ollama API URL"
+msgstr "Ollama API URL"
+
+#: flask/templates/admin/services.html:24 flask/templates/admin/services.html:37 flask/templates/admin/services.html:59
+msgid "Connected"
+msgstr "Bağlandı"
+
+#: flask/templates/admin/services.html:24
+msgid "Unreachable"
+msgstr "Erişilemiyor"
+
+#: flask/templates/admin/services.html:29
+msgid "Test"
+msgstr "Test Et"
+
+#: flask/templates/admin/services.html:35
+msgid "Google AI API Key"
+msgstr "Google AI API Anahtarı"
+
+#: flask/templates/admin/services.html:37
+msgid "Unreachable / invalid"
+msgstr "Erişilemiyor / geçersiz"
+
+#: flask/templates/admin/services.html:37
+msgid "Not configured"
+msgstr "Yapılandırılmadı"
+
+#: flask/templates/admin/services.html:42
+msgid "Test API Key & Models"
+msgstr "API Anahtarını ve Modelleri Test Et"
+
+#: flask/templates/admin/services.html:49
+msgid "2. Image Generation & Web Search"
+msgstr "2. Görsel Oluşturma ve Web Araması"
+
+#: flask/templates/admin/services.html:53
+msgid "Image Generation (Scene images in chat)"
+msgstr "Görsel Oluşturma (Sohbette sahne görselleri)"
+
+#: flask/templates/admin/services.html:57
+msgid "ComfyUI API URL"
+msgstr "ComfyUI API URL"
+
+#: flask/templates/admin/services.html:59
+msgid "Offline"
+msgstr "Çevrimdışı"
+
+#: flask/templates/admin/services.html:66
+msgid "Google AI Image Model"
+msgstr "Google AI Görsel Modeli"
+
+#: flask/templates/admin/services.html:68 flask/templates/admin/services.html:219
+msgid "Ready"
+msgstr "Hazır"
+
+#: flask/templates/admin/services.html:68
+msgid "Not checked / Offline"
+msgstr "Kontrol edilmedi / Çevrimdışı"
+
+#: flask/templates/admin/services.html:80
+msgid "Web Search (Prepared)"
+msgstr "Web Araması (Hazırlanmış)"
+
+#: flask/templates/admin/services.html:84
+msgid "SearXNG URL (Prepared)"
+msgstr "SearXNG URL (Hazırlanmış)"
+
+#: flask/templates/admin/services.html:93
+msgid "3. Task-Specific Model Assignment"
+msgstr "3. Göreve Özel Model Ataması"
+
+#: flask/templates/admin/services.html:94
+msgid "Assign suggested models"
+msgstr "Önerilen modelleri ata"
+
+#: flask/templates/admin/services.html:94
+msgid "Sets all 5 dropdowns to the recommended default models for the selected backend"
+msgstr "5 açılır menünün tümünü seçili arka uç için önerilen varsayılan modellere ayarlar"
+
+#: flask/templates/admin/services.html:100
+msgid ""
+"Roleplay Model:\n"
+"Primary language model for narrative dialogue generation and roleplay in chat."
+msgstr ""
+"Roleplay Modeli:\n"
+"Sohbette anlatısal diyalog üretimi ve rol yapma için birincil dil modeli."
+
+#: flask/templates/admin/services.html:111
+msgid ""
+"Classification Model:\n"
+"Fast, lightweight model for downstream detection of emotions (avatar sprites) and location change suggestions in a single pass."
+msgstr ""
+"Sınıflandırma Modeli:\n"
+"Tek geçişte duyguların (avatar sprite'ları) ve konum değişikliği önerilerinin ardıl tespiti için hızlı, hafif model."
+
+#: flask/templates/admin/services.html:122
+msgid ""
+"Memory Model:\n"
+"Automatically creates episodic summaries (memories) every 10 messages and updates the chat title."
+msgstr ""
+"Hafıza Modeli:\n"
+"Her 10 mesajda bir otomatik olarak epizodik özetler (anılar) oluşturur ve sohbet başlığını günceller."
+
+#: flask/templates/admin/services.html:133
+msgid ""
+"Assistant Model:\n"
+"Responsible for AI author optimization (Sparkle ✨), text translations, and scene image prompts."
+msgstr ""
+"Asistan Modeli:\n"
+"Yapay zeka yazar optimizasyonu (Sparkle ✨), metin çevirileri ve sahne görseli istemlerinden sorumludur."
+
+#: flask/templates/admin/services.html:144
+msgid ""
+"Vision Model:\n"
+"Multimodal model for visual analysis of persona portraits, 16:9 location images, and image uploads in chat."
+msgstr ""
+"Görüş (Vision) Modeli:\n"
+"Persona portrelerinin, 16:9 mekan görsellerinin ve sohbette yüklenen görsellerin görsel analizi için çok modlu model."
+
+#: flask/templates/admin/services.html:156
+msgid "4. LLM Inference Hyperparameters"
+msgstr "4. LLM Çıkarım Hiperparametreleri"
+
+#: flask/templates/admin/services.html:161
+msgid "Controls the token budget for history, memories, and lorebooks (also active for Google AI as a cost/history limit)."
+msgstr "Geçmiş, anılar ve lorebook'lar için token bütçesini kontrol eder (Google AI için de maliyet/geçmiş sınırı olarak etkindir)."
+
+#: flask/templates/admin/services.html:176
+msgid "Repetition penalty for local Ollama models."
+msgstr "Yerel Ollama modelleri için tekrar cezası."
+
+#: flask/templates/admin/services.html:184
+msgid "Save Services & Model Settings"
+msgstr "Servisleri ve Model Ayarlarını Kaydet"
+
+#: flask/templates/admin/services.html:190
+msgid "Ollama Model Manager"
+msgstr "Ollama Model Yöneticisi"
+
+#: flask/templates/admin/services.html:196
+msgid "Setup Helper for Ollama"
+msgstr "Ollama için Kurulum Yardımcısı"
+
+#: flask/templates/admin/services.html:198
+msgid "Install missing"
+msgstr "Eksikleri kur"
+
+#: flask/templates/admin/services.html:201
+msgid "Recommended models per role:"
+msgstr "Rol başına önerilen modeller:"
+
+#: flask/templates/admin/services.html:208
+msgid "Click to copy into pull input"
+msgstr "Pull girişine kopyalamak için tıklayın"
+
+#: flask/templates/admin/services.html:221
+msgid "Missing"
+msgstr "Eksik"
+
+#: flask/templates/admin/services.html:222 flask/templates/admin/services.html:234
+msgid "Pull"
+msgstr "Çek (Pull)"
+
+#: flask/templates/admin/services.html:231
+msgid "Install new model (Pull)"
+msgstr "Yeni model kur (Pull)"
+
+#: flask/templates/admin/services.html:233
+msgid "Enter model tag..."
+msgstr "Model etiketi girin..."
+
+#: flask/templates/admin/services.html:237
+msgid "Quick select:"
+msgstr "Hızlı seçim:"
+
+#: flask/templates/admin/services.html:244
+msgid "Starting download..."
+msgstr "İndirme başlatılıyor..."
+
+#: flask/templates/admin/services.html:249
+msgid "Installed Models"
+msgstr "Kurulu Modeller"
+
+#: flask/templates/admin/services.html:254
+msgid "Delete model"
+msgstr "Modeli sil"
+
+#: flask/templates/admin/services.html:257
+msgid "No models found or Ollama offline."
+msgstr "Model bulunamadı veya Ollama çevrimdışı."
+
+#: flask/templates/admin/services.html:265
+msgid "Google AI Cloud Setup"
+msgstr "Google AI Cloud Kurulumu"
+
+#: flask/templates/admin/services.html:272
+msgid "Recommended Google AI Models"
+msgstr "Önerilen Google AI Modelleri"
+
+#: flask/templates/admin/services.html:282
+msgid "Image Generation"
+msgstr "Görsel Oluşturma"
+
+#: flask/templates/admin/services.html:290
+msgid "Available Cloud Models"
+msgstr "Kullanılabilir Bulut Modelleri"
+
+#: flask/templates/admin/services.html:301
+msgid "Click \"Test API Key & Models\" to load the Gemini models available with your key."
+msgstr "Anahtarınızla kullanılabilir Gemini modellerini yüklemek için \"API Anahtarını ve Modelleri Test Et\"e tıklayın."
+
+#: flask/templates/admin/services.html:557
+msgid "All recommended models are already installed on the Ollama server!"
+msgstr "Önerilen tüm modeller Ollama sunucusunda zaten yüklü!"
+
+#: flask/templates/admin/services.html:566
+msgid "Download the following %(count)s recommended model(s) sequentially?"
+msgstr "Aşağıdaki %(count)s önerilen model sırayla indirilsin mi?"
+
+#: flask/templates/admin/services.html:577
+msgid "Download of '%(model)s' failed. Continue with the next model anyway?"
+msgstr "'%(model)s' indirmesi başarısız oldu. Yine de sonraki modelle devam edilsin mi?"
+
+#: flask/templates/admin/services.html:647
+msgid "Really delete model '%(model)s' from Ollama?"
+msgstr "'%(model)s' modeli Ollama'dan gerçekten silinsin mi?"
+
+#: flask/templates/admin/services.html:656
+msgid "Deletion failed."
+msgstr "Silme başarısız oldu."
+
+#: flask/templates/admin/translations.html:11
+msgid "Background translation status for characters, lorebooks, worlds, locations, and events."
+msgstr "Karakterler, lorebook'lar, dünyalar, konumlar ve olaylar için arka plan çeviri durumu."
+
+#: flask/templates/admin/translations.html:15
+msgid "Start Translation Sync"
+msgstr "Çeviri Eşitlemeyi Başlat"
+
+#: flask/templates/admin/translations.html:23
+msgid "Status:"
+msgstr "Durum:"
+
+#: flask/templates/admin/translations.html:24
+msgid "Loading..."
+msgstr "Yükleniyor..."
+
+#: flask/templates/admin/translations.html:37
+msgid "Currently translating:"
+msgstr "Şu anda çevriliyor:"
+
+#: flask/templates/admin/user_form.html:8
+msgid "Edit User:"
+msgstr "Kullanıcıyı Düzenle:"
+
+#: flask/templates/admin/user_form.html:10
+msgid "Create New User"
+msgstr "Yeni Kullanıcı Oluştur"
+
+#: flask/templates/admin/user_form.html:16
+msgid "Super-Admin Protection:"
+msgstr "Süper Yönetici Koruması:"
+
+#: flask/templates/admin/user_form.html:16
+msgid "This is the initial administrator. Their permissions are permanently locked to full access (Admin) and cannot be revoked."
+msgstr "Bu ilk yöneticidir. İzinleri kalıcı olarak tam erişime (Admin) kilitlenmiştir ve geri alınamaz."
+
+#: flask/templates/admin/user_form.html:23
+msgid "Username"
+msgstr "Kullanıcı adı"
+
+#: flask/templates/admin/user_form.html:27 flask/templates/auth/login.html:14 flask/templates/settings/account.html:20
+msgid "Email address"
+msgstr "E-posta adresi"
+
+#: flask/templates/admin/user_form.html:35
+msgid "New Password (leave blank to keep current password)"
+msgstr "Yeni Şifre (mevcut şifreyi korumak için boş bırakın)"
+
+#: flask/templates/admin/user_form.html:37
+msgid "Initial Password"
+msgstr "Başlangıç Şifresi"
+
+#: flask/templates/admin/user_form.html:45
+msgid "Quick Select via Preset"
+msgstr "Preset ile Hızlı Seçim"
+
+#: flask/templates/admin/user_form.html:48
+msgid "Preset:"
+msgstr "Preset:"
+
+#: flask/templates/admin/user_form.html:56
+msgid "Individual functional permissions (FunctionPermission):"
+msgstr "Bireysel işlevsel izinler (FunctionPermission):"
+
+#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:269 flask/templates/chat/session.html:802 flask/templates/lorebooks/detail.html:96
+msgid "Save"
+msgstr "Kaydet"
+
+#: flask/templates/admin/users.html:9
+msgid "Users & Functional Permissions"
+msgstr "Kullanıcılar ve İşlevsel İzinler"
+
+#: flask/templates/admin/users.html:10
+msgid "Granular control of individual function permissions. The initial administrator is permanently protected."
+msgstr "Bireysel işlev izinlerinin ayrıntılı kontrolü. İlk yönetici kalıcı olarak korunur."
+
+#: flask/templates/admin/users.html:12
+msgid "New User"
+msgstr "Yeni Kullanıcı"
+
+#: flask/templates/admin/users.html:24
+msgid "Initial Super-Admin (Non-revocable)"
+msgstr "İlk Süper Yönetici (Geri alınamaz)"
+
+#: flask/templates/admin/users.html:32
+msgid "No permissions assigned"
+msgstr "İzin atanmadı"
+
+#: flask/templates/admin/users.html:38 flask/templates/characters/creator.html:246
+msgid "Edit"
+msgstr "Düzenle"
+
+#: flask/templates/admin/users.html:40
+msgid "Protected"
+msgstr "Korumalı"
+
+#: flask/templates/admin/users.html:40
+msgid "Initial administrator cannot be deleted"
+msgstr "İlk yönetici silinemez"
+
+#: flask/templates/admin/users.html:42
+msgid "Really delete user %(username)s?"
+msgstr "%(username)s kullanıcısı gerçekten silinsin mi?"
+
+#: flask/templates/auth/login.html:3
+msgid "AIMO — Login"
+msgstr "AIMO — Giriş"
+
+#: flask/templates/auth/login.html:7
+msgid "AIMO Login"
+msgstr "AIMO Giriş"
+
+#: flask/templates/auth/login.html:9
+msgid "Sign in to enter your roleplay worlds."
+msgstr "Rol yapma dünyalarınıza girmek için giriş yapın."
+
+#: flask/templates/auth/login.html:18 flask/templates/settings/account.html:25
+msgid "Password"
+msgstr "Şifre"
+
+#: flask/templates/auth/login.html:22
+msgid "Enter"
+msgstr "Giriş Yap"
+
+#: flask/templates/characters/creator.html:7 flask/templates/characters/creator.html:22
+msgid "Character Designer"
+msgstr "Karakter Tasarımcısı"
+
+#: flask/templates/characters/creator.html:20 flask/templates/characters/creator.html:45 flask/templates/macros/cards.html:194
+msgid "New Character"
+msgstr "Yeni Karakter"
+
+#: flask/templates/characters/creator.html:26
+msgid "Main Info"
+msgstr "Ana Bilgiler"
+
+#: flask/templates/characters/creator.html:27 flask/templates/characters/creator.html:443
+msgid "Gallery Images"
+msgstr "Galeri Görselleri"
+
+#: flask/templates/characters/creator.html:27 flask/templates/characters/creator.html:28 flask/templates/characters/creator.html:31
+msgid "Please save basic info first"
+msgstr "Lütfen önce temel bilgileri kaydedin"
+
+#: flask/templates/characters/creator.html:28 flask/templates/characters/creator.html:534
+msgid "Emotional Sprites"
+msgstr "Duygusal Sprite'lar"
+
+#: flask/templates/characters/creator.html:29
+msgid "Dialogue Styles"
+msgstr "Diyalog Stilleri"
+
+#: flask/templates/characters/creator.html:31 flask/templates/characters/creator.html:576 flask/templates/worldinfo/detail.html:25
+msgid "Random Events"
+msgstr "Rastgele Olaylar"
+
+#: flask/templates/characters/creator.html:32 flask/templates/chat/select_worldinfo.html:19 flask/templates/macros/top_header.html:18 flask/templates/macros/top_header.html:45 flask/templates/settings/creations.html:26
+msgid "Lorebooks"
+msgstr "Bilgi Kitapları"
+
+#: flask/templates/characters/creator.html:33 flask/templates/lorebooks/detail.html:23 flask/templates/worldinfo/detail.html:26
+msgid "Collaboration"
+msgstr "İş Birliği"
+
+#: flask/templates/characters/creator.html:37 flask/templates/lorebooks/detail.html:27 flask/templates/worldinfo/detail.html:30
+msgid "Back to Overview"
+msgstr "Genel Bakışa Dön"
+
+#: flask/templates/characters/creator.html:53
+msgid "Really delete character permanently?"
+msgstr "Karakter gerçekten kalıcı olarak silinsin mi?"
+
+#: flask/templates/characters/creator.html:54
+msgid "Save character"
+msgstr "Karakteri kaydet"
+
+#: flask/templates/characters/creator.html:75
+msgid "Character Name"
+msgstr "Karakter Adı"
+
+#: flask/templates/characters/creator.html:76
+msgid "The unique name of your AI character. Replaces {{char}} in prompts."
+msgstr "AI karakterinizin benzersiz adı. İstemlerde {{char}} yerine geçer."
+
+#: flask/templates/characters/creator.html:83 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:64 flask/templates/macros/cards.html:155
+msgid "Gender"
+msgstr "Cinsiyet"
+
+#: flask/templates/characters/creator.html:84
+msgid "Sets gender and derived pronouns for the system prompt."
+msgstr "Sistem istemi için cinsiyeti ve türetilen zamirleri ayarlar."
+
+#: flask/templates/characters/creator.html:94 flask/templates/lorebooks/detail.html:72 flask/templates/lorebooks/detail.html:156 flask/templates/lorebooks/detail.html:226 flask/templates/settings/creations.html:69
+msgid "Visibility"
+msgstr "Görünürlük"
+
+#: flask/templates/characters/creator.html:95
+msgid "Private = only playable in your account. Public = visible to all users in the Hub."
+msgstr "Özel = yalnızca hesabınızda oynanabilir. Herkese Açık = Hub'daki tüm kullanıcılara görünür."
+
+#: flask/templates/characters/creator.html:98 flask/templates/lorebooks/detail.html:76 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:108 flask/templates/worldinfo/detail.html:110
+msgid "Private"
+msgstr "Özel"
+
+#: flask/templates/characters/creator.html:99 flask/templates/lorebooks/detail.html:77 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:106 flask/templates/worldinfo/detail.html:111
+msgid "Public"
+msgstr "Herkese Açık"
+
+#: flask/templates/characters/creator.html:106
+msgid "Primary Portrait (9:16) & Avatar (1:1) (Required upload)"
+msgstr "Ana Portre (9:16) ve Avatar (1:1) (Zorunlu yükleme)"
+
+#: flask/templates/characters/creator.html:107
+msgid ""
+"Character images:\n"
+"• 9:16 Portrait: Chat sidebar & fullscreen view\n"
+"• 1:1 Avatar: Character cards in Hub & chat bubbles"
+msgstr ""
+"Karakter görselleri:\n"
+"• 9:16 Portre: Sohbet kenar çubuğu ve tam ekran görünüm\n"
+"• 1:1 Avatar: Hub'daki karakter kartları ve sohbet balonları"
+
+#: flask/templates/characters/creator.html:113 flask/templates/characters/creator.html:114 flask/templates/characters/creator.html:116 flask/templates/characters/creator.html:694 flask/templates/macros/persona_manager.html:12
+msgid "Portrait"
+msgstr "Portre"
+
+#: flask/templates/characters/creator.html:121 flask/templates/characters/creator.html:122 flask/templates/characters/creator.html:124 flask/templates/characters/creator.html:695
+msgid "Avatar"
+msgstr "Avatar"
+
+#: flask/templates/characters/creator.html:133
+msgid "Adjust crops"
+msgstr "Kırpmaları ayarla"
+
+#: flask/templates/characters/creator.html:142
+msgid "Initial Relationship Status"
+msgstr "Başlangıç İlişki Durumu"
+
+#: flask/templates/characters/creator.html:143
+msgid ""
+"Initial Relationship Status:\n"
+"Starting level of affection (e.g., Pure Hatred, Neutral, Blind Devotion). Controls the initial roleplay behavior of {{char}} toward the player."
+msgstr ""
+"Başlangıç İlişki Durumu:\n"
+"Başlangıç sevgi düzeyi (ör. Saf Nefret, Nötr, Kör Bağlılık). {{char}} karakterinin oyuncuya karşı başlangıç rol yapma davranışını kontrol eder."
+
+#: flask/templates/characters/creator.html:158
+msgid "Character Description & Personality"
+msgstr "Karakter Açıklaması ve Kişilik"
+
+#: flask/templates/characters/creator.html:159
+msgid "Core identity, traits, backstory, fears, and motivations."
+msgstr "Temel kimlik, özellikler, geçmiş, korkular ve motivasyonlar."
+
+#: flask/templates/characters/creator.html:161
+msgid "AI Author Optimization"
+msgstr "AI Yazar Optimizasyonu"
+
+#: flask/templates/characters/creator.html:181 flask/templates/macros/persona_manager.html:37
+msgid "Physical Appearance"
+msgstr "Fiziksel Görünüm"
+
+#: flask/templates/characters/creator.html:182
+msgid "Detailed visual appearance for prompts and AI image generation."
+msgstr "İstemler ve AI görsel oluşturma için ayrıntılı görsel görünüm."
+
+#: flask/templates/characters/creator.html:184
+msgid "Extract Appearance from Image"
+msgstr "Görselden Görünümü Çıkar"
+
+#: flask/templates/characters/creator.html:184
+msgid "Analyzes the portrait image using a Vision LLM"
+msgstr "Portre görselini bir Vision LLM kullanarak analiz eder"
+
+#: flask/templates/characters/creator.html:196
+msgid "Physical appearance (e.g. emerald eyes, shoulder-length black hair, silver armor)..."
+msgstr "Fiziksel görünüm (ör. zümrüt gözler, omuz hizasında siyah saç, gümüş zırh)..."
+
+#: flask/templates/characters/creator.html:202
+msgid "First Message (Welcome Message)"
+msgstr "İlk Mesaj (Karşılama Mesajı)"
+
+#: flask/templates/characters/creator.html:203
+msgid "The character's direct opening greeting to the player."
+msgstr "Karakterin oyuncuya yönelik doğrudan açılış selamı."
+
+#: flask/templates/characters/creator.html:230
+msgid "Dialogue Styles (Few-Shot Examples)"
+msgstr "Diyalog Stilleri (Few-Shot Örnekleri)"
+
+#: flask/templates/characters/creator.html:231
+msgid "Typical player trigger and character response pairs injected into the prompt."
+msgstr "İsteme enjekte edilen tipik oyuncu tetikleyicisi ve karakter yanıtı çiftleri."
+
+#: flask/templates/characters/creator.html:234
+msgid "Define typical trigger-response examples to guide the AI's tone, dialect, and reactions."
+msgstr "AI'nın tonunu, lehçesini ve tepkilerini yönlendirmek için tipik tetikleyici-yanıt örnekleri tanımlayın."
+
+#: flask/templates/characters/creator.html:237
+msgid "Add Dialogue Style"
+msgstr "Diyalog Stili Ekle"
+
+#: flask/templates/characters/creator.html:244
+msgid "Example"
+msgstr "Örnek"
+
+#: flask/templates/characters/creator.html:246
+msgid "Edit example"
+msgstr "Örneği düzenle"
+
+#: flask/templates/characters/creator.html:247
+msgid "Delete example"
+msgstr "Örneği sil"
+
+#: flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:253 flask/templates/characters/creator.html:258 flask/templates/characters/creator.html:633
+msgid "You"
+msgstr "Sen"
+
+#: flask/templates/characters/creator.html:265
+msgid "No dialogue styles added yet. Click 'Add Dialogue Style' to create examples."
+msgstr "Henüz diyalog stili eklenmedi. Örnek oluşturmak için 'Diyalog Stili Ekle'ye tıklayın."
+
+#: flask/templates/characters/creator.html:275
+msgid "Game World & Locations"
+msgstr "Oyun Dünyası ve Konumlar"
+
+#: flask/templates/characters/creator.html:276
+msgid "Links a recommended world. Once selected, initial, preferred, and disliked locations can be chosen."
+msgstr "Önerilen bir dünyayı bağlar. Seçildikten sonra başlangıç, tercih edilen ve sevilmeyen konumlar seçilebilir."
+
+#: flask/templates/characters/creator.html:279
+msgid "Select a recommended world for this character. It will be pre-selected when starting a new chat."
+msgstr "Bu karakter için önerilen bir dünya seçin. Yeni bir sohbet başlatırken önceden seçili olacaktır."
+
+#: flask/templates/characters/creator.html:284
+msgid "Recommended WorldInfo"
+msgstr "Önerilen WorldInfo"
+
+#: flask/templates/characters/creator.html:285
+msgid "Locations and events of this world are included in roleplay."
+msgstr "Bu dünyanın konumları ve olayları rol yapmaya dahil edilir."
+
+#: flask/templates/characters/creator.html:288
+msgid "No WorldInfo linked"
+msgstr "Bağlı WorldInfo yok"
+
+#: flask/templates/characters/creator.html:300
+msgid "Initial Location of First Message"
+msgstr "İlk Mesajın Başlangıç Konumu"
+
+#: flask/templates/characters/creator.html:301
+msgid "Starting location for the conversation within the linked world."
+msgstr "Bağlı dünya içindeki sohbetin başlangıç konumu."
+
+#: flask/templates/characters/creator.html:304
+msgid "No fixed starting location"
+msgstr "Sabit başlangıç konumu yok"
+
+#: flask/templates/characters/creator.html:318
+msgid "Preferred Locations (from linked world)"
+msgstr "Tercih Edilen Konumlar (bağlı dünyadan)"
+
+#: flask/templates/characters/creator.html:319
+msgid "Locations where the character feels comfortable or likes to spend time."
+msgstr "Karakterin kendini rahat hissettiği veya vakit geçirmeyi sevdiği konumlar."
+
+#: flask/templates/characters/creator.html:331 flask/templates/characters/creator.html:350
+msgid "Tip: Hold Ctrl/Cmd to select multiple."
+msgstr "İpucu: Birden fazla seçmek için Ctrl/Cmd tuşunu basılı tutun."
+
+#: flask/templates/characters/creator.html:337
+msgid "Disliked Locations (from linked world)"
+msgstr "Sevilmeyen Konumlar (bağlı dünyadan)"
+
+#: flask/templates/characters/creator.html:338
+msgid "Locations the character avoids, fears, or dislikes."
+msgstr "Karakterin kaçındığı, korktuğu veya sevmediği konumlar."
+
+#: flask/templates/characters/creator.html:364
+msgid "Linked Lorebooks (Knowledge Compendiums)"
+msgstr "Bağlı Bilgi Kitapları (Bilgi Derlemeleri)"
+
+#: flask/templates/characters/creator.html:365
+msgid "Knowledge compendiums for this character. Matching entries are automatically loaded into the prompt via tags."
+msgstr "Bu karakter için bilgi derlemeleri. Eşleşen girdiler etiketler aracılığıyla otomatik olarak isteme yüklenir."
+
+#: flask/templates/characters/creator.html:368
+msgid "Attach knowledge compendiums. Relevant entries are automatically injected via tag matching."
+msgstr "Bilgi derlemeleri ekleyin. İlgili girdiler etiket eşleştirme yoluyla otomatik olarak enjekte edilir."
+
+#: flask/templates/characters/creator.html:371 flask/templates/macros/lorebook_manager.html:24
+msgid "Add Lorebook"
+msgstr "Bilgi Kitabı Ekle"
+
+#: flask/templates/characters/creator.html:386
+msgid "When should this lorebook be active?"
+msgstr "Bu bilgi kitabı ne zaman etkin olmalı?"
+
+#: flask/templates/characters/creator.html:387
+msgid "All Worlds (Always active)"
+msgstr "Tüm Dünyalar (Her zaman etkin)"
+
+#: flask/templates/characters/creator.html:389
+msgid "Only in world:"
+msgstr "Yalnızca şu dünyada:"
+
+#: flask/templates/characters/creator.html:392
+msgid "Unlink"
+msgstr "Bağlantıyı Kaldır"
+
+#: flask/templates/characters/creator.html:392
+msgid "Unlink lorebook"
+msgstr "Bilgi kitabı bağlantısını kaldır"
+
+#: flask/templates/characters/creator.html:400
+msgid "No lorebooks linked. Click 'Add Lorebook' to select compendiums."
+msgstr "Bağlı bilgi kitabı yok. Derleme seçmek için 'Bilgi Kitabı Ekle'ye tıklayın."
+
+#: flask/templates/characters/creator.html:416
+msgid "Unlockable 9:16 Gallery Images (Threshold -100 to +100)"
+msgstr "Kilidi Açılabilir 9:16 Galeri Görselleri (Eşik -100 ile +100 arası)"
+
+#: flask/templates/characters/creator.html:417
+msgid "Exclusive portrait graphics unlocked when reaching a relationship threshold in chat."
+msgstr "Sohbette belirli bir ilişki eşiğine ulaşıldığında kilidi açılan özel portre grafikleri."
+
+#: flask/templates/characters/creator.html:420
+msgid "Reward the player with exclusive character graphics as the relationship grows in chat."
+msgstr "Sohbette ilişki geliştikçe oyuncuyu özel karakter grafikleriyle ödüllendirin."
+
+#: flask/templates/characters/creator.html:424
+msgid "Add 9:16 Image"
+msgstr "9:16 Görsel Ekle"
+
+#: flask/templates/characters/creator.html:430
+msgid "Delete image"
+msgstr "Görseli sil"
+
+#: flask/templates/characters/creator.html:434
+msgid "Unlocks at relationship:"
+msgstr "Şu ilişkide açılır:"
+
+#: flask/templates/characters/creator.html:445
+msgid "Please save the character's basic info first to upload and manage 9:16 gallery images."
+msgstr "9:16 galeri görsellerini yüklemek ve yönetmek için lütfen önce karakterin temel bilgilerini kaydedin."
+
+#: flask/templates/characters/creator.html:456
+msgid "Emotional Sprites (28 Emotions with Variant Stack View)"
+msgstr "Duygusal Sprite'lar (Varyant Yığını Görünümlü 28 Duygu)"
+
+#: flask/templates/characters/creator.html:457
+msgid "Image variants for 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait."
+msgstr "28 duygu için görsel varyantları. Sistem her yanıttan sonra AI duygusunu sınıflandırır ve sohbet portresini günceller."
+
+#: flask/templates/characters/creator.html:460
+msgid "When an emotion is detected, a random variant is selected. If none exists, neutral is used as fallback."
+msgstr "Bir duygu algılandığında rastgele bir varyant seçilir. Hiçbiri yoksa yedek olarak nötr kullanılır."
+
+#: flask/templates/characters/creator.html:472
+msgid "Choose PNG/WEBP"
+msgstr "PNG/WEBP Seç"
+
+#: flask/templates/characters/creator.html:482
+msgid "Upload another variant"
+msgstr "Başka bir varyant yükle"
+
+#: flask/templates/characters/creator.html:489
+msgid "View all variants"
+msgstr "Tüm varyantları görüntüle"
+
+#: flask/templates/characters/creator.html:492
+msgid "Delete sprite"
+msgstr "Sprite'ı sil"
+
+#: flask/templates/characters/creator.html:500
+msgid "Fallback"
+msgstr "Yedek"
+
+#: flask/templates/characters/creator.html:509
+msgid "Variants for emotion:"
+msgstr "Duygu için varyantlar:"
+
+#: flask/templates/characters/creator.html:517
+msgid "Delete variant"
+msgstr "Varyantı sil"
+
+#: flask/templates/characters/creator.html:536
+msgid "Please save the character's basic info first to upload sprites for the 28 emotions."
+msgstr "28 duygu için sprite yüklemek üzere lütfen önce karakterin temel bilgilerini kaydedin."
+
+#: flask/templates/characters/creator.html:547
+msgid "Character-Specific Random Events"
+msgstr "Karaktere Özgü Rastgele Olaylar"
+
+#: flask/templates/characters/creator.html:548
+msgid "Dynamic events that can trigger exclusively in chats with this character."
+msgstr "Yalnızca bu karakterle yapılan sohbetlerde tetiklenebilen dinamik olaylar."
+
+#: flask/templates/characters/creator.html:551
+msgid "These events are available exclusively in sessions with"
+msgstr "Bu olaylar yalnızca şu karakterle olan oturumlarda kullanılabilir:"
+
+#: flask/templates/characters/creator.html:551
+msgid "in the shared random event pool."
+msgstr "paylaşılan rastgele olay havuzunda."
+
+#: flask/templates/characters/creator.html:578
+msgid "Please save the character's basic info first to create character-specific random events."
+msgstr "Karaktere özgü rastgele olaylar oluşturmak için lütfen önce karakterin temel bilgilerini kaydedin."
+
+#: flask/templates/characters/creator.html:589
+msgid "Upload 9:16 Gallery Image"
+msgstr "9:16 Galeri Görseli Yükle"
+
+#: flask/templates/characters/creator.html:595
+msgid "Image File (9:16 Portrait)"
+msgstr "Görsel Dosyası (9:16 Portre)"
+
+#: flask/templates/characters/creator.html:596
+msgid "Exclusive portrait image for this character."
+msgstr "Bu karakter için özel portre görseli."
+
+#: flask/templates/characters/creator.html:602
+msgid "Unlock Relationship Level"
+msgstr "Kilit Açma İlişki Seviyesi"
+
+#: flask/templates/characters/creator.html:603
+msgid "Required relationship level to unlock this image in chat."
+msgstr "Sohbette bu görselin kilidini açmak için gereken ilişki seviyesi."
+
+#: flask/templates/characters/creator.html:615
+msgid "Upload"
+msgstr "Yükle"
+
+#: flask/templates/characters/creator.html:627
+msgid "Add New Dialogue Style"
+msgstr "Yeni Diyalog Stili Ekle"
+
+#: flask/templates/characters/creator.html:634
+msgid "Trigger (Player Input)"
+msgstr "Tetikleyici (Oyuncu Girdisi)"
+
+#: flask/templates/characters/creator.html:636
+msgid "e.g. Hello! What are you doing out here so late?"
+msgstr "ör. Merhaba! Bu kadar geç saatte burada ne yapıyorsun?"
+
+#: flask/templates/characters/creator.html:641
+msgid "Response (Character Reply)"
+msgstr "Yanıt (Karakter Cevabı)"
+
+#: flask/templates/characters/creator.html:643
+msgid "e.g. Greetings, wanderer. The woods hold secrets at night..."
+msgstr "ör. Selam, gezgin. Orman geceleri sırlar saklar..."
+
+#: flask/templates/characters/creator.html:648
+msgid "Fill with AI"
+msgstr "AI ile Doldur"
+
+#: flask/templates/characters/creator.html:648
+msgid "Generates trigger and response based on character description"
+msgstr "Karakter açıklamasına göre tetikleyici ve yanıt oluşturur"
+
+#: flask/templates/characters/creator.html:652 flask/templates/characters/creator.html:680 flask/templates/macros/lorebook_manager.html:226
+msgid "Add"
+msgstr "Ekle"
+
+#: flask/templates/characters/creator.html:662
+msgid "Link Lorebook"
+msgstr "Bilgi Kitabı Bağla"
+
+#: flask/templates/characters/creator.html:666 flask/templates/macros/lorebook_manager.html:197
+msgid "Filter by lorebook name..."
+msgstr "Bilgi kitabı adına göre filtrele..."
+
+#: flask/templates/characters/creator.html:680
+msgid "Linked"
+msgstr "Bağlı"
+
+#: flask/templates/characters/creator.html:693
+msgid "Set Image Crops"
+msgstr "Görsel kırpmalarını ayarla"
+
+#: flask/templates/chat/select_worldinfo.html:4
+msgid "New Adventure with"
+msgstr "Yeni Macera:"
+
+#: flask/templates/chat/select_worldinfo.html:11
+msgid "New Chat with"
+msgstr "Yeni Sohbet:"
+
+#: flask/templates/chat/select_worldinfo.html:12
+msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
+msgstr "Bu oturum için oyuncu personanızı, aktif WorldInfo'yu ve bilgi kitaplarını yapılandırın."
+
+#: flask/templates/chat/select_worldinfo.html:18 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
+msgid "Settings"
+msgstr "Ayarlar"
+
+#: flask/templates/chat/select_worldinfo.html:27
+msgid "Select Player Persona"
+msgstr "Oyuncu Personası Seç"
+
+#: flask/templates/chat/select_worldinfo.html:32
+msgid "Default"
+msgstr "Varsayılan"
+
+#: flask/templates/chat/select_worldinfo.html:37
+msgid "Note: After sending the first message, the persona is permanently locked for this chat."
+msgstr "Not: İlk mesaj gönderildikten sonra persona bu sohbet için kalıcı olarak kilitlenir."
+
+#: flask/templates/chat/select_worldinfo.html:42
+msgid "Automatically assigned"
+msgstr "Otomatik atandı"
+
+#: flask/templates/chat/select_worldinfo.html:48
+msgid "Active WorldInfo (At most one per session)"
+msgstr "Aktif WorldInfo (oturum başına en fazla bir)"
+
+#: flask/templates/chat/select_worldinfo.html:50
+msgid "No WorldInfo (Default — Neutral background, no events)"
+msgstr "WorldInfo Yok (Varsayılan — Nötr arka plan, olay yok)"
+
+#: flask/templates/chat/select_worldinfo.html:54
+msgid "Recommended for"
+msgstr "Şunun için önerilir:"
+
+#: flask/templates/chat/select_worldinfo.html:60
+msgid "This character recommends a WorldInfo, but you can freely choose another or start without one."
+msgstr "Bu karakter bir WorldInfo öneriyor ancak özgürce başka bir tane seçebilir veya olmadan başlayabilirsiniz."
+
+#: flask/templates/chat/select_worldinfo.html:66
+msgid "Optional Session Title"
+msgstr "İsteğe Bağlı Oturum Başlığı"
+
+#: flask/templates/chat/select_worldinfo.html:67
+msgid "Chat with"
+msgstr "Sohbet:"
+
+#: flask/templates/chat/select_worldinfo.html:73
+msgid "Enable Thinking (Reasoning)"
+msgstr "Düşünmeyi Etkinleştir (Akıl Yürütme)"
+
+#: flask/templates/chat/select_worldinfo.html:76
+msgid "Enables extended chain-of-thought reasoning for compatible models (e.g. Gemma 4, DeepSeek-R1). Disable for faster replies without thinking steps."
+msgstr "Uyumlu modeller (ör. Gemma 4, DeepSeek-R1) için genişletilmiş düşünce zinciri akıl yürütmesini etkinleştirir. Düşünme adımları olmadan daha hızlı yanıtlar için devre dışı bırakın."
+
+#: flask/templates/chat/select_worldinfo.html:89
+msgid "Start Adventure"
+msgstr "Maceraya Başla"
+
+#: flask/templates/chat/session.html:33
+msgid "Info"
+msgstr "Bilgi"
+
+#: flask/templates/chat/session.html:33
+msgid "Sidebar / Character Info"
+msgstr "Kenar çubuğu / Karakter bilgisi"
+
+#: flask/templates/chat/session.html:39 flask/templates/chat/session.html:63 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
+msgid "Location:"
+msgstr "Konum:"
+
+#: flask/templates/chat/session.html:41
+msgid "World:"
+msgstr "Dünya:"
+
+#: flask/templates/chat/session.html:43
+msgid "Neutral Setting"
+msgstr "Tarafsız Ortam"
+
+#: flask/templates/chat/session.html:79
+msgid "View LLM prompt (Admin)"
+msgstr "LLM istemini görüntüle (Yönetici)"
+
+#: flask/templates/chat/session.html:81 flask/templates/chat/session.html:101
+msgid "Translate message (on-demand)"
+msgstr "Mesajı çevir (isteğe bağlı)"
+
+#: flask/templates/chat/session.html:82 flask/templates/chat/session.html:102
+msgid "Edit message"
+msgstr "Mesajı düzenle"
+
+#: flask/templates/chat/session.html:83 flask/templates/chat/session.html:103
+msgid "Duplicate chat from here (Fork)"
+msgstr "Sohbeti buradan çoğalt (Fork)"
+
+#: flask/templates/chat/session.html:85 flask/templates/chat/session.html:104 flask/templates/macros/system_message.html:27
+msgid "Delete from here"
+msgstr "Buradan itibaren sil"
+
+#: flask/templates/chat/session.html:111
+msgid "Show/hide ALT text (image description)"
+msgstr "ALT metnini (görsel açıklaması) göster/gizle"
+
+#: flask/templates/chat/session.html:132
+msgid "AI system notice"
+msgstr "Yapay zeka sistem bildirimi"
+
+#: flask/templates/chat/session.html:134
+msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
+msgstr "Bu bir yapay zeka sohbet botudur. Yanıtlar yerel veya harici dil modelleri tarafından otomatik olarak üretilir ve eksik veya hatalı olabilir."
+
+#: flask/templates/chat/session.html:141
+msgid "Chat options & sessions"
+msgstr "Sohbet seçenekleri ve oturumlar"
+
+#: flask/templates/chat/session.html:141
+msgid "Chat options"
+msgstr "Sohbet seçenekleri"
+
+#: flask/templates/chat/session.html:147
+msgid "Sessions"
+msgstr "Oturumlar"
+
+#: flask/templates/chat/session.html:148
+msgid "Start new chat"
+msgstr "Yeni sohbet başlat"
+
+#: flask/templates/chat/session.html:150
+msgid "Delete chat"
+msgstr "Sohbeti sil"
+
+#: flask/templates/chat/session.html:150
+msgid "Do you really want to permanently delete this chat?"
+msgstr "Bu sohbeti gerçekten kalıcı olarak silmek istiyor musunuz?"
+
+#: flask/templates/chat/session.html:154
+msgid "Attach image (Vision ALT analysis)"
+msgstr "Görsel ekle (Vision ALT analizi)"
+
+#: flask/templates/chat/session.html:162
+msgid "Generate scene image"
+msgstr "Sahne görseli oluştur"
+
+#: flask/templates/chat/session.html:169
+msgid "Cancel image generation"
+msgstr "Görsel oluşturmayı iptal et"
+
+#: flask/templates/chat/session.html:180
+msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
+msgstr "Yanıtınızı veya eyleminizi yazın... (Göndermek için Enter, yeni satır için Shift+Enter)"
+
+#: flask/templates/chat/session.html:186
+msgid "Regenerate response – replaces the last AI reply or retries generation"
+msgstr "Yanıtı yeniden oluştur – son yapay zeka yanıtını değiştirir veya üretimi tekrar dener"
+
+#: flask/templates/chat/session.html:193
+msgid "Cancel response generation"
+msgstr "Yanıt üretimini iptal et"
+
+#: flask/templates/chat/session.html:199
+msgid "Send message (Enter)"
+msgstr "Mesaj gönder (Enter)"
+
+#: flask/templates/chat/session.html:257 flask/templates/chat/session.html:786 flask/templates/lorebooks/detail.html:167
+msgid "Tags (Comma-separated for vectorless RAG)"
+msgstr "Etiketler (vektörsüz RAG için virgülle ayrılmış)"
+
+#: flask/templates/chat/session.html:261 flask/templates/chat/session.html:790
+msgid "Summary"
+msgstr "Özet"
+
+#: flask/templates/chat/session.html:266 flask/templates/chat/session.html:796
+msgid "Recalculate"
+msgstr "Yeniden hesapla"
+
+#: flask/templates/chat/session.html:266 flask/templates/chat/session.html:795
+msgid "Recalculate memory from associated episode messages"
+msgstr "Anıyı ilişkili bölüm mesajlarından yeniden hesapla"
+
+#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:799
+msgid "Translate"
+msgstr "Çevir"
+
+#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:798
+msgid "Translate memory in-place to your language"
+msgstr "Anıyı yerinde kendi dilinize çevirin"
+
+#: flask/templates/chat/session.html:297
+msgid "Thinking: Enabled (Click to disable)"
+msgstr "Düşünme: Etkin (Devre dışı bırakmak için tıklayın)"
+
+#: flask/templates/chat/session.html:297
+msgid "Thinking: Disabled (Click to enable)"
+msgstr "Düşünme: Devre dışı (Etkinleştirmek için tıklayın)"
+
+#: flask/templates/chat/session.html:298
+msgid "Disable thinking"
+msgstr "Düşünmeyi devre dışı bırak"
+
+#: flask/templates/chat/session.html:298
+msgid "Enable thinking"
+msgstr "Düşünmeyi etkinleştir"
+
+#: flask/templates/chat/session.html:311 flask/templates/macros/cards.html:91
+msgid "Relationship:"
+msgstr "İlişki:"
+
+#: flask/templates/chat/session.html:322
+msgid "Active Persona"
+msgstr "Etkin Persona"
+
+#: flask/templates/chat/session.html:327
+msgid "Edit player persona"
+msgstr "Oyuncu personasını düzenle"
+
+#: flask/templates/chat/session.html:344
+msgid "Unknown"
+msgstr "Bilinmiyor"
+
+#: flask/templates/chat/session.html:345
+msgid "Persona is locked for this chat after the 1st message"
+msgstr "Persona bu sohbet için 1. mesajdan sonra kilitlenir"
+
+#: flask/templates/chat/session.html:368
+msgid "No World (Neutral)"
+msgstr "Dünya Yok (Tarafsız)"
+
+#: flask/templates/chat/session.html:371
+msgid "Switch world"
+msgstr "Dünya değiştir"
+
+#: flask/templates/chat/session.html:382
+msgid "Current Location"
+msgstr "Mevcut Konum"
+
+#: flask/templates/chat/session.html:384
+msgid "-- Choose location --"
+msgstr "-- Konum seç --"
+
+#: flask/templates/chat/session.html:402
+msgid "Enable random events"
+msgstr "Rastgele olayları etkinleştir"
+
+#: flask/templates/chat/session.html:407
+msgid "Admin & creator info: Cooldown until the next random event"
+msgstr "Yönetici ve oluşturucu bilgisi: Sonraki rastgele olaya kalan süre"
+
+#: flask/templates/chat/session.html:408
+msgid "Next event:"
+msgstr "Sonraki olay:"
+
+#: flask/templates/chat/session.html:411 flask/templates/chat/session.html:415
+msgid "in"
+msgstr "içinde:"
+
+#: flask/templates/chat/session.html:411
+msgid "message"
+msgstr "mesaj"
+
+#: flask/templates/chat/session.html:411 flask/templates/chat/session.html:415
+msgid "messages"
+msgstr "mesaj"
+
+#: flask/templates/chat/session.html:411
+msgid "paused"
+msgstr "duraklatıldı"
+
+#: flask/templates/chat/session.html:413
+msgid "next message"
+msgstr "sonraki mesaj"
+
+#: flask/templates/chat/session.html:488
+msgid "Do you really want to delete this session?"
+msgstr "Bu oturumu gerçekten silmek istiyor musunuz?"
+
+#: flask/templates/chat/session.html:490
+msgid "Delete session"
+msgstr "Oturumu sil"
+
+#: flask/templates/chat/session.html:714
+msgid "Permanently delete this message and all subsequent messages (including associated memories)?"
+msgstr "Bu mesaj ve sonraki tüm mesajlar (ilişkili anılar dahil) kalıcı olarak silinsin mi?"
+
+#: flask/templates/chat/session.html:913
+msgid "Recalculation error"
+msgstr "Yeniden hesaplama hatası"
+
+#: flask/templates/chat/session.html:915
+msgid "Recalculation error:"
+msgstr "Yeniden hesaplama hatası:"
+
+#: flask/templates/chat/session.html:952
+msgid "Translated!"
+msgstr "Çevrildi!"
+
+#: flask/templates/chat/session.html:964
+msgid "Translation error"
+msgstr "Çeviri hatası"
+
+#: flask/templates/chat/session.html:966
+msgid "Translation error:"
+msgstr "Çeviri hatası:"
+
+#: flask/templates/lorebooks/detail.html:17
+msgid "Lorebook & Encyclopedia"
+msgstr "Bilgi Kitabı ve Ansiklopedi"
+
+#: flask/templates/lorebooks/detail.html:21 flask/templates/lorebooks/detail.html:55 flask/templates/worldinfo/detail.html:23 flask/templates/worldinfo/detail.html:58
+msgid "Basic Settings"
+msgstr "Temel Ayarlar"
+
+#: flask/templates/lorebooks/detail.html:42
+msgid "Really delete Lorebook?"
+msgstr "Bilgi Kitabı gerçekten silinsin mi?"
+
+#: flask/templates/lorebooks/detail.html:43
+msgid "Read-only (External Lorebook)"
+msgstr "Salt okunur (Harici Bilgi Kitabı)"
+
+#: flask/templates/lorebooks/detail.html:44
+msgid "Save Lorebook"
+msgstr "Bilgi Kitabını Kaydet"
+
+#: flask/templates/lorebooks/detail.html:60
+msgid "Lorebook Name"
+msgstr "Bilgi Kitabı Adı"
+
+#: flask/templates/lorebooks/detail.html:61
+msgid "The title of this knowledge compendium."
+msgstr "Bu bilgi derlemesinin başlığı."
+
+#: flask/templates/lorebooks/detail.html:66 flask/templates/lorebooks/detail.html:151 flask/templates/lorebooks/detail.html:221 flask/templates/macros/event_manager.html:54 flask/templates/worldinfo/detail.html:70
+msgid "Proper Noun (Do not translate)"
+msgstr "Özel İsim (Çevirme)"
+
+#: flask/templates/lorebooks/detail.html:73
+msgid "Private = only usable by you. Public = linkable by other users in their characters."
+msgstr "Özel = yalnızca sizin tarafınızdan kullanılabilir. Herkese Açık = diğer kullanıcılar tarafından karakterlerine bağlanabilir."
+
+#: flask/templates/lorebooks/detail.html:83
+msgid "Short Description"
+msgstr "Kısa Açıklama"
+
+#: flask/templates/lorebooks/detail.html:84
+msgid "A brief summary of the topic for quick orientation in the overview."
+msgstr "Genel bakışta hızlı yönlendirme için konunun kısa bir özeti."
+
+#: flask/templates/lorebooks/detail.html:89
+msgid "Short overview of the lorebook content..."
+msgstr "Bilgi kitabı içeriğinin kısa özeti..."
+
+#: flask/templates/lorebooks/detail.html:107
+msgid "New Entry"
+msgstr "Yeni Girdi"
+
+#: flask/templates/lorebooks/detail.html:116
+msgid "Private (Secret Lore)"
+msgstr "Özel (Gizli Bilgi)"
+
+#: flask/templates/lorebooks/detail.html:116
+msgid "Private entry: hidden from other players, but injected via RAG in roleplay."
+msgstr "Özel girdi: diğer oyunculardan gizlenir ancak rol yapmada RAG yoluyla enjekte edilir."
+
+#: flask/templates/lorebooks/detail.html:130
+msgid "Click to edit"
+msgstr "Düzenlemek için tıklayın"
+
+#: flask/templates/lorebooks/detail.html:139
+msgid "Lorebook Entry:"
+msgstr "Bilgi Kitabı Girdisi:"
+
+#: flask/templates/lorebooks/detail.html:145 flask/templates/lorebooks/detail.html:215 flask/templates/macros/event_manager.html:34
+msgid "Title"
+msgstr "Başlık"
+
+#: flask/templates/lorebooks/detail.html:146 flask/templates/lorebooks/detail.html:216
+msgid "Concise title of the lore entry."
+msgstr "Bilgi girdisinin özlü başlığı."
+
+#: flask/templates/lorebooks/detail.html:157 flask/templates/lorebooks/detail.html:227
+msgid "Public: readable in overview. Private: hidden in overview, still injected via RAG in roleplay."
+msgstr "Herkese Açık: genel bakışta okunabilir. Özel: genel bakışta gizlenir, rol yapmada RAG yoluyla enjekte edilmeye devam eder."
+
+#: flask/templates/lorebooks/detail.html:160 flask/templates/lorebooks/detail.html:230
+msgid "Public (Readable in overview)"
+msgstr "Herkese Açık (Genel bakışta okunabilir)"
+
+#: flask/templates/lorebooks/detail.html:161 flask/templates/lorebooks/detail.html:231
+msgid "Private (Secret Lore / Spoiler Protection)"
+msgstr "Özel (Gizli Bilgi / Spoiler Koruması)"
+
+#: flask/templates/lorebooks/detail.html:168 flask/templates/lorebooks/detail.html:238
+msgid "Keywords that trigger loading this entry into [RELEVANT_LOREBOOKS] when mentioned in chat."
+msgstr "Sohbette bahsedildiğinde bu girdinin [RELEVANT_LOREBOOKS] içine yüklenmesini tetikleyen anahtar kelimeler."
+
+#: flask/templates/lorebooks/detail.html:170 flask/templates/lorebooks/detail.html:240
+msgid "Suggest Tags"
+msgstr "Etiket Öner"
+
+#: flask/templates/lorebooks/detail.html:176 flask/templates/lorebooks/detail.html:246
+msgid "Prose Text / Lore Content"
+msgstr "Düzyazı Metni / Bilgi İçeriği"
+
+#: flask/templates/lorebooks/detail.html:177 flask/templates/lorebooks/detail.html:247
+msgid "Compact facts, history, or rules the AI can retrieve and use in dialogue."
+msgstr "AI'nın diyalogda alıp kullanabileceği özlü gerçekler, tarihçe veya kurallar."
+
+#: flask/templates/lorebooks/detail.html:209
+msgid "Create New Lorebook Entry"
+msgstr "Yeni Bilgi Kitabı Girdisi Oluştur"
+
+#: flask/templates/lorebooks/detail.html:237 flask/templates/worldinfo/detail.html:196 flask/templates/worldinfo/detail.html:329
+msgid "Tags (Comma-separated)"
+msgstr "Etiketler (Virgülle ayrılmış)"
+
+#: flask/templates/lorebooks/detail.html:242
+msgid "magic, guild, capital"
+msgstr "büyü, lonca, başkent"
+
+#: flask/templates/lorebooks/detail.html:263
+msgid "Save Entry"
+msgstr "Girdiyi Kaydet"
+
+#: flask/templates/macros/backend_selector.html:122
+msgid "Show"
+msgstr "Göster"
+
+#: flask/templates/macros/backend_selector.html:122
+msgid "Show/hide API key"
+msgstr "API anahtarını göster/gizle"
+
+#: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111
+msgid "Translation pending"
+msgstr "Çeviri bekliyor"
+
+#: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111
+msgid "Translation into your language is pending"
+msgstr "Dilinize çeviri bekleniyor"
+
+#: flask/templates/macros/cards.html:71
+msgid "Exchanged messages"
+msgstr "Alışverişi yapılan mesajlar"
+
+#: flask/templates/macros/cards.html:74
+msgid "Edit character"
+msgstr "Karakteri düzenle"
+
+#: flask/templates/macros/cards.html:79
+msgid "Duplicate character"
+msgstr "Karakteri çoğalt"
+
+#: flask/templates/macros/cards.html:114
+msgid "Public world"
+msgstr "Herkese açık dünya"
+
+#: flask/templates/macros/cards.html:116
+msgid "Private world"
+msgstr "Özel dünya"
+
+#: flask/templates/macros/cards.html:162
+msgid "Default Persona"
+msgstr "Varsayılan Persona"
+
+#: flask/templates/macros/cards.html:165
+msgid "Set as default persona"
+msgstr "Varsayılan persona olarak ayarla"
+
+#: flask/templates/macros/cards.html:182
+msgid "New Persona"
+msgstr "Yeni Persona"
+
+#: flask/templates/macros/cards.html:206
+msgid "New World"
+msgstr "Yeni Dünya"
+
+#: flask/templates/macros/collaboration.html:23
+msgid "Save collaborators"
+msgstr "İşbirlikçileri kaydet"
+
+#: flask/templates/macros/collaboration.html:23 flask/templates/macros/collaboration.html:117
+msgid "Saves all changes in the form"
+msgstr "Formdaki tüm değişiklikleri kaydeder"
+
+#: flask/templates/macros/collaboration.html:72 flask/templates/macros/editor_header.html:47
+msgid "Copy"
+msgstr "Kopyala"
+
+#: flask/templates/macros/collaboration.html:72
+msgid "Copy creator tag"
+msgstr "Oluşturucu etiketini kopyala"
+
+#: flask/templates/macros/collaboration.html:80 flask/templates/macros/lorebook_manager.html:170
+msgid "Remove"
+msgstr "Kaldır"
+
+#: flask/templates/macros/collaboration.html:80
+msgid "Remove collaborator"
+msgstr "İşbirlikçiyi kaldır"
+
+#: flask/templates/macros/editor_header.html:27
+msgid "Really delete permanently?"
+msgstr "Gerçekten kalıcı olarak silinsin mi?"
+
+#: flask/templates/macros/editor_header.html:32
+msgid "Back"
+msgstr "Geri"
+
+#: flask/templates/macros/event_manager.html:12
+msgid "Entire Character (Location-independent)"
+msgstr "Tüm Karakter (Konumdan bağımsız)"
+
+#: flask/templates/macros/event_manager.html:12
+msgid "No recommended world with locations linked"
+msgstr "Konumlu önerilen dünya bağlı değil"
+
+#: flask/templates/macros/event_manager.html:19 flask/templates/macros/event_manager.html:164
+msgid "Entire World"
+msgstr "Tüm Dünya"
+
+#: flask/templates/macros/event_manager.html:35
+msgid ""
+"Event Title:\n"
+"Name of the random event (e.g., 'Sudden Thunderstorm', 'Carrier Pigeon Arrives')."
+msgstr ""
+"Olay Başlığı:\n"
+"Rastgele olayın adı (ör. 'Ani Fırtına', 'Posta Güvercini Gelir')."
+
+#: flask/templates/macros/event_manager.html:60
+msgid "Probability (0 - 100%%)"
+msgstr "Olasılık (0 - 100%%)"
+
+#: flask/templates/macros/event_manager.html:61
+msgid ""
+"Probability (1-100%%):\n"
+"Relative weight in the shared event pool. Every 10 to 100 messages (cooldown counter), one event is triggered by weight."
+msgstr ""
+"Olasılık (1-100%%):\n"
+"Paylaşılan olay havuzundaki göreceli ağırlık. Her 10 ila 100 mesajda bir (bekleme sayacı) ağırlığa göre bir olay tetiklenir."
+
+#: flask/templates/macros/event_manager.html:67 flask/templates/macros/event_manager.html:178
+msgid "One-Shot (Max. 1x per session)"
+msgstr "Tek Seferlik (Oturum başına en fazla 1x)"
+
+#: flask/templates/macros/event_manager.html:68
+msgid ""
+"One-Shot (Single Event):\n"
+"When enabled, this event triggers at most once per chat session and is then removed from the active pool."
+msgstr ""
+"One-Shot (Tek Seferlik Olay):\n"
+"Etkinleştirildiğinde, bu olay sohbet oturumu başına en fazla bir kez tetiklenir ve ardından aktif havuzdan kaldırılır."
+
+#: flask/templates/macros/event_manager.html:75
+msgid "Assignment (Location-independent or bound to a specific location)"
+msgstr "Atama (Konumdan bağımsız veya belirli bir konuma bağlı)"
+
+#: flask/templates/macros/event_manager.html:76
+msgid ""
+"Location Restriction:\n"
+"Choose whether this character event can occur anywhere in chats with this character or is additionally bound to a specific location."
+msgstr ""
+"Konum Kısıtlaması:\n"
+"Bu karakter olayının bu karakterle olan sohbetlerde her yerde mi yoksa belirli bir konuma bağlı olarak mı gerçekleşebileceğini seçin."
+
+#: flask/templates/macros/event_manager.html:78
+msgid "Assignment (Exclusive: Either Entire World OR specific location)"
+msgstr "Atama (Özel: Tüm Dünya VEYA belirli bir konum)"
+
+#: flask/templates/macros/event_manager.html:79
+msgid ""
+"Location Assignment:\n"
+"Choose whether this event can only occur at a specific location or applies as a global event for the entire world."
+msgstr ""
+"Konum Ataması:\n"
+"Bu olayın yalnızca belirli bir konumda mı gerçekleşebileceğini yoksa tüm dünya için küresel bir olay olarak mı geçerli olacağını seçin."
+
+#: flask/templates/macros/event_manager.html:91
+msgid "Relationship Range (From – To)"
+msgstr "İlişki Aralığı (Başlangıç – Bitiş)"
+
+#: flask/templates/macros/event_manager.html:92
+msgid ""
+"Relationship Range:\n"
+"Optionally restricts the event to a relationship range. If both sliders are at the outer ends, the event is active at all relationship tiers."
+msgstr ""
+"İlişki Aralığı:\n"
+"Olayı isteğe bağlı olarak bir ilişki aralığıyla sınırlar. Her iki kaydırıcı da en uçtaysa olay tüm ilişki seviyelerinde etkindir."
+
+#: flask/templates/macros/event_manager.html:108
+msgid "Minimum relationship tier"
+msgstr "Minimum ilişki seviyesi"
+
+#: flask/templates/macros/event_manager.html:117
+msgid "Maximum relationship tier"
+msgstr "Maksimum ilişki seviyesi"
+
+#: flask/templates/macros/event_manager.html:124
+msgid "Scenic Event Description"
+msgstr "Etkinliğin Sahne Açıklaması"
+
+#: flask/templates/macros/event_manager.html:125
+msgid ""
+"Event Description:\n"
+"The narrative occurrence. When triggered, this description is placed in the [WORLD_INFO] section of the prompt for the next turn so the AI reacts appropriately."
+msgstr ""
+"Olay Açıklaması:\n"
+"Anlatısal olay. Tetiklendiğinde, yapay zekanın uygun şekilde tepki vermesi için bu açıklama bir sonraki turda istemin [WORLD_INFO] bölümüne yerleştirilir."
+
+#: flask/templates/macros/event_manager.html:147
+msgid "New Event"
+msgstr "Yeni Etkinlik"
+
+#: flask/templates/macros/event_manager.html:162
+msgid "Character-wide (Everywhere)"
+msgstr "Karakter Genelinde (Her Yerde)"
+
+#: flask/templates/macros/event_manager.html:167
+msgid "Relationship-bound"
+msgstr "İlişkiye bağlı"
+
+#: flask/templates/macros/event_manager.html:178
+msgid "Repeatable"
+msgstr "Tekrarlanabilir"
+
+#: flask/templates/macros/event_manager.html:186
+msgid "Edit Event:"
+msgstr "Etkinliği Düzenle:"
+
+#: flask/templates/macros/event_manager.html:210
+msgid "Create New Event"
+msgstr "Yeni Etkinlik Oluştur"
+
+#: flask/templates/macros/event_manager.html:217
+msgid "Save Event"
+msgstr "Etkinliği Kaydet"
+
+#: flask/templates/macros/image_cropper.html:4 flask/templates/macros/persona_manager.html:115 flask/templates/macros/persona_manager.html:118
+msgid "Set image crop"
+msgstr "Görsel kırpmayı ayarla"
+
+#: flask/templates/macros/image_cropper.html:16
+msgid "Crop Source"
+msgstr "Kaynak Görsel"
+
+#: flask/templates/macros/image_cropper.html:18
+msgid "Resize"
+msgstr "Yeniden boyutlandır"
+
+#: flask/templates/macros/image_cropper.html:26
+msgid "Click to adjust %(label)s"
+msgstr "%(label)s öğesini ayarlamak için tıklayın"
+
+#: flask/templates/macros/image_cropper.html:38
+msgid "Apply crops"
+msgstr "Kırpmaları uygula"
+
+#: flask/templates/macros/image_cropper.html:38
+msgid "Apply crop"
+msgstr "Kırpmayı uygula"
+
+#: flask/templates/macros/lorebook_manager.html:18
+msgid "Active Knowledge Books (Lorebooks)"
+msgstr "Aktif Bilgi Kitapları"
+
+#: flask/templates/macros/lorebook_manager.html:20
+msgid "Lorebooks expand the model's context with relevant world and background knowledge via keyword tags."
+msgstr "Bilgi kitapları, anahtar kelime etiketleri aracılığıyla modelin bağlamını ilgili dünya ve arka plan bilgileriyle genişletir."
+
+#: flask/templates/macros/lorebook_manager.html:49
+msgid "Default Lorebooks (Character & World)"
+msgstr "Varsayılan Bilgi Kitapları (Karakter ve Dünya)"
+
+#: flask/templates/macros/lorebook_manager.html:52
+msgid "Session Toggle (Slider)"
+msgstr "Oturum Anahtarı (Kaydırıcı)"
+
+#: flask/templates/macros/lorebook_manager.html:67
+msgid "Lorebook source"
+msgstr "Bilgi kitabı kaynağı"
+
+#: flask/templates/macros/lorebook_manager.html:69 flask/templates/macros/lorebook_manager.html:142
+msgid "Creator Lore"
+msgstr "Oluşturucu Bilgisi"
+
+#: flask/templates/macros/lorebook_manager.html:69 flask/templates/macros/lorebook_manager.html:142
+msgid "Creator Lore: hidden from other players, but used by the AI in chat."
+msgstr "Oluşturucu Bilgisi: diğer oyunculardan gizlenir ancak sohbette AI tarafından kullanılır."
+
+#: flask/templates/macros/lorebook_manager.html:91
+msgid "Inactive — Requires world:"
+msgstr "Etkin değil — Dünya gerektirir:"
+
+#: flask/templates/macros/lorebook_manager.html:91
+msgid "This lorebook requires the world"
+msgstr "Bu bilgi kitabı şu dünyayı gerektirir:"
+
+#: flask/templates/macros/lorebook_manager.html:92
+msgid "Locked: matching world is not active."
+msgstr "Kilitli: eşleşen dünya etkin değil."
+
+#: flask/templates/macros/lorebook_manager.html:101 flask/templates/macros/lorebook_manager.html:163
+msgid "Deactivate lorebook"
+msgstr "Bilgi kitabını devre dışı bırak"
+
+#: flask/templates/macros/lorebook_manager.html:101 flask/templates/macros/lorebook_manager.html:163
+msgid "Activate lorebook"
+msgstr "Bilgi kitabını etkinleştir"
+
+#: flask/templates/macros/lorebook_manager.html:113
+msgid "No default lorebooks assigned for this session."
+msgstr "Bu oturum için atanmış varsayılan bilgi kitabı yok."
+
+#: flask/templates/macros/lorebook_manager.html:122
+msgid "Custom Lorebooks (Chat-specific)"
+msgstr "Özel Bilgi Kitapları (Sohbete özgü)"
+
+#: flask/templates/macros/lorebook_manager.html:125
+msgid "Actions (Toggle & Delete)"
+msgstr "Eylemler (Aç/Kapat ve Sil)"
+
+#: flask/templates/macros/lorebook_manager.html:134 flask/templates/macros/lorebook_manager.html:140
+msgid "Custom"
+msgstr "Özel"
+
+#: flask/templates/macros/lorebook_manager.html:170
+msgid "Remove lorebook from chat"
+msgstr "Bilgi kitabını sohbetten kaldır"
+
+#: flask/templates/macros/lorebook_manager.html:175
+msgid "No additional custom lorebooks added. Click 'Add Lorebook' to add knowledge."
+msgstr "Ek özel bilgi kitabı eklenmedi. Bilgi eklemek için 'Bilgi Kitabı Ekle'ye tıklayın."
+
+#: flask/templates/macros/lorebook_manager.html:188
+msgid "Add Lorebook to Chat"
+msgstr "Sohbete Bilgi Kitabı Ekle"
+
+#: flask/templates/macros/lorebook_manager.html:226
+msgid "Already active"
+msgstr "Zaten etkin"
+
+#: flask/templates/macros/lorebook_manager.html:232
+msgid "No lorebooks available."
+msgstr "Kullanılabilir bilgi kitabı yok."
+
+#: flask/templates/macros/persona_manager.html:18
+msgid "Adjust crop"
+msgstr "Kırpmayı ayarla"
+
+#: flask/templates/macros/persona_manager.html:19
+msgid "Crop active"
+msgstr "Kırpma etkin"
+
+#: flask/templates/macros/persona_manager.html:28
+msgid "Background / Personality"
+msgstr "Geçmiş / Kişilik"
+
+#: flask/templates/macros/persona_manager.html:28
+msgid "max. 1,200 characters"
+msgstr "maks. 1.200 karakter"
+
+#: flask/templates/macros/persona_manager.html:40
+msgid "Extract image features"
+msgstr "Görsel özelliklerini çıkar"
+
+#: flask/templates/macros/persona_manager.html:40
+msgid "Automatically extract appearance from portrait image via vision model"
+msgstr "Görüş modeli aracılığıyla portre görselinden görünümü otomatik olarak çıkar"
+
+#: flask/templates/macros/persona_manager.html:54
+msgid "Persona"
+msgstr "Persona"
+
+#: flask/templates/macros/persona_manager.html:63 flask/templates/macros/persona_manager.html:89 flask/templates/settings/account.html:17 flask/templates/settings/creations.html:67
+msgid "Name"
+msgstr "Ad"
+
+#: flask/templates/macros/persona_manager.html:74
+msgid "Portrait image (PNG/JPG/WEBP)"
+msgstr "Portre görseli (PNG/JPG/WEBP)"
+
+#: flask/templates/macros/persona_manager.html:78
+msgid "Save Persona"
+msgstr "Personayı kaydet"
+
+#: flask/templates/macros/persona_manager.html:100
+msgid "New portrait image (optional, PNG/JPG/WEBP)"
+msgstr "Yeni portre görseli (isteğe bağlı, PNG/JPG/WEBP)"
+
+#: flask/templates/macros/persona_manager.html:106
+msgid "Save changes"
+msgstr "Değişiklikleri kaydet"
+
+#: flask/templates/macros/persona_manager.html:110
+msgid "Really delete persona?"
+msgstr "Persona gerçekten silinsin mi?"
+
+#: flask/templates/macros/top_header.html:17 flask/templates/macros/top_header.html:44
+msgid "AI Characters"
+msgstr "Yapay Zeka Karakterleri"
+
+#: flask/templates/macros/top_header.html:19 flask/templates/macros/top_header.html:46 flask/templates/settings/creations.html:25
+msgid "Worlds"
+msgstr "Dünyalar"
+
+#: flask/templates/macros/top_header.html:30
+msgid "Open menu"
+msgstr "Menüyü aç"
+
+#: flask/templates/macros/top_header.html:62
+msgid "Logout"
+msgstr "Çıkış Yap"
+
+#: flask/templates/overview/index.html:7
+msgid "Some content is still being translated into your language. The selection of available content may still change."
+msgstr "Bazı içerikler hâlâ dilinize çevriliyor. Kullanılabilir içerik seçimi değişebilir."
+
+#: flask/templates/overview/index.html:8
+msgid "Translations in Progress"
+msgstr "Devam Eden Çeviriler"
+
+#: flask/templates/overview/tabs/characters.html:8
+msgid "All Genders"
+msgstr "Tüm Cinsiyetler"
+
+#: flask/templates/overview/tabs/characters.html:15
+msgid "Chat Status"
+msgstr "Sohbet Durumu"
+
+#: flask/templates/overview/tabs/characters.html:17 flask/templates/overview/tabs/characters.html:34
+msgid "All Characters"
+msgstr "Tüm Karakterler"
+
+#: flask/templates/overview/tabs/characters.html:18
+msgid "Already Chatted"
+msgstr "Daha Önce Sohbet Edildi"
+
+#: flask/templates/overview/tabs/characters.html:19
+msgid "Not Chatted Yet"
+msgstr "Henüz Sohbet Edilmedi"
+
+#: flask/templates/overview/tabs/characters.html:23 flask/templates/settings/creations.html:40
+msgid "Sort Order"
+msgstr "Sıralama Düzeni"
+
+#: flask/templates/overview/tabs/characters.html:25 flask/templates/settings/creations.html:43
+msgid "Newest First"
+msgstr "En Yeniler Önce"
+
+#: flask/templates/overview/tabs/characters.html:26
+msgid "Most Messages"
+msgstr "En Çok Mesaj"
+
+#: flask/templates/overview/tabs/characters.html:27
+msgid "Best Relationship"
+msgstr "En İyi İlişki"
+
+#: flask/templates/overview/tabs/characters.html:32 flask/templates/settings/creations.html:31
+msgid "Author"
+msgstr "Yazar"
+
+#: flask/templates/overview/tabs/characters.html:35 flask/templates/settings/creations.html:34
+msgid "Only Mine (Creator)"
+msgstr "Yalnızca Benimkiler (Oluşturucu)"
+
+#: flask/templates/overview/tabs/characters.html:36 flask/templates/settings/creations.html:35
+msgid "Collaborations"
+msgstr "İş Birlikleri"
+
+#: flask/templates/overview/tabs/lorebooks.html:6
+msgid "New Lorebook"
+msgstr "Yeni Lorebook"
+
+#: flask/templates/settings/account.html:8 flask/templates/settings/layout.html:22
+msgid "Account"
+msgstr "Hesap"
+
+#: flask/templates/settings/account.html:10
+msgid "Creator Tag"
+msgstr "Oluşturucu Etiketi"
+
+#: flask/templates/settings/account.html:10
+msgid "Other creators can add you as a collaborator using this tag."
+msgstr "Diğer oluşturucular bu etiketi kullanarak sizi ortak çalışan olarak ekleyebilir."
+
+#: flask/templates/settings/account.html:11
+msgid "Copy Creator Tag"
+msgstr "Oluşturucu Etiketini Kopyala"
+
+#: flask/templates/settings/account.html:14
+msgid "Name & Email Address"
+msgstr "Ad ve E-posta Adresi"
+
+#: flask/templates/settings/account.html:25
+msgid "Your current password is only required when changing your email address or password. Leave the new password fields empty to keep your current password."
+msgstr "Mevcut şifreniz yalnızca e-posta adresinizi veya şifrenizi değiştirirken gereklidir. Mevcut şifrenizi korumak için yeni şifre alanlarını boş bırakın."
+
+#: flask/templates/settings/account.html:28
+msgid "Current password"
+msgstr "Mevcut şifre"
+
+#: flask/templates/settings/account.html:31
+msgid "New password"
+msgstr "Yeni şifre"
+
+#: flask/templates/settings/account.html:34
+msgid "Confirm new password"
+msgstr "Yeni şifreyi onayla"
+
+#: flask/templates/settings/account.html:39
+msgid "Language"
+msgstr "Dil"
+
+#: flask/templates/settings/account.html:39
+msgid "Language of the interface and displayed content translations."
+msgstr "Arayüzün ve görüntülenen içerik çevirilerinin dili."
+
+#: flask/templates/settings/creations.html:4 flask/templates/settings/creations.html:10 flask/templates/settings/layout.html:20
+msgid "My Creations"
+msgstr "Eserlerim"
+
+#: flask/templates/settings/creations.html:11
+msgid "Overview of all characters, worlds, and lorebooks you created or collaborate on. Click any item to open its editor."
+msgstr "Oluşturduğunuz veya üzerinde iş birliği yaptığınız tüm karakterlerin, dünyaların ve bilgi kitaplarının genel görünümü. Düzenleyicisini açmak için herhangi bir öğeye tıklayın."
+
+#: flask/templates/settings/creations.html:14
+msgid "Total:"
+msgstr "Toplam:"
+
+#: flask/templates/settings/creations.html:21 flask/templates/settings/creations.html:65
+msgid "Type"
+msgstr "Tür"
+
+#: flask/templates/settings/creations.html:23
+msgid "All Types"
+msgstr "Tüm Türler"
+
+#: flask/templates/settings/creations.html:24
+msgid "Characters"
+msgstr "Karakterler"
+
+#: flask/templates/settings/creations.html:33
+msgid "All Works"
+msgstr "Tüm Eserler"
+
+#: flask/templates/settings/creations.html:42
+msgid "Name (A-Z)"
+msgstr "Ad (A-Z)"
+
+#: flask/templates/settings/creations.html:48
+msgid "Search"
+msgstr "Ara"
+
+#: flask/templates/settings/creations.html:53
+msgid "Search name..."
+msgstr "Ad ara..."
+
+#: flask/templates/settings/creations.html:55
+msgid "Search creations"
+msgstr "Eserlerde ara"
+
+#: flask/templates/settings/creations.html:66
+msgid "Preview"
+msgstr "Önizleme"
+
+#: flask/templates/settings/creations.html:68
+msgid "Details"
+msgstr "Ayrıntılar"
+
+#: flask/templates/settings/creations.html:70
+msgid "Role"
+msgstr "Rol"
+
+#: flask/templates/settings/creations.html:71
+msgid "Created"
+msgstr "Oluşturuldu"
+
+#: flask/templates/settings/creations.html:72
+msgid "Action"
+msgstr "Eylem"
+
+#: flask/templates/settings/creations.html:122
+msgid "Editor"
+msgstr "Düzenleyici"
+
+#: flask/templates/settings/creations.html:122
+msgid "Open editor"
+msgstr "Düzenleyiciyi aç"
+
+#: flask/templates/settings/creations.html:132
+msgid "No creations found"
+msgstr "Eser bulunamadı"
+
+#: flask/templates/settings/creations.html:134
+msgid "No works were found matching the selected filters or created/shared with you."
+msgstr "Seçilen filtrelere uyan veya tarafınızdan oluşturulan/sizinle paylaşılan eser bulunamadı."
+
+#: flask/templates/settings/creations.html:137
+msgid "Reset all filters"
+msgstr "Tüm filtreleri sıfırla"
+
+#: flask/templates/settings/index.html:7
+msgid "Player Personas"
+msgstr "Oyuncu Personaları"
+
+#: flask/templates/settings/index.html:8
+msgid "Manage your roleplay identities. The star marks your default persona."
+msgstr "Rol yapma kimliklerinizi yönetin. Yıldız, varsayılan personanızı işaretler."
+
+#: flask/templates/settings/layout.html:14
+msgid "User & Personalization"
+msgstr "Kullanıcı ve Kişiselleştirme"
+
+#: flask/templates/settings/layout.html:18
+msgid "Personas"
+msgstr "Personalar"
+
+#: flask/templates/setup/first_boot.html:14
+msgid "Setup steps"
+msgstr "Kurulum adımları"
+
+#: flask/templates/worldinfo/detail.html:19
+msgid "WorldInfo & Locations"
+msgstr "WorldInfo ve Konumlar"
+
+#: flask/templates/worldinfo/detail.html:24
+msgid "Locations & Backgrounds"
+msgstr "Konumlar ve Arka Planlar"
+
+#: flask/templates/worldinfo/detail.html:45
+msgid "Really delete WorldInfo?"
+msgstr "WorldInfo gerçekten silinsin mi?"
+
+#: flask/templates/worldinfo/detail.html:46
+msgid "Read-only (External World)"
+msgstr "Salt okunur (Harici Dünya)"
+
+#: flask/templates/worldinfo/detail.html:47
+msgid "Save WorldInfo"
+msgstr "WorldInfo'yu Kaydet"
+
+#: flask/templates/worldinfo/detail.html:64
+msgid "World Name"
+msgstr "Dünya Adı"
+
+#: flask/templates/worldinfo/detail.html:65
+msgid "The name of the universe or setting. Included as primary world in the prompt context."
+msgstr "Evrenin veya ortamın adı. İstem bağlamına birincil dünya olarak dahil edilir."
+
+#: flask/templates/worldinfo/detail.html:77
+msgid "Cover Image (1:1)"
+msgstr "Kapak Görseli (1:1)"
+
+#: flask/templates/worldinfo/detail.html:78
+msgid "Square cover image for the world card in the Hub and world selection."
+msgstr "Hub'daki ve dünya seçimindeki dünya kartı için kare kapak görseli."
+
+#: flask/templates/worldinfo/detail.html:81
+msgid "1:1 World Cover"
+msgstr "1:1 Dünya Kapağı"
+
+#: flask/templates/worldinfo/detail.html:93
+msgid "Choose Cover"
+msgstr "Kapak Seç"
+
+#: flask/templates/worldinfo/detail.html:95
+msgid "Crop"
+msgstr "Kırp"
+
+#: flask/templates/worldinfo/detail.html:107
+msgid "Private = only accessible to you. Public = accessible to all users for chats."
+msgstr "Özel = yalnızca sizin tarafınızdan erişilebilir. Herkese Açık = sohbetler için tüm kullanıcılar tarafından erişilebilir."
+
+#: flask/templates/worldinfo/detail.html:118
+msgid "Linked Lorebook (Optional)"
+msgstr "Bağlı Bilgi Kitabı (İsteğe Bağlı)"
+
+#: flask/templates/worldinfo/detail.html:119
+msgid "An optional lorebook automatically included alongside character lorebooks in all chats using this world."
+msgstr "Bu dünyayı kullanan tüm sohbetlerde karakter bilgi kitaplarının yanında otomatik olarak dahil edilen isteğe bağlı bir bilgi kitabı."
+
+#: flask/templates/worldinfo/detail.html:122
+msgid "No lorebook linked"
+msgstr "Bağlı bilgi kitabı yok"
+
+#: flask/templates/worldinfo/detail.html:144
+msgid "New Location"
+msgstr "Yeni Konum"
+
+#: flask/templates/worldinfo/detail.html:151 flask/templates/worldinfo/detail.html:154 flask/templates/worldinfo/detail.html:166
+msgid "This location is bound to"
+msgstr "Bu konum şuna bağlıdır:"
+
+#: flask/templates/worldinfo/detail.html:177
+msgid "Edit Location:"
+msgstr "Konumu Düzenle:"
+
+#: flask/templates/worldinfo/detail.html:183 flask/templates/worldinfo/detail.html:316
+msgid "Location Name"
+msgstr "Konum Adı"
+
+#: flask/templates/worldinfo/detail.html:184 flask/templates/worldinfo/detail.html:317
+msgid "Name of the location (e.g. Old Library, Griffin Tavern)."
+msgstr "Konumun adı (ör. Eski Kütüphane, Grifon Hanı)."
+
+#: flask/templates/worldinfo/detail.html:197 flask/templates/worldinfo/detail.html:330
+msgid "Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet)."
+msgstr "Çevreyi tanımlayan virgülle ayrılmış anahtar kelimeler (ör. kapalı mekan, rahat, sessiz)."
+
+#: flask/templates/worldinfo/detail.html:199 flask/templates/worldinfo/detail.html:332
+msgid "Extract Tags"
+msgstr "Etiketleri Çıkar"
+
+#: flask/templates/worldinfo/detail.html:207 flask/templates/worldinfo/detail.html:340
+msgid "16:9 Background Image (PNG, JPG, WEBP)"
+msgstr "16:9 Arka Plan Görseli (PNG, JPG, WEBP)"
+
+#: flask/templates/worldinfo/detail.html:208 flask/templates/worldinfo/detail.html:341
+msgid "Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference."
+msgstr "Sohbet sahnesi arka planı ve ComfyUI referansı olarak kullanılan yatay 16:9 görsel."
+
+#: flask/templates/worldinfo/detail.html:214 flask/templates/worldinfo/detail.html:347
+msgid "Analyze & Describe Image"
+msgstr "Görseli Analiz Et ve Açıkla"
+
+#: flask/templates/worldinfo/detail.html:221 flask/templates/worldinfo/detail.html:354
+msgid "Location Description"
+msgstr "Konum Açıklaması"
+
+#: flask/templates/worldinfo/detail.html:222 flask/templates/worldinfo/detail.html:355
+msgid "Atmospheric description of the environment, sounds, and mood."
+msgstr "Çevrenin, seslerin ve ruh halinin atmosferik açıklaması."
+
+#: flask/templates/worldinfo/detail.html:239 flask/templates/worldinfo/detail.html:372
+msgid "Character Binding (Optional)"
+msgstr "Karakter Bağlama (İsteğe Bağlı)"
+
+#: flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:373
+msgid "If selected, this location can only be entered when chatting with that specific character."
+msgstr "Seçilirse, bu konuma yalnızca o belirli karakterle sohbet ederken girilebilir."
+
+#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:376
+msgid "No character (Freely accessible)"
+msgstr "Karakter yok (Serbestçe erişilebilir)"
+
+#: flask/templates/worldinfo/detail.html:253
+msgid "Assigned Location Events:"
+msgstr "Atanan Konum Olayları:"
+
+#: flask/templates/worldinfo/detail.html:258
+msgid "No specific location events assigned."
+msgstr "Atanmış belirli bir konum olayı yok."
+
+#: flask/templates/worldinfo/detail.html:310
+msgid "Create New Location"
+msgstr "Yeni Konum Oluştur"
+
+#: flask/templates/worldinfo/detail.html:334
+msgid "tavern, forest, castle"
+msgstr "han, orman, kale"
+
+#: flask/templates/worldinfo/detail.html:387
+msgid "Save Location"
+msgstr "Konumu Kaydet"
+
+#: flask/templates/worldinfo/detail.html:394
+msgid "Set 1:1 World Cover"
+msgstr "1:1 Dünya Kapağını Ayarla"
+
+#: flask/templates/worldinfo/detail.html:394
+msgid "1:1 Cover"
+msgstr "1:1 Kapak"
+

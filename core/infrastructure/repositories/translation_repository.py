@@ -241,7 +241,7 @@ class TranslationRepository:
         target_lang: str,
         default_text: str,
     ) -> str:
-        cleaned_lang = target_lang.strip().lower()[:2] if target_lang else "de"
+        cleaned_lang = target_lang.strip().lower()[:2] if target_lang else "en"
         if entity_id:
             variants = self.get_field_translations(entity_type, entity_id, field_name)
             if cleaned_lang in variants and variants[cleaned_lang].get("text", "").strip():
@@ -251,6 +251,71 @@ class TranslationRepository:
             if rec is not None and rec.translated_text.strip():
                 return rec.translated_text.strip()
         return default_text
+
+    def get_missing_languages(
+        self,
+        entity_type: str,
+        entity_id: int,
+        field_name: str,
+        target_languages: list[str],
+    ) -> list[str]:
+        if not entity_id:
+            return []
+        existing = self.get_field_translations(entity_type, entity_id, field_name)
+        missing: list[str] = []
+        for lang in target_languages:
+            code = lang.strip().lower()[:2]
+            if not code:
+                continue
+            entry = existing.get(code)
+            if entry is None or not str(entry.get("text", "")).strip() or bool(entry.get("is_outdated")):
+                missing.append(code)
+        return missing
+
+    def is_entity_ready_for_language(
+        self,
+        entity_type: str,
+        entity_id: int | None,
+        language: str,
+        required_fields: list[tuple[str, str]],
+        origin_language: str = "en",
+    ) -> bool:
+        if not entity_id:
+            return False
+        cleaned_lang = (language or "en").strip().lower()[:2]
+        cleaned_origin = (origin_language or "en").strip().lower()[:2]
+        if cleaned_lang == cleaned_origin:
+            return True
+        trans_map = self.get_entity_translations_map(entity_type, entity_id)
+        for field_name, base_value in required_fields:
+            if not isinstance(base_value, str) or not base_value.strip():
+                continue
+            field_langs = trans_map.get(field_name, {})
+            entry = field_langs.get(cleaned_lang)
+            if entry is None or not str(entry.get("text", "")).strip():
+                return False
+        return True
+
+    def delete_field_translations(
+        self,
+        entity_type: str,
+        entity_id: int,
+        field_name: str | None = None,
+    ) -> int:
+        if not entity_id:
+            return 0
+        with get_db_session() as conn:
+            if field_name:
+                cur = conn.execute(
+                    "DELETE FROM entity_field_translations WHERE entity_type = ? AND entity_id = ? AND field_name = ?",
+                    (entity_type, entity_id, field_name),
+                )
+            else:
+                cur = conn.execute(
+                    "DELETE FROM entity_field_translations WHERE entity_type = ? AND entity_id = ?",
+                    (entity_type, entity_id),
+                )
+            return int(cur.rowcount or 0)
 
     @staticmethod
     def _to_entity(row: sqlite3.Row) -> TranslationRecord:

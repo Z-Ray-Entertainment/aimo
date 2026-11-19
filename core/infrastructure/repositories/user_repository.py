@@ -147,6 +147,18 @@ class UserRepository(BaseRepository[User]):
                     (user_perms.user_id, perm),
                 )
 
+    def list_distinct_languages(self) -> list[str]:
+        with get_db_session() as conn:
+            rows = conn.execute(
+                "SELECT DISTINCT LOWER(SUBSTR(TRIM(language), 1, 2)) AS lang FROM users WHERE TRIM(language) != ''"
+            ).fetchall()
+            langs: list[str] = ["en"]
+            for row in rows:
+                code = str(row["lang"] or "").strip()
+                if code and code not in langs:
+                    langs.append(code)
+            return langs
+
     @staticmethod
     def _to_entity(row: sqlite3.Row) -> User:
         tag = (

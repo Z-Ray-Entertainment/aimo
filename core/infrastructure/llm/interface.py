@@ -13,7 +13,12 @@ class LLMProvider(ABC):
     DISPLAY_NAME: ClassVar[str] = ""
     BADGE_LABEL: ClassVar[str] = ""
     DESCRIPTION: ClassVar[str] = ""
+    IS_CLOUD: ClassVar[bool] = False
     DEFAULT_MODEL_ROLES: ClassVar[dict[str, dict[str, str]]] = {}
+
+    @classmethod
+    def is_cloud_provider(cls) -> bool:
+        return bool(cls.IS_CLOUD)
 
     @classmethod
     def get_recommended_models(cls) -> dict[str, dict[str, str]]:

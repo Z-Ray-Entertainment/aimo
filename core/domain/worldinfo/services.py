@@ -20,6 +20,7 @@ class WorldInfoService:
         cover_image_path: str | None = None,
         lorebook_id: int | None = None,
         collaborator_creator_tags: list[str] | None = None,
+        is_proper_noun: bool = False,
     ) -> WorldInfo:
         DomainValidator.validate_positive_user_id(user_id, InvalidWorldInfoDataError)
         cleaned_name = DomainValidator.validate_required_string(name, "WorldInfo name", InvalidWorldInfoDataError)
@@ -40,6 +41,7 @@ class WorldInfoService:
                 t.strip().lower() for t in collaborator_creator_tags
                 if isinstance(t, str) and t.strip()
             ] if collaborator_creator_tags else [],
+            is_proper_noun=bool(is_proper_noun),
             created_at=datetime.now(timezone.utc),
         )
 
@@ -52,6 +54,7 @@ class WorldInfoService:
         cover_image_path: str | None | object = ...,
         lorebook_id: int | None | object = ...,
         collaborator_creator_tags: list[str] | None = None,
+        is_proper_noun: bool | None = None,
     ) -> WorldInfo:
         worldinfo.name = DomainValidator.validate_required_string(name, "WorldInfo name", InvalidWorldInfoDataError)
         if icon is not ...:
@@ -71,6 +74,8 @@ class WorldInfoService:
                 t.strip().lower() for t in collaborator_creator_tags
                 if isinstance(t, str) and t.strip()
             ]
+        if is_proper_noun is not None:
+            worldinfo.is_proper_noun = bool(is_proper_noun)
         return worldinfo
 
     def extract_tags_from_description(
@@ -124,6 +129,7 @@ class WorldInfoService:
         bg_path: str | None = None,
         vision_alt_text: str | None = None,
         character_id: int | None = None,
+        is_proper_noun: bool = False,
     ) -> Location:
         if isinstance(worldinfo_id, bool) or not isinstance(worldinfo_id, int) or worldinfo_id <= 0:
             raise InvalidWorldInfoDataError("A valid positive worldinfo_id is required.")
@@ -155,6 +161,7 @@ class WorldInfoService:
             background_image_path=cleaned_bg,
             vision_alt_text=cleaned_alt,
             character_id=valid_char_id,
+            is_proper_noun=bool(is_proper_noun),
         )
 
     def update_location(
@@ -166,6 +173,7 @@ class WorldInfoService:
         bg_path: str | None = None,
         vision_alt_text: str | None = None,
         character_id: int | None | object = ...,
+        is_proper_noun: bool | None = None,
     ) -> Location:
         cleaned_name = name.strip() if isinstance(name, str) else ""
         if not cleaned_name:
@@ -184,6 +192,8 @@ class WorldInfoService:
                 if character_id is not None and not isinstance(character_id, bool) and int(character_id) > 0
                 else None
             )
+        if is_proper_noun is not None:
+            location.is_proper_noun = bool(is_proper_noun)
         return location
 
     @staticmethod
@@ -229,6 +239,7 @@ class WorldInfoService:
         character_id: int | None = None,
         min_relationship: int | None = None,
         max_relationship: int | None = None,
+        is_proper_noun: bool = False,
     ) -> Event:
         if worldinfo_id is not None and (isinstance(worldinfo_id, bool) or not isinstance(worldinfo_id, int) or worldinfo_id <= 0):
             raise InvalidWorldInfoDataError("A valid positive worldinfo_id is required.")
@@ -269,6 +280,7 @@ class WorldInfoService:
             character_id=character_id,
             min_relationship=norm_min_rel,
             max_relationship=norm_max_rel,
+            is_proper_noun=bool(is_proper_noun),
         )
 
     def update_event(
@@ -281,6 +293,7 @@ class WorldInfoService:
         location_id: int | None = None,
         min_relationship: int | None = None,
         max_relationship: int | None = None,
+        is_proper_noun: bool | None = None,
     ) -> Event:
         cleaned_title = title.strip() if isinstance(title, str) else ""
         if not cleaned_title:
@@ -308,6 +321,8 @@ class WorldInfoService:
         event.location_id = location_id
         event.min_relationship = norm_min_rel
         event.max_relationship = norm_max_rel
+        if is_proper_noun is not None:
+            event.is_proper_noun = bool(is_proper_noun)
         return event
 
     def initialize_cooldown(self) -> int:

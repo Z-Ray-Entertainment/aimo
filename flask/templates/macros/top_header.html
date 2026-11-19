@@ -14,9 +14,9 @@
 
   {% if g.current_user %}
     <nav class="header-nav header-hub-nav" id="header-hub-nav">
-      {{ action_button("KI-Charaktere", href=url_for('overview.index', tab='characters'), icon="👤", active=((request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters'), data={"hub-tab": "tab-characters"}) }}
-      {{ action_button("Lorebooks", href=url_for('overview.index', tab='lorebooks'), icon="📜", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks'), data={"hub-tab": "tab-lorebooks"}) }}
-      {{ action_button("Worlds", href=url_for('overview.index', tab='worldinfo'), icon="🌐", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo'), data={"hub-tab": "tab-worldinfo"}) }}
+      {{ action_button(_("AI Characters"), href=url_for('overview.index', tab='characters'), icon="👤", active=((request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters'), data={"hub-tab": "tab-characters"}) }}
+      {{ action_button(_("Lorebooks"), href=url_for('overview.index', tab='lorebooks'), icon="📜", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks'), data={"hub-tab": "tab-lorebooks"}) }}
+      {{ action_button(_("Worlds"), href=url_for('overview.index', tab='worldinfo'), icon="🌐", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo'), data={"hub-tab": "tab-worldinfo"}) }}
     </nav>
   {% else %}
     <div class="header-nav-placeholder"></div>
@@ -27,7 +27,7 @@
       <button type="button"
               class="persona-avatar-btn user-menu-toggle"
               id="mobile-menu-toggle"
-              aria-label="Menü öffnen"
+              aria-label="{{ _('Open menu') }}"
               aria-expanded="false"
               aria-controls="mobile-dropdown-menu"
               title="{{ g.default_persona.name if g.default_persona else 'Benutzermenü' }}">
@@ -41,25 +41,25 @@
       <div class="mobile-dropdown-menu" id="mobile-dropdown-menu" aria-hidden="true">
         <div class="mobile-only-nav-group">
           <div class="mobile-menu-group">
-            {{ action_button("KI-Charaktere", href=url_for('overview.index', tab='characters'), icon="👤", active=((request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters'), data={"hub-tab": "tab-characters"}, extra_class="mobile-nav-btn") }}
-            {{ action_button("Lorebooks", href=url_for('overview.index', tab='lorebooks'), icon="📜", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks'), data={"hub-tab": "tab-lorebooks"}, extra_class="mobile-nav-btn") }}
-            {{ action_button("Worlds", href=url_for('overview.index', tab='worldinfo'), icon="🌐", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo'), data={"hub-tab": "tab-worldinfo"}, extra_class="mobile-nav-btn") }}
+            {{ action_button(_("AI Characters"), href=url_for('overview.index', tab='characters'), icon="👤", active=((request.endpoint == 'overview.index' and (active_tab|default('characters')) == 'characters') or request.blueprint == 'characters'), data={"hub-tab": "tab-characters"}, extra_class="mobile-nav-btn") }}
+            {{ action_button(_("Lorebooks"), href=url_for('overview.index', tab='lorebooks'), icon="📜", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'lorebooks') or request.blueprint == 'lorebooks'), data={"hub-tab": "tab-lorebooks"}, extra_class="mobile-nav-btn") }}
+            {{ action_button(_("Worlds"), href=url_for('overview.index', tab='worldinfo'), icon="🌐", active=((request.endpoint == 'overview.index' and (active_tab|default('')) == 'worldinfo') or request.blueprint == 'worldinfo'), data={"hub-tab": "tab-worldinfo"}, extra_class="mobile-nav-btn") }}
           </div>
 
           <hr class="aimo-menu-divider">
         </div>
 
         <div class="mobile-menu-group">
-          {{ action_button("Einstellungen", href=url_for('settings.index'), icon="⚙️", active=(request.blueprint == 'settings'), extra_class="mobile-nav-btn") }}
+          {{ action_button(_("Settings"), href=url_for('settings.index'), icon="⚙️", active=(request.blueprint == 'settings'), extra_class="mobile-nav-btn") }}
 
           <hr class="aimo-menu-divider">
 
           {% if has_perm('admin_access') %}
-            {{ action_button("Administration", href=url_for('admin.users_list'), icon="🛡️", active=(request.blueprint == 'admin'), extra_class="mobile-nav-btn") }}
+            {{ action_button(_("Administration"), href=url_for('admin.users_list'), icon="🛡️", active=(request.blueprint == 'admin'), extra_class="mobile-nav-btn") }}
             <hr class="aimo-menu-divider">
           {% endif %}
 
-          {{ action_button("Logout", href=url_for('auth.logout'), icon="🚪", extra_class="mobile-nav-btn") }}
+          {{ action_button(_("Logout"), href=url_for('auth.logout'), icon="🚪", extra_class="mobile-nav-btn") }}
         </div>
       </div>
     {% endif %}

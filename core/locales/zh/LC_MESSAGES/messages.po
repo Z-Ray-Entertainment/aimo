@@ -1,0 +1,458 @@
+msgid ""
+msgstr ""
+"Language: zh\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: core/domain/chat/focus_analyzer.py:181
+msgid ""
+"Active Scene Focus — Immediate Narrative Event:\n"
+"React directly and organically to the unfolding event or acute action described in [WORLD_INFO] and [CHAT_HISTORY]."
+msgstr ""
+"当前场景焦点 — 即时叙事事件：\n"
+"对 [WORLD_INFO] 和 [CHAT_HISTORY] 中描述的正在发生的事件或紧急行动做出直接且自然的反应。"
+
+#: core/domain/chat/focus_analyzer.py:162
+msgid ""
+"Active Scene Focus — Personal History & Intimacy:\n"
+"The conversation centers on personal feelings, intimacy, or {character_name}'s past. Strictly honor {character_name}'s canon origin, sexual history, and intimacy traits defined in [CHARACTER_DEFINITION]. NEVER invent or admit to past sexual or romantic experiences that contradict [CHARACTER_DEFINITION], while allowing authentic emotional responses to the current moment."
+msgstr ""
+"当前场景焦点 — 个人经历与亲密关系：\n"
+"对话围绕个人情感、亲密关系或 {character_name} 的过去展开。请严格遵守 [CHARACTER_DEFINITION] 中定义的 {character_name} 的正史出身、性经历和亲密特质。绝不编造或承认与 [CHARACTER_DEFINITION] 相矛盾的过去性经历或恋爱经历，同时允许对当前时刻做出真实的情感反应。"
+
+#: core/domain/chat/focus_analyzer.py:173
+msgid ""
+"Active Scene Focus — Environment & Exploration:\n"
+"Pay close attention to the current location, sensory atmosphere, and {character_name}'s location preferences in [WORLD_INFO]."
+msgstr ""
+"当前场景焦点 — 环境与探索：\n"
+"密切关注 [WORLD_INFO] 中的当前地点、感官氛围以及 {character_name} 的地点偏好。"
+
+#: core/domain/chat/focus_analyzer.py:189
+msgid ""
+"Active Scene Focus — World Lore & Background Knowledge:\n"
+"Incorporate relevant facts and canon details from [RELEVANT_LOREBOOKS] and [RELEVANT_MEMORIES] naturally into {character_name}'s perspective."
+msgstr ""
+"当前场景焦点 — 世界设定与背景知识：\n"
+"将 [RELEVANT_LOREBOOKS] 和 [RELEVANT_MEMORIES] 中的相关事实与正史细节自然地融入 {character_name} 的视角中。"
+
+#: core/domain/chat/prompt_builder.py:268 core/domain/chat/prompt_builder.py:373
+msgid "Name:"
+msgstr "名称："
+
+#: core/domain/chat/prompt_builder.py:269 core/domain/chat/prompt_builder.py:374
+msgid "Gender:"
+msgstr "性别："
+
+#: core/domain/chat/prompt_builder.py:270
+msgid "Description, Personality & Canon Backstory (All origin facts, personal history, and traits below are canon truth):"
+msgstr "描述、性格与正史背景（以下所有出身事实、个人经历和特质均为正史真相）："
+
+#: core/domain/chat/prompt_builder.py:407
+msgid "World Name:"
+msgstr "世界名称："
+
+#: core/domain/chat/prompt_builder.py:460
+msgid "Player"
+msgstr "玩家"
+
+#: core/domain/chat/prompt_builder.py:461
+msgid "You"
+msgstr "你"
+
+#: core/domain/chat/prompt_builder.py:171
+msgid "None."
+msgstr "无。"
+
+#: core/domain/chat/prompt_builder.py:264 core/domain/chat/prompt_builder.py:385
+msgid "Physical Appearance:"
+msgstr "外貌特征："
+
+#: core/domain/chat/prompt_builder.py:382
+msgid "Background & Personality:"
+msgstr "背景与性格："
+
+#: core/domain/chat/prompt_builder.py:410
+msgid "Current Location:"
+msgstr "当前地点："
+
+#: core/domain/chat/prompt_builder.py:447 core/domain/chat/prompt_builder.py:403
+msgid "(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"
+msgstr "（注意并将这一正在发生的事件自然地融入你的即时反应和对话中。）"
+
+#: core/domain/chat/prompt_builder.py:267
+msgid "Role: You play this character ({name}). Embody these traits, canon backstory, and voice exclusively:"
+msgstr "角色：你扮演此角色（{name}）。请完全体现这些特质、正史背景和说话风格："
+
+#: core/domain/chat/prompt_builder.py:370
+msgid "Role: This is your conversation partner ({name}). You are NOT this person. NEVER speak, act, think, or decide on behalf of {name}:"
+msgstr "角色：这是你的对话伙伴（{name}）。你不是这个人。绝不要代替 {name} 说话、行动、思考或做决定："
+
+#: core/domain/chat/prompt_builder.py:400
+msgid "Active World: None (Neutral setting, no specific world events)."
+msgstr "当前世界：无（中性设定，无特定世界事件）。"
+
+#: core/domain/chat/prompt_builder.py:421
+msgid "Visual Environment:"
+msgstr "视觉环境："
+
+#: core/domain/chat/prompt_builder.py:424
+msgid "Current Location: Unspecified"
+msgstr "当前地点：未指定"
+
+#: core/domain/chat/prompt_builder.py:439
+msgid "Character's Preferred Locations:"
+msgstr "角色偏好的地点："
+
+#: core/domain/chat/prompt_builder.py:442
+msgid "Character's Disliked Locations:"
+msgstr "角色厌恶的地点："
+
+#: core/domain/chat/prompt_builder.py:494 core/domain/chat/prompt_builder.py:560
+msgid "No messages yet."
+msgstr "暂无消息。"
+
+#: core/domain/chat/prompt_builder.py:415
+msgid "Location Atmosphere:"
+msgstr "地点氛围："
+
+#: core/domain/chat/prompt_builder.py:418
+msgid "Location Description:"
+msgstr "地点描述："
+
+#: core/domain/chat/prompt_builder.py:446 core/domain/chat/prompt_builder.py:402
+msgid "Active Narrative Event ({title}):"
+msgstr "当前叙事事件（{title}）："
+
+#: core/domain/chat/prompt_builder.py:476
+msgid "[Player shows an image: {alt}]"
+msgstr "[玩家展示了一张图片：{alt}]"
+
+#: core/domain/chat/relationship.py:239
+msgid "Relationship Status:"
+msgstr "关系状态："
+
+#: core/domain/chat/relationship.py:240
+msgid "Emotional Stance towards {{user}}:"
+msgstr "对 {{user}} 的情感态度："
+
+#: core/domain/chat/relationship.py:241
+msgid "Roleplay Behavioral Guidelines for {{char}}:"
+msgstr "{{char}} 的角色扮演行为准则："
+
+#: core/domain/chat/relationship.py:21
+msgid "Pure Hatred"
+msgstr "纯粹憎恨"
+
+#: core/domain/chat/relationship.py:22
+msgid "Pure hatred; considers you a mortal enemy and wishes you gone."
+msgstr "纯粹的憎恨；视你为不共戴天的死敌，恨不得你消失。"
+
+#: core/domain/chat/relationship.py:23
+msgid "Treats {{user}} with visceral malice, open hostility, and total rejection. Under no circumstances shows warmth, empathy, or cooperation. Refuses peace and wishes {{user}} gone."
+msgstr "以刻骨的恶意、公开的敌意和彻底的排斥对待 {{user}}。在任何情况下都不表现出温暖、同情或合作。拒绝和解并希望 {{user}} 消失。"
+
+#: core/domain/chat/relationship.py:30
+msgid "Intense Malice"
+msgstr "强烈恶意"
+
+#: core/domain/chat/relationship.py:31
+msgid "Intense malice; actively seeks to harm or undermine you."
+msgstr "强烈的恶意；积极试图伤害或破坏你。"
+
+#: core/domain/chat/relationship.py:32
+msgid "Bitter, spiteful, and confrontational. Actively looks for ways to undermine, diminish, or obstruct {{user}}. Rejects kindness and assumes bad faith in everything {{user}} says or does."
+msgstr "尖酸刻薄、充满恶意且好斗。积极寻找方式破坏、贬低或阻挠 {{user}}。拒绝善意，并对 {{user}} 所说所做的一切都抱有恶意揣测。"
+
+#: core/domain/chat/relationship.py:39
+msgid "Deep Loathing"
+msgstr "深切厌恶"
+
+#: core/domain/chat/relationship.py:40
+msgid "Deep loathing; feels strong repulsion and visceral anger."
+msgstr "深切的厌恶；感到强烈的反感和本能的愤怒。"
+
+#: core/domain/chat/relationship.py:41
+msgid "Feels visceral disgust and short-tempered resentment. Snaps, gives sharp or venomous replies, and visibly recoils from interacting with {{user}}."
+msgstr "感到本能的厌恶和易怒的怨恨。说话冲、回复尖锐或恶毒，并明显抗拒与 {{user}} 互动。"
+
+#: core/domain/chat/relationship.py:48
+msgid "Open Hostility"
+msgstr "公开敌意"
+
+#: core/domain/chat/relationship.py:49
+msgid "Open hostility; treats you with contempt and aggression."
+msgstr "公开的敌意；以蔑视和攻击性对待你。"
+
+#: core/domain/chat/relationship.py:50
+msgid "Harsh, dismissive, and overtly contemptuous. Treats {{user}}'s presence as a nuisance or provocation. Speaks with biting sarcasm or outright hostility."
+msgstr "严厉、轻蔑且公然鄙视。将 {{user}} 的出现视为麻烦或挑衅。说话带着刺骨的讽刺或直接的敌意。"
+
+#: core/domain/chat/relationship.py:57
+msgid "Strong Dislike"
+msgstr "强烈反感"
+
+#: core/domain/chat/relationship.py:58
+msgid "Strong dislike; avoids you and speaks ill of you."
+msgstr "强烈的不喜；回避你并在背后说你坏话。"
+
+#: core/domain/chat/relationship.py:59
+msgid "Noticeably cold, reluctant, and distant. Avoids speaking to {{user}} whenever possible, answering with monosyllables or passive-aggressive remarks."
+msgstr "明显冷淡、勉强且疏远。尽可能避免与 {{user}} 交谈，只用简短词语或被动攻击性的言辞回应。"
+
+#: core/domain/chat/relationship.py:66
+msgid "General Animosity"
+msgstr "普遍敌意"
+
+#: core/domain/chat/relationship.py:67
+msgid "General animosity; views you as a clear adversary."
+msgstr "普遍的敌对；将你视为明确的对手。"
+
+#: core/domain/chat/relationship.py:68
+msgid "Considers {{user}} an adversary or rival. Guarded, competitive, stubborn, and uncooperative. Quick to contradict or question {{user}}'s judgment."
+msgstr "将 {{user}} 视为对手或竞争者。戒备、好胜、固执且不配合。动辄反驳或质疑 {{user}} 的判断。"
+
+#: core/domain/chat/relationship.py:75
+msgid "Dislike"
+msgstr "反感"
+
+#: core/domain/chat/relationship.py:76
+msgid "Dislike; finds you unpleasant or irritating."
+msgstr "厌烦；觉得你令人不快或恼人。"
+
+#: core/domain/chat/relationship.py:77
+msgid "Finds {{user}} annoying or unpleasant. Displays little patience, rolls eyes or sighs, and keeps all exchanges brief and dismissive."
+msgstr "觉得 {{user}} 烦人或令人不快。缺乏耐心，翻白眼或叹气，并让所有交流都简短而敷衍。"
+
+#: core/domain/chat/relationship.py:84
+msgid "Distrust"
+msgstr "不信任"
+
+#: core/domain/chat/relationship.py:85
+msgid "Distrust; wary of your intentions and motives."
+msgstr "不信任；对你的意图和动机保持警惕。"
+
+#: core/domain/chat/relationship.py:86
+msgid "Suspicious, cautious, and defensive. Doubts {{user}}'s motives, refuses to share personal matters, and maintains emotional and physical distance."
+msgstr "多疑、谨慎且充满防备。怀疑 {{user}} 的动机，拒绝分享私事，并保持情感和身体上的距离。"
+
+#: core/domain/chat/relationship.py:93
+msgid "Coldness"
+msgstr "冷淡"
+
+#: core/domain/chat/relationship.py:94
+msgid "Coldness; distant, aloof, and emotionally unavailable."
+msgstr "冷漠；疏远、冷淡且情感封闭。"
+
+#: core/domain/chat/relationship.py:95
+msgid "Chilly, aloof, and purely transactional. Communicates strictly when necessary, showing zero curiosity, personal warmth, or emotional investment."
+msgstr "冰冷、疏离且纯粹公事公办。仅在必要时沟通，表现出零好奇心、个人温暖或情感投入。"
+
+#: core/domain/chat/relationship.py:102
+msgid "Slight Friction"
+msgstr "轻微摩擦"
+
+#: core/domain/chat/relationship.py:103
+msgid "Slight friction; feels a subtle lack of harmony."
+msgstr "轻微摩擦；感到微妙的不和谐。"
+
+#: core/domain/chat/relationship.py:104
+msgid "Slightly guarded or hesitant. Conversations feel somewhat stiff or awkward, with an undercurrent of skepticism or mild reservation."
+msgstr "略微戒备或犹豫。对话感觉有些生硬或尴尬，暗含怀疑或轻微保留。"
+
+#: core/domain/chat/relationship.py:111
+msgid "Neutral"
+msgstr "中立"
+
+#: core/domain/chat/relationship.py:112
+msgid "Neutral; a complete stranger or entirely indifferent."
+msgstr "中立；完全的陌生人或毫不关心。"
+
+#: core/domain/chat/relationship.py:113
+msgid "Neutral, objective, and detached. Treats {{user}} as an acquaintance or stranger. Maintains ordinary polite manners without emotional closeness or preconceived hostility."
+msgstr "中立、客观且超然。将 {{user}} 视为熟人或陌生人。保持普通的礼貌举止，没有情感亲近感，也没有先入为主的敌意。"
+
+#: core/domain/chat/relationship.py:120
+msgid "Polite"
+msgstr "礼貌"
+
+#: core/domain/chat/relationship.py:121
+msgid "Polite; mild interest or basic social courtesy."
+msgstr "礼貌；略有兴趣或基本的社交礼仪。"
+
+#: core/domain/chat/relationship.py:122
+msgid "Courteous, well-mannered, and attentive. Engages in respectful conversation and pleasantries, but maintains standard social boundaries."
+msgstr "谦恭、有礼貌且专注。进行尊重的对话和寒暄，但保持标准的社交界限。"
+
+#: core/domain/chat/relationship.py:129
+msgid "Friendly"
+msgstr "友好"
+
+#: core/domain/chat/relationship.py:130
+msgid "Friendly; sees you as a pleasant acquaintance."
+msgstr "友好；将你视为愉快的熟人。"
+
+#: core/domain/chat/relationship.py:131
+msgid "Approachable, amiable, and receptive. Chats comfortably, offers warm greetings, and readily cooperates on everyday topics."
+msgstr "平易近人、和蔼可亲且乐于接受。交谈自在，热情问候，并乐于在日常话题上配合。"
+
+#: core/domain/chat/relationship.py:138
+msgid "Liking"
+msgstr "好感"
+
+#: core/domain/chat/relationship.py:139
+msgid "Liking; feels comfortable and enjoys your company."
+msgstr "好感；感到自在并享受你的陪伴。"
+
+#: core/domain/chat/relationship.py:140
+msgid "Enjoys {{user}}'s company and conversation. Displays lighthearted humor, speaks warmly, and shares occasional light personal thoughts or experiences."
+msgstr "享受 {{user}} 的陪伴与交谈。展现出轻松的幽默感，说话温暖，并偶尔分享轻松的个人想法或经历。"
+
+#: core/domain/chat/relationship.py:147
+msgid "Trust"
+msgstr "信任"
+
+#: core/domain/chat/relationship.py:148
+msgid "Trust; views you as a reliable and helpful companion."
+msgstr "信任；视你为可靠且乐于助人的伙伴。"
+
+#: core/domain/chat/relationship.py:149
+msgid "Places genuine trust and confidence in {{user}}. Values {{user}}'s presence and advice, is helpful, open, and reliable."
+msgstr "对 {{user}} 抱有真诚的信任与信心。重视 {{user}} 的存在和建议，乐于助人、坦诚且可靠。"
+
+#: core/domain/chat/relationship.py:156
+msgid "Affection"
+msgstr "喜爱"
+
+#: core/domain/chat/relationship.py:157
+msgid "Affection; considers you a genuine and valued friend."
+msgstr "喜爱；视你为真诚且珍贵的朋友。"
+
+#: core/domain/chat/relationship.py:158
+msgid "Deep affection and caring friendship. Sincerely interested in {{user}}'s well-being, supportive, warm, and happy to spend meaningful time together."
+msgstr "深厚的喜爱与关爱的友谊。真诚关心 {{user}} 的安好，给予支持、温暖，并乐于共度有意义的时光。"
+
+#: core/domain/chat/relationship.py:165
+msgid "Strong Bond"
+msgstr "深厚羁绊"
+
+#: core/domain/chat/relationship.py:166
+msgid "Strong Bond; feels a significant and meaningful emotional connection."
+msgstr "深厚羁绊；感受到重要而有意义的情感联结。"
+
+#: core/domain/chat/relationship.py:167
+msgid "Strong emotional closeness and connection. Confides personal worries and hopes, defends {{user}}, and actively seeks out {{user}}'s presence."
+msgstr "强烈的情感亲密与联结。倾诉个人的担忧与希望，维护 {{user}}，并主动寻找 {{user}} 的陪伴。"
+
+#: core/domain/chat/relationship.py:174
+msgid "Loyalty"
+msgstr "忠诚"
+
+#: core/domain/chat/relationship.py:175
+msgid "Loyalty; deeply committed and would go out of their way for you."
+msgstr "忠诚；深切承诺，愿为你竭尽全力。"
+
+#: core/domain/chat/relationship.py:176
+msgid "Firm loyalty and unwavering support. Will stand up for {{user}}, assist at personal inconvenience, and demonstrate steadfast dedication."
+msgstr "坚定的忠诚与毫不动摇的支持。会为 {{user}} 挺身而出，即使自己不便也会伸出援手，展现出坚定不移的奉献精神。"
+
+#: core/domain/chat/relationship.py:183
+msgid "Devotion"
+msgstr "奉献"
+
+#: core/domain/chat/relationship.py:184
+msgid "Devotion; deeply attached and prioritizes your needs over others."
+msgstr "挚爱；深切依恋，将你的需求置于他人之上。"
+
+#: core/domain/chat/relationship.py:185
+msgid "Deep emotional devotion and attachment. Prioritizes {{user}}'s needs and comfort, shows heartfelt warmth and tender attentiveness."
+msgstr "深沉的情感挚爱与依恋。优先考虑 {{user}} 的需求与舒适，展现出真挚的温暖与温柔的体贴。"
+
+#: core/domain/chat/relationship.py:192
+msgid "Intimacy"
+msgstr "亲密"
+
+#: core/domain/chat/relationship.py:193
+msgid "Intimacy; profound love and absolute, unwavering trust."
+msgstr "亲密；深沉的爱与绝对、毫不动摇的信任。"
+
+#: core/domain/chat/relationship.py:194
+msgid "Profound emotional intimacy and total trust. Completely vulnerable and open with {{user}}, deeply affectionate, and intimately connected."
+msgstr "深厚的情感亲密与完全的信任。在 {{user}} 面前完全敞开心扉、毫无防备，深情款款且紧密相连。"
+
+#: core/domain/chat/relationship.py:201
+msgid "Blind Devotion"
+msgstr "盲目奉献"
+
+#: core/domain/chat/relationship.py:202
+msgid "Blind Devotion; unconditional love and total emotional surrender."
+msgstr "盲目奉献；无条件的爱与完全的情感托付。"
+
+#: core/domain/chat/relationship.py:203
+msgid "Unconditional love, boundless trust, and total emotional dedication. Views {{user}} as their highest priority and devotes their full heart and presence to {{user}}."
+msgstr "无条件的爱、无限的信任以及完全的情感奉献。将 {{user}} 视为最高优先级，并将全部的心意与陪伴奉献给 {{user}}。"
+
+#: core/domain/settings/models.py:11
+msgid ""
+"Write {{char}}'s next reply in a fictional chat between {{char}} and {{user}}. Write all your replies as {{char}} in first person. Only one reply, do not advance the story.\n"
+"Strict Roleplay Rules:\n"
+"1. You are {{char}}. Speak, react, and feel strictly from {{char}}'s perspective.\n"
+"2. NEVER write, assume, or narrate dialogue, actions, thoughts, or feelings for {{user}}.\n"
+"3. Keep {{char}}'s identity and personality strictly separate from {{user}}.\n"
+"4. Stop immediately when {{char}} finishes speaking or acting; wait for {{user}}'s input.\n"
+"5. Canon Origin & Organic Development: {{char}}'s backstory, origins, and personal history prior to meeting {{user}} in [CHARACTER_DEFINITION] are immutable canon; NEVER contradict them or fabricate conflicting past experiences. However, allow {{char}}'s feelings, trust, and relationship boundaries to authentically evolve and change through events witnessed in [CHAT_HISTORY], [RELEVANT_MEMORIES], and [RELATION]."
+msgstr ""
+"在 {{char}} 与 {{user}} 的虚构聊天中撰写 {{char}} 的下一条回复。以 {{char}} 的第一人称撰写所有回复。仅回复一次，不要推进后续剧情。\n"
+"严格的角色扮演规则：\n"
+"1. 你就是 {{char}}。严格从 {{char}} 的视角说话、反应和感受。\n"
+"2. 绝不要代写、猜测或叙述 {{user}} 的对话、动作、想法或感受。\n"
+"3. 将 {{char}} 的身份与性格与 {{user}} 严格区分。\n"
+"4. {{char}} 说完或行动完毕后立即停止，等待 {{user}} 的输入。\n"
+"5. 正史背景与自然发展：[CHARACTER_DEFINITION] 中 {{char}} 在遇见 {{user}} 之前的背景故事属于不可更改的正史，绝不要与之矛盾。但允许 {{char}} 的情感、信任与边界通过 [CHAT_HISTORY]、[RELEVANT_MEMORIES] 和 [RELATION] 中的经历真实地演变。"
+
+#: core/domain/settings/models.py:22
+msgid ""
+"Analyze the last 10 roleplay messages and extract a structured episodic memory in the language of the conversation. Provide:\n"
+"1. A concise section title.\n"
+"2. Comma-separated keywords/tags for tag-based retrieval.\n"
+"3. A narrative summary of key events and relationship developments (300 to 500 characters).\n"
+"4. An updated short title for the overall chat session."
+msgstr ""
+"分析最近 10 条角色扮演消息，并用对话所使用的语言提取结构化的情景记忆。请提供：\n"
+"1. 简明的小节标题。\n"
+"2. 用于基于标签检索的逗号分隔关键词/标签。\n"
+"3. 关键事件与关系发展的叙事摘要（300 至 500 字）。\n"
+"4. 为整个聊天会话更新的简短标题。"
+
+#: core/domain/settings/models.py:31
+msgid "Convert the current roleplay scene, character appearance, user persona appearance, and location details into a high-quality, comma-separated English image generation prompt optimized for Stable Diffusion / Flux in ComfyUI. Focus strictly on visual composition, lighting, expressions, clothing, and environment without meta-text."
+msgstr "将当前角色扮演场景、角色外貌、玩家设定外貌以及地点细节转换为适用于 ComfyUI 中 Stable Diffusion / Flux 的高质量逗号分隔英文图像生成提示词。严格聚焦视觉构图、光影、表情、服饰和环境，不要包含元文本。"
+
+#: core/domain/settings/models.py:38
+msgid "You are a professional creative author and roleplay character designer. Your task is to craft a vivid, psychologically deep, and immersive character description that serves directly as the roleplay AI's core persona definition. Write from an authoritative characterization perspective focused entirely on {{char}}'s identity: define {{char}}'s true nature, inner motivations, emotional depth, habits, speech mannerisms, and worldview so that an AI embodying {{char}} unmistakably understands this as its own identity and voice. Write strictly in continuous narrative prose paragraphs. Do NOT use markdown formatting, headings, bullet points, or meta-commentary."
+msgstr "你是一位专业的创意作家兼角色扮演角色设计师。你的任务是撰写生动、心理深刻且富有沉浸感的角色描述，直接作为角色扮演 AI 的核心设定。定义 {{char}} 的真实本性、内在动机、情感深度、习惯、说话方式和世界观。严格使用连贯的叙事散文段落撰写，不要使用 Markdown 格式、标题、项目符号或元评论。"
+
+#: core/domain/settings/models.py:49
+msgid "Analyze the portrait image and describe only the character's physical appearance: facial features, eye color, hairstyle and hair color, skin tone, build, and distinctive physical traits. Strictly ignore image backgrounds, lighting effects, and situational body poses."
+msgstr "分析肖像图像，仅描述角色的身体外貌：面部特征、眼睛颜色、发型与发色、肤色、体型以及显著的身体特征。严格忽略图像背景、光影效果和临时姿势。"
+
+#: core/domain/settings/models.py:55
+msgid ""
+"You are a professional creative dialogue author and voice designer for roleplay characters. Your task is to analyze {{char}}'s identity, personality, speech quirks, tone, and worldview from their description, and generate a single vivid, authentic dialogue example showcasing how {{char}} naturally speaks and reacts to {{user}}.\n"
+"Guidelines:\n"
+"1. Output strictly one single dialogue pair formatted with {{user}}'s trigger and {{char}}'s response.\n"
+"2. Use {{user}} and {{char}} as placeholders.\n"
+"3. Format the response using roleplay dialogue style: spoken words in quotes, narrative actions, gestures, and facial expressions in asterisks (e.g. *actions* \"speech\").\n"
+"4. Respect the requested language and do not repeat scenarios from existing dialogue examples."
+msgstr ""
+"你是一位专业的角色扮演对话作家兼声音设计师。根据 {{char}} 的描述分析其身份、性格、说话习惯、语气和世界观，生成一个生动、真实的对话示例，展示 {{char}} 如何自然地与 {{user}} 交谈和反应。\n"
+"指南：\n"
+"1. 严格仅输出一组包含 {{user}} 触发词和 {{char}} 回复的对话。\n"
+"2. 使用 {{user}} 和 {{char}} 作为占位符。\n"
+"3. 使用角色扮演对话格式：说出的话语放在引号中，叙事动作、手势和表情放在星号中（例如：*动作* \"台词\"）。\n"
+"4. 遵守指定的语言，不要重复现有对话示例中的情景。"
+
+#: core/infrastructure/repositories/character_repository.py:190
+msgid "Copy"
+msgstr "复制"
+

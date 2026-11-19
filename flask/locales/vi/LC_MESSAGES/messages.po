@@ -1,0 +1,2844 @@
+msgid ""
+msgstr ""
+"Language: vi\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: flask/application/admin/views.py:130 flask/application/admin/views.py:187
+msgid "User not found."
+msgstr "Không tìm thấy người dùng."
+
+#: flask/application/admin/views.py:193
+msgid "User '%(username)s' deleted."
+msgstr "Đã xóa người dùng '%(username)s'."
+
+#: flask/application/admin/views.py:106
+msgid "User '%(username)s' created successfully."
+msgstr "Đã tạo người dùng '%(username)s' thành công."
+
+#: flask/application/admin/views.py:158
+msgid "User '%(username)s' updated."
+msgstr "Đã cập nhật người dùng '%(username)s'."
+
+#: flask/application/admin/views.py:421
+msgid "System prompts saved successfully."
+msgstr "Đã lưu các prompt hệ thống thành công."
+
+#: flask/application/admin/views.py:214
+msgid "Suggested models assigned for all 5 roles successfully!"
+msgstr "Đã gán các mô hình đề xuất cho cả 5 vai trò thành công!"
+
+#: flask/application/admin/views.py:277
+msgid "Service settings and models saved successfully."
+msgstr "Đã lưu cài đặt dịch vụ và mô hình thành công."
+
+#: flask/application/admin/views.py:470
+msgid "System-wide default backdrop reset (default theme active)."
+msgstr "Đã đặt lại hình nền mặc định toàn hệ thống (đang dùng chủ đề mặc định)."
+
+#: flask/application/admin/views.py:487
+msgid "Please select an image file (PNG, JPG, WEBP) to upload."
+msgstr "Vui lòng chọn tệp ảnh (PNG, JPG, WEBP) để tải lên."
+
+#: flask/application/admin/views.py:482
+msgid "New system-wide default backdrop saved successfully."
+msgstr "Đã lưu hình nền mặc định toàn hệ thống mới thành công."
+
+#: flask/application/admin/views.py:495
+msgid "System-wide default backdrop assigned successfully."
+msgstr "Đã gán hình nền mặc định toàn hệ thống thành công."
+
+#: flask/application/auth/views.py:33
+msgid "Invalid email address or password."
+msgstr "Địa chỉ email hoặc mật khẩu không hợp lệ."
+
+#: flask/application/characters/views.py:392
+msgid "Copy '%(name)s' created as draft."
+msgstr "Đã tạo bản sao '%(name)s' dưới dạng bản nháp."
+
+#: flask/application/characters/views.py:408
+msgid "Character deleted."
+msgstr "Đã xóa nhân vật."
+
+#: flask/application/characters/views.py:452
+msgid "Gallery image removed."
+msgstr "Đã xóa ảnh thư viện."
+
+#: flask/application/characters/views.py:502
+msgid "Sprite %(name)s deleted."
+msgstr "Đã xóa sprite %(name)s."
+
+#: flask/application/characters/views.py:283 flask/application/characters/views.py:388 flask/application/chat/views.py:181 flask/application/chat/views.py:205
+msgid "Character not found."
+msgstr "Không tìm thấy nhân vật."
+
+#: flask/application/characters/views.py:287
+msgid "Access denied: You can only edit your own characters or creations shared with you."
+msgstr "Từ chối truy cập: Bạn chỉ có thể chỉnh sửa nhân vật của mình hoặc tác phẩm được chia sẻ với bạn."
+
+#: flask/application/characters/views.py:404
+msgid "Character not found or no permission to delete."
+msgstr "Không tìm thấy nhân vật hoặc không có quyền xóa."
+
+#: flask/application/characters/views.py:423 flask/application/characters/views.py:448 flask/application/characters/views.py:467 flask/application/characters/views.py:498 flask/application/characters/views.py:533
+msgid "Character not found or no permission."
+msgstr "Không tìm thấy nhân vật hoặc không có quyền."
+
+#: flask/application/characters/views.py:539 flask/application/characters/views.py:584
+msgid "Invalid or inaccessible location selected."
+msgstr "Đã chọn địa điểm không hợp lệ hoặc không thể truy cập."
+
+#: flask/application/characters/views.py:564 flask/application/worldinfo/views.py:383
+msgid "Event '%(title)s' added."
+msgstr "Đã thêm sự kiện '%(title)s'."
+
+#: flask/application/characters/views.py:631 flask/application/worldinfo/views.py:440
+msgid "Event deleted."
+msgstr "Đã xóa sự kiện."
+
+#: flask/application/characters/views.py:259
+msgid "Character '%(name)s' created successfully!"
+msgstr "Đã tạo nhân vật '%(name)s' thành công!"
+
+#: flask/application/characters/views.py:345
+msgid "Character '%(name)s' saved."
+msgstr "Đã lưu nhân vật '%(name)s'."
+
+#: flask/application/characters/views.py:433
+msgid "9:16 gallery image added."
+msgstr "Đã thêm ảnh thư viện 9:16."
+
+#: flask/application/characters/views.py:483
+msgid "Sprite '%(name)s' uploaded."
+msgstr "Đã tải lên sprite '%(name)s'."
+
+#: flask/application/characters/views.py:610 flask/application/worldinfo/views.py:422
+msgid "Event updated."
+msgstr "Đã cập nhật sự kiện."
+
+#: flask/application/chat/views.py:605
+msgid "Chat session deleted."
+msgstr "Đã xóa phiên trò chuyện."
+
+#: flask/application/chat/views.py:357 flask/application/chat/views.py:688
+msgid "Chat session not found."
+msgstr "Không tìm thấy phiên trò chuyện."
+
+#: flask/application/chat/views.py:365
+msgid "Associated character not found."
+msgstr "Không tìm thấy nhân vật liên quan."
+
+#: flask/application/chat/views.py:529
+msgid "Session not found."
+msgstr "Không tìm thấy phiên."
+
+#: flask/application/chat/views.py:669
+msgid "Memory deleted."
+msgstr "Đã xóa ký ức."
+
+#: flask/application/chat/views.py:695
+msgid "Memory not found."
+msgstr "Không tìm thấy ký ức."
+
+#: flask/application/chat/views.py:711
+msgid "No messages found for this memory episode."
+msgstr "Không tìm thấy tin nhắn cho giai đoạn ký ức này."
+
+#: flask/application/chat/views.py:742
+msgid "Memory recalculated successfully."
+msgstr "Đã tính toán lại ký ức thành công."
+
+#: flask/application/chat/views.py:541
+msgid "Persona updated for this session."
+msgstr "Đã cập nhật nhân vật cho phiên này."
+
+#: flask/application/chat/views.py:647
+msgid "Memory updated."
+msgstr "Đã cập nhật ký ức."
+
+#: flask/application/chat/views.py:746
+msgid "Recalculation error: %(error)s"
+msgstr "Lỗi tính toán lại: %(error)s"
+
+#: flask/application/chat/views.py:237 flask/application/chat/views.py:549
+msgid "Invalid WorldInfo."
+msgstr "WorldInfo không hợp lệ."
+
+#: flask/application/chat/views.py:242 flask/application/chat/views.py:556 flask/application/worldinfo/views.py:120 flask/application/worldinfo/views.py:228
+msgid "This world is not yet available in your language."
+msgstr "Thế giới này chưa có sẵn bằng ngôn ngữ của bạn."
+
+#: flask/application/chat/views.py:538
+msgid "Invalid persona."
+msgstr "Nhân vật không hợp lệ."
+
+#: flask/application/chat/views.py:565
+msgid "WorldInfo changed for this chat."
+msgstr "Đã đổi WorldInfo cho cuộc trò chuyện này."
+
+#: flask/application/chat/views.py:568
+msgid "Event setting saved."
+msgstr "Đã lưu cài đặt sự kiện."
+
+#: flask/application/chat/views.py:576
+msgid "Thinking enabled."
+msgstr "Đã bật suy nghĩ."
+
+#: flask/application/chat/views.py:578
+msgid "Thinking disabled."
+msgstr "Đã tắt suy nghĩ."
+
+#: flask/application/chat/views.py:583
+msgid "Chat title updated."
+msgstr "Đã cập nhật tiêu đề trò chuyện."
+
+#: flask/application/lorebooks/views.py:135 flask/application/worldinfo/views.py:231
+msgid "Copy '%(name)s' created successfully."
+msgstr "Đã tạo bản sao '%(name)s' thành công."
+
+#: flask/application/lorebooks/views.py:150
+msgid "Lorebook deleted."
+msgstr "Đã xóa lorebook."
+
+#: flask/application/lorebooks/views.py:232
+msgid "Entry deleted."
+msgstr "Đã xóa mục."
+
+#: flask/application/lorebooks/views.py:31
+msgid "Lorebook '%(name)s' created."
+msgstr "Đã tạo lorebook '%(name)s'."
+
+#: flask/application/lorebooks/views.py:48 flask/application/lorebooks/views.py:132
+msgid "Lorebook not found."
+msgstr "Không tìm thấy lorebook."
+
+#: flask/application/lorebooks/views.py:147
+msgid "Lorebook not found or no permission to delete."
+msgstr "Không tìm thấy lorebook hoặc không có quyền xóa."
+
+#: flask/application/lorebooks/views.py:162 flask/application/lorebooks/views.py:194 flask/application/lorebooks/views.py:228
+msgid "Lorebook not found or no permission."
+msgstr "Không tìm thấy lorebook hoặc không có quyền."
+
+#: flask/application/lorebooks/views.py:180
+msgid "Entry '%(title)s' added."
+msgstr "Đã thêm mục '%(title)s'."
+
+#: flask/application/lorebooks/views.py:56
+msgid "Access denied: You can only edit your own lorebooks or creations shared with you."
+msgstr "Từ chối truy cập: Bạn chỉ có thể chỉnh sửa lorebook của mình hoặc tác phẩm được chia sẻ với bạn."
+
+#: flask/application/lorebooks/views.py:73
+msgid "Lorebook updated."
+msgstr "Đã cập nhật lorebook."
+
+#: flask/application/lorebooks/views.py:88
+msgid "This lorebook is not yet available in your language."
+msgstr "Lorebook này chưa có sẵn bằng ngôn ngữ của bạn."
+
+#: flask/application/lorebooks/views.py:214
+msgid "Entry saved."
+msgstr "Đã lưu mục."
+
+#: flask/application/personas/views.py:62
+msgid "Persona '%(name)s' created successfully."
+msgstr "Đã tạo nhân vật '%(name)s' thành công."
+
+#: flask/application/personas/views.py:81 flask/application/personas/views.py:141
+msgid "Persona not found."
+msgstr "Không tìm thấy nhân vật."
+
+#: flask/application/personas/views.py:111
+msgid "Persona '%(name)s' updated."
+msgstr "Đã cập nhật nhân vật '%(name)s'."
+
+#: flask/application/personas/views.py:127
+msgid "'%(name)s' is now your default persona."
+msgstr "'%(name)s' hiện là nhân vật mặc định của bạn."
+
+#: flask/application/personas/views.py:148
+msgid "Persona '%(name)s' deleted."
+msgstr "Đã xóa nhân vật '%(name)s'."
+
+#: flask/application/settings/views.py:63 flask/templates/characters/creator.html:87 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:155 flask/templates/macros/persona_manager.html:69
+msgid "Female"
+msgstr "Nữ"
+
+#: flask/application/settings/views.py:64 flask/templates/characters/creator.html:88 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:157 flask/templates/macros/persona_manager.html:70
+msgid "Male"
+msgstr "Nam"
+
+#: flask/application/settings/views.py:65 flask/templates/characters/creator.html:89 flask/templates/macros/persona_manager.html:71 flask/templates/macros/persona_manager.html:97 flask/templates/overview/tabs/characters.html:11
+msgid "Non-Binary"
+msgstr "Phi nhị nguyên"
+
+#: flask/application/settings/views.py:244
+msgid "Account settings saved."
+msgstr "Đã lưu cài đặt tài khoản."
+
+#: flask/application/settings/views.py:74 flask/i18n.py:117 flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:257 flask/templates/characters/creator.html:258
+msgid "Character"
+msgstr "Nhân vật"
+
+#: flask/application/settings/views.py:100 flask/i18n.py:120 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:362
+msgid "World"
+msgstr "Thế giới"
+
+#: flask/application/settings/views.py:125 flask/i18n.py:118
+msgid "Lorebook"
+msgstr "Sổ tay Tri thức"
+
+#: flask/application/settings/views.py:227
+msgid "The new passwords do not match."
+msgstr "Mật khẩu mới không khớp."
+
+#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:113
+msgid "Owner"
+msgstr "Chủ sở hữu"
+
+#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:115
+msgid "Collaborator"
+msgstr "Cộng tác viên"
+
+#: flask/application/settings/views.py:221
+msgid "The current password is incorrect."
+msgstr "Mật khẩu hiện tại không đúng."
+
+#: flask/application/settings/views.py:225
+msgid "A user with this email address already exists."
+msgstr "Đã tồn tại người dùng với địa chỉ email này."
+
+#: flask/application/settings/views.py:111 flask/templates/macros/cards.html:129
+msgid "Locations"
+msgstr "Địa điểm"
+
+#: flask/application/settings/views.py:111 flask/templates/macros/cards.html:130
+msgid "Events"
+msgstr "Sự kiện"
+
+#: flask/application/settings/views.py:136 flask/templates/lorebooks/detail.html:22 flask/templates/macros/lorebook_manager.html:78 flask/templates/macros/lorebook_manager.html:151 flask/templates/macros/lorebook_manager.html:224
+msgid "Entries"
+msgstr "Mục"
+
+#: flask/application/setup/views.py:127
+msgid "Initial administrator and AI backend configured successfully!"
+msgstr "Đã cấu hình quản trị viên ban đầu và backend AI thành công!"
+
+#: flask/application/ui_helpers.py:102
+msgid "Cloud AI mode: automatic background translation is disabled. Use the greyed-out flag pill-badges to translate into other registered user languages."
+msgstr "Chế độ AI đám mây: tự động dịch nền đã tắt. Sử dụng huy hiệu cờ màu xám để dịch sang các ngôn ngữ người dùng đã đăng ký khác."
+
+#: flask/application/worldinfo/views.py:246
+msgid "WorldInfo deleted."
+msgstr "Đã xóa WorldInfo."
+
+#: flask/application/worldinfo/views.py:348
+msgid "Location deleted."
+msgstr "Đã xóa địa điểm."
+
+#: flask/application/worldinfo/views.py:37
+msgid "WorldInfo '%(name)s' created."
+msgstr "Đã tạo WorldInfo '%(name)s'."
+
+#: flask/application/worldinfo/views.py:54 flask/application/worldinfo/views.py:220
+msgid "WorldInfo not found."
+msgstr "Không tìm thấy WorldInfo."
+
+#: flask/application/worldinfo/views.py:243
+msgid "WorldInfo not found or no permission to delete."
+msgstr "Không tìm thấy WorldInfo hoặc không có quyền xóa."
+
+#: flask/application/worldinfo/views.py:258 flask/application/worldinfo/views.py:300 flask/application/worldinfo/views.py:344 flask/application/worldinfo/views.py:360 flask/application/worldinfo/views.py:397
+msgid "WorldInfo not found or no permission."
+msgstr "Không tìm thấy WorldInfo hoặc không có quyền."
+
+#: flask/application/worldinfo/views.py:285
+msgid "Location '%(name)s' created."
+msgstr "Đã tạo địa điểm '%(name)s'."
+
+#: flask/application/worldinfo/views.py:62
+msgid "Access denied: You can only edit your own WorldInfos or creations shared with you."
+msgstr "Từ chối truy cập: Bạn chỉ có thể chỉnh sửa WorldInfo của mình hoặc tác phẩm được chia sẻ với bạn."
+
+#: flask/application/worldinfo/views.py:90
+msgid "WorldInfo saved."
+msgstr "Đã lưu WorldInfo."
+
+#: flask/application/worldinfo/views.py:329
+msgid "Location updated."
+msgstr "Đã cập nhật địa điểm."
+
+#: flask/i18n.py:51
+msgid "Error adding lorebook."
+msgstr "Lỗi khi thêm lorebook."
+
+#: flask/i18n.py:52
+msgid "Network error while adding lorebook."
+msgstr "Lỗi mạng khi thêm lorebook."
+
+#: flask/i18n.py:53
+msgid "Error toggling lorebook."
+msgstr "Lỗi khi bật/tắt lorebook."
+
+#: flask/i18n.py:54
+msgid "Network error while toggling lorebook."
+msgstr "Lỗi mạng khi bật/tắt lorebook."
+
+#: flask/i18n.py:55
+msgid "Error removing lorebook."
+msgstr "Lỗi khi xóa lorebook."
+
+#: flask/i18n.py:56
+msgid "Network error while removing lorebook."
+msgstr "Lỗi mạng khi xóa lorebook."
+
+#: flask/i18n.py:57
+msgid "Reset this prompt in all languages back to the built-in default?"
+msgstr "Đặt lại prompt này ở mọi ngôn ngữ về mặc định?"
+
+#: flask/i18n.py:58
+msgid "Please select a portrait image first."
+msgstr "Vui lòng chọn ảnh chân dung trước."
+
+#: flask/i18n.py:59
+msgid "Image analysis error: {error}"
+msgstr "Lỗi phân tích ảnh: {error}"
+
+#: flask/i18n.py:60
+msgid "Please enter at least one trigger or response."
+msgstr "Vui lòng nhập ít nhất một từ khóa kích hoạt hoặc câu trả lời."
+
+#: flask/i18n.py:61
+msgid "Please enter a meaningful character description in the 'Basic Info' tab first."
+msgstr "Vui lòng nhập mô tả nhân vật rõ ràng trong tab 'Thông tin cơ bản' trước."
+
+#: flask/i18n.py:62
+msgid "Please enter a title or prose text first so the assistant can derive relevant tags."
+msgstr "Vui lòng nhập tiêu đề hoặc nội dung trước để trợ lý có thể suy ra các thẻ phù hợp."
+
+#: flask/i18n.py:63
+msgid "Error deriving tags: {error}"
+msgstr "Lỗi khi tạo thẻ: {error}"
+
+#: flask/i18n.py:64
+msgid "Connection error: {error}"
+msgstr "Lỗi kết nối: {error}"
+
+#: flask/i18n.py:65
+msgid "Timeout while sending."
+msgstr "Hết thời gian chờ khi gửi."
+
+#: flask/i18n.py:66
+msgid "Timeout"
+msgstr "Hết thời gian chờ"
+
+#: flask/i18n.py:67
+msgid "Connection to backend (aimo-core) lost."
+msgstr "Mất kết nối tới backend (aimo-core)."
+
+#: flask/i18n.py:68
+msgid "Backend connection error"
+msgstr "Lỗi kết nối backend"
+
+#: flask/i18n.py:69
+msgid "Connection to AI backend lost."
+msgstr "Mất kết nối tới backend AI."
+
+#: flask/i18n.py:70
+msgid "AI connection error"
+msgstr "Lỗi kết nối AI"
+
+#: flask/i18n.py:71
+msgid "Error sending message."
+msgstr "Lỗi khi gửi tin nhắn."
+
+#: flask/i18n.py:72
+msgid "Error"
+msgstr "Lỗi"
+
+#: flask/i18n.py:73
+msgid "Connection to backend lost: {error}"
+msgstr "Mất kết nối tới backend: {error}"
+
+#: flask/i18n.py:74
+msgid "Timeout: {error}"
+msgstr "Hết thời gian chờ: {error}"
+
+#: flask/i18n.py:75
+msgid "Ollama connection error: {error}"
+msgstr "Lỗi kết nối Ollama: {error}"
+
+#: flask/i18n.py:76
+msgid "Connection to Ollama (or LLMProvider) lost."
+msgstr "Mất kết nối tới Ollama (hoặc LLMProvider)."
+
+#: flask/i18n.py:77
+msgid "Ollama connection error"
+msgstr "Lỗi kết nối Ollama"
+
+#: flask/i18n.py:78
+msgid "Timeout while regenerating."
+msgstr "Hết thời gian chờ khi tạo lại."
+
+#: flask/i18n.py:79
+msgid "Error while regenerating."
+msgstr "Lỗi khi tạo lại."
+
+#: flask/i18n.py:80
+msgid "Ollama error"
+msgstr "Lỗi Ollama"
+
+#: flask/i18n.py:81
+msgid "Success"
+msgstr "Thành công"
+
+#: flask/i18n.py:82
+msgid "Warning"
+msgstr "Cảnh báo"
+
+#: flask/i18n.py:83
+msgid "Notice"
+msgstr "Thông báo"
+
+#: flask/i18n.py:84 flask/templates/macros/buttons.html:79 flask/templates/macros/buttons.html:80 flask/templates/macros/lorebook_manager.html:239 flask/templates/macros/persona_manager.html:55
+msgid "Close"
+msgstr "Đóng"
+
+#: flask/i18n.py:85 flask/templates/characters/creator.html:134
+msgid "Crops active"
+msgstr "Vùng cắt đang bật"
+
+#: flask/i18n.py:86 flask/templates/worldinfo/detail.html:97
+msgid "1:1 Cover active"
+msgstr "Ảnh bìa 1:1 đang bật"
+
+#: flask/i18n.py:87
+msgid "Analyzing image"
+msgstr "Đang phân tích ảnh"
+
+#: flask/i18n.py:88
+msgid "✨ Analyzing portrait and extracting appearance"
+msgstr "✨ Đang phân tích chân dung và trích xuất ngoại hình"
+
+#: flask/i18n.py:89
+msgid "Drafting dialogue"
+msgstr "Đang soạn hội thoại"
+
+#: flask/i18n.py:90
+msgid "✨ Analyzing character description"
+msgstr "✨ Đang phân tích mô tả nhân vật"
+
+#: flask/i18n.py:91
+msgid "✨ Formulating response"
+msgstr "✨ Đang tạo câu trả lời"
+
+#: flask/i18n.py:92
+msgid "⏳ Analyzing image (Save & Close locked)"
+msgstr "⏳ Đang phân tích ảnh (Đã khóa Lưu & Đóng)"
+
+#: flask/i18n.py:93
+msgid "Not translated yet (click to enter manually or AI translate)"
+msgstr "Chưa được dịch (nhấn để nhập thủ công hoặc dịch bằng AI)"
+
+#: flask/i18n.py:94
+msgid "Translation may be outdated (click to review)"
+msgstr "Bản dịch có thể đã cũ (nhấn để xem lại)"
+
+#: flask/i18n.py:95
+msgid "Appearance extracted from image successfully."
+msgstr "Đã trích xuất ngoại hình từ ảnh thành công."
+
+#: flask/i18n.py:96
+msgid "No appearance extracted."
+msgstr "Không trích xuất được ngoại hình."
+
+#: flask/i18n.py:97
+msgid "Server error ({status}): Could not extract appearance."
+msgstr "Lỗi máy chủ ({status}): không thể trích xuất ngoại hình."
+
+#: flask/i18n.py:98
+msgid "Please select a portrait image first to extract image features."
+msgstr "Vui lòng chọn ảnh chân dung trước để trích xuất đặc điểm ảnh."
+
+#: flask/i18n.py:99
+msgid "Image features extracted"
+msgstr "Đã trích xuất đặc điểm ảnh"
+
+#: flask/i18n.py:100
+msgid "Image analysis failed."
+msgstr "Phân tích ảnh thất bại."
+
+#: flask/i18n.py:101
+msgid "Image analysis error"
+msgstr "Lỗi phân tích ảnh"
+
+#: flask/i18n.py:102
+msgid "Connection error during image analysis."
+msgstr "Lỗi kết nối trong quá trình phân tích ảnh."
+
+#: flask/i18n.py:103
+msgid "Connection error"
+msgstr "Lỗi kết nối"
+
+#: flask/i18n.py:104
+msgid "Create New Persona"
+msgstr "Tạo nhân vật mới"
+
+#: flask/i18n.py:105
+msgid "Edit Persona"
+msgstr "Chỉnh sửa nhân vật"
+
+#: flask/i18n.py:106
+msgid "Used in active chats (deletion protection)"
+msgstr "Đang dùng trong trò chuyện hoạt động (bảo vệ xóa)"
+
+#: flask/i18n.py:107
+msgid "Delete persona"
+msgstr "Xóa nhân vật"
+
+#: flask/i18n.py:108
+msgid "Deletion locked"
+msgstr "Đã khóa xóa"
+
+#: flask/i18n.py:109 flask/templates/admin/services.html:254 flask/templates/admin/users.html:43 flask/templates/characters/creator.html:247 flask/templates/characters/creator.html:430
+msgid "Delete"
+msgstr "Xóa"
+
+#: flask/i18n.py:110 flask/templates/chat/session.html:929
+msgid "Translating..."
+msgstr "Đang dịch..."
+
+#: flask/i18n.py:111
+msgid "Translation paused"
+msgstr "Đã tạm dừng dịch"
+
+#: flask/i18n.py:112
+msgid "Cloud AI Mode (On-Demand)"
+msgstr "Chế độ AI Đám mây (Theo yêu cầu)"
+
+#: flask/i18n.py:113
+msgid "Idle"
+msgstr "Nhàn rỗi"
+
+#: flask/i18n.py:114
+msgid "No active translation"
+msgstr "Không có bản dịch đang chạy"
+
+#: flask/i18n.py:115
+msgid "Last finished:"
+msgstr "Hoàn tất lần cuối:"
+
+#: flask/i18n.py:116
+msgid "Error:"
+msgstr "Lỗi:"
+
+#: flask/i18n.py:119
+msgid "Lorebook Entry"
+msgstr "Mục Lorebook"
+
+#: flask/i18n.py:121
+msgid "Location"
+msgstr "Địa điểm"
+
+#: flask/i18n.py:122
+msgid "Location Tags"
+msgstr "Thẻ địa điểm"
+
+#: flask/i18n.py:123
+msgid "Event"
+msgstr "Sự kiện"
+
+#: flask/i18n.py:124
+msgid "Character Event"
+msgstr "Sự kiện nhân vật"
+
+#: flask/templates/admin/backdrop.html:10
+msgid "System-Wide Default Backdrop"
+msgstr "Hình nền mặc định toàn hệ thống"
+
+#: flask/templates/admin/backdrop.html:12
+msgid "Global atmospheric background for all pages and base fallback for roleplay chats."
+msgstr "Hình nền không khí toàn cục cho mọi trang và nền dự phòng cơ bản cho các cuộc trò chuyện nhập vai."
+
+#: flask/templates/admin/backdrop.html:17
+msgid "Custom backdrop is active"
+msgstr "Hình nền tùy chỉnh đang bật"
+
+#: flask/templates/admin/backdrop.html:18
+msgid "Custom backdrop active"
+msgstr "Hình nền tùy chỉnh đang bật"
+
+#: flask/templates/admin/backdrop.html:21
+msgid "Default RPG theme cover is active"
+msgstr "Ảnh bìa chủ đề RPG mặc định đang bật"
+
+#: flask/templates/admin/backdrop.html:22
+msgid "Default Theme (Cover)"
+msgstr "Chủ đề mặc định (Ảnh bìa)"
+
+#: flask/templates/admin/backdrop.html:36
+msgid "No custom backdrop set"
+msgstr "Chưa đặt hình nền tùy chỉnh"
+
+#: flask/templates/admin/backdrop.html:38
+msgid "Currently using the dark RPG default cover. Upload a 16:9 image on the right or select an existing location."
+msgstr "Hiện đang sử dụng ảnh bìa RPG tối mặc định. Tải lên ảnh 16:9 ở bên phải hoặc chọn một địa điểm hiện có."
+
+#: flask/templates/admin/backdrop.html:47
+msgid "Rule: Priority in Chat"
+msgstr "Quy tắc: Độ ưu tiên trong trò chuyện"
+
+#: flask/templates/admin/backdrop.html:50
+msgid "This default backdrop forms the foundational background. In chat, it is only overridden when the current location has its own background image. If a location has no image or roleplay switches to a neutral setting, this system default automatically applies again."
+msgstr "Hình nền mặc định này tạo thành nền tảng chính. Trong trò chuyện, nó chỉ bị ghi đè khi địa điểm hiện tại có hình nền riêng. Nếu một địa điểm không có ảnh hoặc trò chơi chuyển sang bối cảnh trung lập, mặc định hệ thống này sẽ tự động áp dụng lại."
+
+#: flask/templates/admin/backdrop.html:56
+msgid "Do you really want to remove the custom default backdrop and reset to the default theme?"
+msgstr "Bạn có thực sự muốn xóa hình nền mặc định tùy chỉnh và khôi phục chủ đề mặc định không?"
+
+#: flask/templates/admin/backdrop.html:58
+msgid "Remove Backdrop (Reset to Default)"
+msgstr "Xóa hình nền (Đặt lại mặc định)"
+
+#: flask/templates/admin/backdrop.html:71
+msgid "Upload New Background Image"
+msgstr "Tải lên hình nền mới"
+
+#: flask/templates/admin/backdrop.html:74
+msgid "Recommended: 16:9 widescreen (e.g., 1920×1080 or 2560×1440). Supported formats: PNG, JPG, WEBP."
+msgstr "Khuyến nghị: Màn hình rộng 16:9 (vd: 1920×1080 hoặc 2560×1440). Định dạng hỗ trợ: PNG, JPG, WEBP."
+
+#: flask/templates/admin/backdrop.html:79
+msgid "Select image file:"
+msgstr "Chọn tệp ảnh:"
+
+#: flask/templates/admin/backdrop.html:85
+msgid "Save as System Backdrop"
+msgstr "Lưu làm hình nền hệ thống"
+
+#: flask/templates/admin/backdrop.html:94
+msgid "Choose from Existing Locations"
+msgstr "Chọn từ các địa điểm hiện có"
+
+#: flask/templates/admin/backdrop.html:96
+msgid "available"
+msgstr "khả dụng"
+
+#: flask/templates/admin/backdrop.html:101
+msgid "Click on an existing location to adopt its background image as the system default:"
+msgstr "Nhấn vào một địa điểm hiện có để dùng hình nền của nó làm mặc định hệ thống:"
+
+#: flask/templates/admin/backdrop.html:119
+msgid "No locations with background images have been saved in WorldInfos yet."
+msgstr "Chưa có địa điểm nào có hình nền được lưu trong WorldInfos."
+
+#: flask/templates/admin/layout.html:12 flask/templates/macros/top_header.html:58
+msgid "Administration"
+msgstr "Quản trị"
+
+#: flask/templates/admin/layout.html:14
+msgid "System & Configuration"
+msgstr "Hệ thống & Cấu hình"
+
+#: flask/templates/admin/layout.html:18
+msgid "User Management"
+msgstr "Quản lý người dùng"
+
+#: flask/templates/admin/layout.html:19
+msgid "Services & Models"
+msgstr "Dịch vụ & Mô hình"
+
+#: flask/templates/admin/layout.html:20 flask/templates/admin/prompts.html:34
+msgid "System Prompts"
+msgstr "Prompt hệ thống"
+
+#: flask/templates/admin/layout.html:21 flask/templates/admin/translations.html:9
+msgid "Content Translations"
+msgstr "Dịch nội dung"
+
+#: flask/templates/admin/layout.html:22
+msgid "System Backdrop"
+msgstr "Hình nền Hệ thống"
+
+#: flask/templates/admin/layout.html:26 flask/templates/chat/select_worldinfo.html:88 flask/templates/settings/layout.html:26
+msgid "Back to Hub"
+msgstr "Quay lại Hub"
+
+#: flask/templates/admin/prompts.html:14
+msgid "System-Wide Content Translations"
+msgstr "Dịch Nội dung Toàn hệ thống"
+
+#: flask/templates/admin/prompts.html:18
+msgid "Cloud AI provider active: automatic background translation is disabled to protect your token quota. Use the button to translate missing content on demand."
+msgstr "Nhà cung cấp AI Đám mây đang hoạt động: tính năng dịch nền tự động bị tắt để bảo vệ hạn mức token của bạn. Hãy dùng nút bên dưới để dịch nội dung còn thiếu theo yêu cầu."
+
+#: flask/templates/admin/prompts.html:20
+msgid "Local LLM provider active: missing content translations run automatically in the background, or can be triggered manually here."
+msgstr "Nhà cung cấp LLM Cục bộ đang hoạt động: các bản dịch nội dung còn thiếu sẽ tự động chạy ở chế độ nền hoặc có thể được kích hoạt thủ công tại đây."
+
+#: flask/templates/admin/prompts.html:25
+msgid "Synchronize Missing Translations"
+msgstr "Đồng bộ Bản dịch Còn thiếu"
+
+#: flask/templates/admin/prompts.html:26 flask/templates/admin/translations.html:16 flask/templates/admin/user_form.html:72 flask/templates/characters/creator.html:614 flask/templates/characters/creator.html:651
+msgid "Cancel"
+msgstr "Hủy"
+
+#: flask/templates/admin/prompts.html:39
+msgid "Prompt Placeholders"
+msgstr "Biến giữ chỗ Prompt"
+
+#: flask/templates/admin/prompts.html:42
+msgid "You can use"
+msgstr "Bạn có thể sử dụng"
+
+#: flask/templates/admin/prompts.html:42
+msgid "(character name) and"
+msgstr "(tên nhân vật) và"
+
+#: flask/templates/admin/prompts.html:42
+msgid "(player persona name) in prompts. These are replaced dynamically at runtime."
+msgstr "(tên nhân dạng người chơi) trong prompt. Chúng sẽ được thay thế tự động khi chạy."
+
+#: flask/templates/admin/prompts.html:47
+msgid "Roleplay Prompt"
+msgstr "Prompt Nhập vai"
+
+#: flask/templates/admin/prompts.html:48
+msgid "Memory Prompt"
+msgstr "Prompt Ký ức"
+
+#: flask/templates/admin/prompts.html:49
+msgid "Diffuser Prompt"
+msgstr "Prompt Tạo ảnh"
+
+#: flask/templates/admin/prompts.html:50
+msgid "AI Author Prompt"
+msgstr "Prompt Tác giả AI"
+
+#: flask/templates/admin/prompts.html:51
+msgid "Vision Prompt"
+msgstr "Prompt Thị giác"
+
+#: flask/templates/admin/prompts.html:52
+msgid "AI Dialogue Author Prompt"
+msgstr "Prompt Tác giả Hội thoại AI"
+
+#: flask/templates/admin/prompts.html:59
+msgid "Restore Default"
+msgstr "Khôi phục mặc định"
+
+#: flask/templates/admin/prompts.html:59
+msgid "Resets all languages of this prompt to factory default"
+msgstr "Đặt lại tất cả ngôn ngữ của prompt này về mặc định ban đầu"
+
+#: flask/templates/admin/prompts.html:77
+msgid "Save Prompts"
+msgstr "Lưu Prompt"
+
+#: flask/templates/admin/services.html:10
+msgid "Service Endpoints & Model Tasks"
+msgstr "Điểm cuối dịch vụ & Tác vụ mô hình"
+
+#: flask/templates/admin/services.html:14
+msgid "1. Active AI Backend (Exclusive)"
+msgstr "1. Backend AI đang hoạt động (Độc quyền)"
+
+#: flask/templates/admin/services.html:16
+msgid "AIMO always operates exactly one AI backend (either Ollama or Google AI Cloud) – no parallel operation."
+msgstr "AIMO luôn chỉ vận hành đúng một backend AI (Ollama hoặc Google AI Cloud) – không chạy song song."
+
+#: flask/templates/admin/services.html:22
+msgid "Ollama API URL"
+msgstr "URL API Ollama"
+
+#: flask/templates/admin/services.html:24 flask/templates/admin/services.html:37 flask/templates/admin/services.html:59
+msgid "Connected"
+msgstr "Đã kết nối"
+
+#: flask/templates/admin/services.html:24
+msgid "Unreachable"
+msgstr "Không thể truy cập"
+
+#: flask/templates/admin/services.html:29
+msgid "Test"
+msgstr "Kiểm tra"
+
+#: flask/templates/admin/services.html:35
+msgid "Google AI API Key"
+msgstr "Khóa API Google AI"
+
+#: flask/templates/admin/services.html:37
+msgid "Unreachable / invalid"
+msgstr "Không thể truy cập / không hợp lệ"
+
+#: flask/templates/admin/services.html:37
+msgid "Not configured"
+msgstr "Chưa cấu hình"
+
+#: flask/templates/admin/services.html:42
+msgid "Test API Key & Models"
+msgstr "Kiểm tra khóa API & Mô hình"
+
+#: flask/templates/admin/services.html:49
+msgid "2. Image Generation & Web Search"
+msgstr "2. Tạo ảnh & Tìm kiếm web"
+
+#: flask/templates/admin/services.html:53
+msgid "Image Generation (Scene images in chat)"
+msgstr "Tạo ảnh (Ảnh bối cảnh trong trò chuyện)"
+
+#: flask/templates/admin/services.html:57
+msgid "ComfyUI API URL"
+msgstr "URL API ComfyUI"
+
+#: flask/templates/admin/services.html:59
+msgid "Offline"
+msgstr "Ngoại tuyến"
+
+#: flask/templates/admin/services.html:66
+msgid "Google AI Image Model"
+msgstr "Mô hình ảnh Google AI"
+
+#: flask/templates/admin/services.html:68 flask/templates/admin/services.html:219
+msgid "Ready"
+msgstr "Sẵn sàng"
+
+#: flask/templates/admin/services.html:68
+msgid "Not checked / Offline"
+msgstr "Chưa kiểm tra / Ngoại tuyến"
+
+#: flask/templates/admin/services.html:80
+msgid "Web Search (Prepared)"
+msgstr "Tìm kiếm web (Đã chuẩn bị)"
+
+#: flask/templates/admin/services.html:84
+msgid "SearXNG URL (Prepared)"
+msgstr "URL SearXNG (Đã chuẩn bị)"
+
+#: flask/templates/admin/services.html:93
+msgid "3. Task-Specific Model Assignment"
+msgstr "3. Gán mô hình theo tác vụ"
+
+#: flask/templates/admin/services.html:94
+msgid "Assign suggested models"
+msgstr "Gán các mô hình đề xuất"
+
+#: flask/templates/admin/services.html:94
+msgid "Sets all 5 dropdowns to the recommended default models for the selected backend"
+msgstr "Đặt cả 5 danh sách thả xuống thành các mô hình mặc định được đề xuất cho backend đã chọn"
+
+#: flask/templates/admin/services.html:100
+msgid ""
+"Roleplay Model:\n"
+"Primary language model for narrative dialogue generation and roleplay in chat."
+msgstr ""
+"Mô hình Nhập vai:\n"
+"Mô hình ngôn ngữ chính để tạo hội thoại kể chuyện và nhập vai trong trò chuyện."
+
+#: flask/templates/admin/services.html:111
+msgid ""
+"Classification Model:\n"
+"Fast, lightweight model for downstream detection of emotions (avatar sprites) and location change suggestions in a single pass."
+msgstr ""
+"Mô hình Phân loại:\n"
+"Mô hình nhanh, nhẹ để phát hiện cảm xúc (sprite đại diện) và gợi ý chuyển địa điểm trong một lượt."
+
+#: flask/templates/admin/services.html:122
+msgid ""
+"Memory Model:\n"
+"Automatically creates episodic summaries (memories) every 10 messages and updates the chat title."
+msgstr ""
+"Mô hình Bộ nhớ:\n"
+"Tự động tạo tóm tắt sự kiện (ký ức) sau mỗi 10 tin nhắn và cập nhật tiêu đề trò chuyện."
+
+#: flask/templates/admin/services.html:133
+msgid ""
+"Assistant Model:\n"
+"Responsible for AI author optimization (Sparkle ✨), text translations, and scene image prompts."
+msgstr ""
+"Mô hình Trợ lý:\n"
+"Chịu trách nhiệm tối ưu hóa tác giả AI (Sparkle ✨), dịch văn bản và gợi ý ảnh bối cảnh."
+
+#: flask/templates/admin/services.html:144
+msgid ""
+"Vision Model:\n"
+"Multimodal model for visual analysis of persona portraits, 16:9 location images, and image uploads in chat."
+msgstr ""
+"Mô hình Thị giác (Vision):\n"
+"Mô hình đa phương thức để phân tích hình ảnh chân dung nhân vật, ảnh địa điểm 16:9 và ảnh tải lên trong trò chuyện."
+
+#: flask/templates/admin/services.html:156
+msgid "4. LLM Inference Hyperparameters"
+msgstr "4. Siêu tham số suy luận LLM"
+
+#: flask/templates/admin/services.html:161
+msgid "Controls the token budget for history, memories, and lorebooks (also active for Google AI as a cost/history limit)."
+msgstr "Kiểm soát ngân sách token cho lịch sử, ký ức và lorebook (cũng hoạt động cho Google AI như giới hạn chi phí/lịch sử)."
+
+#: flask/templates/admin/services.html:176
+msgid "Repetition penalty for local Ollama models."
+msgstr "Hình phạt lặp lại cho các mô hình Ollama cục bộ."
+
+#: flask/templates/admin/services.html:184
+msgid "Save Services & Model Settings"
+msgstr "Lưu cài đặt dịch vụ & mô hình"
+
+#: flask/templates/admin/services.html:190
+msgid "Ollama Model Manager"
+msgstr "Trình quản lý mô hình Ollama"
+
+#: flask/templates/admin/services.html:196
+msgid "Setup Helper for Ollama"
+msgstr "Trợ lý thiết lập cho Ollama"
+
+#: flask/templates/admin/services.html:198
+msgid "Install missing"
+msgstr "Cài đặt mục còn thiếu"
+
+#: flask/templates/admin/services.html:201
+msgid "Recommended models per role:"
+msgstr "Mô hình đề xuất theo vai trò:"
+
+#: flask/templates/admin/services.html:208
+msgid "Click to copy into pull input"
+msgstr "Nhấn để sao chép vào ô tải (pull)"
+
+#: flask/templates/admin/services.html:221
+msgid "Missing"
+msgstr "Thiếu"
+
+#: flask/templates/admin/services.html:222 flask/templates/admin/services.html:234
+msgid "Pull"
+msgstr "Tải về (Pull)"
+
+#: flask/templates/admin/services.html:231
+msgid "Install new model (Pull)"
+msgstr "Cài đặt mô hình mới (Pull)"
+
+#: flask/templates/admin/services.html:233
+msgid "Enter model tag..."
+msgstr "Nhập thẻ mô hình..."
+
+#: flask/templates/admin/services.html:237
+msgid "Quick select:"
+msgstr "Chọn nhanh:"
+
+#: flask/templates/admin/services.html:244
+msgid "Starting download..."
+msgstr "Đang bắt đầu tải xuống..."
+
+#: flask/templates/admin/services.html:249
+msgid "Installed Models"
+msgstr "Mô hình đã cài đặt"
+
+#: flask/templates/admin/services.html:254
+msgid "Delete model"
+msgstr "Xóa mô hình"
+
+#: flask/templates/admin/services.html:257
+msgid "No models found or Ollama offline."
+msgstr "Không tìm thấy mô hình hoặc Ollama ngoại tuyến."
+
+#: flask/templates/admin/services.html:265
+msgid "Google AI Cloud Setup"
+msgstr "Thiết lập Google AI Cloud"
+
+#: flask/templates/admin/services.html:272
+msgid "Recommended Google AI Models"
+msgstr "Mô hình Google AI đề xuất"
+
+#: flask/templates/admin/services.html:282
+msgid "Image Generation"
+msgstr "Tạo ảnh"
+
+#: flask/templates/admin/services.html:290
+msgid "Available Cloud Models"
+msgstr "Mô hình đám mây khả dụng"
+
+#: flask/templates/admin/services.html:301
+msgid "Click \"Test API Key & Models\" to load the Gemini models available with your key."
+msgstr "Nhấn \"Kiểm tra khóa API & Mô hình\" để tải các mô hình Gemini khả dụng với khóa của bạn."
+
+#: flask/templates/admin/services.html:557
+msgid "All recommended models are already installed on the Ollama server!"
+msgstr "Tất cả các mô hình được đề xuất đã được cài đặt trên máy chủ Ollama!"
+
+#: flask/templates/admin/services.html:566
+msgid "Download the following %(count)s recommended model(s) sequentially?"
+msgstr "Tải xuống lần lượt %(count)s mô hình được đề xuất sau đây?"
+
+#: flask/templates/admin/services.html:577
+msgid "Download of '%(model)s' failed. Continue with the next model anyway?"
+msgstr "Tải xuống '%(model)s' thất bại. Vẫn tiếp tục với mô hình tiếp theo chứ?"
+
+#: flask/templates/admin/services.html:647
+msgid "Really delete model '%(model)s' from Ollama?"
+msgstr "Thực sự xóa mô hình '%(model)s' khỏi Ollama?"
+
+#: flask/templates/admin/services.html:656
+msgid "Deletion failed."
+msgstr "Xóa thất bại."
+
+#: flask/templates/admin/translations.html:11
+msgid "Background translation status for characters, lorebooks, worlds, locations, and events."
+msgstr "Trạng thái dịch nền cho nhân vật, lorebook, thế giới, địa điểm và sự kiện."
+
+#: flask/templates/admin/translations.html:15
+msgid "Start Translation Sync"
+msgstr "Bắt đầu đồng bộ dịch"
+
+#: flask/templates/admin/translations.html:23
+msgid "Status:"
+msgstr "Trạng thái:"
+
+#: flask/templates/admin/translations.html:24
+msgid "Loading..."
+msgstr "Đang tải..."
+
+#: flask/templates/admin/translations.html:37
+msgid "Currently translating:"
+msgstr "Đang dịch:"
+
+#: flask/templates/admin/user_form.html:8
+msgid "Edit User:"
+msgstr "Chỉnh sửa người dùng:"
+
+#: flask/templates/admin/user_form.html:10
+msgid "Create New User"
+msgstr "Tạo người dùng mới"
+
+#: flask/templates/admin/user_form.html:16
+msgid "Super-Admin Protection:"
+msgstr "Bảo vệ Super-Admin:"
+
+#: flask/templates/admin/user_form.html:16
+msgid "This is the initial administrator. Their permissions are permanently locked to full access (Admin) and cannot be revoked."
+msgstr "Đây là quản trị viên ban đầu. Quyền của họ được khóa vĩnh viễn ở mức toàn quyền (Admin) và không thể thu hồi."
+
+#: flask/templates/admin/user_form.html:23
+msgid "Username"
+msgstr "Tên người dùng"
+
+#: flask/templates/admin/user_form.html:27 flask/templates/auth/login.html:14 flask/templates/settings/account.html:20
+msgid "Email address"
+msgstr "Địa chỉ email"
+
+#: flask/templates/admin/user_form.html:35
+msgid "New Password (leave blank to keep current password)"
+msgstr "Mật khẩu mới (để trống để giữ mật khẩu hiện tại)"
+
+#: flask/templates/admin/user_form.html:37
+msgid "Initial Password"
+msgstr "Mật khẩu ban đầu"
+
+#: flask/templates/admin/user_form.html:45
+msgid "Quick Select via Preset"
+msgstr "Chọn nhanh qua Preset"
+
+#: flask/templates/admin/user_form.html:48
+msgid "Preset:"
+msgstr "Preset:"
+
+#: flask/templates/admin/user_form.html:56
+msgid "Individual functional permissions (FunctionPermission):"
+msgstr "Quyền chức năng riêng lẻ (FunctionPermission):"
+
+#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:269 flask/templates/chat/session.html:802 flask/templates/lorebooks/detail.html:96
+msgid "Save"
+msgstr "Lưu"
+
+#: flask/templates/admin/users.html:9
+msgid "Users & Functional Permissions"
+msgstr "Người dùng & Quyền chức năng"
+
+#: flask/templates/admin/users.html:10
+msgid "Granular control of individual function permissions. The initial administrator is permanently protected."
+msgstr "Kiểm soát chi tiết từng quyền chức năng. Quản trị viên ban đầu được bảo vệ vĩnh viễn."
+
+#: flask/templates/admin/users.html:12
+msgid "New User"
+msgstr "Người dùng mới"
+
+#: flask/templates/admin/users.html:24
+msgid "Initial Super-Admin (Non-revocable)"
+msgstr "Super-Admin ban đầu (Không thể thu hồi)"
+
+#: flask/templates/admin/users.html:32
+msgid "No permissions assigned"
+msgstr "Chưa gán quyền nào"
+
+#: flask/templates/admin/users.html:38 flask/templates/characters/creator.html:246
+msgid "Edit"
+msgstr "Chỉnh sửa"
+
+#: flask/templates/admin/users.html:40
+msgid "Protected"
+msgstr "Được bảo vệ"
+
+#: flask/templates/admin/users.html:40
+msgid "Initial administrator cannot be deleted"
+msgstr "Không thể xóa quản trị viên ban đầu"
+
+#: flask/templates/admin/users.html:42
+msgid "Really delete user %(username)s?"
+msgstr "Thực sự xóa người dùng %(username)s?"
+
+#: flask/templates/auth/login.html:3
+msgid "AIMO — Login"
+msgstr "AIMO — Đăng nhập"
+
+#: flask/templates/auth/login.html:7
+msgid "AIMO Login"
+msgstr "Đăng nhập AIMO"
+
+#: flask/templates/auth/login.html:9
+msgid "Sign in to enter your roleplay worlds."
+msgstr "Đăng nhập để bước vào thế giới nhập vai của bạn."
+
+#: flask/templates/auth/login.html:18 flask/templates/settings/account.html:25
+msgid "Password"
+msgstr "Mật khẩu"
+
+#: flask/templates/auth/login.html:22
+msgid "Enter"
+msgstr "Vào"
+
+#: flask/templates/characters/creator.html:7 flask/templates/characters/creator.html:22
+msgid "Character Designer"
+msgstr "Trình thiết kế Nhân vật"
+
+#: flask/templates/characters/creator.html:20 flask/templates/characters/creator.html:45 flask/templates/macros/cards.html:194
+msgid "New Character"
+msgstr "Nhân vật mới"
+
+#: flask/templates/characters/creator.html:26
+msgid "Main Info"
+msgstr "Thông tin Chính"
+
+#: flask/templates/characters/creator.html:27 flask/templates/characters/creator.html:443
+msgid "Gallery Images"
+msgstr "Ảnh Thư viện"
+
+#: flask/templates/characters/creator.html:27 flask/templates/characters/creator.html:28 flask/templates/characters/creator.html:31
+msgid "Please save basic info first"
+msgstr "Vui lòng lưu thông tin cơ bản trước"
+
+#: flask/templates/characters/creator.html:28 flask/templates/characters/creator.html:534
+msgid "Emotional Sprites"
+msgstr "Ảnh Biểu cảm"
+
+#: flask/templates/characters/creator.html:29
+msgid "Dialogue Styles"
+msgstr "Phong cách Hội thoại"
+
+#: flask/templates/characters/creator.html:31 flask/templates/characters/creator.html:576 flask/templates/worldinfo/detail.html:25
+msgid "Random Events"
+msgstr "Sự kiện Ngẫu nhiên"
+
+#: flask/templates/characters/creator.html:32 flask/templates/chat/select_worldinfo.html:19 flask/templates/macros/top_header.html:18 flask/templates/macros/top_header.html:45 flask/templates/settings/creations.html:26
+msgid "Lorebooks"
+msgstr "Sổ tay Tri thức"
+
+#: flask/templates/characters/creator.html:33 flask/templates/lorebooks/detail.html:23 flask/templates/worldinfo/detail.html:26
+msgid "Collaboration"
+msgstr "Cộng tác"
+
+#: flask/templates/characters/creator.html:37 flask/templates/lorebooks/detail.html:27 flask/templates/worldinfo/detail.html:30
+msgid "Back to Overview"
+msgstr "Quay lại Tổng quan"
+
+#: flask/templates/characters/creator.html:53
+msgid "Really delete character permanently?"
+msgstr "Bạn có chắc muốn xóa vĩnh viễn nhân vật này không?"
+
+#: flask/templates/characters/creator.html:54
+msgid "Save character"
+msgstr "Lưu nhân vật"
+
+#: flask/templates/characters/creator.html:75
+msgid "Character Name"
+msgstr "Tên Nhân vật"
+
+#: flask/templates/characters/creator.html:76
+msgid "The unique name of your AI character. Replaces {{char}} in prompts."
+msgstr "Tên duy nhất cho nhân vật AI của bạn. Thay thế {{char}} trong prompt."
+
+#: flask/templates/characters/creator.html:83 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:64 flask/templates/macros/cards.html:155
+msgid "Gender"
+msgstr "Giới tính"
+
+#: flask/templates/characters/creator.html:84
+msgid "Sets gender and derived pronouns for the system prompt."
+msgstr "Thiết lập giới tính và đại từ suy ra cho prompt hệ thống."
+
+#: flask/templates/characters/creator.html:94 flask/templates/lorebooks/detail.html:72 flask/templates/lorebooks/detail.html:156 flask/templates/lorebooks/detail.html:226 flask/templates/settings/creations.html:69
+msgid "Visibility"
+msgstr "Hiển thị"
+
+#: flask/templates/characters/creator.html:95
+msgid "Private = only playable in your account. Public = visible to all users in the Hub."
+msgstr "Riêng tư = chỉ chơi được trong tài khoản của bạn. Công khai = hiển thị cho tất cả người dùng trong Hub."
+
+#: flask/templates/characters/creator.html:98 flask/templates/lorebooks/detail.html:76 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:108 flask/templates/worldinfo/detail.html:110
+msgid "Private"
+msgstr "Riêng tư"
+
+#: flask/templates/characters/creator.html:99 flask/templates/lorebooks/detail.html:77 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:106 flask/templates/worldinfo/detail.html:111
+msgid "Public"
+msgstr "Công khai"
+
+#: flask/templates/characters/creator.html:106
+msgid "Primary Portrait (9:16) & Avatar (1:1) (Required upload)"
+msgstr "Chân dung chính (9:16) & Ảnh đại diện (1:1) (Bắt buộc tải lên)"
+
+#: flask/templates/characters/creator.html:107
+msgid ""
+"Character images:\n"
+"• 9:16 Portrait: Chat sidebar & fullscreen view\n"
+"• 1:1 Avatar: Character cards in Hub & chat bubbles"
+msgstr ""
+"Hình ảnh nhân vật:\n"
+"• Chân dung 9:16: Thanh bên trò chuyện & chế độ toàn màn hình\n"
+"• Ảnh đại diện 1:1: Thẻ nhân vật trong Hub & bong bóng trò chuyện"
+
+#: flask/templates/characters/creator.html:113 flask/templates/characters/creator.html:114 flask/templates/characters/creator.html:116 flask/templates/characters/creator.html:694 flask/templates/macros/persona_manager.html:12
+msgid "Portrait"
+msgstr "Chân dung"
+
+#: flask/templates/characters/creator.html:121 flask/templates/characters/creator.html:122 flask/templates/characters/creator.html:124 flask/templates/characters/creator.html:695
+msgid "Avatar"
+msgstr "Ảnh đại diện"
+
+#: flask/templates/characters/creator.html:133
+msgid "Adjust crops"
+msgstr "Điều chỉnh vùng cắt"
+
+#: flask/templates/characters/creator.html:142
+msgid "Initial Relationship Status"
+msgstr "Trạng thái quan hệ ban đầu"
+
+#: flask/templates/characters/creator.html:143
+msgid ""
+"Initial Relationship Status:\n"
+"Starting level of affection (e.g., Pure Hatred, Neutral, Blind Devotion). Controls the initial roleplay behavior of {{char}} toward the player."
+msgstr ""
+"Trạng thái quan hệ ban đầu:\n"
+"Mức độ thiện cảm ban đầu (vd: Căm ghét thuần túy, Trung lập, Tận tụy mù quáng). Điều khiển hành vi nhập vai ban đầu của {{char}} đối với người chơi."
+
+#: flask/templates/characters/creator.html:158
+msgid "Character Description & Personality"
+msgstr "Mô tả & Tính cách Nhân vật"
+
+#: flask/templates/characters/creator.html:159
+msgid "Core identity, traits, backstory, fears, and motivations."
+msgstr "Bản sắc cốt lõi, đặc điểm, tiểu sử, nỗi sợ và động lực."
+
+#: flask/templates/characters/creator.html:161
+msgid "AI Author Optimization"
+msgstr "Tối ưu hóa bằng Tác giả AI"
+
+#: flask/templates/characters/creator.html:181 flask/templates/macros/persona_manager.html:37
+msgid "Physical Appearance"
+msgstr "Ngoại hình"
+
+#: flask/templates/characters/creator.html:182
+msgid "Detailed visual appearance for prompts and AI image generation."
+msgstr "Mô tả ngoại hình chi tiết cho prompt và tạo ảnh AI."
+
+#: flask/templates/characters/creator.html:184
+msgid "Extract Appearance from Image"
+msgstr "Trích xuất Ngoại hình từ Ảnh"
+
+#: flask/templates/characters/creator.html:184
+msgid "Analyzes the portrait image using a Vision LLM"
+msgstr "Phân tích ảnh chân dung bằng Vision LLM"
+
+#: flask/templates/characters/creator.html:196
+msgid "Physical appearance (e.g. emerald eyes, shoulder-length black hair, silver armor)..."
+msgstr "Ngoại hình (vd: mắt ngọc lục bảo, tóc đen ngang vai, giáp bạc)..."
+
+#: flask/templates/characters/creator.html:202
+msgid "First Message (Welcome Message)"
+msgstr "Tin nhắn Đầu tiên (Lời chào)"
+
+#: flask/templates/characters/creator.html:203
+msgid "The character's direct opening greeting to the player."
+msgstr "Lời chào mở đầu trực tiếp của nhân vật gửi tới người chơi."
+
+#: flask/templates/characters/creator.html:230
+msgid "Dialogue Styles (Few-Shot Examples)"
+msgstr "Phong cách Hội thoại (Ví dụ mẫu)"
+
+#: flask/templates/characters/creator.html:231
+msgid "Typical player trigger and character response pairs injected into the prompt."
+msgstr "Các cặp câu kích hoạt của người chơi và phản hồi của nhân vật được đưa vào prompt."
+
+#: flask/templates/characters/creator.html:234
+msgid "Define typical trigger-response examples to guide the AI's tone, dialect, and reactions."
+msgstr "Xác định các ví dụ kích hoạt-phản hồi điển hình để định hướng giọng điệu, phương ngữ và phản ứng của AI."
+
+#: flask/templates/characters/creator.html:237
+msgid "Add Dialogue Style"
+msgstr "Thêm Phong cách Hội thoại"
+
+#: flask/templates/characters/creator.html:244
+msgid "Example"
+msgstr "Ví dụ"
+
+#: flask/templates/characters/creator.html:246
+msgid "Edit example"
+msgstr "Sửa ví dụ"
+
+#: flask/templates/characters/creator.html:247
+msgid "Delete example"
+msgstr "Xóa ví dụ"
+
+#: flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:253 flask/templates/characters/creator.html:258 flask/templates/characters/creator.html:633
+msgid "You"
+msgstr "Bạn"
+
+#: flask/templates/characters/creator.html:265
+msgid "No dialogue styles added yet. Click 'Add Dialogue Style' to create examples."
+msgstr "Chưa có phong cách hội thoại nào. Nhấp vào 'Thêm Phong cách Hội thoại' để tạo ví dụ."
+
+#: flask/templates/characters/creator.html:275
+msgid "Game World & Locations"
+msgstr "Thế giới Trò chơi & Địa điểm"
+
+#: flask/templates/characters/creator.html:276
+msgid "Links a recommended world. Once selected, initial, preferred, and disliked locations can be chosen."
+msgstr "Liên kết một thế giới đề xuất. Sau khi chọn, bạn có thể chọn địa điểm ban đầu, yêu thích và không thích."
+
+#: flask/templates/characters/creator.html:279
+msgid "Select a recommended world for this character. It will be pre-selected when starting a new chat."
+msgstr "Chọn một thế giới đề xuất cho nhân vật này. Nó sẽ được chọn sẵn khi bắt đầu cuộc trò chuyện mới."
+
+#: flask/templates/characters/creator.html:284
+msgid "Recommended WorldInfo"
+msgstr "WorldInfo Đề xuất"
+
+#: flask/templates/characters/creator.html:285
+msgid "Locations and events of this world are included in roleplay."
+msgstr "Các địa điểm và sự kiện của thế giới này sẽ được đưa vào nhập vai."
+
+#: flask/templates/characters/creator.html:288
+msgid "No WorldInfo linked"
+msgstr "Chưa liên kết WorldInfo"
+
+#: flask/templates/characters/creator.html:300
+msgid "Initial Location of First Message"
+msgstr "Địa điểm Ban đầu của Tin nhắn Đầu tiên"
+
+#: flask/templates/characters/creator.html:301
+msgid "Starting location for the conversation within the linked world."
+msgstr "Địa điểm bắt đầu cuộc trò chuyện trong thế giới đã liên kết."
+
+#: flask/templates/characters/creator.html:304
+msgid "No fixed starting location"
+msgstr "Không có địa điểm bắt đầu cố định"
+
+#: flask/templates/characters/creator.html:318
+msgid "Preferred Locations (from linked world)"
+msgstr "Địa điểm Yêu thích (từ thế giới liên kết)"
+
+#: flask/templates/characters/creator.html:319
+msgid "Locations where the character feels comfortable or likes to spend time."
+msgstr "Những địa điểm mà nhân vật cảm thấy thoải mái hoặc thích dành thời gian."
+
+#: flask/templates/characters/creator.html:331 flask/templates/characters/creator.html:350
+msgid "Tip: Hold Ctrl/Cmd to select multiple."
+msgstr "Mẹo: Giữ phím Ctrl/Cmd để chọn nhiều mục."
+
+#: flask/templates/characters/creator.html:337
+msgid "Disliked Locations (from linked world)"
+msgstr "Địa điểm Không thích (từ thế giới liên kết)"
+
+#: flask/templates/characters/creator.html:338
+msgid "Locations the character avoids, fears, or dislikes."
+msgstr "Những địa điểm mà nhân vật né tránh, sợ hãi hoặc không thích."
+
+#: flask/templates/characters/creator.html:364
+msgid "Linked Lorebooks (Knowledge Compendiums)"
+msgstr "Sổ tay Tri thức Liên kết (Bách khoa toàn thư)"
+
+#: flask/templates/characters/creator.html:365
+msgid "Knowledge compendiums for this character. Matching entries are automatically loaded into the prompt via tags."
+msgstr "Bách khoa tri thức cho nhân vật này. Các mục khớp thẻ sẽ tự động được tải vào prompt."
+
+#: flask/templates/characters/creator.html:368
+msgid "Attach knowledge compendiums. Relevant entries are automatically injected via tag matching."
+msgstr "Đính kèm sổ tay tri thức. Các mục liên quan sẽ tự động được chèn thông qua khớp thẻ."
+
+#: flask/templates/characters/creator.html:371 flask/templates/macros/lorebook_manager.html:24
+msgid "Add Lorebook"
+msgstr "Thêm Sổ tay Tri thức"
+
+#: flask/templates/characters/creator.html:386
+msgid "When should this lorebook be active?"
+msgstr "Khi nào sổ tay tri thức này nên hoạt động?"
+
+#: flask/templates/characters/creator.html:387
+msgid "All Worlds (Always active)"
+msgstr "Mọi Thế giới (Luôn hoạt động)"
+
+#: flask/templates/characters/creator.html:389
+msgid "Only in world:"
+msgstr "Chỉ trong thế giới:"
+
+#: flask/templates/characters/creator.html:392
+msgid "Unlink"
+msgstr "Hủy liên kết"
+
+#: flask/templates/characters/creator.html:392
+msgid "Unlink lorebook"
+msgstr "Hủy liên kết sổ tay tri thức"
+
+#: flask/templates/characters/creator.html:400
+msgid "No lorebooks linked. Click 'Add Lorebook' to select compendiums."
+msgstr "Chưa liên kết sổ tay tri thức nào. Nhấp 'Thêm Sổ tay Tri thức' để chọn."
+
+#: flask/templates/characters/creator.html:416
+msgid "Unlockable 9:16 Gallery Images (Threshold -100 to +100)"
+msgstr "Ảnh Thư viện 9:16 Có thể Mở khóa (Ngưỡng -100 đến +100)"
+
+#: flask/templates/characters/creator.html:417
+msgid "Exclusive portrait graphics unlocked when reaching a relationship threshold in chat."
+msgstr "Hình ảnh chân dung độc quyền được mở khóa khi đạt ngưỡng mối quan hệ trong trò chuyện."
+
+#: flask/templates/characters/creator.html:420
+msgid "Reward the player with exclusive character graphics as the relationship grows in chat."
+msgstr "Thưởng cho người chơi hình ảnh nhân vật độc quyền khi mối quan hệ phát triển trong trò chuyện."
+
+#: flask/templates/characters/creator.html:424
+msgid "Add 9:16 Image"
+msgstr "Thêm Ảnh 9:16"
+
+#: flask/templates/characters/creator.html:430
+msgid "Delete image"
+msgstr "Xóa ảnh"
+
+#: flask/templates/characters/creator.html:434
+msgid "Unlocks at relationship:"
+msgstr "Mở khóa ở mức quan hệ:"
+
+#: flask/templates/characters/creator.html:445
+msgid "Please save the character's basic info first to upload and manage 9:16 gallery images."
+msgstr "Vui lòng lưu thông tin cơ bản của nhân vật trước để tải lên và quản lý ảnh thư viện 9:16."
+
+#: flask/templates/characters/creator.html:456
+msgid "Emotional Sprites (28 Emotions with Variant Stack View)"
+msgstr "Ảnh Biểu cảm (28 Cảm xúc với Chế độ xem Xếp lớp Biến thể)"
+
+#: flask/templates/characters/creator.html:457
+msgid "Image variants for 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait."
+msgstr "Các biến thể hình ảnh cho 28 cảm xúc. Hệ thống sẽ phân loại cảm xúc AI sau mỗi câu trả lời và cập nhật chân dung trò chuyện."
+
+#: flask/templates/characters/creator.html:460
+msgid "When an emotion is detected, a random variant is selected. If none exists, neutral is used as fallback."
+msgstr "Khi phát hiện cảm xúc, một biến thể ngẫu nhiên sẽ được chọn. Nếu không có, trạng thái trung tính sẽ được dùng thay thế."
+
+#: flask/templates/characters/creator.html:472
+msgid "Choose PNG/WEBP"
+msgstr "Chọn PNG/WEBP"
+
+#: flask/templates/characters/creator.html:482
+msgid "Upload another variant"
+msgstr "Tải lên biến thể khác"
+
+#: flask/templates/characters/creator.html:489
+msgid "View all variants"
+msgstr "Xem tất cả biến thể"
+
+#: flask/templates/characters/creator.html:492
+msgid "Delete sprite"
+msgstr "Xóa ảnh biểu cảm"
+
+#: flask/templates/characters/creator.html:500
+msgid "Fallback"
+msgstr "Dự phòng"
+
+#: flask/templates/characters/creator.html:509
+msgid "Variants for emotion:"
+msgstr "Các biến thể cho cảm xúc:"
+
+#: flask/templates/characters/creator.html:517
+msgid "Delete variant"
+msgstr "Xóa biến thể"
+
+#: flask/templates/characters/creator.html:536
+msgid "Please save the character's basic info first to upload sprites for the 28 emotions."
+msgstr "Vui lòng lưu thông tin cơ bản của nhân vật trước để tải lên ảnh biểu cảm cho 28 cảm xúc."
+
+#: flask/templates/characters/creator.html:547
+msgid "Character-Specific Random Events"
+msgstr "Sự kiện Ngẫu nhiên Riêng của Nhân vật"
+
+#: flask/templates/characters/creator.html:548
+msgid "Dynamic events that can trigger exclusively in chats with this character."
+msgstr "Các sự kiện động chỉ có thể kích hoạt trong cuộc trò chuyện với nhân vật này."
+
+#: flask/templates/characters/creator.html:551
+msgid "These events are available exclusively in sessions with"
+msgstr "Các sự kiện này chỉ khả dụng trong các phiên trò chuyện với"
+
+#: flask/templates/characters/creator.html:551
+msgid "in the shared random event pool."
+msgstr "trong nhóm sự kiện ngẫu nhiên chung."
+
+#: flask/templates/characters/creator.html:578
+msgid "Please save the character's basic info first to create character-specific random events."
+msgstr "Vui lòng lưu thông tin cơ bản của nhân vật trước để tạo sự kiện ngẫu nhiên riêng cho nhân vật."
+
+#: flask/templates/characters/creator.html:589
+msgid "Upload 9:16 Gallery Image"
+msgstr "Tải lên Ảnh Thư viện 9:16"
+
+#: flask/templates/characters/creator.html:595
+msgid "Image File (9:16 Portrait)"
+msgstr "Tệp Hình ảnh (Chân dung 9:16)"
+
+#: flask/templates/characters/creator.html:596
+msgid "Exclusive portrait image for this character."
+msgstr "Ảnh chân dung độc quyền cho nhân vật này."
+
+#: flask/templates/characters/creator.html:602
+msgid "Unlock Relationship Level"
+msgstr "Cấp độ Mối quan hệ Mở khóa"
+
+#: flask/templates/characters/creator.html:603
+msgid "Required relationship level to unlock this image in chat."
+msgstr "Mức độ quan hệ cần thiết để mở khóa hình ảnh này trong trò chuyện."
+
+#: flask/templates/characters/creator.html:615
+msgid "Upload"
+msgstr "Tải lên"
+
+#: flask/templates/characters/creator.html:627
+msgid "Add New Dialogue Style"
+msgstr "Thêm Phong cách Hội thoại Mới"
+
+#: flask/templates/characters/creator.html:634
+msgid "Trigger (Player Input)"
+msgstr "Câu kích hoạt (Đầu vào Người chơi)"
+
+#: flask/templates/characters/creator.html:636
+msgid "e.g. Hello! What are you doing out here so late?"
+msgstr "vd: Xin chào! Bạn đang làm gì ngoài này muộn thế?"
+
+#: flask/templates/characters/creator.html:641
+msgid "Response (Character Reply)"
+msgstr "Phản hồi (Câu trả lời Nhân vật)"
+
+#: flask/templates/characters/creator.html:643
+msgid "e.g. Greetings, wanderer. The woods hold secrets at night..."
+msgstr "vd: Chào lữ khách. Khu rừng ẩn chứa nhiều bí mật vào ban đêm..."
+
+#: flask/templates/characters/creator.html:648
+msgid "Fill with AI"
+msgstr "Điền bằng AI"
+
+#: flask/templates/characters/creator.html:648
+msgid "Generates trigger and response based on character description"
+msgstr "Tạo câu kích hoạt và phản hồi dựa trên mô tả nhân vật"
+
+#: flask/templates/characters/creator.html:652 flask/templates/characters/creator.html:680 flask/templates/macros/lorebook_manager.html:226
+msgid "Add"
+msgstr "Thêm"
+
+#: flask/templates/characters/creator.html:662
+msgid "Link Lorebook"
+msgstr "Liên kết Sổ tay Tri thức"
+
+#: flask/templates/characters/creator.html:666 flask/templates/macros/lorebook_manager.html:197
+msgid "Filter by lorebook name..."
+msgstr "Lọc theo tên sổ tay tri thức..."
+
+#: flask/templates/characters/creator.html:680
+msgid "Linked"
+msgstr "Đã liên kết"
+
+#: flask/templates/characters/creator.html:693
+msgid "Set Image Crops"
+msgstr "Đặt vùng cắt ảnh"
+
+#: flask/templates/chat/select_worldinfo.html:4
+msgid "New Adventure with"
+msgstr "Cuộc phiêu lưu Mới cùng"
+
+#: flask/templates/chat/select_worldinfo.html:11
+msgid "New Chat with"
+msgstr "Trò chuyện mới với"
+
+#: flask/templates/chat/select_worldinfo.html:12
+msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
+msgstr "Cấu hình nhân dạng người chơi, WorldInfo đang hoạt động và sổ tay tri thức cho phiên này."
+
+#: flask/templates/chat/select_worldinfo.html:18 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
+msgid "Settings"
+msgstr "Cài đặt"
+
+#: flask/templates/chat/select_worldinfo.html:27
+msgid "Select Player Persona"
+msgstr "Chọn Nhân dạng Người chơi"
+
+#: flask/templates/chat/select_worldinfo.html:32
+msgid "Default"
+msgstr "Mặc định"
+
+#: flask/templates/chat/select_worldinfo.html:37
+msgid "Note: After sending the first message, the persona is permanently locked for this chat."
+msgstr "Lưu ý: Sau khi gửi tin nhắn đầu tiên, nhân dạng sẽ bị khóa vĩnh viễn cho cuộc trò chuyện này."
+
+#: flask/templates/chat/select_worldinfo.html:42
+msgid "Automatically assigned"
+msgstr "Tự động gán"
+
+#: flask/templates/chat/select_worldinfo.html:48
+msgid "Active WorldInfo (At most one per session)"
+msgstr "WorldInfo Đang hoạt động (Tối đa một mỗi phiên)"
+
+#: flask/templates/chat/select_worldinfo.html:50
+msgid "No WorldInfo (Default — Neutral background, no events)"
+msgstr "Không có WorldInfo (Mặc định — Nền trung tính, không sự kiện)"
+
+#: flask/templates/chat/select_worldinfo.html:54
+msgid "Recommended for"
+msgstr "Đề xuất cho"
+
+#: flask/templates/chat/select_worldinfo.html:60
+msgid "This character recommends a WorldInfo, but you can freely choose another or start without one."
+msgstr "Nhân vật này đề xuất một WorldInfo, nhưng bạn có thể tự do chọn thế giới khác hoặc bắt đầu mà không cần thế giới nào."
+
+#: flask/templates/chat/select_worldinfo.html:66
+msgid "Optional Session Title"
+msgstr "Tiêu đề Phiên Tùy chọn"
+
+#: flask/templates/chat/select_worldinfo.html:67
+msgid "Chat with"
+msgstr "Trò chuyện với"
+
+#: flask/templates/chat/select_worldinfo.html:73
+msgid "Enable Thinking (Reasoning)"
+msgstr "Bật Suy nghĩ (Lập luận)"
+
+#: flask/templates/chat/select_worldinfo.html:76
+msgid "Enables extended chain-of-thought reasoning for compatible models (e.g. Gemma 4, DeepSeek-R1). Disable for faster replies without thinking steps."
+msgstr "Bật lập luận chuỗi suy nghĩ mở rộng cho các mô hình tương thích (vd: Gemma 4, DeepSeek-R1). Tắt để phản hồi nhanh hơn mà không qua bước suy nghĩ."
+
+#: flask/templates/chat/select_worldinfo.html:89
+msgid "Start Adventure"
+msgstr "Bắt đầu phiêu lưu"
+
+#: flask/templates/chat/session.html:33
+msgid "Info"
+msgstr "Thông tin"
+
+#: flask/templates/chat/session.html:33
+msgid "Sidebar / Character Info"
+msgstr "Thanh bên / Thông tin nhân vật"
+
+#: flask/templates/chat/session.html:39 flask/templates/chat/session.html:63 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
+msgid "Location:"
+msgstr "Địa điểm:"
+
+#: flask/templates/chat/session.html:41
+msgid "World:"
+msgstr "Thế giới:"
+
+#: flask/templates/chat/session.html:43
+msgid "Neutral Setting"
+msgstr "Bối cảnh Trung lập"
+
+#: flask/templates/chat/session.html:79
+msgid "View LLM prompt (Admin)"
+msgstr "Xem prompt LLM (Quản trị)"
+
+#: flask/templates/chat/session.html:81 flask/templates/chat/session.html:101
+msgid "Translate message (on-demand)"
+msgstr "Dịch tin nhắn (theo yêu cầu)"
+
+#: flask/templates/chat/session.html:82 flask/templates/chat/session.html:102
+msgid "Edit message"
+msgstr "Chỉnh sửa tin nhắn"
+
+#: flask/templates/chat/session.html:83 flask/templates/chat/session.html:103
+msgid "Duplicate chat from here (Fork)"
+msgstr "Nhân bản trò chuyện từ đây (Fork)"
+
+#: flask/templates/chat/session.html:85 flask/templates/chat/session.html:104 flask/templates/macros/system_message.html:27
+msgid "Delete from here"
+msgstr "Xóa từ đây"
+
+#: flask/templates/chat/session.html:111
+msgid "Show/hide ALT text (image description)"
+msgstr "Hiện/ẩn văn bản ALT (mô tả ảnh)"
+
+#: flask/templates/chat/session.html:132
+msgid "AI system notice"
+msgstr "Thông báo hệ thống AI"
+
+#: flask/templates/chat/session.html:134
+msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
+msgstr "Đây là chatbot AI. Câu trả lời được tạo tự động bởi các mô hình ngôn ngữ cục bộ hoặc bên ngoài và có thể không đầy đủ hoặc không chính xác."
+
+#: flask/templates/chat/session.html:141
+msgid "Chat options & sessions"
+msgstr "Tùy chọn trò chuyện & phiên"
+
+#: flask/templates/chat/session.html:141
+msgid "Chat options"
+msgstr "Tùy chọn trò chuyện"
+
+#: flask/templates/chat/session.html:147
+msgid "Sessions"
+msgstr "Phiên"
+
+#: flask/templates/chat/session.html:148
+msgid "Start new chat"
+msgstr "Bắt đầu trò chuyện mới"
+
+#: flask/templates/chat/session.html:150
+msgid "Delete chat"
+msgstr "Xóa trò chuyện"
+
+#: flask/templates/chat/session.html:150
+msgid "Do you really want to permanently delete this chat?"
+msgstr "Bạn có thực sự muốn xóa vĩnh viễn cuộc trò chuyện này không?"
+
+#: flask/templates/chat/session.html:154
+msgid "Attach image (Vision ALT analysis)"
+msgstr "Đính kèm ảnh (phân tích Vision ALT)"
+
+#: flask/templates/chat/session.html:162
+msgid "Generate scene image"
+msgstr "Tạo ảnh bối cảnh"
+
+#: flask/templates/chat/session.html:169
+msgid "Cancel image generation"
+msgstr "Hủy tạo ảnh"
+
+#: flask/templates/chat/session.html:180
+msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
+msgstr "Viết câu trả lời hoặc hành động của bạn... (Enter để gửi, Shift+Enter để xuống dòng)"
+
+#: flask/templates/chat/session.html:186
+msgid "Regenerate response – replaces the last AI reply or retries generation"
+msgstr "Tạo lại câu trả lời – thay thế câu trả lời AI cuối cùng hoặc thử tạo lại"
+
+#: flask/templates/chat/session.html:193
+msgid "Cancel response generation"
+msgstr "Hủy tạo câu trả lời"
+
+#: flask/templates/chat/session.html:199
+msgid "Send message (Enter)"
+msgstr "Gửi tin nhắn (Enter)"
+
+#: flask/templates/chat/session.html:257 flask/templates/chat/session.html:786 flask/templates/lorebooks/detail.html:167
+msgid "Tags (Comma-separated for vectorless RAG)"
+msgstr "Thẻ (Phân tách bằng dấu phẩy cho RAG không vector)"
+
+#: flask/templates/chat/session.html:261 flask/templates/chat/session.html:790
+msgid "Summary"
+msgstr "Tóm tắt"
+
+#: flask/templates/chat/session.html:266 flask/templates/chat/session.html:796
+msgid "Recalculate"
+msgstr "Tính toán lại"
+
+#: flask/templates/chat/session.html:266 flask/templates/chat/session.html:795
+msgid "Recalculate memory from associated episode messages"
+msgstr "Tính toán lại ký ức từ các tin nhắn sự kiện liên quan"
+
+#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:799
+msgid "Translate"
+msgstr "Dịch"
+
+#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:798
+msgid "Translate memory in-place to your language"
+msgstr "Dịch trực tiếp ký ức sang ngôn ngữ của bạn"
+
+#: flask/templates/chat/session.html:297
+msgid "Thinking: Enabled (Click to disable)"
+msgstr "Suy nghĩ: Đang bật (Nhấn để tắt)"
+
+#: flask/templates/chat/session.html:297
+msgid "Thinking: Disabled (Click to enable)"
+msgstr "Suy nghĩ: Đang tắt (Nhấn để bật)"
+
+#: flask/templates/chat/session.html:298
+msgid "Disable thinking"
+msgstr "Tắt suy nghĩ"
+
+#: flask/templates/chat/session.html:298
+msgid "Enable thinking"
+msgstr "Bật suy nghĩ"
+
+#: flask/templates/chat/session.html:311 flask/templates/macros/cards.html:91
+msgid "Relationship:"
+msgstr "Quan hệ:"
+
+#: flask/templates/chat/session.html:322
+msgid "Active Persona"
+msgstr "Nhân vật đang dùng"
+
+#: flask/templates/chat/session.html:327
+msgid "Edit player persona"
+msgstr "Chỉnh sửa nhân vật người chơi"
+
+#: flask/templates/chat/session.html:344
+msgid "Unknown"
+msgstr "Không rõ"
+
+#: flask/templates/chat/session.html:345
+msgid "Persona is locked for this chat after the 1st message"
+msgstr "Nhân vật sẽ bị khóa cho cuộc trò chuyện này sau tin nhắn đầu tiên"
+
+#: flask/templates/chat/session.html:368
+msgid "No World (Neutral)"
+msgstr "Không có thế giới (Trung lập)"
+
+#: flask/templates/chat/session.html:371
+msgid "Switch world"
+msgstr "Đổi thế giới"
+
+#: flask/templates/chat/session.html:382
+msgid "Current Location"
+msgstr "Vị trí hiện tại"
+
+#: flask/templates/chat/session.html:384
+msgid "-- Choose location --"
+msgstr "-- Chọn vị trí --"
+
+#: flask/templates/chat/session.html:402
+msgid "Enable random events"
+msgstr "Bật sự kiện ngẫu nhiên"
+
+#: flask/templates/chat/session.html:407
+msgid "Admin & creator info: Cooldown until the next random event"
+msgstr "Thông tin quản trị & tác giả: Thời gian chờ tới sự kiện ngẫu nhiên tiếp theo"
+
+#: flask/templates/chat/session.html:408
+msgid "Next event:"
+msgstr "Sự kiện tiếp theo:"
+
+#: flask/templates/chat/session.html:411 flask/templates/chat/session.html:415
+msgid "in"
+msgstr "sau"
+
+#: flask/templates/chat/session.html:411
+msgid "message"
+msgstr "tin nhắn"
+
+#: flask/templates/chat/session.html:411 flask/templates/chat/session.html:415
+msgid "messages"
+msgstr "tin nhắn"
+
+#: flask/templates/chat/session.html:411
+msgid "paused"
+msgstr "tạm dừng"
+
+#: flask/templates/chat/session.html:413
+msgid "next message"
+msgstr "tin nhắn tiếp theo"
+
+#: flask/templates/chat/session.html:488
+msgid "Do you really want to delete this session?"
+msgstr "Bạn có thực sự muốn xóa phiên này không?"
+
+#: flask/templates/chat/session.html:490
+msgid "Delete session"
+msgstr "Xóa phiên"
+
+#: flask/templates/chat/session.html:714
+msgid "Permanently delete this message and all subsequent messages (including associated memories)?"
+msgstr "Xóa vĩnh viễn tin nhắn này và tất cả các tin nhắn tiếp theo (bao gồm cả ký ức liên quan)?"
+
+#: flask/templates/chat/session.html:913
+msgid "Recalculation error"
+msgstr "Lỗi tính toán lại"
+
+#: flask/templates/chat/session.html:915
+msgid "Recalculation error:"
+msgstr "Lỗi tính toán lại:"
+
+#: flask/templates/chat/session.html:952
+msgid "Translated!"
+msgstr "Đã dịch!"
+
+#: flask/templates/chat/session.html:964
+msgid "Translation error"
+msgstr "Lỗi dịch"
+
+#: flask/templates/chat/session.html:966
+msgid "Translation error:"
+msgstr "Lỗi dịch:"
+
+#: flask/templates/lorebooks/detail.html:17
+msgid "Lorebook & Encyclopedia"
+msgstr "Sổ tay Tri thức & Bách khoa toàn thư"
+
+#: flask/templates/lorebooks/detail.html:21 flask/templates/lorebooks/detail.html:55 flask/templates/worldinfo/detail.html:23 flask/templates/worldinfo/detail.html:58
+msgid "Basic Settings"
+msgstr "Cài đặt Cơ bản"
+
+#: flask/templates/lorebooks/detail.html:42
+msgid "Really delete Lorebook?"
+msgstr "Bạn có chắc muốn xóa Sổ tay Tri thức này không?"
+
+#: flask/templates/lorebooks/detail.html:43
+msgid "Read-only (External Lorebook)"
+msgstr "Chỉ đọc (Sổ tay Tri thức Bên ngoài)"
+
+#: flask/templates/lorebooks/detail.html:44
+msgid "Save Lorebook"
+msgstr "Lưu Sổ tay Tri thức"
+
+#: flask/templates/lorebooks/detail.html:60
+msgid "Lorebook Name"
+msgstr "Tên Sổ tay Tri thức"
+
+#: flask/templates/lorebooks/detail.html:61
+msgid "The title of this knowledge compendium."
+msgstr "Tiêu đề của bách khoa tri thức này."
+
+#: flask/templates/lorebooks/detail.html:66 flask/templates/lorebooks/detail.html:151 flask/templates/lorebooks/detail.html:221 flask/templates/macros/event_manager.html:54 flask/templates/worldinfo/detail.html:70
+msgid "Proper Noun (Do not translate)"
+msgstr "Danh từ riêng (Không dịch)"
+
+#: flask/templates/lorebooks/detail.html:73
+msgid "Private = only usable by you. Public = linkable by other users in their characters."
+msgstr "Riêng tư = chỉ bạn sử dụng được. Công khai = người dùng khác có thể liên kết vào nhân vật của họ."
+
+#: flask/templates/lorebooks/detail.html:83
+msgid "Short Description"
+msgstr "Mô tả Ngắn"
+
+#: flask/templates/lorebooks/detail.html:84
+msgid "A brief summary of the topic for quick orientation in the overview."
+msgstr "Tóm tắt ngắn gọn về chủ đề để dễ nắm bắt trong phần tổng quan."
+
+#: flask/templates/lorebooks/detail.html:89
+msgid "Short overview of the lorebook content..."
+msgstr "Tổng quan ngắn về nội dung sổ tay tri thức..."
+
+#: flask/templates/lorebooks/detail.html:107
+msgid "New Entry"
+msgstr "Mục Mới"
+
+#: flask/templates/lorebooks/detail.html:116
+msgid "Private (Secret Lore)"
+msgstr "Riêng tư (Tri thức Bí mật)"
+
+#: flask/templates/lorebooks/detail.html:116
+msgid "Private entry: hidden from other players, but injected via RAG in roleplay."
+msgstr "Mục riêng tư: ẩn khỏi người chơi khác, nhưng vẫn được chèn qua RAG khi nhập vai."
+
+#: flask/templates/lorebooks/detail.html:130
+msgid "Click to edit"
+msgstr "Nhấp để chỉnh sửa"
+
+#: flask/templates/lorebooks/detail.html:139
+msgid "Lorebook Entry:"
+msgstr "Mục Sổ tay Tri thức:"
+
+#: flask/templates/lorebooks/detail.html:145 flask/templates/lorebooks/detail.html:215 flask/templates/macros/event_manager.html:34
+msgid "Title"
+msgstr "Tiêu đề"
+
+#: flask/templates/lorebooks/detail.html:146 flask/templates/lorebooks/detail.html:216
+msgid "Concise title of the lore entry."
+msgstr "Tiêu đề súc tích của mục tri thức."
+
+#: flask/templates/lorebooks/detail.html:157 flask/templates/lorebooks/detail.html:227
+msgid "Public: readable in overview. Private: hidden in overview, still injected via RAG in roleplay."
+msgstr "Công khai: đọc được trong tổng quan. Riêng tư: ẩn trong tổng quan, vẫn được chèn qua RAG khi nhập vai."
+
+#: flask/templates/lorebooks/detail.html:160 flask/templates/lorebooks/detail.html:230
+msgid "Public (Readable in overview)"
+msgstr "Công khai (Đọc được trong tổng quan)"
+
+#: flask/templates/lorebooks/detail.html:161 flask/templates/lorebooks/detail.html:231
+msgid "Private (Secret Lore / Spoiler Protection)"
+msgstr "Riêng tư (Tri thức Bí mật / Chống Tiết lộ)"
+
+#: flask/templates/lorebooks/detail.html:168 flask/templates/lorebooks/detail.html:238
+msgid "Keywords that trigger loading this entry into [RELEVANT_LOREBOOKS] when mentioned in chat."
+msgstr "Từ khóa kích hoạt việc tải mục này vào [RELEVANT_LOREBOOKS] khi được nhắc đến trong cuộc trò chuyện."
+
+#: flask/templates/lorebooks/detail.html:170 flask/templates/lorebooks/detail.html:240
+msgid "Suggest Tags"
+msgstr "Gợi ý Thẻ"
+
+#: flask/templates/lorebooks/detail.html:176 flask/templates/lorebooks/detail.html:246
+msgid "Prose Text / Lore Content"
+msgstr "Văn bản / Nội dung Tri thức"
+
+#: flask/templates/lorebooks/detail.html:177 flask/templates/lorebooks/detail.html:247
+msgid "Compact facts, history, or rules the AI can retrieve and use in dialogue."
+msgstr "Các sự kiện, lịch sử hoặc quy tắc súc tích mà AI có thể truy xuất và sử dụng trong hội thoại."
+
+#: flask/templates/lorebooks/detail.html:209
+msgid "Create New Lorebook Entry"
+msgstr "Tạo Mục Sổ tay Tri thức Mới"
+
+#: flask/templates/lorebooks/detail.html:237 flask/templates/worldinfo/detail.html:196 flask/templates/worldinfo/detail.html:329
+msgid "Tags (Comma-separated)"
+msgstr "Thẻ (Phân tách bằng dấu phẩy)"
+
+#: flask/templates/lorebooks/detail.html:242
+msgid "magic, guild, capital"
+msgstr "phép thuật, hội quán, thủ đô"
+
+#: flask/templates/lorebooks/detail.html:263
+msgid "Save Entry"
+msgstr "Lưu Mục"
+
+#: flask/templates/macros/backend_selector.html:122
+msgid "Show"
+msgstr "Hiện"
+
+#: flask/templates/macros/backend_selector.html:122
+msgid "Show/hide API key"
+msgstr "Hiện/ẩn khóa API"
+
+#: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111
+msgid "Translation pending"
+msgstr "Đang chờ dịch"
+
+#: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111
+msgid "Translation into your language is pending"
+msgstr "Bản dịch sang ngôn ngữ của bạn đang chờ xử lý"
+
+#: flask/templates/macros/cards.html:71
+msgid "Exchanged messages"
+msgstr "Tin nhắn đã trao đổi"
+
+#: flask/templates/macros/cards.html:74
+msgid "Edit character"
+msgstr "Chỉnh sửa nhân vật"
+
+#: flask/templates/macros/cards.html:79
+msgid "Duplicate character"
+msgstr "Nhân bản nhân vật"
+
+#: flask/templates/macros/cards.html:114
+msgid "Public world"
+msgstr "Thế giới công khai"
+
+#: flask/templates/macros/cards.html:116
+msgid "Private world"
+msgstr "Thế giới riêng tư"
+
+#: flask/templates/macros/cards.html:162
+msgid "Default Persona"
+msgstr "Nhân vật mặc định"
+
+#: flask/templates/macros/cards.html:165
+msgid "Set as default persona"
+msgstr "Đặt làm nhân vật mặc định"
+
+#: flask/templates/macros/cards.html:182
+msgid "New Persona"
+msgstr "Persona mới"
+
+#: flask/templates/macros/cards.html:206
+msgid "New World"
+msgstr "Thế giới mới"
+
+#: flask/templates/macros/collaboration.html:23
+msgid "Save collaborators"
+msgstr "Lưu cộng tác viên"
+
+#: flask/templates/macros/collaboration.html:23 flask/templates/macros/collaboration.html:117
+msgid "Saves all changes in the form"
+msgstr "Lưu tất cả thay đổi trong biểu mẫu"
+
+#: flask/templates/macros/collaboration.html:72 flask/templates/macros/editor_header.html:47
+msgid "Copy"
+msgstr "Sao chép"
+
+#: flask/templates/macros/collaboration.html:72
+msgid "Copy creator tag"
+msgstr "Sao chép thẻ tác giả"
+
+#: flask/templates/macros/collaboration.html:80 flask/templates/macros/lorebook_manager.html:170
+msgid "Remove"
+msgstr "Gỡ bỏ"
+
+#: flask/templates/macros/collaboration.html:80
+msgid "Remove collaborator"
+msgstr "Xóa cộng tác viên"
+
+#: flask/templates/macros/editor_header.html:27
+msgid "Really delete permanently?"
+msgstr "Bạn có chắc muốn xóa vĩnh viễn không?"
+
+#: flask/templates/macros/editor_header.html:32
+msgid "Back"
+msgstr "Quay lại"
+
+#: flask/templates/macros/event_manager.html:12
+msgid "Entire Character (Location-independent)"
+msgstr "Toàn bộ nhân vật (Không phụ thuộc địa điểm)"
+
+#: flask/templates/macros/event_manager.html:12
+msgid "No recommended world with locations linked"
+msgstr "Chưa liên kết thế giới đề xuất có địa điểm"
+
+#: flask/templates/macros/event_manager.html:19 flask/templates/macros/event_manager.html:164
+msgid "Entire World"
+msgstr "Toàn bộ thế giới"
+
+#: flask/templates/macros/event_manager.html:35
+msgid ""
+"Event Title:\n"
+"Name of the random event (e.g., 'Sudden Thunderstorm', 'Carrier Pigeon Arrives')."
+msgstr ""
+"Tiêu đề sự kiện:\n"
+"Tên của sự kiện ngẫu nhiên (vd: 'Cơn giông bất ngờ', 'Bồ câu đưa thư đến')."
+
+#: flask/templates/macros/event_manager.html:60
+msgid "Probability (0 - 100%%)"
+msgstr "Xác suất (0 - 100%%)"
+
+#: flask/templates/macros/event_manager.html:61
+msgid ""
+"Probability (1-100%%):\n"
+"Relative weight in the shared event pool. Every 10 to 100 messages (cooldown counter), one event is triggered by weight."
+msgstr ""
+"Xác suất (1-100%%):\n"
+"Trọng số tương đối trong nhóm sự kiện chung. Cứ sau 10 đến 100 tin nhắn (bộ đếm chờ), một sự kiện được kích hoạt theo trọng số."
+
+#: flask/templates/macros/event_manager.html:67 flask/templates/macros/event_manager.html:178
+msgid "One-Shot (Max. 1x per session)"
+msgstr "Một lần (Tối đa 1 lần mỗi phiên)"
+
+#: flask/templates/macros/event_manager.html:68
+msgid ""
+"One-Shot (Single Event):\n"
+"When enabled, this event triggers at most once per chat session and is then removed from the active pool."
+msgstr ""
+"Một lần (One-Shot):\n"
+"Khi bật, sự kiện này chỉ kích hoạt tối đa một lần mỗi phiên trò chuyện rồi bị xóa khỏi nhóm hoạt động."
+
+#: flask/templates/macros/event_manager.html:75
+msgid "Assignment (Location-independent or bound to a specific location)"
+msgstr "Phân công (Không phụ thuộc địa điểm hoặc gắn với địa điểm cụ thể)"
+
+#: flask/templates/macros/event_manager.html:76
+msgid ""
+"Location Restriction:\n"
+"Choose whether this character event can occur anywhere in chats with this character or is additionally bound to a specific location."
+msgstr ""
+"Giới hạn địa điểm:\n"
+"Chọn xem sự kiện nhân vật này có thể xảy ra ở bất kỳ đâu trong trò chuyện với nhân vật này hay gắn với một địa điểm cụ thể."
+
+#: flask/templates/macros/event_manager.html:78
+msgid "Assignment (Exclusive: Either Entire World OR specific location)"
+msgstr "Phân công (Độc quyền: Toàn bộ thế giới HOẶC địa điểm cụ thể)"
+
+#: flask/templates/macros/event_manager.html:79
+msgid ""
+"Location Assignment:\n"
+"Choose whether this event can only occur at a specific location or applies as a global event for the entire world."
+msgstr ""
+"Gán địa điểm:\n"
+"Chọn xem sự kiện này chỉ có thể xảy ra tại một địa điểm cụ thể hay áp dụng như sự kiện toàn cầu cho cả thế giới."
+
+#: flask/templates/macros/event_manager.html:91
+msgid "Relationship Range (From – To)"
+msgstr "Phạm vi quan hệ (Từ – Đến)"
+
+#: flask/templates/macros/event_manager.html:92
+msgid ""
+"Relationship Range:\n"
+"Optionally restricts the event to a relationship range. If both sliders are at the outer ends, the event is active at all relationship tiers."
+msgstr ""
+"Phạm vi quan hệ:\n"
+"Tùy chọn giới hạn sự kiện trong một phạm vi quan hệ. Nếu cả hai thanh trượt ở hai đầu ngoài cùng, sự kiện hoạt động ở mọi cấp độ."
+
+#: flask/templates/macros/event_manager.html:108
+msgid "Minimum relationship tier"
+msgstr "Cấp độ quan hệ tối thiểu"
+
+#: flask/templates/macros/event_manager.html:117
+msgid "Maximum relationship tier"
+msgstr "Cấp độ quan hệ tối đa"
+
+#: flask/templates/macros/event_manager.html:124
+msgid "Scenic Event Description"
+msgstr "Mô tả bối cảnh sự kiện"
+
+#: flask/templates/macros/event_manager.html:125
+msgid ""
+"Event Description:\n"
+"The narrative occurrence. When triggered, this description is placed in the [WORLD_INFO] section of the prompt for the next turn so the AI reacts appropriately."
+msgstr ""
+"Mô tả sự kiện:\n"
+"Tình huống kể chuyện. Khi được kích hoạt, mô tả này được đặt vào phần [WORLD_INFO] của prompt cho lượt tiếp theo để AI phản hồi phù hợp."
+
+#: flask/templates/macros/event_manager.html:147
+msgid "New Event"
+msgstr "Sự kiện mới"
+
+#: flask/templates/macros/event_manager.html:162
+msgid "Character-wide (Everywhere)"
+msgstr "Toàn nhân vật (Mọi nơi)"
+
+#: flask/templates/macros/event_manager.html:167
+msgid "Relationship-bound"
+msgstr "Gắn với quan hệ"
+
+#: flask/templates/macros/event_manager.html:178
+msgid "Repeatable"
+msgstr "Có thể lặp lại"
+
+#: flask/templates/macros/event_manager.html:186
+msgid "Edit Event:"
+msgstr "Chỉnh sửa sự kiện:"
+
+#: flask/templates/macros/event_manager.html:210
+msgid "Create New Event"
+msgstr "Tạo sự kiện mới"
+
+#: flask/templates/macros/event_manager.html:217
+msgid "Save Event"
+msgstr "Lưu sự kiện"
+
+#: flask/templates/macros/image_cropper.html:4 flask/templates/macros/persona_manager.html:115 flask/templates/macros/persona_manager.html:118
+msgid "Set image crop"
+msgstr "Đặt khung cắt ảnh"
+
+#: flask/templates/macros/image_cropper.html:16
+msgid "Crop Source"
+msgstr "Ảnh nguồn cắt"
+
+#: flask/templates/macros/image_cropper.html:18
+msgid "Resize"
+msgstr "Đổi kích thước"
+
+#: flask/templates/macros/image_cropper.html:26
+msgid "Click to adjust %(label)s"
+msgstr "Nhấn để điều chỉnh %(label)s"
+
+#: flask/templates/macros/image_cropper.html:38
+msgid "Apply crops"
+msgstr "Áp dụng vùng cắt"
+
+#: flask/templates/macros/image_cropper.html:38
+msgid "Apply crop"
+msgstr "Áp dụng vùng cắt"
+
+#: flask/templates/macros/lorebook_manager.html:18
+msgid "Active Knowledge Books (Lorebooks)"
+msgstr "Sổ tay Tri thức Đang hoạt động (Lorebooks)"
+
+#: flask/templates/macros/lorebook_manager.html:20
+msgid "Lorebooks expand the model's context with relevant world and background knowledge via keyword tags."
+msgstr "Sổ tay tri thức mở rộng ngữ cảnh của mô hình với kiến thức thế giới và nền tảng liên quan thông qua thẻ từ khóa."
+
+#: flask/templates/macros/lorebook_manager.html:49
+msgid "Default Lorebooks (Character & World)"
+msgstr "Sổ tay Tri thức Mặc định (Nhân vật & Thế giới)"
+
+#: flask/templates/macros/lorebook_manager.html:52
+msgid "Session Toggle (Slider)"
+msgstr "Công tắc Phiên (Thanh trượt)"
+
+#: flask/templates/macros/lorebook_manager.html:67
+msgid "Lorebook source"
+msgstr "Nguồn sổ tay tri thức"
+
+#: flask/templates/macros/lorebook_manager.html:69 flask/templates/macros/lorebook_manager.html:142
+msgid "Creator Lore"
+msgstr "Tri thức của Tác giả"
+
+#: flask/templates/macros/lorebook_manager.html:69 flask/templates/macros/lorebook_manager.html:142
+msgid "Creator Lore: hidden from other players, but used by the AI in chat."
+msgstr "Tri thức của Tác giả: ẩn khỏi người chơi khác, nhưng được AI sử dụng trong cuộc trò chuyện."
+
+#: flask/templates/macros/lorebook_manager.html:91
+msgid "Inactive — Requires world:"
+msgstr "Không hoạt động — Yêu cầu thế giới:"
+
+#: flask/templates/macros/lorebook_manager.html:91
+msgid "This lorebook requires the world"
+msgstr "Sổ tay tri thức này yêu cầu thế giới"
+
+#: flask/templates/macros/lorebook_manager.html:92
+msgid "Locked: matching world is not active."
+msgstr "Đã khóa: thế giới tương ứng chưa được kích hoạt."
+
+#: flask/templates/macros/lorebook_manager.html:101 flask/templates/macros/lorebook_manager.html:163
+msgid "Deactivate lorebook"
+msgstr "Tắt sổ tay tri thức"
+
+#: flask/templates/macros/lorebook_manager.html:101 flask/templates/macros/lorebook_manager.html:163
+msgid "Activate lorebook"
+msgstr "Kích hoạt sổ tay tri thức"
+
+#: flask/templates/macros/lorebook_manager.html:113
+msgid "No default lorebooks assigned for this session."
+msgstr "Không có sổ tay tri thức mặc định nào được gán cho phiên này."
+
+#: flask/templates/macros/lorebook_manager.html:122
+msgid "Custom Lorebooks (Chat-specific)"
+msgstr "Sổ tay Tri thức Tùy chỉnh (Riêng cho cuộc trò chuyện)"
+
+#: flask/templates/macros/lorebook_manager.html:125
+msgid "Actions (Toggle & Delete)"
+msgstr "Hành động (Bật/Tắt & Xóa)"
+
+#: flask/templates/macros/lorebook_manager.html:134 flask/templates/macros/lorebook_manager.html:140
+msgid "Custom"
+msgstr "Tùy chỉnh"
+
+#: flask/templates/macros/lorebook_manager.html:170
+msgid "Remove lorebook from chat"
+msgstr "Gỡ sổ tay tri thức khỏi cuộc trò chuyện"
+
+#: flask/templates/macros/lorebook_manager.html:175
+msgid "No additional custom lorebooks added. Click 'Add Lorebook' to add knowledge."
+msgstr "Chưa thêm sổ tay tri thức tùy chỉnh nào. Nhấp 'Thêm Sổ tay Tri thức' để bổ sung kiến thức."
+
+#: flask/templates/macros/lorebook_manager.html:188
+msgid "Add Lorebook to Chat"
+msgstr "Thêm Sổ tay Tri thức vào Cuộc trò chuyện"
+
+#: flask/templates/macros/lorebook_manager.html:226
+msgid "Already active"
+msgstr "Đang hoạt động"
+
+#: flask/templates/macros/lorebook_manager.html:232
+msgid "No lorebooks available."
+msgstr "Không có sổ tay tri thức nào."
+
+#: flask/templates/macros/persona_manager.html:18
+msgid "Adjust crop"
+msgstr "Điều chỉnh vùng cắt"
+
+#: flask/templates/macros/persona_manager.html:19
+msgid "Crop active"
+msgstr "Vùng cắt đang bật"
+
+#: flask/templates/macros/persona_manager.html:28
+msgid "Background / Personality"
+msgstr "Tiểu sử / Tính cách"
+
+#: flask/templates/macros/persona_manager.html:28
+msgid "max. 1,200 characters"
+msgstr "tối đa 1.200 ký tự"
+
+#: flask/templates/macros/persona_manager.html:40
+msgid "Extract image features"
+msgstr "Trích xuất đặc điểm ảnh"
+
+#: flask/templates/macros/persona_manager.html:40
+msgid "Automatically extract appearance from portrait image via vision model"
+msgstr "Tự động trích xuất ngoại hình từ ảnh chân dung qua mô hình thị giác"
+
+#: flask/templates/macros/persona_manager.html:54
+msgid "Persona"
+msgstr "Nhân vật"
+
+#: flask/templates/macros/persona_manager.html:63 flask/templates/macros/persona_manager.html:89 flask/templates/settings/account.html:17 flask/templates/settings/creations.html:67
+msgid "Name"
+msgstr "Tên"
+
+#: flask/templates/macros/persona_manager.html:74
+msgid "Portrait image (PNG/JPG/WEBP)"
+msgstr "Ảnh chân dung (PNG/JPG/WEBP)"
+
+#: flask/templates/macros/persona_manager.html:78
+msgid "Save Persona"
+msgstr "Lưu nhân vật"
+
+#: flask/templates/macros/persona_manager.html:100
+msgid "New portrait image (optional, PNG/JPG/WEBP)"
+msgstr "Ảnh chân dung mới (tùy chọn, PNG/JPG/WEBP)"
+
+#: flask/templates/macros/persona_manager.html:106
+msgid "Save changes"
+msgstr "Lưu thay đổi"
+
+#: flask/templates/macros/persona_manager.html:110
+msgid "Really delete persona?"
+msgstr "Thực sự xóa nhân vật này?"
+
+#: flask/templates/macros/top_header.html:17 flask/templates/macros/top_header.html:44
+msgid "AI Characters"
+msgstr "Nhân vật AI"
+
+#: flask/templates/macros/top_header.html:19 flask/templates/macros/top_header.html:46 flask/templates/settings/creations.html:25
+msgid "Worlds"
+msgstr "Thế giới"
+
+#: flask/templates/macros/top_header.html:30
+msgid "Open menu"
+msgstr "Mở menu"
+
+#: flask/templates/macros/top_header.html:62
+msgid "Logout"
+msgstr "Đăng xuất"
+
+#: flask/templates/overview/index.html:7
+msgid "Some content is still being translated into your language. The selection of available content may still change."
+msgstr "Một số nội dung vẫn đang được dịch sang ngôn ngữ của bạn. Danh sách nội dung khả dụng vẫn có thể thay đổi."
+
+#: flask/templates/overview/index.html:8
+msgid "Translations in Progress"
+msgstr "Đang tiến hành Dịch"
+
+#: flask/templates/overview/tabs/characters.html:8
+msgid "All Genders"
+msgstr "Tất cả Giới tính"
+
+#: flask/templates/overview/tabs/characters.html:15
+msgid "Chat Status"
+msgstr "Trạng thái Trò chuyện"
+
+#: flask/templates/overview/tabs/characters.html:17 flask/templates/overview/tabs/characters.html:34
+msgid "All Characters"
+msgstr "Tất cả Nhân vật"
+
+#: flask/templates/overview/tabs/characters.html:18
+msgid "Already Chatted"
+msgstr "Đã Trò chuyện"
+
+#: flask/templates/overview/tabs/characters.html:19
+msgid "Not Chatted Yet"
+msgstr "Chưa Trò chuyện"
+
+#: flask/templates/overview/tabs/characters.html:23 flask/templates/settings/creations.html:40
+msgid "Sort Order"
+msgstr "Thứ tự Sắp xếp"
+
+#: flask/templates/overview/tabs/characters.html:25 flask/templates/settings/creations.html:43
+msgid "Newest First"
+msgstr "Mới nhất Trước"
+
+#: flask/templates/overview/tabs/characters.html:26
+msgid "Most Messages"
+msgstr "Nhiều Tin nhắn Nhất"
+
+#: flask/templates/overview/tabs/characters.html:27
+msgid "Best Relationship"
+msgstr "Mối quan hệ Tốt nhất"
+
+#: flask/templates/overview/tabs/characters.html:32 flask/templates/settings/creations.html:31
+msgid "Author"
+msgstr "Tác giả"
+
+#: flask/templates/overview/tabs/characters.html:35 flask/templates/settings/creations.html:34
+msgid "Only Mine (Creator)"
+msgstr "Chỉ của Tôi (Tác giả)"
+
+#: flask/templates/overview/tabs/characters.html:36 flask/templates/settings/creations.html:35
+msgid "Collaborations"
+msgstr "Cộng tác"
+
+#: flask/templates/overview/tabs/lorebooks.html:6
+msgid "New Lorebook"
+msgstr "Lorebook mới"
+
+#: flask/templates/settings/account.html:8 flask/templates/settings/layout.html:22
+msgid "Account"
+msgstr "Tài khoản"
+
+#: flask/templates/settings/account.html:10
+msgid "Creator Tag"
+msgstr "Thẻ Tác giả"
+
+#: flask/templates/settings/account.html:10
+msgid "Other creators can add you as a collaborator using this tag."
+msgstr "Các tác giả khác có thể thêm bạn làm cộng tác viên bằng thẻ này."
+
+#: flask/templates/settings/account.html:11
+msgid "Copy Creator Tag"
+msgstr "Sao chép Thẻ Tác giả"
+
+#: flask/templates/settings/account.html:14
+msgid "Name & Email Address"
+msgstr "Tên & Địa chỉ Email"
+
+#: flask/templates/settings/account.html:25
+msgid "Your current password is only required when changing your email address or password. Leave the new password fields empty to keep your current password."
+msgstr "Mật khẩu hiện tại của bạn chỉ bắt buộc khi thay đổi địa chỉ email hoặc mật khẩu. Hãy để trống các ô mật khẩu mới nếu muốn giữ nguyên mật khẩu hiện tại."
+
+#: flask/templates/settings/account.html:28
+msgid "Current password"
+msgstr "Mật khẩu hiện tại"
+
+#: flask/templates/settings/account.html:31
+msgid "New password"
+msgstr "Mật khẩu mới"
+
+#: flask/templates/settings/account.html:34
+msgid "Confirm new password"
+msgstr "Xác nhận mật khẩu mới"
+
+#: flask/templates/settings/account.html:39
+msgid "Language"
+msgstr "Ngôn ngữ"
+
+#: flask/templates/settings/account.html:39
+msgid "Language of the interface and displayed content translations."
+msgstr "Ngôn ngữ của giao diện và bản dịch nội dung hiển thị."
+
+#: flask/templates/settings/creations.html:4 flask/templates/settings/creations.html:10 flask/templates/settings/layout.html:20
+msgid "My Creations"
+msgstr "Sáng tạo của Tôi"
+
+#: flask/templates/settings/creations.html:11
+msgid "Overview of all characters, worlds, and lorebooks you created or collaborate on. Click any item to open its editor."
+msgstr "Tổng quan về tất cả nhân vật, thế giới và sổ tay tri thức bạn đã tạo hoặc cộng tác. Nhấp vào bất kỳ mục nào để mở trình chỉnh sửa."
+
+#: flask/templates/settings/creations.html:14
+msgid "Total:"
+msgstr "Tổng cộng:"
+
+#: flask/templates/settings/creations.html:21 flask/templates/settings/creations.html:65
+msgid "Type"
+msgstr "Loại"
+
+#: flask/templates/settings/creations.html:23
+msgid "All Types"
+msgstr "Tất cả Loại"
+
+#: flask/templates/settings/creations.html:24
+msgid "Characters"
+msgstr "Nhân vật"
+
+#: flask/templates/settings/creations.html:33
+msgid "All Works"
+msgstr "Tất cả Tác phẩm"
+
+#: flask/templates/settings/creations.html:42
+msgid "Name (A-Z)"
+msgstr "Tên (A-Z)"
+
+#: flask/templates/settings/creations.html:48
+msgid "Search"
+msgstr "Tìm kiếm"
+
+#: flask/templates/settings/creations.html:53
+msgid "Search name..."
+msgstr "Tìm tên..."
+
+#: flask/templates/settings/creations.html:55
+msgid "Search creations"
+msgstr "Tìm kiếm sáng tạo"
+
+#: flask/templates/settings/creations.html:66
+msgid "Preview"
+msgstr "Xem trước"
+
+#: flask/templates/settings/creations.html:68
+msgid "Details"
+msgstr "Chi tiết"
+
+#: flask/templates/settings/creations.html:70
+msgid "Role"
+msgstr "Vai trò"
+
+#: flask/templates/settings/creations.html:71
+msgid "Created"
+msgstr "Đã tạo"
+
+#: flask/templates/settings/creations.html:72
+msgid "Action"
+msgstr "Hành động"
+
+#: flask/templates/settings/creations.html:122
+msgid "Editor"
+msgstr "Trình chỉnh sửa"
+
+#: flask/templates/settings/creations.html:122
+msgid "Open editor"
+msgstr "Mở trình chỉnh sửa"
+
+#: flask/templates/settings/creations.html:132
+msgid "No creations found"
+msgstr "Không tìm thấy sáng tạo nào"
+
+#: flask/templates/settings/creations.html:134
+msgid "No works were found matching the selected filters or created/shared with you."
+msgstr "Không tìm thấy tác phẩm nào khớp với bộ lọc đã chọn hoặc được tạo/chia sẻ với bạn."
+
+#: flask/templates/settings/creations.html:137
+msgid "Reset all filters"
+msgstr "Đặt lại tất cả bộ lọc"
+
+#: flask/templates/settings/index.html:7
+msgid "Player Personas"
+msgstr "Nhân dạng Người chơi"
+
+#: flask/templates/settings/index.html:8
+msgid "Manage your roleplay identities. The star marks your default persona."
+msgstr "Quản lý các danh tính nhập vai của bạn. Ngôi sao đánh dấu nhân dạng mặc định."
+
+#: flask/templates/settings/layout.html:14
+msgid "User & Personalization"
+msgstr "Người dùng & Cá nhân hóa"
+
+#: flask/templates/settings/layout.html:18
+msgid "Personas"
+msgstr "Nhân dạng"
+
+#: flask/templates/setup/first_boot.html:14
+msgid "Setup steps"
+msgstr "Các bước thiết lập"
+
+#: flask/templates/worldinfo/detail.html:19
+msgid "WorldInfo & Locations"
+msgstr "WorldInfo & Địa điểm"
+
+#: flask/templates/worldinfo/detail.html:24
+msgid "Locations & Backgrounds"
+msgstr "Địa điểm & Hình nền"
+
+#: flask/templates/worldinfo/detail.html:45
+msgid "Really delete WorldInfo?"
+msgstr "Bạn có chắc muốn xóa WorldInfo này không?"
+
+#: flask/templates/worldinfo/detail.html:46
+msgid "Read-only (External World)"
+msgstr "Chỉ đọc (Thế giới Bên ngoài)"
+
+#: flask/templates/worldinfo/detail.html:47
+msgid "Save WorldInfo"
+msgstr "Lưu WorldInfo"
+
+#: flask/templates/worldinfo/detail.html:64
+msgid "World Name"
+msgstr "Tên Thế giới"
+
+#: flask/templates/worldinfo/detail.html:65
+msgid "The name of the universe or setting. Included as primary world in the prompt context."
+msgstr "Tên của vũ trụ hoặc bối cảnh. Được đưa vào làm thế giới chính trong ngữ cảnh prompt."
+
+#: flask/templates/worldinfo/detail.html:77
+msgid "Cover Image (1:1)"
+msgstr "Ảnh Bìa (1:1)"
+
+#: flask/templates/worldinfo/detail.html:78
+msgid "Square cover image for the world card in the Hub and world selection."
+msgstr "Ảnh bìa vuông cho thẻ thế giới trong Hub và phần chọn thế giới."
+
+#: flask/templates/worldinfo/detail.html:81
+msgid "1:1 World Cover"
+msgstr "Ảnh Bìa Thế giới 1:1"
+
+#: flask/templates/worldinfo/detail.html:93
+msgid "Choose Cover"
+msgstr "Chọn Ảnh bìa"
+
+#: flask/templates/worldinfo/detail.html:95
+msgid "Crop"
+msgstr "Cắt"
+
+#: flask/templates/worldinfo/detail.html:107
+msgid "Private = only accessible to you. Public = accessible to all users for chats."
+msgstr "Riêng tư = chỉ bạn mới có thể truy cập. Công khai = mọi người dùng đều có thể truy cập để trò chuyện."
+
+#: flask/templates/worldinfo/detail.html:118
+msgid "Linked Lorebook (Optional)"
+msgstr "Sổ tay Tri thức Liên kết (Tùy chọn)"
+
+#: flask/templates/worldinfo/detail.html:119
+msgid "An optional lorebook automatically included alongside character lorebooks in all chats using this world."
+msgstr "Sổ tay tri thức tùy chọn được tự động đưa vào cùng sổ tay tri thức của nhân vật trong mọi cuộc trò chuyện sử dụng thế giới này."
+
+#: flask/templates/worldinfo/detail.html:122
+msgid "No lorebook linked"
+msgstr "Chưa liên kết sổ tay tri thức"
+
+#: flask/templates/worldinfo/detail.html:144
+msgid "New Location"
+msgstr "Địa điểm Mới"
+
+#: flask/templates/worldinfo/detail.html:151 flask/templates/worldinfo/detail.html:154 flask/templates/worldinfo/detail.html:166
+msgid "This location is bound to"
+msgstr "Địa điểm này được gắn với"
+
+#: flask/templates/worldinfo/detail.html:177
+msgid "Edit Location:"
+msgstr "Chỉnh sửa Địa điểm:"
+
+#: flask/templates/worldinfo/detail.html:183 flask/templates/worldinfo/detail.html:316
+msgid "Location Name"
+msgstr "Tên Địa điểm"
+
+#: flask/templates/worldinfo/detail.html:184 flask/templates/worldinfo/detail.html:317
+msgid "Name of the location (e.g. Old Library, Griffin Tavern)."
+msgstr "Tên của địa điểm (vd: Thư viện Cũ, Quán rượu Griffin)."
+
+#: flask/templates/worldinfo/detail.html:197 flask/templates/worldinfo/detail.html:330
+msgid "Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet)."
+msgstr "Các từ khóa phân tách bằng dấu phẩy mô tả môi trường (vd: trong nhà, ấm cúng, yên tĩnh)."
+
+#: flask/templates/worldinfo/detail.html:199 flask/templates/worldinfo/detail.html:332
+msgid "Extract Tags"
+msgstr "Trích xuất Thẻ"
+
+#: flask/templates/worldinfo/detail.html:207 flask/templates/worldinfo/detail.html:340
+msgid "16:9 Background Image (PNG, JPG, WEBP)"
+msgstr "Ảnh Nền 16:9 (PNG, JPG, WEBP)"
+
+#: flask/templates/worldinfo/detail.html:208 flask/templates/worldinfo/detail.html:341
+msgid "Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference."
+msgstr "Ảnh ngang 16:9 dùng làm phông nền sân khấu trò chuyện và ảnh tham chiếu ComfyUI."
+
+#: flask/templates/worldinfo/detail.html:214 flask/templates/worldinfo/detail.html:347
+msgid "Analyze & Describe Image"
+msgstr "Phân tích & Mô tả Ảnh"
+
+#: flask/templates/worldinfo/detail.html:221 flask/templates/worldinfo/detail.html:354
+msgid "Location Description"
+msgstr "Mô tả Địa điểm"
+
+#: flask/templates/worldinfo/detail.html:222 flask/templates/worldinfo/detail.html:355
+msgid "Atmospheric description of the environment, sounds, and mood."
+msgstr "Mô tả bầu không khí của môi trường, âm thanh và tâm trạng."
+
+#: flask/templates/worldinfo/detail.html:239 flask/templates/worldinfo/detail.html:372
+msgid "Character Binding (Optional)"
+msgstr "Gắn kết Nhân vật (Tùy chọn)"
+
+#: flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:373
+msgid "If selected, this location can only be entered when chatting with that specific character."
+msgstr "Nếu được chọn, địa điểm này chỉ có thể vào khi trò chuyện với nhân vật cụ thể đó."
+
+#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:376
+msgid "No character (Freely accessible)"
+msgstr "Không có nhân vật (Truy cập tự do)"
+
+#: flask/templates/worldinfo/detail.html:253
+msgid "Assigned Location Events:"
+msgstr "Sự kiện Địa điểm Đã gán:"
+
+#: flask/templates/worldinfo/detail.html:258
+msgid "No specific location events assigned."
+msgstr "Chưa gán sự kiện địa điểm cụ thể nào."
+
+#: flask/templates/worldinfo/detail.html:310
+msgid "Create New Location"
+msgstr "Tạo Địa điểm Mới"
+
+#: flask/templates/worldinfo/detail.html:334
+msgid "tavern, forest, castle"
+msgstr "quán rượu, khu rừng, lâu đài"
+
+#: flask/templates/worldinfo/detail.html:387
+msgid "Save Location"
+msgstr "Lưu Địa điểm"
+
+#: flask/templates/worldinfo/detail.html:394
+msgid "Set 1:1 World Cover"
+msgstr "Đặt Ảnh Bìa Thế giới 1:1"
+
+#: flask/templates/worldinfo/detail.html:394
+msgid "1:1 Cover"
+msgstr "Ảnh Bìa 1:1"
+

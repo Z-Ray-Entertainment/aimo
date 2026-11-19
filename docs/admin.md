@@ -105,3 +105,9 @@ Configure the global fallback background wallpaper for the application:
 - **Upload Wallpaper:** Upload any 16:9 widescreen wallpaper (PNG, JPG, WEBP) to serve as the global atmospheric background across the entire interface.
 - **Select from Worlds & Locations:** Quick-pick background art directly from any existing WorldInfo location.
 - **Reset:** Revert to the default parchment and wood texture theme at any time.
+
+### Multi-Language System Prompts & Translation Sync
+- Each system prompt displays country-flag pill badges for all 20 supported languages (existing translations appear first; missing languages appear greyed out at the end).
+- Clicking any flag badge loads that language's prompt for inspection, manual editing, or on-demand **AI Translate**.
+- **Restore Default** resets all languages of that prompt back to the built-in factory defaults.
+- **Synchronize Missing Translations:** Starts a dependency-ordered translation run across all customized prompts, characters, worlds, and lorebooks with live progress and a **Cancel** button (especially useful when using Cloud AI providers, where automatic background translation is disabled to protect token quotas).

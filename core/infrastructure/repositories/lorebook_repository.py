@@ -63,15 +63,17 @@ class LorebookRepository(BaseRepository[Lorebook]):
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO lorebooks (user_id, name, description, visibility, collaborator_creator_tags_json, created_at)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO lorebooks (user_id, name, description, visibility, origin_language, collaborator_creator_tags_json, is_proper_noun, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     lorebook.user_id,
                     lorebook.name,
                     lorebook.description,
                     lorebook.visibility,
+                    getattr(lorebook, "origin_language", "en") or "en",
                     tags_json,
+                    1 if getattr(lorebook, "is_proper_noun", False) else 0,
                     created_str,
                 ),
             )
@@ -96,10 +98,18 @@ class LorebookRepository(BaseRepository[Lorebook]):
             conn.execute(
                 """
                 UPDATE lorebooks
-                SET name = ?, description = ?, visibility = ?, collaborator_creator_tags_json = ?
+                SET name = ?, description = ?, visibility = ?, origin_language = ?, collaborator_creator_tags_json = ?, is_proper_noun = ?
                 WHERE id = ?
                 """,
-                (lorebook.name, lorebook.description, lorebook.visibility, tags_json, lorebook.id),
+                (
+                    lorebook.name,
+                    lorebook.description,
+                    lorebook.visibility,
+                    getattr(lorebook, "origin_language", "en") or "en",
+                    tags_json,
+                    1 if getattr(lorebook, "is_proper_noun", False) else 0,
+                    lorebook.id,
+                ),
             )
             row = conn.execute(
                 "SELECT * FROM lorebooks WHERE id = ?",
@@ -123,6 +133,7 @@ class LorebookRepository(BaseRepository[Lorebook]):
             description=orig.description,
             visibility="private",
             collaborator_creator_tags=[],
+            is_proper_noun=orig.is_proper_noun,
         )
         saved = self.create(clone)
         assert saved.id is not None
@@ -137,6 +148,7 @@ class LorebookRepository(BaseRepository[Lorebook]):
                 tags=list(entry.tags),
                 content=entry.content,
                 visibility=entry.visibility,
+                is_proper_noun=entry.is_proper_noun,
             )
             self.add_entry(clone_entry)
 
@@ -151,8 +163,8 @@ class LorebookRepository(BaseRepository[Lorebook]):
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO lorebook_entries (lorebook_id, title, tags_json, content, visibility, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO lorebook_entries (lorebook_id, title, tags_json, content, visibility, is_proper_noun, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     entry.lorebook_id,
@@ -160,6 +172,7 @@ class LorebookRepository(BaseRepository[Lorebook]):
                     json.dumps(entry.tags),
                     entry.content,
                     vis,
+                    1 if getattr(entry, "is_proper_noun", False) else 0,
                     created_str,
                     updated_str,
                 ),
@@ -186,7 +199,7 @@ class LorebookRepository(BaseRepository[Lorebook]):
             conn.execute(
                 """
                 UPDATE lorebook_entries
-                SET title = ?, tags_json = ?, content = ?, visibility = ?, updated_at = ?
+                SET title = ?, tags_json = ?, content = ?, visibility = ?, is_proper_noun = ?, updated_at = ?
                 WHERE id = ?
                 """,
                 (
@@ -194,6 +207,7 @@ class LorebookRepository(BaseRepository[Lorebook]):
                     json.dumps(entry.tags),
                     entry.content,
                     vis,
+                    1 if getattr(entry, "is_proper_noun", False) else 0,
                     updated_str,
                     entry.id,
                 ),
@@ -260,7 +274,13 @@ class LorebookRepository(BaseRepository[Lorebook]):
             name=str(row["name"]),
             description=str(row["description"]),
             visibility=vis,
+            origin_language=(
+                str(row["origin_language"])
+                if ("origin_language" in row.keys() and row["origin_language"])
+                else "en"
+            ),
             collaborator_creator_tags=collaborator_tags,
+            is_proper_noun=bool(row["is_proper_noun"]) if "is_proper_noun" in keys and row["is_proper_noun"] is not None else False,
             created_at=parse_datetime(row["created_at"]),
         )
 
@@ -279,6 +299,7 @@ class LorebookRepository(BaseRepository[Lorebook]):
             tags=list(tags) if isinstance(tags, list) else [],
             content=str(row["content"]),
             visibility=vis,
+            is_proper_noun=bool(row["is_proper_noun"]) if "is_proper_noun" in keys and row["is_proper_noun"] is not None else False,
             created_at=parse_datetime(row["created_at"]),
             updated_at=parse_datetime(row["updated_at"]),
         )

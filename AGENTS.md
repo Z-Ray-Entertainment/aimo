@@ -119,11 +119,11 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 - Messages, lorebooks, and memories must **not be vectorized**.
 - RAG operates strictly rule-based via keyword and tag matching (`shared.utils.tags_overlap(tags_a, tags_b) >= 1`, case-insensitive).
 
-### 4. Canonical English LLM Canon
-- All backend prompts and context are primarily maintained in English.
-- User inputs are translated into English before generation.
-- The web UI displays translated text in the user's language. Translations are persistently cached in SQLite (`TranslationRecord`).
-- When text is edited by the user, the English original is updated immediately and dependent cache entries are invalidated.
+### 4. English Standard, Shared `gettext` & Pre-Translated Native-Language Chat
+- English is the internal standard language across source code, UI strings, default system prompts, and relationship guardrails.
+- **Shared `gettext` (`locales/`):** Both `core/` and `flask/` use Python's `gettext` (`.pot`/`.po`/`.mo`) for UI strings, default system prompts, 21 relationship tiers/guardrails, and `PromptBuilder` labels/directives across all 20 supported languages.
+- **Dynamic Entity Translations (`entity_field_translations`):** Author-created content and customized system prompts are stored per language in SQLite. For local LLMs, a dependency-ordered background worker translates missing languages for all registered user languages (plus English), yielding while active chats run. For **Cloud AI** providers (`IS_CLOUD = True`), automatic background translation is disabled and translations run strictly on-demand via Admin or Author triggers.
+- **Language-Gated Visibility & Native Chat:** Regular users only see content ready in their language; authors/admins always see their own/editable creations. At runtime, prompts are assembled and streamed directly in the user's language, and episodic memories are generated directly in the user's language without translation.
 
 ### 5. Relationship Dynamics & Over-Time Decay
 - Value range: Firmly clamped between **`-100.0` and `+100.0`**.

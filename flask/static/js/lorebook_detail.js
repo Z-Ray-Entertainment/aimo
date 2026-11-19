@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (window.showToastWarning) {
           window.showToastWarning("Bitte trage zuerst einen Titel oder Fließtext ein, damit der Assistent relevante Tags ableiten kann.");
         } else {
-          alert("Bitte trage zuerst einen Titel oder Fließtext ein, damit der Assistent relevante Tags ableiten kann.");
+          alert(window.t("Please enter a title or prose text first so the assistant can derive relevant tags."));
         }
         return;
       }
@@ -44,14 +44,14 @@ document.addEventListener("DOMContentLoaded", () => {
           if (window.showToastError) {
             window.showToastError(`Fehler bei der Tag-Ermittlung: ${data.error}`);
           } else {
-            alert(`Fehler bei der Tag-Ermittlung: ${data.error}`);
+            alert(window.t("Error deriving tags: {error}", { error: data.error }));
           }
         }
       } catch (err) {
         if (window.showToastError) {
           window.showToastError(`Verbindungsfehler: ${err.message}`);
         } else {
-          alert(`Verbindungsfehler: ${err.message}`);
+          alert(window.t("Connection error: {error}", { error: err.message }));
         }
       } finally {
         window.resetButtonLoading(btn, origHtml);

@@ -9,7 +9,9 @@ class Lorebook:
     name: str
     description: str = ""
     visibility: str = "private"
+    origin_language: str = "en"
     collaborator_creator_tags: list[str] = field(default_factory=list)
+    is_proper_noun: bool = False
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def is_visible_to_user(self, user_id: int, is_admin: bool = False) -> bool:
@@ -40,6 +42,7 @@ class LorebookEntry:
     tags: list[str]
     content: str
     visibility: str = "public"
+    is_proper_noun: bool = False
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 

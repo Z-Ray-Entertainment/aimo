@@ -63,17 +63,19 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO worldinfos (user_id, name, icon, visibility, cover_image_path, lorebook_id, collaborator_creator_tags_json, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO worldinfos (user_id, name, icon, visibility, origin_language, cover_image_path, lorebook_id, collaborator_creator_tags_json, is_proper_noun, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     worldinfo.user_id,
                     worldinfo.name,
                     worldinfo.icon,
                     worldinfo.visibility,
+                    getattr(worldinfo, "origin_language", "en") or "en",
                     worldinfo.cover_image_path,
                     worldinfo.lorebook_id,
                     tags_json,
+                    1 if getattr(worldinfo, "is_proper_noun", False) else 0,
                     created_str,
                 ),
             )
@@ -98,16 +100,18 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             conn.execute(
                 """
                 UPDATE worldinfos
-                SET name = ?, icon = ?, visibility = ?, cover_image_path = ?, lorebook_id = ?, collaborator_creator_tags_json = ?
+                SET name = ?, icon = ?, visibility = ?, origin_language = ?, cover_image_path = ?, lorebook_id = ?, collaborator_creator_tags_json = ?, is_proper_noun = ?
                 WHERE id = ?
                 """,
                 (
                     worldinfo.name,
                     worldinfo.icon,
                     worldinfo.visibility,
+                    getattr(worldinfo, "origin_language", "en") or "en",
                     worldinfo.cover_image_path,
                     worldinfo.lorebook_id,
                     tags_json,
+                    1 if getattr(worldinfo, "is_proper_noun", False) else 0,
                     worldinfo.id,
                 ),
             )
@@ -135,6 +139,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             cover_image_path=orig.cover_image_path,
             lorebook_id=orig.lorebook_id,
             collaborator_creator_tags=[],
+            is_proper_noun=orig.is_proper_noun,
         )
         saved = self.create(clone)
         assert saved.id is not None
@@ -154,6 +159,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                 background_image_path=loc.background_image_path,
                 vision_alt_text=loc.vision_alt_text,
                 character_id=loc.character_id,
+                is_proper_noun=loc.is_proper_noun,
             )
             saved_loc = self.add_location(clone_loc)
             assert saved_loc.id is not None
@@ -171,6 +177,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                 one_shot=ev.one_shot,
                 description=ev.description,
                 location_id=mapped_loc_id,
+                is_proper_noun=ev.is_proper_noun,
             )
             self.add_event(clone_ev)
 
@@ -183,9 +190,9 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             cursor = conn.execute(
                 """
                 INSERT INTO locations (
-                    worldinfo_id, name, tags_json, description, background_image_path, vision_alt_text, character_id
+                    worldinfo_id, name, tags_json, description, background_image_path, vision_alt_text, character_id, is_proper_noun
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     location.worldinfo_id,
@@ -195,6 +202,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     location.background_image_path,
                     location.vision_alt_text,
                     location.character_id,
+                    1 if getattr(location, "is_proper_noun", False) else 0,
                 ),
             )
             new_id = int(cursor.lastrowid or 0)
@@ -217,7 +225,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             conn.execute(
                 """
                 UPDATE locations
-                SET name = ?, tags_json = ?, description = ?, background_image_path = ?, vision_alt_text = ?, character_id = ?
+                SET name = ?, tags_json = ?, description = ?, background_image_path = ?, vision_alt_text = ?, character_id = ?, is_proper_noun = ?
                 WHERE id = ?
                 """,
                 (
@@ -227,6 +235,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     location.background_image_path,
                     location.vision_alt_text,
                     location.character_id,
+                    1 if getattr(location, "is_proper_noun", False) else 0,
                     location.id,
                 ),
             )
@@ -270,9 +279,9 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                 """
                 INSERT INTO events (
                     worldinfo_id, character_id, location_id, title, probability, one_shot, description,
-                    min_relationship, max_relationship
+                    min_relationship, max_relationship, is_proper_noun
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     event.worldinfo_id,
@@ -284,6 +293,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     event.description,
                     event.min_relationship,
                     event.max_relationship,
+                    1 if getattr(event, "is_proper_noun", False) else 0,
                 ),
             )
             new_id = int(cursor.lastrowid or 0)
@@ -307,7 +317,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                 """
                 UPDATE events
                 SET location_id = ?, title = ?, probability = ?, one_shot = ?, description = ?,
-                    min_relationship = ?, max_relationship = ?
+                    min_relationship = ?, max_relationship = ?, is_proper_noun = ?
                 WHERE id = ?
                 """,
                 (
@@ -318,6 +328,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     event.description,
                     event.min_relationship,
                     event.max_relationship,
+                    1 if getattr(event, "is_proper_noun", False) else 0,
                     event.id,
                 ),
             )
@@ -397,9 +408,15 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             name=str(row["name"]),
             icon=icon_val,
             visibility=vis,
+            origin_language=(
+                str(row["origin_language"])
+                if ("origin_language" in row.keys() and row["origin_language"])
+                else "en"
+            ),
             cover_image_path=cover_path,
             lorebook_id=lb_id,
             collaborator_creator_tags=collaborator_tags,
+            is_proper_noun=bool(row["is_proper_noun"]) if "is_proper_noun" in keys and row["is_proper_noun"] is not None else False,
             created_at=parse_datetime(row["created_at"]),
         )
 
@@ -430,6 +447,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                 else None
             ),
             character_id=char_id,
+            is_proper_noun=bool(row["is_proper_noun"]) if "is_proper_noun" in row.keys() and row["is_proper_noun"] is not None else False,
         )
 
     @staticmethod
@@ -446,4 +464,5 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             character_id=int(row["character_id"]) if ("character_id" in keys and row["character_id"] is not None) else None,
             min_relationship=int(row["min_relationship"]) if ("min_relationship" in keys and row["min_relationship"] is not None) else None,
             max_relationship=int(row["max_relationship"]) if ("max_relationship" in keys and row["max_relationship"] is not None) else None,
+            is_proper_noun=bool(row["is_proper_noun"]) if ("is_proper_noun" in keys and row["is_proper_noun"] is not None) else False,
         )

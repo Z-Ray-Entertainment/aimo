@@ -2,6 +2,8 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from application.auth.decorators import get_current_user, is_admin, require_auth, require_permission
 from application.lorebooks.forms import LorebookEntryForm
+from application.ui_helpers import tr
+from i18n import gettext_noop as _
 from domain.lorebooks.services import LorebookService
 from domain.permissions.models import FunctionPermission
 from infrastructure.repositories.lorebook_repository import LorebookRepository
@@ -26,7 +28,7 @@ def create_lorebook():
             visibility=request.form.get("visibility", "private"),
         )
         saved = repo.create(lb)
-        flash(f"Lorebook '{saved.name}' erstellt.", "success")
+        flash(tr(_("Lorebook '%(name)s' created."), name=saved.name), "success")
         return redirect(url_for("lorebooks.detail", lorebook_id=saved.id))
     except AimoError as exc:
         flash(str(exc), "error")
@@ -43,7 +45,7 @@ def detail(lorebook_id: int):
     service = LorebookService()
     lorebook = repo.get_by_id(lorebook_id)
     if lorebook is None or not lorebook.is_visible_to_user(user.id, is_admin()):
-        flash("Lorebook nicht gefunden.", "error")
+        flash(tr(_("Lorebook not found.")), "error")
         return redirect(url_for("overview.index"))
 
     is_editable = lorebook.is_editable_by_user(user.id, is_admin(), user.creator_tag)
@@ -51,7 +53,7 @@ def detail(lorebook_id: int):
 
     if request.method == "POST":
         if not is_editable:
-            flash("Zugriff verweigert: Du kannst nur deine eigenen Lorebooks oder für dich freigegebene Kreationen bearbeiten.", "error")
+            flash(tr(_("Access denied: You can only edit your own lorebooks or creations shared with you.")), "error")
             return redirect(url_for("overview.index"))
         try:
             collaborator_tags = None
@@ -65,9 +67,10 @@ def detail(lorebook_id: int):
                 description=request.form.get("description", lorebook.description),
                 visibility=request.form.get("visibility", lorebook.visibility),
                 collaborator_creator_tags=collaborator_tags,
+                is_proper_noun=bool(request.form.get("is_proper_noun")),
             )
             lorebook = repo.update(lorebook)
-            flash("Lorebook aktualisiert.", "success")
+            flash(tr(_("Lorebook updated.")), "success")
             active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
             if active_tab not in ("info", "entries", "collab"):
                 active_tab = "info"
@@ -77,6 +80,26 @@ def detail(lorebook_id: int):
 
     entries = repo.list_entries(lorebook_id, user_id=user.id, is_admin=is_admin())
     trans_repo = TranslationRepository()
+    user_lang = (user.language or "en")[:2].lower()
+    if not is_editable:
+        from application.translation_helpers import is_lorebook_ready_for_language
+
+        if not is_lorebook_ready_for_language(lorebook, user_lang, trans_repo):
+            flash(tr(_("This lorebook is not yet available in your language.")), "warning")
+            return redirect(url_for("overview.index", tab="lorebooks"))
+        if not getattr(lorebook, "is_proper_noun", False):
+            lorebook.name = trans_repo.get_localized_field("lorebook", lorebook.id, "name", user_lang, lorebook.name)
+        lorebook.description = trans_repo.get_localized_field(
+            "lorebook", lorebook.id, "description", user_lang, lorebook.description
+        )
+        for e in entries:
+            if e.id is not None:
+                if not getattr(e, "is_proper_noun", False):
+                    e.title = trans_repo.get_localized_field("lorebook_entry", e.id, "title", user_lang, e.title)
+                e.content = trans_repo.get_localized_field("lorebook_entry", e.id, "content", user_lang, e.content)
+                raw_tags = trans_repo.get_localized_field("lorebook_entry", e.id, "tags", user_lang, "")
+                if raw_tags:
+                    e.tags = [t.strip() for t in raw_tags.split(",") if t.strip()]
     entry_translations = {
         e.id: trans_repo.get_entity_translations_map("lorebook_entry", e.id)
         for e in entries
@@ -106,10 +129,10 @@ def duplicate_lorebook(lorebook_id: int):
     repo = LorebookRepository()
     orig = repo.get_by_id(lorebook_id)
     if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
-        flash("Lorebook nicht gefunden.", "error")
+        flash(tr(_("Lorebook not found.")), "error")
         return redirect(url_for("overview.index", tab="lorebooks"))
     copied = repo.duplicate(lorebook_id, user.id)
-    flash(f"Kopie '{copied.name}' erfolgreich angelegt.", "success")
+    flash(tr(_("Copy '%(name)s' created successfully."), name=copied.name), "success")
     return redirect(url_for("lorebooks.detail", lorebook_id=copied.id))
 
 
@@ -121,10 +144,10 @@ def delete_lorebook(lorebook_id: int):
     repo = LorebookRepository()
     lorebook = repo.get_by_id(lorebook_id)
     if lorebook is None or not lorebook.is_deletable_by_user(user.id, is_admin()):
-        flash("Lorebook nicht gefunden oder keine Berechtigung zum Löschen.", "error")
+        flash(tr(_("Lorebook not found or no permission to delete.")), "error")
         return redirect(url_for("overview.index", tab="lorebooks"))
     repo.delete(lorebook_id)
-    flash("Lorebook gelöscht.", "success")
+    flash(tr(_("Lorebook deleted.")), "success")
     return redirect(url_for("overview.index", tab="lorebooks"))
 
 
@@ -136,7 +159,7 @@ def add_entry(lorebook_id: int):
     repo = LorebookRepository()
     lorebook = repo.get_by_id(lorebook_id)
     if lorebook is None or not lorebook.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("Lorebook nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("Lorebook not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     form = LorebookEntryForm.from_request(request.form)
@@ -148,12 +171,13 @@ def add_entry(lorebook_id: int):
             tags=form.tags,
             content=form.content,
             visibility=form.visibility,
+            is_proper_noun=form.is_proper_noun,
         )
         saved_entry = repo.add_entry(entry)
         TranslationRepository().save_field_variants_json(
             "lorebook_entry", saved_entry.id, "content", request.form.get("i18n_content")
         )
-        flash(f"Eintrag '{entry.title}' hinzugefügt.", "success")
+        flash(tr(_("Entry '%(title)s' added."), title=entry.title), "success")
     except AimoError as exc:
         flash(str(exc), "error")
     return redirect(url_for("lorebooks.detail", lorebook_id=lorebook_id, tab="entries"))
@@ -167,7 +191,7 @@ def edit_entry(lorebook_id: int, entry_id: int):
     repo = LorebookRepository()
     lorebook = repo.get_by_id(lorebook_id)
     if lorebook is None or not lorebook.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("Lorebook nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("Lorebook not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     form = LorebookEntryForm.from_request(request.form)
@@ -175,12 +199,19 @@ def edit_entry(lorebook_id: int, entry_id: int):
     entry = repo.get_entry(entry_id)
     if entry is not None and entry.lorebook_id == lorebook_id:
         try:
-            service.update_entry(entry, form.title, form.tags, form.content, visibility=form.visibility)
+            service.update_entry(
+                entry,
+                form.title,
+                form.tags,
+                form.content,
+                visibility=form.visibility,
+                is_proper_noun=form.is_proper_noun,
+            )
             repo.update_entry(entry)
             TranslationRepository().save_field_variants_json(
                 "lorebook_entry", entry.id, "content", request.form.get("i18n_content")
             )
-            flash("Eintrag gespeichert.", "success")
+            flash(tr(_("Entry saved.")), "success")
         except AimoError as exc:
             flash(str(exc), "error")
     return redirect(url_for("lorebooks.detail", lorebook_id=lorebook_id, tab="entries"))
@@ -194,9 +225,9 @@ def delete_entry(lorebook_id: int, entry_id: int):
     repo = LorebookRepository()
     lorebook = repo.get_by_id(lorebook_id)
     if lorebook is None or not lorebook.is_editable_by_user(user.id, is_admin(), user.creator_tag):
-        flash("Lorebook nicht gefunden oder keine Berechtigung.", "error")
+        flash(tr(_("Lorebook not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
     repo.delete_entry(entry_id)
-    flash("Eintrag gelöscht.", "success")
+    flash(tr(_("Entry deleted.")), "success")
     return redirect(url_for("lorebooks.detail", lorebook_id=lorebook_id, tab="entries"))

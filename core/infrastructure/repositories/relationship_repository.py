@@ -41,24 +41,25 @@ class RelationshipRepository:
                         behavior_rules=str(rules),
                     )
 
-        with get_db_session(self.db_path) as conn:
-            row = conn.execute(
-                """
-                SELECT name, description, behavior_rules
-                FROM relationship_tiers
-                WHERE level = ?
-                """,
-                (step,),
-            ).fetchone()
-            if row:
-                return RelationshipTier(
-                    level=step,
-                    name=str(row["name"]),
-                    description=str(row["description"]),
-                    behavior_rules=str(row["behavior_rules"]),
-                )
+        if not lang_code or lang_code == "en":
+            with get_db_session(self.db_path) as conn:
+                row = conn.execute(
+                    """
+                    SELECT name, description, behavior_rules
+                    FROM relationship_tiers
+                    WHERE level = ?
+                    """,
+                    (step,),
+                ).fetchone()
+                if row:
+                    return RelationshipTier(
+                        level=step,
+                        name=str(row["name"]),
+                        description=str(row["description"]),
+                        behavior_rules=str(row["behavior_rules"]),
+                    )
 
-        return CANONICAL_RELATIONSHIP_TIERS.get(step, CANONICAL_RELATIONSHIP_TIERS[0])
+        return get_relationship_tier(step, language=lang_code)
 
     def get_translations_map(self, language: str = "en") -> dict[int, RelationshipTier]:
         lang_code = language.strip().lower()[:2] if language else "en"
@@ -89,7 +90,7 @@ class RelationshipRepository:
     def list_tiers(self, language: str = "en") -> list[RelationshipTier]:
         trans_map = self.get_translations_map(language)
         return [
-            trans_map.get(lvl, CANONICAL_RELATIONSHIP_TIERS[lvl])
+            trans_map.get(lvl) or get_relationship_tier(lvl, language=language)
             for lvl in ORDERED_TIER_LEVELS
             if lvl in CANONICAL_RELATIONSHIP_TIERS
         ]

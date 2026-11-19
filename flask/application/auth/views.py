@@ -1,8 +1,10 @@
 from flask import Blueprint, abort, flash, redirect, render_template, request, session, url_for
 
 from application.auth.forms import LoginForm
+from application.ui_helpers import tr
 from domain.auth.services import AuthService
 from domain.translation.models import Language
+from i18n import gettext_noop as _
 from infrastructure.repositories.user_repository import UserRepository
 
 auth_bp = Blueprint("auth", __name__)
@@ -28,7 +30,7 @@ def login():
                 user_repo.update(user)
             next_url = request.args.get("next") or url_for("overview.index")
             return redirect(next_url)
-        flash("Ungültige E-Mail-Adresse oder Passwort.", "error")
+        flash(tr(_("Invalid email address or password.")), "error")
 
     return render_template("auth/login.html", form=form)
 

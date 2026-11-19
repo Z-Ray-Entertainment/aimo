@@ -1,13 +1,16 @@
 from flask import Blueprint, jsonify, request
 
 from application.api.auth import get_current_user, is_admin, require_auth, require_permission
+from application.translation_helpers import is_worldinfo_ready_for_language
 from domain.permissions.models import FunctionPermission
 from domain.worldinfo.services import WorldInfoService
 from infrastructure.llm.factory import get_llm_provider
 from infrastructure.repositories.settings_repository import SettingsRepository
+from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
+from shared.llm_activity import interactive_llm_guard
 
 api_worldinfo_bp = Blueprint("api_worldinfo", __name__, url_prefix="/api/worldinfo")
 
@@ -17,11 +20,18 @@ api_worldinfo_bp = Blueprint("api_worldinfo", __name__, url_prefix="/api/worldin
 def list_worldinfo():
     user = get_current_user()
     uid = user.id if user and user.id else None
+    user_lang = (user.language or "en")[:2].lower() if user else "en"
+    user_tag = user.creator_tag if user else None
+    admin_flag = is_admin()
     repo = WorldInfoRepository()
+    trans_repo = TranslationRepository()
     worlds = repo.list_all(uid)
     result = []
     for wi in worlds:
         if wi.id is None:
+            continue
+        is_editable = bool(uid and wi.is_editable_by_user(uid, admin_flag, user_tag))
+        if not is_editable and not is_worldinfo_ready_for_language(wi, user_lang, trans_repo, repo):
             continue
         locations = repo.list_locations(wi.id)
         events = repo.list_events(wi.id)
@@ -154,12 +164,17 @@ def analyze_location_background():
         else:
             bg_path = existing_bg_path
 
+        user = get_current_user()
+        target_lang = (user.language if user and user.language else "en").strip().lower()[:2]
+        from domain.translation.models import LANGUAGE_METADATA
+        lang_label = LANGUAGE_METADATA.get(target_lang, {}).get("label", target_lang)
         resolved = storage.resolve_path(bg_path)
-        alt_text = llm.analyze_image(
-            image_path=resolved,
-            prompt="Describe this 16:9 location background atmosphere, architecture, lighting, and scenery concisely in English for a roleplay setting.",
-            model=settings.tasks.vision_model,
-        ).strip()
+        with interactive_llm_guard():
+            alt_text = llm.analyze_image(
+                image_path=resolved,
+                prompt=f"Describe this 16:9 location background atmosphere, architecture, lighting, and scenery concisely in {lang_label} ({target_lang}) for a roleplay setting.",
+                model=settings.tasks.vision_model,
+            ).strip()
         return jsonify(
             {
                 "background_image_path": bg_path,
@@ -202,5 +217,10 @@ def duplicate_worldinfo(worldinfo_id: int):
     orig = repo.get_by_id(worldinfo_id)
     if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
         return jsonify({"error": "WorldInfo not found."}), 404
+    if not orig.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        trans_repo = TranslationRepository()
+        user_lang = (user.language or "en")[:2].lower()
+        if not is_worldinfo_ready_for_language(orig, user_lang, trans_repo, repo):
+            return jsonify({"error": "This world is not yet available in your language."}), 403
     copied = repo.duplicate(worldinfo_id, user.id)
     return jsonify({"id": copied.id, "name": copied.name}), 201

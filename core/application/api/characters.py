@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request
 
 from application.api.auth import get_current_user, is_admin, require_auth, require_permission
 from application.character_helpers import save_and_persist_sprite
+from application.translation_helpers import is_character_ready_for_language
 from domain.characters.models import Emotion, Gender
 from domain.characters.services import CharacterService
 from domain.permissions.models import FunctionPermission
@@ -13,9 +14,11 @@ from domain.worldinfo.services import WorldInfoService
 from infrastructure.llm.factory import get_llm_provider
 from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.settings_repository import SettingsRepository
+from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from infrastructure.storage.file_storage import FileStorage
 from shared.exceptions import AimoError
+from shared.llm_activity import interactive_llm_guard
 from shared.request_parsers import RequestDataParser
 
 api_characters_bp = Blueprint("api_characters", __name__, url_prefix="/api/characters")
@@ -28,6 +31,8 @@ def list_characters():
     assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     wi_repo = WorldInfoRepository()
+    trans_repo = TranslationRepository()
+    user_lang = (user.language or "en")[:2].lower()
     characters = char_repo.list_visible(user.id)
 
     gender_filter = request.args.get("gender", "").strip().lower()
@@ -40,6 +45,10 @@ def list_characters():
     result = []
     for char in characters:
         if char.id is None:
+            continue
+        is_editable = char.is_editable_by_user(user.id, is_admin(), user.creator_tag)
+        is_ready = is_character_ready_for_language(char, user_lang, trans_repo, wi_repo)
+        if not is_ready and not is_editable:
             continue
         if author_filter in ("mine", "own") and char.user_id != user.id:
             continue
@@ -71,9 +80,10 @@ def list_characters():
                 "primary_portrait_path": char.primary_portrait_path,
                 "avatar_path": char.avatar_path,
                 "card_image_path": char.card_image_path,
-                "appearance": getattr(char, "appearance", ""),
-                "description": char.description,
-                "first_message": char.first_message,
+                "appearance": trans_repo.get_localized_field("character", char.id, "appearance", user_lang, getattr(char, "appearance", "")),
+                "description": trans_repo.get_localized_field("character", char.id, "description", user_lang, char.description),
+                "first_message": trans_repo.get_localized_field("character", char.id, "first_message", user_lang, char.first_message),
+                "translation_pending": not is_ready,
                 "suggested_worldinfo_id": char.suggested_worldinfo_id,
                 "initial_location_id": char.initial_location_id,
                 "initial_relationship": char.initial_relationship,
@@ -241,17 +251,18 @@ def sparkle_description():
         "- Do NOT include meta-text, introductions, or instructions; output only the final character description."
     )
     try:
-        raw_output = llm_provider.generate(
-            prompt=prompt,
-            model=settings.tasks.assistant_model,
-            params=ModelParameters(
-                num_ctx=settings.params.num_ctx,
-                temperature=0.75,
-                top_p=0.9,
-                repeat_penalty=1.1,
-            ),
-            think=False,
-        ).strip()
+        with interactive_llm_guard():
+            raw_output = llm_provider.generate(
+                prompt=prompt,
+                model=settings.tasks.assistant_model,
+                params=ModelParameters(
+                    num_ctx=settings.params.num_ctx,
+                    temperature=0.75,
+                    top_p=0.9,
+                    repeat_penalty=1.1,
+                ),
+                think=False,
+            ).strip()
         improved = _clean_sparkle_prose(raw_output)
         return jsonify({"description": improved})
     except AimoError as exc:
@@ -402,17 +413,18 @@ def sparkle_dialogue():
     )
 
     try:
-        raw_output = llm_provider.generate(
-            prompt=prompt,
-            model=settings.tasks.assistant_model,
-            params=ModelParameters(
-                num_ctx=settings.params.num_ctx,
-                temperature=0.75,
-                top_p=0.9,
-                repeat_penalty=1.1,
-            ),
-            think=False,
-        ).strip()
+        with interactive_llm_guard():
+            raw_output = llm_provider.generate(
+                prompt=prompt,
+                model=settings.tasks.assistant_model,
+                params=ModelParameters(
+                    num_ctx=settings.params.num_ctx,
+                    temperature=0.75,
+                    top_p=0.9,
+                    repeat_penalty=1.1,
+                ),
+                think=False,
+            ).strip()
         parsed_trigger, parsed_response = _parse_dialogue_pair(
             raw_output,
             current_trigger=current_trigger,
@@ -460,13 +472,22 @@ def extract_appearance():
     if not resolved_path.is_file():
         return jsonify({"error": "Kein gültiges Porträtbild zum Analysieren vorhanden."}), 400
 
+    user = get_current_user()
+    target_lang = (user.language if user and user.language else "en").strip().lower()[:2]
+    from domain.translation.models import LANGUAGE_METADATA
+    lang_label = LANGUAGE_METADATA.get(target_lang, {}).get("label", target_lang)
+
     settings = SettingsRepository().get_settings()
     llm = get_llm_provider(settings)
+    from shared.i18n import t as core_t
+    base_vision_prompt = core_t(settings.prompts.vision_persona_prompt, target_lang).strip()
     prompt = (
-        f"{settings.prompts.vision_persona_prompt.strip()}\n"
+        f"{base_vision_prompt}\n"
         "Focus strictly on physical traits: face, eyes, hair, skin tone, clothing, and physique. "
         "Keep it concise and descriptive."
     )
+    if target_lang != "en":
+        prompt += f"\nRespond strictly in {lang_label} ({target_lang})."
     try:
         appearance = llm.analyze_image(
             image_path=resolved_path,

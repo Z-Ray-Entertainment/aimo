@@ -5,60 +5,81 @@
 {% from "macros/buttons.html" import action_button, new_button, modal_close_button %}
 {% from "macros/badges.html" import pill_badge %}
 
-{% macro _event_location_select(scope_type, selected_location_id=none, locations=none) %}
+{% macro _event_location_select(scope_type, selected_location_id=none, locations=none, loc_display=none) %}
 <select name="location_id">
   {% if scope_type == 'character' %}
     <option value="" {% if not selected_location_id %}selected{% endif %}>
-      🎭 Gesamter Charakter (Ortsunabhängig){% if not locations %} — Keine empfohlene Welt mit Orten verknüpft{% endif %}
+      🎭 {{ _("Entire Character (Location-independent)") }}{% if not locations %} — {{ _("No recommended world with locations linked") }}{% endif %}
     </option>
     {% for loc in (locations or []) %}
-      <option value="{{ loc.id }}" {% if selected_location_id == loc.id %}selected{% endif %}>📍 Ort: {{ loc.name }}</option>
+      {% set disp_loc_name = loc_display.get(loc.id, {}).get("name", loc.name) if loc_display else loc.name %}
+      <option value="{{ loc.id }}" {% if selected_location_id == loc.id %}selected{% endif %}>📍 {{ _("Location:") }} {{ disp_loc_name }}</option>
     {% endfor %}
   {% else %}
-    <option value="world" {% if not selected_location_id %}selected{% endif %}>🌍 Gesamte Welt</option>
+    <option value="world" {% if not selected_location_id %}selected{% endif %}>🌍 {{ _("Entire World") }}</option>
     {% for loc in (locations or []) %}
-      <option value="{{ loc.id }}" {% if selected_location_id == loc.id %}selected{% endif %}>📍 Ort: {{ loc.name }}</option>
+      {% set disp_loc_name = loc_display.get(loc.id, {}).get("name", loc.name) if loc_display else loc.name %}
+      <option value="{{ loc.id }}" {% if selected_location_id == loc.id %}selected{% endif %}>📍 {{ _("Location:") }} {{ disp_loc_name }}</option>
     {% endfor %}
   {% endif %}
 </select>
 {% endmacro %}
 
-{% macro _event_form_fields(scope_type, ev=none, locations=none, ev_translations=none, modal_prefix='ev', tier_names_map=none) %}
+{% macro _event_form_fields(scope_type, ev=none, locations=none, ev_translations=none, modal_prefix='ev', tier_names_map=none, loc_display=none, origin_language=none) %}
 {% set ev_id = ev.id if ev else 'new' %}
 {% set i18n_id = 'i18n-' ~ modal_prefix ~ '-ev-' ~ ev_id %}
+{% set i18n_title_id = 'i18n-' ~ modal_prefix ~ '-ev-title-' ~ ev_id %}
 <div>
   <label>
-    Titel *
-    <span class="field-help-btn" title="Event-Titel:&#10;Name des Zufallsereignisses (z. B. 'Plötzlicher Gewittersturm', 'Brieftaube trifft ein').">?</span>
+    {{ _("Title") }} *
+    <span class="field-help-btn" title="{{ _('Event Title:\nName of the random event (e.g., \'Sudden Thunderstorm\', \'Carrier Pigeon Arrives\').') }}">?</span>
   </label>
-  <input type="text" name="title" value="{{ ev.title if ev else '' }}" required>
+  <input
+    type="hidden"
+    name="i18n_title"
+    id="{{ i18n_title_id }}"
+    value='{{ (ev_translations.get(ev.id, {}).get("title", {}) if (ev and ev_translations is defined and ev_translations) else {}) | tojson }}'>
+  <input
+    type="text"
+    name="title"
+    value="{{ ev.title if ev else '' }}"
+    required
+    data-i18n-field="title"
+    data-i18n-entity-type="worldinfo_event"
+    data-i18n-entity-id="{{ ev.id if ev else '' }}"
+    data-i18n-origin="{{ origin_language or ui_language }}"
+    data-i18n-hidden="{{ i18n_title_id }}">
+  <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; font-size: 0.82rem; color: var(--text-muted); cursor: pointer;">
+    <input type="checkbox" name="is_proper_noun" value="1" {% if ev and ev.is_proper_noun %}checked{% endif %}>
+    <span>{{ _("Proper Noun (Do not translate)") }}</span>
+  </label>
 </div>
 <div style="display: flex; gap: 1rem; align-items: center;">
   <div style="flex: 1;">
     <label>
-      Wahrscheinlichkeit (0 - 100%) *
-      <span class="field-help-btn" title="Wahrscheinlichkeit (1-100%):&#10;Relative Gewichtung im gemeinsamen Ereignis-Pool. Alle 10 bis 100 Nachrichten (Cooldown-Zähler) wird ein Ereignis gewichtet ausgelöst.">?</span>
+      {{ _("Probability (0 - 100%%)") }} *
+      <span class="field-help-btn" title="{{ _('Probability (1-100%%):\nRelative weight in the shared event pool. Every 10 to 100 messages (cooldown counter), one event is triggered by weight.') }}">?</span>
     </label>
     <input type="number" name="probability" min="0" max="100" value="{{ ev.probability if ev else 50 }}" required>
   </div>
   <div style="flex: 1; padding-top: 1.2rem;">
     <label>
-      <input type="checkbox" name="one_shot" value="1" {% if ev and ev.one_shot %}checked{% endif %}> One-Shot (Max. 1x pro Session)
-      <span class="field-help-btn" title="One-Shot (Einmaliges Ereignis):&#10;Wenn aktiviert, wird dieses Ereignis pro Chat-Sitzung maximal ein einziges Mal ausgelöst und danach aus dem aktiven Pool entfernt.">?</span>
+      <input type="checkbox" name="one_shot" value="1" {% if ev and ev.one_shot %}checked{% endif %}> {{ _("One-Shot (Max. 1x per session)") }}
+      <span class="field-help-btn" title="{{ _('One-Shot (Single Event):\nWhen enabled, this event triggers at most once per chat session and is then removed from the active pool.') }}">?</span>
     </label>
   </div>
 </div>
 <div>
   <label>
     {% if scope_type == 'character' %}
-      Zugehörigkeit (Ortsunabhängig oder an konkreten Ort gebunden)
-      <span class="field-help-btn" title="Orts-Eingrenzung:&#10;Wähle, ob dieses Charakter-Event überall in Chats mit diesem Charakter eintreten darf oder zusätzlich an einen bestimmten Schauplatz gebunden ist.">?</span>
+      {{ _("Assignment (Location-independent or bound to a specific location)") }}
+      <span class="field-help-btn" title="{{ _('Location Restriction:\nChoose whether this character event can occur anywhere in chats with this character or is additionally bound to a specific location.') }}">?</span>
     {% else %}
-      Zugehörigkeit (Exklusiv: Entweder Gesamte Welt ODER konkreter Ort)
-      <span class="field-help-btn" title="Orts-Zuordnung:&#10;Wähle, ob dieses Ereignis nur an einem bestimmten Schauplatz auftreten kann oder als globales Ereignis für die gesamte Welt gilt.">?</span>
+      {{ _("Assignment (Exclusive: Either Entire World OR specific location)") }}
+      <span class="field-help-btn" title="{{ _('Location Assignment:\nChoose whether this event can only occur at a specific location or applies as a global event for the entire world.') }}">?</span>
     {% endif %}
   </label>
-  {{ _event_location_select(scope_type, selected_location_id=(ev.location_id if ev else none), locations=locations) }}
+  {{ _event_location_select(scope_type, selected_location_id=(ev.location_id if ev else none), locations=locations, loc_display=loc_display) }}
 </div>
 {% if scope_type == 'character' %}
   {% set init_min = ev.min_relationship if (ev and ev.min_relationship is not none) else -100 %}
@@ -67,8 +88,8 @@
   {% set max_name = tier_names_map.get(init_max, init_max) if tier_names_map else init_max %}
   <div>
     <label>
-      Beziehungsbereich (Von – Bis)
-      <span class="field-help-btn" title="Beziehungsbereich:&#10;Grenzt das Event optional auf einen Beziehungsbereich ein. Stehen beide Regler ganz außen, ist das Event auf allen Beziehungsstufen aktiv.">?</span>
+      {{ _("Relationship Range (From – To)") }}
+      <span class="field-help-btn" title="{{ _('Relationship Range:\nOptionally restricts the event to a relationship range. If both sliders are at the outer ends, the event is active at all relationship tiers.') }}">?</span>
     </label>
     <div class="aimo-dual-range" data-tiers='{{ (tier_names_map or {}) | tojson }}'>
       <div class="aimo-dual-range-label">{{ min_name }} – {{ max_name }}</div>
@@ -84,7 +105,7 @@
           max="100"
           step="10"
           value="{{ init_min }}"
-          aria-label="Mindest-Beziehungsstufe">
+          aria-label="{{ _('Minimum relationship tier') }}">
         <input
           type="range"
           name="max_relationship"
@@ -93,15 +114,15 @@
           max="100"
           step="10"
           value="{{ init_max }}"
-          aria-label="Höchst-Beziehungsstufe">
+          aria-label="{{ _('Maximum relationship tier') }}">
       </div>
     </div>
   </div>
 {% endif %}
 <div>
   <label>
-    Szenische Beschreibung des Ereignisses *
-    <span class="field-help-btn" title="Event-Beschreibung:&#10;Der narrative Vorfall. Bei Auslösung wird diese Beschreibung für den nächsten Zug im [WORLD_INFO]-Bereich des Prompts platziert, damit die KI passend darauf reagiert.">?</span>
+    {{ _("Scenic Event Description") }} *
+    <span class="field-help-btn" title="{{ _('Event Description:\nThe narrative occurrence. When triggered, this description is placed in the [WORLD_INFO] section of the prompt for the next turn so the AI reacts appropriately.') }}">?</span>
   </label>
   <input
     type="hidden"
@@ -115,41 +136,46 @@
     data-i18n-field="description"
     data-i18n-entity-type="worldinfo_event"
     data-i18n-entity-id="{{ ev.id if ev else '' }}"
+    data-i18n-origin="{{ origin_language or ui_language }}"
     data-i18n-hidden="{{ i18n_id }}">{{ ev.description if ev else '' }}</textarea>
 </div>
 {% endmacro %}
 
-{% macro event_editor(events, is_editable, add_url, edit_endpoint, delete_endpoint, entity_id_param, entity_id, loc_map, ev_translations, scope_type='worldinfo', locations=none, modal_prefix='ev', relationship_tiers=none, tier_names_map=none) %}
+{% macro event_editor(events, is_editable, add_url, edit_endpoint, delete_endpoint, entity_id_param, entity_id, loc_map, ev_translations, scope_type='worldinfo', locations=none, modal_prefix='ev', relationship_tiers=none, tier_names_map=none, ev_display=none, loc_display=none, origin_language=none) %}
 <div class="card-grid">
   {% if is_editable %}
-    {{ new_button("Neues Event", modal="new-event-modal-" ~ modal_prefix) }}
+    {{ new_button(_("New Event"), modal="new-event-modal-" ~ modal_prefix) }}
   {% endif %}
 
   {% for ev in events %}
+    {% set ev_disp = ev_display.get(ev.id, {}) if ev_display else {} %}
+    {% set disp_ev_title = ev_disp.get("title", ev.title) %}
+    {% set disp_ev_desc = ev_disp.get("description", ev.description) %}
     <div class="card-tile" style="padding: 1.2rem; justify-content: space-between; {% if is_editable %}cursor: pointer;{% endif %}" {% if is_editable %}data-modal-open="edit-event-modal-{{ modal_prefix }}-{{ ev.id }}"{% endif %}>
       <div>
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.6rem;">
           <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
             {% if ev.location_id and loc_map and ev.location_id in loc_map %}
-              {{ pill_badge("Ort: " ~ loc_map[ev.location_id].name, icon="📍", variant="wood") }}
+              {% set disp_badge_loc = loc_display.get(ev.location_id, {}).get("name", loc_map[ev.location_id].name) if loc_display else loc_map[ev.location_id].name %}
+              {{ pill_badge(_("Location:") ~ " " ~ disp_badge_loc, icon="📍", variant="wood") }}
             {% elif scope_type == 'character' %}
-              {{ pill_badge("Charakterweit (Überall)", icon="🎭", variant="default") }}
+              {{ pill_badge(_("Character-wide (Everywhere)"), icon="🎭", variant="default") }}
             {% else %}
-              {{ pill_badge("Gesamte Welt", icon="🌍", variant="default") }}
+              {{ pill_badge(_("Entire World"), icon="🌍", variant="default") }}
             {% endif %}
             {% if scope_type == 'character' and (ev.min_relationship is not none or ev.max_relationship is not none) %}
-              {{ pill_badge(icon="❤️", variant="heart", title="Beziehungsgebunden") }}
+              {{ pill_badge(icon="❤️", variant="heart", title=_("Relationship-bound")) }}
             {% endif %}
           </div>
           <span style="font-size: 0.8rem; font-weight: 700; color: var(--gold-accent);">{{ ev.probability }}%</span>
         </div>
 
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.4rem;">{{ ev.title }}</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">{{ ev.description[:140] }}{% if ev.description|length > 140 %}...{% endif %}</p>
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.4rem;">{{ disp_ev_title }}</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">{{ disp_ev_desc[:140] }}{% if disp_ev_desc|length > 140 %}...{% endif %}</p>
       </div>
 
       <div style="margin-top: 0.75rem; font-size: 0.78rem; color: var(--text-muted);">
-        {% if ev.one_shot %}⚡ One-Shot (Max. 1x pro Session){% else %}🔄 Wiederholbar{% endif %}
+        {% if ev.one_shot %}⚡ {{ _("One-Shot (Max. 1x per session)") }}{% else %}🔄 {{ _("Repeatable") }}{% endif %}
       </div>
     </div>
 
@@ -157,16 +183,16 @@
       <div class="modal-backdrop" id="edit-event-modal-{{ modal_prefix }}-{{ ev.id }}" aria-hidden="true">
         <div class="modal-frame">
           <div class="modal-header">
-            <h3 style="color: var(--gold-accent);">Event bearbeiten: {{ ev.title }}</h3>
+            <h3 style="color: var(--gold-accent);">{{ _("Edit Event:") }} {{ disp_ev_title }}</h3>
             {{ modal_close_button("edit-event-modal-" ~ modal_prefix ~ "-" ~ ev.id) }}
           </div>
           <form method="POST" action="{{ url_for(edit_endpoint, **{entity_id_param: entity_id, 'event_id': ev.id}) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
-            {{ _event_form_fields(scope_type, ev=ev, locations=locations, ev_translations=ev_translations, modal_prefix=modal_prefix, tier_names_map=tier_names_map) }}
+            {{ _event_form_fields(scope_type, ev=ev, locations=locations, ev_translations=ev_translations, modal_prefix=modal_prefix, tier_names_map=tier_names_map, loc_display=loc_display, origin_language=origin_language) }}
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
-              {{ action_button("Löschen", type="submit", form="delete-ev-form-" ~ modal_prefix ~ "-" ~ ev.id, variant="danger", icon="🗑️") }}
+              {{ action_button(_("Delete"), type="submit", form="delete-ev-form-" ~ modal_prefix ~ "-" ~ ev.id, variant="danger", icon="🗑️") }}
               <div style="display: flex; gap: 0.5rem;">
-                {{ action_button("Abbrechen", modal_close="edit-event-modal-" ~ modal_prefix ~ "-" ~ ev.id) }}
-                {{ action_button("Speichern", type="submit", variant="primary", icon="💾") }}
+                {{ action_button(_("Cancel"), modal_close="edit-event-modal-" ~ modal_prefix ~ "-" ~ ev.id) }}
+                {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
               </div>
             </div>
           </form>
@@ -181,17 +207,18 @@
   <div class="modal-backdrop" id="new-event-modal-{{ modal_prefix }}" aria-hidden="true">
     <div class="modal-frame">
       <div class="modal-header">
-        <h3 style="color: var(--gold-accent);">Neues Event anlegen</h3>
+        <h3 style="color: var(--gold-accent);">{{ _("Create New Event") }}</h3>
         {{ modal_close_button("new-event-modal-" ~ modal_prefix) }}
       </div>
       <form method="POST" action="{{ add_url }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
-        {{ _event_form_fields(scope_type, ev=none, locations=locations, ev_translations=ev_translations, modal_prefix=modal_prefix, tier_names_map=tier_names_map) }}
+        {{ _event_form_fields(scope_type, ev=none, locations=locations, ev_translations=ev_translations, modal_prefix=modal_prefix, tier_names_map=tier_names_map, loc_display=loc_display, origin_language=origin_language) }}
         <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
-          {{ action_button("Abbrechen", modal_close="new-event-modal-" ~ modal_prefix) }}
-          {{ action_button("Event speichern", type="submit", variant="primary", icon="💾") }}
+          {{ action_button(_("Cancel"), modal_close="new-event-modal-" ~ modal_prefix) }}
+          {{ action_button(_("Save Event"), type="submit", variant="primary", icon="💾") }}
         </div>
       </form>
     </div>
   </div>
 {% endif %}
+<script src="{{ url_for('static', filename='js/event_sliders.js') }}" defer></script>
 {% endmacro %}

@@ -1962,6 +1962,23 @@ body.chat-page {
   background: var(--gold-accent);
 }
 
+.crop-preview-tab {
+  padding: 0.4rem 0.5rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s, background-color 0.2s, transform 0.15s;
+}
+
+.crop-preview-tab:hover {
+  border-color: var(--border-wood-light);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.crop-preview-tab.active {
+  border-color: var(--gold-accent);
+  background: rgba(212, 175, 55, 0.12);
+}
+
 .crop-resize-handle {
   position: absolute;
   right: -8px;
@@ -2059,6 +2076,28 @@ body.chat-page {
 .i18n-flag-btn.outdated {
   border-color: #FF9800 !important;
   box-shadow: 0 0 6px rgba(255, 152, 0, 0.65);
+}
+
+.i18n-flag-btn.missing {
+  opacity: 0.42;
+  border-style: dashed;
+  border-color: rgba(160, 140, 120, 0.45);
+  background: rgba(24, 18, 13, 0.55);
+  color: var(--text-muted);
+  filter: grayscale(0.7);
+}
+
+.i18n-flag-btn.missing:hover {
+  opacity: 0.85;
+  filter: grayscale(0.2);
+}
+
+.i18n-flag-btn.missing.active {
+  opacity: 1;
+  filter: none;
+  border-style: solid;
+  border-color: var(--gold-accent);
+  color: var(--text-main);
 }
 
 .i18n-translate-controls {
@@ -4095,4 +4134,37 @@ span.persona-star-btn:hover {
   background: rgba(18, 13, 9, 0.85);
   border-color: rgba(99, 179, 237, 0.4);
   color: #63b3ed;
+}
+
+/* Bidirectional & RTL Support (ar, ur) */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+textarea,
+.chat-msg-text {
+  unicode-bidi: plaintext;
+}
+
+[dir="rtl"] body,
+[dir="rtl"] th,
+[dir="rtl"] td,
+[dir="rtl"] .aimo-frame,
+[dir="rtl"] .modal-frame {
+  text-align: start;
+}
+
+[dir="rtl"] .aimo-copy-field input {
+  padding-right: 0.75rem;
+  padding-left: 2.75rem;
+}
+
+[dir="rtl"] .aimo-copy-field .aimo-copy-field-btn {
+  right: auto;
+  left: 0.35rem;
+}
+
+[dir="rtl"] .user-menu-dropdown,
+[dir="rtl"] .mobile-dropdown-menu {
+  right: auto;
+  left: 0;
 }

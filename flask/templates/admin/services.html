@@ -7,65 +7,65 @@
 <div class="aimo-split-stage-grid">
   <form method="POST" action="{{ url_for('admin.services_config') }}" class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
     <h2 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
-      Service-Endpunkte &amp; Modell-Aufgaben
+      {{ _('Service Endpoints & Model Tasks') }}
     </h2>
 
     <div>
-      <h3 style="color: var(--gold-accent); font-size: 1rem; margin-bottom: 0.5rem;">1. Aktives KI-Backend (Exklusiv)</h3>
+      <h3 style="color: var(--gold-accent); font-size: 1rem; margin-bottom: 0.5rem;">{{ _('1. Active AI Backend (Exclusive)') }}</h3>
       <div class="backend-notice-banner" style="margin-bottom: 0.85rem;">
-        AIMO betreibt immer genau <strong>ein</strong> KI-Backend (entweder <strong>Ollama</strong> oder <strong>Google AI Cloud</strong>) – kein Parallelbetrieb.
+        {{ _('AIMO always operates exactly one AI backend (either Ollama or Google AI Cloud) – no parallel operation.') }}
       </div>
 
       {{ llm_backend_cards(settings.llm_backend, field_name="llm_backend", id_prefix="admin-backend") }}
 
       <div id="admin-conn-ollama" class="backend-panel" style="margin-top: 1rem;" {% if is_google %}hidden{% endif %}>
-        <label>Ollama API URL *
+        <label>{{ _('Ollama API URL') }} *
           <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if ollama_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
-            ● {% if ollama_healthy %}Verbunden{% else %}Nicht erreichbar{% endif %}
+            ● {% if ollama_healthy %}{{ _('Connected') }}{% else %}{{ _('Unreachable') }}{% endif %}
           </span>
         </label>
         <div style="display: flex; gap: 0.5rem; align-items: center;">
           <input type="url" id="admin-ollama-url" name="ollama_url" value="{{ ollama_url }}" {% if not is_google %}required{% endif %} style="flex: 1 1 auto;">
-          {{ action_button("Testen", icon="🔌", id="admin-verify-ollama-btn", onclick="verifyAdminBackend('ollama')") }}
+          {{ action_button(_("Test"), icon="🔌", id="admin-verify-ollama-btn", onclick="verifyAdminBackend('ollama')") }}
         </div>
         <div id="admin-verify-ollama-status" class="backend-status-line"></div>
       </div>
 
       <div id="admin-conn-google_ai" class="backend-panel" style="margin-top: 1rem;" {% if not is_google %}hidden{% endif %}>
-        <label for="admin-google-api-key">Google AI API-Key *
+        <label for="admin-google-api-key">{{ _('Google AI API Key') }} *
           <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if is_google and llm_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
-            ● {% if is_google and llm_healthy %}Verbunden{% elif has_google_ai_api_key %}Nicht erreichbar / ungültig{% else %}Nicht konfiguriert{% endif %}
+            ● {% if is_google and llm_healthy %}{{ _('Connected') }}{% elif has_google_ai_api_key %}{{ _('Unreachable / invalid') }}{% else %}{{ _('Not configured') }}{% endif %}
           </span>
         </label>
         {{ api_key_field("admin-google-api-key", name="google_ai_api_key", has_existing=has_google_ai_api_key, masked_hint=google_ai_api_key_hint, required=(is_google and not has_google_ai_api_key)) }}
         <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem; flex-wrap: wrap;">
-          {{ action_button("API-Key & Modelle testen", icon="🔌", id="admin-verify-google-btn", onclick="verifyAdminBackend('google_ai')") }}
+          {{ action_button(_("Test API Key & Models"), icon="🔌", id="admin-verify-google-btn", onclick="verifyAdminBackend('google_ai')") }}
         </div>
         <div id="admin-verify-google_ai-status" class="backend-status-line"></div>
       </div>
     </div>
 
     <div class="aimo-form-section">
-      <h3>2. Bildgenerierung &amp; Websuche</h3>
+      <h3>{{ _('2. Image Generation & Web Search') }}</h3>
 
       <div style="display: flex; flex-direction: column; gap: 1rem;">
         <div>
-          <label style="margin-bottom: 0.45rem; display: block;">Bildgenerierung (Szenenbilder im Chat)</label>
+          <label style="margin-bottom: 0.45rem; display: block;">{{ _('Image Generation (Scene images in chat)') }}</label>
           {{ image_gen_options(settings.image_gen_backend, allow_google=true, id_prefix="admin-img") }}
 
           <div id="admin-comfyui-box" class="conditional-service-box" style="margin-top: 0.65rem;" {% if settings.image_gen_backend != 'comfyui' %}hidden{% endif %}>
-            <label>ComfyUI API URL *
+            <label>{{ _('ComfyUI API URL') }} *
               <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if comfy_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
-                ● {% if comfy_healthy %}Verbunden{% else %}Offline{% endif %}
+                ● {% if comfy_healthy %}{{ _('Connected') }}{% else %}{{ _('Offline') }}{% endif %}
               </span>
             </label>
             <input type="url" id="admin-comfyui-url" name="comfyui_url" value="{{ comfyui_url }}">
           </div>
 
           <div id="admin-google-img-box" class="conditional-service-box" style="margin-top: 0.65rem;" {% if not (is_google and settings.image_gen_backend == 'google_ai') %}hidden{% endif %}>
-            <label for="admin-google-image-model">Google AI Bild-Modell *
+            <label for="admin-google-image-model">{{ _('Google AI Image Model') }} *
               <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if is_google and settings.image_gen_backend == 'google_ai' and image_gen_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
-                ● {% if is_google and settings.image_gen_backend == 'google_ai' and image_gen_healthy %}Bereit{% else %}Nicht geprüft / Offline{% endif %}
+                ● {% if is_google and settings.image_gen_backend == 'google_ai' and image_gen_healthy %}{{ _('Ready') }}{% else %}{{ _('Not checked / Offline') }}{% endif %}
               </span>
             </label>
             <select id="admin-google-image-model" name="google_ai_image_model">
@@ -77,11 +77,11 @@
         </div>
 
         <div>
-          <label style="margin-bottom: 0.45rem; display: block;">Websuche (Vorbereitet)</label>
+          <label style="margin-bottom: 0.45rem; display: block;">{{ _('Web Search (Prepared)') }}</label>
           {{ search_options(settings.search_backend, allow_google=true, id_prefix="admin-search") }}
 
           <div id="admin-searxng-box" class="conditional-service-box" style="margin-top: 0.65rem;" {% if settings.search_backend != 'searxng' %}hidden{% endif %}>
-            <label for="admin-searxng-url">SearXNG URL (Vorbereitet) *</label>
+            <label for="admin-searxng-url">{{ _('SearXNG URL (Prepared)') }} *</label>
             <input type="url" id="admin-searxng-url" name="searxng_url" value="{{ searxng_url }}">
           </div>
         </div>
@@ -90,14 +90,14 @@
 
     <div class="aimo-form-section">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
-        <h3 style="margin: 0;">3. Task-spezifische Modell-Zuweisung</h3>
-        {{ action_button("Vorgeschlagene Modelle zuweisen", icon="✨", onclick="applyRecommendedModels()", title="Setzt alle 5 Dropdowns auf die empfohlenen Standard-Modelle des gewählten Backends") }}
+        <h3 style="margin: 0;">{{ _('3. Task-Specific Model Assignment') }}</h3>
+        {{ action_button(_("Assign suggested models"), icon="✨", onclick="applyRecommendedModels()", title=_("Sets all 5 dropdowns to the recommended default models for the selected backend")) }}
       </div>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
         <div>
           <label>
             Roleplay
-            <span class="field-help-btn" title="Roleplay-Modell:&#10;Primäres Sprachmodell für die narrative Dialog-Generierung und das Rollenspiel im Chat.">?</span>
+            <span class="field-help-btn" title="{{ _('Roleplay Model:\nPrimary language model for narrative dialogue generation and roleplay in chat.') }}">?</span>
           </label>
           <select name="roleplay_model">
             {% for m in installed_models %}
@@ -108,7 +108,7 @@
         <div>
           <label>
             Classification
-            <span class="field-help-btn" title="Classification-Modell:&#10;Schnelles, leichtgewichtiges Modell für die nachgelagerte Erkennung von Emotionen (Avatar-Sprites) und Ortswechsel-Vorschlägen in einem Durchlauf.">?</span>
+            <span class="field-help-btn" title="{{ _('Classification Model:\nFast, lightweight model for downstream detection of emotions (avatar sprites) and location change suggestions in a single pass.') }}">?</span>
           </label>
           <select name="classification_model">
             {% for m in installed_models %}
@@ -119,7 +119,7 @@
         <div>
           <label>
             Memory
-            <span class="field-help-btn" title="Memory-Modell:&#10;Erstellt alle 10 Nachrichten automatisch episodische Zusammenfassungen (Memories) und aktualisiert den Chat-Titel.">?</span>
+            <span class="field-help-btn" title="{{ _('Memory Model:\nAutomatically creates episodic summaries (memories) every 10 messages and updates the chat title.') }}">?</span>
           </label>
           <select name="memory_model">
             {% for m in installed_models %}
@@ -130,7 +130,7 @@
         <div>
           <label>
             Assistant
-            <span class="field-help-btn" title="Assistant-Modell:&#10;Zuständig für KI-Autor Optimierung (Sparkle ✨), Text-Übersetzungen und Szenenbild-Prompts.">?</span>
+            <span class="field-help-btn" title="{{ _('Assistant Model:\nResponsible for AI author optimization (Sparkle ✨), text translations, and scene image prompts.') }}">?</span>
           </label>
           <select name="assistant_model">
             {% for m in installed_models %}
@@ -141,7 +141,7 @@
         <div>
           <label>
             Vision
-            <span class="field-help-btn" title="Vision-Modell:&#10;Multimodales Modell zur optischen Analyse von Persona-Porträts, 16:9 Schauplatz-Bildern und Bild-Uploads im Chat.">?</span>
+            <span class="field-help-btn" title="{{ _('Vision Model:\nMultimodal model for visual analysis of persona portraits, 16:9 location images, and image uploads in chat.') }}">?</span>
           </label>
           <select name="vision_model">
             {% for m in installed_models %}
@@ -153,12 +153,12 @@
     </div>
 
     <div class="aimo-form-section">
-      <h3>4. LLM Inferenz-Hyperparameter</h3>
+      <h3>{{ _('4. LLM Inference Hyperparameters') }}</h3>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.85rem;">
         <div>
           <label>
             Context (num_ctx)
-            <span class="field-help-btn" title="Steuert das Token-Budget für Verlauf, Memories und Lorebooks (auch bei Google AI als Kosten-/Verlaufsgrenze aktiv).">?</span>
+            <span class="field-help-btn" title="{{ _('Controls the token budget for history, memories, and lorebooks (also active for Google AI as a cost/history limit).') }}">?</span>
           </label>
           <input type="number" name="num_ctx" min="512" max="131072" step="256" value="{{ settings.params.num_ctx }}" required>
         </div>
@@ -173,7 +173,7 @@
         <div>
           <label>
             Repeat Penalty
-            <span class="field-help-btn" title="Wiederholungsstrafe für lokale Ollama-Modelle.">?</span>
+            <span class="field-help-btn" title="{{ _('Repetition penalty for local Ollama models.') }}">?</span>
           </label>
           <input type="number" name="repeat_penalty" min="0.5" max="2.5" step="0.05" value="{{ settings.params.repeat_penalty }}" required>
         </div>
@@ -181,31 +181,31 @@
     </div>
 
     <div style="text-align: right; margin-top: 0.5rem;">
-      {{ action_button("Services & Modell-Einstellungen speichern", type="submit", variant="primary", icon="💾") }}
+      {{ action_button(_("Save Services & Model Settings"), type="submit", variant="primary", icon="💾") }}
     </div>
   </form>
 
   <aside id="admin-aside-ollama" class="aimo-frame backend-panel" style="padding: 1.35rem; display: flex; flex-direction: column; gap: 1.1rem;" {% if is_google %}hidden{% endif %}>
     <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
-      <span class="icon-mono">📦</span> Ollama Modell-Manager
+      <span class="icon-mono">📦</span> {{ _('Ollama Model Manager') }}
     </h3>
 
     <div class="setup-helper-box">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem;">
         <h4 style="color: var(--gold-accent); font-size: 0.92rem; margin: 0; display: flex; align-items: center; gap: 0.4rem;">
-          <span class="icon-mono">🧙‍♂️</span> Setup-Helper für Ollama
+          <span class="icon-mono">🧙‍♂️</span> {{ _('Setup Helper for Ollama') }}
         </h4>
-        {{ action_button("Fehlende installieren", icon="⚡", id="pull-all-missing-btn", size="sm", onclick="pullAllMissingRecommended()") }}
+        {{ action_button(_("Install missing"), icon="⚡", id="pull-all-missing-btn", size="sm", onclick="pullAllMissingRecommended()") }}
       </div>
       <div style="font-size: 0.78rem; color: var(--text-muted);">
-        Empfohlene Modelle pro Rolle:
+        {{ _('Recommended models per role:') }}
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 0.55rem;">
         {% for entry in ollama_grouped_recommended %}
           <div class="setup-helper-row">
             <div style="min-width: 0; flex: 1;">
-              <div style="font-family: monospace; font-size: 0.79rem; word-break: break-all; color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('{{ entry.model }}')" title="Klicken zum Übernehmen in die Pull-Eingabe">
+              <div style="font-family: monospace; font-size: 0.79rem; word-break: break-all; color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('{{ entry.model }}')" title="{{ _('Click to copy into pull input') }}">
                 {{ entry.model }}
               </div>
               <div style="display: flex; gap: 0.35rem; margin-top: 0.35rem; flex-wrap: wrap;">
@@ -216,10 +216,10 @@
             </div>
             <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; flex-shrink: 0;">
               {% if entry.model in installed_models and ollama_healthy %}
-                <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ Bereit</span>
+                <span style="color: #4CAF50; font-size: 0.75rem; font-weight: bold;">✔ {{ _('Ready') }}</span>
               {% else %}
-                <span style="color: #E67E22; font-size: 0.74rem;">⏳ Fehlt</span>
-                {{ action_button("Pull", icon="📥", size="sm", onclick="pullSpecificModel('" ~ entry.model ~ "')") }}
+                <span style="color: #E67E22; font-size: 0.74rem;">⏳ {{ _('Missing') }}</span>
+                {{ action_button(_("Pull"), icon="📥", size="sm", onclick="pullSpecificModel('" ~ entry.model ~ "')") }}
               {% endif %}
             </div>
           </div>
@@ -228,33 +228,33 @@
     </div>
 
     <div>
-      <label style="display: block; margin-bottom: 0.4rem; font-size: 0.88rem;">Neues Modell installieren (Pull)</label>
+      <label style="display: block; margin-bottom: 0.4rem; font-size: 0.88rem;">{{ _('Install new model (Pull)') }}</label>
       <div style="display: flex; gap: 0.5rem;">
-        <input type="text" id="pull-model-name" value="{{ ollama_unique_models[0] if ollama_unique_models else '' }}" placeholder="Modell-Tag eingeben...">
-        {{ action_button("Pull", id="pull-model-btn", variant="primary", onclick="pullOllamaModel()") }}
+        <input type="text" id="pull-model-name" value="{{ ollama_unique_models[0] if ollama_unique_models else '' }}" placeholder="{{ _('Enter model tag...') }}">
+        {{ action_button(_("Pull"), id="pull-model-btn", variant="primary", onclick="pullOllamaModel()") }}
       </div>
       <div style="margin-top: 0.35rem; font-size: 0.76rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center;">
-        <span>💡 Schnellwahl:</span>
+        <span>💡 {{ _('Quick select:') }}</span>
         {% for entry in ollama_grouped_recommended %}
           {% if not loop.first %}<span>·</span>{% endif %}
           <code style="color: var(--gold-accent); cursor: pointer;" onclick="setPullModel('{{ entry.model }}')" title="{{ entry.roles | join(' & ') }}">{{ entry.roles | join(' / ') }}</code>
         {% endfor %}
       </div>
       <div id="pull-progress-box" style="display: none; margin-top: 0.65rem; padding: 0.6rem; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--gold-accent); font-size: 0.8rem; color: var(--gold-accent);">
-        Starte Download...
+        {{ _('Starting download...') }}
       </div>
     </div>
 
     <div>
-      <h4 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Installierte Modelle ({{ installed_models|length }})</h4>
+      <h4 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">{{ _('Installed Models') }} ({{ installed_models|length }})</h4>
       <div id="installed-models-list" style="display: flex; flex-direction: column; gap: 0.45rem; max-height: 440px; overflow-y: auto;">
         {% for model_name in installed_models %}
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.7rem; background: var(--bg-input); border: 1px solid var(--border-wood-dark); border-radius: 8px;">
             <span style="font-size: 0.86rem; font-family: monospace;">{{ model_name }}</span>
-            {{ action_button("Löschen", icon="🗑️", layout="icon", variant="danger", size="sm", onclick="deleteOllamaModel('" ~ model_name ~ "')", title="Modell löschen") }}
+            {{ action_button(_("Delete"), icon="🗑️", layout="icon", variant="danger", size="sm", onclick="deleteOllamaModel('" ~ model_name ~ "')", title=_("Delete model")) }}
           </div>
         {% else %}
-          <p style="font-size: 0.85rem; color: var(--text-muted);">Keine Modelle gefunden oder Ollama offline.</p>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">{{ _('No models found or Ollama offline.') }}</p>
         {% endfor %}
       </div>
     </div>
@@ -262,14 +262,14 @@
 
   <aside id="admin-aside-google_ai" class="aimo-frame backend-panel" style="padding: 1.35rem; display: flex; flex-direction: column; gap: 1.1rem;" {% if not is_google %}hidden{% endif %}>
     <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
-      <span class="icon-mono">☁️</span> Google AI Cloud Setup
+      <span class="icon-mono">☁️</span> {{ _('Google AI Cloud Setup') }}
     </h3>
 
     {{ google_ai_steps_guide() }}
 
     <div class="setup-helper-box">
       <h4 style="color: var(--gold-accent); font-size: 0.92rem; margin: 0;">
-        <span class="icon-mono">✨</span> Empfohlene Google AI Modelle
+        <span class="icon-mono">✨</span> {{ _('Recommended Google AI Models') }}
       </h4>
       <div style="display: flex; flex-direction: column; gap: 0.45rem;">
         {% for role_key, info in google_recommended_models.items() %}
@@ -279,7 +279,7 @@
           </div>
         {% endfor %}
         <div class="setup-helper-row">
-          <strong>Bildgenerierung</strong>
+          <strong>{{ _('Image Generation') }}</strong>
           <code style="color: var(--gold-accent); font-size: 0.78rem;">{{ recommended_google_image_model }}</code>
         </div>
       </div>
@@ -287,7 +287,7 @@
 
     <div>
       <h4 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-        Verfügbare Cloud-Modelle (<span id="google-models-count">{{ installed_models|length if is_google else 0 }}</span>)
+        {{ _('Available Cloud Models') }} (<span id="google-models-count">{{ installed_models|length if is_google else 0 }}</span>)
       </h4>
       <div id="google-available-models-list" style="display: flex; flex-direction: column; gap: 0.4rem; max-height: 360px; overflow-y: auto;">
         {% if is_google and installed_models %}
@@ -298,7 +298,7 @@
           {% endfor %}
         {% else %}
           <p style="font-size: 0.84rem; color: var(--text-muted);">
-            Klicke auf <strong>„API-Key &amp; Modelle testen“</strong>, um die mit deinem Key verfügbaren Gemini-Modelle zu laden.
+            {{ _('Click "Test API Key & Models" to load the Gemini models available with your key.') }}
           </p>
         {% endif %}
       </div>
@@ -554,15 +554,17 @@
     const missing = targets.filter(m => !installed.includes(m));
 
     if (missing.length === 0) {
+      const msgAllInstalled = {{ _("All recommended models are already installed on the Ollama server!") | tojson }};
       if (window.showToastInfo) {
-        window.showToastInfo("Alle empfohlenen Modelle sind bereits auf dem Ollama-Server installiert!");
+        window.showToastInfo(msgAllInstalled);
       } else {
-        alert("Alle empfohlenen Modelle sind bereits auf dem Ollama-Server installiert!");
+        alert(msgAllInstalled);
       }
       return;
     }
 
-    if (!confirm(`Folgende ${missing.length} empfohlene(n) Modell(e) nacheinander herunterladen?\n\n- ` + missing.join("\n- "))) {
+    const confirmPullAll = {{ _("Download the following %(count)s recommended model(s) sequentially?", count="__COUNT__") | tojson }}.replace("__COUNT__", missing.length) + "\n\n- " + missing.join("\n- ");
+    if (!confirm(confirmPullAll)) {
       return;
     }
 
@@ -572,7 +574,8 @@
       const isLast = (i === missing.length - 1);
       const success = await pullOllamaModel(isLast);
       if (!success && !isLast) {
-        if (!confirm(`Download von '${model}' fehlgeschlagen. Trotzdem mit dem nächsten Modell fortfahren?`)) {
+        const confirmContinue = {{ _("Download of '%(model)s' failed. Continue with the next model anyway?", model="__MODEL__") | tojson }}.replace("__MODEL__", model);
+        if (!confirm(confirmContinue)) {
           break;
         }
       }
@@ -641,7 +644,8 @@
   }
 
   async function deleteOllamaModel(modelName) {
-    if (!confirm(`Modell '${modelName}' wirklich von Ollama löschen?`)) return;
+    const confirmDelete = {{ _("Really delete model '%(model)s' from Ollama?", model="__MODEL__") | tojson }}.replace("__MODEL__", modelName);
+    if (!confirm(confirmDelete)) return;
     const resp = await fetch(`/api/admin/models/${encodeURIComponent(modelName)}`, {
       method: "DELETE",
     });
@@ -649,10 +653,11 @@
       window.location.reload();
     } else {
       const data = await resp.json();
+      const errMsg = data.error || {{ _("Deletion failed.") | tojson }};
       if (window.showToastError) {
-        window.showToastError(data.error || "Löschen fehlgeschlagen.");
+        window.showToastError(errMsg);
       } else {
-        alert(data.error || "Löschen fehlgeschlagen.");
+        alert(errMsg);
       }
     }
   }

@@ -5,26 +5,26 @@
 <div class="aimo-frame" style="max-width: 760px; margin: 0 auto; padding: 1.75rem;">
   <h2 style="color: var(--gold-accent); margin-bottom: 1rem;">
     {% if target_user %}
-      Benutzer bearbeiten: {{ target_user.username }}
+      {{ _('Edit User:') }} {{ target_user.username }}
     {% else %}
-      Neuen Benutzer anlegen
+      {{ _('Create New User') }}
     {% endif %}
   </h2>
 
   {% if target_user and target_user.is_initial_admin %}
     <div style="padding: 0.75rem 1rem; margin-bottom: 1.25rem; border-radius: 8px; border: 1px solid var(--gold-accent); background: rgba(65, 45, 25, 0.5); font-size: 0.88rem;">
-      🛡️ <strong>Super-Admin-Schutz:</strong> Dies ist der initiale Administrator. Seine Berechtigungen sind dauerhaft auf Vollzugriff (Admin) fixiert und können nicht entzogen werden.
+      🛡️ <strong>{{ _('Super-Admin Protection:') }}</strong> {{ _('This is the initial administrator. Their permissions are permanently locked to full access (Admin) and cannot be revoked.') }}
     </div>
   {% endif %}
 
   <form method="POST" style="display: flex; flex-direction: column; gap: 1.1rem;">
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
       <div>
-        <label>Benutzername *</label>
+        <label>{{ _('Username') }} *</label>
         <input type="text" name="username" value="{{ form.username }}" required>
       </div>
       <div>
-        <label>E-Mail-Adresse *</label>
+        <label>{{ _('Email address') }} *</label>
         <input type="email" name="email" value="{{ form.email }}" required>
       </div>
     </div>
@@ -32,9 +32,9 @@
     <div>
       <label>
         {% if target_user %}
-          Neues Passwort (leer lassen, um Passwort beizubehalten)
+          {{ _('New Password (leave blank to keep current password)') }}
         {% else %}
-          Initialpasswort *
+          {{ _('Initial Password') }} *
         {% endif %}
       </label>
       <input type="password" name="password" {% if not target_user %}required{% endif %}>
@@ -42,10 +42,10 @@
 
     <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-        <label style="font-weight: 700; color: var(--gold-accent);">Schnellauswahl über Preset</label>
+        <label style="font-weight: 700; color: var(--gold-accent);">{{ _('Quick Select via Preset') }}</label>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
           {% for preset_name in presets %}
-            {{ action_button("Preset: " ~ preset_name, onclick="applyPreset('" ~ preset_name ~ "')", disabled=(target_user and target_user.is_initial_admin and preset_name != 'Admin')) }}
+            {{ action_button(_("Preset:") ~ " " ~ preset_name, onclick="applyPreset('" ~ preset_name ~ "')", disabled=(target_user and target_user.is_initial_admin and preset_name != 'Admin')) }}
           {% endfor %}
         </div>
       </div>
@@ -53,7 +53,7 @@
       <input type="hidden" name="preset" id="selected-preset-input" value="">
 
       <label style="display: block; margin-bottom: 0.5rem; font-size: 0.88rem; color: var(--text-muted);">
-        Einzelne funktionale Berechtigungen (FunctionPermission):
+        {{ _('Individual functional permissions (FunctionPermission):') }}
       </label>
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 0.55rem; background: var(--bg-input); padding: 1rem; border-radius: 10px; border: 1px solid var(--border-wood-dark);">
         {% for perm in all_permissions %}
@@ -69,8 +69,8 @@
     </div>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
-      {{ action_button("Abbrechen", href=url_for('admin.users_list'), arrow="left") }}
-      {{ action_button("Speichern", type="submit", variant="primary", icon="💾") }}
+      {{ action_button(_("Cancel"), href=url_for('admin.users_list'), arrow="left") }}
+      {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
     </div>
   </form>
 </div>

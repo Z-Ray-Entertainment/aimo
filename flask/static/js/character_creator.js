@@ -118,16 +118,16 @@
         if (window.showToastWarning) {
           window.showToastWarning("Bitte wähle zuerst ein Porträtbild aus.");
         } else {
-          alert("Bitte wähle zuerst ein Porträtbild aus.");
+          alert(window.t("Please select a portrait image first."));
         }
         return;
       }
 
       const origPlaceholder = textarea.placeholder;
-      const origBtnHtml = window.setButtonLoading(btn, "Analysiere Bild");
+      const origBtnHtml = window.setButtonLoading(btn, window.t("Analyzing image"));
 
       if (!textarea.value.trim()) {
-        textarea.placeholder = "✨ Analysiere Porträt und extrahiere Aussehen";
+        textarea.placeholder = window.t("✨ Analyzing portrait and extracting appearance");
       }
 
       try {
@@ -158,21 +158,24 @@
           textarea.value = data.appearance;
           textarea.dispatchEvent(new Event("input", { bubbles: true }));
           if (window.showToastSuccess) {
-            window.showToastSuccess("Aussehen erfolgreich aus Bild extrahiert.");
+            window.showToastSuccess(window.t("Appearance extracted from image successfully."));
           }
         } else {
           const errMsg = (data && data.error)
-            || (resp.ok ? "Kein Aussehen extrahiert." : `Serverfehler (${resp.status}): Aussehen konnte nicht extrahiert werden.`);
+            || (resp.ok
+              ? window.t("No appearance extracted.")
+              : window.t("Server error ({status}): Could not extract appearance.", { status: resp.status }));
           if (window.showToastError) window.showToastError(errMsg); else alert(errMsg);
         }
       } catch (err) {
+        const errMsg = window.t("Image analysis error: {error}", { error: err });
         if (window.showToastError) {
-          window.showToastError("Fehler bei der Bildanalyse: " + err);
+          window.showToastError(errMsg);
         } else {
-          alert("Fehler bei der Bildanalyse: " + err);
+          alert(errMsg);
         }
       } finally {
-        window.resetButtonLoading(btn, '<span class="icon-mono">👁️</span><span>Aussehen aus Bild extrahieren</span>');
+        window.resetButtonLoading(btn, origBtnHtml);
         textarea.placeholder = origPlaceholder;
       }
     });
@@ -443,7 +446,7 @@
         if (window.showToastWarning) {
           window.showToastWarning("Bitte gib mindestens einen Trigger oder eine Response ein.");
         } else {
-          alert("Bitte gib mindestens einen Trigger oder eine Response ein.");
+          alert(window.t("Please enter at least one trigger or response."));
         }
         return;
       }
@@ -474,20 +477,20 @@
         if (window.showToastWarning) {
           window.showToastWarning("Bitte gib zuerst im Reiter 'Basis-Info' eine aussagekräftige Charakterbeschreibung ein.");
         } else {
-          alert("Bitte gib zuerst im Reiter 'Basis-Info' eine aussagekräftige Charakterbeschreibung ein.");
+          alert(window.t("Please enter a meaningful character description in the 'Basic Info' tab first."));
         }
         return;
       }
 
       const origTriggerPlaceholder = triggerInput.placeholder;
       const origResponsePlaceholder = responseInput.placeholder;
-      const origBtnHtml = window.setButtonLoading(sparkleModalBtn, "Entwerfe Dialog");
+      const origBtnHtml = window.setButtonLoading(sparkleModalBtn, window.t("Drafting dialogue"));
 
       if (!triggerInput.value) {
-        triggerInput.placeholder = "✨ Analysiere Charakterbeschreibung";
+        triggerInput.placeholder = window.t("✨ Analyzing character description");
       }
       if (!responseInput.value) {
-        responseInput.placeholder = "✨ Formuliere Antwort";
+        responseInput.placeholder = window.t("✨ Formulating response");
       }
 
       const userLang = (document.documentElement.lang || "de").slice(0, 2).toLowerCase();

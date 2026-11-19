@@ -13,6 +13,7 @@ from domain.lorebooks.models import LorebookEntry
 from domain.memories.models import Memory
 from domain.personas.models import UserPersona
 from domain.worldinfo.models import Event, Location, WorldInfo
+from shared.i18n import gettext_noop as _, t
 from shared.utils import (
     distill_message_dialogue,
     estimate_tokens,
@@ -81,6 +82,7 @@ class PromptBuilder:
         effective_num_ctx: int = 4096,
         thinking_enabled: bool = False,
         active_tags: list[str] | None = None,
+        language: str = "en",
     ) -> str:
         ctx_size = max(2048, int(effective_num_ctx or 4096))
         if thinking_enabled:
@@ -103,13 +105,15 @@ class PromptBuilder:
         character_section = self._format_character_definition(
             character=character,
             condense_intimate_backstory=False,
+            language=language,
         )
-        persona_section = self._format_user_persona(persona=persona)
+        persona_section = self._format_user_persona(persona=persona, language=language)
         relation_section = self._format_relation_section(
             relationship_value=relationship_value,
             translations=relation_translations,
             scene_focus=scene_focus,
             character_name=character.name,
+            language=language,
         )
 
         compact_world = (
@@ -124,6 +128,7 @@ class PromptBuilder:
             available_locations=available_locations or [],
             character=character,
             compact_mode=compact_world,
+            language=language,
         )
         worldinfo_mode = "Compact (Intimacy Focus)" if compact_world else "Full Detail"
 
@@ -163,7 +168,7 @@ class PromptBuilder:
         examples_tokens = estimate_tokens(f"[DIALOGUE_EXAMPLES]\n{examples_section}\n[/DIALOGUE_EXAMPLES]")
 
         if len(narrative_messages) >= 4 and (fixed_tokens + examples_tokens) > (max_prompt_tokens - 600):
-            examples_section = "None."
+            examples_section = t(_("None."), language)
             active_examples_count = 0
             examples_tokens = estimate_tokens(f"[DIALOGUE_EXAMPLES]\n{examples_section}\n[/DIALOGUE_EXAMPLES]")
 
@@ -175,6 +180,7 @@ class PromptBuilder:
             persona_name=persona.name,
             history_budget_tokens=available_history_tokens,
             effective_num_ctx=ctx_size,
+            language=language,
         )
 
         parts: list[str] = []
@@ -198,6 +204,7 @@ class PromptBuilder:
             condensed_char_section = self._format_character_definition(
                 character=character,
                 condense_intimate_backstory=True,
+                language=language,
             )
             parts[1 if system_section else 0] = (
                 f"[CHARACTER_DEFINITION]\n{condensed_char_section}\n[/CHARACTER_DEFINITION]"
@@ -234,6 +241,7 @@ class PromptBuilder:
     def _format_character_definition(
         character: Character,
         condense_intimate_backstory: bool = False,
+        language: str = "en",
     ) -> str:
         c_forms = get_gender_forms(character.gender.value)
         desc_block = character.description.strip()
@@ -253,13 +261,18 @@ class PromptBuilder:
                     desc_block = "\n\n".join(filtered)
 
         if hasattr(character, "appearance") and character.appearance and character.appearance.strip():
-            desc_block = f"{desc_block}\n\nPhysical Appearance:\n{character.appearance.strip()}"
+            app_label = t(_("Physical Appearance:"), language)
+            desc_block = f"{desc_block}\n\n{app_label}\n{character.appearance.strip()}"
 
+        role_line = t(_("Role: You play this character ({name}). Embody these traits, canon backstory, and voice exclusively:"), language).format(name=character.name)
+        name_label = t(_("Name:"), language)
+        gender_label = t(_("Gender:"), language)
+        desc_label = t(_("Description, Personality & Canon Backstory (All origin facts, personal history, and traits below are canon truth):"), language)
         lines = [
-            f"Role: You play this character ({character.name}). Embody these traits, canon backstory, and voice exclusively:",
-            f"Name: {character.name}",
-            f"Gender: {character.gender.value} ({c_forms['pronouns']})",
-            f"Description, Personality & Canon Backstory (All origin facts, personal history, and traits below are canon truth):\n{desc_block}",
+            role_line,
+            f"{name_label} {character.name}",
+            f"{gender_label} {character.gender.value} ({c_forms['pronouns']})",
+            f"{desc_label}\n{desc_block}",
         ]
         return "\n".join(lines)
 
@@ -269,10 +282,11 @@ class PromptBuilder:
         translations: dict[int, RelationshipTier] | None = None,
         scene_focus: SceneFocus = SceneFocus.GENERAL_ROLEPLAY,
         character_name: str = "{{char}}",
+        language: str = "en",
     ) -> str:
-        tier = get_relationship_tier(relationship_value, translations=translations)
-        base_rel = format_relationship_prompt(tier)
-        directive = PythonFocusAnalyzer.get_focus_directive(scene_focus, character_name)
+        tier = get_relationship_tier(relationship_value, translations=translations, language=language)
+        base_rel = format_relationship_prompt(tier, language=language)
+        directive = PythonFocusAnalyzer.get_focus_directive(scene_focus, character_name, language=language)
         if directive:
             return f"{base_rel}\n\n{directive}"
         return base_rel
@@ -350,18 +364,26 @@ class PromptBuilder:
         return best_block, 1
 
     @staticmethod
-    def _format_user_persona(persona: UserPersona) -> str:
+    def _format_user_persona(persona: UserPersona, language: str = "en") -> str:
         u_forms = get_gender_forms(persona.gender.value)
+        role_line = t(
+            _("Role: This is your conversation partner ({name}). You are NOT this person. NEVER speak, act, think, or decide on behalf of {name}:"),
+            language,
+        ).format(name=persona.name)
+        name_label = t(_("Name:"), language)
+        gender_label = t(_("Gender:"), language)
         lines = [
-            f"Role: This is your conversation partner ({persona.name}). You are NOT this person. NEVER speak, act, think, or decide on behalf of {persona.name}:",
-            f"Name: {persona.name}",
-            f"Gender: {persona.gender.value} ({u_forms['pronouns']})",
+            role_line,
+            f"{name_label} {persona.name}",
+            f"{gender_label} {persona.gender.value} ({u_forms['pronouns']})",
         ]
         if persona.description.strip():
             desc = persona.description.strip()[:1200]
-            lines.append(f"Background & Personality: {desc}")
+            bg_label = t(_("Background & Personality:"), language)
+            lines.append(f"{bg_label} {desc}")
         if persona.appearance.strip():
-            lines.append(f"Physical Appearance: {persona.appearance.strip()}")
+            app_label = t(_("Physical Appearance:"), language)
+            lines.append(f"{app_label} {persona.appearance.strip()}")
         return "\n".join(lines)
 
     @staticmethod
@@ -372,30 +394,34 @@ class PromptBuilder:
         available_locations: list[Location],
         character: Character,
         compact_mode: bool = False,
+        language: str = "en",
     ) -> str:
         if worldinfo is None:
-            lines = ["Active World: None (Neutral setting, no specific world events)."]
+            lines = [t(_("Active World: None (Neutral setting, no specific world events)."), language)]
             if triggered_event is not None:
-                lines.append(
-                    f"Active Narrative Event ({triggered_event.title}): "
-                    f"{triggered_event.description.strip()} "
-                    f"(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"
-                )
+                ev_label = t(_("Active Narrative Event ({title}):"), language).format(title=triggered_event.title)
+                ev_hint = t(_("(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"), language)
+                lines.append(f"{ev_label} {triggered_event.description.strip()} {ev_hint}")
             return "\n".join(lines)
 
-        lines = [f"World Name: {worldinfo.name}"]
+        world_label = t(_("World Name:"), language)
+        lines = [f"{world_label} {worldinfo.name}"]
         if current_location is not None:
-            lines.append(f"Current Location: {current_location.name}")
+            loc_label = t(_("Current Location:"), language)
+            lines.append(f"{loc_label} {current_location.name}")
             if current_location.description.strip():
                 if compact_mode:
                     short_desc = extract_first_sentence(current_location.description.strip(), max_chars=180)
-                    lines.append(f"Location Atmosphere: {short_desc}")
+                    atmo_label = t(_("Location Atmosphere:"), language)
+                    lines.append(f"{atmo_label} {short_desc}")
                 else:
-                    lines.append(f"Location Description: {current_location.description.strip()}")
+                    loc_desc_label = t(_("Location Description:"), language)
+                    lines.append(f"{loc_desc_label} {current_location.description.strip()}")
             if not compact_mode and current_location.vision_alt_text:
-                lines.append(f"Visual Environment: {current_location.vision_alt_text.strip()}")
+                vis_label = t(_("Visual Environment:"), language)
+                lines.append(f"{vis_label} {current_location.vision_alt_text.strip()}")
         else:
-            lines.append("Current Location: Unspecified")
+            lines.append(t(_("Current Location: Unspecified"), language))
 
         if not compact_mode and available_locations:
             loc_map = {loc.id: loc.name for loc in available_locations if loc.id is not None}
@@ -410,16 +436,16 @@ class PromptBuilder:
                 if lid in loc_map
             ]
             if pref_names:
-                lines.append(f"Character's Preferred Locations: {', '.join(pref_names)}")
+                pref_label = t(_("Character's Preferred Locations:"), language)
+                lines.append(f"{pref_label} {', '.join(pref_names)}")
             if disliked_names:
-                lines.append(f"Character's Disliked Locations: {', '.join(disliked_names)}")
+                disliked_label = t(_("Character's Disliked Locations:"), language)
+                lines.append(f"{disliked_label} {', '.join(disliked_names)}")
 
         if triggered_event is not None:
-            lines.append(
-                f"Active Narrative Event ({triggered_event.title}): "
-                f"{triggered_event.description.strip()} "
-                f"(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"
-            )
+            ev_label = t(_("Active Narrative Event ({title}):"), language).format(title=triggered_event.title)
+            ev_hint = t(_("(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"), language)
+            lines.append(f"{ev_label} {triggered_event.description.strip()} {ev_hint}")
 
         return "\n".join(lines)
 
@@ -429,9 +455,17 @@ class PromptBuilder:
         character_name: str,
         persona_name: str,
         distill: bool = False,
+        language: str = "en",
     ) -> str:
-        speaker = f"{persona_name} (Player)" if msg.role == MessageRole.USER else f"{character_name} (You)"
-        content = msg.english_content.strip()
+        player_tag = t(_("Player"), language)
+        you_tag = t(_("You"), language)
+        speaker = f"{persona_name} ({player_tag})" if msg.role == MessageRole.USER else f"{character_name} ({you_tag})"
+        raw_content = (
+            (msg.localized_content or msg.english_content)
+            if language != "en"
+            else (msg.english_content or msg.localized_content)
+        )
+        content = (raw_content or "").strip()
         if distill and msg.role == MessageRole.CHARACTER:
             content = distill_message_dialogue(content, max_chars=380)
         elif distill and msg.role == MessageRole.USER and len(content) > 340:
@@ -439,10 +473,11 @@ class PromptBuilder:
 
         if msg.image_alt_text and msg.image_alt_text.strip():
             alt = msg.image_alt_text.strip()
+            img_prefix = t(_("[Player shows an image: {alt}]"), language).format(alt=alt)
             if content:
-                content = f"[Player shows an image: {alt}] {content}"
+                content = f"{img_prefix} {content}"
             else:
-                content = f"[Player shows an image: {alt}]"
+                content = img_prefix
         return f"{speaker}: {content}" if content else ""
 
     @classmethod
@@ -453,13 +488,14 @@ class PromptBuilder:
         persona_name: str,
         history_budget_tokens: int,
         effective_num_ctx: int = 4096,
+        language: str = "en",
     ) -> tuple[str, str]:
         if not narrative_messages:
-            return "No messages yet.", "Empty (0 messages)"
+            return t(_("No messages yet."), language), "Empty (0 messages)"
 
         # Step 1: Try all up to 10 messages verbatim
         full_lines = [
-            cls._format_single_message(m, character_name, persona_name, distill=False)
+            cls._format_single_message(m, character_name, persona_name, distill=False, language=language)
             for m in narrative_messages
         ]
         full_lines = [line for line in full_lines if line]
@@ -471,7 +507,7 @@ class PromptBuilder:
         window_size = 6 if effective_num_ctx <= 6144 else min(8, len(narrative_messages))
         window_msgs = narrative_messages[-window_size:]
         win_lines = [
-            cls._format_single_message(m, character_name, persona_name, distill=False)
+            cls._format_single_message(m, character_name, persona_name, distill=False, language=language)
             for m in window_msgs
         ]
         win_lines = [line for line in win_lines if line]
@@ -488,7 +524,7 @@ class PromptBuilder:
             distilled_flags[i] = True
             distilled_count += 1
             candidate_lines = [
-                cls._format_single_message(m, character_name, persona_name, distill=distilled_flags[idx])
+                cls._format_single_message(m, character_name, persona_name, distill=distilled_flags[idx], language=language)
                 for idx, m in enumerate(window_msgs)
             ]
             candidate_lines = [line for line in candidate_lines if line]
@@ -504,7 +540,7 @@ class PromptBuilder:
             window_msgs = window_msgs[1:]
             distilled_flags = distilled_flags[1:]
             candidate_lines = [
-                cls._format_single_message(m, character_name, persona_name, distill=distilled_flags[idx])
+                cls._format_single_message(m, character_name, persona_name, distill=distilled_flags[idx], language=language)
                 for idx, m in enumerate(window_msgs)
             ]
             candidate_lines = [line for line in candidate_lines if line]
@@ -517,11 +553,11 @@ class PromptBuilder:
                 )
 
         final_lines = [
-            cls._format_single_message(m, character_name, persona_name, distill=False)
+            cls._format_single_message(m, character_name, persona_name, distill=False, language=language)
             for m in window_msgs[-2:]
         ]
         final_lines = [line for line in final_lines if line]
-        return "\n".join(final_lines) if final_lines else "No messages yet.", f"{len(final_lines)} messages (minimum acute window)"
+        return "\n".join(final_lines) if final_lines else t(_("No messages yet."), language), f"{len(final_lines)} messages (minimum acute window)"
 
     @classmethod
     def _format_chat_history(

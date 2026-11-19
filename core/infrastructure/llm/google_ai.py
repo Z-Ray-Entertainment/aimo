@@ -24,6 +24,7 @@ class GoogleAILLMProvider(BaseLLMProvider):
     PROVIDER_ID: ClassVar[str] = "google_ai"
     DISPLAY_NAME: ClassVar[str] = "Google AI Cloud (Gemini API)"
     BADGE_LABEL: ClassVar[str] = "Cloud"
+    IS_CLOUD: ClassVar[bool] = True
     DESCRIPTION: ClassVar[str] = (
         "Sofort startklar ohne eigene GPU über einen API-Key aus Google AI Studio. "
         "Unterstützt Text, Vision und optional Bildgenerierung."

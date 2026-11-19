@@ -9,9 +9,11 @@ class WorldInfo:
     name: str
     icon: str | None = "🌐"
     visibility: str = "private"
+    origin_language: str = "en"
     cover_image_path: str | None = None
     lorebook_id: int | None = None
     collaborator_creator_tags: list[str] = field(default_factory=list)
+    is_proper_noun: bool = False
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def is_visible_to_user(self, user_id: int, is_admin: bool = False) -> bool:
@@ -44,6 +46,7 @@ class Location:
     background_image_path: str | None = None
     vision_alt_text: str | None = None
     character_id: int | None = None
+    is_proper_noun: bool = False
 
     def is_accessible_by_character(self, character_id: int | None) -> bool:
         if self.character_id is None:
@@ -63,6 +66,7 @@ class Event:
     character_id: int | None = None
     min_relationship: int | None = None
     max_relationship: int | None = None
+    is_proper_noun: bool = False
 
 
 @dataclass

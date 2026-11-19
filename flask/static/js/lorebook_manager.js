@@ -195,7 +195,7 @@
               if (window.showToastError) {
                 window.showToastError(errData.error || "Fehler beim Hinzufügen des Lorebooks.");
               } else {
-                alert(errData.error || "Fehler beim Hinzufügen des Lorebooks.");
+                alert(errData.error || window.t("Error adding lorebook."));
               }
               return;
             }
@@ -228,7 +228,7 @@
             if (window.showToastError) {
               window.showToastError("Netzwerkfehler beim Hinzufügen des Lorebooks.");
             } else {
-              alert("Netzwerkfehler beim Hinzufügen des Lorebooks.");
+              alert(window.t("Network error while adding lorebook."));
             }
           }
         }
@@ -275,7 +275,7 @@
             if (window.showToastError) {
               window.showToastError(errData.error || "Fehler beim Umschalten des Lorebooks.");
             } else {
-              alert(errData.error || "Fehler beim Umschalten des Lorebooks.");
+              alert(errData.error || window.t("Error toggling lorebook."));
             }
             return;
           }
@@ -285,7 +285,7 @@
           if (window.showToastError) {
             window.showToastError("Netzwerkfehler beim Umschalten des Lorebooks.");
           } else {
-            alert("Netzwerkfehler beim Umschalten des Lorebooks.");
+            alert(window.t("Network error while toggling lorebook."));
           }
         }
       }
@@ -332,7 +332,7 @@
             if (window.showToastError) {
               window.showToastError(errData.error || "Fehler beim Entfernen des Lorebooks.");
             } else {
-              alert(errData.error || "Fehler beim Entfernen des Lorebooks.");
+              alert(errData.error || window.t("Error removing lorebook."));
             }
             return;
           }
@@ -356,7 +356,7 @@
           if (window.showToastError) {
             window.showToastError("Netzwerkfehler beim Entfernen des Lorebooks.");
           } else {
-            alert("Netzwerkfehler beim Entfernen des Lorebooks.");
+            alert(window.t("Network error while removing lorebook."));
           }
         }
       }

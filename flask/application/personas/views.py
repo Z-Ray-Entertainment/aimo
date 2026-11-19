@@ -1,6 +1,8 @@
 from flask import Blueprint, flash, redirect, request, url_for
 
 from application.auth.decorators import get_current_user, require_permission
+from application.ui_helpers import tr
+from i18n import gettext_noop as _
 from domain.permissions.models import FunctionPermission
 from domain.personas.models import Gender
 from domain.personas.services import PersonaService
@@ -44,16 +46,20 @@ def create_persona():
             appearance=request.form.get("appearance", ""),
             is_default=is_default,
         )
+        persona.origin_language = (user.language or "en")[:2].lower()
 
         saved = repo.create(persona)
         if saved.id is not None:
+            from application.ui_helpers import notify_author_translation_hint
+
             trans_repo.save_field_variants_json(
                 "persona", saved.id, "description", request.form.get("i18n_description")
             )
             trans_repo.save_field_variants_json(
                 "persona", saved.id, "appearance", request.form.get("i18n_appearance")
             )
-        flash(f"Persona '{persona.name}' erfolgreich erstellt.", "success")
+            notify_author_translation_hint("persona", saved.id, "description")
+        flash(tr(_("Persona '%(name)s' created successfully."), name=persona.name), "success")
     except AimoError as exc:
         flash(str(exc), "error")
 
@@ -72,7 +78,7 @@ def edit_persona(persona_id: int):
 
     persona = repo.get_by_id(persona_id)
     if persona is None or persona.user_id != user.id:
-        flash("Persona nicht gefunden.", "error")
+        flash(tr(_("Persona not found.")), "error")
         return redirect(url_for("overview.index"))
 
     try:
@@ -102,7 +108,7 @@ def edit_persona(persona_id: int):
         trans_repo.save_field_variants_json(
             "persona", persona_id, "appearance", request.form.get("i18n_appearance")
         )
-        flash(f"Persona '{persona.name}' aktualisiert.", "success")
+        flash(tr(_("Persona '%(name)s' updated."), name=persona.name), "success")
     except AimoError as exc:
         flash(str(exc), "error")
 
@@ -118,7 +124,7 @@ def set_default(persona_id: int):
     persona = repo.get_by_id(persona_id)
     if persona and persona.user_id == user.id:
         repo.set_default(user.id, persona_id)
-        flash(f"'{persona.name}' ist nun deine Standard-Persona.", "success")
+        flash(tr(_("'%(name)s' is now your default persona."), name=persona.name), "success")
     return redirect(request.referrer or url_for("overview.index"))
 
 
@@ -132,14 +138,14 @@ def delete_persona(persona_id: int):
 
     persona = repo.get_by_id(persona_id)
     if persona is None or persona.user_id != user.id:
-        flash("Persona nicht gefunden.", "error")
+        flash(tr(_("Persona not found.")), "error")
         return redirect(url_for("overview.index"))
 
     try:
         in_use = repo.is_used_in_any_session(persona_id)
         service.delete_persona(persona, has_active_chats=in_use)
         repo.delete(persona_id)
-        flash(f"Persona '{persona.name}' gelöscht.", "success")
+        flash(tr(_("Persona '%(name)s' deleted."), name=persona.name), "success")
     except AimoError as exc:
         flash(str(exc), "error")
 

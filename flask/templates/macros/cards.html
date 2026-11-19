@@ -57,23 +57,26 @@
   {% call aimo_card_container(chat_url, char.name ~ ' (' ~ char.gender.value ~ ')', bg_style, description=char.description) %}
     <div class="aimo-card-header">
       {% if char.gender.value == 'female' %}
-        {{ pill_badge("Weiblich", icon="♀️", variant="dark", title="Geschlecht", extra_class="aimo-card-badge") }}
+        {{ pill_badge(_("Female"), icon="♀️", variant="dark", title=_("Gender"), extra_class="aimo-card-badge") }}
       {% elif char.gender.value == 'male' %}
-        {{ pill_badge("Männlich", icon="♂️", variant="dark", title="Geschlecht", extra_class="aimo-card-badge") }}
+        {{ pill_badge(_("Male"), icon="♂️", variant="dark", title=_("Gender"), extra_class="aimo-card-badge") }}
       {% else %}
-        {{ pill_badge(char.gender.value, icon="⚧️", variant="dark", title="Geschlecht", extra_class="aimo-card-badge") }}
+        {{ pill_badge(char.gender.value, icon="⚧️", variant="dark", title=_("Gender"), extra_class="aimo-card-badge") }}
       {% endif %}
       <div style="display: flex; gap: 0.35rem; align-items: center;">
+        {% if item.translation_pending %}
+          {{ pill_badge(_("Translation pending"), icon="🌐", variant="dark", title=_("Translation into your language is pending"), extra_class="aimo-card-badge") }}
+        {% endif %}
         {% if item.message_count > 0 %}
-          {{ pill_badge(item.message_count, icon="💬", icon_mono=true, variant="dark", title="Ausgetauschte Nachrichten", extra_class="aimo-card-badge") }}
+          {{ pill_badge(item.message_count, icon="💬", icon_mono=true, variant="dark", title=_("Exchanged messages"), extra_class="aimo-card-badge") }}
         {% endif %}
         {% if item.is_editable and has_edit_perm %}
-          <a href="{{ url_for('characters.edit_character', character_id=char.id) }}" class="aimo-card-action-btn" title="Charakter bearbeiten">
+          <a href="{{ url_for('characters.edit_character', character_id=char.id) }}" class="aimo-card-action-btn" title="{{ _('Edit character') }}">
             <span class="icon-mono">✏️</span>
           </a>
         {% elif has_create_perm %}
           <form method="POST" action="{{ url_for('characters.copy_character', character_id=char.id) }}" style="display: inline; margin: 0;">
-            <button type="submit" class="aimo-card-action-btn" title="Charakter duplizieren (eigenes Duplikat anlegen)">
+            <button type="submit" class="aimo-card-action-btn" title="{{ _('Duplicate character') }}">
               <span class="icon-mono">📄</span>
             </button>
           </form>
@@ -85,7 +88,7 @@
       <h3 class="aimo-card-title">{{ char.name }}</h3>
       <div class="relationship-bar-wrap aimo-card-rel-wrap" data-relationship-score="{{ item.best_relationship }}">
         <div class="relationship-header">
-          <span>Beziehung: {{ item.relationship_tier_name|default(item.best_relationship) }}</span>
+          <span>{{ _("Relationship:") }} {{ item.relationship_tier_name|default(item.best_relationship) }}</span>
           <span class="heart-icon">❤️</span>
         </div>
         <div class="relationship-track">
@@ -104,10 +107,13 @@
   {% call aimo_card_container(detail_url, wi.name, bg_style, description=wi.description if wi.cover_image_path else none) %}
     <div class="aimo-card-header">
       <div style="flex: 1;"></div>
+      {% if item.translation_pending %}
+        {{ pill_badge(_("Translation pending"), icon="🌐", variant="dark", title=_("Translation into your language is pending"), extra_class="aimo-card-badge") }}
+      {% endif %}
       {% if wi.visibility == 'public' %}
-        {{ pill_badge("Öffentlich", icon="🌍", variant="dark", title="Öffentliche Welt", extra_class="aimo-card-badge") }}
+        {{ pill_badge(_("Public"), icon="🌍", variant="dark", title=_("Public world"), extra_class="aimo-card-badge") }}
       {% else %}
-        {{ pill_badge("Privat", icon="🔒", variant="dark", title="Private Welt", extra_class="aimo-card-badge") }}
+        {{ pill_badge(_("Private"), icon="🔒", variant="dark", title=_("Private world"), extra_class="aimo-card-badge") }}
       {% endif %}
     </div>
 
@@ -120,8 +126,8 @@
     <div class="aimo-card-footer">
       <h3 class="aimo-card-title">{{ wi.name }}</h3>
       <div class="aimo-card-stats">
-        <span class="aimo-card-stat-pill">📍 {{ item.location_count }} Orte</span>
-        <span class="aimo-card-stat-pill">🎲 {{ item.event_count }} Events</span>
+        <span class="aimo-card-stat-pill">📍 {{ item.location_count }} {{ _("Locations") }}</span>
+        <span class="aimo-card-stat-pill">🎲 {{ item.event_count }} {{ _("Events") }}</span>
       </div>
     </div>
   {% endcall %}
@@ -146,17 +152,17 @@
   {% call aimo_card_container(none, p.name, bg_style, description=(p.description or p.appearance), onclick=("openEditPersonaFromBtn(this)" if can_manage else none), click_attrs=click_attrs) %}
     <div class="aimo-card-header">
       {% if p.gender.value == 'female' %}
-        {{ pill_badge("Weiblich", icon="♀️", variant="dark", title="Geschlecht", extra_class="aimo-card-badge") }}
+        {{ pill_badge(_("Female"), icon="♀️", variant="dark", title=_("Gender"), extra_class="aimo-card-badge") }}
       {% elif p.gender.value == 'male' %}
-        {{ pill_badge("Männlich", icon="♂️", variant="dark", title="Geschlecht", extra_class="aimo-card-badge") }}
+        {{ pill_badge(_("Male"), icon="♂️", variant="dark", title=_("Gender"), extra_class="aimo-card-badge") }}
       {% else %}
-        {{ pill_badge(p.gender.value, icon="⚧️", variant="dark", title="Geschlecht", extra_class="aimo-card-badge") }}
+        {{ pill_badge(p.gender.value, icon="⚧️", variant="dark", title=_("Gender"), extra_class="aimo-card-badge") }}
       {% endif %}
       {% if p.is_default %}
-        <span class="aimo-card-action-btn persona-star-btn is-default" title="Standard-Persona" aria-label="Standard-Persona">★</span>
+        <span class="aimo-card-action-btn persona-star-btn is-default" title="{{ _('Default Persona') }}" aria-label="{{ _('Default Persona') }}">★</span>
       {% elif can_manage %}
         <form method="POST" action="{{ url_for('personas.set_default', persona_id=p.id) }}" style="display: inline; margin: 0;">
-          <button type="submit" class="aimo-card-action-btn persona-star-btn" title="Als Standard-Persona festlegen" aria-label="Als Standard-Persona festlegen">☆</button>
+          <button type="submit" class="aimo-card-action-btn persona-star-btn" title="{{ _('Set as default persona') }}" aria-label="{{ _('Set as default persona') }}">☆</button>
         </form>
       {% else %}
         <span class="aimo-card-action-btn persona-star-btn" aria-hidden="true">☆</span>
@@ -173,7 +179,7 @@
 {% macro persona_grid(persona_items, can_manage=false) %}
   {% call aimo_card_grid() %}
     {% if can_manage %}
-      {{ new_button("Neue Persona", onclick="if (!window.aimoPersonaVisionRunning) openNewPersonaForm()") }}
+      {{ new_button(_("New Persona"), onclick="if (!window.aimoPersonaVisionRunning) openNewPersonaForm()") }}
     {% endif %}
     {% for p_item in persona_items %}
       {{ persona_card(p_item, can_manage=can_manage) }}
@@ -185,7 +191,7 @@
 {% macro character_grid(character_cards, can_create=false, can_edit=false) %}
   {% call aimo_card_grid() %}
     {% if can_create %}
-      {{ new_button("Neuer Charakter", href=url_for('characters.new_character')) }}
+      {{ new_button(_("New Character"), href=url_for('characters.new_character')) }}
     {% endif %}
     {% for item in character_cards %}
       {{ character_card(item, has_edit_perm=can_edit, has_create_perm=can_create) }}
@@ -197,7 +203,7 @@
 {% macro worldinfo_grid(worldinfo_cards, can_create=false) %}
   {% call aimo_card_grid() %}
     {% if can_create %}
-      {{ new_button("Neue Welt", modal="new-worldinfo-modal") }}
+      {{ new_button(_("New World"), modal="new-worldinfo-modal") }}
     {% endif %}
     {% for item in worldinfo_cards %}
       {{ worldinfo_card(item) }}

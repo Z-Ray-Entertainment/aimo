@@ -158,8 +158,8 @@ window.AimoImageCropper = {
 
     function setActiveTarget(targetId) {
       activeTargetId = targetId;
-      modal.querySelectorAll(".crop-target-btn").forEach((btn) => {
-        btn.classList.toggle("active", btn.getAttribute("data-crop-target") === targetId);
+      modal.querySelectorAll("[data-crop-target]").forEach((el) => {
+        el.classList.toggle("active", el.getAttribute("data-crop-target") === targetId);
       });
       if (!boxes[targetId].initialized) {
         initBoxForTarget(getTarget(targetId));
@@ -338,9 +338,10 @@ window.AimoImageCropper = {
       }
 
       if (statusBadge) {
-        statusBadge.textContent = targets.length > 1
-          ? "✓ Ausschnitte aktiv"
-          : "✓ 1:1 Cover aktiv";
+        const activeLabel = targets.length > 1
+          ? (window.t ? window.t("Crops active") : "Crops active")
+          : (window.t ? window.t("1:1 Cover active") : "1:1 Cover active");
+        statusBadge.textContent = "✓ " + activeLabel;
         statusBadge.style.display = "inline-block";
       }
 

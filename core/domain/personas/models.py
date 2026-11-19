@@ -35,5 +35,6 @@ class UserPersona:
     portrait_path: str
     description: str
     appearance: str = ""
+    origin_language: str = "en"
     is_default: bool = False
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))

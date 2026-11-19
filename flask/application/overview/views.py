@@ -1,6 +1,11 @@
 from flask import Blueprint, render_template, request
 
 from application.auth.decorators import get_current_user, is_admin, require_auth
+from application.translation_helpers import (
+    is_character_ready_for_language,
+    is_lorebook_ready_for_language,
+    is_worldinfo_ready_for_language,
+)
 from infrastructure.repositories.character_repository import CharacterRepository
 from infrastructure.repositories.lorebook_repository import LorebookRepository
 from infrastructure.repositories.persona_repository import PersonaRepository
@@ -33,11 +38,20 @@ def index():
     if active_tab not in ("characters", "lorebooks", "worldinfo"):
         active_tab = "characters"
 
+    trans_repo = TranslationRepository()
+    has_missing_translations = False
+
     raw_characters = char_repo.list_visible(user.id)
     character_cards = []
     for char in raw_characters:
         if char.id is None:
             continue
+        is_editable = char.is_editable_by_user(user.id, is_admin(), user.creator_tag)
+        is_ready = is_character_ready_for_language(char, sys_lang, trans_repo, wi_repo)
+        if not is_ready:
+            has_missing_translations = True
+            if not is_editable:
+                continue
         if author_filter == "mine" and char.user_id != user.id:
             continue
         if author_filter == "collaborations":
@@ -59,7 +73,9 @@ def index():
             char.id, user.id, default_value=float(char.initial_relationship)
         )
         tier = rel_repo.get_tier(best_rel, language=sys_lang)
-        is_editable = char.is_editable_by_user(user.id, is_admin(), user.creator_tag)
+        char.description = trans_repo.get_localized_field(
+            "character", char.id, "description", sys_lang, char.description
+        )
         character_cards.append(
             {
                 "character": char,
@@ -67,6 +83,7 @@ def index():
                 "best_relationship": best_rel,
                 "relationship_tier_name": tier.name,
                 "is_editable": is_editable,
+                "translation_pending": not is_ready,
             }
         )
 
@@ -82,6 +99,16 @@ def index():
     for lb in lorebooks:
         if lb.id is None:
             continue
+        is_editable = lb.is_editable_by_user(user.id, is_admin(), user.creator_tag)
+        is_ready = is_lorebook_ready_for_language(lb, sys_lang, trans_repo)
+        if not is_ready:
+            has_missing_translations = True
+            if not is_editable:
+                continue
+        lb.name = trans_repo.get_localized_field("lorebook", lb.id, "name", sys_lang, lb.name)
+        lb.description = trans_repo.get_localized_field(
+            "lorebook", lb.id, "description", sys_lang, lb.description
+        )
         entries = lb_repo.list_entries(lb.id, user_id=user.id, is_admin=is_admin())
         all_tags = []
         for e in entries:
@@ -93,7 +120,8 @@ def index():
                 "lorebook": lb,
                 "entry_count": len(entries),
                 "tags": all_tags[:8],
-                "is_editable": lb.is_editable_by_user(user.id, is_admin(), user.creator_tag),
+                "is_editable": is_editable,
+                "translation_pending": not is_ready,
             }
         )
 
@@ -102,18 +130,26 @@ def index():
     for wi in worldinfos:
         if wi.id is None:
             continue
+        is_editable = wi.is_editable_by_user(user.id, is_admin(), user.creator_tag)
+        is_ready = is_worldinfo_ready_for_language(wi, sys_lang, trans_repo, wi_repo)
+        if not is_ready:
+            has_missing_translations = True
+            if not is_editable:
+                continue
         locations = wi_repo.list_locations(wi.id)
         events = wi_repo.list_events(wi.id)
+        if not getattr(wi, "is_proper_noun", False):
+            wi.name = trans_repo.get_localized_field("worldinfo", wi.id, "name", sys_lang, wi.name)
         worldinfo_cards.append(
             {
                 "worldinfo": wi,
                 "location_count": len(locations),
                 "event_count": len(events),
-                "is_editable": wi.is_editable_by_user(user.id, is_admin(), user.creator_tag),
+                "is_editable": is_editable,
+                "translation_pending": not is_ready,
             }
         )
 
-    trans_repo = TranslationRepository()
     personas = persona_repo.list_for_user(user.id)
     persona_items = []
     for p in personas:
@@ -139,4 +175,5 @@ def index():
         author_filter=author_filter,
         sort_by=sort_by,
         active_tab=active_tab,
+        has_missing_translations=has_missing_translations,
     )

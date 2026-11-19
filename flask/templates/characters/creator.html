@@ -4,7 +4,7 @@
 {% from "macros/image_cropper.html" import image_cropper_modal %}
 {% from "macros/collaboration.html" import collaboration_manager %}
 {% from "macros/event_manager.html" import event_editor %}
-{% block title %}AIMO — Character Designer{% endblock %}
+{% block title %}AIMO — {{ _("Character Designer") }}{% endblock %}
 
 {% block extra_head %}
 <script src="{{ url_for('static', filename='js/character_creator.js') }}" defer></script>
@@ -17,24 +17,24 @@
     <div class="aimo-sidebar-header">
       <div class="aimo-sidebar-title">
         <span class="icon-mono">🎭</span>
-        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ character.name if character else "Neuer Charakter" }}</span>
+        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ character.name if character else _("New Character") }}</span>
       </div>
-      <p class="aimo-sidebar-subtitle">Charakter-Designer</p>
+      <p class="aimo-sidebar-subtitle">{{ _("Character Designer") }}</p>
     </div>
 
     <nav class="aimo-sidebar-nav">
-      {{ tab_button("Hauptinformationen", "tab-char-info", icon="📋", active=(active_tab == 'info'), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button("Galeriebilder", "tab-char-gallery", icon="🖼️", active=(active_tab == 'gallery'), disabled=(not character), title=("Bitte zuerst Grunddaten speichern" if not character else none), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button("Emotionale Sprites", "tab-char-sprites", icon="🎭", active=(active_tab == 'sprites'), disabled=(not character), title=("Bitte zuerst Grunddaten speichern" if not character else none), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button("Gesprächsstile", "tab-char-dialogue", icon="💬", active=(active_tab == 'dialogue'), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button("World", "tab-char-world", icon="🗺️", active=(active_tab == 'world'), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button("Zufalls-Events", "tab-char-events", icon="🎲", active=(active_tab == 'events'), count=(events|length if character else none), disabled=(not character), title=("Bitte zuerst Grunddaten speichern" if not character else none), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button("Lorebooks", "tab-char-lorebooks", icon="📖", active=(active_tab == 'lorebooks'), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button("Kollaboration", "tab-char-collab", icon="👥", active=(active_tab == 'collab'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Main Info"), "tab-char-info", icon="📋", active=(active_tab == 'info'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Gallery Images"), "tab-char-gallery", icon="🖼️", active=(active_tab == 'gallery'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Emotional Sprites"), "tab-char-sprites", icon="🎭", active=(active_tab == 'sprites'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Dialogue Styles"), "tab-char-dialogue", icon="💬", active=(active_tab == 'dialogue'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("World"), "tab-char-world", icon="🗺️", active=(active_tab == 'world'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Random Events"), "tab-char-events", icon="🎲", active=(active_tab == 'events'), count=(events|length if character else none), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Lorebooks"), "tab-char-lorebooks", icon="📖", active=(active_tab == 'lorebooks'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Collaboration"), "tab-char-collab", icon="👥", active=(active_tab == 'collab'), extra_class="aimo-sidebar-nav-item") }}
     </nav>
 
     <div class="aimo-sidebar-footer">
-      {{ action_button("Zurück zur Übersicht", href=get_safe_back_url(url_for('overview.index', tab='characters')), arrow="left", extra_class="aimo-sidebar-back-btn") }}
+      {{ action_button(_("Back to Overview"), href=get_safe_back_url(url_for('overview.index', tab='characters')), arrow="left", extra_class="aimo-sidebar-back-btn") }}
     </div>
   </aside>
 
@@ -42,7 +42,7 @@
   <section class="aimo-sidebar-stage">
     <!-- Top Action Bar -->
     {{ editor_header(
-        title=character.name if character else "Neuer Charakter",
+        title=character.name if character else _("New Character"),
         back_url=get_safe_back_url(url_for('overview.index', tab='characters')),
         form_id="character-main-form",
         is_editable=is_editable,
@@ -50,8 +50,8 @@
         can_copy=(character is not none and character.id is not none),
         delete_url=(url_for('characters.delete_character', character_id=character.id) if character else none),
         can_delete=(character is not none and is_author),
-        delete_confirm_msg="Charakter wirklich unwiderruflich löschen?",
-        save_title="Charakter speichern",
+        delete_confirm_msg=_("Really delete character permanently?"),
+        save_title=_("Save character"),
         show_back=false
     ) }}
 
@@ -72,56 +72,56 @@
       <div class="aimo-frame" style="padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
         <div>
           <label>
-            Name des Charakters *
-            <span class="field-help-btn" title="Name des Charakters:&#10;Der eindeutige Rufname deiner KI-Figur. Dieser Name wird im Chat als Sprecher angezeigt und ersetzt {{char}} in allen Prompts.">?</span>
+            {{ _("Character Name") }} *
+            <span class="field-help-btn" title="{{ _('The unique name of your AI character. Replaces {{char}} in prompts.') }}">?</span>
           </label>
           <input type="text" id="char-name-input" name="name" value="{{ form.name }}" required>
         </div>
         <div style="display: flex; gap: 1rem;">
           <div style="flex: 1;">
             <label>
-              Geschlecht *
-              <span class="field-help-btn" title="Geschlecht &amp; Pronomen:&#10;Legt das Geschlecht fest. Passende Pronomen werden abgeleitet und in den System-Prompt injiziert.">?</span>
+              {{ _("Gender") }} *
+              <span class="field-help-btn" title="{{ _('Sets gender and derived pronouns for the system prompt.') }}">?</span>
             </label>
             <select name="gender" required>
-              <option value="female" {% if form.gender == 'female' %}selected{% endif %}>Weiblich (female)</option>
-              <option value="male" {% if form.gender == 'male' %}selected{% endif %}>Männlich (male)</option>
-              <option value="non-binary" {% if form.gender == 'non-binary' %}selected{% endif %}>Nicht-Binär (non-binary)</option>
+              <option value="female" {% if form.gender == 'female' %}selected{% endif %}>{{ _("Female") }}</option>
+              <option value="male" {% if form.gender == 'male' %}selected{% endif %}>{{ _("Male") }}</option>
+              <option value="non-binary" {% if form.gender == 'non-binary' %}selected{% endif %}>{{ _("Non-Binary") }}</option>
             </select>
           </div>
           <div style="flex: 1;">
             <label>
-              Sichtbarkeit *
-              <span class="field-help-btn" title="Sichtbarkeit:&#10;Privat = Nur in deinem Account spielbar.&#10;Öffentlich = Alle Benutzer im Hub können diesen Charakter sehen und spielen.">?</span>
+              {{ _("Visibility") }} *
+              <span class="field-help-btn" title="{{ _('Private = only playable in your account. Public = visible to all users in the Hub.') }}">?</span>
             </label>
             <select name="visibility" required>
-              <option value="private" {% if form.visibility == 'private' %}selected{% endif %}>Privat</option>
-              <option value="public" {% if form.visibility == 'public' %}selected{% endif %}>Öffentlich</option>
+              <option value="private" {% if form.visibility == 'private' %}selected{% endif %}>{{ _("Private") }}</option>
+              <option value="public" {% if form.visibility == 'public' %}selected{% endif %}>{{ _("Public") }}</option>
             </select>
           </div>
         </div>
 
         <div>
           <label>
-            Primary Portrait (9:16) &amp; Avatar (1:1) (Pflicht-Upload) *
-            <span class="field-help-btn" title="Charakterbilder:&#10;• 9:16 Porträt: Chat-Seitenleiste &amp; Vollbild-Ansicht&#10;• 1:1 Avatar: Charakterkarten im Hub &amp; Chat-Bubbles">?</span>
+            {{ _('Primary Portrait (9:16) & Avatar (1:1) (Required upload)') }} *
+            <span class="field-help-btn" title="{{ _('Character images:\n• 9:16 Portrait: Chat sidebar & fullscreen view\n• 1:1 Avatar: Character cards in Hub & chat bubbles') }}">?</span>
           </label>
           <div style="display: flex; gap: 1rem; align-items: flex-start; margin-top: 0.35rem; flex-wrap: wrap;">
             <div style="display: flex; gap: 0.85rem; align-items: center; flex-wrap: wrap;">
               <!-- 9:16 Portrait Preview -->
               <div style="text-align: center;">
-                <div id="portrait-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 54px; height: 96px; border-radius: 8px; border: 2px solid var(--gold-accent); overflow: hidden; background: rgba(15, 11, 8, 0.9); margin-bottom: 0.25rem;" title="9:16 Porträt (Chat-Seitenleiste &amp; Vollbild)">
-                  <img id="portrait-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}{% endif %}" alt="9:16 Porträt" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
+                <div id="portrait-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 54px; height: 96px; border-radius: 8px; border: 2px solid var(--gold-accent); overflow: hidden; background: rgba(15, 11, 8, 0.9); margin-bottom: 0.25rem;" title="{{ _('Portrait') }}">
+                  <img id="portrait-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}{% endif %}" alt="{{ _('Portrait') }}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
                 </div>
-                <span style="font-size: 0.7rem; color: var(--gold-accent); font-weight: 600;">9:16 Chat/Voll</span>
+                <span style="font-size: 0.7rem; color: var(--gold-accent); font-weight: 600;">{{ _('Portrait') }}</span>
               </div>
 
               <!-- 1:1 Avatar Preview -->
               <div style="text-align: center;">
-                <div id="avatar-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 64px; height: 64px; border-radius: 10px; border: 2px solid #64B5F6; overflow: hidden; background: rgba(15, 11, 8, 0.9); margin-bottom: 0.25rem;" title="1:1 Avatar (Übersichtskarte &amp; Chat-Bubble)">
-                  <img id="avatar-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.avatar_path or character.primary_portrait_path) }}{% endif %}" alt="1:1 Avatar" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
+                <div id="avatar-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 64px; height: 64px; border-radius: 10px; border: 2px solid #64B5F6; overflow: hidden; background: rgba(15, 11, 8, 0.9); margin-bottom: 0.25rem;" title="{{ _('Avatar') }}">
+                  <img id="avatar-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.avatar_path or character.primary_portrait_path) }}{% endif %}" alt="{{ _('Avatar') }}" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
                 </div>
-                <span style="font-size: 0.7rem; color: #64B5F6; font-weight: 600;">1:1 Übersicht/Bubble</span>
+                <span style="font-size: 0.7rem; color: #64B5F6; font-weight: 600;">{{ _('Avatar') }}</span>
               </div>
             </div>
 
@@ -130,11 +130,8 @@
               <input type="file" id="avatar-portrait-input" name="avatar_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
               <input type="file" id="card-portrait-input" name="card_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
               <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-                {{ action_button("Ausschnitte anpassen (9:16 & 1:1)", icon="✂️", id="open-crop-btn", size="sm", disabled=(not character)) }}
-                <span id="crop-status-badge" style="display: none; font-size: 0.8rem; color: #4CAF50; font-weight: 600;">✓ Ausschnitte aktiv</span>
-              </div>
-              <div style="font-size: 0.76rem; color: var(--text-muted);">
-                Tipp: <strong>9:16</strong> für das Chat-Porträt und <strong>1:1</strong> für die Übersichtskarte &amp; Chat-Bubbles.
+                {{ action_button(_("Adjust crops"), icon="✂️", id="open-crop-btn", size="sm", disabled=(not character)) }}
+                <span id="crop-status-badge" style="display: none; font-size: 0.8rem; color: #4CAF50; font-weight: 600;">✓ {{ _('Crops active') }}</span>
               </div>
             </div>
           </div>
@@ -142,8 +139,8 @@
 
         <div>
           <label>
-            Initialer Beziehungsstatus *
-            <span class="field-help-btn" title="Initialer Beziehungsstatus:&#10;Startstufe der Zuneigung (z. B. Pure Hatred, Neutral, Blind Devotion). Steuert das anfängliche Rollenspielverhalten von {{char}} gegenüber dem Spieler.">?</span>
+            {{ _('Initial Relationship Status') }} *
+            <span class="field-help-btn" title="{{ _('Initial Relationship Status:\nStarting level of affection (e.g., Pure Hatred, Neutral, Blind Devotion). Controls the initial roleplay behavior of {{char}} toward the player.') }}">?</span>
           </label>
           <select name="initial_relationship" required>
             {% for tier in relationship_tiers %}
@@ -158,16 +155,22 @@
         <div style="grid-column: 1 / -1;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
             <label>
-              Charakterbeschreibung &amp; Persönlichkeit *
-              <span class="field-help-btn" title="Charakterbeschreibung &amp; Persönlichkeit:&#10;Kernidentität der Figur (Wesen, Eigenarten, Hintergrundgeschichte, Ängste, Motivationen). Tipp: Nutze '✨ KI-Autor Optimierung'.">?</span>
+              {{ _("Character Description & Personality") }} *
+              <span class="field-help-btn" title="{{ _('Core identity, traits, backstory, fears, and motivations.') }}">?</span>
             </label>
-            {{ action_button("KI-Autor Optimierung", icon="✨", id="sparkle-improve-btn", extra_class="btn-sparkle") }}
+            {{ action_button(_("AI Author Optimization"), icon="✨", id="sparkle-improve-btn", extra_class="btn-sparkle") }}
           </div>
+          <input type="hidden" name="i18n_description" id="i18n-char-description" value='{{ char_translations.get("description", {}) | tojson if char_translations is defined else "{}" }}'>
           <textarea
             id="char-description-textarea"
             name="description"
             rows="6"
             maxlength="6000"
+            data-i18n-field="description"
+            data-i18n-entity-type="character"
+            data-i18n-entity-id="{{ character.id if character else '' }}"
+            data-i18n-origin="{{ character.origin_language if character else ui_language }}"
+            data-i18n-hidden="i18n-char-description"
             required>{{ form.description }}</textarea>
         </div>
 
@@ -175,33 +178,45 @@
         <div style="grid-column: 1 / -1;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
             <label>
-              Aussehen des Charakters (Physical Appearance)
-              <span class="field-help-btn" title="Aussehen des Charakters:&#10;Detaillierte visuelle Beschreibung (Augenfarbe, Frisur, Hautton, Statur, Kleidung). Fließt direkt in den [CHARACTER_DEFINITION]-Prompt ein und steuert KI-Bildgenerierungen.">?</span>
+              {{ _("Physical Appearance") }}
+              <span class="field-help-btn" title="{{ _('Detailed visual appearance for prompts and AI image generation.') }}">?</span>
             </label>
-            {{ action_button("Aussehen aus Bild extrahieren", icon="👁️", id="extract-appearance-btn", extra_class="btn-sparkle", title="Analysiert das Porträtbild mit einem Vision-LLM") }}
+            {{ action_button(_("Extract Appearance from Image"), icon="👁️", id="extract-appearance-btn", extra_class="btn-sparkle", title=_("Analyzes the portrait image using a Vision LLM")) }}
           </div>
+          <input type="hidden" name="i18n_appearance" id="i18n-char-appearance" value='{{ char_translations.get("appearance", {}) | tojson if char_translations is defined else "{}" }}'>
           <textarea
             id="char-appearance-textarea"
             name="appearance"
             rows="4"
-            placeholder="Körperliches Aussehen (z. B. smaragdgrüne Augen, schulterlanges schwarzes Haar, silberne Rüstung)...">{{ form.appearance }}</textarea>
+            data-i18n-field="appearance"
+            data-i18n-entity-type="character"
+            data-i18n-entity-id="{{ character.id if character else '' }}"
+            data-i18n-origin="{{ character.origin_language if character else ui_language }}"
+            data-i18n-hidden="i18n-char-appearance"
+            placeholder="{{ _('Physical appearance (e.g. emerald eyes, shoulder-length black hair, silver armor)...') }}">{{ form.appearance }}</textarea>
         </div>
 
         <!-- Erste Nachricht -->
         <div style="grid-column: 1 / -1;">
           <label>
-            Erste Nachricht (Welcome Message beim ersten Chat) *
-            <span class="field-help-btn" title="First Message (Begrüßung):&#10;Die direkte erste Begrüßung des Charakters an den Spieler.&#10;WICHTIG: Keine Raumszene, Wetter oder Umgebung in der 3. Person beschreiben (das verleitet die KI zur Erzählerrolle). Schauplätze gehören in die WorldInfo!">?</span>
+            {{ _("First Message (Welcome Message)") }} *
+            <span class="field-help-btn" title="{{ _('The character\'s direct opening greeting to the player.') }}">?</span>
           </label>
+          <input type="hidden" name="i18n_first_message" id="i18n-char-first-msg" value='{{ char_translations.get("first_message", {}) | tojson if char_translations is defined else "{}" }}'>
           <textarea
             name="first_message"
             rows="4"
+            data-i18n-field="first_message"
+            data-i18n-entity-type="character"
+            data-i18n-entity-id="{{ character.id if character else '' }}"
+            data-i18n-origin="{{ character.origin_language if character else ui_language }}"
+            data-i18n-hidden="i18n-char-first-msg"
             required>{{ form.first_message }}</textarea>
         </div>
 
         <!-- Bottom Save Action Row -->
         <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-wood-dark);">
-          {{ action_button("Speichern", type="submit", variant="primary", icon="💾") }}
+          {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
         </div>
       </div>
     </section>
@@ -212,42 +227,42 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
           <div>
             <h3 style="color: var(--gold-accent); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
-              💬 Gesprächsstile (Few-Shot Dialogbeispiele)
-              <span class="field-help-btn" title="Gesprächsstile:&#10;Typische Dialog-Paare aus Spieler-Trigger und Charakter-Antwort. Werden im Format &lt;START&gt;\n{{user}}: ...\n{{char}}: ... in den Prompt injiziert.">?</span>
+              💬 {{ _("Dialogue Styles (Few-Shot Examples)") }}
+              <span class="field-help-btn" title="{{ _('Typical player trigger and character response pairs injected into the prompt.') }}">?</span>
             </h3>
             <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
-              Definiere typische Trigger-Response-Beispiele, an denen sich die KI für Tonalität, Dialekt und Reaktionen orientiert.
+              {{ _("Define typical trigger-response examples to guide the AI's tone, dialect, and reactions.") }}
             </p>
           </div>
-          {{ action_button("Gesprächsstil hinzufügen", icon="➕", variant="primary", modal="add-dialogue-modal") }}
+          {{ action_button(_("Add Dialogue Style"), icon="➕", variant="primary", modal="add-dialogue-modal") }}
         </div>
 
         <div id="dialogue-examples-list" class="dialogue-examples-list">
           {% for ex in form.dialogue_examples %}
             <div class="dialogue-example-item" data-index="{{ loop.index0 }}">
               <div class="dialogue-item-header">
-                <span class="dialogue-index-label"><span class="icon-mono">💬</span> Beispiel {{ loop.index }}</span>
+                <span class="dialogue-index-label"><span class="icon-mono">💬</span> {{ _("Example") }} {{ loop.index }}</span>
                 <div class="dialogue-item-actions">
-                  {{ action_button("Bearbeiten", icon="✏️", layout="icon", size="sm", extra_class="edit-dialogue-btn dialogue-action-btn", data={"index": loop.index0}, title="Beispiel bearbeiten") }}
-                  {{ action_button("Löschen", icon="🗑️", layout="icon", variant="danger", size="sm", extra_class="delete-dialogue-btn dialogue-action-btn", data={"index": loop.index0}, title="Beispiel löschen") }}
+                  {{ action_button(_("Edit"), icon="✏️", layout="icon", size="sm", extra_class="edit-dialogue-btn dialogue-action-btn", data={"index": loop.index0}, title=_("Edit example")) }}
+                  {{ action_button(_("Delete"), icon="🗑️", layout="icon", variant="danger", size="sm", extra_class="delete-dialogue-btn dialogue-action-btn", data={"index": loop.index0}, title=_("Delete example")) }}
                 </div>
               </div>
               <!-- Trigger: Rechtsbündig, {{text}} {{user}} -->
               <div class="dialogue-entry-trigger">
-                <div class="dialogue-text">{{ ex.trigger | replace('{{user}}', g.default_persona.name if g.default_persona else 'Du') | replace('{{char}}', character.name if character else (form.name or 'Charakter')) }}</div>
-                <span class="role-badge user-badge" title="{{ '{{user}}' }}">{{ g.default_persona.name if g.default_persona else 'Du' }}</span>
+                <div class="dialogue-text">{{ ex.trigger | replace('{{user}}', g.default_persona.name if g.default_persona else _('You')) | replace('{{char}}', character.name if character else (form.name or _('Character'))) }}</div>
+                <span class="role-badge user-badge" title="{{ '{{user}}' }}">{{ g.default_persona.name if g.default_persona else _('You') }}</span>
               </div>
               <!-- Response: Linksbündig, {{char}} {{text}} -->
               <div class="dialogue-entry-response">
-                <span class="role-badge char-badge" title="{{ '{{char}}' }}">{{ character.name if character else (form.name or 'Charakter') }}</span>
-                <div class="dialogue-text">{{ ex.response | replace('{{user}}', g.default_persona.name if g.default_persona else 'Du') | replace('{{char}}', character.name if character else (form.name or 'Charakter')) }}</div>
+                <span class="role-badge char-badge" title="{{ '{{char}}' }}">{{ character.name if character else (form.name or _('Character')) }}</span>
+                <div class="dialogue-text">{{ ex.response | replace('{{user}}', g.default_persona.name if g.default_persona else _('You')) | replace('{{char}}', character.name if character else (form.name or _('Character'))) }}</div>
               </div>
             </div>
           {% endfor %}
         </div>
 
         <div id="dialogue-empty-notice" class="aimo-frame" style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.9rem; {% if form.dialogue_examples|length > 0 %}display: none;{% endif %}">
-          Noch keine Gesprächsstile angelegt. Klicke auf <strong>„Gesprächsstil hinzufügen“</strong>, um Dialogbeispiele zu hinterlegen.
+          {{ _("No dialogue styles added yet. Click 'Add Dialogue Style' to create examples.") }}
         </div>
       </div>
     </section>
@@ -257,20 +272,20 @@
       <div class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
         <div>
           <h3 style="color: var(--gold-accent); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
-            🗺️ Spielwelt &amp; Schauplätze
-            <span class="field-help-btn" title="World &amp; Orte:&#10;Verknüpft eine empfohlene Spielwelt. Sobald eine Welt gewählt ist, können Startort, bevorzugte und gemiedene Orte aus dieser Welt bestimmt werden.">?</span>
+            🗺️ {{ _("Game World & Locations") }}
+            <span class="field-help-btn" title="{{ _('Links a recommended world. Once selected, initial, preferred, and disliked locations can be chosen.') }}">?</span>
           </h3>
           <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">
-            Wähle eine empfohlene Welt für diesen Charakter. Beim Start eines neuen Spiels wird diese Welt vorausgewählt.
+            {{ _("Select a recommended world for this character. It will be pre-selected when starting a new chat.") }}
           </p>
 
           <div>
             <label>
-              Empfohlene WorldInfo
-              <span class="field-help-btn" title="Empfohlene Welt:&#10;Orte und Ereignisse dieser Welt fließen in das Rollenspiel ein.">?</span>
+              {{ _("Recommended WorldInfo") }}
+              <span class="field-help-btn" title="{{ _('Locations and events of this world are included in roleplay.') }}">?</span>
             </label>
             <select name="suggested_worldinfo_id" id="char-worldinfo-select">
-              <option value="">-- Keine WorldInfo verknüpft --</option>
+              <option value="">-- {{ _("No WorldInfo linked") }} --</option>
               {% for wi in worldinfos %}
                 <option value="{{ wi.id }}" {% if form.suggested_worldinfo_id == wi.id %}selected{% endif %}>{{ wi.name }}</option>
               {% endfor %}
@@ -282,11 +297,11 @@
         <div id="worldinfo-locations-container" style="{% if not form.suggested_worldinfo_id %}display: none;{% endif %} display: flex; flex-direction: column; gap: 1.25rem; border-top: 1px solid var(--border-wood-dark); padding-top: 1.25rem;">
           <div>
             <label>
-              Initialort der First Message
-              <span class="field-help-btn" title="Initialort:&#10;Konkreter Startort für das Gespräch innerhalb der verknüpften Welt.">?</span>
+              {{ _("Initial Location of First Message") }}
+              <span class="field-help-btn" title="{{ _('Starting location for the conversation within the linked world.') }}">?</span>
             </label>
             <select name="initial_location_id" id="char-initial-location-select">
-              <option value="">-- Kein fester Startort --</option>
+              <option value="">-- {{ _("No fixed starting location") }} --</option>
               {% for loc in all_locations %}
                 <option value="{{ loc.id }}"
                         data-worldinfo-id="{{ loc.worldinfo_id }}"
@@ -300,8 +315,8 @@
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
             <div>
               <label>
-                Bevorzugte Orte (Nur Orte der verknüpften Welt)
-                <span class="field-help-btn" title="Bevorzugte Orte:&#10;Orte, an denen sich der Charakter besonders wohlfühlt oder gern aufhält. Fließen in [WORLD_INFO] ein.">?</span>
+                {{ _("Preferred Locations (from linked world)") }}
+                <span class="field-help-btn" title="{{ _('Locations where the character feels comfortable or likes to spend time.') }}">?</span>
               </label>
               <select name="preferred_location_ids" id="char-preferred-locations-select" multiple size="5">
                 {% for loc in all_locations %}
@@ -313,14 +328,14 @@
                 {% endfor %}
               </select>
               <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.25rem;">
-                Tipp: Halte Strg/Cmd gedrückt für Mehrfachauswahl.
+                {{ _("Tip: Hold Ctrl/Cmd to select multiple.") }}
               </div>
             </div>
 
             <div>
               <label>
-                Gemiedene Orte (Nur Orte der verknüpften Welt)
-                <span class="field-help-btn" title="Gemiedene Orte:&#10;Orte, die der Charakter meidet, fürchtet oder verabscheut. Fließen ebenfalls in [WORLD_INFO] ein.">?</span>
+                {{ _("Disliked Locations (from linked world)") }}
+                <span class="field-help-btn" title="{{ _('Locations the character avoids, fears, or dislikes.') }}">?</span>
               </label>
               <select name="disliked_location_ids" id="char-disliked-locations-select" multiple size="5">
                 {% for loc in all_locations %}
@@ -332,7 +347,7 @@
                 {% endfor %}
               </select>
               <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.25rem;">
-                Tipp: Halte Strg/Cmd gedrückt für Mehrfachauswahl.
+                {{ _("Tip: Hold Ctrl/Cmd to select multiple.") }}
               </div>
             </div>
           </div>
@@ -346,14 +361,14 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
           <div>
             <h3 style="color: var(--gold-accent); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
-              📖 Verknüpfte Lorebooks (Wissenskompendien)
-              <span class="field-help-btn" title="Verknüpfte Lorebooks:&#10;Wissenskompendien für diesen Charakter. Sobald passende Schlagworte (Tags) im Chat fallen, werden Einträge automatisch ohne Vektordatenbank in den Prompt geladen.">?</span>
+              📖 {{ _("Linked Lorebooks (Knowledge Compendiums)") }}
+              <span class="field-help-btn" title="{{ _('Knowledge compendiums for this character. Matching entries are automatically loaded into the prompt via tags.') }}">?</span>
             </h3>
             <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
-              Füge Wissenskompendien an. Relevante Einträge werden nach dem Tag-Matching-Verfahren automatisch injiziert.
+              {{ _("Attach knowledge compendiums. Relevant entries are automatically injected via tag matching.") }}
             </p>
           </div>
-          {{ action_button("Lorebook hinzufügen", icon="➕", variant="primary", modal="add-lorebook-modal") }}
+          {{ action_button(_("Add Lorebook"), icon="➕", variant="primary", modal="add-lorebook-modal") }}
         </div>
 
         <div id="linked-lorebooks-list" class="lorebook-list">
@@ -368,13 +383,13 @@
                   {% endif %}
                 </div>
                 <div style="display: flex; align-items: center; gap: 0.65rem;">
-                  <select name="lorebook_world_condition_{{ lb.id }}" style="font-size: 0.82rem; padding: 0.35rem 0.6rem; max-width: 240px;" title="Wann soll dieses Lorebook aktiv sein?">
-                    <option value="" {% if not form.lorebook_world_conditions.get(lb.id) %}selected{% endif %}>🌍 Alle Welten (Immer aktiv)</option>
+                  <select name="lorebook_world_condition_{{ lb.id }}" style="font-size: 0.82rem; padding: 0.35rem 0.6rem; max-width: 240px;" title="{{ _('When should this lorebook be active?') }}">
+                    <option value="" {% if not form.lorebook_world_conditions.get(lb.id) %}selected{% endif %}>🌍 {{ _("All Worlds (Always active)") }}</option>
                     {% for wi in worldinfos %}
-                      <option value="{{ wi.id }}" {% if form.lorebook_world_conditions.get(lb.id) == wi.id %}selected{% endif %}>🌐 Nur in Welt: {{ wi.name }}</option>
+                      <option value="{{ wi.id }}" {% if form.lorebook_world_conditions.get(lb.id) == wi.id %}selected{% endif %}>🌐 {{ _("Only in world:") }} {{ wi.name }}</option>
                     {% endfor %}
                   </select>
-                  {{ action_button("Entkoppeln", icon="🗑️", layout="icon", variant="danger", size="sm", extra_class="remove-lorebook-btn", data={"id": lb.id}, title="Lorebook entkoppeln") }}
+                  {{ action_button(_("Unlink"), icon="🗑️", layout="icon", variant="danger", size="sm", extra_class="remove-lorebook-btn", data={"id": lb.id}, title=_("Unlink lorebook")) }}
                 </div>
               </div>
             {% endif %}
@@ -382,7 +397,7 @@
         </div>
 
         <div id="lorebook-empty-notice" class="aimo-frame" style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.9rem; {% if form.linked_lorebook_ids|length > 0 %}display: none;{% endif %}">
-          Keine Lorebooks verknüpft. Klicke auf <strong>„Lorebook hinzufügen“</strong>, um Kompendien auszuwählen.
+          {{ _("No lorebooks linked. Click 'Add Lorebook' to select compendiums.") }}
         </div>
       </div>
     </section>
@@ -398,25 +413,25 @@
     {% if character %}
       <div class="aimo-frame" style="padding: 1.5rem;">
         <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-          🖼️ Freischaltbare 9:16-Galeriebilder (Schwellenwert -100 bis +100)
-          <span class="field-help-btn" title="9:16 Galeriebilder:&#10;Exklusive Hochformat-Grafiken mit Freischalt-Schwellenwert (-100 bis +100). Bei Erreichen des Werts im Chat wird das Bild im Medien-Tab enthüllt.">?</span>
+          🖼️ {{ _("Unlockable 9:16 Gallery Images (Threshold -100 to +100)") }}
+          <span class="field-help-btn" title="{{ _('Exclusive portrait graphics unlocked when reaching a relationship threshold in chat.') }}">?</span>
         </h3>
         <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">
-          Belohne den Spieler mit exklusiven Charakter-Grafiken, wenn das Beziehungsverhältnis im Chat wächst.
+          {{ _("Reward the player with exclusive character graphics as the relationship grows in chat.") }}
         </p>
 
         <div class="card-grid">
-          {{ new_button("9:16 Bild hinzufügen", modal="add-gallery-modal") }}
+          {{ new_button(_("Add 9:16 Image"), modal="add-gallery-modal") }}
 
           {% for img in character.gallery_images %}
             <div class="card-tile" style="justify-content: space-between;">
               <div style="flex: 1; background-image: url('{{ url_for('uploaded_file', filename=img.file_path) }}'); background-size: cover; background-position: center; min-height: 240px; position: relative;">
                 <form method="POST" action="{{ url_for('characters.delete_gallery_image', character_id=character.id, image_id=img.id) }}" style="position: absolute; top: 0.5rem; right: 0.5rem;">
-                  {{ action_button("Löschen", type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title="Bild löschen") }}
+                  {{ action_button(_("Delete"), type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title=_("Delete image")) }}
                 </form>
               </div>
               <div style="padding: 0.6rem; text-align: center; font-size: 0.85rem;">
-                Freischaltung ab Beziehung: <strong>{{ gallery_threshold_names.get(img.unlock_threshold, img.unlock_threshold) }}</strong>
+                {{ _("Unlocks at relationship:") }} <strong>{{ gallery_threshold_names.get(img.unlock_threshold, img.unlock_threshold) }}</strong>
               </div>
             </div>
           {% endfor %}
@@ -425,9 +440,9 @@
     {% else %}
       <div class="aimo-frame" style="padding: 2.5rem; text-align: center;">
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🖼️</div>
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">Galeriebilder</h3>
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">{{ _("Gallery Images") }}</h3>
         <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
-          Bitte speichere die Grunddaten des Charakters zuerst ab, um 9:16-Galeriebilder hochladen und verwalten zu können.
+          {{ _("Please save the character's basic info first to upload and manage 9:16 gallery images.") }}
         </p>
       </div>
     {% endif %}
@@ -438,11 +453,11 @@
     {% if character %}
       <div class="aimo-frame" style="padding: 1.5rem;">
         <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-          🎭 Emotionale Sprites (28 Emotionen mit Varianten-Stackview)
-          <span class="field-help-btn" title="Emotionale Sprites:&#10;Bildvarianten für die 28 Emotionen. Das System klassifiziert nach jeder Antwort autonom die Emotion der KI und aktualisiert das Porträt im Chat.">?</span>
+          🎭 {{ _("Emotional Sprites (28 Emotions with Variant Stack View)") }}
+          <span class="field-help-btn" title="{{ _('Image variants for 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait.') }}">?</span>
         </h3>
         <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
-          Wird eine Emotion erkannt, wählt das System zufällig eine hinterlegte Variante (<code>_[nummer]</code>). Fehlt ein Sprite, greift automatisch <code>neutral</code>.
+          {{ _("When an emotion is detected, a random variant is selected. If none exists, neutral is used as fallback.") }}
         </p>
 
         <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));">
@@ -454,7 +469,7 @@
                   <input type="hidden" name="emotion" value="{{ emotion }}">
                   <label style="cursor: pointer; text-align: center; color: var(--text-muted);">
                     <div style="font-size: 2rem; margin-bottom: 0.3rem;">➕</div>
-                    <div style="font-size: 0.8rem;">PNG/WEBP wählen</div>
+                    <div style="font-size: 0.8rem;">{{ _("Choose PNG/WEBP") }}</div>
                     <input type="file" name="sprite_file" accept=".png,.webp" style="display: none;" onchange="window.saveSpriteScrollAndSubmit(this.form)">
                   </label>
                 </form>
@@ -464,17 +479,17 @@
                   <div style="position: absolute; top: 0.4rem; right: 0.4rem; display: flex; gap: 0.35rem;">
                     <form method="POST" action="{{ url_for('characters.upload_sprite', character_id=character.id) }}" enctype="multipart/form-data">
                       <input type="hidden" name="emotion" value="{{ emotion }}">
-                      <label class="aimo-btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem; cursor: pointer;" title="Weitere Variante hochladen">
+                      <label class="aimo-btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem; cursor: pointer;" title="{{ _('Upload another variant') }}">
                         <span class="icon-mono">📄➕</span>
                         <input type="file" name="sprite_file" accept=".png,.webp" style="display: none;" onchange="window.saveSpriteScrollAndSubmit(this.form)">
                       </label>
                     </form>
 
                     {% if sp_list|length > 1 %}
-                      {{ action_button(sp_list|length|string, icon="👁️", size="sm", modal="sprite-modal-" ~ emotion, title="Alle " ~ (sp_list|length) ~ " Varianten ansehen") }}
+                      {{ action_button(sp_list|length|string, icon="👁️", size="sm", modal="sprite-modal-" ~ emotion, title=_("View all variants")) }}
                     {% else %}
                       <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp_list[0].variant) }}" onsubmit="window.saveSpriteScrollPos()">
-                        {{ action_button("Löschen", type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title="Sprite löschen") }}
+                        {{ action_button(_("Delete"), type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title=_("Delete sprite")) }}
                       </form>
                     {% endif %}
                   </div>
@@ -482,7 +497,7 @@
               {% endif %}
 
               <div style="padding: 0.45rem; text-align: center; background: rgba(18, 13, 9, 0.95); border-top: 1px solid var(--border-wood-dark); font-weight: 600; font-size: 0.85rem;">
-                {{ emotion }} {% if emotion == 'neutral' %}<span style="color: var(--gold-accent);">(Fallback)</span>{% endif %}
+                {{ emotion }} {% if emotion == 'neutral' %}<span style="color: var(--gold-accent);">({{ _("Fallback") }})</span>{% endif %}
               </div>
             </div>
 
@@ -491,7 +506,7 @@
               <div class="modal-backdrop" id="sprite-modal-{{ emotion }}" aria-hidden="true">
                 <div class="modal-frame">
                   <div class="modal-header">
-                    <h3 style="color: var(--gold-accent);">Varianten für Emotion: {{ emotion }}</h3>
+                    <h3 style="color: var(--gold-accent);">{{ _("Variants for emotion:") }} {{ emotion }}</h3>
                     {{ modal_close_button("sprite-modal-" ~ emotion) }}
                   </div>
                   <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));">
@@ -499,7 +514,7 @@
                       <div class="card-tile" style="min-height: 200px; position: relative;">
                         <img src="{{ url_for('uploaded_file', filename=sp.file_path) }}" alt="{{ emotion }}_{{ sp.variant }}" style="width: 100%; height: 160px; object-fit: contain;">
                         <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp.variant) }}" style="position: absolute; top: 0.4rem; right: 0.4rem;" onsubmit="window.saveSpriteScrollPos()">
-                          {{ action_button("Löschen", type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title="Variante löschen") }}
+                          {{ action_button(_("Delete"), type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title=_("Delete variant")) }}
                         </form>
                         <div style="text-align: center; padding: 0.35rem; font-size: 0.8rem;">
                           {{ emotion }}_{{ sp.variant }}
@@ -516,9 +531,9 @@
     {% else %}
       <div class="aimo-frame" style="padding: 2.5rem; text-align: center;">
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎭</div>
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">Emotionale Sprites</h3>
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">{{ _("Emotional Sprites") }}</h3>
         <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
-          Bitte speichere die Grunddaten des Charakters zuerst ab, um Sprites für die 28 Emotionen hochzuladen.
+          {{ _("Please save the character's basic info first to upload sprites for the 28 emotions.") }}
         </p>
       </div>
     {% endif %}
@@ -529,11 +544,11 @@
     {% if character %}
       <div class="aimo-frame" style="padding: 1.5rem; margin-bottom: 1.25rem;">
         <h3 style="color: var(--gold-accent); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
-          🎲 Charakter-spezifische Zufalls-Events
-          <span class="field-help-btn" title="Charakter-Events:&#10;Dynamische Ereignisse, die exklusiv in Chats mit {{ character.name }} eintreten können. Optional kann jedes Event zusätzlich auf einen konkreten Ort eingegrenzt werden.">?</span>
+          🎲 {{ _("Character-Specific Random Events") }}
+          <span class="field-help-btn" title="{{ _('Dynamic events that can trigger exclusively in chats with this character.') }}">?</span>
         </h3>
         <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
-          Diese Ereignisse stehen ausschließlich in Sitzungen mit <strong>{{ character.name }}</strong> im gemeinsamen Zufalls-Pool zur Verfügung (wahlweise ortsunabhängig oder zusätzlich an einen bestimmten Ort gebunden).
+          {{ _("These events are available exclusively in sessions with") }} <strong>{{ character.name }}</strong> {{ _("in the shared random event pool.") }}
         </p>
       </div>
       {{ event_editor(
@@ -550,14 +565,17 @@
           locations=event_locations,
           modal_prefix='char',
           relationship_tiers=relationship_tiers,
-          tier_names_map=gallery_threshold_names
+          tier_names_map=gallery_threshold_names,
+          ev_display=ev_display,
+          loc_display=loc_display,
+          origin_language=(character.origin_language if character else ui_language)
       ) }}
     {% else %}
       <div class="aimo-frame" style="padding: 2.5rem; text-align: center;">
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎲</div>
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">Zufalls-Events</h3>
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">{{ _("Random Events") }}</h3>
         <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
-          Bitte speichere die Grunddaten des Charakters zuerst ab, um charakter-spezifische Zufalls-Events anzulegen.
+          {{ _("Please save the character's basic info first to create character-specific random events.") }}
         </p>
       </div>
     {% endif %}
@@ -568,21 +586,21 @@
     <div class="modal-backdrop" id="add-gallery-modal" aria-hidden="true">
       <div class="modal-frame" style="max-width: 440px;">
         <div class="modal-header">
-          <h3 style="color: var(--gold-accent);">9:16-Galeriebild hochladen</h3>
+          <h3 style="color: var(--gold-accent);">{{ _("Upload 9:16 Gallery Image") }}</h3>
           {{ modal_close_button("add-gallery-modal") }}
         </div>
         <form method="POST" action="{{ url_for('characters.add_gallery_image', character_id=character.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
           <div>
             <label>
-              Bilddatei (9:16 Hochformat) *
-              <span class="field-help-btn" title="9:16 Galeriebild:&#10;Exklusives Hochformat-Bild für diesen Charakter.">?</span>
+              {{ _("Image File (9:16 Portrait)") }} *
+              <span class="field-help-btn" title="{{ _('Exclusive portrait image for this character.') }}">?</span>
             </label>
             <input type="file" name="gallery_image" accept=".png,.jpg,.jpeg,.webp" required>
           </div>
           <div>
             <label>
-              Freischalt-Beziehungsstufe *
-              <span class="field-help-btn" title="Freischalt-Beziehungsstufe:&#10;Erforderliche Beziehungsstufe, ab der dieses 9:16-Galeriebild im Chat freigeschaltet wird.">?</span>
+              {{ _("Unlock Relationship Level") }} *
+              <span class="field-help-btn" title="{{ _('Required relationship level to unlock this image in chat.') }}">?</span>
             </label>
             <select name="unlock_threshold" required>
               {% for tier in relationship_tiers %}
@@ -593,8 +611,8 @@
             </select>
           </div>
           <div style="text-align: right; display: flex; justify-content: flex-end; gap: 0.5rem;">
-            {{ action_button("Abbrechen", modal_close="add-gallery-modal") }}
-            {{ action_button("Hochladen", type="submit", variant="primary") }}
+            {{ action_button(_("Cancel"), modal_close="add-gallery-modal") }}
+            {{ action_button(_("Upload"), type="submit", variant="primary") }}
           </div>
         </form>
       </div>
@@ -606,32 +624,32 @@
   <div class="modal-backdrop" id="add-dialogue-modal" aria-hidden="true">
     <div class="modal-frame" style="max-width: 580px;">
       <div class="modal-header">
-        <h3 style="color: var(--gold-accent);" id="dialogue-modal-title"><span class="icon-mono">💬</span> Neuen Gesprächsstil hinzufügen</h3>
+        <h3 style="color: var(--gold-accent);" id="dialogue-modal-title"><span class="icon-mono">💬</span> {{ _("Add New Dialogue Style") }}</h3>
         {{ modal_close_button("add-dialogue-modal") }}
       </div>
       <div style="display: flex; flex-direction: column; gap: 1rem; padding: 0.5rem 0;">
         <div>
           <label style="display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.35rem;">
-            <span class="role-badge user-badge modal-badge-user" title="{{ '{{user}}' }}">{{ g.default_persona.name if g.default_persona else 'Du' }}</span>
-            <span>Trigger (Spieler-Eingabe) *</span>
+            <span class="role-badge user-badge modal-badge-user" title="{{ '{{user}}' }}">{{ g.default_persona.name if g.default_persona else _('You') }}</span>
+            <span>{{ _("Trigger (Player Input)") }} *</span>
           </label>
-          <textarea id="modal-dialogue-trigger" rows="3" placeholder="z. B. Hallo! Was machst du hier draußen so spät?" style="width: 100%;"></textarea>
+          <textarea id="modal-dialogue-trigger" rows="3" placeholder="{{ _('e.g. Hello! What are you doing out here so late?') }}" style="width: 100%;"></textarea>
         </div>
         <div>
           <label style="display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.35rem;">
-            <span class="role-badge char-badge modal-badge-char" title="{{ '{{char}}' }}">{{ character.name if character else (form.name or 'Charakter') }}</span>
-            <span>Response (Charakter-Antwort) *</span>
+            <span class="role-badge char-badge modal-badge-char" title="{{ '{{char}}' }}">{{ character.name if character else (form.name or _('Character')) }}</span>
+            <span>{{ _("Response (Character Reply)") }} *</span>
           </label>
-          <textarea id="modal-dialogue-response" rows="3" placeholder="z. B. Sey gegrüßt, Wanderer. Die Wälder bergen nachts Geheimnisse, die nicht für jedes Ohr bestimmt sind..." style="width: 100%;"></textarea>
+          <textarea id="modal-dialogue-response" rows="3" placeholder="{{ _('e.g. Greetings, wanderer. The woods hold secrets at night...') }}" style="width: 100%;"></textarea>
         </div>
       </div>
       <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.65rem; margin-top: 1rem; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem; flex-wrap: wrap;">
         <div>
-          {{ action_button("Mit KI ausfüllen", id="sparkle-modal-dialogue-btn", icon="✨", extra_class="btn-sparkle", title="Füllt Trigger und Response basierend auf der Charakterbeschreibung aus") }}
+          {{ action_button(_("Fill with AI"), id="sparkle-modal-dialogue-btn", icon="✨", extra_class="btn-sparkle", title=_("Generates trigger and response based on character description")) }}
         </div>
         <div style="display: flex; gap: 0.65rem;">
-          {{ action_button("Abbrechen", icon="✕", modal_close="add-dialogue-modal") }}
-          {{ action_button("Hinzufügen", icon="➕", variant="primary", id="confirm-add-dialogue-btn") }}
+          {{ action_button(_("Cancel"), icon="✕", modal_close="add-dialogue-modal") }}
+          {{ action_button(_("Add"), icon="➕", variant="primary", id="confirm-add-dialogue-btn") }}
         </div>
       </div>
     </div>
@@ -641,11 +659,11 @@
   <div class="modal-backdrop" id="add-lorebook-modal" aria-hidden="true">
     <div class="modal-frame" style="max-width: 620px;">
       <div class="modal-header">
-        <h3 style="color: var(--gold-accent);"><span class="icon-mono">📖</span> Lorebook verknüpfen</h3>
+        <h3 style="color: var(--gold-accent);"><span class="icon-mono">📖</span> {{ _("Link Lorebook") }}</h3>
         {{ modal_close_button("add-lorebook-modal") }}
       </div>
       <div style="padding: 0.5rem 0 1rem 0;">
-        <input type="text" id="lorebook-filter-input" placeholder="Nach Lorebook-Name filtern..." class="search-input" style="width: 100%; margin-bottom: 0.85rem;" autocomplete="off">
+        <input type="text" id="lorebook-filter-input" placeholder="{{ _('Filter by lorebook name...') }}" class="search-input" style="width: 100%; margin-bottom: 0.85rem;" autocomplete="off">
         <div id="lorebook-picker-list" class="lorebook-picker-list">
           {% for lb in lorebooks %}
             <div class="lorebook-picker-item {% if lb.id in form.linked_lorebook_ids %}already-added{% endif %}" data-id="{{ lb.id }}" data-name="{{ lb.name|lower }}" data-fullname="{{ lb.name }}" data-desc="{{ lb.description or '' }}">
@@ -659,22 +677,26 @@
                 {% endif %}
               </div>
               <span class="picker-status-badge" style="font-size: 0.8rem; color: var(--text-muted);">
-                {% if lb.id in form.linked_lorebook_ids %}✓ Verknüpft{% else %}+ Hinzufügen{% endif %}
+                {% if lb.id in form.linked_lorebook_ids %}✓ {{ _("Linked") }}{% else %}+ {{ _("Add") }}{% endif %}
               </span>
             </div>
           {% endfor %}
         </div>
       </div>
       <div style="display: flex; justify-content: flex-end; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
-        {{ action_button("Abbrechen", modal_close="add-lorebook-modal") }}
+        {{ action_button(_("Cancel"), modal_close="add-lorebook-modal") }}
       </div>
     </div>
   </div>
 
   <!-- MODAL: Dual-Crop Profile (9:16 Porträt & 1:1 Avatar) via Reusable Macro -->
-  {{ image_cropper_modal("portrait-crop-modal", title="Bild-Ausschnitte festlegen (9:16 Porträt & 1:1 Avatar)", targets=[
-    {"id": "portrait", "label": "9:16 Porträt (Chat & Voll)", "short_label": "9:16 Porträt", "icon": "📱", "ratio": 0.5625, "preview_width": 72, "preview_height": 128, "accent_color": "var(--gold-accent)"},
-    {"id": "avatar", "label": "1:1 Avatar (Übersicht & Bubble)", "short_label": "1:1 Avatar", "icon": "👤", "ratio": 1.0, "preview_width": 64, "preview_height": 64, "accent_color": "#64B5F6"}
+  {{ image_cropper_modal("portrait-crop-modal", title=_("Set Image Crops"), targets=[
+    {"id": "portrait", "label": _("Portrait"), "short_label": _("Portrait"), "icon": "📱", "ratio": 0.5625, "preview_width": 72, "preview_height": 128, "accent_color": "var(--gold-accent)"},
+    {"id": "avatar", "label": _("Avatar"), "short_label": _("Avatar"), "icon": "👤", "ratio": 1.0, "preview_width": 64, "preview_height": 64, "accent_color": "#64B5F6"}
   ]) }}
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/i18n_editor.js') }}" defer></script>
 {% endblock %}

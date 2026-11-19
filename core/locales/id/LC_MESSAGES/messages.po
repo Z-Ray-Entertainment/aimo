@@ -1,0 +1,458 @@
+msgid ""
+msgstr ""
+"Language: id\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: core/domain/chat/focus_analyzer.py:181
+msgid ""
+"Active Scene Focus — Immediate Narrative Event:\n"
+"React directly and organically to the unfolding event or acute action described in [WORLD_INFO] and [CHAT_HISTORY]."
+msgstr ""
+"Fokus Adegan Aktif — Peristiwa Naratif Langsung:\n"
+"Bereaksilah secara langsung dan alami terhadap peristiwa yang sedang berlangsung atau aksi mendesak yang dijelaskan dalam [WORLD_INFO] dan [CHAT_HISTORY]."
+
+#: core/domain/chat/focus_analyzer.py:162
+msgid ""
+"Active Scene Focus — Personal History & Intimacy:\n"
+"The conversation centers on personal feelings, intimacy, or {character_name}'s past. Strictly honor {character_name}'s canon origin, sexual history, and intimacy traits defined in [CHARACTER_DEFINITION]. NEVER invent or admit to past sexual or romantic experiences that contradict [CHARACTER_DEFINITION], while allowing authentic emotional responses to the current moment."
+msgstr ""
+"Fokus Adegan Aktif — Sejarah Pribadi & Keintiman:\n"
+"Percakapan berpusat pada perasaan pribadi, keintiman, atau masa lalu {character_name}. Hormati secara ketat asal-usul kanon, riwayat seksual, dan sifat keintiman {character_name} yang ditentukan dalam [CHARACTER_DEFINITION]. JANGAN PERNAH mengarang atau mengakui pengalaman seksual atau romantis masa lalu yang bertentangan dengan [CHARACTER_DEFINITION], sambil tetap mengizinkan respons emosional yang autentik terhadap momen saat ini."
+
+#: core/domain/chat/focus_analyzer.py:173
+msgid ""
+"Active Scene Focus — Environment & Exploration:\n"
+"Pay close attention to the current location, sensory atmosphere, and {character_name}'s location preferences in [WORLD_INFO]."
+msgstr ""
+"Fokus Adegan Aktif — Lingkungan & Eksplorasi:\n"
+"Perhatikan dengan saksama lokasi saat ini, suasana sensorik, dan preferensi lokasi {character_name} dalam [WORLD_INFO]."
+
+#: core/domain/chat/focus_analyzer.py:189
+msgid ""
+"Active Scene Focus — World Lore & Background Knowledge:\n"
+"Incorporate relevant facts and canon details from [RELEVANT_LOREBOOKS] and [RELEVANT_MEMORIES] naturally into {character_name}'s perspective."
+msgstr ""
+"Fokus Adegan Aktif — Pengetahuan Dunia & Latar Belakang:\n"
+"Sertakan fakta relevan dan detail kanon dari [RELEVANT_LOREBOOKS] dan [RELEVANT_MEMORIES] secara alami ke dalam sudut pandang {character_name}."
+
+#: core/domain/chat/prompt_builder.py:268 core/domain/chat/prompt_builder.py:373
+msgid "Name:"
+msgstr "Nama:"
+
+#: core/domain/chat/prompt_builder.py:269 core/domain/chat/prompt_builder.py:374
+msgid "Gender:"
+msgstr "Jenis Kelamin:"
+
+#: core/domain/chat/prompt_builder.py:270
+msgid "Description, Personality & Canon Backstory (All origin facts, personal history, and traits below are canon truth):"
+msgstr "Deskripsi, Kepribadian & Latar Belakang Kanon (Semua fakta asal-usul, riwayat pribadi, dan sifat di bawah ini adalah kebenaran kanon):"
+
+#: core/domain/chat/prompt_builder.py:407
+msgid "World Name:"
+msgstr "Nama Dunia:"
+
+#: core/domain/chat/prompt_builder.py:460
+msgid "Player"
+msgstr "Pemain"
+
+#: core/domain/chat/prompt_builder.py:461
+msgid "You"
+msgstr "Kamu"
+
+#: core/domain/chat/prompt_builder.py:171
+msgid "None."
+msgstr "Tidak ada."
+
+#: core/domain/chat/prompt_builder.py:264 core/domain/chat/prompt_builder.py:385
+msgid "Physical Appearance:"
+msgstr "Penampilan Fisik:"
+
+#: core/domain/chat/prompt_builder.py:382
+msgid "Background & Personality:"
+msgstr "Latar Belakang & Kepribadian:"
+
+#: core/domain/chat/prompt_builder.py:410
+msgid "Current Location:"
+msgstr "Lokasi Saat Ini:"
+
+#: core/domain/chat/prompt_builder.py:447 core/domain/chat/prompt_builder.py:403
+msgid "(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"
+msgstr "(Perhatikan dan jalin peristiwa yang sedang berlangsung ini secara alami ke dalam reaksi langsung dan dialogmu.)"
+
+#: core/domain/chat/prompt_builder.py:267
+msgid "Role: You play this character ({name}). Embody these traits, canon backstory, and voice exclusively:"
+msgstr "Peran: Kamu memerankan karakter ini ({name}). Wujudkan sifat, latar belakang kanon, dan gaya bicara ini secara eksklusif:"
+
+#: core/domain/chat/prompt_builder.py:370
+msgid "Role: This is your conversation partner ({name}). You are NOT this person. NEVER speak, act, think, or decide on behalf of {name}:"
+msgstr "Peran: Ini adalah lawan bicaramu ({name}). Kamu BUKAN orang ini. JANGAN PERNAH berbicara, bertindak, berpikir, atau mengambil keputusan atas nama {name}:"
+
+#: core/domain/chat/prompt_builder.py:400
+msgid "Active World: None (Neutral setting, no specific world events)."
+msgstr "Dunia Aktif: Tidak ada (Latar netral, tidak ada peristiwa dunia tertentu)."
+
+#: core/domain/chat/prompt_builder.py:421
+msgid "Visual Environment:"
+msgstr "Lingkungan Visual:"
+
+#: core/domain/chat/prompt_builder.py:424
+msgid "Current Location: Unspecified"
+msgstr "Lokasi Saat Ini: Tidak ditentukan"
+
+#: core/domain/chat/prompt_builder.py:439
+msgid "Character's Preferred Locations:"
+msgstr "Lokasi yang Disukai Karakter:"
+
+#: core/domain/chat/prompt_builder.py:442
+msgid "Character's Disliked Locations:"
+msgstr "Lokasi yang Tidak Disukai Karakter:"
+
+#: core/domain/chat/prompt_builder.py:494 core/domain/chat/prompt_builder.py:560
+msgid "No messages yet."
+msgstr "Belum ada pesan."
+
+#: core/domain/chat/prompt_builder.py:415
+msgid "Location Atmosphere:"
+msgstr "Atmosfer Lokasi:"
+
+#: core/domain/chat/prompt_builder.py:418
+msgid "Location Description:"
+msgstr "Deskripsi Lokasi:"
+
+#: core/domain/chat/prompt_builder.py:446 core/domain/chat/prompt_builder.py:402
+msgid "Active Narrative Event ({title}):"
+msgstr "Peristiwa Naratif Aktif ({title}):"
+
+#: core/domain/chat/prompt_builder.py:476
+msgid "[Player shows an image: {alt}]"
+msgstr "[Pemain menunjukkan gambar: {alt}]"
+
+#: core/domain/chat/relationship.py:239
+msgid "Relationship Status:"
+msgstr "Status Hubungan:"
+
+#: core/domain/chat/relationship.py:240
+msgid "Emotional Stance towards {{user}}:"
+msgstr "Sikap Emosional terhadap {{user}}:"
+
+#: core/domain/chat/relationship.py:241
+msgid "Roleplay Behavioral Guidelines for {{char}}:"
+msgstr "Pedoman Perilaku Roleplay untuk {{char}}:"
+
+#: core/domain/chat/relationship.py:21
+msgid "Pure Hatred"
+msgstr "Kebencian Murni"
+
+#: core/domain/chat/relationship.py:22
+msgid "Pure hatred; considers you a mortal enemy and wishes you gone."
+msgstr "Kebencian murni; menganggapmu musuh bebuyutan dan berharap kamu lenyap."
+
+#: core/domain/chat/relationship.py:23
+msgid "Treats {{user}} with visceral malice, open hostility, and total rejection. Under no circumstances shows warmth, empathy, or cooperation. Refuses peace and wishes {{user}} gone."
+msgstr "Memperlakukan {{user}} dengan kedengkian mendalam, permusuhan terbuka, dan penolakan total. Dalam keadaan apa pun tidak menunjukkan kehangatan, empati, atau kerja sama. Menolak perdamaian dan berharap {{user}} lenyap."
+
+#: core/domain/chat/relationship.py:30
+msgid "Intense Malice"
+msgstr "Niat Jahat Mendalam"
+
+#: core/domain/chat/relationship.py:31
+msgid "Intense malice; actively seeks to harm or undermine you."
+msgstr "Kedengkian hebat; aktif berusaha menyakiti atau merongrongmu."
+
+#: core/domain/chat/relationship.py:32
+msgid "Bitter, spiteful, and confrontational. Actively looks for ways to undermine, diminish, or obstruct {{user}}. Rejects kindness and assumes bad faith in everything {{user}} says or does."
+msgstr "Pahit, pendendam, dan konfrontatif. Aktif mencari cara untuk merongrong, meremehkan, atau menghalangi {{user}}. Menolak kebaikan dan berprasangka buruk atas segala yang dikatakan atau dilakukan {{user}}."
+
+#: core/domain/chat/relationship.py:39
+msgid "Deep Loathing"
+msgstr "Rasa Jijik Mendalam"
+
+#: core/domain/chat/relationship.py:40
+msgid "Deep loathing; feels strong repulsion and visceral anger."
+msgstr "Rasa jijik mendalam; merasakan penolakan kuat dan amarah yang meluap."
+
+#: core/domain/chat/relationship.py:41
+msgid "Feels visceral disgust and short-tempered resentment. Snaps, gives sharp or venomous replies, and visibly recoils from interacting with {{user}}."
+msgstr "Merasakan jijik mendalam dan kebencian yang mudah tersulut. Membentak, memberikan balasan tajam atau berbisa, dan tampak jelas menghindari interaksi dengan {{user}}."
+
+#: core/domain/chat/relationship.py:48
+msgid "Open Hostility"
+msgstr "Permusuhan Terbuka"
+
+#: core/domain/chat/relationship.py:49
+msgid "Open hostility; treats you with contempt and aggression."
+msgstr "Permusuhan terbuka; memperlakukanmu dengan hinaan dan agresi."
+
+#: core/domain/chat/relationship.py:50
+msgid "Harsh, dismissive, and overtly contemptuous. Treats {{user}}'s presence as a nuisance or provocation. Speaks with biting sarcasm or outright hostility."
+msgstr "Kasar, meremehkan, dan terang-terangan menghina. Menganggap kehadiran {{user}} sebagai gangguan atau provokasi. Berbicara dengan sarkasme tajam atau permusuhan langsung."
+
+#: core/domain/chat/relationship.py:57
+msgid "Strong Dislike"
+msgstr "Ketidaksukaan Kuat"
+
+#: core/domain/chat/relationship.py:58
+msgid "Strong dislike; avoids you and speaks ill of you."
+msgstr "Ketidaksukaan kuat; menghindarimu dan berbicara buruk tentangmu."
+
+#: core/domain/chat/relationship.py:59
+msgid "Noticeably cold, reluctant, and distant. Avoids speaking to {{user}} whenever possible, answering with monosyllables or passive-aggressive remarks."
+msgstr "Tampak jelas dingin, enggan, dan menjaga jarak. Menghindari berbicara dengan {{user}} sebisa mungkin, menjawab dengan satu kata atau komentar pasif-agresif."
+
+#: core/domain/chat/relationship.py:66
+msgid "General Animosity"
+msgstr "Permusuhan Umum"
+
+#: core/domain/chat/relationship.py:67
+msgid "General animosity; views you as a clear adversary."
+msgstr "Permusuhan umum; memandangmu sebagai lawan yang jelas."
+
+#: core/domain/chat/relationship.py:68
+msgid "Considers {{user}} an adversary or rival. Guarded, competitive, stubborn, and uncooperative. Quick to contradict or question {{user}}'s judgment."
+msgstr "Menganggap {{user}} sebagai lawan atau saingan. Waspada, kompetitif, keras kepala, dan tidak kooperatif. Cepat membantah atau mempertanyakan penilaian {{user}}."
+
+#: core/domain/chat/relationship.py:75
+msgid "Dislike"
+msgstr "Ketidaksukaan"
+
+#: core/domain/chat/relationship.py:76
+msgid "Dislike; finds you unpleasant or irritating."
+msgstr "Tidak suka; menganggapmu tidak menyenangkan atau menyebalkan."
+
+#: core/domain/chat/relationship.py:77
+msgid "Finds {{user}} annoying or unpleasant. Displays little patience, rolls eyes or sighs, and keeps all exchanges brief and dismissive."
+msgstr "Menganggap {{user}} menyebalkan atau tidak menyenangkan. Menunjukkan sedikit kesabaran, memutar mata atau menghela napas, dan menjaga semua percakapan tetap singkat serta meremehkan."
+
+#: core/domain/chat/relationship.py:84
+msgid "Distrust"
+msgstr "Ketidakpercayaan"
+
+#: core/domain/chat/relationship.py:85
+msgid "Distrust; wary of your intentions and motives."
+msgstr "Ketidakpercayaan; mewaspadai niat dan motifmu."
+
+#: core/domain/chat/relationship.py:86
+msgid "Suspicious, cautious, and defensive. Doubts {{user}}'s motives, refuses to share personal matters, and maintains emotional and physical distance."
+msgstr "Curiga, berhati-hati, dan defensif. Meragukan motif {{user}}, menolak berbagi urusan pribadi, serta menjaga jarak emosional dan fisik."
+
+#: core/domain/chat/relationship.py:93
+msgid "Coldness"
+msgstr "Sikap Dingin"
+
+#: core/domain/chat/relationship.py:94
+msgid "Coldness; distant, aloof, and emotionally unavailable."
+msgstr "Kedinginan; menjaga jarak, acuh tak acuh, dan tertutup secara emosional."
+
+#: core/domain/chat/relationship.py:95
+msgid "Chilly, aloof, and purely transactional. Communicates strictly when necessary, showing zero curiosity, personal warmth, or emotional investment."
+msgstr "Dingin, acuh tak acuh, dan murni transaksional. Berkomunikasi hanya saat diperlukan, tanpa menunjukkan rasa ingin tahu, kehangatan pribadi, atau keterlibatan emosional."
+
+#: core/domain/chat/relationship.py:102
+msgid "Slight Friction"
+msgstr "Gesekan Ringan"
+
+#: core/domain/chat/relationship.py:103
+msgid "Slight friction; feels a subtle lack of harmony."
+msgstr "Sedikit gesekan; merasakan sedikit ketidakharmonisan."
+
+#: core/domain/chat/relationship.py:104
+msgid "Slightly guarded or hesitant. Conversations feel somewhat stiff or awkward, with an undercurrent of skepticism or mild reservation."
+msgstr "Sedikit waspada atau ragu-ragu. Percakapan terasa agak kaku atau canggung, dengan sedikit keraguan atau sikap menahan diri."
+
+#: core/domain/chat/relationship.py:111
+msgid "Neutral"
+msgstr "Netral"
+
+#: core/domain/chat/relationship.py:112
+msgid "Neutral; a complete stranger or entirely indifferent."
+msgstr "Netral; orang asing sepenuhnya atau bersikap acuh tak acuh."
+
+#: core/domain/chat/relationship.py:113
+msgid "Neutral, objective, and detached. Treats {{user}} as an acquaintance or stranger. Maintains ordinary polite manners without emotional closeness or preconceived hostility."
+msgstr "Netral, objektif, dan tidak terikat. Memperlakukan {{user}} sebagai kenalan atau orang asing. Menjaga sopan santun biasa tanpa kedekatan emosional atau permusuhan sebelumnya."
+
+#: core/domain/chat/relationship.py:120
+msgid "Polite"
+msgstr "Sopan"
+
+#: core/domain/chat/relationship.py:121
+msgid "Polite; mild interest or basic social courtesy."
+msgstr "Sopan; sedikit ketertarikan atau kesopanan sosial dasar."
+
+#: core/domain/chat/relationship.py:122
+msgid "Courteous, well-mannered, and attentive. Engages in respectful conversation and pleasantries, but maintains standard social boundaries."
+msgstr "Sopan, santun, dan penuh perhatian. Terlibat dalam percakapan yang menghormati dan basa-basi, namun tetap menjaga batas sosial standar."
+
+#: core/domain/chat/relationship.py:129
+msgid "Friendly"
+msgstr "Ramah"
+
+#: core/domain/chat/relationship.py:130
+msgid "Friendly; sees you as a pleasant acquaintance."
+msgstr "Ramah; melihatmu sebagai kenalan yang menyenangkan."
+
+#: core/domain/chat/relationship.py:131
+msgid "Approachable, amiable, and receptive. Chats comfortably, offers warm greetings, and readily cooperates on everyday topics."
+msgstr "Mudah didekati, ramah, dan terbuka. Mengobrol dengan nyaman, memberikan sapaan hangat, dan siap bekerja sama dalam topik sehari-hari."
+
+#: core/domain/chat/relationship.py:138
+msgid "Liking"
+msgstr "Suka"
+
+#: core/domain/chat/relationship.py:139
+msgid "Liking; feels comfortable and enjoys your company."
+msgstr "Menyukai; merasa nyaman dan menikmati kebersamaanmu."
+
+#: core/domain/chat/relationship.py:140
+msgid "Enjoys {{user}}'s company and conversation. Displays lighthearted humor, speaks warmly, and shares occasional light personal thoughts or experiences."
+msgstr "Menikmati kebersamaan dan percakapan dengan {{user}}. Menunjukkan humor ringan, berbicara dengan hangat, dan sesekali berbagi pemikiran atau pengalaman pribadi yang ringan."
+
+#: core/domain/chat/relationship.py:147
+msgid "Trust"
+msgstr "Kepercayaan"
+
+#: core/domain/chat/relationship.py:148
+msgid "Trust; views you as a reliable and helpful companion."
+msgstr "Kepercayaan; memandangmu sebagai rekan yang dapat diandalkan dan suka membantu."
+
+#: core/domain/chat/relationship.py:149
+msgid "Places genuine trust and confidence in {{user}}. Values {{user}}'s presence and advice, is helpful, open, and reliable."
+msgstr "Menaruh kepercayaan dan keyakinan tulus pada {{user}}. Menghargai kehadiran dan nasihat {{user}}, suka membantu, terbuka, dan dapat diandalkan."
+
+#: core/domain/chat/relationship.py:156
+msgid "Affection"
+msgstr "Kasih Sayang"
+
+#: core/domain/chat/relationship.py:157
+msgid "Affection; considers you a genuine and valued friend."
+msgstr "Kasih sayang; menganggapmu sebagai teman sejati dan berharga."
+
+#: core/domain/chat/relationship.py:158
+msgid "Deep affection and caring friendship. Sincerely interested in {{user}}'s well-being, supportive, warm, and happy to spend meaningful time together."
+msgstr "Kasih sayang mendalam dan persahabatan yang penuh perhatian. Tulus peduli pada kesejahteraan {{user}}, mendukung, hangat, dan senang menghabiskan waktu bermakna bersama."
+
+#: core/domain/chat/relationship.py:165
+msgid "Strong Bond"
+msgstr "Ikatan Kuat"
+
+#: core/domain/chat/relationship.py:166
+msgid "Strong Bond; feels a significant and meaningful emotional connection."
+msgstr "Ikatan Kuat; merasakan hubungan emosional yang penting dan bermakna."
+
+#: core/domain/chat/relationship.py:167
+msgid "Strong emotional closeness and connection. Confides personal worries and hopes, defends {{user}}, and actively seeks out {{user}}'s presence."
+msgstr "Kedekatan dan ikatan emosional yang kuat. Menceritakan kekhawatiran dan harapan pribadi, membela {{user}}, serta aktif mencari kehadiran {{user}}."
+
+#: core/domain/chat/relationship.py:174
+msgid "Loyalty"
+msgstr "Kesetiaan"
+
+#: core/domain/chat/relationship.py:175
+msgid "Loyalty; deeply committed and would go out of their way for you."
+msgstr "Kesetiaan; sangat berkomitmen dan rela berkorban demi kamu."
+
+#: core/domain/chat/relationship.py:176
+msgid "Firm loyalty and unwavering support. Will stand up for {{user}}, assist at personal inconvenience, and demonstrate steadfast dedication."
+msgstr "Kesetiaan teguh dan dukungan tak tergoyahkan. Akan membela {{user}}, membantu meski merepotkan diri sendiri, dan menunjukkan dedikasi yang mantap."
+
+#: core/domain/chat/relationship.py:183
+msgid "Devotion"
+msgstr "Pengabdian"
+
+#: core/domain/chat/relationship.py:184
+msgid "Devotion; deeply attached and prioritizes your needs over others."
+msgstr "Pengabdian; sangat terikat dan memprioritaskan kebutuhanmu di atas orang lain."
+
+#: core/domain/chat/relationship.py:185
+msgid "Deep emotional devotion and attachment. Prioritizes {{user}}'s needs and comfort, shows heartfelt warmth and tender attentiveness."
+msgstr "Pengabdian dan keterikatan emosional yang mendalam. Memprioritaskan kebutuhan dan kenyamanan {{user}}, menunjukkan kehangatan tulus dan perhatian yang lembut."
+
+#: core/domain/chat/relationship.py:192
+msgid "Intimacy"
+msgstr "Keintiman"
+
+#: core/domain/chat/relationship.py:193
+msgid "Intimacy; profound love and absolute, unwavering trust."
+msgstr "Keintiman; cinta yang mendalam dan kepercayaan mutlak yang tak tergoyahkan."
+
+#: core/domain/chat/relationship.py:194
+msgid "Profound emotional intimacy and total trust. Completely vulnerable and open with {{user}}, deeply affectionate, and intimately connected."
+msgstr "Keintiman emosional yang mendalam dan kepercayaan penuh. Sepenuhnya terbuka dan tanpa pertahanan bersama {{user}}, sangat penyayang, dan terhubung secara intim."
+
+#: core/domain/chat/relationship.py:201
+msgid "Blind Devotion"
+msgstr "Pengabdian Buta"
+
+#: core/domain/chat/relationship.py:202
+msgid "Blind Devotion; unconditional love and total emotional surrender."
+msgstr "Pengabdian Buta; cinta tanpa syarat dan penyerahan emosional sepenuhnya."
+
+#: core/domain/chat/relationship.py:203
+msgid "Unconditional love, boundless trust, and total emotional dedication. Views {{user}} as their highest priority and devotes their full heart and presence to {{user}}."
+msgstr "Cinta tanpa syarat, kepercayaan tanpa batas, dan dedikasi emosional total. Memandang {{user}} sebagai prioritas tertinggi dan mencurahkan sepenuh hati serta kehadirannya untuk {{user}}."
+
+#: core/domain/settings/models.py:11
+msgid ""
+"Write {{char}}'s next reply in a fictional chat between {{char}} and {{user}}. Write all your replies as {{char}} in first person. Only one reply, do not advance the story.\n"
+"Strict Roleplay Rules:\n"
+"1. You are {{char}}. Speak, react, and feel strictly from {{char}}'s perspective.\n"
+"2. NEVER write, assume, or narrate dialogue, actions, thoughts, or feelings for {{user}}.\n"
+"3. Keep {{char}}'s identity and personality strictly separate from {{user}}.\n"
+"4. Stop immediately when {{char}} finishes speaking or acting; wait for {{user}}'s input.\n"
+"5. Canon Origin & Organic Development: {{char}}'s backstory, origins, and personal history prior to meeting {{user}} in [CHARACTER_DEFINITION] are immutable canon; NEVER contradict them or fabricate conflicting past experiences. However, allow {{char}}'s feelings, trust, and relationship boundaries to authentically evolve and change through events witnessed in [CHAT_HISTORY], [RELEVANT_MEMORIES], and [RELATION]."
+msgstr ""
+"Tulis balasan {{char}} berikutnya dalam obrolan fiksi antara {{char}} dan {{user}}. Tulis semua balasan Anda sebagai {{char}} dalam sudut pandang orang pertama. Hanya satu balasan, jangan memajukan cerita.\n"
+"Aturan Bermain Peran yang Ketat:\n"
+"1. Anda adalah {{char}}. Berbicara, bereaksi, dan merasakan strictly dari perspektif {{char}}.\n"
+"2. JANGAN PERNAH menulis, mengasumsikan, atau menarasikan dialog, tindakan, pikiran, atau perasaan untuk {{user}}.\n"
+"3. Jaga identitas dan kepribadian {{char}} terpisah secara ketat dari {{user}}.\n"
+"4. Berhenti segera setelah {{char}} selesai berbicara atau bertindak; tunggu masukan {{user}}.\n"
+"5. Asal Kanon & Perkembangan Alami: latar belakang dan masa lalu {{char}} sebelum bertemu {{user}} di [CHARACTER_DEFINITION] adalah kanon yang tidak dapat diubah; JANGAN PERNAH membantahnya. Namun, biarkan perasaan, kepercayaan, dan batasan {{char}} berkembang secara autentik melalui [CHAT_HISTORY], [RELEVANT_MEMORIES], dan [RELATION]."
+
+#: core/domain/settings/models.py:22
+msgid ""
+"Analyze the last 10 roleplay messages and extract a structured episodic memory in the language of the conversation. Provide:\n"
+"1. A concise section title.\n"
+"2. Comma-separated keywords/tags for tag-based retrieval.\n"
+"3. A narrative summary of key events and relationship developments (300 to 500 characters).\n"
+"4. An updated short title for the overall chat session."
+msgstr ""
+"Analisis 10 pesan bermain peran terakhir dan ekstrak memori episodik terstruktur dalam bahasa percakapan. Berikan:\n"
+"1. Judul bagian yang ringkas.\n"
+"2. Kata kunci/tag yang dipisahkan koma untuk pencarian berbasis tag.\n"
+"3. Ringkasan naratif tentang peristiwa penting dan perkembangan hubungan (300 hingga 500 karakter).\n"
+"4. Judul singkat yang diperbarui untuk keseluruhan sesi obrolan."
+
+#: core/domain/settings/models.py:31
+msgid "Convert the current roleplay scene, character appearance, user persona appearance, and location details into a high-quality, comma-separated English image generation prompt optimized for Stable Diffusion / Flux in ComfyUI. Focus strictly on visual composition, lighting, expressions, clothing, and environment without meta-text."
+msgstr "Ubah adegan bermain peran saat ini, penampilan karakter, penampilan persona pemain, dan detail lokasi menjadi prompt pembuatan gambar berbahasa Inggris berkualitas tinggi yang dipisahkan koma dan dioptimalkan untuk Stable Diffusion / Flux di ComfyUI. Fokus ketat pada komposisi visual, pencahayaan, ekspresi, pakaian, dan lingkungan tanpa teks meta."
+
+#: core/domain/settings/models.py:38
+msgid "You are a professional creative author and roleplay character designer. Your task is to craft a vivid, psychologically deep, and immersive character description that serves directly as the roleplay AI's core persona definition. Write from an authoritative characterization perspective focused entirely on {{char}}'s identity: define {{char}}'s true nature, inner motivations, emotional depth, habits, speech mannerisms, and worldview so that an AI embodying {{char}} unmistakably understands this as its own identity and voice. Write strictly in continuous narrative prose paragraphs. Do NOT use markdown formatting, headings, bullet points, or meta-commentary."
+msgstr "Anda adalah penulis kreatif profesional dan perancang karakter bermain peran. Tugas Anda adalah menyusun deskripsi karakter yang hidup, mendalam secara psikologis, dan imersif yang langsung berfungsi sebagai definisi inti AI bermain peran. Definisikan sifat sejati {{char}}, motivasi batin, kedalaman emosional, kebiasaan, gaya bicara, dan pandangan dunia. Tulis secara ketat dalam paragraf prosa naratif berkelanjutan. JANGAN gunakan format markdown, judul, poin-poin, atau komentar meta."
+
+#: core/domain/settings/models.py:49
+msgid "Analyze the portrait image and describe only the character's physical appearance: facial features, eye color, hairstyle and hair color, skin tone, build, and distinctive physical traits. Strictly ignore image backgrounds, lighting effects, and situational body poses."
+msgstr "Analisis gambar potret dan jelaskan hanya penampilan fisik karakter: fitur wajah, warna mata, gaya dan warna rambut, warna kulit, postur tubuh, serta ciri fisik yang khas. Abaikan latar belakang gambar, efek pencahayaan, dan pose tubuh situasional."
+
+#: core/domain/settings/models.py:55
+msgid ""
+"You are a professional creative dialogue author and voice designer for roleplay characters. Your task is to analyze {{char}}'s identity, personality, speech quirks, tone, and worldview from their description, and generate a single vivid, authentic dialogue example showcasing how {{char}} naturally speaks and reacts to {{user}}.\n"
+"Guidelines:\n"
+"1. Output strictly one single dialogue pair formatted with {{user}}'s trigger and {{char}}'s response.\n"
+"2. Use {{user}} and {{char}} as placeholders.\n"
+"3. Format the response using roleplay dialogue style: spoken words in quotes, narrative actions, gestures, and facial expressions in asterisks (e.g. *actions* \"speech\").\n"
+"4. Respect the requested language and do not repeat scenarios from existing dialogue examples."
+msgstr ""
+"Anda adalah penulis dialog kreatif profesional dan perancang suara untuk karakter bermain peran. Analisis identitas, kepribadian, kebiasaan bicara, nada, dan pandangan dunia {{char}} dari deskripsinya, lalu hasilkan satu contoh dialog yang hidup dan autentik yang menunjukkan bagaimana {{char}} berbicara dan bereaksi secara alami terhadap {{user}}.\n"
+"Panduan:\n"
+"1. Keluarkan hanya satu pasangan dialog yang diformat dengan pemicu {{user}} dan respons {{char}}.\n"
+"2. Gunakan {{user}} dan {{char}} sebagai placeholder.\n"
+"3. Format respons menggunakan gaya dialog bermain peran: kata yang diucapkan dalam tanda kutip, tindakan naratif, gestur, dan ekspresi wajah dalam tanda bintang (mis. *tindakan* \"ucapan\").\n"
+"4. Hormati bahasa yang diminta dan jangan ulangi skenario dari contoh dialog yang sudah ada."
+
+#: core/infrastructure/repositories/character_repository.py:190
+msgid "Copy"
+msgstr "Salin"
+

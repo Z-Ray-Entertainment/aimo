@@ -5,6 +5,7 @@
 > - **Architecture:** Designed by human
 > - **Quality Assurance:** Code reviewed and tested by human
 > - **Implementation:** Most code written by AI
+> - **UI Translations:** Most interface translations are AI-generated and are likely inaccurate or incorrect
 >
 > THIS IS STILL WIP, WHILE IT WORKS IT IS STILL ALPHA
 

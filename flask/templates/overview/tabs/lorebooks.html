@@ -3,7 +3,7 @@
 <section id="tab-lorebooks" class="tab-pane{% if (active_tab|default('')) == 'lorebooks' %} active{% endif %}">
   <div class="card-grid">
     {% if has_perm('lorebook_create') %}
-      {{ new_button("Neues Lorebook", modal="new-lorebook-modal") }}
+      {{ new_button(_("New Lorebook"), modal="new-lorebook-modal") }}
     {% endif %}
 
     {% for item in lorebook_cards %}
@@ -19,7 +19,7 @@
           </div>
         </div>
         <div style="margin-top: 1rem; font-size: 0.85rem; color: var(--gold-accent);">
-          {{ item.entry_count }} Einträge →
+          {{ item.entry_count }} {{ _("Entries") }} →
         </div>
       </a>
     {% endfor %}
