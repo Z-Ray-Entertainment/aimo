@@ -38,11 +38,11 @@ class BaseLLMProvider(LLMProvider):
         return self._match_candidate(raw_output, cleaned_candidates)
 
     _RELATIONSHIP_IMPACT_CANDIDATES: tuple[str, ...] = (
-        "very_negative",
-        "negative",
         "neutral",
         "positive",
+        "negative",
         "very_positive",
+        "very_negative",
     )
 
     def _generate_json_dict(
@@ -126,13 +126,14 @@ class BaseLLMProvider(LLMProvider):
                 (
                     "relationship_impact",
                     (
-                        f"evaluate how this interaction affected the character's feelings toward the player; "
-                        f"strictly choose one label from: [{impact_list}] "
-                        "(very_negative = betrayal, severe insult, harm, cruelty, or boundary violation; "
-                        "negative = rudeness, dismissal, dishonesty, or friction; "
-                        "neutral = small talk, factual exchange, or no meaningful emotional shift; "
-                        "positive = kindness, warmth, humor, helpfulness, or genuine interest; "
-                        "very_positive = deep vulnerability, selfless protection, profound loyalty, or heartfelt devotion)"
+                        f"judge ONLY the character's emotional reaction toward the player in this turn; "
+                        f"strictly choose one label from: [{impact_list}]. "
+                        "Default to 'neutral' if unsure. "
+                        "(neutral = normal talk, factual exchange, or playful/spicy/intense roleplay where the character is not genuinely angry at the player; "
+                        "positive = character reacts with warmth, happiness, affection, flirting, humor, or appreciation; "
+                        "negative = character reacts with mild annoyance, coldness, or irritation at the player; "
+                        "very_positive = character feels deeply moved, devoted, passionately connected, or grateful; "
+                        "very_negative = character clearly rejects, despises, or is genuinely furious at the player)"
                     ),
                     list(self._RELATIONSHIP_IMPACT_CANDIDATES),
                     "neutral",
@@ -158,8 +159,7 @@ class BaseLLMProvider(LLMProvider):
         context_lines: list[str] = []
         if evaluate_relationship:
             char_label = character_name.strip() if character_name and character_name.strip() else "Character"
-            tier_label = relationship_tier.strip() if relationship_tier and relationship_tier.strip() else "Neutral"
-            context_lines.append(f"Character: {char_label} (current relationship status: {tier_label})")
+            context_lines.append(f"Character: {char_label}")
             if user_text and user_text.strip():
                 context_lines.append(f"Player message:\n{user_text.strip()}")
             context_lines.append(f"Character reply:\n{text}")
@@ -183,7 +183,9 @@ class BaseLLMProvider(LLMProvider):
         results: dict[str, str] = {}
         for key, _, candidates, default_val in fields:
             raw_val = data.get(key, default_val)
-            results[key] = self._match_candidate(raw_val, candidates)
+            if key == "relationship_impact":
+                raw_val = raw_val.strip().lower().replace("-", "_").replace(" ", "_")
+            results[key] = self._match_candidate(raw_val, candidates, default=default_val)
 
         detected_emotion = results.get("emotion", "neutral")
         raw_loc_val = data.get("location", "stay_here").strip().lower().replace(" ", "_")
@@ -204,7 +206,9 @@ class BaseLLMProvider(LLMProvider):
             )
 
     @staticmethod
-    def _match_candidate(raw_output: str, candidates: list[str]) -> str:
+    def _match_candidate(
+        raw_output: str, candidates: list[str], default: str | None = None
+    ) -> str:
         normalized_output = raw_output.strip().strip("`'\".,:;!?()[]{}").lower()
         lower_map = {candidate.lower(): candidate for candidate in candidates}
 
@@ -220,4 +224,4 @@ class BaseLLMProvider(LLMProvider):
             if candidate.lower() in normalized_output:
                 return candidate
 
-        return candidates[0]
+        return default if default is not None else candidates[0]

@@ -22,11 +22,22 @@ class ChatService:
         )
         return round(session.relationship_value - previous, 4)
 
+    def reset_relationship(self, session: ChatSession, character: Character) -> float:
+        session.relationship_value = round(
+            min(MAX_RELATIONSHIP, max(MIN_RELATIONSHIP, float(character.initial_relationship))),
+            4,
+        )
+        return session.relationship_value
+
     def apply_relationship_impact(
-        self, session: ChatSession, impact: RelationshipImpact
+        self,
+        session: ChatSession,
+        impact: RelationshipImpact,
+        update_timestamp: bool = True,
     ) -> float:
         applied = self._adjust_relationship(session, impact.delta)
-        session.last_message_at = datetime.now(timezone.utc)
+        if update_timestamp:
+            session.last_message_at = datetime.now(timezone.utc)
         return applied
 
     def revert_relationship_delta(self, session: ChatSession, delta: float) -> float:

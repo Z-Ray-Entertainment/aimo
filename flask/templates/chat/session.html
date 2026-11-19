@@ -309,7 +309,19 @@
     <div class="relationship-bar-wrap aimo-frame chat-glass-panel" data-relationship-score="{{ chat_session.relationship_value }}" style="border-radius: 10px; padding: 0.65rem;">
       <div class="relationship-header">
         <span>{{ _('Relationship:') }} <strong id="rel-score-label">{{ relationship_tier_name }}</strong></span>
-        <span class="heart-icon">❤️</span>
+        <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+          {% if is_admin %}
+            <button
+              type="button"
+              id="recalculate-rel-btn"
+              style="background: none; border: none; cursor: pointer; color: var(--gold-accent); padding: 0; font-size: 0.9rem; line-height: 1;"
+              title="{{ _('Reset relationship to default and recalculate from chat history') }}"
+              onclick="window.chatStream && window.chatStream.recalculateRelationship(this);">
+              <span class="icon-mono">🔄</span>
+            </button>
+          {% endif %}
+          <span class="heart-icon">❤️</span>
+        </span>
       </div>
       <div class="relationship-track">
         <div class="relationship-fill"></div>

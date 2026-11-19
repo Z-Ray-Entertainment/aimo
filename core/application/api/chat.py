@@ -1236,6 +1236,97 @@ def get_message_prompt(session_id: int, message_idx: int):
     })
 
 
+@api_chat_bp.route("/<int:session_id>/recalculate-relationship", methods=["POST"])
+@require_permission(FunctionPermission.ADMIN_ACCESS)
+def recalculate_relationship(session_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
+
+    data = request.get_json(silent=True) or {}
+    user_lang = str(data.get("language", "de")).strip()
+
+    char_repo = CharacterRepository()
+    character = char_repo.get_by_id(chat_session.character_id)
+    if character is None:
+        return jsonify({"error": "Character not found."}), 404
+
+    chat_repo = ChatRepository()
+    rel_repo = RelationshipRepository()
+    settings_repo = SettingsRepository()
+    chat_service = ChatService()
+
+    settings = settings_repo.get_settings()
+    classification_model = (
+        settings.tasks.classification_model
+        if getattr(settings.tasks, "classification_model", None)
+        else settings.tasks.roleplay_model
+    )
+    llm = get_llm_provider(settings)
+
+    previous_value = chat_session.relationship_value
+    chat_service.reset_relationship(chat_session, character)
+
+    messages = chat_repo.get_messages(session_id, limit=None)
+    pending_user_msg: Message | None = None
+    evaluated_turns = 0
+
+    for msg in messages:
+        if msg.role == MessageRole.USER:
+            pending_user_msg = msg
+        elif msg.role == MessageRole.CHARACTER and msg.message_idx > 0:
+            user_text = (
+                (pending_user_msg.localized_content or pending_user_msg.english_content)
+                if pending_user_msg is not None
+                else ""
+            )
+            ai_text = msg.english_content or msg.localized_content
+            current_tier_en = rel_repo.get_tier(chat_session.relationship_value, language="en")
+
+            try:
+                _, _, raw_impact = llm.classify_turn(
+                    text=ai_text,
+                    emotion_candidates=None,
+                    location_candidates=None,
+                    model=classification_model,
+                    user_text=user_text,
+                    character_name=character.name,
+                    relationship_tier=current_tier_en.name,
+                    evaluate_relationship=True,
+                )
+            except Exception:
+                raw_impact = RelationshipImpact.NEUTRAL.value
+
+            impact = RelationshipImpact.resolve(raw_impact)
+            applied_delta = chat_service.apply_relationship_impact(
+                chat_session, impact, update_timestamp=False
+            )
+
+            msg.metadata = dict(msg.metadata or {})
+            msg.metadata["relationship_impact"] = impact.value
+            msg.metadata["relationship_delta"] = applied_delta
+            chat_repo.update_message(msg)
+
+            pending_user_msg = None
+            evaluated_turns += 1
+
+    chat_repo.update_session(chat_session)
+    tier = rel_repo.get_tier(chat_session.relationship_value, language=user_lang)
+    net_delta = chat_session.relationship_value - previous_value
+    net_impact = "positive" if net_delta > 0 else ("negative" if net_delta < 0 else "neutral")
+
+    return jsonify(
+        {
+            "relationship_value": chat_session.relationship_value,
+            "relationship_tier_name": tier.name,
+            "relationship_impact": net_impact,
+            "evaluated_turns": evaluated_turns,
+        }
+    )
+
+
 @api_chat_bp.route("/notifications", methods=["GET"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def poll_chat_notifications():
