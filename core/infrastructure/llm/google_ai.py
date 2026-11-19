@@ -67,6 +67,7 @@ class GoogleAILLMProvider(BaseLLMProvider):
     }
 
     _MODEL_CTX_CACHE: dict[str, int] = {}
+    _THINKING_FALLBACK_CACHE: dict[str, str] = {}
 
     @classmethod
     def supports_model_management(cls) -> bool:
@@ -151,6 +152,7 @@ class GoogleAILLMProvider(BaseLLMProvider):
         self.api_key: str = (api_key or "").strip()
         self.base_url: str = base_url.strip().rstrip("/")
         self.request_timeout: tuple[float, float] = request_timeout
+        self._session: requests.Session = requests.Session()
 
     def generate_stream(
         self,
@@ -408,32 +410,72 @@ class GoogleAILLMProvider(BaseLLMProvider):
         payload: dict[str, Any],
         stream: bool,
     ) -> requests.Response:
-        response = requests.post(
+        effective_payload = payload
+        cached_mode = self._THINKING_FALLBACK_CACHE.get(url)
+        gen_cfg_orig = payload.get("generationConfig") or {}
+        if cached_mode and "thinkingConfig" in gen_cfg_orig:
+            effective_payload = dict(payload)
+            gen_cfg = dict(gen_cfg_orig)
+            if cached_mode == "none":
+                gen_cfg.pop("thinkingConfig", None)
+            elif cached_mode == "low" and gen_cfg.get("thinkingConfig", {}).get("thinkingLevel") == "minimal":
+                gen_cfg["thinkingConfig"] = {
+                    **gen_cfg["thinkingConfig"],
+                    "thinkingLevel": "low",
+                }
+            effective_payload["generationConfig"] = gen_cfg
+
+        response = self._session.post(
             url,
             headers=headers,
-            json=payload,
+            json=effective_payload,
             stream=stream,
             timeout=self.request_timeout,
         )
         response.encoding = "utf-8"
+
+        thinking_cfg = (effective_payload.get("generationConfig") or {}).get("thinkingConfig")
         if (
             response.status_code == 400
-            and "thinkingConfig" in (payload.get("generationConfig") or {})
+            and isinstance(thinking_cfg, dict)
             and "thinking" in (response.text or "").lower()
         ):
-            response.close()
-            fallback_payload = dict(payload)
-            gen_cfg = dict(payload["generationConfig"])
-            gen_cfg.pop("thinkingConfig", None)
-            fallback_payload["generationConfig"] = gen_cfg
-            response = requests.post(
-                url,
-                headers=headers,
-                json=fallback_payload,
-                stream=stream,
-                timeout=self.request_timeout,
-            )
-            response.encoding = "utf-8"
+            if thinking_cfg.get("thinkingLevel") == "minimal":
+                response.close()
+                low_payload = dict(effective_payload)
+                low_gen_cfg = dict(effective_payload["generationConfig"])
+                low_gen_cfg["thinkingConfig"] = {
+                    **thinking_cfg,
+                    "thinkingLevel": "low",
+                }
+                low_payload["generationConfig"] = low_gen_cfg
+                response = self._session.post(
+                    url,
+                    headers=headers,
+                    json=low_payload,
+                    stream=stream,
+                    timeout=self.request_timeout,
+                )
+                response.encoding = "utf-8"
+                if response.status_code < 400:
+                    self._THINKING_FALLBACK_CACHE[url] = "low"
+                    return response
+
+            if response.status_code == 400 and "thinking" in (response.text or "").lower():
+                response.close()
+                self._THINKING_FALLBACK_CACHE[url] = "none"
+                fallback_payload = dict(effective_payload)
+                gen_cfg = dict(effective_payload["generationConfig"])
+                gen_cfg.pop("thinkingConfig", None)
+                fallback_payload["generationConfig"] = gen_cfg
+                response = self._session.post(
+                    url,
+                    headers=headers,
+                    json=fallback_payload,
+                    stream=stream,
+                    timeout=self.request_timeout,
+                )
+                response.encoding = "utf-8"
         return response
 
     @staticmethod
@@ -448,6 +490,8 @@ class GoogleAILLMProvider(BaseLLMProvider):
             "temperature": float(params.temperature),
             "topP": float(params.top_p),
         }
+        if params.max_tokens is not None:
+            generation_config["maxOutputTokens"] = int(params.max_tokens)
         if stop:
             clean_stops = [s for s in stop if isinstance(s, str) and s][:5]
             if clean_stops:
@@ -461,7 +505,7 @@ class GoogleAILLMProvider(BaseLLMProvider):
 
         if think is False:
             generation_config["thinkingConfig"] = {
-                "thinkingLevel": "low",
+                "thinkingLevel": "minimal",
                 "includeThoughts": False,
             }
         elif think is True:

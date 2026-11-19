@@ -126,6 +126,8 @@ class OllamaLLMProvider(BaseLLMProvider):
             )
         return f"Ollama-Verbindungsfehler ({model}): {raw_err}"
 
+    _SCHEMA_UNSUPPORTED_CACHE: set[str] = set()
+
     def __init__(
         self,
         base_url: str = DEFAULT_BASE_URL,
@@ -135,6 +137,7 @@ class OllamaLLMProvider(BaseLLMProvider):
         self.base_url: str = base_url.strip().rstrip("/")
         self.request_timeout: tuple[float, float] = request_timeout
         self.pull_timeout: tuple[float, float] = pull_timeout
+        self._session: requests.Session = requests.Session()
 
     def generate_stream(
         self,
@@ -151,12 +154,13 @@ class OllamaLLMProvider(BaseLLMProvider):
             "model": model,
             "prompt": prompt,
             "stream": True,
+            "keep_alive": "10m",
             "options": options,
         }
         if think is not None:
             payload["think"] = think
         try:
-            response = requests.post(
+            response = self._session.post(
                 f"{self.base_url}/api/generate",
                 json=payload,
                 stream=True,
@@ -211,25 +215,44 @@ class OllamaLLMProvider(BaseLLMProvider):
         options = self._build_options(params)
         if stop:
             options["stop"] = stop
+        schema_cache_key = f"{self.base_url}::{model}"
+        effective_format: str | dict | None = (
+            "json"
+            if isinstance(format, dict) and schema_cache_key in self._SCHEMA_UNSUPPORTED_CACHE
+            else format
+        )
         payload: dict[str, Any] = {
             "model": model,
             "prompt": prompt,
             "stream": False,
+            "keep_alive": "10m",
             "options": options,
         }
-        if format:
-            payload["format"] = format
+        if effective_format:
+            payload["format"] = effective_format
         if think is not None:
             payload["think"] = think
         try:
-            response = requests.post(
+            response = self._session.post(
                 f"{self.base_url}/api/generate",
                 json=payload,
                 timeout=self.request_timeout,
             )
             if response.status_code == 400 and think is not None and "think" in response.text.lower():
                 payload.pop("think", None)
-                response = requests.post(
+                response = self._session.post(
+                    f"{self.base_url}/api/generate",
+                    json=payload,
+                    timeout=self.request_timeout,
+                )
+            if (
+                response.status_code == 400
+                and isinstance(effective_format, dict)
+                and "format" in response.text.lower()
+            ):
+                self._SCHEMA_UNSUPPORTED_CACHE.add(schema_cache_key)
+                payload["format"] = "json"
+                response = self._session.post(
                     f"{self.base_url}/api/generate",
                     json=payload,
                     timeout=self.request_timeout,
@@ -417,9 +440,12 @@ class OllamaLLMProvider(BaseLLMProvider):
 
     @staticmethod
     def _build_options(params: ModelParameters) -> dict[str, int | float]:
-        return {
+        options: dict[str, int | float] = {
             "num_ctx": params.num_ctx,
             "temperature": params.temperature,
             "top_p": params.top_p,
             "repeat_penalty": params.repeat_penalty,
         }
+        if params.max_tokens is not None:
+            options["num_predict"] = params.max_tokens
+        return options
