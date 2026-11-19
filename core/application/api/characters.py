@@ -10,6 +10,7 @@ from domain.characters.models import Emotion, Gender
 from domain.characters.services import CharacterService
 from domain.permissions.models import FunctionPermission
 from domain.settings.models import ModelParameters
+from domain.translation.models import LANGUAGE_METADATA
 from domain.worldinfo.services import WorldInfoService
 from infrastructure.llm.factory import get_llm_provider
 from infrastructure.repositories.character_repository import CharacterRepository
@@ -236,15 +237,20 @@ def sparkle_description():
     draft = str(data.get("description", "")).strip()
     name = str(data.get("name", "Character")).strip()
     gender = str(data.get("gender", "")).strip()
+    language = str(data.get("language", "en")).strip().lower()[:2] or "en"
+    lang_meta = LANGUAGE_METADATA.get(language)
+    lang_label = f"{lang_meta['label']} ({language})" if lang_meta else language
     gender_info = f"\nGender: {gender}" if gender else ""
 
     settings = SettingsRepository().get_settings()
     llm_provider = get_llm_provider(settings)
     prompt = (
         f"{settings.prompts.sparkle_assistant_prompt}\n\n"
+        f"Language Directive: Write the entire character description strictly in {lang_label}.\n"
         f"Character Name: {name}{gender_info}\n"
         f"Draft / Notes:\n{draft or 'Create an engaging fantasy/roleplay personality.'}\n\n"
         "Strict Formatting & Persona Rules:\n"
+        f"- Output strictly in {lang_label}, regardless of the language of the instructions.\n"
         f"- Focus entirely on defining {name} (or {{{{char}}}}): establish their identity, psychology, temperament, mannerisms, and worldview so the roleplay model effortlessly embodies this persona as its own self.\n"
         "- Write strictly in natural, continuous narrative prose paragraphs (pure prose).\n"
         "- Do NOT use any markdown formatting, headings, bullet points, numbered lists, bold text, or asterisks.\n"

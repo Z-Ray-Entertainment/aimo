@@ -67,6 +67,7 @@
       }
 
       try {
+        const language = textarea.dataset.i18nActiveLang || document.body.dataset.userLanguage || "en";
         const resp = await fetch("/api/characters/sparkle", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -74,6 +75,7 @@
             name: nameInput ? nameInput.value : "",
             gender: genderSelect ? genderSelect.value : "",
             description: textarea.value,
+            language,
           }),
         });
 

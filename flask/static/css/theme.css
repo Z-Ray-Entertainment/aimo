@@ -2165,6 +2165,11 @@ body.chat-page {
   border-radius: 6px !important;
 }
 
+.i18n-delete-btn:hover {
+  border-color: var(--danger, #e5534b) !important;
+  color: var(--danger, #e5534b) !important;
+}
+
 /* Uploaded Image Eye Button & Grey System ALT-Text Box */
 .btn-eye-alt {
   display: inline-flex;

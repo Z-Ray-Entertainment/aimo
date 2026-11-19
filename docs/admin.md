@@ -108,6 +108,6 @@ Configure the global fallback background wallpaper for the application:
 
 ### Multi-Language System Prompts & Translation Sync
 - Each system prompt displays country-flag pill badges for all 20 supported languages (existing translations appear first; missing languages appear greyed out at the end).
-- Clicking any flag badge loads that language's prompt for inspection, manual editing, or on-demand **AI Translate**.
+- Clicking any flag badge loads that language's prompt for inspection, manual editing, on-demand **AI Translate**, or deleting the translation (via the trash button next to **AI Translate**) so the background Translation Worker can regenerate it from the English original when needed.
 - **Restore Default** resets all languages of that prompt back to the built-in factory defaults.
 - **Synchronize Missing Translations:** Starts a dependency-ordered translation run across all customized prompts, characters, worlds, and lorebooks with live progress and a **Cancel** button (especially useful when using Cloud AI providers, where automatic background translation is disabled to protect token quotas).

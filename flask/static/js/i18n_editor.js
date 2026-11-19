@@ -73,6 +73,8 @@ function initEditorI18nFields() {
 
     // Track whether the user is currently providing/fixing a translation so we don't mark the origin language outdated while they type a new translation
     let isProvidingTranslation = activeLang !== originLang;
+    let dirtyInCurrentTab = false;
+    inputEl.dataset.i18nActiveLang = activeLang;
 
     const toolbar = document.createElement("div");
     toolbar.className = "i18n-toolbar";
@@ -96,7 +98,14 @@ function initEditorI18nFields() {
     translateBtn.title = "Auto-translate from origin/English into the selected language";
     translateBtn.innerHTML = `<span class="icon-mono">🌐</span> AI Translate`;
 
+    const deleteBtn = document.createElement("button");
+    deleteBtn.type = "button";
+    deleteBtn.className = "btn i18n-translate-btn i18n-delete-btn";
+    deleteBtn.title = window.t ? window.t("Delete translation for this language") : "Delete translation for this language";
+    deleteBtn.innerHTML = `<span class="icon-mono">🗑️</span>`;
+
     controlsContainer.appendChild(translateBtn);
+    controlsContainer.appendChild(deleteBtn);
 
     toolbar.appendChild(leftGroup);
     toolbar.appendChild(controlsContainer);
@@ -126,13 +135,25 @@ function initEditorI18nFields() {
       }
       activeLang = originLang || "en";
       isProvidingTranslation = false;
+      dirtyInCurrentTab = false;
+      inputEl.dataset.i18nActiveLang = activeLang;
       renderFlags();
     });
 
     const hasContentFor = (code) =>
       Boolean(variants[code] && typeof variants[code].content === "string" && variants[code].content.trim() !== "");
 
+    const updateDeleteBtnState = () => {
+      const canDelete =
+        Boolean(activeLang) &&
+        activeLang !== "en" &&
+        (hasContentFor(activeLang) || inputEl.value.trim() !== "");
+      deleteBtn.disabled = !canDelete;
+      deleteBtn.style.display = canDelete ? "" : "none";
+    };
+
     const renderFlags = () => {
+      updateDeleteBtnState();
       flagsContainer.innerHTML = "";
       const liveList = AIMO_LANGUAGES.filter(
         (m) => hasContentFor(m.code) && !variants[m.code]?.is_outdated
@@ -177,6 +198,8 @@ function initEditorI18nFields() {
           }
           activeLang = meta.code;
           isProvidingTranslation = meta.code !== originLang;
+          dirtyInCurrentTab = false;
+          inputEl.dataset.i18nActiveLang = activeLang;
           inputEl.value = variants[meta.code]?.content || "";
           syncHiddenJson();
           renderFlags();
@@ -191,6 +214,7 @@ function initEditorI18nFields() {
     inputEl.addEventListener("input", () => {
       const newVal = inputEl.value;
       if (!activeLang) activeLang = originLang || "en";
+      dirtyInCurrentTab = true;
 
       variants[activeLang] = {
         content: newVal,
@@ -212,15 +236,29 @@ function initEditorI18nFields() {
       renderFlags();
     });
 
+    deleteBtn.addEventListener("click", () => {
+      if (!activeLang || activeLang === "en") return;
+      delete variants[activeLang];
+      inputEl.value = "";
+      dirtyInCurrentTab = false;
+      syncHiddenJson();
+      renderFlags();
+    });
+
     translateBtn.addEventListener("click", async () => {
       const targetLang = activeLang || originLang || "en";
+      const currentInput = inputEl.value.trim();
       const sourceText = (
-        variants["en"]?.content ||
-        variants[originLang]?.content ||
-        (activeLang !== targetLang ? inputEl.value : "") ||
-        Object.values(variants).find((v) => v && v.content && v.content.trim())?.content ||
-        inputEl.value ||
-        ""
+        (dirtyInCurrentTab && currentInput)
+          ? currentInput
+          : (
+              variants["en"]?.content ||
+              variants[originLang]?.content ||
+              (activeLang !== targetLang ? inputEl.value : "") ||
+              Object.values(variants).find((v) => v && v.content && v.content.trim())?.content ||
+              inputEl.value ||
+              ""
+            )
       ).trim();
       if (!sourceText) {
         window.showToastWarning("Please enter source text first before translating.");
@@ -250,6 +288,8 @@ function initEditorI18nFields() {
           };
           activeLang = targetLang;
           isProvidingTranslation = false;
+          dirtyInCurrentTab = false;
+          inputEl.dataset.i18nActiveLang = activeLang;
           inputEl.value = data.translated_text;
           syncHiddenJson();
           renderFlags();

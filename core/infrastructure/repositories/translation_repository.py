@@ -218,19 +218,37 @@ class TranslationRepository:
         if not isinstance(parsed, dict):
             return
         variants = parsed.get("variants") if isinstance(parsed.get("variants"), dict) else parsed
+        kept_langs: list[str] = []
         for lang, info in variants.items():
             if not isinstance(info, dict):
+                continue
+            cleaned_lang = str(lang).strip().lower()[:2]
+            if not cleaned_lang:
                 continue
             txt = str(info.get("content") or info.get("text") or "").strip()
             outdated = bool(info.get("is_outdated") if "is_outdated" in info else info.get("outdated", False))
             if txt:
+                kept_langs.append(cleaned_lang)
                 self.save_field_translation(
                     entity_type=entity_type,
                     entity_id=entity_id,
                     field_name=field_name,
-                    language=str(lang),
+                    language=cleaned_lang,
                     text_content=txt,
                     is_outdated=outdated,
+                )
+
+        with get_db_session() as conn:
+            if kept_langs:
+                placeholders = ",".join("?" for _ in kept_langs)
+                conn.execute(
+                    f"DELETE FROM entity_field_translations WHERE entity_type = ? AND entity_id = ? AND field_name = ? AND language NOT IN ({placeholders})",
+                    (entity_type, entity_id, field_name, *kept_langs),
+                )
+            else:
+                conn.execute(
+                    "DELETE FROM entity_field_translations WHERE entity_type = ? AND entity_id = ? AND field_name = ?",
+                    (entity_type, entity_id, field_name),
                 )
 
     def get_localized_field(
