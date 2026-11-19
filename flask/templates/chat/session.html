@@ -56,7 +56,8 @@
           data-character-portrait="{{ url_for('uploaded_file', filename=character.avatar_path or character.primary_portrait_path) }}"
           data-persona-name="{{ persona.name if persona else 'Du' }}"
           data-persona-portrait="{{ url_for('uploaded_file', filename=persona.portrait_path) if persona else '/static/img/cover.svg' }}"
-          data-is-admin="{{ 'true' if is_admin else 'false' }}">
+          data-is-admin="{{ 'true' if is_admin else 'false' }}"
+          data-can-debug-rel="{{ 'true' if can_debug_relationship else 'false' }}">
           {% if initial_location %}
             <div class="system-ui-notice location-intro-notice" style="margin: 0.25rem auto 1rem auto; max-width: 88%; text-align: left; padding: 0.65rem 1rem;">
               <div style="font-weight: 700; color: var(--gold-accent); margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.4rem;">
@@ -89,6 +90,12 @@
                   <div id="msg-text-{{ msg.message_idx }}" class="chat-markdown" data-raw-content="{{ msg.localized_content }}" data-en-content="{{ msg.english_content }}">{{ msg.localized_content }}</div>
                 </div>
               </div>
+              {% if can_debug_relationship and msg.message_idx > 0 and msg.metadata and msg.metadata.get('relationship_impact') %}
+                {% set rel_delta = msg.metadata.get('relationship_delta') %}
+                <div class="system-ui-notice" data-rel-debug-for="{{ msg.message_idx }}">
+                  [Debug Relationship] {{ msg.metadata.get('relationship_impact') }}{% if rel_delta is not none %} ({{ '+' if rel_delta >= 0 else '' }}{{ rel_delta }}){% endif %}
+                </div>
+              {% endif %}
             {% elif msg.role.value == 'user' %}
               <div class="chat-bubble-row user" data-message-idx="{{ msg.message_idx }}">
                 {% if persona %}
@@ -310,6 +317,17 @@
       <div class="relationship-header">
         <span>{{ _('Relationship:') }} <strong id="rel-score-label">{{ relationship_tier_name }}</strong></span>
         <span style="display: inline-flex; align-items: center; gap: 0.35rem;">
+          {% if can_debug_relationship %}
+            <button
+              type="button"
+              id="toggle-rel-debug-btn"
+              aria-pressed="false"
+              class="rel-debug-toggle-btn"
+              title="{{ _('Show/hide relationship debug evaluations') }}"
+              onclick="window.chatStream && window.chatStream.toggleRelationshipDebug(this);">
+              <span class="icon-mono">📊</span>
+            </button>
+          {% endif %}
           {% if is_admin %}
             <button
               type="button"

@@ -128,6 +128,7 @@ class AimoChatStream {
     this.countdownTimer = null;
     this.isGeneratingImage = false;
     this.isSending = false;
+    this.initRelationshipDebugToggle();
   }
 
   setGeneratingUIState(isGenerating) {
@@ -177,6 +178,7 @@ class AimoChatStream {
       personaName: list?.getAttribute("data-persona-name") || "Du",
       personaPortrait: list?.getAttribute("data-persona-portrait") || "/static/img/cover.svg",
       isAdmin: list?.getAttribute("data-is-admin") === "true",
+      canDebugRel: list?.getAttribute("data-can-debug-rel") === "true",
     };
   }
 
@@ -661,6 +663,11 @@ class AimoChatStream {
             data.relationship_tier_name,
             data.relationship_impact
           );
+          this.setTurnRelationshipDebugNotice(
+            data.message_idx,
+            data.relationship_impact,
+            data.relationship_delta
+          );
         }
 
         if (data.suggested_location) {
@@ -885,14 +892,7 @@ class AimoChatStream {
       if (resData.system_message) {
         this.appendSystemMessage(resData.system_message);
       } else if (resData.ui_notice) {
-        const messagesList = document.getElementById("chat-messages-list");
-        if (messagesList) {
-          const notice = document.createElement("div");
-          notice.className = "system-ui-notice";
-          notice.textContent = resData.ui_notice;
-          messagesList.appendChild(notice);
-          messagesList.scrollTop = messagesList.scrollHeight;
-        }
+        this.appendUiNotice(resData.ui_notice);
       }
       const backdrop = document.getElementById("system-default-backdrop") || document.querySelector(".system-default-backdrop");
       if (backdrop) {
@@ -1076,6 +1076,92 @@ class AimoChatStream {
     }
   }
 
+  appendUiNotice(text) {
+    const messagesList = document.getElementById("chat-messages-list");
+    if (!messagesList || !text) return;
+    const notice = document.createElement("div");
+    notice.className = "system-ui-notice";
+    notice.textContent = text;
+    messagesList.appendChild(notice);
+    messagesList.scrollTop = messagesList.scrollHeight;
+  }
+
+  setTurnRelationshipDebugNotice(messageIdx, impact, delta) {
+    const meta = this.getChatMetadata();
+    if (!meta.isAdmin && !meta.canDebugRel) return;
+    if (messageIdx === undefined || messageIdx === null) return;
+    const messagesList = document.getElementById("chat-messages-list");
+    if (!messagesList) return;
+
+    const deltaText =
+      typeof delta === "number" ? ` (${delta >= 0 ? "+" : ""}${delta})` : "";
+    const text = `[Debug Relationship] ${impact || "neutral"}${deltaText}`;
+
+    let notice = messagesList.querySelector(
+      `.system-ui-notice[data-rel-debug-for="${messageIdx}"]`
+    );
+    if (!notice) {
+      notice = document.createElement("div");
+      notice.className = "system-ui-notice";
+      notice.setAttribute("data-rel-debug-for", String(messageIdx));
+      const msgRow = messagesList.querySelector(
+        `[data-message-idx="${messageIdx}"]`
+      );
+      if (msgRow && msgRow.parentNode === messagesList) {
+        msgRow.insertAdjacentElement("afterend", notice);
+      } else {
+        messagesList.appendChild(notice);
+      }
+    }
+    notice.textContent = text;
+  }
+
+  appendRelationshipDebugNotice(relationshipValue, tierName, impact, delta, evaluatedTurns = null) {
+    if (!this.getChatMetadata().isAdmin) return;
+    if (typeof relationshipValue !== "number") return;
+    const deltaText =
+      typeof delta === "number" ? `${delta >= 0 ? "+" : ""}${delta}` : "?";
+    const prefix =
+      typeof evaluatedTurns === "number"
+        ? `[Debug Relationship Recalc (${evaluatedTurns} turns)]`
+        : "[Debug Relationship]";
+    const impactLabel = impact || "neutral";
+    const tierLabel = tierName || "";
+    this.appendUiNotice(
+      `${prefix} ${impactLabel} (${deltaText}) → ${relationshipValue} (${tierLabel})`
+    );
+  }
+
+  toggleRelationshipDebug(btn) {
+    const messagesList = document.getElementById("chat-messages-list");
+    if (!messagesList) return;
+    const isVisible = messagesList.classList.toggle("show-rel-debug");
+    if (btn) {
+      btn.classList.toggle("active", isVisible);
+      btn.setAttribute("aria-pressed", isVisible ? "true" : "false");
+    }
+    try {
+      localStorage.setItem("aimo_rel_debug", isVisible ? "1" : "0");
+    } catch (_) {}
+  }
+
+  initRelationshipDebugToggle() {
+    const meta = this.getChatMetadata();
+    if (!meta.isAdmin && !meta.canDebugRel) return;
+    let enabled = false;
+    try {
+      enabled = localStorage.getItem("aimo_rel_debug") === "1";
+    } catch (_) {}
+    if (!enabled) return;
+    const messagesList = document.getElementById("chat-messages-list");
+    const btn = document.getElementById("toggle-rel-debug-btn");
+    if (messagesList) messagesList.classList.add("show-rel-debug");
+    if (btn) {
+      btn.classList.add("active");
+      btn.setAttribute("aria-pressed", "true");
+    }
+  }
+
   async recalculateRelationship(btn) {
     if (this.isSending || this.isGeneratingImage) return;
     const origHtml = window.setButtonLoading ? window.setButtonLoading(btn, "⏳") : btn?.innerHTML;
@@ -1093,11 +1179,23 @@ class AimoChatStream {
         window.showToastError ? window.showToastError(msg, window.t("Error")) : alert(msg);
         return;
       }
+      if (Array.isArray(data.turn_results)) {
+        data.turn_results.forEach((turn) => {
+          this.setTurnRelationshipDebugNotice(turn.message_idx, turn.impact, turn.delta);
+        });
+      }
       if (typeof data.relationship_value === "number") {
         this.updateRelationshipUI(
           data.relationship_value,
           data.relationship_tier_name,
           data.relationship_impact
+        );
+        this.appendRelationshipDebugNotice(
+          data.relationship_value,
+          data.relationship_tier_name,
+          data.relationship_impact,
+          data.relationship_delta,
+          data.evaluated_turns
         );
       }
     } catch (err) {

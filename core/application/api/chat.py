@@ -72,6 +72,7 @@ class _BackgroundTurnTask:
         self.is_admin: bool = is_admin
         self.system_message: Message | None = None
         self.can_view_event_counter: bool = False
+        self.can_debug_relationship: bool = False
         self.cooldown_counter: int | None = None
         self.events_enabled: bool = True
         self.assembled_prompt: str | None = None
@@ -345,6 +346,9 @@ def _start_background_turn(
     )
     task.system_message = saved_event_msg
     task.can_view_event_counter = can_view_event_counter
+    task.can_debug_relationship = is_admin or character.is_editable_by_user(
+        chat_session.user_id, is_admin, session_user_tag
+    )
     task.cooldown_counter = chat_session.cooldown_counter
     task.events_enabled = chat_session.events_enabled
     with _TASKS_LOCK:
@@ -835,6 +839,8 @@ def _start_background_turn(
             if task.can_view_event_counter:
                 payload["cooldown_counter"] = latest_session.cooldown_counter
                 payload["events_enabled"] = latest_session.events_enabled
+            if task.can_debug_relationship:
+                payload["relationship_delta"] = applied_delta
             if task.is_admin and task.assembled_prompt:
                 payload["prompt"] = task.assembled_prompt
 
@@ -1267,11 +1273,12 @@ def recalculate_relationship(session_id: int):
     llm = get_llm_provider(settings)
 
     previous_value = chat_session.relationship_value
-    chat_service.reset_relationship(chat_session, character)
+    initial_value = chat_service.reset_relationship(chat_session, character)
 
     messages = chat_repo.get_messages(session_id, limit=None)
     pending_user_msg: Message | None = None
     evaluated_turns = 0
+    turn_results: list[dict[str, object]] = []
 
     for msg in messages:
         if msg.role == MessageRole.USER:
@@ -1311,10 +1318,18 @@ def recalculate_relationship(session_id: int):
 
             pending_user_msg = None
             evaluated_turns += 1
+            turn_results.append(
+                {
+                    "message_idx": msg.message_idx,
+                    "impact": impact.value,
+                    "delta": applied_delta,
+                }
+            )
 
     chat_repo.update_session(chat_session)
     tier = rel_repo.get_tier(chat_session.relationship_value, language=user_lang)
     net_delta = chat_session.relationship_value - previous_value
+    recalc_delta = chat_session.relationship_value - initial_value
     net_impact = "positive" if net_delta > 0 else ("negative" if net_delta < 0 else "neutral")
 
     return jsonify(
@@ -1322,7 +1337,9 @@ def recalculate_relationship(session_id: int):
             "relationship_value": chat_session.relationship_value,
             "relationship_tier_name": tier.name,
             "relationship_impact": net_impact,
+            "relationship_delta": round(recalc_delta, 4),
             "evaluated_turns": evaluated_turns,
+            "turn_results": turn_results,
         }
     )
 
