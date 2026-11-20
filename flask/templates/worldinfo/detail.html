@@ -199,7 +199,19 @@
               <span class="lock-icon">🔒</span>
             </div>
           {% endif %}
-          <div style="height: 140px; background-image: url('{% if loc.background_image_path %}{{ url_for('uploaded_file', filename=loc.background_image_path) }}{% else %}/static/img/cover.svg{% endif %}'); background-size: cover; background-position: center; border-bottom: 1px solid var(--border-wood-dark);"></div>
+          <div style="height: 140px; background-image: url('{% if loc.background_image_path %}{{ url_for('uploaded_file', filename=loc.background_image_path) }}{% else %}/static/img/cover.svg{% endif %}'); background-size: cover; background-position: center; border-bottom: 1px solid var(--border-wood-dark); position: relative;">
+            {% if loc.background_image_path %}
+              <button type="button"
+                      class="chat-input-btn loc-backdrop-viewer-btn"
+                      data-viewer-src="{{ url_for('uploaded_file', filename=loc.background_image_path) }}"
+                      data-viewer-title="{{ loc.name }}"
+                      title="{{ _('View location backdrop') }}"
+                      aria-label="{{ _('View location backdrop') }}"
+                      style="position: absolute; top: 0.45rem; right: 0.45rem; width: 30px; height: 30px; font-size: 0.85rem;">
+                <span class="icon-mono" aria-hidden="true">🖼️</span>
+              </button>
+            {% endif %}
+          </div>
           <div style="padding: 1rem; flex: 1;">
             {% set loc_disp = loc_display.get(loc.id, {}) if loc_display is defined else {} %}
             {% set disp_loc_name = loc_disp.get("name", loc.name) %}
@@ -254,8 +266,11 @@
                 <input type="file" id="edit-loc-bg-input-{{ loc.id }}" name="background_file" accept=".png,.jpg,.jpeg,.webp">
                 <input type="hidden" id="edit-loc-bg-path-{{ loc.id }}" name="background_image_path" value="{{ loc.background_image_path or '' }}">
                 <input type="hidden" id="edit-loc-vision-alt-{{ loc.id }}" name="vision_alt_text" value="{{ loc.vision_alt_text or '' }}">
-                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.35rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.35rem; flex-wrap: wrap;">
                   {{ action_button(_("Analyze & Describe Image"), icon="👁️", size="sm", extra_class="edit-loc-analyze-btn", disabled=(not loc.background_image_path), data={"loc-id": loc.id, "input-id": "edit-loc-bg-input-" ~ loc.id, "path-id": "edit-loc-bg-path-" ~ loc.id, "alt-id": "edit-loc-vision-alt-" ~ loc.id, "desc-id": "edit-loc-desc-" ~ loc.id, "status-id": "edit-loc-analyze-status-" ~ loc.id}) }}
+                  {% if loc.background_image_path %}
+                    {{ action_button(_("View backdrop"), icon="🖼️", layout="icon", size="sm", extra_class="edit-loc-viewer-btn", title=_("View location backdrop"), data={"viewer-src": url_for('uploaded_file', filename=loc.background_image_path), "viewer-title": loc.name}) }}
+                  {% endif %}
                   <span id="edit-loc-analyze-status-{{ loc.id }}" style="font-size: 0.75rem; color: var(--text-muted);"></span>
                 </div>
               </div>

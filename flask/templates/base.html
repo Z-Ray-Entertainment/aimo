@@ -1,3 +1,4 @@
+{% from "macros/image_viewer.html" import image_viewer_overlay %}
 <!DOCTYPE html>
 <html lang="{{ ui_language | default('en') }}" dir="{{ ui_dir | default('ltr') }}">
 <head>
@@ -34,6 +35,7 @@
   <div id="aimo-toast-container" class="toast-container" aria-live="polite"></div>
 
   {% include "macros/persona_manager.html" %}
+  {{ image_viewer_overlay() }}
 
   <script>
     window.AIMO_LANGUAGES = {{ aimo_languages | tojson }};
@@ -49,6 +51,7 @@
     };
   </script>
   <script src="{{ url_for('static', filename='js/modals.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/image_viewer.js') }}"></script>
   <script src="{{ url_for('static', filename='js/image_cropper.js') }}"></script>
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   {% block extra_scripts %}{% endblock %}

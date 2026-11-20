@@ -129,6 +129,7 @@ class AimoChatStream {
     this.isGeneratingImage = false;
     this.isSending = false;
     this.initRelationshipDebugToggle();
+    this.initImageViewerBindings();
   }
 
   setGeneratingUIState(isGenerating) {
@@ -930,6 +931,22 @@ class AimoChatStream {
       if (locSelect) {
         locSelect.value = locationId === null ? "world" : String(locationId);
       }
+      const locBackdropBtn = document.getElementById("chat-location-backdrop-btn");
+      if (locBackdropBtn) {
+        const locBgPath = resData.location?.background_image_path?.trim();
+        if (locBgPath) {
+          const bgUrl = (locBgPath.startsWith("/") || locBgPath.startsWith("http"))
+            ? locBgPath
+            : `/uploads/${locBgPath}`;
+          locBackdropBtn.setAttribute("data-backdrop-url", bgUrl);
+          locBackdropBtn.setAttribute("data-backdrop-title", resData.location?.name || "");
+          locBackdropBtn.hidden = false;
+        } else {
+          locBackdropBtn.setAttribute("data-backdrop-url", "");
+          locBackdropBtn.setAttribute("data-backdrop-title", "");
+          locBackdropBtn.hidden = true;
+        }
+      }
       return resData;
     } else {
       const errStr = resData.error || "Fehler beim Wechseln des Ortes.";
@@ -973,7 +990,7 @@ class AimoChatStream {
       });
       const data = await resp.json();
       if (resp.ok && data.image_path) {
-        notice.innerHTML = `<img src="/uploads/${data.image_path}" alt="Generierte Szene" style="max-width:320px; border-radius:10px; border:2px solid var(--gold-accent); margin-top:0.4rem;">`;
+        notice.innerHTML = `<img src="/uploads/${data.image_path}" alt="Generierte Szene" class="chat-generated-scene-img" style="max-width:320px; border-radius:10px; border:2px solid var(--gold-accent); margin-top:0.4rem;">`;
         this.appendImageToGallery(`/uploads/${data.image_path}`, data.image_path);
       } else {
         notice.textContent = data.error || "Bildgenerierung abgebrochen oder fehlgeschlagen.";
@@ -1264,6 +1281,103 @@ class AimoChatStream {
       this.isSending = false;
       this.activeThinkingUI = null;
       this.setGeneratingUIState(false);
+    }
+  }
+
+  openGridGallery(gridEl, clickedTile) {
+    if (!window.AimoImageViewer || !gridEl || !clickedTile) return;
+    const tiles = Array.from(gridEl.querySelectorAll(".card-tile"));
+    const items = [];
+    let startIndex = 0;
+
+    for (const tile of tiles) {
+      const img = tile.querySelector("img");
+      const src = img?.getAttribute("src") || img?.src;
+      if (!src) continue;
+      if (tile === clickedTile) {
+        startIndex = items.length;
+      }
+      items.push({
+        src,
+        title: tile.getAttribute("data-viewer-title") || img.getAttribute("alt") || "",
+        subtitle: tile.getAttribute("data-viewer-subtitle") || "",
+        alt: img.getAttribute("alt") || "",
+      });
+    }
+
+    if (items.length > 0) {
+      window.AimoImageViewer.open(items, startIndex);
+    }
+  }
+
+  initImageViewerBindings() {
+    const openSingle = (src, title = "", subtitle = "") => {
+      if (window.AimoImageViewer && src) {
+        window.AimoImageViewer.openSingle(src, title, subtitle);
+      }
+    };
+
+    const sidebarSprite = document.getElementById("active-character-sprite");
+    if (sidebarSprite) {
+      sidebarSprite.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const meta = this.getChatMetadata();
+        openSingle(sidebarSprite.src, meta.characterName || sidebarSprite.alt || "");
+      });
+    }
+
+    const bindBackdropBtn = (btnId) => {
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+      btn.addEventListener("click", () => {
+        const url = btn.getAttribute("data-backdrop-url");
+        const title = btn.getAttribute("data-backdrop-title") || "";
+        if (url) openSingle(url, title);
+      });
+    };
+    bindBackdropBtn("chat-world-backdrop-btn");
+    bindBackdropBtn("chat-location-backdrop-btn");
+
+    const messagesList = document.getElementById("chat-messages-list");
+    if (messagesList) {
+      messagesList.addEventListener("click", (e) => {
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+
+        const charAvatar = target.closest(".chat-bubble-row.character .chat-avatar");
+        if (charAvatar) {
+          const meta = this.getChatMetadata();
+          openSingle(charAvatar.src, meta.characterName || charAvatar.alt || "");
+          return;
+        }
+
+        const uploadedImg = target.closest(".chat-uploaded-image-wrap img");
+        if (uploadedImg) {
+          openSingle(uploadedImg.src, uploadedImg.getAttribute("alt") || "");
+          return;
+        }
+
+        const generatedImg = target.closest(".chat-generated-scene-img");
+        if (generatedImg) {
+          openSingle(generatedImg.src, generatedImg.getAttribute("alt") || "");
+        }
+      });
+    }
+
+    const unlockedGrid = document.getElementById("unlocked-gallery-grid");
+    if (unlockedGrid) {
+      unlockedGrid.addEventListener("click", (e) => {
+        const tile = e.target instanceof Element ? e.target.closest(".card-tile") : null;
+        if (tile) this.openGridGallery(unlockedGrid, tile);
+      });
+    }
+
+    const sessionMediaGrid = document.getElementById("session-media-grid");
+    if (sessionMediaGrid) {
+      sessionMediaGrid.addEventListener("click", (e) => {
+        const tile = e.target instanceof Element ? e.target.closest(".card-tile") : null;
+        if (tile) this.openGridGallery(sessionMediaGrid, tile);
+      });
     }
   }
 }

@@ -27,15 +27,20 @@ When starting a new conversation with a character:
 - **Header:** Back button (`←`) to the main overview.
 - **Left Sidebar (Multi-Chat):** Lists all your chat sessions and forks with this character. Titles update dynamically based on key events.
 - **Central Four-Tab Container:**
-  - **Tab 1: Chat:** The ongoing dialogue in message bubbles (AI on the left with portrait/sprite, player on the right).
-  - **Tab 2: Media:** Aggregates all unlocked 9:16 gallery images, uploaded photos, and generated images.
+  - **Tab 1: Chat:** The ongoing dialogue in message bubbles (AI on the left with portrait/sprite, player on the right). Clicking an uploaded or generated image in a message, or the character's 1:1 avatar next to a reply, opens it in the fullscreen Image Viewer.
+  - **Tab 2: Media:** Aggregates all unlocked 9:16 character gallery images as well as uploaded photos and generated images from the session. Clicking any image opens the corresponding section as a browsable fullscreen gallery.
   - **Tab 3: Memories:** Lists all system-generated memory summaries and allows manual edits.
   - **Tab 4: Lorebooks:** Live lorebook manager showing active, toggled, and custom lorebooks for this session.
 - **Right Info Box:**
-  - Character portrait / transparent emotion sprite (dynamically scaled in 9:16 aspect ratio to fit the display height), equipped with an aesthetic Brain overlay icon (🧠) in the top-right corner with a live hover tooltip. The icon visually indicates whether Thinking is active (in color with a soft glow) or inactive (in monochrome gray).
+  - Character portrait / transparent emotion sprite (dynamically scaled in 9:16 aspect ratio to fit the display height), equipped with an aesthetic Brain overlay icon (🧠) in the top-right corner with a live hover tooltip. The icon visually indicates whether Thinking is active (in color with a soft glow) or inactive (in monochrome gray). Clicking the character portrait or active sprite opens it in the fullscreen Image Viewer.
   - Dynamic relationship bar displaying the current qualitative status title (e.g. *„Neutral“*, *„Friendly“*, *„Affection“*, *„Blind Devotion“*) with visual progress fill and dynamic heart icon.
   - Player persona badge / selector (locked after the first message).
-  - Unified World & Setting block: Active WorldInfo with switch button, manual location selector, random events toggle checkbox (shown whenever world or character events exist), and a live event cooldown counter for administrators as well as authors and collaborators of the active world or character (integrated without separating divider, updating dynamically as messages are exchanged).
+  - Unified World & Setting block: Active WorldInfo with switch button (plus a `🖼️` button to view the world's backdrop in fullscreen when available), manual location selector (with a `🖼️` button next to the location indicator in the header to view the current location's backdrop when available), random events toggle checkbox (shown whenever world or character events exist), and a live event cooldown counter for administrators as well as authors and collaborators of the active world or character (integrated without separating divider, updating dynamically as messages are exchanged).
+
+### 🖼️ Fullscreen Image Viewer
+- **Single-Image View:** Clicking the character's sidebar portrait/sprite, a character's 1:1 avatar in chat, an uploaded or generated image inside a chat message, or a world/location `🖼️` backdrop button opens that exact image in a clean fullscreen overlay.
+- **Gallery View (Media Tab):** Clicking an unlocked 9:16 character image or a session media tile inside the **Media** tab opens a browsable fullscreen gallery for that section, complete with an image counter (e.g., `2 / 5`) and navigation arrows (`‹` / `›`).
+- **Controls:** Navigate galleries with the on-screen arrows, keyboard arrow keys (`←` / `→`), or horizontal touch swipes. Close the viewer at any time via the `✕` button, the `Esc` key, or by clicking the dark background outside the image.
 
 ---
 

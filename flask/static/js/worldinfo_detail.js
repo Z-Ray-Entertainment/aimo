@@ -252,4 +252,37 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  if (window.AimoImageViewer) {
+    const wiCoverImg = document.getElementById("worldinfo-cover-preview-img");
+    if (wiCoverImg) {
+      wiCoverImg.addEventListener("click", () => {
+        if (wiCoverImg.src && wiCoverImg.style.display !== "none") {
+          window.AimoImageViewer.openSingle(wiCoverImg.src, wiCoverImg.alt || "Cover");
+        }
+      });
+    }
+
+    if (wiBackdropPreview) {
+      wiBackdropPreview.addEventListener("click", () => {
+        const bg = wiBackdropPreview.style.backgroundImage || "";
+        const match = bg.match(/^url\(["']?(.+?)["']?\)$/);
+        if (match && match[1]) {
+          window.AimoImageViewer.openSingle(match[1], "World Backdrop");
+        }
+      });
+    }
+
+    document.querySelectorAll(".loc-backdrop-viewer-btn, .edit-loc-viewer-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const src = btn.getAttribute("data-viewer-src");
+        const title = btn.getAttribute("data-viewer-title") || "";
+        if (src) {
+          window.AimoImageViewer.openSingle(src, title);
+        }
+      });
+    });
+  }
 });

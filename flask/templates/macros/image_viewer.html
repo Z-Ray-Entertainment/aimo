@@ -1,0 +1,30 @@
+{% from "macros/buttons.html" import action_button %}
+
+{% macro image_viewer_overlay() %}
+<div id="aimo-image-viewer" class="aimo-iv-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-label="{{ _('Image Viewer') }}" tabindex="-1">
+  <div class="aimo-iv-header">
+    <div class="aimo-iv-meta">
+      <div id="aimo-iv-title" class="aimo-iv-title"></div>
+      <div id="aimo-iv-subtitle" class="aimo-iv-subtitle"></div>
+    </div>
+    <div class="aimo-iv-controls">
+      <span id="aimo-iv-counter" class="aimo-iv-counter"></span>
+      {{ action_button(_("Close"), icon="✕", layout="icon", id="aimo-iv-close-btn", extra_class="aimo-iv-close-btn", title=_("Close (Esc)")) }}
+    </div>
+  </div>
+
+  <div class="aimo-iv-stage">
+    <button type="button" id="aimo-iv-prev-btn" class="aimo-btn aimo-iv-nav-btn aimo-iv-prev" aria-label="{{ _('Previous image') }}" title="{{ _('Previous image') }}">
+      <span aria-hidden="true">‹</span>
+    </button>
+
+    <div class="aimo-iv-img-wrap">
+      <img id="aimo-iv-img" class="aimo-iv-img" src="" alt="">
+    </div>
+
+    <button type="button" id="aimo-iv-next-btn" class="aimo-btn aimo-iv-nav-btn aimo-iv-next" aria-label="{{ _('Next image') }}" title="{{ _('Next image') }}">
+      <span aria-hidden="true">›</span>
+    </button>
+  </div>
+</div>
+{% endmacro %}
