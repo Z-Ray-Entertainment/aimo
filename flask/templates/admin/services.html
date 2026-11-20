@@ -51,9 +51,9 @@
       <div style="display: flex; flex-direction: column; gap: 1rem;">
         <div>
           <label style="margin-bottom: 0.45rem; display: block;">{{ _('Image Generation (Scene images in chat)') }}</label>
-          {{ image_gen_options(settings.image_gen_backend, allow_google=true, id_prefix="admin-img") }}
+          {{ image_gen_options('disabled', allow_google=true, id_prefix="admin-img", disable_providers=true) }}
 
-          <div id="admin-comfyui-box" class="conditional-service-box" style="margin-top: 0.65rem;" {% if settings.image_gen_backend != 'comfyui' %}hidden{% endif %}>
+          <div id="admin-comfyui-box" class="conditional-service-box" style="margin-top: 0.65rem;" hidden>
             <label>{{ _('ComfyUI API URL') }} *
               <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if comfy_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
                 ● {% if comfy_healthy %}{{ _('Connected') }}{% else %}{{ _('Offline') }}{% endif %}
@@ -62,7 +62,7 @@
             <input type="url" id="admin-comfyui-url" name="comfyui_url" value="{{ comfyui_url }}">
           </div>
 
-          <div id="admin-google-img-box" class="conditional-service-box" style="margin-top: 0.65rem;" {% if not (is_google and settings.image_gen_backend == 'google_ai') %}hidden{% endif %}>
+          <div id="admin-google-img-box" class="conditional-service-box" style="margin-top: 0.65rem;" hidden>
             <label for="admin-google-image-model">{{ _('Google AI Image Model') }} *
               <span style="font-size: 0.78rem; margin-left: 0.4rem; color: {% if is_google and settings.image_gen_backend == 'google_ai' and image_gen_healthy %}#4CAF50{% else %}#E74C3C{% endif %};">
                 ● {% if is_google and settings.image_gen_backend == 'google_ai' and image_gen_healthy %}{{ _('Ready') }}{% else %}{{ _('Not checked / Offline') }}{% endif %}
@@ -78,9 +78,9 @@
 
         <div>
           <label style="margin-bottom: 0.45rem; display: block;">{{ _('Web Search (Prepared)') }}</label>
-          {{ search_options(settings.search_backend, allow_google=true, id_prefix="admin-search") }}
+          {{ search_options('disabled', allow_google=true, id_prefix="admin-search", disable_providers=true) }}
 
-          <div id="admin-searxng-box" class="conditional-service-box" style="margin-top: 0.65rem;" {% if settings.search_backend != 'searxng' %}hidden{% endif %}>
+          <div id="admin-searxng-box" class="conditional-service-box" style="margin-top: 0.65rem;" hidden>
             <label for="admin-searxng-url">{{ _('SearXNG URL (Prepared)') }} *</label>
             <input type="url" id="admin-searxng-url" name="searxng_url" value="{{ searxng_url }}">
           </div>
@@ -342,14 +342,16 @@
     document.querySelectorAll('[data-google-only="1"]').forEach((el) => {
       el.hidden = !isGoogle;
       const radio = el.querySelector('input[type="radio"]');
-      if (radio) radio.disabled = !isGoogle;
+      if (radio && !radio.hasAttribute("data-locked-disabled")) {
+        radio.disabled = !isGoogle;
+      }
     });
 
     if (!isGoogle) {
       const imgSelected = document.querySelector('input[name="image_gen_backend"]:checked');
       if (imgSelected && imgSelected.value === "google_ai") {
-        const comfyRadio = document.getElementById("admin-img-comfyui");
-        if (comfyRadio) comfyRadio.checked = true;
+        const disabledImgRadio = document.getElementById("admin-img-disabled");
+        if (disabledImgRadio) disabledImgRadio.checked = true;
       }
       const searchSelected = document.querySelector('input[name="search_backend"]:checked');
       if (searchSelected && searchSelected.value === "google_ai") {
@@ -369,7 +371,7 @@
     const backend = getSelectedAdminBackend();
     const isGoogle = backend === "google_ai";
 
-    const imgSelected = document.querySelector('input[name="image_gen_backend"]:checked')?.value || "comfyui";
+    const imgSelected = document.querySelector('input[name="image_gen_backend"]:checked')?.value || "disabled";
     const comfyBox = document.getElementById("admin-comfyui-box");
     const comfyInput = document.getElementById("admin-comfyui-url");
     if (comfyBox && comfyInput) {

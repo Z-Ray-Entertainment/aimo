@@ -30,7 +30,7 @@ class AdminServicesForm:
     ollama_url: str = ""
     google_ai_api_key: str = ""
     clear_google_ai_api_key: bool = False
-    image_gen_backend: str = "comfyui"
+    image_gen_backend: str = "disabled"
     comfyui_url: str = ""
     google_ai_image_model: str = ""
     search_backend: str = "disabled"
@@ -51,7 +51,7 @@ class AdminServicesForm:
         raw_search = p.to_str(form_data, "search_backend")
         if not raw_search:
             raw_search = "searxng" if p.to_bool(form_data, "searxng_enabled") else "disabled"
-        raw_img = p.to_str(form_data, "image_gen_backend") or "comfyui"
+        raw_img = p.to_str(form_data, "image_gen_backend") or "disabled"
         return cls(
             llm_backend=p.to_str(form_data, "llm_backend", "ollama").lower(),
             ollama_url=p.to_str(form_data, "ollama_url"),

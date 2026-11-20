@@ -396,7 +396,7 @@ def prompts_config():
                 settings=settings,
                 roleplay_prompt=form.roleplay_prompt,
                 memory_prompt=form.memory_prompt,
-                diffuser_prompt=form.diffuser_prompt,
+                diffuser_prompt=form.diffuser_prompt or settings.prompts.diffuser_prompt,
                 sparkle_assistant_prompt=form.sparkle_assistant_prompt,
                 vision_persona_prompt=form.vision_persona_prompt,
                 dialogue_author_prompt=form.dialogue_author_prompt,

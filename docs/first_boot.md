@@ -32,10 +32,8 @@ Before the system is made accessible for regular users, exactly one initial admi
   ollama pull gemma4:e4b
   ollama pull llama3.2:1b
   ```
-- **SearXNG URL (Optional):**  
-  Address for web search via tool-calling (currently disabled / TODO).
-- **ComfyUI URL (Optional):**  
-  The address of your ComfyUI server (default: `http://localhost:8188`) for generative image workflows in chat. Can also be configured later in the [Admin Panel](admin.md).
+- **Image Generation & Web Search:**  
+  Both options are pre-selected to **Deaktiviert** with the active provider buttons (Google AI Image, ComfyUI, Google Search, SearXNG) disabled.
 
 ---
 

@@ -34,7 +34,7 @@
 </div>
 {% endmacro %}
 
-{% macro image_gen_options(selected_value, allow_google=true, id_prefix="img_gen") %}
+{% macro image_gen_options(selected_value, allow_google=true, id_prefix="img_gen", disable_providers=false) %}
 <div class="service-option-grid" data-service-radio-group="image_gen_backend">
   {% if allow_google %}
     <label class="service-option-pill"
@@ -44,7 +44,8 @@
              id="{{ id_prefix }}-google_ai"
              name="image_gen_backend"
              value="google_ai"
-             {% if selected_value == 'google_ai' %}checked{% endif %}>
+             {% if selected_value == 'google_ai' %}checked{% endif %}
+             {% if disable_providers %}disabled data-locked-disabled="1"{% endif %}>
       <span class="service-option-title"><span>🎨</span> Google AI Image</span>
       <span class="service-option-sub">Szenenbilder direkt über Gemini API &amp; deinen API-Key.</span>
     </label>
@@ -55,7 +56,8 @@
            id="{{ id_prefix }}-comfyui"
            name="image_gen_backend"
            value="comfyui"
-           {% if selected_value == 'comfyui' %}checked{% endif %}>
+           {% if selected_value == 'comfyui' %}checked{% endif %}
+           {% if disable_providers %}disabled{% endif %}>
     <span class="service-option-title"><span>🖼️</span> ComfyUI (Lokal)</span>
     <span class="service-option-sub">Eigener ComfyUI-Server für lokale Diffusions-Workflows.</span>
   </label>
@@ -72,7 +74,7 @@
 </div>
 {% endmacro %}
 
-{% macro search_options(selected_value, allow_google=true, id_prefix="search") %}
+{% macro search_options(selected_value, allow_google=true, id_prefix="search", disable_providers=false) %}
 <div class="service-option-grid" data-service-radio-group="search_backend">
   {% if allow_google %}
     <label class="service-option-pill"
@@ -82,7 +84,8 @@
              id="{{ id_prefix }}-google_ai"
              name="search_backend"
              value="google_ai"
-             {% if selected_value == 'google_ai' %}checked{% endif %}>
+             {% if selected_value == 'google_ai' %}checked{% endif %}
+             {% if disable_providers %}disabled data-locked-disabled="1"{% endif %}>
       <span class="service-option-title"><span>🔍</span> Google Search</span>
       <span class="service-option-sub">Google Search Grounding über Google AI (vorbereitet).</span>
     </label>
@@ -93,7 +96,8 @@
            id="{{ id_prefix }}-searxng"
            name="search_backend"
            value="searxng"
-           {% if selected_value == 'searxng' %}checked{% endif %}>
+           {% if selected_value == 'searxng' %}checked{% endif %}
+           {% if disable_providers %}disabled{% endif %}>
     <span class="service-option-title"><span>🌐</span> SearXNG (Lokal)</span>
     <span class="service-option-sub">Eigene SearXNG-Instanz per URL anbinden (vorbereitet).</span>
   </label>
