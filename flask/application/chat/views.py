@@ -377,6 +377,7 @@ def view_session(session_id: int):
         is_admin=is_admin,
         can_view_event_counter=can_view_event_counter,
         can_debug_relationship=can_debug_relationship,
+        active_tab=request.args.get("tab", "messages"),
     )
 
 
@@ -398,13 +399,18 @@ def update_session_settings(session_id: int):
         return redirect(url_for("overview.index"))
 
     action = request.form.get("action", "")
+    return_tab = request.form.get("return_tab", "").strip()
+    redirect_kwargs = {"session_id": session_id}
+    if return_tab == "settings":
+        redirect_kwargs["tab"] = "settings"
+
     try:
         if action == "change_persona":
             new_persona_id = int(request.form.get("persona_id", 0))
             new_persona = persona_repo.get_by_id(new_persona_id)
             if new_persona is None or (new_persona.user_id != user.id and not user.is_initial_admin):
                 flash(tr(_("Invalid persona.")), "error")
-                return redirect(url_for("chat.view_session", session_id=session_id))
+                return redirect(url_for("chat.view_session", **redirect_kwargs))
             chat_service.change_persona(chat_session, new_persona_id)
             flash(tr(_("Persona updated for this session.")), "success")
         elif action == "switch_worldinfo":
@@ -415,14 +421,14 @@ def update_session_settings(session_id: int):
                 wi = wi_repo.get_by_id(new_wi_id)
                 if wi is None or not wi.is_visible_to_user(user.id, is_admin_user()):
                     flash(tr(_("Invalid WorldInfo.")), "error")
-                    return redirect(url_for("chat.view_session", session_id=session_id))
+                    return redirect(url_for("chat.view_session", **redirect_kwargs))
                 if not wi.is_editable_by_user(
                     user.id, is_admin_user(), user.creator_tag
                 ) and not is_worldinfo_ready_for_language(
                     wi, _get_user_system_language(), TranslationRepository(), wi_repo
                 ):
                     flash(tr(_("This world is not yet available in your language.")), "warning")
-                    return redirect(url_for("chat.view_session", session_id=session_id))
+                    return redirect(url_for("chat.view_session", **redirect_kwargs))
                 char = char_repo.get_by_id(chat_session.character_id)
                 if char and char.initial_location_id:
                     loc = wi_repo.get_location(char.initial_location_id)
@@ -454,7 +460,7 @@ def update_session_settings(session_id: int):
     except AimoError as exc:
         flash(str(exc), "error")
 
-    return redirect(url_for("chat.view_session", session_id=session_id))
+    return redirect(url_for("chat.view_session", **redirect_kwargs))
 
 
 @chat_bp.route("/session/<int:session_id>/delete", methods=["POST"])

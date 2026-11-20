@@ -257,7 +257,8 @@
 #chat-pane-messages.tab-pane.active,
 #chat-pane-media.tab-pane.active,
 #chat-pane-memories.tab-pane.active,
-#chat-pane-lorebooks.tab-pane.active {
+#chat-pane-lorebooks.tab-pane.active,
+#chat-pane-settings.tab-pane.active {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -268,7 +269,8 @@
   gap: 0.75rem;
 }
 
-#chat-pane-media.tab-pane.active {
+#chat-pane-media.tab-pane.active,
+#chat-pane-settings.tab-pane.active {
   overflow-y: auto;
   padding-right: 0.4rem;
 }
