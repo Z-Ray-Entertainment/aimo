@@ -7,7 +7,7 @@
         <span class="icon-mono">💬</span> Sitzungen mit {{ character.name }}
       </h3>
       <div style="display: flex; gap: 0.5rem; align-items: center;">
-        {{ action_button("Neuer Chat", href=url_for('chat.new_character_chat', character_id=character.id, configure=1), icon="➕", size="sm", variant="primary") }}
+        {{ action_button("Neuer Chat", href=url_for('chat.new_character_chat', character_id=character.id, configure=1), icon="➕", size="sm") }}
         {{ modal_close_button("chat-sessions-modal") }}
       </div>
     </div>
@@ -55,7 +55,7 @@
       <input type="hidden" id="edit-msg-idx" value="">
       <textarea id="edit-msg-content" rows="5" required></textarea>
       <div style="text-align: right;">
-        {{ action_button("Änderung speichern (Sync Kanon)", type="submit", variant="primary", icon="💾") }}
+        {{ action_button("Änderung speichern (Sync Kanon)", type="submit", icon="💾") }}
       </div>
     </form>
   </div>

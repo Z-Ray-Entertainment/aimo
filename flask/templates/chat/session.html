@@ -220,7 +220,7 @@
                   {{ action_button(_("Recalculate"), icon="🔄", size="sm", data={"action": "recalculate-memory", "session-id": chat_session.id, "mem-id": mem.id}, title=_("Recalculate memory from associated episode messages")) }}
                   {{ action_button(_("Translate"), icon="🌐", size="sm", data={"action": "translate-memory", "session-id": chat_session.id, "mem-id": mem.id}, title=_("Translate memory in-place to your language")) }}
                 </div>
-                {{ action_button(_("Save"), type="submit", variant="primary", size="sm", icon="💾") }}
+                {{ action_button(_("Save"), type="submit", size="sm", icon="💾") }}
               </div>
             </form>
           {% endfor %}
@@ -293,7 +293,7 @@
                 {% endfor %}
               </select>
               <div class="chat-settings-form-actions">
-                {{ action_button(_("Switch world"), type="submit", variant="primary") }}
+                {{ action_button(_("Switch world"), type="submit") }}
               </div>
             </form>
           </div>

@@ -40,7 +40,7 @@
 
   <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
     {% if is_editable and form_id %}
-      {{ action_button(_("Save"), type="submit", form=form_id, variant="primary", icon="💾", title=eff_save_title) }}
+      {{ action_button(_("Save"), type="submit", form=form_id, icon="💾", title=eff_save_title) }}
     {% endif %}
     {% if can_copy and copy_url %}
       <form method="POST" action="{{ copy_url }}" style="display: inline;">

@@ -53,7 +53,7 @@
 
 {# Reusable Action/Navigation Button Component (System-weite .aimo-btn Basisklasse); layout: 'full' (Icon + Text) oder 'icon' (nur Icon) #}
 {% macro action_button(text="", href=none, type="button", icon=none, icon_src=none, arrow=none, variant="default", size="default", extra_class="", id=none, title=none, onclick=none, modal=none, modal_close=none, layout="full", active=false, disabled=false, form=none, style=none, target=none, aria_label=none, data={}) %}
-  {% set variant_class = ' primary' if variant == 'primary' else (' danger' if variant == 'danger' else '') %}
+  {% set variant_class = ' danger' if variant == 'danger' else '' %}
   {% set size_class = ' aimo-btn-lg' if size == 'lg' else (' aimo-btn-sm' if size == 'sm' else '') %}
   {% set layout_class = ' aimo-btn-icon' if layout == 'icon' else '' %}
   {% set active_class = ' active' if active else '' %}

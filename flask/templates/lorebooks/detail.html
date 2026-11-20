@@ -98,7 +98,7 @@
 
         {% if is_editable %}
           <div style="margin-top: 0.5rem;">
-            {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
+            {{ action_button(_("Save"), type="submit", icon="💾") }}
           </div>
         {% endif %}
       </div>
@@ -197,7 +197,7 @@
             {{ action_button(_("Delete"), type="submit", form="delete-entry-form-" ~ entry.id, variant="danger", icon="🗑️") }}
             <div style="display: flex; gap: 0.5rem;">
               {{ action_button(_("Cancel"), modal_close="edit-entry-modal-" ~ entry.id) }}
-              {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
+              {{ action_button(_("Save"), type="submit", icon="💾") }}
             </div>
           </div>
         </form>
@@ -265,7 +265,7 @@
       </div>
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
         {{ action_button(_("Cancel"), modal_close="new-entry-modal") }}
-        {{ action_button(_("Save Entry"), type="submit", variant="primary", icon="💾") }}
+        {{ action_button(_("Save Entry"), type="submit", icon="💾") }}
       </div>
     </form>
   </div>

@@ -53,7 +53,7 @@
         <input type="password" id="password" name="password" required>
       </div>
       <div class="wizard-nav-bar" style="justify-content: flex-end;">
-        {{ action_button("Weiter zur Backend-Auswahl", arrow="right", variant="primary", onclick="goToSetupStep(2)") }}
+        {{ action_button("Weiter zur Backend-Auswahl", arrow="right", onclick="goToSetupStep(2)") }}
       </div>
     </section>
 
@@ -69,7 +69,7 @@
 
       <div class="wizard-nav-bar">
         {{ action_button("Zurück", arrow="left", onclick="goToSetupStep(1)") }}
-        {{ action_button("Weiter zur Einrichtung", arrow="right", variant="primary", onclick="goToSetupStep(3)") }}
+        {{ action_button("Weiter zur Einrichtung", arrow="right", onclick="goToSetupStep(3)") }}
       </div>
     </section>
 
@@ -231,7 +231,7 @@
 
       <div class="wizard-nav-bar">
         {{ action_button("Zurück zur Backend-Auswahl", arrow="left", onclick="goToSetupStep(2)") }}
-        {{ action_button("System initialisieren & Starten", type="submit", icon="✨", variant="primary", size="lg") }}
+        {{ action_button("System initialisieren & Starten", type="submit", icon="✨", size="lg") }}
       </div>
     </section>
   </form>

@@ -96,15 +96,16 @@ function initEditorI18nFields() {
 
     const translateBtn = document.createElement("button");
     translateBtn.type = "button";
-    translateBtn.className = "btn i18n-translate-btn";
+    translateBtn.className = "aimo-btn aimo-btn-sm";
     translateBtn.title = "Auto-translate from origin/English into the selected language";
-    translateBtn.innerHTML = `<span class="icon-mono">🌐</span> AI Translate`;
+    translateBtn.innerHTML = `<span class="icon-mono">🌐</span><span>AI Translate</span>`;
     if (isFieldDisabled) translateBtn.disabled = true;
 
     const deleteBtn = document.createElement("button");
     deleteBtn.type = "button";
-    deleteBtn.className = "btn i18n-translate-btn i18n-delete-btn";
+    deleteBtn.className = "aimo-btn aimo-btn-sm aimo-btn-icon danger";
     deleteBtn.title = window.t ? window.t("Delete translation for this language") : "Delete translation for this language";
+    deleteBtn.setAttribute("aria-label", deleteBtn.title);
     deleteBtn.innerHTML = `<span class="icon-mono">🗑️</span>`;
     if (isFieldDisabled) deleteBtn.disabled = true;
 

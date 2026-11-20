@@ -822,9 +822,9 @@ button.chat-menu-dropdown-item {
 .chat-menu-dropdown-item:hover,
 a.chat-menu-dropdown-item:hover,
 button.chat-menu-dropdown-item:hover,
-.chat-menu-dropdown-item:focus,
-a.chat-menu-dropdown-item:focus,
-button.chat-menu-dropdown-item:focus {
+.chat-menu-dropdown-item:focus-visible,
+a.chat-menu-dropdown-item:focus-visible,
+button.chat-menu-dropdown-item:focus-visible {
   background: rgba(65, 42, 25, 0.75);
   color: var(--gold-accent) !important;
   text-decoration: none !important;
@@ -851,8 +851,8 @@ button.chat-menu-dropdown-item.danger {
 .chat-menu-dropdown-item.danger-action:hover,
 a.chat-menu-dropdown-item.danger:hover,
 button.chat-menu-dropdown-item.danger:hover,
-.chat-menu-dropdown-item.danger:focus,
-button.chat-menu-dropdown-item.danger:focus {
+.chat-menu-dropdown-item.danger:focus-visible,
+button.chat-menu-dropdown-item.danger:focus-visible {
   background: rgba(100, 30, 22, 0.5) !important;
   color: #ff7675 !important;
   text-decoration: none !important;

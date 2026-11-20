@@ -75,7 +75,7 @@
           {{ persona_text_fields('new') }}
           <div style="display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
             {{ action_button(_("Cancel"), modal_close="persona-manager-modal", data={"persona-lockable": "1"}) }}
-            {{ action_button(_("Save Persona"), type="submit", variant="primary", icon="💾", id="new-persona-submit-btn", data={"persona-lockable": "1"}) }}
+            {{ action_button(_("Save Persona"), type="submit", icon="💾", id="new-persona-submit-btn", data={"persona-lockable": "1"}) }}
           </div>
         </form>
       </div>
@@ -103,7 +103,7 @@
             {{ action_button(_("Delete"), type="submit", form="edit-persona-delete-form", variant="danger", icon="🗑️", id="edit-persona-delete-btn", data={"persona-lockable": "1"}) }}
             <div style="display: flex; gap: 0.5rem;">
               {{ action_button(_("Cancel"), modal_close="persona-manager-modal", data={"persona-lockable": "1"}) }}
-              {{ action_button(_("Save changes"), type="submit", variant="primary", icon="💾", id="edit-persona-submit-btn", data={"persona-lockable": "1"}) }}
+              {{ action_button(_("Save changes"), type="submit", icon="💾", id="edit-persona-submit-btn", data={"persona-lockable": "1"}) }}
             </div>
           </div>
         </form>

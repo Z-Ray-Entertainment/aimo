@@ -86,7 +86,7 @@
 }
 
 .hamburger-btn:hover,
-.hamburger-btn:focus {
+.hamburger-btn:focus-visible {
   border-color: var(--gold-accent);
   box-shadow: 0 0 8px var(--gold-glow);
   background: var(--bg-leather);

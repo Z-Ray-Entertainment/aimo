@@ -20,7 +20,7 @@
       </p>
     </div>
     {% if is_author and form_id %}
-      {{ action_button(_("Save collaborators"), type="submit", form=form_id, variant="primary", icon="💾", extra_class="collab-save-btn", title=_("Saves all changes in the form")) }}
+      {{ action_button(_("Save collaborators"), type="submit", form=form_id, icon="💾", extra_class="collab-save-btn", title=_("Saves all changes in the form")) }}
     {% endif %}
   </div>
 
@@ -112,9 +112,9 @@
             placeholder="z. B. 123e4567-e89b-12d3-a456-426614174000"
             style="width: 100%; font-family: monospace; font-size: 0.88rem;">
         </div>
-        {{ action_button("Hinzufügen", icon="➕", variant="primary", extra_class="add-collab-tag-btn") }}
+        {{ action_button("Hinzufügen", icon="➕", extra_class="add-collab-tag-btn") }}
         {% if form_id %}
-          {{ action_button(_("Save"), type="submit", form=form_id, variant="primary", icon="💾", extra_class="collab-save-btn", title=_("Saves all changes in the form")) }}
+          {{ action_button(_("Save"), type="submit", form=form_id, icon="💾", extra_class="collab-save-btn", title=_("Saves all changes in the form")) }}
         {% endif %}
       </div>
       <div class="collab-feedback-msg" style="margin-top: 0.65rem; font-size: 0.84rem; display: none;"></div>

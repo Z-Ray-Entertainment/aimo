@@ -30,7 +30,7 @@
           </div>
           <div style="text-align: right; display: flex; justify-content: flex-end; gap: 0.5rem;">
             {{ action_button(_("Cancel"), modal_close="add-gallery-modal") }}
-            {{ action_button(_("Upload"), type="submit", variant="primary") }}
+            {{ action_button(_("Upload"), type="submit") }}
           </div>
         </form>
       </div>
@@ -66,7 +66,7 @@
         </div>
         <div style="display: flex; gap: 0.65rem;">
           {{ action_button(_("Cancel"), icon="✕", modal_close="add-dialogue-modal") }}
-          {{ action_button(_("Add"), icon="➕", variant="primary", id="confirm-add-dialogue-btn") }}
+          {{ action_button(_("Add"), icon="➕", id="confirm-add-dialogue-btn") }}
         </div>
       </div>
     </div>

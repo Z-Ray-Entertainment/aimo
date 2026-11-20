@@ -35,7 +35,7 @@
 
     <div style="display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1.2rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
       {{ action_button(_("Cancel"), modal_close=modal_id) }}
-      {{ action_button((_("Apply crops") if targets|length > 1 else _("Apply crop")), icon="✂️", variant="primary", id=modal_id ~ "-apply-btn") }}
+      {{ action_button((_("Apply crops") if targets|length > 1 else _("Apply crop")), icon="✂️", id=modal_id ~ "-apply-btn") }}
     </div>
   </div>
 </div>

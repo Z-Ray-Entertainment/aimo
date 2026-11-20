@@ -201,9 +201,9 @@ button.btn:hover {
 }
 
 .aimo-btn:hover,
-.aimo-btn:focus,
+.aimo-btn:focus-visible,
 a.aimo-btn:hover,
-a.aimo-btn:focus {
+a.aimo-btn:focus-visible {
   color: var(--text-main);
   border-color: var(--gold-accent);
   background: var(--bg-leather);
@@ -227,28 +227,6 @@ a.aimo-btn.active {
   text-decoration: none !important;
 }
 
-.aimo-btn.primary,
-button.aimo-btn.primary,
-a.aimo-btn.primary {
-  background: var(--bg-leather);
-  color: var(--gold-accent);
-  border-color: var(--gold-accent);
-  box-shadow: 0 0 10px var(--gold-glow);
-  font-weight: 700;
-}
-
-.aimo-btn.primary:hover,
-button.aimo-btn.primary:hover,
-a.aimo-btn.primary:hover,
-.aimo-btn.primary:focus,
-button.aimo-btn.primary:focus,
-a.aimo-btn.primary:focus {
-  background: var(--bg-leather-hover);
-  color: var(--text-main);
-  border-color: var(--gold-accent);
-  box-shadow: 0 0 14px var(--gold-glow);
-}
-
 .aimo-btn.danger,
 button.aimo-btn.danger,
 a.aimo-btn.danger {
@@ -259,7 +237,10 @@ a.aimo-btn.danger {
 
 .aimo-btn.danger:hover,
 button.aimo-btn.danger:hover,
-a.aimo-btn.danger:hover {
+a.aimo-btn.danger:hover,
+.aimo-btn.danger:focus-visible,
+button.aimo-btn.danger:focus-visible,
+a.aimo-btn.danger:focus-visible {
   background: #7A241B;
   color: #fff;
   box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
@@ -391,9 +372,9 @@ a.aimo-btn-sm {
 }
 
 .persona-avatar-btn:hover,
-.persona-avatar-btn:focus,
+.persona-avatar-btn:focus-visible,
 a.persona-avatar-btn:hover,
-a.persona-avatar-btn:focus {
+a.persona-avatar-btn:focus-visible {
   border-color: var(--gold-accent);
   box-shadow: 0 0 8px var(--gold-glow);
   text-decoration: none !important;

@@ -180,7 +180,7 @@
 
         {% if is_editable %}
           <div style="margin-top: 0.5rem;">
-            {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
+            {{ action_button(_("Save"), type="submit", icon="💾") }}
           </div>
         {% endif %}
       </div>
@@ -329,7 +329,7 @@
                 {{ action_button(_("Delete"), type="submit", form="delete-loc-form-" ~ loc.id, variant="danger", icon="🗑️") }}
                 <div style="display: flex; gap: 0.5rem;">
                   {{ action_button(_("Cancel"), modal_close="edit-location-modal-" ~ loc.id) }}
-                  {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
+                  {{ action_button(_("Save"), type="submit", icon="💾") }}
                 </div>
               </div>
             </form>
@@ -449,7 +449,7 @@
 
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
         {{ action_button(_("Cancel"), modal_close="new-location-modal") }}
-        {{ action_button(_("Save Location"), type="submit", variant="primary", icon="💾") }}
+        {{ action_button(_("Save Location"), type="submit", icon="💾") }}
       </div>
     </form>
   </div>

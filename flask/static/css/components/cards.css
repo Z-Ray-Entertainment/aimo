@@ -92,7 +92,7 @@
 }
 
 .aimo-add-card-tile:hover,
-.aimo-add-card-tile:focus {
+.aimo-add-card-tile:focus-visible {
   text-decoration: none !important;
   color: #66bb6a;
   text-shadow: 0 0 10px rgba(76, 175, 80, 0.85), 0 0 22px rgba(76, 175, 80, 0.5);
@@ -108,7 +108,7 @@
 
 a.aimo-add-card-tile,
 a.aimo-add-card-tile:hover,
-a.aimo-add-card-tile:focus,
+a.aimo-add-card-tile:focus-visible,
 a.aimo-add-card-tile:visited,
 a.aimo-add-card-tile:active {
   text-decoration: none !important;
@@ -123,7 +123,7 @@ a.aimo-add-card-tile:active {
 }
 
 .aimo-add-card-tile:hover .plus-symbol,
-.aimo-add-card-tile:focus .plus-symbol {
+.aimo-add-card-tile:focus-visible .plus-symbol {
   color: #66bb6a;
   text-shadow: 0 0 14px rgba(76, 175, 80, 0.95), 0 0 28px rgba(76, 175, 80, 0.55);
   transform: scale(1.12);
