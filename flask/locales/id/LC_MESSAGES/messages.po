@@ -32,23 +32,23 @@ msgstr "Model yang disarankan berhasil ditetapkan untuk semua 5 peran!"
 msgid "Service settings and models saved successfully."
 msgstr "Pengaturan layanan dan model berhasil disimpan."
 
-#: flask/application/admin/views.py:470
+#: flask/application/admin/views.py:472
 msgid "System-wide default backdrop reset (default theme active)."
 msgstr "Latar belakang bawaan sistem diatur ulang (tema bawaan aktif)."
 
-#: flask/application/admin/views.py:508
+#: flask/application/admin/views.py:510
 msgid "World Backdrop"
-msgstr ""
+msgstr "Latar Belakang Dunia"
 
-#: flask/application/admin/views.py:487
+#: flask/application/admin/views.py:489
 msgid "Please select an image file (PNG, JPG, WEBP) to upload."
 msgstr "Silakan pilih file gambar (PNG, JPG, WEBP) untuk diunggah."
 
-#: flask/application/admin/views.py:482
+#: flask/application/admin/views.py:484
 msgid "New system-wide default backdrop saved successfully."
 msgstr "Latar belakang bawaan sistem baru berhasil disimpan."
 
-#: flask/application/admin/views.py:495
+#: flask/application/admin/views.py:497
 msgid "System-wide default backdrop assigned successfully."
 msgstr "Latar belakang bawaan sistem berhasil ditetapkan."
 
@@ -56,143 +56,151 @@ msgstr "Latar belakang bawaan sistem berhasil ditetapkan."
 msgid "Invalid email address or password."
 msgstr "Alamat email atau kata sandi tidak valid."
 
-#: flask/application/characters/views.py:392
+#: flask/application/characters/views.py:401
 msgid "Copy '%(name)s' created as draft."
 msgstr "Salinan '%(name)s' dibuat sebagai draf."
 
-#: flask/application/characters/views.py:408
+#: flask/application/characters/views.py:417
 msgid "Character deleted."
 msgstr "Karakter dihapus."
 
-#: flask/application/characters/views.py:452
+#: flask/application/characters/views.py:493
 msgid "Gallery image removed."
 msgstr "Gambar galeri dihapus."
 
-#: flask/application/characters/views.py:502
+#: flask/application/characters/views.py:543
 msgid "Sprite %(name)s deleted."
 msgstr "Sprite %(name)s dihapus."
 
-#: flask/application/characters/views.py:283 flask/application/characters/views.py:388 flask/application/chat/views.py:181 flask/application/chat/views.py:205
+#: flask/application/characters/views.py:292 flask/application/characters/views.py:397 flask/application/chat/views.py:45 flask/application/chat/views.py:69
 msgid "Character not found."
 msgstr "Karakter tidak ditemukan."
 
-#: flask/application/characters/views.py:287
+#: flask/application/characters/views.py:296
 msgid "Access denied: You can only edit your own characters or creations shared with you."
 msgstr "Akses ditolak: Anda hanya dapat mengedit karakter Anda sendiri atau kreasi yang dibagikan kepada Anda."
 
-#: flask/application/characters/views.py:404
+#: flask/application/characters/views.py:413
 msgid "Character not found or no permission to delete."
 msgstr "Karakter tidak ditemukan atau tidak ada izin untuk menghapus."
 
-#: flask/application/characters/views.py:423 flask/application/characters/views.py:448 flask/application/characters/views.py:467 flask/application/characters/views.py:498 flask/application/characters/views.py:533
+#: flask/application/characters/views.py:432 flask/application/characters/views.py:459 flask/application/characters/views.py:485 flask/application/characters/views.py:508 flask/application/characters/views.py:539
 msgid "Character not found or no permission."
 msgstr "Karakter tidak ditemukan atau tidak ada izin."
 
-#: flask/application/characters/views.py:539 flask/application/characters/views.py:584
+#: flask/application/characters/views.py:463 flask/application/characters/views.py:489
+msgid "Gallery image not found."
+msgstr "Gambar galeri tidak ditemukan."
+
+#: flask/application/characters/views.py:470
+msgid "Gallery image updated."
+msgstr "Gambar galeri diperbarui."
+
+#: flask/application/characters/views.py:580 flask/application/characters/views.py:625
 msgid "Invalid or inaccessible location selected."
 msgstr "Lokasi yang dipilih tidak valid atau tidak dapat diakses."
 
-#: flask/application/characters/views.py:564 flask/application/worldinfo/views.py:391
+#: flask/application/characters/views.py:605 flask/application/worldinfo/views.py:393
 msgid "Event '%(title)s' added."
 msgstr "Acara '%(title)s' ditambahkan."
 
-#: flask/application/characters/views.py:631 flask/application/worldinfo/views.py:448
+#: flask/application/characters/views.py:672 flask/application/worldinfo/views.py:450
 msgid "Event deleted."
 msgstr "Acara dihapus."
 
-#: flask/application/characters/views.py:259
+#: flask/application/characters/views.py:268
 msgid "Character '%(name)s' created successfully!"
 msgstr "Karakter '%(name)s' berhasil dibuat!"
 
-#: flask/application/characters/views.py:345
+#: flask/application/characters/views.py:354
 msgid "Character '%(name)s' saved."
 msgstr "Karakter '%(name)s' disimpan."
 
-#: flask/application/characters/views.py:433
+#: flask/application/characters/views.py:442
 msgid "9:16 gallery image added."
 msgstr "Gambar galeri 9:16 ditambahkan."
 
-#: flask/application/characters/views.py:483
+#: flask/application/characters/views.py:524
 msgid "Sprite '%(name)s' uploaded."
 msgstr "Sprite '%(name)s' diunggah."
 
-#: flask/application/characters/views.py:610 flask/application/worldinfo/views.py:430
+#: flask/application/characters/views.py:651 flask/application/worldinfo/views.py:432
 msgid "Event updated."
 msgstr "Acara diperbarui."
 
-#: flask/application/chat/views.py:609
-msgid "Chat session deleted."
-msgstr "Sesi obrolan dihapus."
-
-#: flask/application/chat/views.py:357 flask/application/chat/views.py:692
-msgid "Chat session not found."
-msgstr "Sesi obrolan tidak ditemukan."
-
-#: flask/application/chat/views.py:365
-msgid "Associated character not found."
-msgstr "Karakter terkait tidak ditemukan."
-
-#: flask/application/chat/views.py:533
-msgid "Session not found."
-msgstr "Sesi tidak ditemukan."
-
-#: flask/application/chat/views.py:673
+#: flask/application/chat/memory_views.py:80
 msgid "Memory deleted."
 msgstr "Memori dihapus."
 
-#: flask/application/chat/views.py:699
+#: flask/application/chat/memory_views.py:99 flask/application/chat/views.py:221
+msgid "Chat session not found."
+msgstr "Sesi obrolan tidak ditemukan."
+
+#: flask/application/chat/memory_views.py:106
 msgid "Memory not found."
 msgstr "Memori tidak ditemukan."
 
-#: flask/application/chat/views.py:715
+#: flask/application/chat/memory_views.py:122
 msgid "No messages found for this memory episode."
 msgstr "Tidak ada pesan yang ditemukan untuk episode memori ini."
 
-#: flask/application/chat/views.py:746
+#: flask/application/chat/memory_views.py:153
 msgid "Memory recalculated successfully."
 msgstr "Memori berhasil dihitung ulang."
 
-#: flask/application/chat/views.py:545
-msgid "Persona updated for this session."
-msgstr "Persona diperbarui untuk sesi ini."
-
-#: flask/application/chat/views.py:651
+#: flask/application/chat/memory_views.py:58
 msgid "Memory updated."
 msgstr "Memori diperbarui."
 
-#: flask/application/chat/views.py:750
+#: flask/application/chat/memory_views.py:157
 msgid "Recalculation error: %(error)s"
 msgstr "Kesalahan penghitungan ulang: %(error)s"
 
-#: flask/application/chat/views.py:237 flask/application/chat/views.py:553
+#: flask/application/chat/views.py:479
+msgid "Chat session deleted."
+msgstr "Sesi obrolan dihapus."
+
+#: flask/application/chat/views.py:229
+msgid "Associated character not found."
+msgstr "Karakter terkait tidak ditemukan."
+
+#: flask/application/chat/views.py:398
+msgid "Session not found."
+msgstr "Sesi tidak ditemukan."
+
+#: flask/application/chat/views.py:415
+msgid "Persona updated for this session."
+msgstr "Persona diperbarui untuk sesi ini."
+
+#: flask/application/chat/views.py:101 flask/application/chat/views.py:423
 msgid "Invalid WorldInfo."
 msgstr "WorldInfo tidak valid."
 
-#: flask/application/chat/views.py:242 flask/application/chat/views.py:560 flask/application/worldinfo/views.py:128 flask/application/worldinfo/views.py:236
+#: flask/application/chat/views.py:106 flask/application/chat/views.py:430 flask/application/worldinfo/views.py:128 flask/application/worldinfo/views.py:236
 msgid "This world is not yet available in your language."
 msgstr "Dunia ini belum tersedia dalam bahasa Anda."
 
-#: flask/application/chat/views.py:542
+#: flask/application/chat/views.py:412
 msgid "Invalid persona."
 msgstr "Persona tidak valid."
 
-#: flask/application/chat/views.py:569
+#: flask/application/chat/views.py:439
 msgid "WorldInfo changed for this chat."
 msgstr "WorldInfo diubah untuk obrolan ini."
 
-#: flask/application/chat/views.py:572
+#: flask/application/chat/views.py:442
 msgid "Event setting saved."
 msgstr "Pengaturan acara disimpan."
 
-#: flask/application/chat/views.py:580
+#: flask/application/chat/views.py:450
 msgid "Thinking enabled."
 msgstr "Berpikir diaktifkan."
 
-#: flask/application/chat/views.py:582
+#: flask/application/chat/views.py:452
 msgid "Thinking disabled."
 msgstr "Berpikir dinonaktifkan."
 
-#: flask/application/chat/views.py:587
+#: flask/application/chat/views.py:457
 msgid "Chat title updated."
 msgstr "Judul obrolan diperbarui."
 
@@ -264,15 +272,15 @@ msgstr "'%(name)s' sekarang menjadi persona bawaan Anda."
 msgid "Persona '%(name)s' deleted."
 msgstr "Persona '%(name)s' dihapus."
 
-#: flask/application/settings/views.py:63 flask/templates/characters/creator.html:87 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:155 flask/templates/macros/persona_manager.html:69
+#: flask/application/settings/views.py:63 flask/templates/characters/partials/tab_info.html:20 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:155 flask/templates/macros/persona_manager.html:72
 msgid "Female"
 msgstr "Perempuan"
 
-#: flask/application/settings/views.py:64 flask/templates/characters/creator.html:88 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:157 flask/templates/macros/persona_manager.html:70
+#: flask/application/settings/views.py:64 flask/templates/characters/partials/tab_info.html:21 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:157 flask/templates/macros/persona_manager.html:73
 msgid "Male"
 msgstr "Laki-laki"
 
-#: flask/application/settings/views.py:65 flask/templates/characters/creator.html:89 flask/templates/macros/persona_manager.html:71 flask/templates/macros/persona_manager.html:97 flask/templates/overview/tabs/characters.html:11
+#: flask/application/settings/views.py:65 flask/templates/characters/partials/tab_info.html:22 flask/templates/macros/persona_manager.html:74 flask/templates/macros/persona_manager.html:107 flask/templates/overview/tabs/characters.html:11
 msgid "Non-Binary"
 msgstr "Non-Biner"
 
@@ -280,11 +288,11 @@ msgstr "Non-Biner"
 msgid "Account settings saved."
 msgstr "Pengaturan akun disimpan."
 
-#: flask/application/settings/views.py:74 flask/i18n.py:132 flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:257 flask/templates/characters/creator.html:258
+#: flask/application/settings/views.py:74 flask/i18n.py:132 flask/templates/characters/partials/modals.html:94 flask/templates/characters/partials/tab_dialogue.html:23 flask/templates/characters/partials/tab_dialogue.html:28
 msgid "Character"
 msgstr "Karakter"
 
-#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:405
+#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/partials/sidebar.html:34 flask/templates/chat/session.html:279
 msgid "World"
 msgstr "Dunia"
 
@@ -296,11 +304,11 @@ msgstr "Lorebook"
 msgid "The new passwords do not match."
 msgstr "Kata sandi baru tidak cocok."
 
-#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:113
+#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:110
 msgid "Owner"
 msgstr "Pemilik"
 
-#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:115
+#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:112
 msgid "Collaborator"
 msgstr "Kolaborator"
 
@@ -320,7 +328,7 @@ msgstr "Lokasi"
 msgid "Events"
 msgstr "Peristiwa"
 
-#: flask/application/settings/views.py:136 flask/templates/lorebooks/detail.html:22 flask/templates/macros/lorebook_manager.html:78 flask/templates/macros/lorebook_manager.html:151 flask/templates/macros/lorebook_manager.html:224
+#: flask/application/settings/views.py:136 flask/templates/lorebooks/detail.html:27 flask/templates/macros/lorebook_manager.html:78 flask/templates/macros/lorebook_manager.html:151 flask/templates/macros/lorebook_manager.html:224
 msgid "Entries"
 msgstr "Entri"
 
@@ -336,7 +344,7 @@ msgstr "Mode AI Cloud: terjemahan latar belakang otomatis dinonaktifkan. Gunakan
 msgid "WorldInfo deleted."
 msgstr "WorldInfo dihapus."
 
-#: flask/application/worldinfo/views.py:356
+#: flask/application/worldinfo/views.py:358
 msgid "Location deleted."
 msgstr "Lokasi dihapus."
 
@@ -352,7 +360,7 @@ msgstr "WorldInfo tidak ditemukan."
 msgid "WorldInfo not found or no permission to delete."
 msgstr "WorldInfo tidak ditemukan atau tidak ada izin untuk menghapus."
 
-#: flask/application/worldinfo/views.py:266 flask/application/worldinfo/views.py:308 flask/application/worldinfo/views.py:352 flask/application/worldinfo/views.py:368 flask/application/worldinfo/views.py:405
+#: flask/application/worldinfo/views.py:266 flask/application/worldinfo/views.py:308 flask/application/worldinfo/views.py:354 flask/application/worldinfo/views.py:370 flask/application/worldinfo/views.py:407
 msgid "WorldInfo not found or no permission."
 msgstr "WorldInfo tidak ditemukan atau tidak ada izin."
 
@@ -368,7 +376,7 @@ msgstr "Akses ditolak: Anda hanya dapat mengedit WorldInfo Anda sendiri atau kre
 msgid "WorldInfo saved."
 msgstr "WorldInfo disimpan."
 
-#: flask/application/worldinfo/views.py:337
+#: flask/application/worldinfo/views.py:339
 msgid "Location updated."
 msgstr "Lokasi diperbarui."
 
@@ -504,15 +512,15 @@ msgstr "Peringatan"
 msgid "Notice"
 msgstr "Pemberitahuan"
 
-#: flask/i18n.py:99 flask/templates/macros/buttons.html:79 flask/templates/macros/buttons.html:80 flask/templates/macros/lorebook_manager.html:239 flask/templates/macros/persona_manager.html:55
+#: flask/i18n.py:99 flask/templates/characters/partials/modals.html:167 flask/templates/macros/buttons.html:83 flask/templates/macros/buttons.html:84 flask/templates/macros/image_viewer.html:12
 msgid "Close"
 msgstr "Tutup"
 
-#: flask/i18n.py:100 flask/templates/characters/creator.html:134
+#: flask/i18n.py:100 flask/templates/characters/partials/tab_info.html:67
 msgid "Crops active"
 msgstr "Potongan aktif"
 
-#: flask/i18n.py:101 flask/templates/worldinfo/detail.html:97
+#: flask/i18n.py:101 flask/templates/worldinfo/detail.html:110
 msgid "1:1 Cover active"
 msgstr "Sampul 1:1 aktif"
 
@@ -604,11 +612,11 @@ msgstr "Hapus persona"
 msgid "Deletion locked"
 msgstr "Penghapusan dikunci"
 
-#: flask/i18n.py:124 flask/templates/admin/services.html:254 flask/templates/admin/users.html:43 flask/templates/characters/creator.html:247 flask/templates/characters/creator.html:430
+#: flask/i18n.py:124 flask/templates/admin/services.html:250 flask/templates/admin/users.html:40 flask/templates/characters/partials/tab_dialogue.html:18 flask/templates/characters/partials/tab_gallery.html:62
 msgid "Delete"
 msgstr "Hapus"
 
-#: flask/i18n.py:125 flask/templates/chat/session.html:972
+#: flask/i18n.py:125
 msgid "Translating..."
 msgstr "Menerjemahkan..."
 
@@ -656,37 +664,161 @@ msgstr "Acara"
 msgid "Character Event"
 msgstr "Acara Karakter"
 
-#: flask/templates/admin/backdrop.html:10
-msgid "System-Wide Default Backdrop"
-msgstr "Latar Belakang Bawaan Sistem"
+#: flask/i18n.py:140
+msgid "admire"
+msgstr "Kagum"
 
-#: flask/templates/admin/backdrop.html:12
+#: flask/i18n.py:141
+msgid "amused"
+msgstr "Terhibur"
+
+#: flask/i18n.py:142
+msgid "anger"
+msgstr "Marah"
+
+#: flask/i18n.py:143
+msgid "annoyed"
+msgstr "Kesal"
+
+#: flask/i18n.py:144
+msgid "approval"
+msgstr "Setuju"
+
+#: flask/i18n.py:145
+msgid "caring"
+msgstr "Peduli"
+
+#: flask/i18n.py:146
+msgid "confused"
+msgstr "Bingung"
+
+#: flask/i18n.py:147
+msgid "curious"
+msgstr "Penasaran"
+
+#: flask/i18n.py:148
+msgid "desire"
+msgstr "Hasrat"
+
+#: flask/i18n.py:149
+msgid "disappointed"
+msgstr "Kecewa"
+
+#: flask/i18n.py:150
+msgid "disapproval"
+msgstr "Tidak Setuju"
+
+#: flask/i18n.py:151
+msgid "disgust"
+msgstr "Jijik"
+
+#: flask/i18n.py:152
+msgid "embarrassed"
+msgstr "Malu"
+
+#: flask/i18n.py:153
+msgid "excited"
+msgstr "Bersemangat"
+
+#: flask/i18n.py:154
+msgid "fear"
+msgstr "Takut"
+
+#: flask/i18n.py:155
+msgid "gratitude"
+msgstr "Syukur"
+
+#: flask/i18n.py:156
+msgid "grief"
+msgstr "Duka"
+
+#: flask/i18n.py:157
+msgid "joy"
+msgstr "Gembira"
+
+#: flask/i18n.py:158
+msgid "love"
+msgstr "Cinta"
+
+#: flask/i18n.py:159
+msgid "nervousness"
+msgstr "Gugup"
+
+#: flask/i18n.py:160
+msgid "neutral"
+msgstr "Netral"
+
+#: flask/i18n.py:161
+msgid "optimistic"
+msgstr "Optimis"
+
+#: flask/i18n.py:162
+msgid "pride"
+msgstr "Bangga"
+
+#: flask/i18n.py:163
+msgid "realize"
+msgstr "Sadar"
+
+#: flask/i18n.py:164
+msgid "relief"
+msgstr "Lega"
+
+#: flask/i18n.py:165
+msgid "remorse"
+msgstr "Penyesalan"
+
+#: flask/i18n.py:166
+msgid "sad"
+msgstr "Sedih"
+
+#: flask/i18n.py:167
+msgid "surprise"
+msgstr "Terkejut"
+
+#: flask/templates/admin/backdrop.html:14
 msgid "Global atmospheric background for all pages and base fallback for roleplay chats."
 msgstr "Latar belakang atmosferik global untuk semua halaman dan cadangan dasar untuk obrolan bermain peran."
 
-#: flask/templates/admin/backdrop.html:17
+#: flask/templates/admin/backdrop.html:18
 msgid "Custom backdrop is active"
 msgstr "Latar belakang khusus aktif"
 
-#: flask/templates/admin/backdrop.html:18
+#: flask/templates/admin/backdrop.html:19
 msgid "Custom backdrop active"
 msgstr "Latar belakang khusus aktif"
 
-#: flask/templates/admin/backdrop.html:21
+#: flask/templates/admin/backdrop.html:22
 msgid "Default RPG theme cover is active"
 msgstr "Sampul tema RPG bawaan aktif"
 
-#: flask/templates/admin/backdrop.html:22
+#: flask/templates/admin/backdrop.html:23
 msgid "Default Theme (Cover)"
 msgstr "Tema Bawaan (Sampul)"
 
-#: flask/templates/admin/backdrop.html:36
+#: flask/templates/admin/backdrop.html:37
 msgid "No custom backdrop set"
 msgstr "Tidak ada latar belakang khusus yang diatur"
 
 #: flask/templates/admin/backdrop.html:38
-msgid "Currently using the dark RPG default cover. Upload a 16:9 image on the right or select an existing location."
-msgstr "Saat ini menggunakan sampul bawaan RPG gelap. Unggah gambar 16:9 di sebelah kanan atau pilih lokasi yang ada."
+msgid "Currently using the dark RPG default cover. Choose a 16:9 image below or select an existing location."
+msgstr "Saat ini menggunakan sampul default RPG gelap. Pilih gambar 16:9 di bawah atau pilih lokasi yang ada."
+
+#: flask/templates/admin/backdrop.html:39 flask/templates/macros/backdrop_selector.html:54 flask/templates/worldinfo/detail.html:130 flask/templates/worldinfo/detail.html:255 flask/templates/worldinfo/detail.html:398
+msgid "Choose Backdrop"
+msgstr "Pilih Latar Belakang"
+
+#: flask/templates/admin/backdrop.html:40 flask/templates/macros/backdrop_selector.html:62 flask/templates/worldinfo/detail.html:131 flask/templates/worldinfo/detail.html:256 flask/templates/worldinfo/detail.html:399
+msgid "Remove Backdrop"
+msgstr "Hapus Latar Belakang"
+
+#: flask/templates/admin/backdrop.html:41
+msgid "Recommended: 16:9 widescreen (e.g., 1920×1080 or 2560×1440). Supported formats: PNG, JPG, WEBP."
+msgstr "Disarankan: 16:9 layar lebar (mis. 1920×1080 atau 2560×1440). Format yang didukung: PNG, JPG, WEBP."
+
+#: flask/templates/admin/backdrop.html:42 flask/templates/admin/layout.html:31
+msgid "System Backdrop"
+msgstr "Latar Belakang Sistem"
 
 #: flask/templates/admin/backdrop.html:47
 msgid "Rule: Priority in Chat"
@@ -694,225 +826,197 @@ msgstr "Aturan: Prioritas dalam Obrolan"
 
 #: flask/templates/admin/backdrop.html:50
 msgid "This default backdrop forms the foundational background (Priority: System → World → Location). In chat, it is overridden by the active WorldInfo backdrop if set, and further overridden when the current location has its own background image."
-msgstr ""
+msgstr "Latar belakang default ini membentuk latar dasar (Prioritas: Sistem → Dunia → Lokasi). Di obrolan, ini digantikan oleh latar belakang WorldInfo aktif jika diatur, dan digantikan lagi jika lokasi saat ini memiliki gambar latarnya sendiri."
 
-#: flask/templates/admin/backdrop.html:56
-msgid "Do you really want to remove the custom default backdrop and reset to the default theme?"
-msgstr "Apakah Anda benar-benar ingin menghapus latar belakang bawaan khusus dan kembali ke tema bawaan?"
-
-#: flask/templates/admin/backdrop.html:58
-msgid "Remove Backdrop (Reset to Default)"
-msgstr "Hapus Latar Belakang (Reset ke Bawaan)"
-
-#: flask/templates/admin/backdrop.html:71
-msgid "Upload New Background Image"
-msgstr "Unggah Gambar Latar Belakang Baru"
-
-#: flask/templates/admin/backdrop.html:74
-msgid "Recommended: 16:9 widescreen (e.g., 1920×1080 or 2560×1440). Supported formats: PNG, JPG, WEBP."
-msgstr "Disarankan: 16:9 layar lebar (mis. 1920×1080 atau 2560×1440). Format yang didukung: PNG, JPG, WEBP."
-
-#: flask/templates/admin/backdrop.html:79
-msgid "Select image file:"
-msgstr "Pilih file gambar:"
-
-#: flask/templates/admin/backdrop.html:85
+#: flask/templates/admin/backdrop.html:55
 msgid "Save as System Backdrop"
 msgstr "Simpan sebagai Latar Belakang Sistem"
 
-#: flask/templates/admin/backdrop.html:94
+#: flask/templates/admin/backdrop.html:64
 msgid "Choose from Existing Locations"
 msgstr "Pilih dari Lokasi yang Ada"
 
-#: flask/templates/admin/backdrop.html:96
+#: flask/templates/admin/backdrop.html:66
 msgid "available"
 msgstr "tersedia"
 
-#: flask/templates/admin/backdrop.html:101
+#: flask/templates/admin/backdrop.html:71
 msgid "Click on an existing location to adopt its background image as the system default:"
 msgstr "Klik lokasi yang ada untuk menggunakan gambar latar belakangnya sebagai bawaan sistem:"
 
-#: flask/templates/admin/backdrop.html:119
+#: flask/templates/admin/backdrop.html:89
 msgid "No locations with background images have been saved in WorldInfos yet."
 msgstr "Belum ada lokasi dengan gambar latar belakang yang disimpan di WorldInfo."
 
-#: flask/templates/admin/layout.html:12 flask/templates/macros/top_header.html:58
+#: flask/templates/admin/layout.html:21 flask/templates/macros/top_header.html:56
 msgid "Administration"
 msgstr "Administrasi"
 
-#: flask/templates/admin/layout.html:14
+#: flask/templates/admin/layout.html:23
 msgid "System & Configuration"
 msgstr "Sistem & Konfigurasi"
 
-#: flask/templates/admin/layout.html:18
+#: flask/templates/admin/layout.html:27
 msgid "User Management"
 msgstr "Manajemen Pengguna"
 
-#: flask/templates/admin/layout.html:19
+#: flask/templates/admin/layout.html:28
 msgid "Services & Models"
 msgstr "Layanan & Model"
 
-#: flask/templates/admin/layout.html:20 flask/templates/admin/prompts.html:12
+#: flask/templates/admin/layout.html:29
 msgid "System Prompts"
 msgstr "Prompt Sistem"
 
-#: flask/templates/admin/layout.html:21 flask/templates/admin/translations.html:9
+#: flask/templates/admin/layout.html:30
 msgid "Content Translations"
 msgstr "Terjemahan Konten"
 
-#: flask/templates/admin/layout.html:22
-msgid "System Backdrop"
-msgstr "Latar Belakang Sistem"
-
-#: flask/templates/admin/layout.html:26 flask/templates/chat/select_worldinfo.html:88 flask/templates/settings/layout.html:26
+#: flask/templates/admin/layout.html:35 flask/templates/chat/select_worldinfo.html:92 flask/templates/settings/layout.html:30
 msgid "Back to Hub"
 msgstr "Kembali ke Hub"
 
-#: flask/templates/admin/prompts.html:17
+#: flask/templates/admin/prompts.html:15
 msgid "Prompt Placeholders"
 msgstr "Placeholder Prompt"
 
-#: flask/templates/admin/prompts.html:20
+#: flask/templates/admin/prompts.html:18
 msgid "You can use"
 msgstr "Anda dapat menggunakan"
 
-#: flask/templates/admin/prompts.html:20
+#: flask/templates/admin/prompts.html:18
 msgid "(character name) and"
 msgstr "(nama karakter) dan"
 
-#: flask/templates/admin/prompts.html:20
+#: flask/templates/admin/prompts.html:18
 msgid "(player persona name) in prompts. These are replaced dynamically at runtime."
 msgstr "(nama persona pemain) dalam prompt. Ini diganti secara dinamis saat runtime."
 
-#: flask/templates/admin/prompts.html:25
+#: flask/templates/admin/prompts.html:23
 msgid "Roleplay Prompt"
 msgstr "Prompt Roleplay"
 
-#: flask/templates/admin/prompts.html:26
+#: flask/templates/admin/prompts.html:24
 msgid "Memory Prompt"
 msgstr "Prompt Memori"
 
-#: flask/templates/admin/prompts.html:27
+#: flask/templates/admin/prompts.html:25
 msgid "Diffuser Prompt"
 msgstr "Prompt Diffuser"
 
-#: flask/templates/admin/prompts.html:28
+#: flask/templates/admin/prompts.html:26
 msgid "AI Author Prompt"
 msgstr "Prompt Penulis AI"
 
-#: flask/templates/admin/prompts.html:29
+#: flask/templates/admin/prompts.html:27
 msgid "Vision Prompt"
 msgstr "Prompt Visi"
 
-#: flask/templates/admin/prompts.html:30
+#: flask/templates/admin/prompts.html:28
 msgid "AI Dialogue Author Prompt"
 msgstr "Prompt Penulis Dialog AI"
 
-#: flask/templates/admin/prompts.html:37
+#: flask/templates/admin/prompts.html:36
 msgid "Restore Default"
 msgstr "Kembalikan Default"
 
-#: flask/templates/admin/prompts.html:37
+#: flask/templates/admin/prompts.html:36
 msgid "Resets all languages of this prompt to factory default"
 msgstr "Mengatur ulang semua bahasa dari prompt ini ke setelan pabrik"
 
-#: flask/templates/admin/prompts.html:55
+#: flask/templates/admin/prompts.html:54
 msgid "Save Prompts"
 msgstr "Simpan Prompt"
 
 #: flask/templates/admin/services.html:10
-msgid "Service Endpoints & Model Tasks"
-msgstr "Titik Akhir Layanan & Tugas Model"
-
-#: flask/templates/admin/services.html:14
 msgid "1. Active AI Backend (Exclusive)"
 msgstr "1. Backend AI Aktif (Eksklusif)"
 
-#: flask/templates/admin/services.html:16
+#: flask/templates/admin/services.html:12
 msgid "AIMO always operates exactly one AI backend (either Ollama or Google AI Cloud) – no parallel operation."
 msgstr "AIMO selalu mengoperasikan tepat satu backend AI (Ollama atau Google AI Cloud) – tidak ada operasi paralel."
 
-#: flask/templates/admin/services.html:22
+#: flask/templates/admin/services.html:18
 msgid "Ollama API URL"
 msgstr "URL API Ollama"
 
-#: flask/templates/admin/services.html:24 flask/templates/admin/services.html:37 flask/templates/admin/services.html:59
+#: flask/templates/admin/services.html:20 flask/templates/admin/services.html:33 flask/templates/admin/services.html:55
 msgid "Connected"
 msgstr "Terhubung"
 
-#: flask/templates/admin/services.html:24
+#: flask/templates/admin/services.html:20
 msgid "Unreachable"
 msgstr "Tidak dapat dijangkau"
 
-#: flask/templates/admin/services.html:29
+#: flask/templates/admin/services.html:25
 msgid "Test"
 msgstr "Uji"
 
-#: flask/templates/admin/services.html:35
+#: flask/templates/admin/services.html:31
 msgid "Google AI API Key"
 msgstr "Kunci API Google AI"
 
-#: flask/templates/admin/services.html:37
+#: flask/templates/admin/services.html:33
 msgid "Unreachable / invalid"
 msgstr "Tidak dapat dijangkau / tidak valid"
 
-#: flask/templates/admin/services.html:37
+#: flask/templates/admin/services.html:33
 msgid "Not configured"
 msgstr "Belum dikonfigurasi"
 
-#: flask/templates/admin/services.html:42
+#: flask/templates/admin/services.html:38
 msgid "Test API Key & Models"
 msgstr "Uji Kunci API & Model"
 
-#: flask/templates/admin/services.html:49
+#: flask/templates/admin/services.html:45
 msgid "2. Image Generation & Web Search"
 msgstr "2. Pembuatan Gambar & Pencarian Web"
 
-#: flask/templates/admin/services.html:53
+#: flask/templates/admin/services.html:49
 msgid "Image Generation (Scene images in chat)"
 msgstr "Pembuatan Gambar (Gambar adegan dalam obrolan)"
 
-#: flask/templates/admin/services.html:57
+#: flask/templates/admin/services.html:53
 msgid "ComfyUI API URL"
 msgstr "URL API ComfyUI"
 
-#: flask/templates/admin/services.html:59
+#: flask/templates/admin/services.html:55
 msgid "Offline"
 msgstr "Offline"
 
-#: flask/templates/admin/services.html:66
+#: flask/templates/admin/services.html:62
 msgid "Google AI Image Model"
 msgstr "Model Gambar Google AI"
 
-#: flask/templates/admin/services.html:68 flask/templates/admin/services.html:219
+#: flask/templates/admin/services.html:64 flask/templates/admin/services.html:215
 msgid "Ready"
 msgstr "Siap"
 
-#: flask/templates/admin/services.html:68
+#: flask/templates/admin/services.html:64
 msgid "Not checked / Offline"
 msgstr "Belum diperiksa / Offline"
 
-#: flask/templates/admin/services.html:80
+#: flask/templates/admin/services.html:76
 msgid "Web Search (Prepared)"
 msgstr "Pencarian Web (Disiapkan)"
 
-#: flask/templates/admin/services.html:84
+#: flask/templates/admin/services.html:80
 msgid "SearXNG URL (Prepared)"
 msgstr "URL SearXNG (Disiapkan)"
 
-#: flask/templates/admin/services.html:93
+#: flask/templates/admin/services.html:89
 msgid "3. Task-Specific Model Assignment"
 msgstr "3. Penetapan Model Khusus Tugas"
 
-#: flask/templates/admin/services.html:94
+#: flask/templates/admin/services.html:90
 msgid "Assign suggested models"
 msgstr "Tetapkan model yang disarankan"
 
-#: flask/templates/admin/services.html:94
+#: flask/templates/admin/services.html:90
 msgid "Sets all 5 dropdowns to the recommended default models for the selected backend"
 msgstr "Mengatur semua 5 dropdown ke model bawaan yang direkomendasikan untuk backend yang dipilih"
 
-#: flask/templates/admin/services.html:100
+#: flask/templates/admin/services.html:96
 msgid ""
 "Roleplay Model:\n"
 "Primary language model for narrative dialogue generation and roleplay in chat."
@@ -920,7 +1024,7 @@ msgstr ""
 "Model Roleplay:\n"
 "Model bahasa utama untuk pembuatan dialog naratif dan permainan peran dalam obrolan."
 
-#: flask/templates/admin/services.html:111
+#: flask/templates/admin/services.html:107
 msgid ""
 "Classification Model:\n"
 "Fast, lightweight model for downstream detection of emotions (avatar sprites) and location change suggestions in a single pass."
@@ -928,7 +1032,7 @@ msgstr ""
 "Model Klasifikasi:\n"
 "Model cepat dan ringan untuk deteksi emosi (sprite avatar) dan saran perpindahan lokasi dalam satu kali jalan."
 
-#: flask/templates/admin/services.html:122
+#: flask/templates/admin/services.html:118
 msgid ""
 "Memory Model:\n"
 "Automatically creates episodic summaries (memories) every 10 messages and updates the chat title."
@@ -936,7 +1040,7 @@ msgstr ""
 "Model Memori:\n"
 "Secara otomatis membuat ringkasan episodik (memori) setiap 10 pesan dan memperbarui judul obrolan."
 
-#: flask/templates/admin/services.html:133
+#: flask/templates/admin/services.html:129
 msgid ""
 "Assistant Model:\n"
 "Responsible for AI author optimization (Sparkle ✨), text translations, and scene image prompts."
@@ -944,7 +1048,7 @@ msgstr ""
 "Model Asisten:\n"
 "Bertanggung jawab atas optimasi penulis AI (Sparkle ✨), terjemahan teks, dan prompt gambar adegan."
 
-#: flask/templates/admin/services.html:144
+#: flask/templates/admin/services.html:140
 msgid ""
 "Vision Model:\n"
 "Multimodal model for visual analysis of persona portraits, 16:9 location images, and image uploads in chat."
@@ -952,139 +1056,139 @@ msgstr ""
 "Model Visi:\n"
 "Model multimodal untuk analisis visual potret persona, gambar lokasi 16:9, dan unggahan gambar dalam obrolan."
 
-#: flask/templates/admin/services.html:156
+#: flask/templates/admin/services.html:152
 msgid "4. LLM Inference Hyperparameters"
 msgstr "4. Hiperparameter Inferensi LLM"
 
-#: flask/templates/admin/services.html:161
+#: flask/templates/admin/services.html:157
 msgid "Controls the token budget for history, memories, and lorebooks (also active for Google AI as a cost/history limit)."
 msgstr "Mengontrol anggaran token untuk riwayat, memori, dan lorebook (juga aktif untuk Google AI sebagai batas biaya/riwayat)."
 
-#: flask/templates/admin/services.html:176
+#: flask/templates/admin/services.html:172
 msgid "Repetition penalty for local Ollama models."
 msgstr "Penalti pengulangan untuk model Ollama lokal."
 
-#: flask/templates/admin/services.html:184
+#: flask/templates/admin/services.html:180
 msgid "Save Services & Model Settings"
 msgstr "Simpan Layanan & Pengaturan Model"
 
-#: flask/templates/admin/services.html:190
+#: flask/templates/admin/services.html:186
 msgid "Ollama Model Manager"
 msgstr "Pengelola Model Ollama"
 
-#: flask/templates/admin/services.html:196
+#: flask/templates/admin/services.html:192
 msgid "Setup Helper for Ollama"
 msgstr "Pembantu Pengaturan untuk Ollama"
 
-#: flask/templates/admin/services.html:198
+#: flask/templates/admin/services.html:194
 msgid "Install missing"
 msgstr "Instal yang hilang"
 
-#: flask/templates/admin/services.html:201
+#: flask/templates/admin/services.html:197
 msgid "Recommended models per role:"
 msgstr "Model yang disarankan per peran:"
 
-#: flask/templates/admin/services.html:208
+#: flask/templates/admin/services.html:204
 msgid "Click to copy into pull input"
 msgstr "Klik untuk menyalin ke input pull"
 
-#: flask/templates/admin/services.html:221
+#: flask/templates/admin/services.html:217
 msgid "Missing"
 msgstr "Hilang"
 
-#: flask/templates/admin/services.html:222 flask/templates/admin/services.html:234
+#: flask/templates/admin/services.html:218 flask/templates/admin/services.html:230
 msgid "Pull"
 msgstr "Tarik (Pull)"
 
-#: flask/templates/admin/services.html:231
+#: flask/templates/admin/services.html:227
 msgid "Install new model (Pull)"
 msgstr "Instal model baru (Pull)"
 
-#: flask/templates/admin/services.html:233
+#: flask/templates/admin/services.html:229
 msgid "Enter model tag..."
 msgstr "Masukkan tag model..."
 
-#: flask/templates/admin/services.html:237
+#: flask/templates/admin/services.html:233
 msgid "Quick select:"
 msgstr "Pilihan cepat:"
 
-#: flask/templates/admin/services.html:244
+#: flask/templates/admin/services.html:240
 msgid "Starting download..."
 msgstr "Memulai unduhan..."
 
-#: flask/templates/admin/services.html:249
+#: flask/templates/admin/services.html:245
 msgid "Installed Models"
 msgstr "Model Terinstal"
 
-#: flask/templates/admin/services.html:254
+#: flask/templates/admin/services.html:250
 msgid "Delete model"
 msgstr "Hapus model"
 
-#: flask/templates/admin/services.html:257
+#: flask/templates/admin/services.html:253
 msgid "No models found or Ollama offline."
 msgstr "Tidak ada model ditemukan atau Ollama offline."
 
-#: flask/templates/admin/services.html:265
+#: flask/templates/admin/services.html:261
 msgid "Google AI Cloud Setup"
 msgstr "Pengaturan Google AI Cloud"
 
-#: flask/templates/admin/services.html:272
+#: flask/templates/admin/services.html:268
 msgid "Recommended Google AI Models"
 msgstr "Model Google AI yang Disarankan"
 
-#: flask/templates/admin/services.html:282
+#: flask/templates/admin/services.html:278
 msgid "Image Generation"
 msgstr "Pembuatan Gambar"
 
-#: flask/templates/admin/services.html:290
+#: flask/templates/admin/services.html:286
 msgid "Available Cloud Models"
 msgstr "Model Cloud yang Tersedia"
 
-#: flask/templates/admin/services.html:301
+#: flask/templates/admin/services.html:297
 msgid "Click \"Test API Key & Models\" to load the Gemini models available with your key."
 msgstr "Klik \"Uji Kunci API & Model\" untuk memuat model Gemini yang tersedia dengan kunci Anda."
 
-#: flask/templates/admin/services.html:557
+#: flask/templates/admin/services.html:555
 msgid "All recommended models are already installed on the Ollama server!"
 msgstr "Semua model yang disarankan sudah terinstal di server Ollama!"
 
-#: flask/templates/admin/services.html:566
+#: flask/templates/admin/services.html:564
 msgid "Download the following %(count)s recommended model(s) sequentially?"
 msgstr "Unduh %(count)s model yang disarankan berikut secara berurutan?"
 
-#: flask/templates/admin/services.html:577
+#: flask/templates/admin/services.html:575
 msgid "Download of '%(model)s' failed. Continue with the next model anyway?"
 msgstr "Gagal mengunduh '%(model)s'. Tetap lanjutkan ke model berikutnya?"
 
-#: flask/templates/admin/services.html:647
+#: flask/templates/admin/services.html:645
 msgid "Really delete model '%(model)s' from Ollama?"
 msgstr "Benar-benar hapus model '%(model)s' dari Ollama?"
 
-#: flask/templates/admin/services.html:656
+#: flask/templates/admin/services.html:654
 msgid "Deletion failed."
 msgstr "Penghapusan gagal."
 
-#: flask/templates/admin/translations.html:11
+#: flask/templates/admin/translations.html:9
 msgid "Background translation status for characters, lorebooks, worlds, locations, and events."
 msgstr "Status terjemahan latar belakang untuk karakter, lorebook, dunia, lokasi, dan acara."
 
-#: flask/templates/admin/translations.html:15
+#: flask/templates/admin/translations.html:12
 msgid "Start Translation Sync"
 msgstr "Mulai Sinkronisasi Terjemahan"
 
-#: flask/templates/admin/translations.html:16 flask/templates/admin/user_form.html:72 flask/templates/characters/creator.html:614 flask/templates/characters/creator.html:651 flask/templates/characters/creator.html:687
+#: flask/templates/admin/translations.html:13 flask/templates/admin/user_form.html:72 flask/templates/characters/partials/modals.html:32 flask/templates/characters/partials/modals.html:68 flask/templates/characters/partials/modals.html:105
 msgid "Cancel"
 msgstr "Batal"
 
-#: flask/templates/admin/translations.html:23
+#: flask/templates/admin/translations.html:20
 msgid "Status:"
 msgstr "Status:"
 
-#: flask/templates/admin/translations.html:24
+#: flask/templates/admin/translations.html:21
 msgid "Loading..."
 msgstr "Memuat..."
 
-#: flask/templates/admin/translations.html:37
+#: flask/templates/admin/translations.html:34
 msgid "Currently translating:"
 msgstr "Sedang menerjemahkan:"
 
@@ -1108,7 +1212,7 @@ msgstr "Ini adalah administrator awal. Izinnya terkunci permanen pada akses penu
 msgid "Username"
 msgstr "Nama pengguna"
 
-#: flask/templates/admin/user_form.html:27 flask/templates/auth/login.html:14 flask/templates/settings/account.html:20
+#: flask/templates/admin/user_form.html:27 flask/templates/auth/login.html:14 flask/templates/settings/account.html:18
 msgid "Email address"
 msgstr "Alamat email"
 
@@ -1132,43 +1236,39 @@ msgstr "Preset:"
 msgid "Individual functional permissions (FunctionPermission):"
 msgstr "Izin fungsional individual (FunctionPermission):"
 
-#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:280 flask/templates/chat/session.html:845 flask/templates/lorebooks/detail.html:96
+#: flask/templates/admin/user_form.html:73 flask/templates/characters/partials/tab_gallery.html:65 flask/templates/characters/partials/tab_info.html:152 flask/templates/chat/session.html:223 flask/templates/lorebooks/detail.html:95
 msgid "Save"
 msgstr "Simpan"
 
-#: flask/templates/admin/users.html:9
-msgid "Users & Functional Permissions"
-msgstr "Pengguna & Izin Fungsional"
-
-#: flask/templates/admin/users.html:10
+#: flask/templates/admin/users.html:8
 msgid "Granular control of individual function permissions. The initial administrator is permanently protected."
 msgstr "Kontrol terperinci atas izin fungsi individual. Administrator awal dilindungi secara permanen."
 
-#: flask/templates/admin/users.html:12
+#: flask/templates/admin/users.html:9
 msgid "New User"
 msgstr "Pengguna Baru"
 
-#: flask/templates/admin/users.html:24
+#: flask/templates/admin/users.html:21
 msgid "Initial Super-Admin (Non-revocable)"
 msgstr "Super-Admin Awal (Tidak dapat dicabut)"
 
-#: flask/templates/admin/users.html:32
+#: flask/templates/admin/users.html:29
 msgid "No permissions assigned"
 msgstr "Tidak ada izin yang ditetapkan"
 
-#: flask/templates/admin/users.html:38 flask/templates/characters/creator.html:246
+#: flask/templates/admin/users.html:35 flask/templates/characters/partials/tab_dialogue.html:17
 msgid "Edit"
 msgstr "Edit"
 
-#: flask/templates/admin/users.html:40
+#: flask/templates/admin/users.html:37
 msgid "Protected"
 msgstr "Dilindungi"
 
-#: flask/templates/admin/users.html:40
+#: flask/templates/admin/users.html:37
 msgid "Initial administrator cannot be deleted"
 msgstr "Administrator awal tidak dapat dihapus"
 
-#: flask/templates/admin/users.html:42
+#: flask/templates/admin/users.html:39
 msgid "Really delete user %(username)s?"
 msgstr "Benar-benar hapus pengguna %(username)s?"
 
@@ -1184,7 +1284,7 @@ msgstr "Login AIMO"
 msgid "Sign in to enter your roleplay worlds."
 msgstr "Masuk untuk memasuki dunia bermain peran Anda."
 
-#: flask/templates/auth/login.html:18 flask/templates/settings/account.html:25
+#: flask/templates/auth/login.html:18 flask/templates/settings/account.html:23
 msgid "Password"
 msgstr "Kata sandi"
 
@@ -1192,11 +1292,11 @@ msgstr "Kata sandi"
 msgid "Enter"
 msgstr "Masuk"
 
-#: flask/templates/characters/creator.html:7 flask/templates/characters/creator.html:22
+#: flask/templates/characters/creator.html:5 flask/templates/characters/creator.html:22
 msgid "Character Designer"
 msgstr "Perancang Karakter"
 
-#: flask/templates/characters/creator.html:20 flask/templates/characters/creator.html:45 flask/templates/macros/cards.html:194
+#: flask/templates/characters/creator.html:20 flask/templates/characters/creator.html:43 flask/templates/macros/cards.html:194
 msgid "New Character"
 msgstr "Karakter Baru"
 
@@ -1204,7 +1304,7 @@ msgstr "Karakter Baru"
 msgid "Main Info"
 msgstr "Info Utama"
 
-#: flask/templates/characters/creator.html:27 flask/templates/characters/creator.html:443
+#: flask/templates/characters/creator.html:27
 msgid "Gallery Images"
 msgstr "Gambar Galeri"
 
@@ -1212,7 +1312,7 @@ msgstr "Gambar Galeri"
 msgid "Please save basic info first"
 msgstr "Harap simpan info dasar terlebih dahulu"
 
-#: flask/templates/characters/creator.html:28 flask/templates/characters/creator.html:534
+#: flask/templates/characters/creator.html:28
 msgid "Emotional Sprites"
 msgstr "Sprite Emosi"
 
@@ -1220,67 +1320,243 @@ msgstr "Sprite Emosi"
 msgid "Dialogue Styles"
 msgstr "Gaya Dialog"
 
-#: flask/templates/characters/creator.html:31 flask/templates/characters/creator.html:576 flask/templates/worldinfo/detail.html:25
+#: flask/templates/characters/creator.html:31 flask/templates/chat/session.html:304 flask/templates/worldinfo/detail.html:33
 msgid "Random Events"
 msgstr "Peristiwa Acak"
 
-#: flask/templates/characters/creator.html:32 flask/templates/chat/select_worldinfo.html:19 flask/templates/macros/top_header.html:18 flask/templates/macros/top_header.html:45 flask/templates/settings/creations.html:26
+#: flask/templates/characters/creator.html:32 flask/templates/chat/select_worldinfo.html:23 flask/templates/macros/top_header.html:18 flask/templates/macros/top_header.html:45 flask/templates/settings/creations.html:23
 msgid "Lorebooks"
 msgstr "Lorebook"
 
-#: flask/templates/characters/creator.html:33 flask/templates/lorebooks/detail.html:23 flask/templates/worldinfo/detail.html:26
+#: flask/templates/characters/creator.html:33 flask/templates/lorebooks/detail.html:28 flask/templates/worldinfo/detail.html:34
 msgid "Collaboration"
 msgstr "Kolaborasi"
 
-#: flask/templates/characters/creator.html:37 flask/templates/lorebooks/detail.html:27 flask/templates/worldinfo/detail.html:30
+#: flask/templates/characters/creator.html:37 flask/templates/lorebooks/detail.html:32 flask/templates/worldinfo/detail.html:38
 msgid "Back to Overview"
 msgstr "Kembali ke Ikhtisar"
 
-#: flask/templates/characters/creator.html:53
+#: flask/templates/characters/creator.html:51
 msgid "Really delete character permanently?"
 msgstr "Yakin ingin menghapus karakter secara permanen?"
 
-#: flask/templates/characters/creator.html:54
+#: flask/templates/characters/creator.html:52
 msgid "Save character"
 msgstr "Simpan karakter"
 
-#: flask/templates/characters/creator.html:75
+#: flask/templates/characters/partials/modals.html:7
+msgid "Upload 9:16 Gallery Image"
+msgstr "Unggah Gambar Galeri 9:16"
+
+#: flask/templates/characters/partials/modals.html:13
+msgid "Image File (9:16 Portrait)"
+msgstr "File Gambar (Potret 9:16)"
+
+#: flask/templates/characters/partials/modals.html:14
+msgid "Exclusive portrait image for this character."
+msgstr "Gambar potret eksklusif untuk karakter ini."
+
+#: flask/templates/characters/partials/modals.html:20 flask/templates/characters/partials/tab_gallery.html:50
+msgid "Unlock Relationship Level"
+msgstr "Level Hubungan untuk Membuka"
+
+#: flask/templates/characters/partials/modals.html:21 flask/templates/characters/partials/tab_gallery.html:51
+msgid "Required relationship level to unlock this image in chat."
+msgstr "Level hubungan yang diperlukan untuk membuka gambar ini dalam obrolan."
+
+#: flask/templates/characters/partials/modals.html:33 flask/templates/characters/partials/modals.html:69
+msgid "Upload"
+msgstr "Unggah"
+
+#: flask/templates/characters/partials/modals.html:43
+msgid "Add Emotional Sprite"
+msgstr "Tambah Sprite Emosi"
+
+#: flask/templates/characters/partials/modals.html:49
+msgid "Emotion"
+msgstr "Emosi"
+
+#: flask/templates/characters/partials/modals.html:50
+msgid "Select which emotion this sprite represents."
+msgstr "Pilih emosi yang diwakili oleh sprite ini."
+
+#: flask/templates/characters/partials/modals.html:55 flask/templates/characters/partials/tab_sprites.html:30
+msgid "Fallback"
+msgstr "Cadangan"
+
+#: flask/templates/characters/partials/modals.html:62
+msgid "Sprite File (PNG, WEBP)"
+msgstr "File Sprite (PNG, WEBP)"
+
+#: flask/templates/characters/partials/modals.html:63
+msgid "Transparent PNG or WEBP sprite image for this emotion."
+msgstr "Gambar sprite PNG atau WEBP transparan untuk emosi ini."
+
+#: flask/templates/characters/partials/modals.html:81
+msgid "Add New Dialogue Style"
+msgstr "Tambah Gaya Dialog Baru"
+
+#: flask/templates/characters/partials/modals.html:87 flask/templates/characters/partials/tab_dialogue.html:23 flask/templates/characters/partials/tab_dialogue.html:24 flask/templates/characters/partials/tab_dialogue.html:29
+msgid "You"
+msgstr "Kamu"
+
+#: flask/templates/characters/partials/modals.html:88
+msgid "Trigger (Player Input)"
+msgstr "Pemicu (Input Pemain)"
+
+#: flask/templates/characters/partials/modals.html:90
+msgid "e.g. Hello! What are you doing out here so late?"
+msgstr "mis. Halo! Apa yang kamu lakukan di luar selarut ini?"
+
+#: flask/templates/characters/partials/modals.html:95
+msgid "Response (Character Reply)"
+msgstr "Respons (Balasan Karakter)"
+
+#: flask/templates/characters/partials/modals.html:97
+msgid "e.g. Greetings, wanderer. The woods hold secrets at night..."
+msgstr "mis. Salam, pengembara. Hutan menyimpan banyak rahasia di malam hari..."
+
+#: flask/templates/characters/partials/modals.html:102
+msgid "Fill with AI"
+msgstr "Isi dengan AI"
+
+#: flask/templates/characters/partials/modals.html:102
+msgid "Generates trigger and response based on character description"
+msgstr "Menghasilkan pemicu dan respons berdasarkan deskripsi karakter"
+
+#: flask/templates/characters/partials/modals.html:106 flask/templates/characters/partials/modals.html:134 flask/templates/characters/partials/modals.html:152 flask/templates/characters/partials/tab_world.html:53 flask/templates/characters/partials/tab_world.html:81
+msgid "Add"
+msgstr "Tambah"
+
+#: flask/templates/characters/partials/modals.html:116
+msgid "Link Lorebook"
+msgstr "Tautkan Lorebook"
+
+#: flask/templates/characters/partials/modals.html:120 flask/templates/macros/lorebook_manager.html:197
+msgid "Filter by lorebook name..."
+msgstr "Filter berdasarkan nama lorebook..."
+
+#: flask/templates/characters/partials/modals.html:134
+msgid "Linked"
+msgstr "Tertaut"
+
+#: flask/templates/characters/partials/modals.html:150
+msgid "Add Preferred Location"
+msgstr "Tambah Lokasi Favorit"
+
+#: flask/templates/characters/partials/modals.html:151
+msgid "Add Disliked Location"
+msgstr "Tambah Lokasi yang Dihindari"
+
+#: flask/templates/characters/partials/modals.html:153 flask/templates/characters/partials/tab_world.html:63 flask/templates/characters/partials/tab_world.html:91
+msgid "Remove location"
+msgstr "Hapus lokasi"
+
+#: flask/templates/characters/partials/modals.html:154
+msgid "All locations of this world are already assigned."
+msgstr "Semua lokasi di dunia ini sudah ditetapkan."
+
+#: flask/templates/characters/partials/modals.html:155
+msgid "No matching locations found."
+msgstr "Tidak ada lokasi yang cocok ditemukan."
+
+#: flask/templates/characters/partials/modals.html:158
+msgid "Add Location"
+msgstr "Tambah Lokasi"
+
+#: flask/templates/characters/partials/modals.html:162
+msgid "Search locations by name or description..."
+msgstr "Cari lokasi berdasarkan nama atau deskripsi..."
+
+#: flask/templates/characters/partials/modals.html:173
+msgid "Set Image Crops"
+msgstr "Atur pemotongan gambar"
+
+#: flask/templates/characters/partials/modals.html:174 flask/templates/characters/partials/tab_info.html:46 flask/templates/characters/partials/tab_info.html:47 flask/templates/characters/partials/tab_info.html:49 flask/templates/macros/persona_manager.html:13
+msgid "Portrait"
+msgstr "Potret"
+
+#: flask/templates/characters/partials/modals.html:175 flask/templates/characters/partials/tab_info.html:54 flask/templates/characters/partials/tab_info.html:55 flask/templates/characters/partials/tab_info.html:57
+msgid "Avatar"
+msgstr "Avatar"
+
+#: flask/templates/characters/partials/tab_dialogue.html:6
+msgid "Typical player trigger and character response pairs injected into the prompt."
+msgstr "Pasangan pemicu pemain dan respons karakter khas yang disisipkan ke dalam prompt."
+
+#: flask/templates/characters/partials/tab_dialogue.html:8
+msgid "Add Dialogue Style"
+msgstr "Tambah Gaya Dialog"
+
+#: flask/templates/characters/partials/tab_dialogue.html:15
+msgid "Example"
+msgstr "Contoh"
+
+#: flask/templates/characters/partials/tab_dialogue.html:17
+msgid "Edit example"
+msgstr "Edit contoh"
+
+#: flask/templates/characters/partials/tab_dialogue.html:18
+msgid "Delete example"
+msgstr "Hapus contoh"
+
+#: flask/templates/characters/partials/tab_dialogue.html:36
+msgid "No dialogue styles added yet. Click 'Add Dialogue Style' to create examples."
+msgstr "Belum ada gaya dialog yang ditambahkan. Klik 'Tambah Gaya Dialog' untuk membuat contoh."
+
+#: flask/templates/characters/partials/tab_events.html:6
+msgid "Dynamic events that can trigger exclusively in chats with this character."
+msgstr "Peristiwa dinamis yang dapat terpicu secara eksklusif dalam obrolan dengan karakter ini."
+
+#: flask/templates/characters/partials/tab_events.html:32
+msgid "Please save the character's basic info first to create character-specific random events."
+msgstr "Harap simpan info dasar karakter terlebih dahulu untuk membuat peristiwa acak khusus karakter."
+
+#: flask/templates/characters/partials/tab_gallery.html:6
+msgid "Exclusive portrait graphics unlocked when reaching a relationship threshold in chat."
+msgstr "Grafik potret eksklusif yang terbuka saat mencapai ambang hubungan tertentu dalam obrolan."
+
+#: flask/templates/characters/partials/tab_gallery.html:12
+msgid "Add 9:16 Image"
+msgstr "Tambah Gambar 9:16"
+
+#: flask/templates/characters/partials/tab_gallery.html:21 flask/templates/characters/partials/tab_gallery.html:28
+msgid "Unlocks at relationship:"
+msgstr "Terbuka pada tingkat hubungan:"
+
+#: flask/templates/characters/partials/tab_gallery.html:24 flask/templates/characters/partials/tab_gallery.html:45
+msgid "View fullscreen"
+msgstr "Lihat layar penuh"
+
+#: flask/templates/characters/partials/tab_gallery.html:36
+msgid "Edit 9:16 Gallery Image"
+msgstr "Edit Gambar Galeri 9:16"
+
+#: flask/templates/characters/partials/tab_gallery.html:79
+msgid "Please save the character's basic info first to upload and manage 9:16 gallery images."
+msgstr "Harap simpan info dasar karakter terlebih dahulu untuk mengunggah dan mengelola gambar galeri 9:16."
+
+#: flask/templates/characters/partials/tab_info.html:7
 msgid "Character Name"
 msgstr "Nama Karakter"
 
-#: flask/templates/characters/creator.html:76
+#: flask/templates/characters/partials/tab_info.html:8
 msgid "The unique name of your AI character. Replaces {{char}} in prompts."
 msgstr "Nama unik karakter AI Anda. Menggantikan {{char}} dalam prompt."
 
-#: flask/templates/characters/creator.html:83 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:64 flask/templates/macros/cards.html:155
+#: flask/templates/characters/partials/tab_info.html:15 flask/templates/characters/partials/tab_info.html:26 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:64
 msgid "Gender"
 msgstr "Jenis Kelamin"
 
-#: flask/templates/characters/creator.html:84
-msgid "Sets gender and derived pronouns for the system prompt."
-msgstr "Mengatur jenis kelamin dan kata ganti turunan untuk prompt sistem."
-
-#: flask/templates/characters/creator.html:94 flask/templates/lorebooks/detail.html:72 flask/templates/lorebooks/detail.html:156 flask/templates/lorebooks/detail.html:226 flask/templates/settings/creations.html:69
+#: flask/templates/characters/partials/tab_info.html:31 flask/templates/lorebooks/detail.html:74 flask/templates/lorebooks/detail.html:156 flask/templates/lorebooks/detail.html:224 flask/templates/overview/modals/new_lorebook.html:15
 msgid "Visibility"
 msgstr "Visibilitas"
 
-#: flask/templates/characters/creator.html:95
-msgid "Private = only playable in your account. Public = visible to all users in the Hub."
-msgstr "Pribadi = hanya dapat dimainkan di akun Anda. Publik = terlihat oleh semua pengguna di Hub."
-
-#: flask/templates/characters/creator.html:98 flask/templates/lorebooks/detail.html:76 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:108 flask/templates/worldinfo/detail.html:154
-msgid "Private"
-msgstr "Pribadi"
-
-#: flask/templates/characters/creator.html:99 flask/templates/lorebooks/detail.html:77 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:106 flask/templates/worldinfo/detail.html:155
-msgid "Public"
-msgstr "Publik"
-
-#: flask/templates/characters/creator.html:106
+#: flask/templates/characters/partials/tab_info.html:39
 msgid "Primary Portrait (9:16) & Avatar (1:1) (Required upload)"
 msgstr "Potret Utama (9:16) & Avatar (1:1) (Wajib unggah)"
 
-#: flask/templates/characters/creator.html:107
+#: flask/templates/characters/partials/tab_info.html:40
 msgid ""
 "Character images:\n"
 "• 9:16 Portrait: Chat sidebar & fullscreen view\n"
@@ -1290,23 +1566,15 @@ msgstr ""
 "• Potret 9:16: Bilah sisi obrolan & tampilan layar penuh\n"
 "• Avatar 1:1: Kartu karakter di Hub & gelembung obrolan"
 
-#: flask/templates/characters/creator.html:113 flask/templates/characters/creator.html:114 flask/templates/characters/creator.html:116 flask/templates/characters/creator.html:694 flask/templates/macros/persona_manager.html:12
-msgid "Portrait"
-msgstr "Potret"
-
-#: flask/templates/characters/creator.html:121 flask/templates/characters/creator.html:122 flask/templates/characters/creator.html:124 flask/templates/characters/creator.html:695
-msgid "Avatar"
-msgstr "Avatar"
-
-#: flask/templates/characters/creator.html:133
+#: flask/templates/characters/partials/tab_info.html:66
 msgid "Adjust crops"
 msgstr "Sesuaikan potongan"
 
-#: flask/templates/characters/creator.html:142
+#: flask/templates/characters/partials/tab_info.html:75
 msgid "Initial Relationship Status"
 msgstr "Status Hubungan Awal"
 
-#: flask/templates/characters/creator.html:143
+#: flask/templates/characters/partials/tab_info.html:76
 msgid ""
 "Initial Relationship Status:\n"
 "Starting level of affection (e.g., Pure Hatred, Neutral, Blind Devotion). Controls the initial roleplay behavior of {{char}} toward the player."
@@ -1314,797 +1582,597 @@ msgstr ""
 "Status Hubungan Awal:\n"
 "Tingkat awal kasih sayang (mis. Kebencian Murni, Netral, Pengabdian Buta). Mengontrol perilaku bermain peran awal {{char}} terhadap pemain."
 
-#: flask/templates/characters/creator.html:158
+#: flask/templates/characters/partials/tab_info.html:91
 msgid "Character Description & Personality"
 msgstr "Deskripsi & Kepribadian Karakter"
 
-#: flask/templates/characters/creator.html:159
+#: flask/templates/characters/partials/tab_info.html:92
 msgid "Core identity, traits, backstory, fears, and motivations."
 msgstr "Identitas inti, sifat, latar belakang, ketakutan, dan motivasi."
 
-#: flask/templates/characters/creator.html:161
+#: flask/templates/characters/partials/tab_info.html:94
 msgid "AI Author Optimization"
 msgstr "Optimasi Penulis AI"
 
-#: flask/templates/characters/creator.html:181 flask/templates/macros/persona_manager.html:37
+#: flask/templates/characters/partials/tab_info.html:114 flask/templates/macros/persona_manager.html:38
 msgid "Physical Appearance"
 msgstr "Penampilan Fisik"
 
-#: flask/templates/characters/creator.html:182
+#: flask/templates/characters/partials/tab_info.html:115
 msgid "Detailed visual appearance for prompts and AI image generation."
 msgstr "Penampilan visual terperinci untuk prompt dan pembuatan gambar AI."
 
-#: flask/templates/characters/creator.html:184
+#: flask/templates/characters/partials/tab_info.html:117
 msgid "Extract Appearance from Image"
 msgstr "Ekstrak Penampilan dari Gambar"
 
-#: flask/templates/characters/creator.html:184
+#: flask/templates/characters/partials/tab_info.html:117
 msgid "Analyzes the portrait image using a Vision LLM"
 msgstr "Menganalisis gambar potret menggunakan Vision LLM"
 
-#: flask/templates/characters/creator.html:196
+#: flask/templates/characters/partials/tab_info.html:129
 msgid "Physical appearance (e.g. emerald eyes, shoulder-length black hair, silver armor)..."
 msgstr "Penampilan fisik (mis. mata zamrud, rambut hitam sebahu, zirah perak)..."
 
-#: flask/templates/characters/creator.html:202
+#: flask/templates/characters/partials/tab_info.html:135
 msgid "First Message (Welcome Message)"
 msgstr "Pesan Pertama (Pesan Selamat Datang)"
 
-#: flask/templates/characters/creator.html:203
+#: flask/templates/characters/partials/tab_info.html:136
 msgid "The character's direct opening greeting to the player."
 msgstr "Sapaan pembuka langsung dari karakter kepada pemain."
 
-#: flask/templates/characters/creator.html:230
-msgid "Dialogue Styles (Few-Shot Examples)"
-msgstr "Gaya Dialog (Contoh Few-Shot)"
-
-#: flask/templates/characters/creator.html:231
-msgid "Typical player trigger and character response pairs injected into the prompt."
-msgstr "Pasangan pemicu pemain dan respons karakter khas yang disisipkan ke dalam prompt."
-
-#: flask/templates/characters/creator.html:234
-msgid "Define typical trigger-response examples to guide the AI's tone, dialect, and reactions."
-msgstr "Tentukan contoh pemicu-respons khas untuk memandu nada, dialek, dan reaksi AI."
-
-#: flask/templates/characters/creator.html:237
-msgid "Add Dialogue Style"
-msgstr "Tambah Gaya Dialog"
-
-#: flask/templates/characters/creator.html:244
-msgid "Example"
-msgstr "Contoh"
-
-#: flask/templates/characters/creator.html:246
-msgid "Edit example"
-msgstr "Edit contoh"
-
-#: flask/templates/characters/creator.html:247
-msgid "Delete example"
-msgstr "Hapus contoh"
-
-#: flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:253 flask/templates/characters/creator.html:258 flask/templates/characters/creator.html:633
-msgid "You"
-msgstr "Kamu"
-
-#: flask/templates/characters/creator.html:265
-msgid "No dialogue styles added yet. Click 'Add Dialogue Style' to create examples."
-msgstr "Belum ada gaya dialog yang ditambahkan. Klik 'Tambah Gaya Dialog' untuk membuat contoh."
-
-#: flask/templates/characters/creator.html:275
-msgid "Game World & Locations"
-msgstr "Dunia Game & Lokasi"
-
-#: flask/templates/characters/creator.html:276
-msgid "Links a recommended world. Once selected, initial, preferred, and disliked locations can be chosen."
-msgstr "Menautkan dunia yang direkomendasikan. Setelah dipilih, lokasi awal, disukai, dan tidak disukai dapat dipilih."
-
-#: flask/templates/characters/creator.html:279
-msgid "Select a recommended world for this character. It will be pre-selected when starting a new chat."
-msgstr "Pilih dunia yang direkomendasikan untuk karakter ini. Dunia ini akan otomatis terpilih saat memulai obrolan baru."
-
-#: flask/templates/characters/creator.html:284
-msgid "Recommended WorldInfo"
-msgstr "WorldInfo yang Direkomendasikan"
-
-#: flask/templates/characters/creator.html:285
-msgid "Locations and events of this world are included in roleplay."
-msgstr "Lokasi dan peristiwa dunia ini disertakan dalam roleplay."
-
-#: flask/templates/characters/creator.html:288
-msgid "No WorldInfo linked"
-msgstr "Tidak ada WorldInfo tertaut"
-
-#: flask/templates/characters/creator.html:300
-msgid "Initial Location of First Message"
-msgstr "Lokasi Awal Pesan Pertama"
-
-#: flask/templates/characters/creator.html:301
-msgid "Starting location for the conversation within the linked world."
-msgstr "Lokasi awal percakapan di dalam dunia yang ditautkan."
-
-#: flask/templates/characters/creator.html:304
-msgid "No fixed starting location"
-msgstr "Tidak ada lokasi awal tetap"
-
-#: flask/templates/characters/creator.html:318
-msgid "Preferred Locations (from linked world)"
-msgstr "Lokasi yang Disukai (dari dunia tertaut)"
-
-#: flask/templates/characters/creator.html:319
-msgid "Locations where the character feels comfortable or likes to spend time."
-msgstr "Lokasi di mana karakter merasa nyaman atau suka menghabiskan waktu."
-
-#: flask/templates/characters/creator.html:331 flask/templates/characters/creator.html:350
-msgid "Tip: Hold Ctrl/Cmd to select multiple."
-msgstr "Tips: Tahan Ctrl/Cmd untuk memilih beberapa."
-
-#: flask/templates/characters/creator.html:337
-msgid "Disliked Locations (from linked world)"
-msgstr "Lokasi yang Tidak Disukai (dari dunia tertaut)"
-
-#: flask/templates/characters/creator.html:338
-msgid "Locations the character avoids, fears, or dislikes."
-msgstr "Lokasi yang dihindari, ditakuti, atau tidak disukai karakter."
-
-#: flask/templates/characters/creator.html:364
-msgid "Linked Lorebooks (Knowledge Compendiums)"
-msgstr "Lorebook Tertaut (Kompendium Pengetahuan)"
-
-#: flask/templates/characters/creator.html:365
+#: flask/templates/characters/partials/tab_lorebooks.html:6
 msgid "Knowledge compendiums for this character. Matching entries are automatically loaded into the prompt via tags."
 msgstr "Kompendium pengetahuan untuk karakter ini. Entri yang cocok otomatis dimuat ke dalam prompt melalui tag."
 
-#: flask/templates/characters/creator.html:368
-msgid "Attach knowledge compendiums. Relevant entries are automatically injected via tag matching."
-msgstr "Lampirkan kompendium pengetahuan. Entri yang relevan otomatis disisipkan melalui pencocokan tag."
-
-#: flask/templates/characters/creator.html:371 flask/templates/macros/lorebook_manager.html:24
+#: flask/templates/characters/partials/tab_lorebooks.html:8 flask/templates/macros/lorebook_manager.html:24
 msgid "Add Lorebook"
 msgstr "Tambah Lorebook"
 
-#: flask/templates/characters/creator.html:386
+#: flask/templates/characters/partials/tab_lorebooks.html:23
 msgid "When should this lorebook be active?"
 msgstr "Kapan lorebook ini harus aktif?"
 
-#: flask/templates/characters/creator.html:387
+#: flask/templates/characters/partials/tab_lorebooks.html:24
 msgid "All Worlds (Always active)"
 msgstr "Semua Dunia (Selalu aktif)"
 
-#: flask/templates/characters/creator.html:389
+#: flask/templates/characters/partials/tab_lorebooks.html:26
 msgid "Only in world:"
 msgstr "Hanya di dunia:"
 
-#: flask/templates/characters/creator.html:392
+#: flask/templates/characters/partials/tab_lorebooks.html:29
 msgid "Unlink"
 msgstr "Lepaskan tautan"
 
-#: flask/templates/characters/creator.html:392
+#: flask/templates/characters/partials/tab_lorebooks.html:29
 msgid "Unlink lorebook"
 msgstr "Lepaskan tautan lorebook"
 
-#: flask/templates/characters/creator.html:400
+#: flask/templates/characters/partials/tab_lorebooks.html:37
 msgid "No lorebooks linked. Click 'Add Lorebook' to select compendiums."
 msgstr "Tidak ada lorebook tertaut. Klik 'Tambah Lorebook' untuk memilih kompendium."
 
-#: flask/templates/characters/creator.html:416
-msgid "Unlockable 9:16 Gallery Images (Threshold -100 to +100)"
-msgstr "Gambar Galeri 9:16 yang Dapat Dibuka (Ambang batas -100 hingga +100)"
+#: flask/templates/characters/partials/tab_sprites.html:8
+msgid "Emotional sprites (PNG/WEBP) for up to 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait."
+msgstr "Sprite emosi (PNG/WEBP) untuk hingga 28 emosi. Sistem mengklasifikasikan emosi AI setelah setiap balasan dan memperbarui potret obrolan."
 
-#: flask/templates/characters/creator.html:417
-msgid "Exclusive portrait graphics unlocked when reaching a relationship threshold in chat."
-msgstr "Grafik potret eksklusif yang terbuka saat mencapai ambang hubungan tertentu dalam obrolan."
+#: flask/templates/characters/partials/tab_sprites.html:15
+msgid "Add Sprite"
+msgstr "Tambah Sprite"
 
-#: flask/templates/characters/creator.html:420
-msgid "Reward the player with exclusive character graphics as the relationship grows in chat."
-msgstr "Beri hadiah kepada pemain berupa grafik karakter eksklusif seiring berkembangnya hubungan dalam obrolan."
+#: flask/templates/characters/partials/tab_sprites.html:30
+msgid "Used when no sprite matches the detected emotion"
+msgstr "Digunakan jika tidak ada sprite yang cocok dengan emosi yang terdeteksi"
 
-#: flask/templates/characters/creator.html:424
-msgid "Add 9:16 Image"
-msgstr "Tambah Gambar 9:16"
-
-#: flask/templates/characters/creator.html:430
-msgid "Delete image"
-msgstr "Hapus gambar"
-
-#: flask/templates/characters/creator.html:434
-msgid "Unlocks at relationship:"
-msgstr "Terbuka pada tingkat hubungan:"
-
-#: flask/templates/characters/creator.html:445
-msgid "Please save the character's basic info first to upload and manage 9:16 gallery images."
-msgstr "Harap simpan info dasar karakter terlebih dahulu untuk mengunggah dan mengelola gambar galeri 9:16."
-
-#: flask/templates/characters/creator.html:456
-msgid "Emotional Sprites (28 Emotions with Variant Stack View)"
-msgstr "Sprite Emosi (28 Emosi dengan Tampilan Tumpukan Varian)"
-
-#: flask/templates/characters/creator.html:457
-msgid "Image variants for 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait."
-msgstr "Varian gambar untuk 28 emosi. Sistem mengklasifikasikan emosi AI setelah setiap balasan dan memperbarui potret obrolan."
-
-#: flask/templates/characters/creator.html:460
-msgid "When an emotion is detected, a random variant is selected. If none exists, neutral is used as fallback."
-msgstr "Saat emosi terdeteksi, varian acak dipilih. Jika tidak ada, netral digunakan sebagai cadangan."
-
-#: flask/templates/characters/creator.html:472
-msgid "Choose PNG/WEBP"
-msgstr "Pilih PNG/WEBP"
-
-#: flask/templates/characters/creator.html:482
-msgid "Upload another variant"
-msgstr "Unggah varian lain"
-
-#: flask/templates/characters/creator.html:489
-msgid "View all variants"
-msgstr "Lihat semua varian"
-
-#: flask/templates/characters/creator.html:492
+#: flask/templates/characters/partials/tab_sprites.html:36
 msgid "Delete sprite"
 msgstr "Hapus sprite"
 
-#: flask/templates/characters/creator.html:500
-msgid "Fallback"
-msgstr "Cadangan"
-
-#: flask/templates/characters/creator.html:509
-msgid "Variants for emotion:"
-msgstr "Varian untuk emosi:"
-
-#: flask/templates/characters/creator.html:517
-msgid "Delete variant"
-msgstr "Hapus varian"
-
-#: flask/templates/characters/creator.html:536
+#: flask/templates/characters/partials/tab_sprites.html:52
 msgid "Please save the character's basic info first to upload sprites for the 28 emotions."
 msgstr "Harap simpan info dasar karakter terlebih dahulu untuk mengunggah sprite bagi 28 emosi."
 
-#: flask/templates/characters/creator.html:547
-msgid "Character-Specific Random Events"
-msgstr "Peristiwa Acak Khusus Karakter"
+#: flask/templates/characters/partials/tab_world.html:6
+msgid "Links a recommended world. Once selected, initial, preferred, and disliked locations can be chosen."
+msgstr "Menautkan dunia yang direkomendasikan. Setelah dipilih, lokasi awal, disukai, dan tidak disukai dapat dipilih."
 
-#: flask/templates/characters/creator.html:548
-msgid "Dynamic events that can trigger exclusively in chats with this character."
-msgstr "Peristiwa dinamis yang dapat terpicu secara eksklusif dalam obrolan dengan karakter ini."
+#: flask/templates/characters/partials/tab_world.html:12
+msgid "Recommended WorldInfo"
+msgstr "WorldInfo yang Direkomendasikan"
 
-#: flask/templates/characters/creator.html:551
-msgid "These events are available exclusively in sessions with"
-msgstr "Peristiwa ini tersedia secara eksklusif dalam sesi bersama"
+#: flask/templates/characters/partials/tab_world.html:13
+msgid "Locations and events of this world are included in roleplay."
+msgstr "Lokasi dan peristiwa dunia ini disertakan dalam roleplay."
 
-#: flask/templates/characters/creator.html:551
-msgid "in the shared random event pool."
-msgstr "di kumpulan peristiwa acak bersama."
+#: flask/templates/characters/partials/tab_world.html:16
+msgid "No WorldInfo linked"
+msgstr "Tidak ada WorldInfo tertaut"
 
-#: flask/templates/characters/creator.html:578
-msgid "Please save the character's basic info first to create character-specific random events."
-msgstr "Harap simpan info dasar karakter terlebih dahulu untuk membuat peristiwa acak khusus karakter."
+#: flask/templates/characters/partials/tab_world.html:25
+msgid "Initial Location of First Message"
+msgstr "Lokasi Awal Pesan Pertama"
 
-#: flask/templates/characters/creator.html:589
-msgid "Upload 9:16 Gallery Image"
-msgstr "Unggah Gambar Galeri 9:16"
+#: flask/templates/characters/partials/tab_world.html:26
+msgid "Starting location for the conversation within the linked world."
+msgstr "Lokasi awal percakapan di dalam dunia yang ditautkan."
 
-#: flask/templates/characters/creator.html:595
-msgid "Image File (9:16 Portrait)"
-msgstr "File Gambar (Potret 9:16)"
+#: flask/templates/characters/partials/tab_world.html:29
+msgid "No fixed starting location"
+msgstr "Tidak ada lokasi awal tetap"
 
-#: flask/templates/characters/creator.html:596
-msgid "Exclusive portrait image for this character."
-msgstr "Gambar potret eksklusif untuk karakter ini."
+#: flask/templates/characters/partials/tab_world.html:49
+msgid "Preferred Locations (from linked world)"
+msgstr "Lokasi yang Disukai (dari dunia tertaut)"
 
-#: flask/templates/characters/creator.html:602
-msgid "Unlock Relationship Level"
-msgstr "Level Hubungan untuk Membuka"
+#: flask/templates/characters/partials/tab_world.html:50
+msgid "Locations where the character feels comfortable or likes to spend time."
+msgstr "Lokasi di mana karakter merasa nyaman atau suka menghabiskan waktu."
 
-#: flask/templates/characters/creator.html:603
-msgid "Required relationship level to unlock this image in chat."
-msgstr "Level hubungan yang diperlukan untuk membuka gambar ini dalam obrolan."
+#: flask/templates/characters/partials/tab_world.html:63 flask/templates/characters/partials/tab_world.html:91 flask/templates/macros/collaboration.html:74 flask/templates/macros/lorebook_manager.html:170
+msgid "Remove"
+msgstr "Hapus"
 
-#: flask/templates/characters/creator.html:615
-msgid "Upload"
-msgstr "Unggah"
+#: flask/templates/characters/partials/tab_world.html:70
+msgid "No preferred locations selected."
+msgstr "Tidak ada lokasi favorit dipilih."
 
-#: flask/templates/characters/creator.html:627
-msgid "Add New Dialogue Style"
-msgstr "Tambah Gaya Dialog Baru"
+#: flask/templates/characters/partials/tab_world.html:77
+msgid "Disliked Locations (from linked world)"
+msgstr "Lokasi yang Tidak Disukai (dari dunia tertaut)"
 
-#: flask/templates/characters/creator.html:634
-msgid "Trigger (Player Input)"
-msgstr "Pemicu (Input Pemain)"
+#: flask/templates/characters/partials/tab_world.html:78
+msgid "Locations the character avoids, fears, or dislikes."
+msgstr "Lokasi yang dihindari, ditakuti, atau tidak disukai karakter."
 
-#: flask/templates/characters/creator.html:636
-msgid "e.g. Hello! What are you doing out here so late?"
-msgstr "mis. Halo! Apa yang kamu lakukan di luar selarut ini?"
+#: flask/templates/characters/partials/tab_world.html:98
+msgid "No disliked locations selected."
+msgstr "Tidak ada lokasi yang dihindari dipilih."
 
-#: flask/templates/characters/creator.html:641
-msgid "Response (Character Reply)"
-msgstr "Respons (Balasan Karakter)"
+#: flask/templates/chat/partials/input_bar.html:3
+msgid "AI system notice"
+msgstr "Pemberitahuan sistem AI"
 
-#: flask/templates/characters/creator.html:643
-msgid "e.g. Greetings, wanderer. The woods hold secrets at night..."
-msgstr "mis. Salam, pengembara. Hutan menyimpan banyak rahasia di malam hari..."
+#: flask/templates/chat/partials/input_bar.html:5
+msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
+msgstr "Ini adalah chatbot AI. Respons dibuat secara otomatis oleh model bahasa lokal atau eksternal dan mungkin tidak lengkap atau tidak akurat."
 
-#: flask/templates/characters/creator.html:648
-msgid "Fill with AI"
-msgstr "Isi dengan AI"
+#: flask/templates/chat/partials/input_bar.html:11
+msgid "Chat options & sessions"
+msgstr "Opsi obrolan & sesi"
 
-#: flask/templates/characters/creator.html:648
-msgid "Generates trigger and response based on character description"
-msgstr "Menghasilkan pemicu dan respons berdasarkan deskripsi karakter"
+#: flask/templates/chat/partials/input_bar.html:11
+msgid "Chat options"
+msgstr "Opsi obrolan"
 
-#: flask/templates/characters/creator.html:652 flask/templates/characters/creator.html:680 flask/templates/macros/lorebook_manager.html:226
-msgid "Add"
-msgstr "Tambah"
+#: flask/templates/chat/partials/input_bar.html:17
+msgid "Sessions"
+msgstr "Sesi"
 
-#: flask/templates/characters/creator.html:662
-msgid "Link Lorebook"
-msgstr "Tautkan Lorebook"
+#: flask/templates/chat/partials/input_bar.html:18
+msgid "Start new chat"
+msgstr "Mulai obrolan baru"
 
-#: flask/templates/characters/creator.html:666 flask/templates/macros/lorebook_manager.html:197
-msgid "Filter by lorebook name..."
-msgstr "Filter berdasarkan nama lorebook..."
+#: flask/templates/chat/partials/input_bar.html:20
+msgid "Delete chat"
+msgstr "Hapus obrolan"
 
-#: flask/templates/characters/creator.html:680
-msgid "Linked"
-msgstr "Tertaut"
+#: flask/templates/chat/partials/input_bar.html:20
+msgid "Do you really want to permanently delete this chat?"
+msgstr "Apakah Anda benar-benar ingin menghapus obrolan ini secara permanen?"
 
-#: flask/templates/characters/creator.html:693
-msgid "Set Image Crops"
-msgstr "Atur pemotongan gambar"
+#: flask/templates/chat/partials/input_bar.html:24
+msgid "Attach image (Vision ALT analysis)"
+msgstr "Lampirkan gambar (analisis Vision ALT)"
+
+#: flask/templates/chat/partials/input_bar.html:32
+msgid "Generate scene image"
+msgstr "Buat gambar adegan"
+
+#: flask/templates/chat/partials/input_bar.html:38
+msgid "Cancel image generation"
+msgstr "Batalkan pembuatan gambar"
+
+#: flask/templates/chat/partials/input_bar.html:48
+msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
+msgstr "Tulis balasan atau tindakan Anda... (Enter untuk kirim, Shift+Enter untuk baris baru)"
+
+#: flask/templates/chat/partials/input_bar.html:52
+msgid "Regenerate response – replaces the last AI reply or retries generation"
+msgstr "Buat ulang respons – mengganti balasan AI terakhir atau mencoba ulang pembuatan"
+
+#: flask/templates/chat/partials/input_bar.html:58
+msgid "Cancel response generation"
+msgstr "Batalkan pembuatan respons"
+
+#: flask/templates/chat/partials/input_bar.html:64
+msgid "Send message (Enter)"
+msgstr "Kirim pesan (Enter)"
+
+#: flask/templates/chat/partials/modals.html:35
+msgid "Do you really want to delete this session?"
+msgstr "Apakah Anda benar-benar ingin menghapus sesi ini?"
+
+#: flask/templates/chat/partials/modals.html:37
+msgid "Delete session"
+msgstr "Hapus sesi"
+
+#: flask/templates/chat/partials/sidebar.html:11
+msgid "Thinking: Enabled (Click to disable)"
+msgstr "Berpikir: Aktif (Klik untuk menonaktifkan)"
+
+#: flask/templates/chat/partials/sidebar.html:11
+msgid "Thinking: Disabled (Click to enable)"
+msgstr "Berpikir: Nonaktif (Klik untuk mengaktifkan)"
+
+#: flask/templates/chat/partials/sidebar.html:12
+msgid "Disable thinking"
+msgstr "Nonaktifkan berpikir"
+
+#: flask/templates/chat/partials/sidebar.html:12
+msgid "Enable thinking"
+msgstr "Aktifkan berpikir"
+
+#: flask/templates/chat/partials/sidebar.html:31
+msgid "Current Location"
+msgstr "Lokasi Saat Ini"
+
+#: flask/templates/chat/partials/sidebar.html:48
+msgid "Admin & creator info: Cooldown until the next random event"
+msgstr "Info admin & pembuat: Jeda hingga acara acak berikutnya"
+
+#: flask/templates/chat/partials/sidebar.html:49
+msgid "Next event:"
+msgstr "Acara berikutnya:"
+
+#: flask/templates/chat/partials/sidebar.html:52 flask/templates/chat/partials/sidebar.html:56
+msgid "in"
+msgstr "dalam"
+
+#: flask/templates/chat/partials/sidebar.html:52
+msgid "message"
+msgstr "pesan"
+
+#: flask/templates/chat/partials/sidebar.html:52 flask/templates/chat/partials/sidebar.html:56
+msgid "messages"
+msgstr "pesan"
+
+#: flask/templates/chat/partials/sidebar.html:52
+msgid "paused"
+msgstr "dijeda"
+
+#: flask/templates/chat/partials/sidebar.html:54
+msgid "next message"
+msgstr "pesan berikutnya"
 
 #: flask/templates/chat/select_worldinfo.html:4
 msgid "New Adventure with"
 msgstr "Petualangan Baru bersama"
 
-#: flask/templates/chat/select_worldinfo.html:11
+#: flask/templates/chat/select_worldinfo.html:15
 msgid "New Chat with"
 msgstr "Obrolan Baru dengan"
 
-#: flask/templates/chat/select_worldinfo.html:12
+#: flask/templates/chat/select_worldinfo.html:16
 msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
 msgstr "Konfigurasikan persona pemain, WorldInfo aktif, dan lorebook Anda untuk sesi ini."
 
-#: flask/templates/chat/select_worldinfo.html:18 flask/templates/chat/session.html:32 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
+#: flask/templates/chat/select_worldinfo.html:22 flask/templates/chat/session.html:30 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:16
 msgid "Settings"
 msgstr "Pengaturan"
 
-#: flask/templates/chat/select_worldinfo.html:27
+#: flask/templates/chat/select_worldinfo.html:31
 msgid "Select Player Persona"
 msgstr "Pilih Persona Pemain"
 
-#: flask/templates/chat/select_worldinfo.html:32
+#: flask/templates/chat/select_worldinfo.html:36
 msgid "Default"
 msgstr "Default"
 
-#: flask/templates/chat/select_worldinfo.html:37
+#: flask/templates/chat/select_worldinfo.html:41
 msgid "Note: After sending the first message, the persona is permanently locked for this chat."
 msgstr "Catatan: Setelah mengirim pesan pertama, persona terkunci secara permanen untuk obrolan ini."
 
-#: flask/templates/chat/select_worldinfo.html:42
+#: flask/templates/chat/select_worldinfo.html:46
 msgid "Automatically assigned"
 msgstr "Ditetapkan secara otomatis"
 
-#: flask/templates/chat/select_worldinfo.html:48
+#: flask/templates/chat/select_worldinfo.html:52
 msgid "Active WorldInfo (At most one per session)"
 msgstr "WorldInfo Aktif (Maksimal satu per sesi)"
 
-#: flask/templates/chat/select_worldinfo.html:50
+#: flask/templates/chat/select_worldinfo.html:54
 msgid "No WorldInfo (Default — Neutral background, no events)"
 msgstr "Tanpa WorldInfo (Bawaan — Latar belakang netral, tanpa acara)"
 
-#: flask/templates/chat/select_worldinfo.html:54
+#: flask/templates/chat/select_worldinfo.html:58
 msgid "Recommended for"
 msgstr "Direkomendasikan untuk"
 
-#: flask/templates/chat/select_worldinfo.html:60
+#: flask/templates/chat/select_worldinfo.html:64
 msgid "This character recommends a WorldInfo, but you can freely choose another or start without one."
 msgstr "Karakter ini merekomendasikan WorldInfo, tetapi Anda bebas memilih yang lain atau memulai tanpa WorldInfo."
 
-#: flask/templates/chat/select_worldinfo.html:66
+#: flask/templates/chat/select_worldinfo.html:70
 msgid "Optional Session Title"
 msgstr "Judul Sesi Opsional"
 
-#: flask/templates/chat/select_worldinfo.html:67
+#: flask/templates/chat/select_worldinfo.html:71
 msgid "Chat with"
 msgstr "Obrolan dengan"
 
-#: flask/templates/chat/select_worldinfo.html:73
+#: flask/templates/chat/select_worldinfo.html:77
 msgid "Enable Thinking (Reasoning)"
 msgstr "Aktifkan Berpikir (Penalaran)"
 
-#: flask/templates/chat/select_worldinfo.html:76
+#: flask/templates/chat/select_worldinfo.html:80
 msgid "Enables extended chain-of-thought reasoning for compatible models (e.g. Gemma 4, DeepSeek-R1). Disable for faster replies without thinking steps."
 msgstr "Mengaktifkan penalaran chain-of-thought lanjutan untuk model yang kompatibel (mis. Gemma 4, DeepSeek-R1). Nonaktifkan untuk balasan lebih cepat tanpa langkah berpikir."
 
-#: flask/templates/chat/select_worldinfo.html:89
+#: flask/templates/chat/select_worldinfo.html:93
 msgid "Start Adventure"
 msgstr "Mulai Petualangan"
 
-#: flask/templates/chat/session.html:37
+#: flask/templates/chat/session.html:32
 msgid "Info"
 msgstr "Info"
 
-#: flask/templates/chat/session.html:37
+#: flask/templates/chat/session.html:32
 msgid "Sidebar / Character Info"
 msgstr "Bilah sisi / Info Karakter"
 
-#: flask/templates/chat/session.html:43 flask/templates/chat/session.html:68 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
+#: flask/templates/chat/session.html:39 flask/templates/chat/session.html:76 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
 msgid "Location:"
 msgstr "Lokasi:"
 
-#: flask/templates/chat/session.html:45
+#: flask/templates/chat/session.html:41
 msgid "World:"
 msgstr "Dunia:"
 
-#: flask/templates/chat/session.html:47
+#: flask/templates/chat/session.html:43
 msgid "Neutral Setting"
 msgstr "Latar Netral"
 
-#: flask/templates/chat/session.html:84
+#: flask/templates/chat/session.html:53 flask/templates/chat/session.html:54 flask/templates/worldinfo/detail.html:187 flask/templates/worldinfo/detail.html:188
+msgid "View location backdrop"
+msgstr "Lihat latar belakang lokasi"
+
+#: flask/templates/chat/session.html:92
 msgid "View LLM prompt (Admin)"
 msgstr "Lihat prompt LLM (Admin)"
 
-#: flask/templates/chat/session.html:86 flask/templates/chat/session.html:112
+#: flask/templates/chat/session.html:94 flask/templates/chat/session.html:120
 msgid "Translate message (on-demand)"
 msgstr "Terjemahkan pesan (sesuai permintaan)"
 
-#: flask/templates/chat/session.html:87 flask/templates/chat/session.html:113
+#: flask/templates/chat/session.html:95 flask/templates/chat/session.html:121
 msgid "Edit message"
 msgstr "Edit pesan"
 
-#: flask/templates/chat/session.html:88 flask/templates/chat/session.html:114
+#: flask/templates/chat/session.html:96 flask/templates/chat/session.html:122
 msgid "Duplicate chat from here (Fork)"
 msgstr "Duplikat obrolan dari sini (Fork)"
 
-#: flask/templates/chat/session.html:90 flask/templates/chat/session.html:115 flask/templates/macros/system_message.html:27
+#: flask/templates/chat/session.html:98 flask/templates/chat/session.html:123 flask/templates/macros/system_message.html:31
 msgid "Delete from here"
 msgstr "Hapus dari sini"
 
-#: flask/templates/chat/session.html:122
+#: flask/templates/chat/session.html:130
 msgid "Show/hide ALT text (image description)"
 msgstr "Tampilkan/sembunyikan teks ALT (deskripsi gambar)"
 
-#: flask/templates/chat/session.html:143
-msgid "AI system notice"
-msgstr "Pemberitahuan sistem AI"
-
-#: flask/templates/chat/session.html:145
-msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
-msgstr "Ini adalah chatbot AI. Respons dibuat secara otomatis oleh model bahasa lokal atau eksternal dan mungkin tidak lengkap atau tidak akurat."
-
-#: flask/templates/chat/session.html:152
-msgid "Chat options & sessions"
-msgstr "Opsi obrolan & sesi"
-
-#: flask/templates/chat/session.html:152
-msgid "Chat options"
-msgstr "Opsi obrolan"
-
-#: flask/templates/chat/session.html:158
-msgid "Sessions"
-msgstr "Sesi"
-
 #: flask/templates/chat/session.html:159
-msgid "Start new chat"
-msgstr "Mulai obrolan baru"
+msgid "Unlock at:"
+msgstr "Terbuka pada:"
 
-#: flask/templates/chat/session.html:161
-msgid "Delete chat"
-msgstr "Hapus obrolan"
+#: flask/templates/chat/session.html:188 flask/templates/chat/session.html:189 flask/templates/chat/session.html:192
+msgid "View world backdrop"
+msgstr "Lihat latar belakang dunia"
 
-#: flask/templates/chat/session.html:161
-msgid "Do you really want to permanently delete this chat?"
-msgstr "Apakah Anda benar-benar ingin menghapus obrolan ini secara permanen?"
-
-#: flask/templates/chat/session.html:165
-msgid "Attach image (Vision ALT analysis)"
-msgstr "Lampirkan gambar (analisis Vision ALT)"
-
-#: flask/templates/chat/session.html:173
-msgid "Generate scene image"
-msgstr "Buat gambar adegan"
-
-#: flask/templates/chat/session.html:180
-msgid "Cancel image generation"
-msgstr "Batalkan pembuatan gambar"
-
-#: flask/templates/chat/session.html:191
-msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
-msgstr "Tulis balasan atau tindakan Anda... (Enter untuk kirim, Shift+Enter untuk baris baru)"
-
-#: flask/templates/chat/session.html:197
-msgid "Regenerate response – replaces the last AI reply or retries generation"
-msgstr "Buat ulang respons – mengganti balasan AI terakhir atau mencoba ulang pembuatan"
-
-#: flask/templates/chat/session.html:204
-msgid "Cancel response generation"
-msgstr "Batalkan pembuatan respons"
-
-#: flask/templates/chat/session.html:210
-msgid "Send message (Enter)"
-msgstr "Kirim pesan (Enter)"
-
-#: flask/templates/chat/session.html:268 flask/templates/chat/session.html:829 flask/templates/lorebooks/detail.html:167
+#: flask/templates/chat/session.html:211 flask/templates/lorebooks/detail.html:164
 msgid "Tags (Comma-separated for vectorless RAG)"
 msgstr "Tag (Dipisahkan koma untuk RAG tanpa vektor)"
 
-#: flask/templates/chat/session.html:272 flask/templates/chat/session.html:833
+#: flask/templates/chat/session.html:215
 msgid "Summary"
 msgstr "Ringkasan"
 
-#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:839
+#: flask/templates/chat/session.html:220
 msgid "Recalculate"
 msgstr "Hitung ulang"
 
-#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:838
+#: flask/templates/chat/session.html:220
 msgid "Recalculate memory from associated episode messages"
 msgstr "Hitung ulang memori dari pesan episode terkait"
 
-#: flask/templates/chat/session.html:278 flask/templates/chat/session.html:842
+#: flask/templates/chat/session.html:221
 msgid "Translate"
 msgstr "Terjemahkan"
 
-#: flask/templates/chat/session.html:278 flask/templates/chat/session.html:841
+#: flask/templates/chat/session.html:221
 msgid "Translate memory in-place to your language"
 msgstr "Terjemahkan memori langsung di tempat ke bahasa Anda"
 
-#: flask/templates/chat/session.html:296
-msgid "Relationship Settings"
-msgstr ""
-
-#: flask/templates/chat/session.html:299
-msgid "Show relationship debug labels"
-msgstr ""
-
-#: flask/templates/chat/session.html:310
-msgid "Reset relationship to default and recalculate from chat history"
-msgstr ""
-
-#: flask/templates/chat/session.html:317
-msgid "Recalculate relationship"
-msgstr ""
-
-#: flask/templates/chat/session.html:340
-msgid "Thinking: Enabled (Click to disable)"
-msgstr "Berpikir: Aktif (Klik untuk menonaktifkan)"
-
-#: flask/templates/chat/session.html:340
-msgid "Thinking: Disabled (Click to enable)"
-msgstr "Berpikir: Nonaktif (Klik untuk mengaktifkan)"
-
-#: flask/templates/chat/session.html:341
-msgid "Disable thinking"
-msgstr "Nonaktifkan berpikir"
-
-#: flask/templates/chat/session.html:341
-msgid "Enable thinking"
-msgstr "Aktifkan berpikir"
-
-#: flask/templates/chat/session.html:354 flask/templates/macros/cards.html:91
-msgid "Relationship:"
-msgstr "Hubungan:"
-
-#: flask/templates/chat/session.html:365
+#: flask/templates/chat/session.html:238
 msgid "Active Persona"
 msgstr "Persona Aktif"
 
-#: flask/templates/chat/session.html:370
+#: flask/templates/chat/session.html:243
 msgid "Edit player persona"
 msgstr "Edit persona pemain"
 
-#: flask/templates/chat/session.html:387
+#: flask/templates/chat/session.html:261
 msgid "Unknown"
 msgstr "Tidak diketahui"
 
-#: flask/templates/chat/session.html:388
+#: flask/templates/chat/session.html:262
 msgid "Persona is locked for this chat after the 1st message"
 msgstr "Persona dikunci untuk obrolan ini setelah pesan pertama"
 
-#: flask/templates/chat/session.html:411
+#: flask/templates/chat/session.html:282
+msgid "Warning:"
+msgstr "Peringatan:"
+
+#: flask/templates/chat/session.html:282
+msgid "Switching worlds during an active chat may lead to inconsistencies with earlier memories."
+msgstr "Mengganti dunia selama obrolan aktif dapat menyebabkan ketidakkonsistenan dengan ingatan sebelumnya."
+
+#: flask/templates/chat/session.html:288
 msgid "No World (Neutral)"
 msgstr "Tanpa Dunia (Netral)"
 
-#: flask/templates/chat/session.html:414
+#: flask/templates/chat/session.html:296
 msgid "Switch world"
 msgstr "Ganti dunia"
 
-#: flask/templates/chat/session.html:425
-msgid "Current Location"
-msgstr "Lokasi Saat Ini"
-
-#: flask/templates/chat/session.html:427
-msgid "-- Choose location --"
-msgstr "-- Pilih lokasi --"
-
-#: flask/templates/chat/session.html:445
+#: flask/templates/chat/session.html:310
 msgid "Enable random events"
 msgstr "Aktifkan acara acak"
 
-#: flask/templates/chat/session.html:450
-msgid "Admin & creator info: Cooldown until the next random event"
-msgstr "Info admin & pembuat: Jeda hingga acara acak berikutnya"
+#: flask/templates/chat/session.html:323
+msgid "Relationship Settings"
+msgstr "Pengaturan Hubungan"
 
-#: flask/templates/chat/session.html:451
-msgid "Next event:"
-msgstr "Acara berikutnya:"
+#: flask/templates/chat/session.html:326
+msgid "Show relationship debug labels"
+msgstr "Tampilkan label debug hubungan"
 
-#: flask/templates/chat/session.html:454 flask/templates/chat/session.html:458
-msgid "in"
-msgstr "dalam"
+#: flask/templates/chat/session.html:334
+msgid "Reset relationship to default and recalculate from chat history"
+msgstr "Atur ulang hubungan ke default dan hitung ulang dari riwayat obrolan"
 
-#: flask/templates/chat/session.html:454
-msgid "message"
-msgstr "pesan"
+#: flask/templates/chat/session.html:337
+msgid "Recalculate relationship"
+msgstr "Hitung ulang hubungan"
 
-#: flask/templates/chat/session.html:454 flask/templates/chat/session.html:458
-msgid "messages"
-msgstr "pesan"
-
-#: flask/templates/chat/session.html:454
-msgid "paused"
-msgstr "dijeda"
-
-#: flask/templates/chat/session.html:456
-msgid "next message"
-msgstr "pesan berikutnya"
-
-#: flask/templates/chat/session.html:531
-msgid "Do you really want to delete this session?"
-msgstr "Apakah Anda benar-benar ingin menghapus sesi ini?"
-
-#: flask/templates/chat/session.html:533
-msgid "Delete session"
-msgstr "Hapus sesi"
-
-#: flask/templates/chat/session.html:757
-msgid "Permanently delete this message and all subsequent messages (including associated memories)?"
-msgstr "Hapus permanen pesan ini dan semua pesan berikutnya (termasuk memori terkait)?"
-
-#: flask/templates/chat/session.html:956
-msgid "Recalculation error"
-msgstr "Kesalahan penghitungan ulang"
-
-#: flask/templates/chat/session.html:958
-msgid "Recalculation error:"
-msgstr "Kesalahan penghitungan ulang:"
-
-#: flask/templates/chat/session.html:995
-msgid "Translated!"
-msgstr "Diterjemahkan!"
-
-#: flask/templates/chat/session.html:1007
-msgid "Translation error"
-msgstr "Kesalahan terjemahan"
-
-#: flask/templates/chat/session.html:1009
-msgid "Translation error:"
-msgstr "Kesalahan terjemahan:"
-
-#: flask/templates/lorebooks/detail.html:17
+#: flask/templates/lorebooks/detail.html:22
 msgid "Lorebook & Encyclopedia"
 msgstr "Lorebook & Ensiklopedia"
 
-#: flask/templates/lorebooks/detail.html:21 flask/templates/lorebooks/detail.html:55 flask/templates/worldinfo/detail.html:23 flask/templates/worldinfo/detail.html:58
+#: flask/templates/lorebooks/detail.html:26 flask/templates/worldinfo/detail.html:31
 msgid "Basic Settings"
 msgstr "Pengaturan Dasar"
 
-#: flask/templates/lorebooks/detail.html:42
+#: flask/templates/lorebooks/detail.html:47
 msgid "Really delete Lorebook?"
 msgstr "Yakin ingin menghapus Lorebook?"
 
-#: flask/templates/lorebooks/detail.html:43
+#: flask/templates/lorebooks/detail.html:48
 msgid "Read-only (External Lorebook)"
 msgstr "Hanya baca (Lorebook Eksternal)"
 
-#: flask/templates/lorebooks/detail.html:44
+#: flask/templates/lorebooks/detail.html:49
 msgid "Save Lorebook"
 msgstr "Simpan Lorebook"
 
-#: flask/templates/lorebooks/detail.html:60
+#: flask/templates/lorebooks/detail.html:62
 msgid "Lorebook Name"
 msgstr "Nama Lorebook"
 
-#: flask/templates/lorebooks/detail.html:61
+#: flask/templates/lorebooks/detail.html:63
 msgid "The title of this knowledge compendium."
 msgstr "Judul kompendium pengetahuan ini."
 
-#: flask/templates/lorebooks/detail.html:66 flask/templates/lorebooks/detail.html:151 flask/templates/lorebooks/detail.html:221 flask/templates/macros/event_manager.html:54 flask/templates/worldinfo/detail.html:70
+#: flask/templates/lorebooks/detail.html:68 flask/templates/lorebooks/detail.html:151 flask/templates/lorebooks/detail.html:219 flask/templates/macros/event_manager.html:54 flask/templates/worldinfo/detail.html:75
 msgid "Proper Noun (Do not translate)"
 msgstr "Nama diri (Jangan diterjemahkan)"
 
-#: flask/templates/lorebooks/detail.html:73
-msgid "Private = only usable by you. Public = linkable by other users in their characters."
-msgstr "Pribadi = hanya dapat digunakan oleh Anda. Publik = dapat ditautkan oleh pengguna lain ke karakter mereka."
-
-#: flask/templates/lorebooks/detail.html:83
+#: flask/templates/lorebooks/detail.html:82
 msgid "Short Description"
 msgstr "Deskripsi Singkat"
 
-#: flask/templates/lorebooks/detail.html:84
+#: flask/templates/lorebooks/detail.html:83
 msgid "A brief summary of the topic for quick orientation in the overview."
 msgstr "Ringkasan singkat topik untuk orientasi cepat di ikhtisar."
 
-#: flask/templates/lorebooks/detail.html:89
+#: flask/templates/lorebooks/detail.html:88
 msgid "Short overview of the lorebook content..."
 msgstr "Ikhtisar singkat konten lorebook..."
 
-#: flask/templates/lorebooks/detail.html:107
+#: flask/templates/lorebooks/detail.html:106
 msgid "New Entry"
 msgstr "Entri Baru"
 
-#: flask/templates/lorebooks/detail.html:116
+#: flask/templates/lorebooks/detail.html:115
 msgid "Private (Secret Lore)"
 msgstr "Pribadi (Lore Rahasia)"
 
-#: flask/templates/lorebooks/detail.html:116
+#: flask/templates/lorebooks/detail.html:115
 msgid "Private entry: hidden from other players, but injected via RAG in roleplay."
 msgstr "Entri pribadi: tersembunyi dari pemain lain, tetapi disisipkan melalui RAG dalam roleplay."
 
-#: flask/templates/lorebooks/detail.html:130
+#: flask/templates/lorebooks/detail.html:129
 msgid "Click to edit"
 msgstr "Klik untuk mengedit"
 
-#: flask/templates/lorebooks/detail.html:139
+#: flask/templates/lorebooks/detail.html:138
 msgid "Lorebook Entry:"
 msgstr "Entri Lorebook:"
 
-#: flask/templates/lorebooks/detail.html:145 flask/templates/lorebooks/detail.html:215 flask/templates/macros/event_manager.html:34
+#: flask/templates/lorebooks/detail.html:145 flask/templates/lorebooks/detail.html:213 flask/templates/macros/event_manager.html:34
 msgid "Title"
 msgstr "Judul"
 
-#: flask/templates/lorebooks/detail.html:146 flask/templates/lorebooks/detail.html:216
+#: flask/templates/lorebooks/detail.html:146 flask/templates/lorebooks/detail.html:214
 msgid "Concise title of the lore entry."
 msgstr "Judul ringkas entri lore."
 
-#: flask/templates/lorebooks/detail.html:157 flask/templates/lorebooks/detail.html:227
-msgid "Public: readable in overview. Private: hidden in overview, still injected via RAG in roleplay."
-msgstr "Publik: dapat dibaca di ikhtisar. Pribadi: tersembunyi di ikhtisar, tetap disisipkan melalui RAG dalam roleplay."
-
-#: flask/templates/lorebooks/detail.html:160 flask/templates/lorebooks/detail.html:230
+#: flask/templates/lorebooks/detail.html:158 flask/templates/lorebooks/detail.html:226
 msgid "Public (Readable in overview)"
 msgstr "Publik (Dapat dibaca di ikhtisar)"
 
-#: flask/templates/lorebooks/detail.html:161 flask/templates/lorebooks/detail.html:231
+#: flask/templates/lorebooks/detail.html:158 flask/templates/lorebooks/detail.html:226
 msgid "Private (Secret Lore / Spoiler Protection)"
 msgstr "Pribadi (Lore Rahasia / Perlindungan Spoiler)"
 
-#: flask/templates/lorebooks/detail.html:168 flask/templates/lorebooks/detail.html:238
+#: flask/templates/lorebooks/detail.html:165 flask/templates/lorebooks/detail.html:233
 msgid "Keywords that trigger loading this entry into [RELEVANT_LOREBOOKS] when mentioned in chat."
 msgstr "Kata kunci yang memicu pemuatan entri ini ke dalam [RELEVANT_LOREBOOKS] saat disebutkan dalam obrolan."
 
-#: flask/templates/lorebooks/detail.html:170 flask/templates/lorebooks/detail.html:240
+#: flask/templates/lorebooks/detail.html:167 flask/templates/lorebooks/detail.html:235
 msgid "Suggest Tags"
 msgstr "Sarankan Tag"
 
-#: flask/templates/lorebooks/detail.html:176 flask/templates/lorebooks/detail.html:246
+#: flask/templates/lorebooks/detail.html:173 flask/templates/lorebooks/detail.html:241
 msgid "Prose Text / Lore Content"
 msgstr "Teks Prosa / Konten Lore"
 
-#: flask/templates/lorebooks/detail.html:177 flask/templates/lorebooks/detail.html:247
+#: flask/templates/lorebooks/detail.html:174 flask/templates/lorebooks/detail.html:242
 msgid "Compact facts, history, or rules the AI can retrieve and use in dialogue."
 msgstr "Fakta ringkas, sejarah, atau aturan yang dapat diambil dan digunakan AI dalam dialog."
 
-#: flask/templates/lorebooks/detail.html:209
+#: flask/templates/lorebooks/detail.html:206
 msgid "Create New Lorebook Entry"
 msgstr "Buat Entri Lorebook Baru"
 
-#: flask/templates/lorebooks/detail.html:237 flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:373
+#: flask/templates/lorebooks/detail.html:232 flask/templates/worldinfo/detail.html:231 flask/templates/worldinfo/detail.html:374
 msgid "Tags (Comma-separated)"
 msgstr "Tag (Dipisahkan koma)"
 
-#: flask/templates/lorebooks/detail.html:242
+#: flask/templates/lorebooks/detail.html:237
 msgid "magic, guild, capital"
 msgstr "sihir, serikat, ibu kota"
 
-#: flask/templates/lorebooks/detail.html:263
+#: flask/templates/lorebooks/detail.html:258
 msgid "Save Entry"
 msgstr "Simpan Entri"
 
-#: flask/templates/macros/backend_selector.html:122
+#: flask/templates/macros/backend_selector.html:126
 msgid "Show"
 msgstr "Tampilkan"
 
-#: flask/templates/macros/backend_selector.html:122
+#: flask/templates/macros/backend_selector.html:126
 msgid "Show/hide API key"
 msgstr "Tampilkan/sembunyikan kunci API"
+
+#: flask/templates/macros/buttons.html:96 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:103
+msgid "Public"
+msgstr "Publik"
+
+#: flask/templates/macros/buttons.html:97 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:105
+msgid "Private"
+msgstr "Pribadi"
 
 #: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111
 msgid "Translation pending"
@@ -2125,6 +2193,10 @@ msgstr "Edit karakter"
 #: flask/templates/macros/cards.html:79
 msgid "Duplicate character"
 msgstr "Duplikat karakter"
+
+#: flask/templates/macros/cards.html:91
+msgid "Relationship:"
+msgstr "Hubungan:"
 
 #: flask/templates/macros/cards.html:114
 msgid "Public world"
@@ -2150,27 +2222,27 @@ msgstr "Persona Baru"
 msgid "New World"
 msgstr "Dunia Baru"
 
-#: flask/templates/macros/collaboration.html:23
+#: flask/templates/macros/collaboration.html:14
+msgid "Collaborators receive full edit access to this creation (content, sprites, locations & events), but can never delete it or manage collaborators."
+msgstr "Kolaborator mendapatkan akses edit penuh ke kreasi ini (konten, sprite, lokasi & acara), tetapi tidak pernah dapat menghapusnya atau mengelola kolaborator."
+
+#: flask/templates/macros/collaboration.html:17
 msgid "Save collaborators"
 msgstr "Simpan kolaborator"
 
-#: flask/templates/macros/collaboration.html:23 flask/templates/macros/collaboration.html:117
+#: flask/templates/macros/collaboration.html:17 flask/templates/macros/collaboration.html:111
 msgid "Saves all changes in the form"
 msgstr "Menyimpan semua perubahan di formulir"
 
-#: flask/templates/macros/collaboration.html:72 flask/templates/macros/editor_header.html:47
+#: flask/templates/macros/collaboration.html:66 flask/templates/macros/editor_header.html:47
 msgid "Copy"
 msgstr "Salin"
 
-#: flask/templates/macros/collaboration.html:72
+#: flask/templates/macros/collaboration.html:66
 msgid "Copy creator tag"
 msgstr "Salin tag pembuat"
 
-#: flask/templates/macros/collaboration.html:80 flask/templates/macros/lorebook_manager.html:170
-msgid "Remove"
-msgstr "Hapus"
-
-#: flask/templates/macros/collaboration.html:80
+#: flask/templates/macros/collaboration.html:74
 msgid "Remove collaborator"
 msgstr "Hapus kolaborator"
 
@@ -2310,7 +2382,7 @@ msgstr "Buat Peristiwa Baru"
 msgid "Save Event"
 msgstr "Simpan Peristiwa"
 
-#: flask/templates/macros/image_cropper.html:4 flask/templates/macros/persona_manager.html:115 flask/templates/macros/persona_manager.html:118
+#: flask/templates/macros/image_cropper.html:4 flask/templates/macros/persona_manager.html:129 flask/templates/macros/persona_manager.html:132
 msgid "Set image crop"
 msgstr "Atur pemotongan gambar"
 
@@ -2333,6 +2405,22 @@ msgstr "Terapkan potongan"
 #: flask/templates/macros/image_cropper.html:38
 msgid "Apply crop"
 msgstr "Terapkan potongan"
+
+#: flask/templates/macros/image_viewer.html:4
+msgid "Image Viewer"
+msgstr "Penampil Gambar"
+
+#: flask/templates/macros/image_viewer.html:12
+msgid "Close (Esc)"
+msgstr "Tutup (Esc)"
+
+#: flask/templates/macros/image_viewer.html:17
+msgid "Previous image"
+msgstr "Gambar sebelumnya"
+
+#: flask/templates/macros/image_viewer.html:25
+msgid "Next image"
+msgstr "Gambar berikutnya"
 
 #: flask/templates/macros/lorebook_manager.html:18
 msgid "Active Knowledge Books (Lorebooks)"
@@ -2418,55 +2506,55 @@ msgstr "Sudah aktif"
 msgid "No lorebooks available."
 msgstr "Tidak ada lorebook yang tersedia."
 
-#: flask/templates/macros/persona_manager.html:18
+#: flask/templates/macros/persona_manager.html:19
 msgid "Adjust crop"
 msgstr "Sesuaikan potongan"
 
-#: flask/templates/macros/persona_manager.html:19
+#: flask/templates/macros/persona_manager.html:20
 msgid "Crop active"
 msgstr "Potongan aktif"
 
-#: flask/templates/macros/persona_manager.html:28
+#: flask/templates/macros/persona_manager.html:29
 msgid "Background / Personality"
 msgstr "Latar Belakang / Kepribadian"
 
-#: flask/templates/macros/persona_manager.html:28
+#: flask/templates/macros/persona_manager.html:29
 msgid "max. 1,200 characters"
 msgstr "maks. 1.200 karakter"
 
-#: flask/templates/macros/persona_manager.html:40
+#: flask/templates/macros/persona_manager.html:41
 msgid "Extract image features"
 msgstr "Ekstrak fitur gambar"
 
-#: flask/templates/macros/persona_manager.html:40
+#: flask/templates/macros/persona_manager.html:41
 msgid "Automatically extract appearance from portrait image via vision model"
 msgstr "Ekstrak penampilan secara otomatis dari gambar potret melalui model visi"
 
-#: flask/templates/macros/persona_manager.html:54
+#: flask/templates/macros/persona_manager.html:55
 msgid "Persona"
 msgstr "Persona"
 
-#: flask/templates/macros/persona_manager.html:63 flask/templates/macros/persona_manager.html:89 flask/templates/settings/account.html:17 flask/templates/settings/creations.html:67
+#: flask/templates/macros/persona_manager.html:64 flask/templates/macros/persona_manager.html:96 flask/templates/settings/account.html:15 flask/templates/settings/creations.html:64
 msgid "Name"
 msgstr "Nama"
 
-#: flask/templates/macros/persona_manager.html:74
+#: flask/templates/macros/persona_manager.html:81
 msgid "Portrait image (PNG/JPG/WEBP)"
 msgstr "Gambar potret (PNG/JPG/WEBP)"
 
-#: flask/templates/macros/persona_manager.html:78
+#: flask/templates/macros/persona_manager.html:85
 msgid "Save Persona"
 msgstr "Simpan Persona"
 
-#: flask/templates/macros/persona_manager.html:100
+#: flask/templates/macros/persona_manager.html:114
 msgid "New portrait image (optional, PNG/JPG/WEBP)"
 msgstr "Gambar potret baru (opsional, PNG/JPG/WEBP)"
 
-#: flask/templates/macros/persona_manager.html:106
+#: flask/templates/macros/persona_manager.html:120
 msgid "Save changes"
 msgstr "Simpan perubahan"
 
-#: flask/templates/macros/persona_manager.html:110
+#: flask/templates/macros/persona_manager.html:124
 msgid "Really delete persona?"
 msgstr "Benar-benar hapus persona?"
 
@@ -2474,7 +2562,7 @@ msgstr "Benar-benar hapus persona?"
 msgid "AI Characters"
 msgstr "Karakter AI"
 
-#: flask/templates/macros/top_header.html:19 flask/templates/macros/top_header.html:46 flask/templates/settings/creations.html:25
+#: flask/templates/macros/top_header.html:19 flask/templates/macros/top_header.html:46 flask/templates/settings/creations.html:22
 msgid "Worlds"
 msgstr "Dunia"
 
@@ -2482,15 +2570,23 @@ msgstr "Dunia"
 msgid "Open menu"
 msgstr "Buka menu"
 
-#: flask/templates/macros/top_header.html:62
+#: flask/templates/macros/top_header.html:60
 msgid "Logout"
 msgstr "Keluar"
 
-#: flask/templates/overview/index.html:7
+#: flask/templates/macros/top_header.html:66 flask/templates/macros/top_header.html:71
+msgid "Support us on ko-fi"
+msgstr "Dukung kami di Ko-fi"
+
+#: flask/templates/macros/top_header.html:74 flask/templates/macros/top_header.html:79
+msgid "Visit our Website"
+msgstr "Kunjungi Situs Web kami"
+
+#: flask/templates/overview/index.html:11
 msgid "Some content is still being translated into your language. The selection of available content may still change."
 msgstr "Beberapa konten masih diterjemahkan ke bahasa Anda. Pilihan konten yang tersedia masih dapat berubah."
 
-#: flask/templates/overview/index.html:8
+#: flask/templates/overview/index.html:12
 msgid "Translations in Progress"
 msgstr "Terjemahan Sedang Berlangsung"
 
@@ -2514,11 +2610,11 @@ msgstr "Sudah Pernah Mengobrol"
 msgid "Not Chatted Yet"
 msgstr "Belum Pernah Mengobrol"
 
-#: flask/templates/overview/tabs/characters.html:23 flask/templates/settings/creations.html:40
+#: flask/templates/overview/tabs/characters.html:23 flask/templates/settings/creations.html:37
 msgid "Sort Order"
 msgstr "Urutan"
 
-#: flask/templates/overview/tabs/characters.html:25 flask/templates/settings/creations.html:43
+#: flask/templates/overview/tabs/characters.html:25 flask/templates/settings/creations.html:40
 msgid "Newest First"
 msgstr "Terbaru Dulu"
 
@@ -2530,15 +2626,15 @@ msgstr "Pesan Terbanyak"
 msgid "Best Relationship"
 msgstr "Hubungan Terbaik"
 
-#: flask/templates/overview/tabs/characters.html:32 flask/templates/settings/creations.html:31
+#: flask/templates/overview/tabs/characters.html:32 flask/templates/settings/creations.html:28
 msgid "Author"
 msgstr "Penulis"
 
-#: flask/templates/overview/tabs/characters.html:35 flask/templates/settings/creations.html:34
+#: flask/templates/overview/tabs/characters.html:35 flask/templates/settings/creations.html:31
 msgid "Only Mine (Creator)"
 msgstr "Hanya Milik Saya (Kreator)"
 
-#: flask/templates/overview/tabs/characters.html:36 flask/templates/settings/creations.html:35
+#: flask/templates/overview/tabs/characters.html:36 flask/templates/settings/creations.html:32
 msgid "Collaborations"
 msgstr "Kolaborasi"
 
@@ -2546,331 +2642,323 @@ msgstr "Kolaborasi"
 msgid "New Lorebook"
 msgstr "Lorebook Baru"
 
-#: flask/templates/settings/account.html:8 flask/templates/settings/layout.html:22
-msgid "Account"
-msgstr "Akun"
-
-#: flask/templates/settings/account.html:10
+#: flask/templates/settings/account.html:8
 msgid "Creator Tag"
 msgstr "Tag Kreator"
 
-#: flask/templates/settings/account.html:10
+#: flask/templates/settings/account.html:8
 msgid "Other creators can add you as a collaborator using this tag."
 msgstr "Kreator lain dapat menambahkan Anda sebagai kolaborator menggunakan tag ini."
 
-#: flask/templates/settings/account.html:11
+#: flask/templates/settings/account.html:9
 msgid "Copy Creator Tag"
 msgstr "Salin Tag Kreator"
 
-#: flask/templates/settings/account.html:14
+#: flask/templates/settings/account.html:12
 msgid "Name & Email Address"
 msgstr "Nama & Alamat Email"
 
-#: flask/templates/settings/account.html:25
+#: flask/templates/settings/account.html:23
 msgid "Your current password is only required when changing your email address or password. Leave the new password fields empty to keep your current password."
 msgstr "Kata sandi Anda saat ini hanya diperlukan saat mengubah alamat email atau kata sandi. Biarkan kolom kata sandi baru kosong untuk mempertahankan kata sandi saat ini."
 
-#: flask/templates/settings/account.html:28
+#: flask/templates/settings/account.html:26
 msgid "Current password"
 msgstr "Kata sandi saat ini"
 
-#: flask/templates/settings/account.html:31
+#: flask/templates/settings/account.html:29
 msgid "New password"
 msgstr "Kata sandi baru"
 
-#: flask/templates/settings/account.html:34
+#: flask/templates/settings/account.html:32
 msgid "Confirm new password"
 msgstr "Konfirmasi kata sandi baru"
 
-#: flask/templates/settings/account.html:39
+#: flask/templates/settings/account.html:37
 msgid "Language"
 msgstr "Bahasa"
 
-#: flask/templates/settings/account.html:39
+#: flask/templates/settings/account.html:37
 msgid "Language of the interface and displayed content translations."
 msgstr "Bahasa antarmuka dan terjemahan konten yang ditampilkan."
 
-#: flask/templates/settings/creations.html:4 flask/templates/settings/creations.html:10 flask/templates/settings/layout.html:20
+#: flask/templates/settings/creations.html:4 flask/templates/settings/layout.html:24
 msgid "My Creations"
 msgstr "Karya Saya"
 
-#: flask/templates/settings/creations.html:11
+#: flask/templates/settings/creations.html:9
 msgid "Overview of all characters, worlds, and lorebooks you created or collaborate on. Click any item to open its editor."
 msgstr "Ikhtisar semua karakter, dunia, dan lorebook yang Anda buat atau kolaborasikan. Klik item mana saja untuk membuka editornya."
 
-#: flask/templates/settings/creations.html:14
+#: flask/templates/settings/creations.html:11
 msgid "Total:"
 msgstr "Total:"
 
-#: flask/templates/settings/creations.html:21 flask/templates/settings/creations.html:65
+#: flask/templates/settings/creations.html:18 flask/templates/settings/creations.html:62
 msgid "Type"
 msgstr "Tipe"
 
-#: flask/templates/settings/creations.html:23
+#: flask/templates/settings/creations.html:20
 msgid "All Types"
 msgstr "Semua Tipe"
 
-#: flask/templates/settings/creations.html:24
+#: flask/templates/settings/creations.html:21
 msgid "Characters"
 msgstr "Karakter"
 
-#: flask/templates/settings/creations.html:33
+#: flask/templates/settings/creations.html:30
 msgid "All Works"
 msgstr "Semua Karya"
 
-#: flask/templates/settings/creations.html:42
+#: flask/templates/settings/creations.html:39
 msgid "Name (A-Z)"
 msgstr "Nama (A-Z)"
 
-#: flask/templates/settings/creations.html:48
+#: flask/templates/settings/creations.html:45
 msgid "Search"
 msgstr "Cari"
 
-#: flask/templates/settings/creations.html:53
+#: flask/templates/settings/creations.html:50
 msgid "Search name..."
 msgstr "Cari nama..."
 
-#: flask/templates/settings/creations.html:55
+#: flask/templates/settings/creations.html:52
 msgid "Search creations"
 msgstr "Cari karya"
 
-#: flask/templates/settings/creations.html:66
+#: flask/templates/settings/creations.html:63
 msgid "Preview"
 msgstr "Pratinjau"
 
-#: flask/templates/settings/creations.html:68
+#: flask/templates/settings/creations.html:65
 msgid "Details"
 msgstr "Detail"
 
-#: flask/templates/settings/creations.html:70
+#: flask/templates/settings/creations.html:67
 msgid "Role"
 msgstr "Peran"
 
-#: flask/templates/settings/creations.html:71
+#: flask/templates/settings/creations.html:68
 msgid "Created"
 msgstr "Dibuat"
 
-#: flask/templates/settings/creations.html:72
+#: flask/templates/settings/creations.html:69
 msgid "Action"
 msgstr "Tindakan"
 
-#: flask/templates/settings/creations.html:122
+#: flask/templates/settings/creations.html:119
 msgid "Editor"
 msgstr "Editor"
 
-#: flask/templates/settings/creations.html:122
+#: flask/templates/settings/creations.html:119
 msgid "Open editor"
 msgstr "Buka editor"
 
-#: flask/templates/settings/creations.html:132
+#: flask/templates/settings/creations.html:129
 msgid "No creations found"
 msgstr "Tidak ada karya ditemukan"
 
-#: flask/templates/settings/creations.html:134
+#: flask/templates/settings/creations.html:131
 msgid "No works were found matching the selected filters or created/shared with you."
 msgstr "Tidak ada karya yang ditemukan sesuai filter yang dipilih atau yang dibuat/dibagikan dengan Anda."
 
-#: flask/templates/settings/creations.html:137
+#: flask/templates/settings/creations.html:134
 msgid "Reset all filters"
 msgstr "Atur ulang semua filter"
 
-#: flask/templates/settings/index.html:7
-msgid "Player Personas"
-msgstr "Persona Pemain"
-
-#: flask/templates/settings/index.html:8
+#: flask/templates/settings/index.html:13
 msgid "Manage your roleplay identities. The star marks your default persona."
 msgstr "Kelola identitas roleplay Anda. Bintang menandai persona default Anda."
 
-#: flask/templates/settings/layout.html:14
+#: flask/templates/settings/layout.html:18
 msgid "User & Personalization"
 msgstr "Pengguna & Personalisasi"
 
-#: flask/templates/settings/layout.html:18
+#: flask/templates/settings/layout.html:22
 msgid "Personas"
 msgstr "Persona"
 
-#: flask/templates/setup/first_boot.html:14
+#: flask/templates/settings/layout.html:26
+msgid "Account"
+msgstr "Akun"
+
+#: flask/templates/setup/first_boot.html:18
 msgid "Setup steps"
 msgstr "Langkah pengaturan"
 
-#: flask/templates/worldinfo/detail.html:19
+#: flask/templates/worldinfo/detail.html:27
 msgid "WorldInfo & Locations"
 msgstr "WorldInfo & Lokasi"
 
-#: flask/templates/worldinfo/detail.html:24
+#: flask/templates/worldinfo/detail.html:32
 msgid "Locations & Backgrounds"
 msgstr "Lokasi & Latar Belakang"
 
-#: flask/templates/worldinfo/detail.html:45
+#: flask/templates/worldinfo/detail.html:53
 msgid "Really delete WorldInfo?"
 msgstr "Yakin ingin menghapus WorldInfo?"
 
-#: flask/templates/worldinfo/detail.html:46
+#: flask/templates/worldinfo/detail.html:54
 msgid "Read-only (External World)"
 msgstr "Hanya baca (Dunia Eksternal)"
 
-#: flask/templates/worldinfo/detail.html:47
+#: flask/templates/worldinfo/detail.html:55
 msgid "Save WorldInfo"
 msgstr "Simpan WorldInfo"
 
-#: flask/templates/worldinfo/detail.html:64
+#: flask/templates/worldinfo/detail.html:69
 msgid "World Name"
 msgstr "Nama Dunia"
 
-#: flask/templates/worldinfo/detail.html:65
+#: flask/templates/worldinfo/detail.html:70
 msgid "The name of the universe or setting. Included as primary world in the prompt context."
 msgstr "Nama alam semesta atau latar. Disertakan sebagai dunia utama dalam konteks prompt."
 
-#: flask/templates/worldinfo/detail.html:77
+#: flask/templates/worldinfo/detail.html:90
 msgid "Cover Image (1:1)"
 msgstr "Gambar Sampul (1:1)"
 
-#: flask/templates/worldinfo/detail.html:78
+#: flask/templates/worldinfo/detail.html:91
 msgid "Square cover image for the world card in the Hub and world selection."
 msgstr "Gambar sampul persegi untuk kartu dunia di Hub dan pemilihan dunia."
 
-#: flask/templates/worldinfo/detail.html:81
+#: flask/templates/worldinfo/detail.html:94
 msgid "1:1 World Cover"
 msgstr "Sampul Dunia 1:1"
 
-#: flask/templates/worldinfo/detail.html:93
+#: flask/templates/worldinfo/detail.html:106
 msgid "Choose Cover"
 msgstr "Pilih Sampul"
 
-#: flask/templates/worldinfo/detail.html:95
+#: flask/templates/worldinfo/detail.html:108
 msgid "Crop"
 msgstr "Potong"
 
-#: flask/templates/worldinfo/detail.html:106
-msgid "World Backdrop (16:9)"
-msgstr ""
-
-#: flask/templates/worldinfo/detail.html:107
-msgid "Optional 16:9 chat background for this world. Overrides the System Backdrop when a location has no background image of its own (Priority: System → World → Location)."
-msgstr ""
-
 #: flask/templates/worldinfo/detail.html:119
+msgid "World Backdrop (16:9)"
+msgstr "Latar Belakang Dunia (16:9)"
+
+#: flask/templates/worldinfo/detail.html:120
+msgid "Optional 16:9 chat background for this world. Overrides the System Backdrop when a location has no background image of its own (Priority: System → World → Location)."
+msgstr "Latar belakang obrolan 16:9 opsional untuk dunia ini. Menggantikan Latar Belakang Sistem jika lokasi tidak memiliki gambar latar sendiri (Prioritas: Sistem → Dunia → Lokasi)."
+
+#: flask/templates/worldinfo/detail.html:128
 msgid "No world backdrop set"
-msgstr ""
+msgstr "Tidak ada latar belakang dunia yang diatur"
 
-#: flask/templates/worldinfo/detail.html:121
+#: flask/templates/worldinfo/detail.html:129
 msgid "Uses System Backdrop unless a location defines its own background."
-msgstr ""
+msgstr "Menggunakan Latar Belakang Sistem kecuali lokasi menentukan latar belakangnya sendiri."
 
-#: flask/templates/worldinfo/detail.html:131
-msgid "Choose Backdrop"
-msgstr ""
-
-#: flask/templates/worldinfo/detail.html:137
-msgid "Remove Backdrop"
-msgstr ""
+#: flask/templates/worldinfo/detail.html:132
+msgid "Priority in chat: System → World → Location"
+msgstr "Prioritas di obrolan: Sistem → Dunia → Lokasi"
 
 #: flask/templates/worldinfo/detail.html:141
-msgid "Priority in chat: System → World → Location"
-msgstr ""
-
-#: flask/templates/worldinfo/detail.html:151
-msgid "Private = only accessible to you. Public = accessible to all users for chats."
-msgstr "Pribadi = hanya dapat diakses oleh Anda. Publik = dapat diakses oleh semua pengguna untuk obrolan."
-
-#: flask/templates/worldinfo/detail.html:162
 msgid "Linked Lorebook (Optional)"
 msgstr "Lorebook Tertaut (Opsional)"
 
-#: flask/templates/worldinfo/detail.html:163
+#: flask/templates/worldinfo/detail.html:142
 msgid "An optional lorebook automatically included alongside character lorebooks in all chats using this world."
 msgstr "Lorebook opsional yang otomatis disertakan bersama lorebook karakter di semua obrolan yang menggunakan dunia ini."
 
-#: flask/templates/worldinfo/detail.html:166
+#: flask/templates/worldinfo/detail.html:145
 msgid "No lorebook linked"
 msgstr "Tidak ada lorebook tertaut"
 
-#: flask/templates/worldinfo/detail.html:188
+#: flask/templates/worldinfo/detail.html:167
 msgid "New Location"
 msgstr "Lokasi Baru"
 
-#: flask/templates/worldinfo/detail.html:195 flask/templates/worldinfo/detail.html:198 flask/templates/worldinfo/detail.html:210
+#: flask/templates/worldinfo/detail.html:174 flask/templates/worldinfo/detail.html:177 flask/templates/worldinfo/detail.html:201
 msgid "This location is bound to"
 msgstr "Lokasi ini terikat pada"
 
-#: flask/templates/worldinfo/detail.html:221
+#: flask/templates/worldinfo/detail.html:212
 msgid "Edit Location:"
 msgstr "Edit Lokasi:"
 
-#: flask/templates/worldinfo/detail.html:227 flask/templates/worldinfo/detail.html:360
+#: flask/templates/worldinfo/detail.html:218 flask/templates/worldinfo/detail.html:361
 msgid "Location Name"
 msgstr "Nama Lokasi"
 
-#: flask/templates/worldinfo/detail.html:228 flask/templates/worldinfo/detail.html:361
+#: flask/templates/worldinfo/detail.html:219 flask/templates/worldinfo/detail.html:362
 msgid "Name of the location (e.g. Old Library, Griffin Tavern)."
 msgstr "Nama lokasi (mis. Perpustakaan Tua, Kedai Griffin)."
 
-#: flask/templates/worldinfo/detail.html:241 flask/templates/worldinfo/detail.html:374
+#: flask/templates/worldinfo/detail.html:232 flask/templates/worldinfo/detail.html:375
 msgid "Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet)."
 msgstr "Kata kunci dipisahkan koma yang menggambarkan lingkungan (mis. dalam ruangan, nyaman, tenang)."
 
-#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:376
+#: flask/templates/worldinfo/detail.html:234 flask/templates/worldinfo/detail.html:377
 msgid "Extract Tags"
 msgstr "Ekstrak Tag"
 
-#: flask/templates/worldinfo/detail.html:251 flask/templates/worldinfo/detail.html:384
+#: flask/templates/worldinfo/detail.html:242 flask/templates/worldinfo/detail.html:385
 msgid "16:9 Background Image (PNG, JPG, WEBP)"
 msgstr "Gambar Latar 16:9 (PNG, JPG, WEBP)"
 
-#: flask/templates/worldinfo/detail.html:252 flask/templates/worldinfo/detail.html:385
+#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:386
 msgid "Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference."
 msgstr "Gambar lanskap 16:9 yang digunakan sebagai latar panggung obrolan dan referensi ComfyUI."
 
-#: flask/templates/worldinfo/detail.html:258 flask/templates/worldinfo/detail.html:391
+#: flask/templates/worldinfo/detail.html:253 flask/templates/worldinfo/detail.html:396
+msgid "No location backdrop set"
+msgstr "Tidak ada latar belakang lokasi yang diatur"
+
+#: flask/templates/worldinfo/detail.html:254 flask/templates/worldinfo/detail.html:397
+msgid "Uses World Backdrop or System Backdrop if none is set."
+msgstr "Menggunakan Latar Belakang Dunia atau Sistem jika tidak ada yang diatur."
+
+#: flask/templates/worldinfo/detail.html:259 flask/templates/worldinfo/detail.html:401
 msgid "Analyze & Describe Image"
 msgstr "Analisis & Deskripsikan Gambar"
 
-#: flask/templates/worldinfo/detail.html:265 flask/templates/worldinfo/detail.html:398
+#: flask/templates/worldinfo/detail.html:266 flask/templates/worldinfo/detail.html:408
 msgid "Location Description"
 msgstr "Deskripsi Lokasi"
 
-#: flask/templates/worldinfo/detail.html:266 flask/templates/worldinfo/detail.html:399
+#: flask/templates/worldinfo/detail.html:267 flask/templates/worldinfo/detail.html:409
 msgid "Atmospheric description of the environment, sounds, and mood."
 msgstr "Deskripsi atmosfer mengenai lingkungan, suara, dan suasana hati."
 
-#: flask/templates/worldinfo/detail.html:283 flask/templates/worldinfo/detail.html:416
+#: flask/templates/worldinfo/detail.html:284 flask/templates/worldinfo/detail.html:426
 msgid "Character Binding (Optional)"
 msgstr "Pengikatan Karakter (Opsional)"
 
-#: flask/templates/worldinfo/detail.html:284 flask/templates/worldinfo/detail.html:417
+#: flask/templates/worldinfo/detail.html:285 flask/templates/worldinfo/detail.html:427
 msgid "If selected, this location can only be entered when chatting with that specific character."
 msgstr "Jika dipilih, lokasi ini hanya dapat dimasuki saat mengobrol dengan karakter tersebut."
 
-#: flask/templates/worldinfo/detail.html:287 flask/templates/worldinfo/detail.html:420
+#: flask/templates/worldinfo/detail.html:288 flask/templates/worldinfo/detail.html:430
 msgid "No character (Freely accessible)"
 msgstr "Tidak ada karakter (Bebas diakses)"
 
-#: flask/templates/worldinfo/detail.html:297
+#: flask/templates/worldinfo/detail.html:298
 msgid "Assigned Location Events:"
 msgstr "Peristiwa Lokasi yang Ditetapkan:"
 
-#: flask/templates/worldinfo/detail.html:302
+#: flask/templates/worldinfo/detail.html:303
 msgid "No specific location events assigned."
 msgstr "Tidak ada peristiwa lokasi khusus yang ditetapkan."
 
-#: flask/templates/worldinfo/detail.html:354
+#: flask/templates/worldinfo/detail.html:355
 msgid "Create New Location"
 msgstr "Buat Lokasi Baru"
 
-#: flask/templates/worldinfo/detail.html:378
+#: flask/templates/worldinfo/detail.html:379
 msgid "tavern, forest, castle"
 msgstr "kedai, hutan, kastil"
 
-#: flask/templates/worldinfo/detail.html:431
+#: flask/templates/worldinfo/detail.html:441
 msgid "Save Location"
 msgstr "Simpan Lokasi"
 
-#: flask/templates/worldinfo/detail.html:438
+#: flask/templates/worldinfo/detail.html:448
 msgid "Set 1:1 World Cover"
 msgstr "Atur Sampul Dunia 1:1"
 
-#: flask/templates/worldinfo/detail.html:438
+#: flask/templates/worldinfo/detail.html:448
 msgid "1:1 Cover"
 msgstr "Sampul 1:1"
 

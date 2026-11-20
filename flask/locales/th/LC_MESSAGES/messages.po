@@ -32,23 +32,23 @@ msgstr "กำหนดโมเดลที่แนะนำสำหรับ
 msgid "Service settings and models saved successfully."
 msgstr "บันทึกการตั้งค่าบริการและโมเดลสำเร็จแล้ว"
 
-#: flask/application/admin/views.py:470
+#: flask/application/admin/views.py:472
 msgid "System-wide default backdrop reset (default theme active)."
 msgstr "รีเซ็ตพื้นหลังเริ่มต้นทั้งระบบแล้ว (กำลังใช้ธีมเริ่มต้น)"
 
-#: flask/application/admin/views.py:508
+#: flask/application/admin/views.py:510
 msgid "World Backdrop"
-msgstr ""
+msgstr "ภาพพื้นหลังโลก"
 
-#: flask/application/admin/views.py:487
+#: flask/application/admin/views.py:489
 msgid "Please select an image file (PNG, JPG, WEBP) to upload."
 msgstr "กรุณาเลือกไฟล์ภาพ (PNG, JPG, WEBP) เพื่ออัปโหลด"
 
-#: flask/application/admin/views.py:482
+#: flask/application/admin/views.py:484
 msgid "New system-wide default backdrop saved successfully."
 msgstr "บันทึกพื้นหลังเริ่มต้นทั้งระบบใหม่สำเร็จแล้ว"
 
-#: flask/application/admin/views.py:495
+#: flask/application/admin/views.py:497
 msgid "System-wide default backdrop assigned successfully."
 msgstr "กำหนดพื้นหลังเริ่มต้นทั้งระบบสำเร็จแล้ว"
 
@@ -56,143 +56,151 @@ msgstr "กำหนดพื้นหลังเริ่มต้นทั้
 msgid "Invalid email address or password."
 msgstr "อีเมลหรือรหัสผ่านไม่ถูกต้อง"
 
-#: flask/application/characters/views.py:392
+#: flask/application/characters/views.py:401
 msgid "Copy '%(name)s' created as draft."
 msgstr "สร้างสำเนา '%(name)s' เป็นฉบับร่างแล้ว"
 
-#: flask/application/characters/views.py:408
+#: flask/application/characters/views.py:417
 msgid "Character deleted."
 msgstr "ลบตัวละครแล้ว"
 
-#: flask/application/characters/views.py:452
+#: flask/application/characters/views.py:493
 msgid "Gallery image removed."
 msgstr "ลบรูปภาพแกลเลอรีแล้ว"
 
-#: flask/application/characters/views.py:502
+#: flask/application/characters/views.py:543
 msgid "Sprite %(name)s deleted."
 msgstr "ลบสไปรต์ %(name)s แล้ว"
 
-#: flask/application/characters/views.py:283 flask/application/characters/views.py:388 flask/application/chat/views.py:181 flask/application/chat/views.py:205
+#: flask/application/characters/views.py:292 flask/application/characters/views.py:397 flask/application/chat/views.py:45 flask/application/chat/views.py:69
 msgid "Character not found."
 msgstr "ไม่พบตัวละคร"
 
-#: flask/application/characters/views.py:287
+#: flask/application/characters/views.py:296
 msgid "Access denied: You can only edit your own characters or creations shared with you."
 msgstr "ปฏิเสธการเข้าถึง: คุณสามารถแก้ไขได้เฉพาะตัวละครของคุณเองหรือผลงานที่แชร์กับคุณเท่านั้น"
 
-#: flask/application/characters/views.py:404
+#: flask/application/characters/views.py:413
 msgid "Character not found or no permission to delete."
 msgstr "ไม่พบตัวละครหรือไม่มีสิทธิ์ลบ"
 
-#: flask/application/characters/views.py:423 flask/application/characters/views.py:448 flask/application/characters/views.py:467 flask/application/characters/views.py:498 flask/application/characters/views.py:533
+#: flask/application/characters/views.py:432 flask/application/characters/views.py:459 flask/application/characters/views.py:485 flask/application/characters/views.py:508 flask/application/characters/views.py:539
 msgid "Character not found or no permission."
 msgstr "ไม่พบตัวละครหรือไม่มีสิทธิ์"
 
-#: flask/application/characters/views.py:539 flask/application/characters/views.py:584
+#: flask/application/characters/views.py:463 flask/application/characters/views.py:489
+msgid "Gallery image not found."
+msgstr "ไม่พบรูปภาพแกลเลอรี"
+
+#: flask/application/characters/views.py:470
+msgid "Gallery image updated."
+msgstr "อัปเดตรูปภาพแกลเลอรีแล้ว"
+
+#: flask/application/characters/views.py:580 flask/application/characters/views.py:625
 msgid "Invalid or inaccessible location selected."
 msgstr "เลือกสถานที่ที่ไม่ถูกต้องหรือไม่สามารถเข้าถึงได้"
 
-#: flask/application/characters/views.py:564 flask/application/worldinfo/views.py:391
+#: flask/application/characters/views.py:605 flask/application/worldinfo/views.py:393
 msgid "Event '%(title)s' added."
 msgstr "เพิ่มเหตุการณ์ '%(title)s' แล้ว"
 
-#: flask/application/characters/views.py:631 flask/application/worldinfo/views.py:448
+#: flask/application/characters/views.py:672 flask/application/worldinfo/views.py:450
 msgid "Event deleted."
 msgstr "ลบเหตุการณ์แล้ว"
 
-#: flask/application/characters/views.py:259
+#: flask/application/characters/views.py:268
 msgid "Character '%(name)s' created successfully!"
 msgstr "สร้างตัวละคร '%(name)s' สำเร็จแล้ว!"
 
-#: flask/application/characters/views.py:345
+#: flask/application/characters/views.py:354
 msgid "Character '%(name)s' saved."
 msgstr "บันทึกตัวละคร '%(name)s' แล้ว"
 
-#: flask/application/characters/views.py:433
+#: flask/application/characters/views.py:442
 msgid "9:16 gallery image added."
 msgstr "เพิ่มรูปภาพแกลเลอรี 9:16 แล้ว"
 
-#: flask/application/characters/views.py:483
+#: flask/application/characters/views.py:524
 msgid "Sprite '%(name)s' uploaded."
 msgstr "อัปโหลดสไปรต์ '%(name)s' แล้ว"
 
-#: flask/application/characters/views.py:610 flask/application/worldinfo/views.py:430
+#: flask/application/characters/views.py:651 flask/application/worldinfo/views.py:432
 msgid "Event updated."
 msgstr "อัปเดตเหตุการณ์แล้ว"
 
-#: flask/application/chat/views.py:609
-msgid "Chat session deleted."
-msgstr "ลบเซสชันแชทแล้ว"
-
-#: flask/application/chat/views.py:357 flask/application/chat/views.py:692
-msgid "Chat session not found."
-msgstr "ไม่พบเซสชันแชท"
-
-#: flask/application/chat/views.py:365
-msgid "Associated character not found."
-msgstr "ไม่พบตัวละครที่เกี่ยวข้อง"
-
-#: flask/application/chat/views.py:533
-msgid "Session not found."
-msgstr "ไม่พบเซสชัน"
-
-#: flask/application/chat/views.py:673
+#: flask/application/chat/memory_views.py:80
 msgid "Memory deleted."
 msgstr "ลบความทรงจำแล้ว"
 
-#: flask/application/chat/views.py:699
+#: flask/application/chat/memory_views.py:99 flask/application/chat/views.py:221
+msgid "Chat session not found."
+msgstr "ไม่พบเซสชันแชท"
+
+#: flask/application/chat/memory_views.py:106
 msgid "Memory not found."
 msgstr "ไม่พบความทรงจำ"
 
-#: flask/application/chat/views.py:715
+#: flask/application/chat/memory_views.py:122
 msgid "No messages found for this memory episode."
 msgstr "ไม่พบข้อความสำหรับช่วงความทรงจำนี้"
 
-#: flask/application/chat/views.py:746
+#: flask/application/chat/memory_views.py:153
 msgid "Memory recalculated successfully."
 msgstr "คำนวณความทรงจำใหม่สำเร็จแล้ว"
 
-#: flask/application/chat/views.py:545
-msgid "Persona updated for this session."
-msgstr "อัปเดตเพอร์โซนาสำหรับเซสชันนี้แล้ว"
-
-#: flask/application/chat/views.py:651
+#: flask/application/chat/memory_views.py:58
 msgid "Memory updated."
 msgstr "อัปเดตความทรงจำแล้ว"
 
-#: flask/application/chat/views.py:750
+#: flask/application/chat/memory_views.py:157
 msgid "Recalculation error: %(error)s"
 msgstr "ข้อผิดพลาดในการคำนวณใหม่: %(error)s"
 
-#: flask/application/chat/views.py:237 flask/application/chat/views.py:553
+#: flask/application/chat/views.py:479
+msgid "Chat session deleted."
+msgstr "ลบเซสชันแชทแล้ว"
+
+#: flask/application/chat/views.py:229
+msgid "Associated character not found."
+msgstr "ไม่พบตัวละครที่เกี่ยวข้อง"
+
+#: flask/application/chat/views.py:398
+msgid "Session not found."
+msgstr "ไม่พบเซสชัน"
+
+#: flask/application/chat/views.py:415
+msgid "Persona updated for this session."
+msgstr "อัปเดตเพอร์โซนาสำหรับเซสชันนี้แล้ว"
+
+#: flask/application/chat/views.py:101 flask/application/chat/views.py:423
 msgid "Invalid WorldInfo."
 msgstr "WorldInfo ไม่ถูกต้อง"
 
-#: flask/application/chat/views.py:242 flask/application/chat/views.py:560 flask/application/worldinfo/views.py:128 flask/application/worldinfo/views.py:236
+#: flask/application/chat/views.py:106 flask/application/chat/views.py:430 flask/application/worldinfo/views.py:128 flask/application/worldinfo/views.py:236
 msgid "This world is not yet available in your language."
 msgstr "โลกนี้ยังไม่พร้อมใช้งานในภาษาของคุณ"
 
-#: flask/application/chat/views.py:542
+#: flask/application/chat/views.py:412
 msgid "Invalid persona."
 msgstr "เพอร์โซนาไม่ถูกต้อง"
 
-#: flask/application/chat/views.py:569
+#: flask/application/chat/views.py:439
 msgid "WorldInfo changed for this chat."
 msgstr "เปลี่ยน WorldInfo สำหรับแชทนี้แล้ว"
 
-#: flask/application/chat/views.py:572
+#: flask/application/chat/views.py:442
 msgid "Event setting saved."
 msgstr "บันทึกการตั้งค่าเหตุการณ์แล้ว"
 
-#: flask/application/chat/views.py:580
+#: flask/application/chat/views.py:450
 msgid "Thinking enabled."
 msgstr "เปิดใช้งานการคิดแล้ว"
 
-#: flask/application/chat/views.py:582
+#: flask/application/chat/views.py:452
 msgid "Thinking disabled."
 msgstr "ปิดใช้งานการคิดแล้ว"
 
-#: flask/application/chat/views.py:587
+#: flask/application/chat/views.py:457
 msgid "Chat title updated."
 msgstr "อัปเดตชื่อแชทแล้ว"
 
@@ -264,15 +272,15 @@ msgstr "'%(name)s' เป็นเพอร์โซนาเริ่มต้�
 msgid "Persona '%(name)s' deleted."
 msgstr "ลบเพอร์โซนา '%(name)s' แล้ว"
 
-#: flask/application/settings/views.py:63 flask/templates/characters/creator.html:87 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:155 flask/templates/macros/persona_manager.html:69
+#: flask/application/settings/views.py:63 flask/templates/characters/partials/tab_info.html:20 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:155 flask/templates/macros/persona_manager.html:72
 msgid "Female"
 msgstr "หญิง"
 
-#: flask/application/settings/views.py:64 flask/templates/characters/creator.html:88 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:157 flask/templates/macros/persona_manager.html:70
+#: flask/application/settings/views.py:64 flask/templates/characters/partials/tab_info.html:21 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:157 flask/templates/macros/persona_manager.html:73
 msgid "Male"
 msgstr "ชาย"
 
-#: flask/application/settings/views.py:65 flask/templates/characters/creator.html:89 flask/templates/macros/persona_manager.html:71 flask/templates/macros/persona_manager.html:97 flask/templates/overview/tabs/characters.html:11
+#: flask/application/settings/views.py:65 flask/templates/characters/partials/tab_info.html:22 flask/templates/macros/persona_manager.html:74 flask/templates/macros/persona_manager.html:107 flask/templates/overview/tabs/characters.html:11
 msgid "Non-Binary"
 msgstr "นอนไบนารี"
 
@@ -280,11 +288,11 @@ msgstr "นอนไบนารี"
 msgid "Account settings saved."
 msgstr "บันทึกการตั้งค่าบัญชีแล้ว"
 
-#: flask/application/settings/views.py:74 flask/i18n.py:132 flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:257 flask/templates/characters/creator.html:258
+#: flask/application/settings/views.py:74 flask/i18n.py:132 flask/templates/characters/partials/modals.html:94 flask/templates/characters/partials/tab_dialogue.html:23 flask/templates/characters/partials/tab_dialogue.html:28
 msgid "Character"
 msgstr "ตัวละคร"
 
-#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:405
+#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/partials/sidebar.html:34 flask/templates/chat/session.html:279
 msgid "World"
 msgstr "โลก"
 
@@ -296,11 +304,11 @@ msgstr "สมุดตำนาน"
 msgid "The new passwords do not match."
 msgstr "รหัสผ่านใหม่ไม่ตรงกัน"
 
-#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:113
+#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:110
 msgid "Owner"
 msgstr "เจ้าของ"
 
-#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:115
+#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:112
 msgid "Collaborator"
 msgstr "ผู้ร่วมงาน"
 
@@ -320,7 +328,7 @@ msgstr "สถานที่"
 msgid "Events"
 msgstr "เหตุการณ์"
 
-#: flask/application/settings/views.py:136 flask/templates/lorebooks/detail.html:22 flask/templates/macros/lorebook_manager.html:78 flask/templates/macros/lorebook_manager.html:151 flask/templates/macros/lorebook_manager.html:224
+#: flask/application/settings/views.py:136 flask/templates/lorebooks/detail.html:27 flask/templates/macros/lorebook_manager.html:78 flask/templates/macros/lorebook_manager.html:151 flask/templates/macros/lorebook_manager.html:224
 msgid "Entries"
 msgstr "รายการ"
 
@@ -336,7 +344,7 @@ msgstr "โหมด AI บนคลาวด์: ปิดการแปลอ
 msgid "WorldInfo deleted."
 msgstr "ลบ WorldInfo แล้ว"
 
-#: flask/application/worldinfo/views.py:356
+#: flask/application/worldinfo/views.py:358
 msgid "Location deleted."
 msgstr "ลบสถานที่แล้ว"
 
@@ -352,7 +360,7 @@ msgstr "ไม่พบ WorldInfo"
 msgid "WorldInfo not found or no permission to delete."
 msgstr "ไม่พบ WorldInfo หรือไม่มีสิทธิ์ลบ"
 
-#: flask/application/worldinfo/views.py:266 flask/application/worldinfo/views.py:308 flask/application/worldinfo/views.py:352 flask/application/worldinfo/views.py:368 flask/application/worldinfo/views.py:405
+#: flask/application/worldinfo/views.py:266 flask/application/worldinfo/views.py:308 flask/application/worldinfo/views.py:354 flask/application/worldinfo/views.py:370 flask/application/worldinfo/views.py:407
 msgid "WorldInfo not found or no permission."
 msgstr "ไม่พบ WorldInfo หรือไม่มีสิทธิ์"
 
@@ -368,7 +376,7 @@ msgstr "ปฏิเสธการเข้าถึง: คุณสามา�
 msgid "WorldInfo saved."
 msgstr "บันทึก WorldInfo แล้ว"
 
-#: flask/application/worldinfo/views.py:337
+#: flask/application/worldinfo/views.py:339
 msgid "Location updated."
 msgstr "อัปเดตสถานที่แล้ว"
 
@@ -504,15 +512,15 @@ msgstr "คำเตือน"
 msgid "Notice"
 msgstr "ประกาศ"
 
-#: flask/i18n.py:99 flask/templates/macros/buttons.html:79 flask/templates/macros/buttons.html:80 flask/templates/macros/lorebook_manager.html:239 flask/templates/macros/persona_manager.html:55
+#: flask/i18n.py:99 flask/templates/characters/partials/modals.html:167 flask/templates/macros/buttons.html:83 flask/templates/macros/buttons.html:84 flask/templates/macros/image_viewer.html:12
 msgid "Close"
 msgstr "ปิด"
 
-#: flask/i18n.py:100 flask/templates/characters/creator.html:134
+#: flask/i18n.py:100 flask/templates/characters/partials/tab_info.html:67
 msgid "Crops active"
 msgstr "เปิดใช้งานการครอปแล้ว"
 
-#: flask/i18n.py:101 flask/templates/worldinfo/detail.html:97
+#: flask/i18n.py:101 flask/templates/worldinfo/detail.html:110
 msgid "1:1 Cover active"
 msgstr "ปก 1:1 เปิดใช้งานแล้ว"
 
@@ -604,11 +612,11 @@ msgstr "ลบเพอร์โซนา"
 msgid "Deletion locked"
 msgstr "ล็อกการลบ"
 
-#: flask/i18n.py:124 flask/templates/admin/services.html:254 flask/templates/admin/users.html:43 flask/templates/characters/creator.html:247 flask/templates/characters/creator.html:430
+#: flask/i18n.py:124 flask/templates/admin/services.html:250 flask/templates/admin/users.html:40 flask/templates/characters/partials/tab_dialogue.html:18 flask/templates/characters/partials/tab_gallery.html:62
 msgid "Delete"
 msgstr "ลบ"
 
-#: flask/i18n.py:125 flask/templates/chat/session.html:972
+#: flask/i18n.py:125
 msgid "Translating..."
 msgstr "กำลังแปล..."
 
@@ -656,37 +664,161 @@ msgstr "เหตุการณ์"
 msgid "Character Event"
 msgstr "เหตุการณ์ตัวละคร"
 
-#: flask/templates/admin/backdrop.html:10
-msgid "System-Wide Default Backdrop"
-msgstr "พื้นหลังเริ่มต้นทั้งระบบ"
+#: flask/i18n.py:140
+msgid "admire"
+msgstr "ชื่นชม"
 
-#: flask/templates/admin/backdrop.html:12
+#: flask/i18n.py:141
+msgid "amused"
+msgstr "ขบขัน"
+
+#: flask/i18n.py:142
+msgid "anger"
+msgstr "โกรธ"
+
+#: flask/i18n.py:143
+msgid "annoyed"
+msgstr "รำคาญ"
+
+#: flask/i18n.py:144
+msgid "approval"
+msgstr "เห็นด้วย"
+
+#: flask/i18n.py:145
+msgid "caring"
+msgstr "ห่วงใย"
+
+#: flask/i18n.py:146
+msgid "confused"
+msgstr "สับสน"
+
+#: flask/i18n.py:147
+msgid "curious"
+msgstr "อยากรู้อยากเห็น"
+
+#: flask/i18n.py:148
+msgid "desire"
+msgstr "ปรารถนา"
+
+#: flask/i18n.py:149
+msgid "disappointed"
+msgstr "ผิดหวัง"
+
+#: flask/i18n.py:150
+msgid "disapproval"
+msgstr "ไม่เห็นด้วย"
+
+#: flask/i18n.py:151
+msgid "disgust"
+msgstr "รังเกียจ"
+
+#: flask/i18n.py:152
+msgid "embarrassed"
+msgstr "อาย"
+
+#: flask/i18n.py:153
+msgid "excited"
+msgstr "ตื่นเต้น"
+
+#: flask/i18n.py:154
+msgid "fear"
+msgstr "กลัว"
+
+#: flask/i18n.py:155
+msgid "gratitude"
+msgstr "กตัญญู"
+
+#: flask/i18n.py:156
+msgid "grief"
+msgstr "โศกเศร้า"
+
+#: flask/i18n.py:157
+msgid "joy"
+msgstr "ยินดี"
+
+#: flask/i18n.py:158
+msgid "love"
+msgstr "รัก"
+
+#: flask/i18n.py:159
+msgid "nervousness"
+msgstr "ประหม่า"
+
+#: flask/i18n.py:160
+msgid "neutral"
+msgstr "เป็นกลาง"
+
+#: flask/i18n.py:161
+msgid "optimistic"
+msgstr "มองโลกในแง่ดี"
+
+#: flask/i18n.py:162
+msgid "pride"
+msgstr "ภูมิใจ"
+
+#: flask/i18n.py:163
+msgid "realize"
+msgstr "ตระหนัก"
+
+#: flask/i18n.py:164
+msgid "relief"
+msgstr "โล่งใจ"
+
+#: flask/i18n.py:165
+msgid "remorse"
+msgstr "สำนึกผิด"
+
+#: flask/i18n.py:166
+msgid "sad"
+msgstr "เศร้า"
+
+#: flask/i18n.py:167
+msgid "surprise"
+msgstr "ประหลาดใจ"
+
+#: flask/templates/admin/backdrop.html:14
 msgid "Global atmospheric background for all pages and base fallback for roleplay chats."
 msgstr "พื้นหลังบรรยากาศส่วนกลางสำหรับทุกหน้า และพื้นหลังสำรองพื้นฐานสำหรับแชทสวมบทบาท"
 
-#: flask/templates/admin/backdrop.html:17
+#: flask/templates/admin/backdrop.html:18
 msgid "Custom backdrop is active"
 msgstr "เปิดใช้งานพื้นหลังแบบกำหนดเองแล้ว"
 
-#: flask/templates/admin/backdrop.html:18
+#: flask/templates/admin/backdrop.html:19
 msgid "Custom backdrop active"
 msgstr "เปิดใช้งานพื้นหลังแบบกำหนดเอง"
 
-#: flask/templates/admin/backdrop.html:21
+#: flask/templates/admin/backdrop.html:22
 msgid "Default RPG theme cover is active"
 msgstr "เปิดใช้งานปกธีม RPG เริ่มต้นแล้ว"
 
-#: flask/templates/admin/backdrop.html:22
+#: flask/templates/admin/backdrop.html:23
 msgid "Default Theme (Cover)"
 msgstr "ธีมเริ่มต้น (ปก)"
 
-#: flask/templates/admin/backdrop.html:36
+#: flask/templates/admin/backdrop.html:37
 msgid "No custom backdrop set"
 msgstr "ยังไม่ได้ตั้งค่าพื้นหลังแบบกำหนดเอง"
 
 #: flask/templates/admin/backdrop.html:38
-msgid "Currently using the dark RPG default cover. Upload a 16:9 image on the right or select an existing location."
-msgstr "กำลังใช้ปก RPG สีเข้มเริ่มต้น อัปโหลดภาพ 16:9 ทางด้านขวาหรือเลือกสถานที่ที่มีอยู่"
+msgid "Currently using the dark RPG default cover. Choose a 16:9 image below or select an existing location."
+msgstr "กำลังใช้ปก RPG สีเข้มเริ่มต้น เลือกรูปภาพ 16:9 ด้านล่างหรือเลือกสถานที่ที่มีอยู่"
+
+#: flask/templates/admin/backdrop.html:39 flask/templates/macros/backdrop_selector.html:54 flask/templates/worldinfo/detail.html:130 flask/templates/worldinfo/detail.html:255 flask/templates/worldinfo/detail.html:398
+msgid "Choose Backdrop"
+msgstr "เลือกภาพพื้นหลัง"
+
+#: flask/templates/admin/backdrop.html:40 flask/templates/macros/backdrop_selector.html:62 flask/templates/worldinfo/detail.html:131 flask/templates/worldinfo/detail.html:256 flask/templates/worldinfo/detail.html:399
+msgid "Remove Backdrop"
+msgstr "ลบภาพพื้นหลัง"
+
+#: flask/templates/admin/backdrop.html:41
+msgid "Recommended: 16:9 widescreen (e.g., 1920×1080 or 2560×1440). Supported formats: PNG, JPG, WEBP."
+msgstr "แนะนำ: จอกว้าง 16:9 (เช่น 1920×1080 หรือ 2560×1440) รูปแบบที่รองรับ: PNG, JPG, WEBP"
+
+#: flask/templates/admin/backdrop.html:42 flask/templates/admin/layout.html:31
+msgid "System Backdrop"
+msgstr "พื้นหลังระบบ"
 
 #: flask/templates/admin/backdrop.html:47
 msgid "Rule: Priority in Chat"
@@ -694,225 +826,197 @@ msgstr "กฎ: ลำดับความสำคัญในแชท"
 
 #: flask/templates/admin/backdrop.html:50
 msgid "This default backdrop forms the foundational background (Priority: System → World → Location). In chat, it is overridden by the active WorldInfo backdrop if set, and further overridden when the current location has its own background image."
-msgstr ""
+msgstr "ภาพพื้นหลังเริ่มต้นนี้เป็นพื้นหลังพื้นฐาน (ลำดับความสำคัญ: ระบบ → โลก → สถานที่) ในแชทจะถูกแทนที่ด้วยพื้นหลัง WorldInfo ที่ใช้งานอยู่หากตั้งค่าไว้ และถูกแทนที่ด้วยภาพพื้นหลังของสถานที่ปัจจุบันหากมี"
 
-#: flask/templates/admin/backdrop.html:56
-msgid "Do you really want to remove the custom default backdrop and reset to the default theme?"
-msgstr "คุณต้องการลบพื้นหลังเริ่มต้นแบบกำหนดเองและกลับไปใช้ธีมเริ่มต้นหรือไม่?"
-
-#: flask/templates/admin/backdrop.html:58
-msgid "Remove Backdrop (Reset to Default)"
-msgstr "ลบพื้นหลัง (รีเซ็ตเป็นค่าเริ่มต้น)"
-
-#: flask/templates/admin/backdrop.html:71
-msgid "Upload New Background Image"
-msgstr "อัปโหลดภาพพื้นหลังใหม่"
-
-#: flask/templates/admin/backdrop.html:74
-msgid "Recommended: 16:9 widescreen (e.g., 1920×1080 or 2560×1440). Supported formats: PNG, JPG, WEBP."
-msgstr "แนะนำ: จอกว้าง 16:9 (เช่น 1920×1080 หรือ 2560×1440) รูปแบบที่รองรับ: PNG, JPG, WEBP"
-
-#: flask/templates/admin/backdrop.html:79
-msgid "Select image file:"
-msgstr "เลือกไฟล์ภาพ:"
-
-#: flask/templates/admin/backdrop.html:85
+#: flask/templates/admin/backdrop.html:55
 msgid "Save as System Backdrop"
 msgstr "บันทึกเป็นพื้นหลังระบบ"
 
-#: flask/templates/admin/backdrop.html:94
+#: flask/templates/admin/backdrop.html:64
 msgid "Choose from Existing Locations"
 msgstr "เลือกจากสถานที่ที่มีอยู่"
 
-#: flask/templates/admin/backdrop.html:96
+#: flask/templates/admin/backdrop.html:66
 msgid "available"
 msgstr "รายการ"
 
-#: flask/templates/admin/backdrop.html:101
+#: flask/templates/admin/backdrop.html:71
 msgid "Click on an existing location to adopt its background image as the system default:"
 msgstr "คลิกที่สถานที่ที่มีอยู่เพื่อนำภาพพื้นหลังมาใช้เป็นค่าเริ่มต้นของระบบ:"
 
-#: flask/templates/admin/backdrop.html:119
+#: flask/templates/admin/backdrop.html:89
 msgid "No locations with background images have been saved in WorldInfos yet."
 msgstr "ยังไม่มีสถานที่ที่มีภาพพื้นหลังบันทึกไว้ใน WorldInfos"
 
-#: flask/templates/admin/layout.html:12 flask/templates/macros/top_header.html:58
+#: flask/templates/admin/layout.html:21 flask/templates/macros/top_header.html:56
 msgid "Administration"
 msgstr "การจัดการ"
 
-#: flask/templates/admin/layout.html:14
+#: flask/templates/admin/layout.html:23
 msgid "System & Configuration"
 msgstr "ระบบและการกำหนดค่า"
 
-#: flask/templates/admin/layout.html:18
+#: flask/templates/admin/layout.html:27
 msgid "User Management"
 msgstr "การจัดการผู้ใช้"
 
-#: flask/templates/admin/layout.html:19
+#: flask/templates/admin/layout.html:28
 msgid "Services & Models"
 msgstr "บริการและโมเดล"
 
-#: flask/templates/admin/layout.html:20 flask/templates/admin/prompts.html:12
+#: flask/templates/admin/layout.html:29
 msgid "System Prompts"
 msgstr "พรอมต์ระบบ"
 
-#: flask/templates/admin/layout.html:21 flask/templates/admin/translations.html:9
+#: flask/templates/admin/layout.html:30
 msgid "Content Translations"
 msgstr "การแปลเนื้อหา"
 
-#: flask/templates/admin/layout.html:22
-msgid "System Backdrop"
-msgstr "พื้นหลังระบบ"
-
-#: flask/templates/admin/layout.html:26 flask/templates/chat/select_worldinfo.html:88 flask/templates/settings/layout.html:26
+#: flask/templates/admin/layout.html:35 flask/templates/chat/select_worldinfo.html:92 flask/templates/settings/layout.html:30
 msgid "Back to Hub"
 msgstr "กลับไปยังฮับ"
 
-#: flask/templates/admin/prompts.html:17
+#: flask/templates/admin/prompts.html:15
 msgid "Prompt Placeholders"
 msgstr "ตัวแปรแทนที่ในพรอมต์"
 
-#: flask/templates/admin/prompts.html:20
+#: flask/templates/admin/prompts.html:18
 msgid "You can use"
 msgstr "คุณสามารถใช้"
 
-#: flask/templates/admin/prompts.html:20
+#: flask/templates/admin/prompts.html:18
 msgid "(character name) and"
 msgstr "(ชื่อตัวละคร) และ"
 
-#: flask/templates/admin/prompts.html:20
+#: flask/templates/admin/prompts.html:18
 msgid "(player persona name) in prompts. These are replaced dynamically at runtime."
 msgstr "(ชื่อตัวตนผู้เล่น) ในพรอมต์ ซึ่งจะถูกแทนที่แบบไดนามิกขณะรันไทม์"
 
-#: flask/templates/admin/prompts.html:25
+#: flask/templates/admin/prompts.html:23
 msgid "Roleplay Prompt"
 msgstr "พรอมต์สวมบทบาท"
 
-#: flask/templates/admin/prompts.html:26
+#: flask/templates/admin/prompts.html:24
 msgid "Memory Prompt"
 msgstr "พรอมต์ความทรงจำ"
 
-#: flask/templates/admin/prompts.html:27
+#: flask/templates/admin/prompts.html:25
 msgid "Diffuser Prompt"
 msgstr "พรอมต์สร้างภาพ"
 
-#: flask/templates/admin/prompts.html:28
+#: flask/templates/admin/prompts.html:26
 msgid "AI Author Prompt"
 msgstr "พรอมต์ผู้แต่ง AI"
 
-#: flask/templates/admin/prompts.html:29
+#: flask/templates/admin/prompts.html:27
 msgid "Vision Prompt"
 msgstr "พรอมต์การมองเห็น"
 
-#: flask/templates/admin/prompts.html:30
+#: flask/templates/admin/prompts.html:28
 msgid "AI Dialogue Author Prompt"
 msgstr "พรอมต์ผู้แต่งบทสนทนา AI"
 
-#: flask/templates/admin/prompts.html:37
+#: flask/templates/admin/prompts.html:36
 msgid "Restore Default"
 msgstr "คืนค่าเริ่มต้น"
 
-#: flask/templates/admin/prompts.html:37
+#: flask/templates/admin/prompts.html:36
 msgid "Resets all languages of this prompt to factory default"
 msgstr "รีเซ็ตทุกภาษาของพรอมต์นี้กลับเป็นค่าเริ่มต้นจากโรงงาน"
 
-#: flask/templates/admin/prompts.html:55
+#: flask/templates/admin/prompts.html:54
 msgid "Save Prompts"
 msgstr "บันทึกพรอมต์"
 
 #: flask/templates/admin/services.html:10
-msgid "Service Endpoints & Model Tasks"
-msgstr "จุดเชื่อมต่อบริการและงานของโมเดล"
-
-#: flask/templates/admin/services.html:14
 msgid "1. Active AI Backend (Exclusive)"
 msgstr "1. แบ็กเอนด์ AI ที่ใช้งาน (แบบเดี่ยว)"
 
-#: flask/templates/admin/services.html:16
+#: flask/templates/admin/services.html:12
 msgid "AIMO always operates exactly one AI backend (either Ollama or Google AI Cloud) – no parallel operation."
 msgstr "AIMO ทำงานกับแบ็กเอนด์ AI เพียงตัวเดียวเสมอ (Ollama หรือ Google AI Cloud) – ไม่ทำงานขนานกัน"
 
-#: flask/templates/admin/services.html:22
+#: flask/templates/admin/services.html:18
 msgid "Ollama API URL"
 msgstr "URL API ของ Ollama"
 
-#: flask/templates/admin/services.html:24 flask/templates/admin/services.html:37 flask/templates/admin/services.html:59
+#: flask/templates/admin/services.html:20 flask/templates/admin/services.html:33 flask/templates/admin/services.html:55
 msgid "Connected"
 msgstr "เชื่อมต่อแล้ว"
 
-#: flask/templates/admin/services.html:24
+#: flask/templates/admin/services.html:20
 msgid "Unreachable"
 msgstr "ไม่สามารถเข้าถึงได้"
 
-#: flask/templates/admin/services.html:29
+#: flask/templates/admin/services.html:25
 msgid "Test"
 msgstr "ทดสอบ"
 
-#: flask/templates/admin/services.html:35
+#: flask/templates/admin/services.html:31
 msgid "Google AI API Key"
 msgstr "คีย์ API ของ Google AI"
 
-#: flask/templates/admin/services.html:37
+#: flask/templates/admin/services.html:33
 msgid "Unreachable / invalid"
 msgstr "ไม่สามารถเข้าถึงได้ / ไม่ถูกต้อง"
 
-#: flask/templates/admin/services.html:37
+#: flask/templates/admin/services.html:33
 msgid "Not configured"
 msgstr "ยังไม่ได้ตั้งค่า"
 
-#: flask/templates/admin/services.html:42
+#: flask/templates/admin/services.html:38
 msgid "Test API Key & Models"
 msgstr "ทดสอบคีย์ API และโมเดล"
 
-#: flask/templates/admin/services.html:49
+#: flask/templates/admin/services.html:45
 msgid "2. Image Generation & Web Search"
 msgstr "2. การสร้างภาพและการค้นหาเว็บ"
 
-#: flask/templates/admin/services.html:53
+#: flask/templates/admin/services.html:49
 msgid "Image Generation (Scene images in chat)"
 msgstr "การสร้างภาพ (ภาพฉากในแชท)"
 
-#: flask/templates/admin/services.html:57
+#: flask/templates/admin/services.html:53
 msgid "ComfyUI API URL"
 msgstr "URL API ของ ComfyUI"
 
-#: flask/templates/admin/services.html:59
+#: flask/templates/admin/services.html:55
 msgid "Offline"
 msgstr "ออฟไลน์"
 
-#: flask/templates/admin/services.html:66
+#: flask/templates/admin/services.html:62
 msgid "Google AI Image Model"
 msgstr "โมเดลภาพ Google AI"
 
-#: flask/templates/admin/services.html:68 flask/templates/admin/services.html:219
+#: flask/templates/admin/services.html:64 flask/templates/admin/services.html:215
 msgid "Ready"
 msgstr "พร้อม"
 
-#: flask/templates/admin/services.html:68
+#: flask/templates/admin/services.html:64
 msgid "Not checked / Offline"
 msgstr "ยังไม่ได้ตรวจสอบ / ออฟไลน์"
 
-#: flask/templates/admin/services.html:80
+#: flask/templates/admin/services.html:76
 msgid "Web Search (Prepared)"
 msgstr "การค้นหาเว็บ (เตรียมไว้)"
 
-#: flask/templates/admin/services.html:84
+#: flask/templates/admin/services.html:80
 msgid "SearXNG URL (Prepared)"
 msgstr "URL ของ SearXNG (เตรียมไว้)"
 
-#: flask/templates/admin/services.html:93
+#: flask/templates/admin/services.html:89
 msgid "3. Task-Specific Model Assignment"
 msgstr "3. การกำหนดโมเดลตามงาน"
 
-#: flask/templates/admin/services.html:94
+#: flask/templates/admin/services.html:90
 msgid "Assign suggested models"
 msgstr "กำหนดโมเดลที่แนะนำ"
 
-#: flask/templates/admin/services.html:94
+#: flask/templates/admin/services.html:90
 msgid "Sets all 5 dropdowns to the recommended default models for the selected backend"
 msgstr "ตั้งค่าดรอปดาวน์ทั้ง 5 รายการเป็นโมเดลเริ่มต้นที่แนะนำสำหรับแบ็กเอนด์ที่เลือก"
 
-#: flask/templates/admin/services.html:100
+#: flask/templates/admin/services.html:96
 msgid ""
 "Roleplay Model:\n"
 "Primary language model for narrative dialogue generation and roleplay in chat."
@@ -920,7 +1024,7 @@ msgstr ""
 "โมเดลสวมบทบาท:\n"
 "โมเดลภาษาหลักสำหรับการสร้างบทสนทนาเชิงเรื่องราวและการสวมบทบาทในแชท"
 
-#: flask/templates/admin/services.html:111
+#: flask/templates/admin/services.html:107
 msgid ""
 "Classification Model:\n"
 "Fast, lightweight model for downstream detection of emotions (avatar sprites) and location change suggestions in a single pass."
@@ -928,7 +1032,7 @@ msgstr ""
 "โมเดลจำแนกประเภท:\n"
 "โมเดลที่รวดเร็วและน้ำหนักเบาสำหรับตรวจจับอารมณ์ (สไปรต์อวาตาร์) และคำแนะนำการเปลี่ยนสถานที่ในรอบเดียว"
 
-#: flask/templates/admin/services.html:122
+#: flask/templates/admin/services.html:118
 msgid ""
 "Memory Model:\n"
 "Automatically creates episodic summaries (memories) every 10 messages and updates the chat title."
@@ -936,7 +1040,7 @@ msgstr ""
 "โมเดลความจำ:\n"
 "สร้างสรุปเหตุการณ์ (ความทรงจำ) โดยอัตโนมัติทุกๆ 10 ข้อความและอัปเดตชื่อแชท"
 
-#: flask/templates/admin/services.html:133
+#: flask/templates/admin/services.html:129
 msgid ""
 "Assistant Model:\n"
 "Responsible for AI author optimization (Sparkle ✨), text translations, and scene image prompts."
@@ -944,7 +1048,7 @@ msgstr ""
 "โมเดลผู้ช่วย:\n"
 "รับผิดชอบการปรับแต่งสำหรับผู้เขียน AI (Sparkle ✨) การแปลข้อความ และพรอมต์ภาพฉาก"
 
-#: flask/templates/admin/services.html:144
+#: flask/templates/admin/services.html:140
 msgid ""
 "Vision Model:\n"
 "Multimodal model for visual analysis of persona portraits, 16:9 location images, and image uploads in chat."
@@ -952,139 +1056,139 @@ msgstr ""
 "โมเดลวิชัน (Vision):\n"
 "โมเดลหลายรูปแบบสำหรับวิเคราะห์ภาพพอร์ตเทรตเพอร์โซนา ภาพสถานที่ 16:9 และภาพที่อัปโหลดในแชท"
 
-#: flask/templates/admin/services.html:156
+#: flask/templates/admin/services.html:152
 msgid "4. LLM Inference Hyperparameters"
 msgstr "4. ไฮเปอร์พารามิเตอร์การอนุมาน LLM"
 
-#: flask/templates/admin/services.html:161
+#: flask/templates/admin/services.html:157
 msgid "Controls the token budget for history, memories, and lorebooks (also active for Google AI as a cost/history limit)."
 msgstr "ควบคุมงบประมาณโทเค็นสำหรับประวัติ ความทรงจำ และหนังสือตำนาน (ใช้งานสำหรับ Google AI เป็นขีดจำกัดค่าใช้จ่าย/ประวัติด้วย)"
 
-#: flask/templates/admin/services.html:176
+#: flask/templates/admin/services.html:172
 msgid "Repetition penalty for local Ollama models."
 msgstr "บทลงโทษการซ้ำคำสำหรับโมเดล Ollama ในเครื่อง"
 
-#: flask/templates/admin/services.html:184
+#: flask/templates/admin/services.html:180
 msgid "Save Services & Model Settings"
 msgstr "บันทึกการตั้งค่าบริการและโมเดล"
 
-#: flask/templates/admin/services.html:190
+#: flask/templates/admin/services.html:186
 msgid "Ollama Model Manager"
 msgstr "ตัวจัดการโมเดล Ollama"
 
-#: flask/templates/admin/services.html:196
+#: flask/templates/admin/services.html:192
 msgid "Setup Helper for Ollama"
 msgstr "ตัวช่วยตั้งค่าสำหรับ Ollama"
 
-#: flask/templates/admin/services.html:198
+#: flask/templates/admin/services.html:194
 msgid "Install missing"
 msgstr "ติดตั้งส่วนที่ขาด"
 
-#: flask/templates/admin/services.html:201
+#: flask/templates/admin/services.html:197
 msgid "Recommended models per role:"
 msgstr "โมเดลที่แนะนำตามบทบาท:"
 
-#: flask/templates/admin/services.html:208
+#: flask/templates/admin/services.html:204
 msgid "Click to copy into pull input"
 msgstr "คลิกเพื่อคัดลอกไปยังช่องดึงข้อมูล (pull)"
 
-#: flask/templates/admin/services.html:221
+#: flask/templates/admin/services.html:217
 msgid "Missing"
 msgstr "ขาด"
 
-#: flask/templates/admin/services.html:222 flask/templates/admin/services.html:234
+#: flask/templates/admin/services.html:218 flask/templates/admin/services.html:230
 msgid "Pull"
 msgstr "ดึง (Pull)"
 
-#: flask/templates/admin/services.html:231
+#: flask/templates/admin/services.html:227
 msgid "Install new model (Pull)"
 msgstr "ติดตั้งโมเดลใหม่ (Pull)"
 
-#: flask/templates/admin/services.html:233
+#: flask/templates/admin/services.html:229
 msgid "Enter model tag..."
 msgstr "ป้อนแท็กโมเดล..."
 
-#: flask/templates/admin/services.html:237
+#: flask/templates/admin/services.html:233
 msgid "Quick select:"
 msgstr "เลือกด่วน:"
 
-#: flask/templates/admin/services.html:244
+#: flask/templates/admin/services.html:240
 msgid "Starting download..."
 msgstr "กำลังเริ่มดาวน์โหลด..."
 
-#: flask/templates/admin/services.html:249
+#: flask/templates/admin/services.html:245
 msgid "Installed Models"
 msgstr "โมเดลที่ติดตั้งแล้ว"
 
-#: flask/templates/admin/services.html:254
+#: flask/templates/admin/services.html:250
 msgid "Delete model"
 msgstr "ลบโมเดล"
 
-#: flask/templates/admin/services.html:257
+#: flask/templates/admin/services.html:253
 msgid "No models found or Ollama offline."
 msgstr "ไม่พบโมเดลหรือ Ollama ออฟไลน์"
 
-#: flask/templates/admin/services.html:265
+#: flask/templates/admin/services.html:261
 msgid "Google AI Cloud Setup"
 msgstr "การตั้งค่า Google AI Cloud"
 
-#: flask/templates/admin/services.html:272
+#: flask/templates/admin/services.html:268
 msgid "Recommended Google AI Models"
 msgstr "โมเดล Google AI ที่แนะนำ"
 
-#: flask/templates/admin/services.html:282
+#: flask/templates/admin/services.html:278
 msgid "Image Generation"
 msgstr "การสร้างภาพ"
 
-#: flask/templates/admin/services.html:290
+#: flask/templates/admin/services.html:286
 msgid "Available Cloud Models"
 msgstr "โมเดลคลาวด์ที่ใช้งานได้"
 
-#: flask/templates/admin/services.html:301
+#: flask/templates/admin/services.html:297
 msgid "Click \"Test API Key & Models\" to load the Gemini models available with your key."
 msgstr "คลิก \"ทดสอบคีย์ API และโมเดล\" เพื่อโหลดโมเดล Gemini ที่ใช้งานได้กับคีย์ของคุณ"
 
-#: flask/templates/admin/services.html:557
+#: flask/templates/admin/services.html:555
 msgid "All recommended models are already installed on the Ollama server!"
 msgstr "ติดตั้งโมเดลที่แนะนำทั้งหมดบนเซิร์ฟเวอร์ Ollama แล้ว!"
 
-#: flask/templates/admin/services.html:566
+#: flask/templates/admin/services.html:564
 msgid "Download the following %(count)s recommended model(s) sequentially?"
 msgstr "ดาวน์โหลดโมเดลที่แนะนำ %(count)s รายการต่อไปนี้ตามลำดับหรือไม่?"
 
-#: flask/templates/admin/services.html:577
+#: flask/templates/admin/services.html:575
 msgid "Download of '%(model)s' failed. Continue with the next model anyway?"
 msgstr "การดาวน์โหลด '%(model)s' ล้มเหลว ต้องการดำเนินการต่อกับโมเดลถัดไปหรือไม่?"
 
-#: flask/templates/admin/services.html:647
+#: flask/templates/admin/services.html:645
 msgid "Really delete model '%(model)s' from Ollama?"
 msgstr "ต้องการลบโมเดล '%(model)s' ออกจาก Ollama จริงหรือไม่?"
 
-#: flask/templates/admin/services.html:656
+#: flask/templates/admin/services.html:654
 msgid "Deletion failed."
 msgstr "การลบล้มเหลว"
 
-#: flask/templates/admin/translations.html:11
+#: flask/templates/admin/translations.html:9
 msgid "Background translation status for characters, lorebooks, worlds, locations, and events."
 msgstr "สถานะการแปลเบื้องหลังสำหรับตัวละคร หนังสือตำนาน โลก สถานที่ และเหตุการณ์"
 
-#: flask/templates/admin/translations.html:15
+#: flask/templates/admin/translations.html:12
 msgid "Start Translation Sync"
 msgstr "เริ่มซิงค์การแปล"
 
-#: flask/templates/admin/translations.html:16 flask/templates/admin/user_form.html:72 flask/templates/characters/creator.html:614 flask/templates/characters/creator.html:651 flask/templates/characters/creator.html:687
+#: flask/templates/admin/translations.html:13 flask/templates/admin/user_form.html:72 flask/templates/characters/partials/modals.html:32 flask/templates/characters/partials/modals.html:68 flask/templates/characters/partials/modals.html:105
 msgid "Cancel"
 msgstr "ยกเลิก"
 
-#: flask/templates/admin/translations.html:23
+#: flask/templates/admin/translations.html:20
 msgid "Status:"
 msgstr "สถานะ:"
 
-#: flask/templates/admin/translations.html:24
+#: flask/templates/admin/translations.html:21
 msgid "Loading..."
 msgstr "กำลังโหลด..."
 
-#: flask/templates/admin/translations.html:37
+#: flask/templates/admin/translations.html:34
 msgid "Currently translating:"
 msgstr "กำลังแปล:"
 
@@ -1108,7 +1212,7 @@ msgstr "นี่คือผู้ดูแลระบบเริ่มต้
 msgid "Username"
 msgstr "ชื่อผู้ใช้"
 
-#: flask/templates/admin/user_form.html:27 flask/templates/auth/login.html:14 flask/templates/settings/account.html:20
+#: flask/templates/admin/user_form.html:27 flask/templates/auth/login.html:14 flask/templates/settings/account.html:18
 msgid "Email address"
 msgstr "ที่อยู่อีเมล"
 
@@ -1132,43 +1236,39 @@ msgstr "พรีเซ็ต:"
 msgid "Individual functional permissions (FunctionPermission):"
 msgstr "สิทธิ์การทำงานแต่ละรายการ (FunctionPermission):"
 
-#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:280 flask/templates/chat/session.html:845 flask/templates/lorebooks/detail.html:96
+#: flask/templates/admin/user_form.html:73 flask/templates/characters/partials/tab_gallery.html:65 flask/templates/characters/partials/tab_info.html:152 flask/templates/chat/session.html:223 flask/templates/lorebooks/detail.html:95
 msgid "Save"
 msgstr "บันทึก"
 
-#: flask/templates/admin/users.html:9
-msgid "Users & Functional Permissions"
-msgstr "ผู้ใช้และสิทธิ์การทำงาน"
-
-#: flask/templates/admin/users.html:10
+#: flask/templates/admin/users.html:8
 msgid "Granular control of individual function permissions. The initial administrator is permanently protected."
 msgstr "ควบคุมสิทธิ์การทำงานแต่ละรายการอย่างละเอียด ผู้ดูแลระบบเริ่มต้นได้รับการปกป้องอย่างถาวร"
 
-#: flask/templates/admin/users.html:12
+#: flask/templates/admin/users.html:9
 msgid "New User"
 msgstr "ผู้ใช้ใหม่"
 
-#: flask/templates/admin/users.html:24
+#: flask/templates/admin/users.html:21
 msgid "Initial Super-Admin (Non-revocable)"
 msgstr "ซูเปอร์แอดมินเริ่มต้น (เพิกถอนไม่ได้)"
 
-#: flask/templates/admin/users.html:32
+#: flask/templates/admin/users.html:29
 msgid "No permissions assigned"
 msgstr "ยังไม่ได้กำหนดสิทธิ์"
 
-#: flask/templates/admin/users.html:38 flask/templates/characters/creator.html:246
+#: flask/templates/admin/users.html:35 flask/templates/characters/partials/tab_dialogue.html:17
 msgid "Edit"
 msgstr "แก้ไข"
 
-#: flask/templates/admin/users.html:40
+#: flask/templates/admin/users.html:37
 msgid "Protected"
 msgstr "ได้รับการปกป้อง"
 
-#: flask/templates/admin/users.html:40
+#: flask/templates/admin/users.html:37
 msgid "Initial administrator cannot be deleted"
 msgstr "ไม่สามารถลบผู้ดูแลระบบเริ่มต้นได้"
 
-#: flask/templates/admin/users.html:42
+#: flask/templates/admin/users.html:39
 msgid "Really delete user %(username)s?"
 msgstr "ต้องการลบผู้ใช้ %(username)s จริงหรือไม่?"
 
@@ -1184,7 +1284,7 @@ msgstr "เข้าสู่ระบบ AIMO"
 msgid "Sign in to enter your roleplay worlds."
 msgstr "ลงชื่อเข้าใช้เพื่อเข้าสู่โลกแห่งการสวมบทบาทของคุณ"
 
-#: flask/templates/auth/login.html:18 flask/templates/settings/account.html:25
+#: flask/templates/auth/login.html:18 flask/templates/settings/account.html:23
 msgid "Password"
 msgstr "รหัสผ่าน"
 
@@ -1192,11 +1292,11 @@ msgstr "รหัสผ่าน"
 msgid "Enter"
 msgstr "เข้าสู่ระบบ"
 
-#: flask/templates/characters/creator.html:7 flask/templates/characters/creator.html:22
+#: flask/templates/characters/creator.html:5 flask/templates/characters/creator.html:22
 msgid "Character Designer"
 msgstr "ผู้ออกแบบตัวละคร"
 
-#: flask/templates/characters/creator.html:20 flask/templates/characters/creator.html:45 flask/templates/macros/cards.html:194
+#: flask/templates/characters/creator.html:20 flask/templates/characters/creator.html:43 flask/templates/macros/cards.html:194
 msgid "New Character"
 msgstr "ตัวละครใหม่"
 
@@ -1204,7 +1304,7 @@ msgstr "ตัวละครใหม่"
 msgid "Main Info"
 msgstr "ข้อมูลหลัก"
 
-#: flask/templates/characters/creator.html:27 flask/templates/characters/creator.html:443
+#: flask/templates/characters/creator.html:27
 msgid "Gallery Images"
 msgstr "รูปภาพแกลเลอรี"
 
@@ -1212,7 +1312,7 @@ msgstr "รูปภาพแกลเลอรี"
 msgid "Please save basic info first"
 msgstr "โปรดบันทึกข้อมูลพื้นฐานก่อน"
 
-#: flask/templates/characters/creator.html:28 flask/templates/characters/creator.html:534
+#: flask/templates/characters/creator.html:28
 msgid "Emotional Sprites"
 msgstr "สไปรต์แสดงอารมณ์"
 
@@ -1220,67 +1320,243 @@ msgstr "สไปรต์แสดงอารมณ์"
 msgid "Dialogue Styles"
 msgstr "รูปแบบบทสนทนา"
 
-#: flask/templates/characters/creator.html:31 flask/templates/characters/creator.html:576 flask/templates/worldinfo/detail.html:25
+#: flask/templates/characters/creator.html:31 flask/templates/chat/session.html:304 flask/templates/worldinfo/detail.html:33
 msgid "Random Events"
 msgstr "เหตุการณ์สุ่ม"
 
-#: flask/templates/characters/creator.html:32 flask/templates/chat/select_worldinfo.html:19 flask/templates/macros/top_header.html:18 flask/templates/macros/top_header.html:45 flask/templates/settings/creations.html:26
+#: flask/templates/characters/creator.html:32 flask/templates/chat/select_worldinfo.html:23 flask/templates/macros/top_header.html:18 flask/templates/macros/top_header.html:45 flask/templates/settings/creations.html:23
 msgid "Lorebooks"
 msgstr "สมุดตำนาน"
 
-#: flask/templates/characters/creator.html:33 flask/templates/lorebooks/detail.html:23 flask/templates/worldinfo/detail.html:26
+#: flask/templates/characters/creator.html:33 flask/templates/lorebooks/detail.html:28 flask/templates/worldinfo/detail.html:34
 msgid "Collaboration"
 msgstr "การทำงานร่วมกัน"
 
-#: flask/templates/characters/creator.html:37 flask/templates/lorebooks/detail.html:27 flask/templates/worldinfo/detail.html:30
+#: flask/templates/characters/creator.html:37 flask/templates/lorebooks/detail.html:32 flask/templates/worldinfo/detail.html:38
 msgid "Back to Overview"
 msgstr "กลับไปยังภาพรวม"
 
-#: flask/templates/characters/creator.html:53
+#: flask/templates/characters/creator.html:51
 msgid "Really delete character permanently?"
 msgstr "ต้องการลบตัวละครนี้อย่างถาวรจริงหรือไม่?"
 
-#: flask/templates/characters/creator.html:54
+#: flask/templates/characters/creator.html:52
 msgid "Save character"
 msgstr "บันทึกตัวละคร"
 
-#: flask/templates/characters/creator.html:75
+#: flask/templates/characters/partials/modals.html:7
+msgid "Upload 9:16 Gallery Image"
+msgstr "อัปโหลดรูปภาพแกลเลอรี 9:16"
+
+#: flask/templates/characters/partials/modals.html:13
+msgid "Image File (9:16 Portrait)"
+msgstr "ไฟล์รูปภาพ (แนวตั้ง 9:16)"
+
+#: flask/templates/characters/partials/modals.html:14
+msgid "Exclusive portrait image for this character."
+msgstr "รูปภาพพอร์ตเทรตพิเศษสำหรับตัวละครนี้"
+
+#: flask/templates/characters/partials/modals.html:20 flask/templates/characters/partials/tab_gallery.html:50
+msgid "Unlock Relationship Level"
+msgstr "ระดับความสัมพันธ์เพื่อปลดล็อก"
+
+#: flask/templates/characters/partials/modals.html:21 flask/templates/characters/partials/tab_gallery.html:51
+msgid "Required relationship level to unlock this image in chat."
+msgstr "ระดับความสัมพันธ์ที่ต้องใช้เพื่อปลดล็อกรูปภาพนี้ในแชท"
+
+#: flask/templates/characters/partials/modals.html:33 flask/templates/characters/partials/modals.html:69
+msgid "Upload"
+msgstr "อัปโหลด"
+
+#: flask/templates/characters/partials/modals.html:43
+msgid "Add Emotional Sprite"
+msgstr "เพิ่มสไปรต์อารมณ์"
+
+#: flask/templates/characters/partials/modals.html:49
+msgid "Emotion"
+msgstr "อารมณ์"
+
+#: flask/templates/characters/partials/modals.html:50
+msgid "Select which emotion this sprite represents."
+msgstr "เลือกว่าสไปรต์นี้แสดงถึงอารมณ์ใด"
+
+#: flask/templates/characters/partials/modals.html:55 flask/templates/characters/partials/tab_sprites.html:30
+msgid "Fallback"
+msgstr "ค่าสำรอง"
+
+#: flask/templates/characters/partials/modals.html:62
+msgid "Sprite File (PNG, WEBP)"
+msgstr "ไฟล์สไปรต์ (PNG, WEBP)"
+
+#: flask/templates/characters/partials/modals.html:63
+msgid "Transparent PNG or WEBP sprite image for this emotion."
+msgstr "ภาพสไปรต์ PNG หรือ WEBP โปร่งใสสำหรับอารมณ์นี้"
+
+#: flask/templates/characters/partials/modals.html:81
+msgid "Add New Dialogue Style"
+msgstr "เพิ่มรูปแบบบทสนทนาใหม่"
+
+#: flask/templates/characters/partials/modals.html:87 flask/templates/characters/partials/tab_dialogue.html:23 flask/templates/characters/partials/tab_dialogue.html:24 flask/templates/characters/partials/tab_dialogue.html:29
+msgid "You"
+msgstr "คุณ"
+
+#: flask/templates/characters/partials/modals.html:88
+msgid "Trigger (Player Input)"
+msgstr "ข้อความกระตุ้น (อินพุตผู้เล่น)"
+
+#: flask/templates/characters/partials/modals.html:90
+msgid "e.g. Hello! What are you doing out here so late?"
+msgstr "เช่น สวัสดี! ดึกป่านนี้มาทำอะไรอยู่ข้างนอก?"
+
+#: flask/templates/characters/partials/modals.html:95
+msgid "Response (Character Reply)"
+msgstr "การตอบกลับ (คำตอบของตัวละคร)"
+
+#: flask/templates/characters/partials/modals.html:97
+msgid "e.g. Greetings, wanderer. The woods hold secrets at night..."
+msgstr "เช่น สวัสดี นักพเนจร ป่ายามค่ำคืนมีความลับซ่อนอยู่..."
+
+#: flask/templates/characters/partials/modals.html:102
+msgid "Fill with AI"
+msgstr "เติมด้วย AI"
+
+#: flask/templates/characters/partials/modals.html:102
+msgid "Generates trigger and response based on character description"
+msgstr "สร้างข้อความกระตุ้นและการตอบกลับตามคำอธิบายตัวละคร"
+
+#: flask/templates/characters/partials/modals.html:106 flask/templates/characters/partials/modals.html:134 flask/templates/characters/partials/modals.html:152 flask/templates/characters/partials/tab_world.html:53 flask/templates/characters/partials/tab_world.html:81
+msgid "Add"
+msgstr "เพิ่ม"
+
+#: flask/templates/characters/partials/modals.html:116
+msgid "Link Lorebook"
+msgstr "เชื่อมโยงสมุดตำนาน"
+
+#: flask/templates/characters/partials/modals.html:120 flask/templates/macros/lorebook_manager.html:197
+msgid "Filter by lorebook name..."
+msgstr "กรองตามชื่อสมุดตำนาน..."
+
+#: flask/templates/characters/partials/modals.html:134
+msgid "Linked"
+msgstr "เชื่อมโยงแล้ว"
+
+#: flask/templates/characters/partials/modals.html:150
+msgid "Add Preferred Location"
+msgstr "เพิ่มสถานที่ที่ชื่นชอบ"
+
+#: flask/templates/characters/partials/modals.html:151
+msgid "Add Disliked Location"
+msgstr "เพิ่มสถานที่ที่หลีกเลี่ยง"
+
+#: flask/templates/characters/partials/modals.html:153 flask/templates/characters/partials/tab_world.html:63 flask/templates/characters/partials/tab_world.html:91
+msgid "Remove location"
+msgstr "ลบสถานที่"
+
+#: flask/templates/characters/partials/modals.html:154
+msgid "All locations of this world are already assigned."
+msgstr "สถานที่ทั้งหมดของโลกนี้ถูกกำหนดไว้แล้ว"
+
+#: flask/templates/characters/partials/modals.html:155
+msgid "No matching locations found."
+msgstr "ไม่พบสถานที่ที่ตรงกัน"
+
+#: flask/templates/characters/partials/modals.html:158
+msgid "Add Location"
+msgstr "เพิ่มสถานที่"
+
+#: flask/templates/characters/partials/modals.html:162
+msgid "Search locations by name or description..."
+msgstr "ค้นหาสถานที่ตามชื่อหรือคำอธิบาย..."
+
+#: flask/templates/characters/partials/modals.html:173
+msgid "Set Image Crops"
+msgstr "ตั้งค่าการครอปภาพ"
+
+#: flask/templates/characters/partials/modals.html:174 flask/templates/characters/partials/tab_info.html:46 flask/templates/characters/partials/tab_info.html:47 flask/templates/characters/partials/tab_info.html:49 flask/templates/macros/persona_manager.html:13
+msgid "Portrait"
+msgstr "พอร์ตเทรต"
+
+#: flask/templates/characters/partials/modals.html:175 flask/templates/characters/partials/tab_info.html:54 flask/templates/characters/partials/tab_info.html:55 flask/templates/characters/partials/tab_info.html:57
+msgid "Avatar"
+msgstr "อวาตาร์"
+
+#: flask/templates/characters/partials/tab_dialogue.html:6
+msgid "Typical player trigger and character response pairs injected into the prompt."
+msgstr "คู่ข้อความกระตุ้นของผู้เล่นและการตอบกลับของตัวละครทั่วไปที่จะถูกใส่เข้าไปในพรอมต์"
+
+#: flask/templates/characters/partials/tab_dialogue.html:8
+msgid "Add Dialogue Style"
+msgstr "เพิ่มรูปแบบบทสนทนา"
+
+#: flask/templates/characters/partials/tab_dialogue.html:15
+msgid "Example"
+msgstr "ตัวอย่าง"
+
+#: flask/templates/characters/partials/tab_dialogue.html:17
+msgid "Edit example"
+msgstr "แก้ไขตัวอย่าง"
+
+#: flask/templates/characters/partials/tab_dialogue.html:18
+msgid "Delete example"
+msgstr "ลบตัวอย่าง"
+
+#: flask/templates/characters/partials/tab_dialogue.html:36
+msgid "No dialogue styles added yet. Click 'Add Dialogue Style' to create examples."
+msgstr "ยังไม่ได้เพิ่มรูปแบบบทสนทนา คลิก 'เพิ่มรูปแบบบทสนทนา' เพื่อสร้างตัวอย่าง"
+
+#: flask/templates/characters/partials/tab_events.html:6
+msgid "Dynamic events that can trigger exclusively in chats with this character."
+msgstr "เหตุการณ์แบบไดนามิกที่สามารถเกิดขึ้นได้เฉพาะในแชทกับตัวละครนี้เท่านั้น"
+
+#: flask/templates/characters/partials/tab_events.html:32
+msgid "Please save the character's basic info first to create character-specific random events."
+msgstr "โปรดบันทึกข้อมูลพื้นฐานของตัวละครก่อนเพื่อสร้างเหตุการณ์สุ่มเฉพาะตัวละคร"
+
+#: flask/templates/characters/partials/tab_gallery.html:6
+msgid "Exclusive portrait graphics unlocked when reaching a relationship threshold in chat."
+msgstr "ภาพพอร์ตเทรตพิเศษที่จะปลดล็อกเมื่อระดับความสัมพันธ์ในแชทถึงเกณฑ์ที่กำหนด"
+
+#: flask/templates/characters/partials/tab_gallery.html:12
+msgid "Add 9:16 Image"
+msgstr "เพิ่มรูปภาพ 9:16"
+
+#: flask/templates/characters/partials/tab_gallery.html:21 flask/templates/characters/partials/tab_gallery.html:28
+msgid "Unlocks at relationship:"
+msgstr "ปลดล็อกที่ระดับความสัมพันธ์:"
+
+#: flask/templates/characters/partials/tab_gallery.html:24 flask/templates/characters/partials/tab_gallery.html:45
+msgid "View fullscreen"
+msgstr "ดูแบบเต็มหน้าจอ"
+
+#: flask/templates/characters/partials/tab_gallery.html:36
+msgid "Edit 9:16 Gallery Image"
+msgstr "แก้ไขรูปภาพแกลเลอรี 9:16"
+
+#: flask/templates/characters/partials/tab_gallery.html:79
+msgid "Please save the character's basic info first to upload and manage 9:16 gallery images."
+msgstr "โปรดบันทึกข้อมูลพื้นฐานของตัวละครก่อนเพื่ออัปโหลดและจัดการรูปภาพแกลเลอรี 9:16"
+
+#: flask/templates/characters/partials/tab_info.html:7
 msgid "Character Name"
 msgstr "ชื่อตัวละคร"
 
-#: flask/templates/characters/creator.html:76
+#: flask/templates/characters/partials/tab_info.html:8
 msgid "The unique name of your AI character. Replaces {{char}} in prompts."
 msgstr "ชื่อเฉพาะของตัวละคร AI ของคุณ ใช้แทน {{char}} ในพรอมต์"
 
-#: flask/templates/characters/creator.html:83 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:64 flask/templates/macros/cards.html:155
+#: flask/templates/characters/partials/tab_info.html:15 flask/templates/characters/partials/tab_info.html:26 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:64
 msgid "Gender"
 msgstr "เพศ"
 
-#: flask/templates/characters/creator.html:84
-msgid "Sets gender and derived pronouns for the system prompt."
-msgstr "กำหนดเพศและสรรพนามที่เกี่ยวข้องสำหรับพรอมต์ระบบ"
-
-#: flask/templates/characters/creator.html:94 flask/templates/lorebooks/detail.html:72 flask/templates/lorebooks/detail.html:156 flask/templates/lorebooks/detail.html:226 flask/templates/settings/creations.html:69
+#: flask/templates/characters/partials/tab_info.html:31 flask/templates/lorebooks/detail.html:74 flask/templates/lorebooks/detail.html:156 flask/templates/lorebooks/detail.html:224 flask/templates/overview/modals/new_lorebook.html:15
 msgid "Visibility"
 msgstr "การมองเห็น"
 
-#: flask/templates/characters/creator.html:95
-msgid "Private = only playable in your account. Public = visible to all users in the Hub."
-msgstr "ส่วนตัว = เล่นได้เฉพาะในบัญชีของคุณ สาธารณะ = ผู้ใช้ทุกคนสามารถมองเห็นได้ในฮับ"
-
-#: flask/templates/characters/creator.html:98 flask/templates/lorebooks/detail.html:76 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:108 flask/templates/worldinfo/detail.html:154
-msgid "Private"
-msgstr "ส่วนตัว"
-
-#: flask/templates/characters/creator.html:99 flask/templates/lorebooks/detail.html:77 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:106 flask/templates/worldinfo/detail.html:155
-msgid "Public"
-msgstr "สาธารณะ"
-
-#: flask/templates/characters/creator.html:106
+#: flask/templates/characters/partials/tab_info.html:39
 msgid "Primary Portrait (9:16) & Avatar (1:1) (Required upload)"
 msgstr "พอร์ตเทรตหลัก (9:16) และอวาตาร์ (1:1) (อัปโหลดบังคับ)"
 
-#: flask/templates/characters/creator.html:107
+#: flask/templates/characters/partials/tab_info.html:40
 msgid ""
 "Character images:\n"
 "• 9:16 Portrait: Chat sidebar & fullscreen view\n"
@@ -1290,23 +1566,15 @@ msgstr ""
 "• พอร์ตเทรต 9:16: แถบด้านข้างแชทและมุมมองเต็มหน้าจอ\n"
 "• อวาตาร์ 1:1: การ์ดตัวละครในฮับและกล่องข้อความแชท"
 
-#: flask/templates/characters/creator.html:113 flask/templates/characters/creator.html:114 flask/templates/characters/creator.html:116 flask/templates/characters/creator.html:694 flask/templates/macros/persona_manager.html:12
-msgid "Portrait"
-msgstr "พอร์ตเทรต"
-
-#: flask/templates/characters/creator.html:121 flask/templates/characters/creator.html:122 flask/templates/characters/creator.html:124 flask/templates/characters/creator.html:695
-msgid "Avatar"
-msgstr "อวาตาร์"
-
-#: flask/templates/characters/creator.html:133
+#: flask/templates/characters/partials/tab_info.html:66
 msgid "Adjust crops"
 msgstr "ปรับการครอป"
 
-#: flask/templates/characters/creator.html:142
+#: flask/templates/characters/partials/tab_info.html:75
 msgid "Initial Relationship Status"
 msgstr "สถานะความสัมพันธ์เริ่มต้น"
 
-#: flask/templates/characters/creator.html:143
+#: flask/templates/characters/partials/tab_info.html:76
 msgid ""
 "Initial Relationship Status:\n"
 "Starting level of affection (e.g., Pure Hatred, Neutral, Blind Devotion). Controls the initial roleplay behavior of {{char}} toward the player."
@@ -1314,797 +1582,597 @@ msgstr ""
 "สถานะความสัมพันธ์เริ่มต้น:\n"
 "ระดับความรู้สึกเริ่มต้น (เช่น เกลียดชังอย่างแท้จริง, เป็นกลาง, ภักดีอย่างไม่ลืมหูลืมตา) ควบคุมพฤติกรรมการสวมบทบาทเริ่มต้นของ {{char}} ต่อผู้เล่น"
 
-#: flask/templates/characters/creator.html:158
+#: flask/templates/characters/partials/tab_info.html:91
 msgid "Character Description & Personality"
 msgstr "คำอธิบายและบุคลิกภาพของตัวละคร"
 
-#: flask/templates/characters/creator.html:159
+#: flask/templates/characters/partials/tab_info.html:92
 msgid "Core identity, traits, backstory, fears, and motivations."
 msgstr "อัตลักษณ์หลัก ลักษณะนิสัย ภูมิหลัง ความกลัว และแรงจูงใจ"
 
-#: flask/templates/characters/creator.html:161
+#: flask/templates/characters/partials/tab_info.html:94
 msgid "AI Author Optimization"
 msgstr "การปรับแต่งโดยผู้แต่ง AI"
 
-#: flask/templates/characters/creator.html:181 flask/templates/macros/persona_manager.html:37
+#: flask/templates/characters/partials/tab_info.html:114 flask/templates/macros/persona_manager.html:38
 msgid "Physical Appearance"
 msgstr "รูปลักษณ์ภายนอก"
 
-#: flask/templates/characters/creator.html:182
+#: flask/templates/characters/partials/tab_info.html:115
 msgid "Detailed visual appearance for prompts and AI image generation."
 msgstr "รายละเอียดรูปลักษณ์ภายนอกสำหรับพรอมต์และการสร้างภาพด้วย AI"
 
-#: flask/templates/characters/creator.html:184
+#: flask/templates/characters/partials/tab_info.html:117
 msgid "Extract Appearance from Image"
 msgstr "แยกรูปลักษณ์จากรูปภาพ"
 
-#: flask/templates/characters/creator.html:184
+#: flask/templates/characters/partials/tab_info.html:117
 msgid "Analyzes the portrait image using a Vision LLM"
 msgstr "วิเคราะห์รูปภาพพอร์ตเทรตโดยใช้ Vision LLM"
 
-#: flask/templates/characters/creator.html:196
+#: flask/templates/characters/partials/tab_info.html:129
 msgid "Physical appearance (e.g. emerald eyes, shoulder-length black hair, silver armor)..."
 msgstr "รูปลักษณ์ภายนอก (เช่น ตาสีมรกต ผมดำยาวประบ่า เกราะสีเงิน)..."
 
-#: flask/templates/characters/creator.html:202
+#: flask/templates/characters/partials/tab_info.html:135
 msgid "First Message (Welcome Message)"
 msgstr "ข้อความแรก (ข้อความต้อนรับ)"
 
-#: flask/templates/characters/creator.html:203
+#: flask/templates/characters/partials/tab_info.html:136
 msgid "The character's direct opening greeting to the player."
 msgstr "คำทักทายเปิดเรื่องโดยตรงของตัวละครต่อผู้เล่น"
 
-#: flask/templates/characters/creator.html:230
-msgid "Dialogue Styles (Few-Shot Examples)"
-msgstr "รูปแบบบทสนทนา (ตัวอย่าง Few-Shot)"
-
-#: flask/templates/characters/creator.html:231
-msgid "Typical player trigger and character response pairs injected into the prompt."
-msgstr "คู่ข้อความกระตุ้นของผู้เล่นและการตอบกลับของตัวละครทั่วไปที่จะถูกใส่เข้าไปในพรอมต์"
-
-#: flask/templates/characters/creator.html:234
-msgid "Define typical trigger-response examples to guide the AI's tone, dialect, and reactions."
-msgstr "กำหนดตัวอย่างการกระตุ้นและการตอบกลับทั่วไปเพื่อนำทางน้ำเสียง สำเนียง และการตอบสนองของ AI"
-
-#: flask/templates/characters/creator.html:237
-msgid "Add Dialogue Style"
-msgstr "เพิ่มรูปแบบบทสนทนา"
-
-#: flask/templates/characters/creator.html:244
-msgid "Example"
-msgstr "ตัวอย่าง"
-
-#: flask/templates/characters/creator.html:246
-msgid "Edit example"
-msgstr "แก้ไขตัวอย่าง"
-
-#: flask/templates/characters/creator.html:247
-msgid "Delete example"
-msgstr "ลบตัวอย่าง"
-
-#: flask/templates/characters/creator.html:252 flask/templates/characters/creator.html:253 flask/templates/characters/creator.html:258 flask/templates/characters/creator.html:633
-msgid "You"
-msgstr "คุณ"
-
-#: flask/templates/characters/creator.html:265
-msgid "No dialogue styles added yet. Click 'Add Dialogue Style' to create examples."
-msgstr "ยังไม่ได้เพิ่มรูปแบบบทสนทนา คลิก 'เพิ่มรูปแบบบทสนทนา' เพื่อสร้างตัวอย่าง"
-
-#: flask/templates/characters/creator.html:275
-msgid "Game World & Locations"
-msgstr "โลกของเกมและสถานที่"
-
-#: flask/templates/characters/creator.html:276
-msgid "Links a recommended world. Once selected, initial, preferred, and disliked locations can be chosen."
-msgstr "เชื่อมโยงโลกที่แนะนำ เมื่อเลือกแล้ว จะสามารถเลือกสถานที่เริ่มต้น สถานที่ที่ชอบ และสถานที่ที่ไม่ชอบได้"
-
-#: flask/templates/characters/creator.html:279
-msgid "Select a recommended world for this character. It will be pre-selected when starting a new chat."
-msgstr "เลือกโลกที่แนะนำสำหรับตัวละครนี้ ระบบจะเลือกไว้ล่วงหน้าเมื่อเริ่มแชทใหม่"
-
-#: flask/templates/characters/creator.html:284
-msgid "Recommended WorldInfo"
-msgstr "WorldInfo ที่แนะนำ"
-
-#: flask/templates/characters/creator.html:285
-msgid "Locations and events of this world are included in roleplay."
-msgstr "สถานที่และเหตุการณ์ของโลกนี้จะถูกรวมอยู่ในการสวมบทบาท"
-
-#: flask/templates/characters/creator.html:288
-msgid "No WorldInfo linked"
-msgstr "ไม่ได้เชื่อมโยง WorldInfo"
-
-#: flask/templates/characters/creator.html:300
-msgid "Initial Location of First Message"
-msgstr "สถานที่เริ่มต้นของข้อความแรก"
-
-#: flask/templates/characters/creator.html:301
-msgid "Starting location for the conversation within the linked world."
-msgstr "สถานที่เริ่มต้นสำหรับการสนทนาภายในโลกที่เชื่อมโยง"
-
-#: flask/templates/characters/creator.html:304
-msgid "No fixed starting location"
-msgstr "ไม่มีสถานที่เริ่มต้นที่แน่นอน"
-
-#: flask/templates/characters/creator.html:318
-msgid "Preferred Locations (from linked world)"
-msgstr "สถานที่ที่ชื่นชอบ (จากโลกที่เชื่อมโยง)"
-
-#: flask/templates/characters/creator.html:319
-msgid "Locations where the character feels comfortable or likes to spend time."
-msgstr "สถานที่ที่ตัวละครรู้สึกสบายใจหรือชอบใช้เวลาอยู่"
-
-#: flask/templates/characters/creator.html:331 flask/templates/characters/creator.html:350
-msgid "Tip: Hold Ctrl/Cmd to select multiple."
-msgstr "เคล็ดลับ: กด Ctrl/Cmd ค้างไว้เพื่อเลือกหลายรายการ"
-
-#: flask/templates/characters/creator.html:337
-msgid "Disliked Locations (from linked world)"
-msgstr "สถานที่ที่ไม่ชอบ (จากโลกที่เชื่อมโยง)"
-
-#: flask/templates/characters/creator.html:338
-msgid "Locations the character avoids, fears, or dislikes."
-msgstr "สถานที่ที่ตัวละครหลีกเลี่ยง หวาดกลัว หรือไม่ชอบ"
-
-#: flask/templates/characters/creator.html:364
-msgid "Linked Lorebooks (Knowledge Compendiums)"
-msgstr "สมุดตำนานที่เชื่อมโยง (คลังความรู้)"
-
-#: flask/templates/characters/creator.html:365
+#: flask/templates/characters/partials/tab_lorebooks.html:6
 msgid "Knowledge compendiums for this character. Matching entries are automatically loaded into the prompt via tags."
 msgstr "คลังความรู้สำหรับตัวละครนี้ รายการที่ตรงกันจะถูกโหลดเข้าสู่พรอมต์โดยอัตโนมัติผ่านแท็ก"
 
-#: flask/templates/characters/creator.html:368
-msgid "Attach knowledge compendiums. Relevant entries are automatically injected via tag matching."
-msgstr "แนบคลังความรู้ รายการที่เกี่ยวข้องจะถูกแทรกโดยอัตโนมัติผ่านการจับคู่แท็ก"
-
-#: flask/templates/characters/creator.html:371 flask/templates/macros/lorebook_manager.html:24
+#: flask/templates/characters/partials/tab_lorebooks.html:8 flask/templates/macros/lorebook_manager.html:24
 msgid "Add Lorebook"
 msgstr "เพิ่มสมุดตำนาน"
 
-#: flask/templates/characters/creator.html:386
+#: flask/templates/characters/partials/tab_lorebooks.html:23
 msgid "When should this lorebook be active?"
 msgstr "สมุดตำนานนี้ควรเปิดใช้งานเมื่อใด?"
 
-#: flask/templates/characters/creator.html:387
+#: flask/templates/characters/partials/tab_lorebooks.html:24
 msgid "All Worlds (Always active)"
 msgstr "ทุกโลก (เปิดใช้งานเสมอ)"
 
-#: flask/templates/characters/creator.html:389
+#: flask/templates/characters/partials/tab_lorebooks.html:26
 msgid "Only in world:"
 msgstr "เฉพาะในโลก:"
 
-#: flask/templates/characters/creator.html:392
+#: flask/templates/characters/partials/tab_lorebooks.html:29
 msgid "Unlink"
 msgstr "ยกเลิกการเชื่อมโยง"
 
-#: flask/templates/characters/creator.html:392
+#: flask/templates/characters/partials/tab_lorebooks.html:29
 msgid "Unlink lorebook"
 msgstr "ยกเลิกการเชื่อมโยงสมุดตำนาน"
 
-#: flask/templates/characters/creator.html:400
+#: flask/templates/characters/partials/tab_lorebooks.html:37
 msgid "No lorebooks linked. Click 'Add Lorebook' to select compendiums."
 msgstr "ไม่มีสมุดตำนานที่เชื่อมโยง คลิก 'เพิ่มสมุดตำนาน' เพื่อเลือกคลังความรู้"
 
-#: flask/templates/characters/creator.html:416
-msgid "Unlockable 9:16 Gallery Images (Threshold -100 to +100)"
-msgstr "รูปภาพแกลเลอรี 9:16 ที่ปลดล็อกได้ (เกณฑ์ -100 ถึง +100)"
+#: flask/templates/characters/partials/tab_sprites.html:8
+msgid "Emotional sprites (PNG/WEBP) for up to 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait."
+msgstr "สไปรต์อารมณ์ (PNG/WEBP) สูงสุด 28 อารมณ์ ระบบจะจำแนกอารมณ์ของ AI หลังการตอบกลับแต่ละครั้งและอัปเดตภาพแชท"
 
-#: flask/templates/characters/creator.html:417
-msgid "Exclusive portrait graphics unlocked when reaching a relationship threshold in chat."
-msgstr "ภาพพอร์ตเทรตพิเศษที่จะปลดล็อกเมื่อระดับความสัมพันธ์ในแชทถึงเกณฑ์ที่กำหนด"
+#: flask/templates/characters/partials/tab_sprites.html:15
+msgid "Add Sprite"
+msgstr "เพิ่มสไปรต์"
 
-#: flask/templates/characters/creator.html:420
-msgid "Reward the player with exclusive character graphics as the relationship grows in chat."
-msgstr "มอบรางวัลให้ผู้เล่นเป็นภาพตัวละครพิเศษเมื่อความสัมพันธ์เติบโตขึ้นในแชท"
+#: flask/templates/characters/partials/tab_sprites.html:30
+msgid "Used when no sprite matches the detected emotion"
+msgstr "ใช้เมื่อไม่มีสไปรต์ใดตรงกับอารมณ์ที่ตรวจพบ"
 
-#: flask/templates/characters/creator.html:424
-msgid "Add 9:16 Image"
-msgstr "เพิ่มรูปภาพ 9:16"
-
-#: flask/templates/characters/creator.html:430
-msgid "Delete image"
-msgstr "ลบรูปภาพ"
-
-#: flask/templates/characters/creator.html:434
-msgid "Unlocks at relationship:"
-msgstr "ปลดล็อกที่ระดับความสัมพันธ์:"
-
-#: flask/templates/characters/creator.html:445
-msgid "Please save the character's basic info first to upload and manage 9:16 gallery images."
-msgstr "โปรดบันทึกข้อมูลพื้นฐานของตัวละครก่อนเพื่ออัปโหลดและจัดการรูปภาพแกลเลอรี 9:16"
-
-#: flask/templates/characters/creator.html:456
-msgid "Emotional Sprites (28 Emotions with Variant Stack View)"
-msgstr "สไปรต์แสดงอารมณ์ (28 อารมณ์พร้อมมุมมองซ้อนหลายแบบ)"
-
-#: flask/templates/characters/creator.html:457
-msgid "Image variants for 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait."
-msgstr "ตัวเลือกรูปภาพสำหรับ 28 อารมณ์ ระบบจะจำแนกอารมณ์ของ AI หลังการตอบกลับแต่ละครั้งและอัปเดตภาพตัวละครในแชท"
-
-#: flask/templates/characters/creator.html:460
-msgid "When an emotion is detected, a random variant is selected. If none exists, neutral is used as fallback."
-msgstr "เมื่อตรวจพบอารมณ์ ระบบจะสุ่มเลือกภาพรูปแบบหนึ่ง หากไม่มี จะใช้ภาพอารมณ์เป็นกลางแทน"
-
-#: flask/templates/characters/creator.html:472
-msgid "Choose PNG/WEBP"
-msgstr "เลือก PNG/WEBP"
-
-#: flask/templates/characters/creator.html:482
-msgid "Upload another variant"
-msgstr "อัปโหลดรูปแบบอื่น"
-
-#: flask/templates/characters/creator.html:489
-msgid "View all variants"
-msgstr "ดูรูปแบบทั้งหมด"
-
-#: flask/templates/characters/creator.html:492
+#: flask/templates/characters/partials/tab_sprites.html:36
 msgid "Delete sprite"
 msgstr "ลบสไปรต์"
 
-#: flask/templates/characters/creator.html:500
-msgid "Fallback"
-msgstr "ค่าสำรอง"
-
-#: flask/templates/characters/creator.html:509
-msgid "Variants for emotion:"
-msgstr "รูปแบบสำหรับอารมณ์:"
-
-#: flask/templates/characters/creator.html:517
-msgid "Delete variant"
-msgstr "ลบรูปแบบ"
-
-#: flask/templates/characters/creator.html:536
+#: flask/templates/characters/partials/tab_sprites.html:52
 msgid "Please save the character's basic info first to upload sprites for the 28 emotions."
 msgstr "โปรดบันทึกข้อมูลพื้นฐานของตัวละครก่อนเพื่ออัปโหลดสไปรต์สำหรับ 28 อารมณ์"
 
-#: flask/templates/characters/creator.html:547
-msgid "Character-Specific Random Events"
-msgstr "เหตุการณ์สุ่มเฉพาะตัวละคร"
+#: flask/templates/characters/partials/tab_world.html:6
+msgid "Links a recommended world. Once selected, initial, preferred, and disliked locations can be chosen."
+msgstr "เชื่อมโยงโลกที่แนะนำ เมื่อเลือกแล้ว จะสามารถเลือกสถานที่เริ่มต้น สถานที่ที่ชอบ และสถานที่ที่ไม่ชอบได้"
 
-#: flask/templates/characters/creator.html:548
-msgid "Dynamic events that can trigger exclusively in chats with this character."
-msgstr "เหตุการณ์แบบไดนามิกที่สามารถเกิดขึ้นได้เฉพาะในแชทกับตัวละครนี้เท่านั้น"
+#: flask/templates/characters/partials/tab_world.html:12
+msgid "Recommended WorldInfo"
+msgstr "WorldInfo ที่แนะนำ"
 
-#: flask/templates/characters/creator.html:551
-msgid "These events are available exclusively in sessions with"
-msgstr "เหตุการณ์เหล่านี้ใช้งานได้เฉพาะในเซสชันกับ"
+#: flask/templates/characters/partials/tab_world.html:13
+msgid "Locations and events of this world are included in roleplay."
+msgstr "สถานที่และเหตุการณ์ของโลกนี้จะถูกรวมอยู่ในการสวมบทบาท"
 
-#: flask/templates/characters/creator.html:551
-msgid "in the shared random event pool."
-msgstr "ในกลุ่มเหตุการณ์สุ่มที่ใช้ร่วมกัน"
+#: flask/templates/characters/partials/tab_world.html:16
+msgid "No WorldInfo linked"
+msgstr "ไม่ได้เชื่อมโยง WorldInfo"
 
-#: flask/templates/characters/creator.html:578
-msgid "Please save the character's basic info first to create character-specific random events."
-msgstr "โปรดบันทึกข้อมูลพื้นฐานของตัวละครก่อนเพื่อสร้างเหตุการณ์สุ่มเฉพาะตัวละคร"
+#: flask/templates/characters/partials/tab_world.html:25
+msgid "Initial Location of First Message"
+msgstr "สถานที่เริ่มต้นของข้อความแรก"
 
-#: flask/templates/characters/creator.html:589
-msgid "Upload 9:16 Gallery Image"
-msgstr "อัปโหลดรูปภาพแกลเลอรี 9:16"
+#: flask/templates/characters/partials/tab_world.html:26
+msgid "Starting location for the conversation within the linked world."
+msgstr "สถานที่เริ่มต้นสำหรับการสนทนาภายในโลกที่เชื่อมโยง"
 
-#: flask/templates/characters/creator.html:595
-msgid "Image File (9:16 Portrait)"
-msgstr "ไฟล์รูปภาพ (แนวตั้ง 9:16)"
+#: flask/templates/characters/partials/tab_world.html:29
+msgid "No fixed starting location"
+msgstr "ไม่มีสถานที่เริ่มต้นที่แน่นอน"
 
-#: flask/templates/characters/creator.html:596
-msgid "Exclusive portrait image for this character."
-msgstr "รูปภาพพอร์ตเทรตพิเศษสำหรับตัวละครนี้"
+#: flask/templates/characters/partials/tab_world.html:49
+msgid "Preferred Locations (from linked world)"
+msgstr "สถานที่ที่ชื่นชอบ (จากโลกที่เชื่อมโยง)"
 
-#: flask/templates/characters/creator.html:602
-msgid "Unlock Relationship Level"
-msgstr "ระดับความสัมพันธ์เพื่อปลดล็อก"
+#: flask/templates/characters/partials/tab_world.html:50
+msgid "Locations where the character feels comfortable or likes to spend time."
+msgstr "สถานที่ที่ตัวละครรู้สึกสบายใจหรือชอบใช้เวลาอยู่"
 
-#: flask/templates/characters/creator.html:603
-msgid "Required relationship level to unlock this image in chat."
-msgstr "ระดับความสัมพันธ์ที่ต้องใช้เพื่อปลดล็อกรูปภาพนี้ในแชท"
+#: flask/templates/characters/partials/tab_world.html:63 flask/templates/characters/partials/tab_world.html:91 flask/templates/macros/collaboration.html:74 flask/templates/macros/lorebook_manager.html:170
+msgid "Remove"
+msgstr "ลบออก"
 
-#: flask/templates/characters/creator.html:615
-msgid "Upload"
-msgstr "อัปโหลด"
+#: flask/templates/characters/partials/tab_world.html:70
+msgid "No preferred locations selected."
+msgstr "ยังไม่ได้เลือกสถานที่ที่ชื่นชอบ"
 
-#: flask/templates/characters/creator.html:627
-msgid "Add New Dialogue Style"
-msgstr "เพิ่มรูปแบบบทสนทนาใหม่"
+#: flask/templates/characters/partials/tab_world.html:77
+msgid "Disliked Locations (from linked world)"
+msgstr "สถานที่ที่ไม่ชอบ (จากโลกที่เชื่อมโยง)"
 
-#: flask/templates/characters/creator.html:634
-msgid "Trigger (Player Input)"
-msgstr "ข้อความกระตุ้น (อินพุตผู้เล่น)"
+#: flask/templates/characters/partials/tab_world.html:78
+msgid "Locations the character avoids, fears, or dislikes."
+msgstr "สถานที่ที่ตัวละครหลีกเลี่ยง หวาดกลัว หรือไม่ชอบ"
 
-#: flask/templates/characters/creator.html:636
-msgid "e.g. Hello! What are you doing out here so late?"
-msgstr "เช่น สวัสดี! ดึกป่านนี้มาทำอะไรอยู่ข้างนอก?"
+#: flask/templates/characters/partials/tab_world.html:98
+msgid "No disliked locations selected."
+msgstr "ยังไม่ได้เลือกสถานที่ที่หลีกเลี่ยง"
 
-#: flask/templates/characters/creator.html:641
-msgid "Response (Character Reply)"
-msgstr "การตอบกลับ (คำตอบของตัวละคร)"
+#: flask/templates/chat/partials/input_bar.html:3
+msgid "AI system notice"
+msgstr "ประกาศระบบ AI"
 
-#: flask/templates/characters/creator.html:643
-msgid "e.g. Greetings, wanderer. The woods hold secrets at night..."
-msgstr "เช่น สวัสดี นักพเนจร ป่ายามค่ำคืนมีความลับซ่อนอยู่..."
+#: flask/templates/chat/partials/input_bar.html:5
+msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
+msgstr "นี่คือแชทบอท AI คำตอบถูกสร้างขึ้นโดยอัตโนมัติจากโมเดลภาษาในเครื่องหรือภายนอก และอาจไม่สมบูรณ์หรือไม่ถูกต้อง"
 
-#: flask/templates/characters/creator.html:648
-msgid "Fill with AI"
-msgstr "เติมด้วย AI"
+#: flask/templates/chat/partials/input_bar.html:11
+msgid "Chat options & sessions"
+msgstr "ตัวเลือกแชทและเซสชัน"
 
-#: flask/templates/characters/creator.html:648
-msgid "Generates trigger and response based on character description"
-msgstr "สร้างข้อความกระตุ้นและการตอบกลับตามคำอธิบายตัวละคร"
+#: flask/templates/chat/partials/input_bar.html:11
+msgid "Chat options"
+msgstr "ตัวเลือกแชท"
 
-#: flask/templates/characters/creator.html:652 flask/templates/characters/creator.html:680 flask/templates/macros/lorebook_manager.html:226
-msgid "Add"
-msgstr "เพิ่ม"
+#: flask/templates/chat/partials/input_bar.html:17
+msgid "Sessions"
+msgstr "เซสชัน"
 
-#: flask/templates/characters/creator.html:662
-msgid "Link Lorebook"
-msgstr "เชื่อมโยงสมุดตำนาน"
+#: flask/templates/chat/partials/input_bar.html:18
+msgid "Start new chat"
+msgstr "เริ่มแชทใหม่"
 
-#: flask/templates/characters/creator.html:666 flask/templates/macros/lorebook_manager.html:197
-msgid "Filter by lorebook name..."
-msgstr "กรองตามชื่อสมุดตำนาน..."
+#: flask/templates/chat/partials/input_bar.html:20
+msgid "Delete chat"
+msgstr "ลบแชท"
 
-#: flask/templates/characters/creator.html:680
-msgid "Linked"
-msgstr "เชื่อมโยงแล้ว"
+#: flask/templates/chat/partials/input_bar.html:20
+msgid "Do you really want to permanently delete this chat?"
+msgstr "คุณต้องการลบแชทนี้อย่างถาวรหรือไม่?"
 
-#: flask/templates/characters/creator.html:693
-msgid "Set Image Crops"
-msgstr "ตั้งค่าการครอปภาพ"
+#: flask/templates/chat/partials/input_bar.html:24
+msgid "Attach image (Vision ALT analysis)"
+msgstr "แนบภาพ (วิเคราะห์ Vision ALT)"
+
+#: flask/templates/chat/partials/input_bar.html:32
+msgid "Generate scene image"
+msgstr "สร้างภาพฉาก"
+
+#: flask/templates/chat/partials/input_bar.html:38
+msgid "Cancel image generation"
+msgstr "ยกเลิกการสร้างภาพ"
+
+#: flask/templates/chat/partials/input_bar.html:48
+msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
+msgstr "เขียนคำตอบหรือการกระทำของคุณ... (Enter เพื่อส่ง, Shift+Enter เพื่อขึ้นบรรทัดใหม่)"
+
+#: flask/templates/chat/partials/input_bar.html:52
+msgid "Regenerate response – replaces the last AI reply or retries generation"
+msgstr "สร้างคำตอบใหม่ – แทนที่คำตอบ AI ล่าสุดหรือลองสร้างใหม่"
+
+#: flask/templates/chat/partials/input_bar.html:58
+msgid "Cancel response generation"
+msgstr "ยกเลิกการสร้างคำตอบ"
+
+#: flask/templates/chat/partials/input_bar.html:64
+msgid "Send message (Enter)"
+msgstr "ส่งข้อความ (Enter)"
+
+#: flask/templates/chat/partials/modals.html:35
+msgid "Do you really want to delete this session?"
+msgstr "คุณต้องการลบเซสชันนี้จริงหรือไม่?"
+
+#: flask/templates/chat/partials/modals.html:37
+msgid "Delete session"
+msgstr "ลบเซสชัน"
+
+#: flask/templates/chat/partials/sidebar.html:11
+msgid "Thinking: Enabled (Click to disable)"
+msgstr "การคิด: เปิดใช้งาน (คลิกเพื่อปิด)"
+
+#: flask/templates/chat/partials/sidebar.html:11
+msgid "Thinking: Disabled (Click to enable)"
+msgstr "การคิด: ปิดใช้งาน (คลิกเพื่อเปิด)"
+
+#: flask/templates/chat/partials/sidebar.html:12
+msgid "Disable thinking"
+msgstr "ปิดการคิด"
+
+#: flask/templates/chat/partials/sidebar.html:12
+msgid "Enable thinking"
+msgstr "เปิดการคิด"
+
+#: flask/templates/chat/partials/sidebar.html:31
+msgid "Current Location"
+msgstr "ตำแหน่งปัจจุบัน"
+
+#: flask/templates/chat/partials/sidebar.html:48
+msgid "Admin & creator info: Cooldown until the next random event"
+msgstr "ข้อมูลผู้ดูแลและผู้สร้าง: เวลารอก่อนเหตุการณ์สุ่มถัดไป"
+
+#: flask/templates/chat/partials/sidebar.html:49
+msgid "Next event:"
+msgstr "เหตุการณ์ถัดไป:"
+
+#: flask/templates/chat/partials/sidebar.html:52 flask/templates/chat/partials/sidebar.html:56
+msgid "in"
+msgstr "ในอีก"
+
+#: flask/templates/chat/partials/sidebar.html:52
+msgid "message"
+msgstr "ข้อความ"
+
+#: flask/templates/chat/partials/sidebar.html:52 flask/templates/chat/partials/sidebar.html:56
+msgid "messages"
+msgstr "ข้อความ"
+
+#: flask/templates/chat/partials/sidebar.html:52
+msgid "paused"
+msgstr "หยุดชั่วคราว"
+
+#: flask/templates/chat/partials/sidebar.html:54
+msgid "next message"
+msgstr "ข้อความถัดไป"
 
 #: flask/templates/chat/select_worldinfo.html:4
 msgid "New Adventure with"
 msgstr "การผจญภัยครั้งใหม่กับ"
 
-#: flask/templates/chat/select_worldinfo.html:11
+#: flask/templates/chat/select_worldinfo.html:15
 msgid "New Chat with"
 msgstr "แชทใหม่กับ"
 
-#: flask/templates/chat/select_worldinfo.html:12
+#: flask/templates/chat/select_worldinfo.html:16
 msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
 msgstr "กำหนดค่าตัวตนผู้เล่น WorldInfo ที่ใช้งาน และสมุดตำนานสำหรับเซสชันนี้"
 
-#: flask/templates/chat/select_worldinfo.html:18 flask/templates/chat/session.html:32 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
+#: flask/templates/chat/select_worldinfo.html:22 flask/templates/chat/session.html:30 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:16
 msgid "Settings"
 msgstr "การตั้งค่า"
 
-#: flask/templates/chat/select_worldinfo.html:27
+#: flask/templates/chat/select_worldinfo.html:31
 msgid "Select Player Persona"
 msgstr "เลือกตัวตนผู้เล่น"
 
-#: flask/templates/chat/select_worldinfo.html:32
+#: flask/templates/chat/select_worldinfo.html:36
 msgid "Default"
 msgstr "ค่าเริ่มต้น"
 
-#: flask/templates/chat/select_worldinfo.html:37
+#: flask/templates/chat/select_worldinfo.html:41
 msgid "Note: After sending the first message, the persona is permanently locked for this chat."
 msgstr "หมายเหตุ: หลังจากส่งข้อความแรกแล้ว ตัวตนผู้เล่นจะถูกล็อกถาวรสำหรับแชทนี้"
 
-#: flask/templates/chat/select_worldinfo.html:42
+#: flask/templates/chat/select_worldinfo.html:46
 msgid "Automatically assigned"
 msgstr "กำหนดให้อัตโนมัติ"
 
-#: flask/templates/chat/select_worldinfo.html:48
+#: flask/templates/chat/select_worldinfo.html:52
 msgid "Active WorldInfo (At most one per session)"
 msgstr "WorldInfo ที่ใช้งานอยู่ (สูงสุดหนึ่งรายการต่อเซสชัน)"
 
-#: flask/templates/chat/select_worldinfo.html:50
+#: flask/templates/chat/select_worldinfo.html:54
 msgid "No WorldInfo (Default — Neutral background, no events)"
 msgstr "ไม่มี WorldInfo (ค่าเริ่มต้น — พื้นหลังเป็นกลาง ไม่มีเหตุการณ์)"
 
-#: flask/templates/chat/select_worldinfo.html:54
+#: flask/templates/chat/select_worldinfo.html:58
 msgid "Recommended for"
 msgstr "แนะนำสำหรับ"
 
-#: flask/templates/chat/select_worldinfo.html:60
+#: flask/templates/chat/select_worldinfo.html:64
 msgid "This character recommends a WorldInfo, but you can freely choose another or start without one."
 msgstr "ตัวละครนี้แนะนำ WorldInfo ไว้ แต่คุณสามารถเลือกอันอื่นหรือเริ่มโดยไม่มีก็ได้"
 
-#: flask/templates/chat/select_worldinfo.html:66
+#: flask/templates/chat/select_worldinfo.html:70
 msgid "Optional Session Title"
 msgstr "ชื่อเซสชัน (ไม่บังคับ)"
 
-#: flask/templates/chat/select_worldinfo.html:67
+#: flask/templates/chat/select_worldinfo.html:71
 msgid "Chat with"
 msgstr "แชทกับ"
 
-#: flask/templates/chat/select_worldinfo.html:73
+#: flask/templates/chat/select_worldinfo.html:77
 msgid "Enable Thinking (Reasoning)"
 msgstr "เปิดใช้งานการคิด (การใช้เหตุผล)"
 
-#: flask/templates/chat/select_worldinfo.html:76
+#: flask/templates/chat/select_worldinfo.html:80
 msgid "Enables extended chain-of-thought reasoning for compatible models (e.g. Gemma 4, DeepSeek-R1). Disable for faster replies without thinking steps."
 msgstr "เปิดใช้งานการใช้เหตุผลแบบเป็นขั้นตอนสำหรับโมเดลที่รองรับ (เช่น Gemma 4, DeepSeek-R1) ปิดใช้งานเพื่อการตอบกลับที่เร็วขึ้นโดยไม่มีขั้นตอนการคิด"
 
-#: flask/templates/chat/select_worldinfo.html:89
+#: flask/templates/chat/select_worldinfo.html:93
 msgid "Start Adventure"
 msgstr "เริ่มการผจญภัย"
 
-#: flask/templates/chat/session.html:37
+#: flask/templates/chat/session.html:32
 msgid "Info"
 msgstr "ข้อมูล"
 
-#: flask/templates/chat/session.html:37
+#: flask/templates/chat/session.html:32
 msgid "Sidebar / Character Info"
 msgstr "แถบด้านข้าง / ข้อมูลตัวละคร"
 
-#: flask/templates/chat/session.html:43 flask/templates/chat/session.html:68 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
+#: flask/templates/chat/session.html:39 flask/templates/chat/session.html:76 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
 msgid "Location:"
 msgstr "สถานที่:"
 
-#: flask/templates/chat/session.html:45
+#: flask/templates/chat/session.html:41
 msgid "World:"
 msgstr "โลก:"
 
-#: flask/templates/chat/session.html:47
+#: flask/templates/chat/session.html:43
 msgid "Neutral Setting"
 msgstr "ฉากกลาง"
 
-#: flask/templates/chat/session.html:84
+#: flask/templates/chat/session.html:53 flask/templates/chat/session.html:54 flask/templates/worldinfo/detail.html:187 flask/templates/worldinfo/detail.html:188
+msgid "View location backdrop"
+msgstr "ดูภาพพื้นหลังสถานที่"
+
+#: flask/templates/chat/session.html:92
 msgid "View LLM prompt (Admin)"
 msgstr "ดูพรอมต์ LLM (ผู้ดูแลระบบ)"
 
-#: flask/templates/chat/session.html:86 flask/templates/chat/session.html:112
+#: flask/templates/chat/session.html:94 flask/templates/chat/session.html:120
 msgid "Translate message (on-demand)"
 msgstr "แปลข้อความ (ตามต้องการ)"
 
-#: flask/templates/chat/session.html:87 flask/templates/chat/session.html:113
+#: flask/templates/chat/session.html:95 flask/templates/chat/session.html:121
 msgid "Edit message"
 msgstr "แก้ไขข้อความ"
 
-#: flask/templates/chat/session.html:88 flask/templates/chat/session.html:114
+#: flask/templates/chat/session.html:96 flask/templates/chat/session.html:122
 msgid "Duplicate chat from here (Fork)"
 msgstr "ทำซ้ำแชทจากตรงนี้ (Fork)"
 
-#: flask/templates/chat/session.html:90 flask/templates/chat/session.html:115 flask/templates/macros/system_message.html:27
+#: flask/templates/chat/session.html:98 flask/templates/chat/session.html:123 flask/templates/macros/system_message.html:31
 msgid "Delete from here"
 msgstr "ลบจากตรงนี้"
 
-#: flask/templates/chat/session.html:122
+#: flask/templates/chat/session.html:130
 msgid "Show/hide ALT text (image description)"
 msgstr "แสดง/ซ่อนข้อความ ALT (คำอธิบายภาพ)"
 
-#: flask/templates/chat/session.html:143
-msgid "AI system notice"
-msgstr "ประกาศระบบ AI"
-
-#: flask/templates/chat/session.html:145
-msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
-msgstr "นี่คือแชทบอท AI คำตอบถูกสร้างขึ้นโดยอัตโนมัติจากโมเดลภาษาในเครื่องหรือภายนอก และอาจไม่สมบูรณ์หรือไม่ถูกต้อง"
-
-#: flask/templates/chat/session.html:152
-msgid "Chat options & sessions"
-msgstr "ตัวเลือกแชทและเซสชัน"
-
-#: flask/templates/chat/session.html:152
-msgid "Chat options"
-msgstr "ตัวเลือกแชท"
-
-#: flask/templates/chat/session.html:158
-msgid "Sessions"
-msgstr "เซสชัน"
-
 #: flask/templates/chat/session.html:159
-msgid "Start new chat"
-msgstr "เริ่มแชทใหม่"
+msgid "Unlock at:"
+msgstr "ปลดล็อกที่ระดับ:"
 
-#: flask/templates/chat/session.html:161
-msgid "Delete chat"
-msgstr "ลบแชท"
+#: flask/templates/chat/session.html:188 flask/templates/chat/session.html:189 flask/templates/chat/session.html:192
+msgid "View world backdrop"
+msgstr "ดูภาพพื้นหลังโลก"
 
-#: flask/templates/chat/session.html:161
-msgid "Do you really want to permanently delete this chat?"
-msgstr "คุณต้องการลบแชทนี้อย่างถาวรหรือไม่?"
-
-#: flask/templates/chat/session.html:165
-msgid "Attach image (Vision ALT analysis)"
-msgstr "แนบภาพ (วิเคราะห์ Vision ALT)"
-
-#: flask/templates/chat/session.html:173
-msgid "Generate scene image"
-msgstr "สร้างภาพฉาก"
-
-#: flask/templates/chat/session.html:180
-msgid "Cancel image generation"
-msgstr "ยกเลิกการสร้างภาพ"
-
-#: flask/templates/chat/session.html:191
-msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
-msgstr "เขียนคำตอบหรือการกระทำของคุณ... (Enter เพื่อส่ง, Shift+Enter เพื่อขึ้นบรรทัดใหม่)"
-
-#: flask/templates/chat/session.html:197
-msgid "Regenerate response – replaces the last AI reply or retries generation"
-msgstr "สร้างคำตอบใหม่ – แทนที่คำตอบ AI ล่าสุดหรือลองสร้างใหม่"
-
-#: flask/templates/chat/session.html:204
-msgid "Cancel response generation"
-msgstr "ยกเลิกการสร้างคำตอบ"
-
-#: flask/templates/chat/session.html:210
-msgid "Send message (Enter)"
-msgstr "ส่งข้อความ (Enter)"
-
-#: flask/templates/chat/session.html:268 flask/templates/chat/session.html:829 flask/templates/lorebooks/detail.html:167
+#: flask/templates/chat/session.html:211 flask/templates/lorebooks/detail.html:164
 msgid "Tags (Comma-separated for vectorless RAG)"
 msgstr "แท็ก (คั่นด้วยจุลภาคสำหรับ RAG แบบไม่ใช้เวกเตอร์)"
 
-#: flask/templates/chat/session.html:272 flask/templates/chat/session.html:833
+#: flask/templates/chat/session.html:215
 msgid "Summary"
 msgstr "สรุป"
 
-#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:839
+#: flask/templates/chat/session.html:220
 msgid "Recalculate"
 msgstr "คำนวณใหม่"
 
-#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:838
+#: flask/templates/chat/session.html:220
 msgid "Recalculate memory from associated episode messages"
 msgstr "คำนวณความทรงจำใหม่จากข้อความเหตุการณ์ที่เกี่ยวข้อง"
 
-#: flask/templates/chat/session.html:278 flask/templates/chat/session.html:842
+#: flask/templates/chat/session.html:221
 msgid "Translate"
 msgstr "แปล"
 
-#: flask/templates/chat/session.html:278 flask/templates/chat/session.html:841
+#: flask/templates/chat/session.html:221
 msgid "Translate memory in-place to your language"
 msgstr "แปลความทรงจำในตำแหน่งเดิมเป็นภาษาของคุณ"
 
-#: flask/templates/chat/session.html:296
-msgid "Relationship Settings"
-msgstr ""
-
-#: flask/templates/chat/session.html:299
-msgid "Show relationship debug labels"
-msgstr ""
-
-#: flask/templates/chat/session.html:310
-msgid "Reset relationship to default and recalculate from chat history"
-msgstr ""
-
-#: flask/templates/chat/session.html:317
-msgid "Recalculate relationship"
-msgstr ""
-
-#: flask/templates/chat/session.html:340
-msgid "Thinking: Enabled (Click to disable)"
-msgstr "การคิด: เปิดใช้งาน (คลิกเพื่อปิด)"
-
-#: flask/templates/chat/session.html:340
-msgid "Thinking: Disabled (Click to enable)"
-msgstr "การคิด: ปิดใช้งาน (คลิกเพื่อเปิด)"
-
-#: flask/templates/chat/session.html:341
-msgid "Disable thinking"
-msgstr "ปิดการคิด"
-
-#: flask/templates/chat/session.html:341
-msgid "Enable thinking"
-msgstr "เปิดการคิด"
-
-#: flask/templates/chat/session.html:354 flask/templates/macros/cards.html:91
-msgid "Relationship:"
-msgstr "ความสัมพันธ์:"
-
-#: flask/templates/chat/session.html:365
+#: flask/templates/chat/session.html:238
 msgid "Active Persona"
 msgstr "เพอร์โซนาที่ใช้งาน"
 
-#: flask/templates/chat/session.html:370
+#: flask/templates/chat/session.html:243
 msgid "Edit player persona"
 msgstr "แก้ไขเพอร์โซนาผู้เล่น"
 
-#: flask/templates/chat/session.html:387
+#: flask/templates/chat/session.html:261
 msgid "Unknown"
 msgstr "ไม่ทราบ"
 
-#: flask/templates/chat/session.html:388
+#: flask/templates/chat/session.html:262
 msgid "Persona is locked for this chat after the 1st message"
 msgstr "เพอร์โซนาจะถูกล็อกสำหรับแชทนี้หลังข้อความแรก"
 
-#: flask/templates/chat/session.html:411
+#: flask/templates/chat/session.html:282
+msgid "Warning:"
+msgstr "คำเตือน:"
+
+#: flask/templates/chat/session.html:282
+msgid "Switching worlds during an active chat may lead to inconsistencies with earlier memories."
+msgstr "การเปลี่ยนโลกในระหว่างแชทที่กำลังดำเนินอยู่อาจทำให้เกิดความไม่สอดคล้องกับความทรงจำก่อนหน้า"
+
+#: flask/templates/chat/session.html:288
 msgid "No World (Neutral)"
 msgstr "ไม่มีโลก (เป็นกลาง)"
 
-#: flask/templates/chat/session.html:414
+#: flask/templates/chat/session.html:296
 msgid "Switch world"
 msgstr "เปลี่ยนโลก"
 
-#: flask/templates/chat/session.html:425
-msgid "Current Location"
-msgstr "ตำแหน่งปัจจุบัน"
-
-#: flask/templates/chat/session.html:427
-msgid "-- Choose location --"
-msgstr "-- เลือกตำแหน่ง --"
-
-#: flask/templates/chat/session.html:445
+#: flask/templates/chat/session.html:310
 msgid "Enable random events"
 msgstr "เปิดใช้งานเหตุการณ์สุ่ม"
 
-#: flask/templates/chat/session.html:450
-msgid "Admin & creator info: Cooldown until the next random event"
-msgstr "ข้อมูลผู้ดูแลและผู้สร้าง: เวลารอก่อนเหตุการณ์สุ่มถัดไป"
+#: flask/templates/chat/session.html:323
+msgid "Relationship Settings"
+msgstr "การตั้งค่าความสัมพันธ์"
 
-#: flask/templates/chat/session.html:451
-msgid "Next event:"
-msgstr "เหตุการณ์ถัดไป:"
+#: flask/templates/chat/session.html:326
+msgid "Show relationship debug labels"
+msgstr "แสดงป้ายดีบักความสัมพันธ์"
 
-#: flask/templates/chat/session.html:454 flask/templates/chat/session.html:458
-msgid "in"
-msgstr "ในอีก"
+#: flask/templates/chat/session.html:334
+msgid "Reset relationship to default and recalculate from chat history"
+msgstr "รีเซ็ตความสัมพันธ์เป็นค่าเริ่มต้นและคำนวณใหม่จากประวัติแชท"
 
-#: flask/templates/chat/session.html:454
-msgid "message"
-msgstr "ข้อความ"
+#: flask/templates/chat/session.html:337
+msgid "Recalculate relationship"
+msgstr "คำนวณความสัมพันธ์ใหม่"
 
-#: flask/templates/chat/session.html:454 flask/templates/chat/session.html:458
-msgid "messages"
-msgstr "ข้อความ"
-
-#: flask/templates/chat/session.html:454
-msgid "paused"
-msgstr "หยุดชั่วคราว"
-
-#: flask/templates/chat/session.html:456
-msgid "next message"
-msgstr "ข้อความถัดไป"
-
-#: flask/templates/chat/session.html:531
-msgid "Do you really want to delete this session?"
-msgstr "คุณต้องการลบเซสชันนี้จริงหรือไม่?"
-
-#: flask/templates/chat/session.html:533
-msgid "Delete session"
-msgstr "ลบเซสชัน"
-
-#: flask/templates/chat/session.html:757
-msgid "Permanently delete this message and all subsequent messages (including associated memories)?"
-msgstr "ลบข้อความนี้และข้อความถัดไปทั้งหมด (รวมถึงความทรงจำที่เกี่ยวข้อง) อย่างถาวรหรือไม่?"
-
-#: flask/templates/chat/session.html:956
-msgid "Recalculation error"
-msgstr "ข้อผิดพลาดในการคำนวณใหม่"
-
-#: flask/templates/chat/session.html:958
-msgid "Recalculation error:"
-msgstr "ข้อผิดพลาดในการคำนวณใหม่:"
-
-#: flask/templates/chat/session.html:995
-msgid "Translated!"
-msgstr "แปลแล้ว!"
-
-#: flask/templates/chat/session.html:1007
-msgid "Translation error"
-msgstr "ข้อผิดพลาดในการแปล"
-
-#: flask/templates/chat/session.html:1009
-msgid "Translation error:"
-msgstr "ข้อผิดพลาดในการแปล:"
-
-#: flask/templates/lorebooks/detail.html:17
+#: flask/templates/lorebooks/detail.html:22
 msgid "Lorebook & Encyclopedia"
 msgstr "สมุดตำนานและสารานุกรม"
 
-#: flask/templates/lorebooks/detail.html:21 flask/templates/lorebooks/detail.html:55 flask/templates/worldinfo/detail.html:23 flask/templates/worldinfo/detail.html:58
+#: flask/templates/lorebooks/detail.html:26 flask/templates/worldinfo/detail.html:31
 msgid "Basic Settings"
 msgstr "การตั้งค่าพื้นฐาน"
 
-#: flask/templates/lorebooks/detail.html:42
+#: flask/templates/lorebooks/detail.html:47
 msgid "Really delete Lorebook?"
 msgstr "ต้องการลบสมุดตำนานนี้จริงหรือไม่?"
 
-#: flask/templates/lorebooks/detail.html:43
+#: flask/templates/lorebooks/detail.html:48
 msgid "Read-only (External Lorebook)"
 msgstr "อ่านอย่างเดียว (สมุดตำนานภายนอก)"
 
-#: flask/templates/lorebooks/detail.html:44
+#: flask/templates/lorebooks/detail.html:49
 msgid "Save Lorebook"
 msgstr "บันทึกสมุดตำนาน"
 
-#: flask/templates/lorebooks/detail.html:60
+#: flask/templates/lorebooks/detail.html:62
 msgid "Lorebook Name"
 msgstr "ชื่อสมุดตำนาน"
 
-#: flask/templates/lorebooks/detail.html:61
+#: flask/templates/lorebooks/detail.html:63
 msgid "The title of this knowledge compendium."
 msgstr "ชื่อของคลังความรู้นี้"
 
-#: flask/templates/lorebooks/detail.html:66 flask/templates/lorebooks/detail.html:151 flask/templates/lorebooks/detail.html:221 flask/templates/macros/event_manager.html:54 flask/templates/worldinfo/detail.html:70
+#: flask/templates/lorebooks/detail.html:68 flask/templates/lorebooks/detail.html:151 flask/templates/lorebooks/detail.html:219 flask/templates/macros/event_manager.html:54 flask/templates/worldinfo/detail.html:75
 msgid "Proper Noun (Do not translate)"
 msgstr "คำนามเฉพาะ (ไม่ต้องแปล)"
 
-#: flask/templates/lorebooks/detail.html:73
-msgid "Private = only usable by you. Public = linkable by other users in their characters."
-msgstr "ส่วนตัว = ใช้ได้เฉพาะคุณเท่านั้น สาธารณะ = ผู้ใช้อื่นสามารถเชื่อมโยงกับตัวละครของตนได้"
-
-#: flask/templates/lorebooks/detail.html:83
+#: flask/templates/lorebooks/detail.html:82
 msgid "Short Description"
 msgstr "คำอธิบายสั้นๆ"
 
-#: flask/templates/lorebooks/detail.html:84
+#: flask/templates/lorebooks/detail.html:83
 msgid "A brief summary of the topic for quick orientation in the overview."
 msgstr "สรุปย่อของหัวข้อเพื่อให้เข้าใจได้อย่างรวดเร็วในหน้าภาพรวม"
 
-#: flask/templates/lorebooks/detail.html:89
+#: flask/templates/lorebooks/detail.html:88
 msgid "Short overview of the lorebook content..."
 msgstr "ภาพรวมสั้นๆ ของเนื้อหาสมุดตำนาน..."
 
-#: flask/templates/lorebooks/detail.html:107
+#: flask/templates/lorebooks/detail.html:106
 msgid "New Entry"
 msgstr "รายการใหม่"
 
-#: flask/templates/lorebooks/detail.html:116
+#: flask/templates/lorebooks/detail.html:115
 msgid "Private (Secret Lore)"
 msgstr "ส่วนตัว (ตำนานลับ)"
 
-#: flask/templates/lorebooks/detail.html:116
+#: flask/templates/lorebooks/detail.html:115
 msgid "Private entry: hidden from other players, but injected via RAG in roleplay."
 msgstr "รายการส่วนตัว: ซ่อนจากผู้เล่นอื่น แต่จะถูกแทรกผ่าน RAG ในการสวมบทบาท"
 
-#: flask/templates/lorebooks/detail.html:130
+#: flask/templates/lorebooks/detail.html:129
 msgid "Click to edit"
 msgstr "คลิกเพื่อแก้ไข"
 
-#: flask/templates/lorebooks/detail.html:139
+#: flask/templates/lorebooks/detail.html:138
 msgid "Lorebook Entry:"
 msgstr "รายการสมุดตำนาน:"
 
-#: flask/templates/lorebooks/detail.html:145 flask/templates/lorebooks/detail.html:215 flask/templates/macros/event_manager.html:34
+#: flask/templates/lorebooks/detail.html:145 flask/templates/lorebooks/detail.html:213 flask/templates/macros/event_manager.html:34
 msgid "Title"
 msgstr "ชื่อเรื่อง"
 
-#: flask/templates/lorebooks/detail.html:146 flask/templates/lorebooks/detail.html:216
+#: flask/templates/lorebooks/detail.html:146 flask/templates/lorebooks/detail.html:214
 msgid "Concise title of the lore entry."
 msgstr "ชื่อเรื่องสั้นๆ ของรายการตำนาน"
 
-#: flask/templates/lorebooks/detail.html:157 flask/templates/lorebooks/detail.html:227
-msgid "Public: readable in overview. Private: hidden in overview, still injected via RAG in roleplay."
-msgstr "สาธารณะ: อ่านได้ในหน้าภาพรวม ส่วนตัว: ซ่อนในหน้าภาพรวม แต่ยังคงถูกแทรกผ่าน RAG ในการสวมบทบาท"
-
-#: flask/templates/lorebooks/detail.html:160 flask/templates/lorebooks/detail.html:230
+#: flask/templates/lorebooks/detail.html:158 flask/templates/lorebooks/detail.html:226
 msgid "Public (Readable in overview)"
 msgstr "สาธารณะ (อ่านได้ในหน้าภาพรวม)"
 
-#: flask/templates/lorebooks/detail.html:161 flask/templates/lorebooks/detail.html:231
+#: flask/templates/lorebooks/detail.html:158 flask/templates/lorebooks/detail.html:226
 msgid "Private (Secret Lore / Spoiler Protection)"
 msgstr "ส่วนตัว (ตำนานลับ / ป้องกันสปอยล์)"
 
-#: flask/templates/lorebooks/detail.html:168 flask/templates/lorebooks/detail.html:238
+#: flask/templates/lorebooks/detail.html:165 flask/templates/lorebooks/detail.html:233
 msgid "Keywords that trigger loading this entry into [RELEVANT_LOREBOOKS] when mentioned in chat."
 msgstr "คำสำคัญที่กระตุ้นให้โหลดรายการนี้เข้าสู่ [RELEVANT_LOREBOOKS] เมื่อถูกกล่าวถึงในแชท"
 
-#: flask/templates/lorebooks/detail.html:170 flask/templates/lorebooks/detail.html:240
+#: flask/templates/lorebooks/detail.html:167 flask/templates/lorebooks/detail.html:235
 msgid "Suggest Tags"
 msgstr "แนะนำแท็ก"
 
-#: flask/templates/lorebooks/detail.html:176 flask/templates/lorebooks/detail.html:246
+#: flask/templates/lorebooks/detail.html:173 flask/templates/lorebooks/detail.html:241
 msgid "Prose Text / Lore Content"
 msgstr "ข้อความบรรยาย / เนื้อหาตำนาน"
 
-#: flask/templates/lorebooks/detail.html:177 flask/templates/lorebooks/detail.html:247
+#: flask/templates/lorebooks/detail.html:174 flask/templates/lorebooks/detail.html:242
 msgid "Compact facts, history, or rules the AI can retrieve and use in dialogue."
 msgstr "ข้อเท็จจริง ประวัติ หรือกฎเกณฑ์สั้นๆ ที่ AI สามารถดึงมาใช้ในบทสนทนาได้"
 
-#: flask/templates/lorebooks/detail.html:209
+#: flask/templates/lorebooks/detail.html:206
 msgid "Create New Lorebook Entry"
 msgstr "สร้างรายการสมุดตำนานใหม่"
 
-#: flask/templates/lorebooks/detail.html:237 flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:373
+#: flask/templates/lorebooks/detail.html:232 flask/templates/worldinfo/detail.html:231 flask/templates/worldinfo/detail.html:374
 msgid "Tags (Comma-separated)"
 msgstr "แท็ก (คั่นด้วยจุลภาค)"
 
-#: flask/templates/lorebooks/detail.html:242
+#: flask/templates/lorebooks/detail.html:237
 msgid "magic, guild, capital"
 msgstr "เวทมนตร์, กิลด์, เมืองหลวง"
 
-#: flask/templates/lorebooks/detail.html:263
+#: flask/templates/lorebooks/detail.html:258
 msgid "Save Entry"
 msgstr "บันทึกรายการ"
 
-#: flask/templates/macros/backend_selector.html:122
+#: flask/templates/macros/backend_selector.html:126
 msgid "Show"
 msgstr "แสดง"
 
-#: flask/templates/macros/backend_selector.html:122
+#: flask/templates/macros/backend_selector.html:126
 msgid "Show/hide API key"
 msgstr "แสดง/ซ่อนคีย์ API"
+
+#: flask/templates/macros/buttons.html:96 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:103
+msgid "Public"
+msgstr "สาธารณะ"
+
+#: flask/templates/macros/buttons.html:97 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:105
+msgid "Private"
+msgstr "ส่วนตัว"
 
 #: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111
 msgid "Translation pending"
@@ -2125,6 +2193,10 @@ msgstr "แก้ไขตัวละคร"
 #: flask/templates/macros/cards.html:79
 msgid "Duplicate character"
 msgstr "ทำสำเนาตัวละคร"
+
+#: flask/templates/macros/cards.html:91
+msgid "Relationship:"
+msgstr "ความสัมพันธ์:"
 
 #: flask/templates/macros/cards.html:114
 msgid "Public world"
@@ -2150,27 +2222,27 @@ msgstr "ตัวตนใหม่"
 msgid "New World"
 msgstr "โลกใหม่"
 
-#: flask/templates/macros/collaboration.html:23
+#: flask/templates/macros/collaboration.html:14
+msgid "Collaborators receive full edit access to this creation (content, sprites, locations & events), but can never delete it or manage collaborators."
+msgstr "ผู้ร่วมงานจะได้รับสิทธิ์แก้ไขผลงานนี้อย่างเต็มที่ (เนื้อหา สไปรต์ สถานที่ และเหตุการณ์) แต่ไม่สามารถลบผลงานหรือจัดการผู้ร่วมงานได้"
+
+#: flask/templates/macros/collaboration.html:17
 msgid "Save collaborators"
 msgstr "บันทึกผู้ร่วมงาน"
 
-#: flask/templates/macros/collaboration.html:23 flask/templates/macros/collaboration.html:117
+#: flask/templates/macros/collaboration.html:17 flask/templates/macros/collaboration.html:111
 msgid "Saves all changes in the form"
 msgstr "บันทึกการเปลี่ยนแปลงทั้งหมดในฟอร์ม"
 
-#: flask/templates/macros/collaboration.html:72 flask/templates/macros/editor_header.html:47
+#: flask/templates/macros/collaboration.html:66 flask/templates/macros/editor_header.html:47
 msgid "Copy"
 msgstr "คัดลอก"
 
-#: flask/templates/macros/collaboration.html:72
+#: flask/templates/macros/collaboration.html:66
 msgid "Copy creator tag"
 msgstr "คัดลอกแท็กผู้สร้าง"
 
-#: flask/templates/macros/collaboration.html:80 flask/templates/macros/lorebook_manager.html:170
-msgid "Remove"
-msgstr "ลบออก"
-
-#: flask/templates/macros/collaboration.html:80
+#: flask/templates/macros/collaboration.html:74
 msgid "Remove collaborator"
 msgstr "ลบผู้ร่วมงาน"
 
@@ -2310,7 +2382,7 @@ msgstr "สร้างเหตุการณ์ใหม่"
 msgid "Save Event"
 msgstr "บันทึกเหตุการณ์"
 
-#: flask/templates/macros/image_cropper.html:4 flask/templates/macros/persona_manager.html:115 flask/templates/macros/persona_manager.html:118
+#: flask/templates/macros/image_cropper.html:4 flask/templates/macros/persona_manager.html:129 flask/templates/macros/persona_manager.html:132
 msgid "Set image crop"
 msgstr "ตั้งค่าการครอปภาพ"
 
@@ -2333,6 +2405,22 @@ msgstr "ใช้การครอป"
 #: flask/templates/macros/image_cropper.html:38
 msgid "Apply crop"
 msgstr "ใช้การครอป"
+
+#: flask/templates/macros/image_viewer.html:4
+msgid "Image Viewer"
+msgstr "ตัวแสดงรูปภาพ"
+
+#: flask/templates/macros/image_viewer.html:12
+msgid "Close (Esc)"
+msgstr "ปิด (Esc)"
+
+#: flask/templates/macros/image_viewer.html:17
+msgid "Previous image"
+msgstr "รูปภาพก่อนหน้า"
+
+#: flask/templates/macros/image_viewer.html:25
+msgid "Next image"
+msgstr "รูปภาพถัดไป"
 
 #: flask/templates/macros/lorebook_manager.html:18
 msgid "Active Knowledge Books (Lorebooks)"
@@ -2418,55 +2506,55 @@ msgstr "ใช้งานอยู่แล้ว"
 msgid "No lorebooks available."
 msgstr "ไม่มีสมุดตำนานที่ใช้ได้"
 
-#: flask/templates/macros/persona_manager.html:18
+#: flask/templates/macros/persona_manager.html:19
 msgid "Adjust crop"
 msgstr "ปรับการครอป"
 
-#: flask/templates/macros/persona_manager.html:19
+#: flask/templates/macros/persona_manager.html:20
 msgid "Crop active"
 msgstr "เปิดใช้งานการครอปแล้ว"
 
-#: flask/templates/macros/persona_manager.html:28
+#: flask/templates/macros/persona_manager.html:29
 msgid "Background / Personality"
 msgstr "ภูมิหลัง / บุคลิกภาพ"
 
-#: flask/templates/macros/persona_manager.html:28
+#: flask/templates/macros/persona_manager.html:29
 msgid "max. 1,200 characters"
 msgstr "สูงสุด 1,200 ตัวอักษร"
 
-#: flask/templates/macros/persona_manager.html:40
+#: flask/templates/macros/persona_manager.html:41
 msgid "Extract image features"
 msgstr "ดึงลักษณะภาพ"
 
-#: flask/templates/macros/persona_manager.html:40
+#: flask/templates/macros/persona_manager.html:41
 msgid "Automatically extract appearance from portrait image via vision model"
 msgstr "ดึงรูปลักษณ์จากภาพพอร์ตเทรตโดยอัตโนมัติผ่านโมเดลวิชัน"
 
-#: flask/templates/macros/persona_manager.html:54
+#: flask/templates/macros/persona_manager.html:55
 msgid "Persona"
 msgstr "เพอร์โซนา"
 
-#: flask/templates/macros/persona_manager.html:63 flask/templates/macros/persona_manager.html:89 flask/templates/settings/account.html:17 flask/templates/settings/creations.html:67
+#: flask/templates/macros/persona_manager.html:64 flask/templates/macros/persona_manager.html:96 flask/templates/settings/account.html:15 flask/templates/settings/creations.html:64
 msgid "Name"
 msgstr "ชื่อ"
 
-#: flask/templates/macros/persona_manager.html:74
+#: flask/templates/macros/persona_manager.html:81
 msgid "Portrait image (PNG/JPG/WEBP)"
 msgstr "ภาพพอร์ตเทรต (PNG/JPG/WEBP)"
 
-#: flask/templates/macros/persona_manager.html:78
+#: flask/templates/macros/persona_manager.html:85
 msgid "Save Persona"
 msgstr "บันทึกเพอร์โซนา"
 
-#: flask/templates/macros/persona_manager.html:100
+#: flask/templates/macros/persona_manager.html:114
 msgid "New portrait image (optional, PNG/JPG/WEBP)"
 msgstr "ภาพพอร์ตเทรตใหม่ (ไม่บังคับ, PNG/JPG/WEBP)"
 
-#: flask/templates/macros/persona_manager.html:106
+#: flask/templates/macros/persona_manager.html:120
 msgid "Save changes"
 msgstr "บันทึกการเปลี่ยนแปลง"
 
-#: flask/templates/macros/persona_manager.html:110
+#: flask/templates/macros/persona_manager.html:124
 msgid "Really delete persona?"
 msgstr "ต้องการลบเพอร์โซนาจริงหรือไม่?"
 
@@ -2474,7 +2562,7 @@ msgstr "ต้องการลบเพอร์โซนาจริงหร
 msgid "AI Characters"
 msgstr "ตัวละคร AI"
 
-#: flask/templates/macros/top_header.html:19 flask/templates/macros/top_header.html:46 flask/templates/settings/creations.html:25
+#: flask/templates/macros/top_header.html:19 flask/templates/macros/top_header.html:46 flask/templates/settings/creations.html:22
 msgid "Worlds"
 msgstr "โลก"
 
@@ -2482,15 +2570,23 @@ msgstr "โลก"
 msgid "Open menu"
 msgstr "เปิดเมนู"
 
-#: flask/templates/macros/top_header.html:62
+#: flask/templates/macros/top_header.html:60
 msgid "Logout"
 msgstr "ออกจากระบบ"
 
-#: flask/templates/overview/index.html:7
+#: flask/templates/macros/top_header.html:66 flask/templates/macros/top_header.html:71
+msgid "Support us on ko-fi"
+msgstr "สนับสนุนเราบน Ko-fi"
+
+#: flask/templates/macros/top_header.html:74 flask/templates/macros/top_header.html:79
+msgid "Visit our Website"
+msgstr "เยี่ยมชมเว็บไซต์ของเรา"
+
+#: flask/templates/overview/index.html:11
 msgid "Some content is still being translated into your language. The selection of available content may still change."
 msgstr "เนื้อหาบางส่วนยังอยู่ระหว่างการแปลเป็นภาษาของคุณ ตัวเลือกเนื้อหาที่มีอยู่อาจยังมีการเปลี่ยนแปลง"
 
-#: flask/templates/overview/index.html:8
+#: flask/templates/overview/index.html:12
 msgid "Translations in Progress"
 msgstr "กำลังดำเนินการแปล"
 
@@ -2514,11 +2610,11 @@ msgstr "เคยแชทแล้ว"
 msgid "Not Chatted Yet"
 msgstr "ยังไม่เคยแชท"
 
-#: flask/templates/overview/tabs/characters.html:23 flask/templates/settings/creations.html:40
+#: flask/templates/overview/tabs/characters.html:23 flask/templates/settings/creations.html:37
 msgid "Sort Order"
 msgstr "ลำดับการจัดเรียง"
 
-#: flask/templates/overview/tabs/characters.html:25 flask/templates/settings/creations.html:43
+#: flask/templates/overview/tabs/characters.html:25 flask/templates/settings/creations.html:40
 msgid "Newest First"
 msgstr "ใหม่ล่าสุดก่อน"
 
@@ -2530,15 +2626,15 @@ msgstr "ข้อความมากที่สุด"
 msgid "Best Relationship"
 msgstr "ความสัมพันธ์ดีที่สุด"
 
-#: flask/templates/overview/tabs/characters.html:32 flask/templates/settings/creations.html:31
+#: flask/templates/overview/tabs/characters.html:32 flask/templates/settings/creations.html:28
 msgid "Author"
 msgstr "ผู้สร้าง"
 
-#: flask/templates/overview/tabs/characters.html:35 flask/templates/settings/creations.html:34
+#: flask/templates/overview/tabs/characters.html:35 flask/templates/settings/creations.html:31
 msgid "Only Mine (Creator)"
 msgstr "เฉพาะของฉัน (ผู้สร้าง)"
 
-#: flask/templates/overview/tabs/characters.html:36 flask/templates/settings/creations.html:35
+#: flask/templates/overview/tabs/characters.html:36 flask/templates/settings/creations.html:32
 msgid "Collaborations"
 msgstr "งานที่ร่วมมือกัน"
 
@@ -2546,331 +2642,323 @@ msgstr "งานที่ร่วมมือกัน"
 msgid "New Lorebook"
 msgstr "สมุดตำนานใหม่"
 
-#: flask/templates/settings/account.html:8 flask/templates/settings/layout.html:22
-msgid "Account"
-msgstr "บัญชี"
-
-#: flask/templates/settings/account.html:10
+#: flask/templates/settings/account.html:8
 msgid "Creator Tag"
 msgstr "แท็กผู้สร้าง"
 
-#: flask/templates/settings/account.html:10
+#: flask/templates/settings/account.html:8
 msgid "Other creators can add you as a collaborator using this tag."
 msgstr "ผู้สร้างคนอื่นสามารถเพิ่มคุณเป็นผู้ร่วมงานได้โดยใช้แท็กนี้"
 
-#: flask/templates/settings/account.html:11
+#: flask/templates/settings/account.html:9
 msgid "Copy Creator Tag"
 msgstr "คัดลอกแท็กผู้สร้าง"
 
-#: flask/templates/settings/account.html:14
+#: flask/templates/settings/account.html:12
 msgid "Name & Email Address"
 msgstr "ชื่อและที่อยู่อีเมล"
 
-#: flask/templates/settings/account.html:25
+#: flask/templates/settings/account.html:23
 msgid "Your current password is only required when changing your email address or password. Leave the new password fields empty to keep your current password."
 msgstr "ต้องใช้รหัสผ่านปัจจุบันของคุณเฉพาะเมื่อเปลี่ยนที่อยู่อีเมลหรือรหัสผ่านเท่านั้น เว้นช่องรหัสผ่านใหม่ให้ว่างไว้เพื่อคงรหัสผ่านปัจจุบันของคุณ"
 
-#: flask/templates/settings/account.html:28
+#: flask/templates/settings/account.html:26
 msgid "Current password"
 msgstr "รหัสผ่านปัจจุบัน"
 
-#: flask/templates/settings/account.html:31
+#: flask/templates/settings/account.html:29
 msgid "New password"
 msgstr "รหัสผ่านใหม่"
 
-#: flask/templates/settings/account.html:34
+#: flask/templates/settings/account.html:32
 msgid "Confirm new password"
 msgstr "ยืนยันรหัสผ่านใหม่"
 
-#: flask/templates/settings/account.html:39
+#: flask/templates/settings/account.html:37
 msgid "Language"
 msgstr "ภาษา"
 
-#: flask/templates/settings/account.html:39
+#: flask/templates/settings/account.html:37
 msgid "Language of the interface and displayed content translations."
 msgstr "ภาษาของอินเทอร์เฟซและการแปลเนื้อหาที่แสดง"
 
-#: flask/templates/settings/creations.html:4 flask/templates/settings/creations.html:10 flask/templates/settings/layout.html:20
+#: flask/templates/settings/creations.html:4 flask/templates/settings/layout.html:24
 msgid "My Creations"
 msgstr "ผลงานของฉัน"
 
-#: flask/templates/settings/creations.html:11
+#: flask/templates/settings/creations.html:9
 msgid "Overview of all characters, worlds, and lorebooks you created or collaborate on. Click any item to open its editor."
 msgstr "ภาพรวมของตัวละคร โลก และสมุดตำนานทั้งหมดที่คุณสร้างหรือร่วมมือกัน คลิกที่รายการใดก็ได้เพื่อเปิดตัวแก้ไข"
 
-#: flask/templates/settings/creations.html:14
+#: flask/templates/settings/creations.html:11
 msgid "Total:"
 msgstr "ทั้งหมด:"
 
-#: flask/templates/settings/creations.html:21 flask/templates/settings/creations.html:65
+#: flask/templates/settings/creations.html:18 flask/templates/settings/creations.html:62
 msgid "Type"
 msgstr "ประเภท"
 
-#: flask/templates/settings/creations.html:23
+#: flask/templates/settings/creations.html:20
 msgid "All Types"
 msgstr "ทุกประเภท"
 
-#: flask/templates/settings/creations.html:24
+#: flask/templates/settings/creations.html:21
 msgid "Characters"
 msgstr "ตัวละคร"
 
-#: flask/templates/settings/creations.html:33
+#: flask/templates/settings/creations.html:30
 msgid "All Works"
 msgstr "ผลงานทั้งหมด"
 
-#: flask/templates/settings/creations.html:42
+#: flask/templates/settings/creations.html:39
 msgid "Name (A-Z)"
 msgstr "ชื่อ (A-Z)"
 
-#: flask/templates/settings/creations.html:48
+#: flask/templates/settings/creations.html:45
 msgid "Search"
 msgstr "ค้นหา"
 
-#: flask/templates/settings/creations.html:53
+#: flask/templates/settings/creations.html:50
 msgid "Search name..."
 msgstr "ค้นหาชื่อ..."
 
-#: flask/templates/settings/creations.html:55
+#: flask/templates/settings/creations.html:52
 msgid "Search creations"
 msgstr "ค้นหาผลงาน"
 
-#: flask/templates/settings/creations.html:66
+#: flask/templates/settings/creations.html:63
 msgid "Preview"
 msgstr "ตัวอย่าง"
 
-#: flask/templates/settings/creations.html:68
+#: flask/templates/settings/creations.html:65
 msgid "Details"
 msgstr "รายละเอียด"
 
-#: flask/templates/settings/creations.html:70
+#: flask/templates/settings/creations.html:67
 msgid "Role"
 msgstr "บทบาท"
 
-#: flask/templates/settings/creations.html:71
+#: flask/templates/settings/creations.html:68
 msgid "Created"
 msgstr "สร้างเมื่อ"
 
-#: flask/templates/settings/creations.html:72
+#: flask/templates/settings/creations.html:69
 msgid "Action"
 msgstr "การดำเนินการ"
 
-#: flask/templates/settings/creations.html:122
+#: flask/templates/settings/creations.html:119
 msgid "Editor"
 msgstr "ตัวแก้ไข"
 
-#: flask/templates/settings/creations.html:122
+#: flask/templates/settings/creations.html:119
 msgid "Open editor"
 msgstr "เปิดตัวแก้ไข"
 
-#: flask/templates/settings/creations.html:132
+#: flask/templates/settings/creations.html:129
 msgid "No creations found"
 msgstr "ไม่พบผลงาน"
 
-#: flask/templates/settings/creations.html:134
+#: flask/templates/settings/creations.html:131
 msgid "No works were found matching the selected filters or created/shared with you."
 msgstr "ไม่พบผลงานที่ตรงกับตัวกรองที่เลือก หรือที่สร้าง/แชร์กับคุณ"
 
-#: flask/templates/settings/creations.html:137
+#: flask/templates/settings/creations.html:134
 msgid "Reset all filters"
 msgstr "รีเซ็ตตัวกรองทั้งหมด"
 
-#: flask/templates/settings/index.html:7
-msgid "Player Personas"
-msgstr "ตัวตนผู้เล่น"
-
-#: flask/templates/settings/index.html:8
+#: flask/templates/settings/index.html:13
 msgid "Manage your roleplay identities. The star marks your default persona."
 msgstr "จัดการตัวตนสำหรับการสวมบทบาทของคุณ ดาวจะแสดงตัวตนเริ่มต้นของคุณ"
 
-#: flask/templates/settings/layout.html:14
+#: flask/templates/settings/layout.html:18
 msgid "User & Personalization"
 msgstr "ผู้ใช้และการปรับแต่งส่วนบุคคล"
 
-#: flask/templates/settings/layout.html:18
+#: flask/templates/settings/layout.html:22
 msgid "Personas"
 msgstr "ตัวตน"
 
-#: flask/templates/setup/first_boot.html:14
+#: flask/templates/settings/layout.html:26
+msgid "Account"
+msgstr "บัญชี"
+
+#: flask/templates/setup/first_boot.html:18
 msgid "Setup steps"
 msgstr "ขั้นตอนการตั้งค่า"
 
-#: flask/templates/worldinfo/detail.html:19
+#: flask/templates/worldinfo/detail.html:27
 msgid "WorldInfo & Locations"
 msgstr "WorldInfo และสถานที่"
 
-#: flask/templates/worldinfo/detail.html:24
+#: flask/templates/worldinfo/detail.html:32
 msgid "Locations & Backgrounds"
 msgstr "สถานที่และพื้นหลัง"
 
-#: flask/templates/worldinfo/detail.html:45
+#: flask/templates/worldinfo/detail.html:53
 msgid "Really delete WorldInfo?"
 msgstr "ต้องการลบ WorldInfo นี้จริงหรือไม่?"
 
-#: flask/templates/worldinfo/detail.html:46
+#: flask/templates/worldinfo/detail.html:54
 msgid "Read-only (External World)"
 msgstr "อ่านอย่างเดียว (โลกภายนอก)"
 
-#: flask/templates/worldinfo/detail.html:47
+#: flask/templates/worldinfo/detail.html:55
 msgid "Save WorldInfo"
 msgstr "บันทึก WorldInfo"
 
-#: flask/templates/worldinfo/detail.html:64
+#: flask/templates/worldinfo/detail.html:69
 msgid "World Name"
 msgstr "ชื่อโลก"
 
-#: flask/templates/worldinfo/detail.html:65
+#: flask/templates/worldinfo/detail.html:70
 msgid "The name of the universe or setting. Included as primary world in the prompt context."
 msgstr "ชื่อของจักรวาลหรือฉากหลัง รวมเป็นโลกหลักในบริบทของพรอมต์"
 
-#: flask/templates/worldinfo/detail.html:77
+#: flask/templates/worldinfo/detail.html:90
 msgid "Cover Image (1:1)"
 msgstr "รูปภาพหน้าปก (1:1)"
 
-#: flask/templates/worldinfo/detail.html:78
+#: flask/templates/worldinfo/detail.html:91
 msgid "Square cover image for the world card in the Hub and world selection."
 msgstr "รูปภาพหน้าปกสี่เหลี่ยมจัตุรัสสำหรับการ์ดโลกในฮับและการเลือกโลก"
 
-#: flask/templates/worldinfo/detail.html:81
+#: flask/templates/worldinfo/detail.html:94
 msgid "1:1 World Cover"
 msgstr "หน้าปกโลก 1:1"
 
-#: flask/templates/worldinfo/detail.html:93
+#: flask/templates/worldinfo/detail.html:106
 msgid "Choose Cover"
 msgstr "เลือกหน้าปก"
 
-#: flask/templates/worldinfo/detail.html:95
+#: flask/templates/worldinfo/detail.html:108
 msgid "Crop"
 msgstr "ครอบตัด"
 
-#: flask/templates/worldinfo/detail.html:106
-msgid "World Backdrop (16:9)"
-msgstr ""
-
-#: flask/templates/worldinfo/detail.html:107
-msgid "Optional 16:9 chat background for this world. Overrides the System Backdrop when a location has no background image of its own (Priority: System → World → Location)."
-msgstr ""
-
 #: flask/templates/worldinfo/detail.html:119
+msgid "World Backdrop (16:9)"
+msgstr "ภาพพื้นหลังโลก (16:9)"
+
+#: flask/templates/worldinfo/detail.html:120
+msgid "Optional 16:9 chat background for this world. Overrides the System Backdrop when a location has no background image of its own (Priority: System → World → Location)."
+msgstr "พื้นหลังแชท 16:9 เสริมสำหรับโลกนี้ จะใช้แทนพื้นหลังระบบเมื่อสถานที่ไม่มีภาพพื้นหลังของตนเอง (ลำดับความสำคัญ: ระบบ → โลก → สถานที่)"
+
+#: flask/templates/worldinfo/detail.html:128
 msgid "No world backdrop set"
-msgstr ""
+msgstr "ยังไม่ได้ตั้งค่าภาพพื้นหลังโลก"
 
-#: flask/templates/worldinfo/detail.html:121
+#: flask/templates/worldinfo/detail.html:129
 msgid "Uses System Backdrop unless a location defines its own background."
-msgstr ""
+msgstr "ใช้พื้นหลังระบบ เว้นแต่สถานที่นั้นจะกำหนดพื้นหลังของตนเอง"
 
-#: flask/templates/worldinfo/detail.html:131
-msgid "Choose Backdrop"
-msgstr ""
-
-#: flask/templates/worldinfo/detail.html:137
-msgid "Remove Backdrop"
-msgstr ""
+#: flask/templates/worldinfo/detail.html:132
+msgid "Priority in chat: System → World → Location"
+msgstr "ลำดับความสำคัญในแชท: ระบบ → โลก → สถานที่"
 
 #: flask/templates/worldinfo/detail.html:141
-msgid "Priority in chat: System → World → Location"
-msgstr ""
-
-#: flask/templates/worldinfo/detail.html:151
-msgid "Private = only accessible to you. Public = accessible to all users for chats."
-msgstr "ส่วนตัว = เข้าถึงได้เฉพาะคุณเท่านั้น สาธารณะ = ผู้ใช้ทุกคนเข้าถึงได้สำหรับแชท"
-
-#: flask/templates/worldinfo/detail.html:162
 msgid "Linked Lorebook (Optional)"
 msgstr "สมุดตำนานที่เชื่อมโยง (ไม่บังคับ)"
 
-#: flask/templates/worldinfo/detail.html:163
+#: flask/templates/worldinfo/detail.html:142
 msgid "An optional lorebook automatically included alongside character lorebooks in all chats using this world."
 msgstr "สมุดตำนานเพิ่มเติมที่จะถูกรวมเข้ากับสมุดตำนานของตัวละครโดยอัตโนมัติในทุกแชทที่ใช้โลกนี้"
 
-#: flask/templates/worldinfo/detail.html:166
+#: flask/templates/worldinfo/detail.html:145
 msgid "No lorebook linked"
 msgstr "ไม่ได้เชื่อมโยงสมุดตำนาน"
 
-#: flask/templates/worldinfo/detail.html:188
+#: flask/templates/worldinfo/detail.html:167
 msgid "New Location"
 msgstr "สถานที่ใหม่"
 
-#: flask/templates/worldinfo/detail.html:195 flask/templates/worldinfo/detail.html:198 flask/templates/worldinfo/detail.html:210
+#: flask/templates/worldinfo/detail.html:174 flask/templates/worldinfo/detail.html:177 flask/templates/worldinfo/detail.html:201
 msgid "This location is bound to"
 msgstr "สถานที่นี้ผูกไว้กับ"
 
-#: flask/templates/worldinfo/detail.html:221
+#: flask/templates/worldinfo/detail.html:212
 msgid "Edit Location:"
 msgstr "แก้ไขสถานที่:"
 
-#: flask/templates/worldinfo/detail.html:227 flask/templates/worldinfo/detail.html:360
+#: flask/templates/worldinfo/detail.html:218 flask/templates/worldinfo/detail.html:361
 msgid "Location Name"
 msgstr "ชื่อสถานที่"
 
-#: flask/templates/worldinfo/detail.html:228 flask/templates/worldinfo/detail.html:361
+#: flask/templates/worldinfo/detail.html:219 flask/templates/worldinfo/detail.html:362
 msgid "Name of the location (e.g. Old Library, Griffin Tavern)."
 msgstr "ชื่อของสถานที่ (เช่น ห้องสมุดเก่า, โรงเตี๊ยมกริฟฟิน)"
 
-#: flask/templates/worldinfo/detail.html:241 flask/templates/worldinfo/detail.html:374
+#: flask/templates/worldinfo/detail.html:232 flask/templates/worldinfo/detail.html:375
 msgid "Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet)."
 msgstr "คำสำคัญคั่นด้วยจุลภาคที่อธิบายสภาพแวดล้อม (เช่น ในร่ม, อบอุ่น, เงียบสงบ)"
 
-#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:376
+#: flask/templates/worldinfo/detail.html:234 flask/templates/worldinfo/detail.html:377
 msgid "Extract Tags"
 msgstr "แยกแท็ก"
 
-#: flask/templates/worldinfo/detail.html:251 flask/templates/worldinfo/detail.html:384
+#: flask/templates/worldinfo/detail.html:242 flask/templates/worldinfo/detail.html:385
 msgid "16:9 Background Image (PNG, JPG, WEBP)"
 msgstr "รูปภาพพื้นหลัง 16:9 (PNG, JPG, WEBP)"
 
-#: flask/templates/worldinfo/detail.html:252 flask/templates/worldinfo/detail.html:385
+#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:386
 msgid "Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference."
 msgstr "รูปภาพแนวนอน 16:9 ที่ใช้เป็นฉากหลังเวทีแชทและข้อมูลอ้างอิงของ ComfyUI"
 
-#: flask/templates/worldinfo/detail.html:258 flask/templates/worldinfo/detail.html:391
+#: flask/templates/worldinfo/detail.html:253 flask/templates/worldinfo/detail.html:396
+msgid "No location backdrop set"
+msgstr "ยังไม่ได้ตั้งค่าภาพพื้นหลังสถานที่"
+
+#: flask/templates/worldinfo/detail.html:254 flask/templates/worldinfo/detail.html:397
+msgid "Uses World Backdrop or System Backdrop if none is set."
+msgstr "ใช้พื้นหลังโลกหรือพื้นหลังระบบหากไม่ได้ตั้งค่าไว้"
+
+#: flask/templates/worldinfo/detail.html:259 flask/templates/worldinfo/detail.html:401
 msgid "Analyze & Describe Image"
 msgstr "วิเคราะห์และอธิบายรูปภาพ"
 
-#: flask/templates/worldinfo/detail.html:265 flask/templates/worldinfo/detail.html:398
+#: flask/templates/worldinfo/detail.html:266 flask/templates/worldinfo/detail.html:408
 msgid "Location Description"
 msgstr "คำอธิบายสถานที่"
 
-#: flask/templates/worldinfo/detail.html:266 flask/templates/worldinfo/detail.html:399
+#: flask/templates/worldinfo/detail.html:267 flask/templates/worldinfo/detail.html:409
 msgid "Atmospheric description of the environment, sounds, and mood."
 msgstr "คำอธิบายบรรยากาศของสภาพแวดล้อม เสียง และอารมณ์"
 
-#: flask/templates/worldinfo/detail.html:283 flask/templates/worldinfo/detail.html:416
+#: flask/templates/worldinfo/detail.html:284 flask/templates/worldinfo/detail.html:426
 msgid "Character Binding (Optional)"
 msgstr "การผูกตัวละคร (ไม่บังคับ)"
 
-#: flask/templates/worldinfo/detail.html:284 flask/templates/worldinfo/detail.html:417
+#: flask/templates/worldinfo/detail.html:285 flask/templates/worldinfo/detail.html:427
 msgid "If selected, this location can only be entered when chatting with that specific character."
 msgstr "หากเลือก สถานที่นี้จะสามารถเข้าไปได้เฉพาะเมื่อแชทกับตัวละครนั้นเท่านั้น"
 
-#: flask/templates/worldinfo/detail.html:287 flask/templates/worldinfo/detail.html:420
+#: flask/templates/worldinfo/detail.html:288 flask/templates/worldinfo/detail.html:430
 msgid "No character (Freely accessible)"
 msgstr "ไม่มีตัวละคร (เข้าถึงได้อย่างอิสระ)"
 
-#: flask/templates/worldinfo/detail.html:297
+#: flask/templates/worldinfo/detail.html:298
 msgid "Assigned Location Events:"
 msgstr "เหตุการณ์ของสถานที่ที่กำหนด:"
 
-#: flask/templates/worldinfo/detail.html:302
+#: flask/templates/worldinfo/detail.html:303
 msgid "No specific location events assigned."
 msgstr "ไม่มีเหตุการณ์เฉพาะของสถานที่ที่กำหนดไว้"
 
-#: flask/templates/worldinfo/detail.html:354
+#: flask/templates/worldinfo/detail.html:355
 msgid "Create New Location"
 msgstr "สร้างสถานที่ใหม่"
 
-#: flask/templates/worldinfo/detail.html:378
+#: flask/templates/worldinfo/detail.html:379
 msgid "tavern, forest, castle"
 msgstr "โรงเตี๊ยม, ป่า, ปราสาท"
 
-#: flask/templates/worldinfo/detail.html:431
+#: flask/templates/worldinfo/detail.html:441
 msgid "Save Location"
 msgstr "บันทึกสถานที่"
 
-#: flask/templates/worldinfo/detail.html:438
+#: flask/templates/worldinfo/detail.html:448
 msgid "Set 1:1 World Cover"
 msgstr "ตั้งค่าหน้าปกโลก 1:1"
 
-#: flask/templates/worldinfo/detail.html:438
+#: flask/templates/worldinfo/detail.html:448
 msgid "1:1 Cover"
 msgstr "หน้าปก 1:1"
 

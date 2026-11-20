@@ -18,12 +18,13 @@
           {% for emotion, sp in sprite_by_emotion.items() %}
             {% set sprite_url = url_for('uploaded_file', filename=sp.file_path) %}
             {% set bg_style = "background-image: url('" ~ sprite_url ~ "');" %}
+            {% set emotion_label = _(emotion) %}
             {% set click_attrs = {
               'data-sprite-index': loop.index0,
               'data-viewer-src': sprite_url,
-              'data-viewer-title': character.name ~ ' — ' ~ emotion
+              'data-viewer-title': character.name ~ ' — ' ~ emotion_label
             } %}
-            {% call aimo_card_container(none, character.name ~ ' — ' ~ emotion, bg_style, extra_class='aimo-sprite-card', click_attrs=click_attrs) %}
+            {% call aimo_card_container(none, character.name ~ ' — ' ~ emotion_label, bg_style, extra_class='aimo-sprite-card', click_attrs=click_attrs) %}
               <div class="aimo-card-header">
                 {% if emotion == 'neutral' %}
                   {{ pill_badge(_("Fallback"), variant="gold", title=_("Used when no sprite matches the detected emotion"), extra_class="aimo-card-badge") }}
@@ -38,7 +39,7 @@
               </div>
 
               <div class="aimo-card-footer">
-                <h3 class="aimo-card-title">{{ emotion }}</h3>
+                <h3 class="aimo-card-title">{{ emotion_label }}</h3>
               </div>
             {% endcall %}
           {% endfor %}

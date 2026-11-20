@@ -52,7 +52,7 @@
               <select name="emotion" required>
                 {% for em in available_emotions %}
                   <option value="{{ em }}">
-                    {{ em }}{% if em == 'neutral' %} ({{ _("Fallback") }}){% endif %}
+                    {{ _(em) }}{% if em == 'neutral' %} ({{ _("Fallback") }}){% endif %}
                   </option>
                 {% endfor %}
               </select>
