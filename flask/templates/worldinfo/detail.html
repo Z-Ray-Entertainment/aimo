@@ -60,17 +60,26 @@
       <input type="hidden" name="return_to" value="{{ get_safe_back_url(url_for('overview.index', tab='worldinfo')) }}">
       <input type="hidden" name="active_tab" value="{{ active_tab }}">
       <div class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; max-width: 800px;">
-        <!-- Welt-Name -->
-        <div>
-          <label style="font-weight: 600;">
-            {{ _("World Name") }} *
-            <span class="field-help-btn" title="{{ _('The name of the universe or setting. Included as primary world in the prompt context.') }}">?</span>
-          </label>
-          <input type="text" name="name" value="{{ worldinfo.name }}" required style="width: 100%; font-size: 1rem; font-weight: 700;" {% if not is_editable %}disabled readonly{% endif %}>
-          <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.4rem; font-size: 0.85rem; color: var(--text-muted); cursor: pointer;">
-            <input type="checkbox" name="is_proper_noun" value="1" {% if worldinfo.is_proper_noun %}checked{% endif %} {% if not is_editable %}disabled{% endif %}>
-            <span>{{ _("Proper Noun (Do not translate)") }}</span>
-          </label>
+        <!-- Welt-Name & Sichtbarkeit -->
+        <div class="editor-settings-top-row">
+          <div class="editor-settings-top-main">
+            <label style="font-weight: 600;">
+              {{ _("World Name") }} *
+              <span class="field-help-btn" title="{{ _('The name of the universe or setting. Included as primary world in the prompt context.') }}">?</span>
+            </label>
+            <input type="text" name="name" value="{{ worldinfo.name }}" required style="width: 100%; font-size: 1rem; font-weight: 700;" {% if not is_editable %}disabled readonly{% endif %}>
+            <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.4rem; font-size: 0.85rem; color: var(--text-muted); cursor: pointer;">
+              <input type="checkbox" name="is_proper_noun" value="1" {% if worldinfo.is_proper_noun %}checked{% endif %} {% if not is_editable %}disabled{% endif %}>
+              <span>{{ _("Proper Noun (Do not translate)") }}</span>
+            </label>
+          </div>
+
+          <div class="editor-settings-visibility">
+            <label style="font-weight: 600;">
+              {{ _("Visibility") }}
+            </label>
+            {{ visibility_toggle(value=worldinfo.visibility, disabled=not is_editable) }}
+          </div>
         </div>
 
         <!-- 1:1 Cover Image & Vorschau -->
@@ -144,14 +153,6 @@
               </span>
             {% endif %}
           </div>
-        </div>
-
-        <!-- Sichtbarkeit -->
-        <div>
-          <label style="font-weight: 600;">
-            {{ _("Visibility") }}
-          </label>
-          {{ visibility_toggle(value=worldinfo.visibility, disabled=not is_editable) }}
         </div>
 
         <!-- Gebundenes Lorebook -->

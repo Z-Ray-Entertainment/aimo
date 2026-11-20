@@ -56,23 +56,25 @@
       <input type="hidden" name="return_to" value="{{ get_safe_back_url(url_for('overview.index', tab='lorebooks')) }}">
       <input type="hidden" name="active_tab" value="{{ active_tab }}">
       <div class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; max-width: 800px;">
-        <div>
-          <label style="font-weight: 600;">
-            {{ _("Lorebook Name") }} *
-            <span class="field-help-btn" title="{{ _('The title of this knowledge compendium.') }}">?</span>
-          </label>
-          <input type="text" name="name" value="{{ lorebook.name }}" required style="width: 100%; font-size: 1rem; font-weight: 700;" {% if not is_editable %}disabled readonly{% endif %}>
-          <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.4rem; font-size: 0.85rem; color: var(--text-muted); cursor: pointer;">
-            <input type="checkbox" name="is_proper_noun" value="1" {% if lorebook.is_proper_noun %}checked{% endif %} {% if not is_editable %}disabled{% endif %}>
-            <span>{{ _("Proper Noun (Do not translate)") }}</span>
-          </label>
-        </div>
+        <div class="editor-settings-top-row">
+          <div class="editor-settings-top-main">
+            <label style="font-weight: 600;">
+              {{ _("Lorebook Name") }} *
+              <span class="field-help-btn" title="{{ _('The title of this knowledge compendium.') }}">?</span>
+            </label>
+            <input type="text" name="name" value="{{ lorebook.name }}" required style="width: 100%; font-size: 1rem; font-weight: 700;" {% if not is_editable %}disabled readonly{% endif %}>
+            <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.4rem; font-size: 0.85rem; color: var(--text-muted); cursor: pointer;">
+              <input type="checkbox" name="is_proper_noun" value="1" {% if lorebook.is_proper_noun %}checked{% endif %} {% if not is_editable %}disabled{% endif %}>
+              <span>{{ _("Proper Noun (Do not translate)") }}</span>
+            </label>
+          </div>
 
-        <div>
-          <label style="font-weight: 600;">
-            {{ _("Visibility") }}
-          </label>
-          {{ visibility_toggle(value=lorebook.visibility, disabled=not is_editable) }}
+          <div class="editor-settings-visibility">
+            <label style="font-weight: 600;">
+              {{ _("Visibility") }}
+            </label>
+            {{ visibility_toggle(value=lorebook.visibility, disabled=not is_editable) }}
+          </div>
         </div>
 
         <div>
@@ -137,22 +139,24 @@
           {{ modal_close_button("edit-entry-modal-" ~ entry.id) }}
         </div>
         <form method="POST" action="{{ url_for('lorebooks.edit_entry', lorebook_id=lorebook.id, entry_id=entry.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
-          <div>
-            <label>
-              {{ _("Title") }} *
-              <span class="field-help-btn" title="{{ _('Concise title of the lore entry.') }}">?</span>
-            </label>
-            <input type="text" id="title-input-{{ entry.id }}" name="title" value="{{ entry.title }}" required>
-            <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; font-size: 0.82rem; color: var(--text-muted); cursor: pointer;">
-              <input type="checkbox" name="is_proper_noun" value="1" {% if entry.is_proper_noun %}checked{% endif %}>
-              <span>{{ _("Proper Noun (Do not translate)") }}</span>
-            </label>
-          </div>
-          <div>
-            <label>
-              {{ _("Visibility") }}
-            </label>
-            {{ visibility_toggle(value=entry.visibility, public_title=_("Public (Readable in overview)"), private_title=_("Private (Secret Lore / Spoiler Protection)")) }}
+          <div class="editor-settings-top-row">
+            <div class="editor-settings-top-main">
+              <label>
+                {{ _("Title") }} *
+                <span class="field-help-btn" title="{{ _('Concise title of the lore entry.') }}">?</span>
+              </label>
+              <input type="text" id="title-input-{{ entry.id }}" name="title" value="{{ entry.title }}" required>
+              <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; font-size: 0.82rem; color: var(--text-muted); cursor: pointer;">
+                <input type="checkbox" name="is_proper_noun" value="1" {% if entry.is_proper_noun %}checked{% endif %}>
+                <span>{{ _("Proper Noun (Do not translate)") }}</span>
+              </label>
+            </div>
+            <div class="editor-settings-visibility">
+              <label>
+                {{ _("Visibility") }}
+              </label>
+              {{ visibility_toggle(value=entry.visibility, public_title=_("Public (Readable in overview)"), private_title=_("Private (Secret Lore / Spoiler Protection)")) }}
+            </div>
           </div>
           <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
@@ -203,22 +207,24 @@
       {{ modal_close_button("new-entry-modal") }}
     </div>
     <form method="POST" action="{{ url_for('lorebooks.add_entry', lorebook_id=lorebook.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
-      <div>
-        <label>
-          {{ _("Title") }} *
-          <span class="field-help-btn" title="{{ _('Concise title of the lore entry.') }}">?</span>
-        </label>
-        <input type="text" id="new-entry-title" name="title" required>
-        <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; font-size: 0.82rem; color: var(--text-muted); cursor: pointer;">
-          <input type="checkbox" name="is_proper_noun" value="1">
-          <span>{{ _("Proper Noun (Do not translate)") }}</span>
-        </label>
-      </div>
-      <div>
-        <label>
-          {{ _("Visibility") }}
-        </label>
-        {{ visibility_toggle(value="public", public_title=_("Public (Readable in overview)"), private_title=_("Private (Secret Lore / Spoiler Protection)")) }}
+      <div class="editor-settings-top-row">
+        <div class="editor-settings-top-main">
+          <label>
+            {{ _("Title") }} *
+            <span class="field-help-btn" title="{{ _('Concise title of the lore entry.') }}">?</span>
+          </label>
+          <input type="text" id="new-entry-title" name="title" required>
+          <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; font-size: 0.82rem; color: var(--text-muted); cursor: pointer;">
+            <input type="checkbox" name="is_proper_noun" value="1">
+            <span>{{ _("Proper Noun (Do not translate)") }}</span>
+          </label>
+        </div>
+        <div class="editor-settings-visibility">
+          <label>
+            {{ _("Visibility") }}
+          </label>
+          {{ visibility_toggle(value="public", public_title=_("Public (Readable in overview)"), private_title=_("Private (Secret Lore / Spoiler Protection)")) }}
+        </div>
       </div>
       <div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
