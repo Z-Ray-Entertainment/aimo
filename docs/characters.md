@@ -45,8 +45,9 @@ The Character Designer uses a modern two-column layout consistent with the Admin
 ## 🖼️ 2. Unlockable Gallery Images (`🖼️ Galeriebilder`)
 
 - Smartphone/portrait-oriented images (9:16 aspect ratio).
-- **Affection Threshold:** Assign a relationship tier (from *Pure Hatred* to *Blind Devotion*) to each image. As soon as your relationship in a chat reaches this tier, the image unlocks under the *"Media"* tab!
-- **Fullscreen Gallery:** Clicking any gallery image opens all uploaded gallery images in a browsable fullscreen Image Viewer.
+- **Adding Images:** Click the **Add 9:16 Image** tile in the gallery grid to upload a new image and select its unlock relationship tier.
+- **Affection Threshold & Editing:** Assign a relationship tier (from *Pure Hatred* to *Blind Devotion*) to each image. As soon as your relationship in a chat reaches this tier, the image unlocks under the *"Media"* tab! Clicking any gallery card opens the edit dialog, where you can change the unlock relationship tier or delete the image.
+- **Fullscreen Gallery:** Clicking the **🔍** button on a gallery card (or clicking the preview image inside the edit dialog) opens all uploaded gallery images in a browsable fullscreen Image Viewer. In read-only view, clicking a card directly opens the fullscreen viewer.
 
 ---
 

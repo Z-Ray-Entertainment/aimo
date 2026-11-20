@@ -186,6 +186,13 @@ class CharacterService:
             ]
         return character
 
+    def validate_gallery_threshold(self, threshold: int) -> int:
+        if isinstance(threshold, bool) or not isinstance(threshold, int) or not (-100 <= threshold <= 100):
+            raise InvalidCharacterDataError(
+                "Gallery image unlock_threshold must be an integer between -100 and 100."
+            )
+        return threshold
+
     def add_gallery_image(
         self,
         character: Character,
@@ -196,16 +203,13 @@ class CharacterService:
         if not cleaned_path:
             raise InvalidCharacterDataError("Gallery image file_path must not be empty.")
 
-        if isinstance(threshold, bool) or not isinstance(threshold, int) or not (-100 <= threshold <= 100):
-            raise InvalidCharacterDataError(
-                "Gallery image unlock_threshold must be an integer between -100 and 100."
-            )
+        validated_threshold = self.validate_gallery_threshold(threshold)
 
         image = CharacterImage(
             id=None,
             character_id=character.id or 0,
             file_path=cleaned_path,
-            unlock_threshold=threshold,
+            unlock_threshold=validated_threshold,
         )
         character.gallery_images.append(image)
         return image

@@ -437,6 +437,34 @@ def add_gallery_image(character_id: int):
     return redirect(url_for("characters.edit_character", character_id=character_id, tab="gallery"))
 
 
+@characters_bp.route("/<int:character_id>/gallery/<int:image_id>/edit", methods=["POST"])
+@require_permission(FunctionPermission.CHARACTER_EDIT)
+def edit_gallery_image(character_id: int, image_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    char_repo = CharacterRepository()
+    char_service = CharacterService()
+
+    character = char_repo.get_by_id(character_id)
+    if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        flash(tr(_("Character not found or no permission.")), "error")
+        return redirect(url_for("overview.index"))
+
+    if not any(img.id == image_id for img in character.gallery_images):
+        flash(tr(_("Gallery image not found.")), "error")
+        return redirect(url_for("characters.edit_character", character_id=character_id, tab="gallery"))
+
+    try:
+        threshold = int(request.form.get("unlock_threshold", 0))
+        validated_threshold = char_service.validate_gallery_threshold(threshold)
+        char_repo.update_gallery_image_threshold(image_id, validated_threshold)
+        flash(tr(_("Gallery image updated.")), "success")
+    except (ValueError, AimoError) as exc:
+        flash(str(exc), "error")
+
+    return redirect(url_for("characters.edit_character", character_id=character_id, tab="gallery"))
+
+
 @characters_bp.route("/<int:character_id>/gallery/<int:image_id>/delete", methods=["POST"])
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def delete_gallery_image(character_id: int, image_id: int):
@@ -447,6 +475,10 @@ def delete_gallery_image(character_id: int, image_id: int):
     if char is None or not char.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         flash(tr(_("Character not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
+
+    if not any(img.id == image_id for img in char.gallery_images):
+        flash(tr(_("Gallery image not found.")), "error")
+        return redirect(url_for("characters.edit_character", character_id=character_id, tab="gallery"))
 
     char_repo.delete_gallery_image(image_id)
     flash(tr(_("Gallery image removed.")), "success")

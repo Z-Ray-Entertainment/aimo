@@ -1,6 +1,6 @@
 {% from "macros/buttons.html" import action_button, new_button, modal_close_button %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
-  {% if character %}
+  {% if character and is_editable %}
     <div class="modal-backdrop" id="add-gallery-modal" aria-hidden="true">
       <div class="modal-frame" style="max-width: 440px;">
         <div class="modal-header">
@@ -28,9 +28,9 @@
               {% endfor %}
             </select>
           </div>
-          <div style="text-align: right; display: flex; justify-content: flex-end; gap: 0.5rem;">
+          <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
             {{ action_button(_("Cancel"), modal_close="add-gallery-modal") }}
-            {{ action_button(_("Upload"), type="submit") }}
+            {{ action_button(_("Upload"), type="submit", icon="💾") }}
           </div>
         </form>
       </div>
