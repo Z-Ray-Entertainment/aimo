@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros/buttons.html" import action_button, new_button, tab_button, modal_close_button %}
+{% from "macros/buttons.html" import action_button, new_button, tab_button, modal_close_button, visibility_toggle %}
 {% from "macros/badges.html" import pill_badge %}
 {% from "macros/editor_header.html" import editor_header %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
@@ -154,12 +154,8 @@
         <div>
           <label style="font-weight: 600;">
             {{ _("Visibility") }}
-            <span class="field-help-btn" title="{{ _('Private = only accessible to you. Public = accessible to all users for chats.') }}">?</span>
           </label>
-          <select name="visibility" style="width: 220px;" {% if not is_editable %}disabled{% endif %}>
-            <option value="private" {% if worldinfo.visibility != 'public' %}selected{% endif %}>🔒 {{ _("Private") }}</option>
-            <option value="public" {% if worldinfo.visibility == 'public' %}selected{% endif %}>🌍 {{ _("Public") }}</option>
-          </select>
+          {{ visibility_toggle(value=worldinfo.visibility, disabled=not is_editable) }}
         </div>
 
         <!-- Gebundenes Lorebook -->

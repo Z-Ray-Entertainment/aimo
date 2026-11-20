@@ -480,4 +480,20 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(pollNotifications, 600);
   }
 
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-visibility-toggle]");
+    if (!btn || btn.disabled) return;
+    const nextState = btn.getAttribute("data-state") === "public" ? "private" : "public";
+    const nextTitle = btn.getAttribute(nextState === "public" ? "data-public-title" : "data-private-title") || nextState;
+    btn.setAttribute("data-state", nextState);
+    btn.setAttribute("aria-pressed", nextState === "public" ? "true" : "false");
+    btn.setAttribute("title", nextTitle);
+    btn.setAttribute("aria-label", nextTitle);
+    const input = btn.closest(".aimo-visibility-toggle-wrap")?.querySelector("input[type='hidden']");
+    if (input) {
+      input.value = nextState;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  });
+
 });

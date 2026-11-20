@@ -1,4 +1,4 @@
-{% from "macros/buttons.html" import action_button %}
+{% from "macros/buttons.html" import action_button, visibility_toggle %}
 {% from "macros/badges.html" import pill_radio_group %}
     <section id="tab-char-info" class="tab-pane {% if active_tab == 'info' %}active{% endif %}">
       <div class="aimo-frame" style="padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
@@ -29,12 +29,8 @@
           <div style="flex: 1; min-width: 160px;">
             <label>
               {{ _("Visibility") }} *
-              <span class="field-help-btn" title="{{ _('Private = only playable in your account. Public = visible to all users in the Hub.') }}">?</span>
             </label>
-            <select name="visibility" required>
-              <option value="private" {% if form.visibility == 'private' %}selected{% endif %}>{{ _("Private") }}</option>
-              <option value="public" {% if form.visibility == 'public' %}selected{% endif %}>{{ _("Public") }}</option>
-            </select>
+            {{ visibility_toggle(value=form.visibility) }}
           </div>
         </div>
 

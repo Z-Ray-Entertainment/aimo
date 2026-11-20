@@ -32,7 +32,8 @@ The Character Designer uses a modern two-column layout consistent with the Admin
 ## 📝 1. Main Information (`📋 Hauptinformationen`)
 
 - **Name:** Character's name.
-- **Gender:** Icon-only single-select pill-badges (`♀️`, `♂️`, `⚧️`, with `Non-Binary` selected by default). Hovering over a pill-badge displays the corresponding label (`Female`, `Male`, or `Non-Binary`).
+- **Gender:** Icon-only single-select icon buttons (`♀️`, `♂️`, `⚧️`, with `Non-Binary` selected by default). Hovering over a button displays the corresponding label (`Female`, `Male`, or `Non-Binary`).
+- **Visibility:** Compact eye icon toggle button switching between **Public** (open eye icon) and **Private** (closed eye icon). Hovering over the button displays the current state label (`Public` or `Private`).
 - **Primary Portrait (Mandatory):** Main 9:16 portrait and 1:1 avatar image used for tiles and default chat presentation. Clicking either preview thumbnail opens it in the fullscreen Image Viewer.
 - **Description & AI Sparkle ✨:**
   - Define personality, speech patterns, quirks, and mannerisms.

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros/buttons.html" import action_button, new_button, tab_button, modal_close_button %}
+{% from "macros/buttons.html" import action_button, new_button, tab_button, modal_close_button, visibility_toggle %}
 {% from "macros/badges.html" import pill_badge %}
 {% from "macros/editor_header.html" import editor_header %}
 {% from "macros/collaboration.html" import collaboration_manager %}
@@ -75,12 +75,8 @@
         <div>
           <label style="font-weight: 600;">
             {{ _("Visibility") }}
-            <span class="field-help-btn" title="{{ _('Private = only usable by you. Public = linkable by other users in their characters.') }}">?</span>
           </label>
-          <select name="visibility" style="width: 220px;" {% if not is_editable %}disabled{% endif %}>
-            <option value="private" {% if lorebook.visibility != 'public' %}selected{% endif %}>🔒 {{ _("Private") }}</option>
-            <option value="public" {% if lorebook.visibility == 'public' %}selected{% endif %}>🌍 {{ _("Public") }}</option>
-          </select>
+          {{ visibility_toggle(value=lorebook.visibility, disabled=not is_editable) }}
         </div>
 
         <div>
@@ -159,12 +155,8 @@
           <div>
             <label>
               {{ _("Visibility") }}
-              <span class="field-help-btn" title="{{ _('Public: readable in overview. Private: hidden in overview, still injected via RAG in roleplay.') }}">?</span>
             </label>
-            <select name="visibility">
-              <option value="public" {% if entry.visibility != 'private' %}selected{% endif %}>🌍 {{ _("Public (Readable in overview)") }}</option>
-              <option value="private" {% if entry.visibility == 'private' %}selected{% endif %}>🔒 {{ _("Private (Secret Lore / Spoiler Protection)") }}</option>
-            </select>
+            {{ visibility_toggle(value=entry.visibility, public_title=_("Public (Readable in overview)"), private_title=_("Private (Secret Lore / Spoiler Protection)")) }}
           </div>
           <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
@@ -229,12 +221,8 @@
       <div>
         <label>
           {{ _("Visibility") }}
-          <span class="field-help-btn" title="{{ _('Public: readable in overview. Private: hidden in overview, still injected via RAG in roleplay.') }}">?</span>
         </label>
-        <select name="visibility">
-          <option value="public" selected>🌍 {{ _("Public (Readable in overview)") }}</option>
-          <option value="private">🔒 {{ _("Private (Secret Lore / Spoiler Protection)") }}</option>
-        </select>
+        {{ visibility_toggle(value="public", public_title=_("Public (Readable in overview)"), private_title=_("Private (Secret Lore / Spoiler Protection)")) }}
       </div>
       <div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">

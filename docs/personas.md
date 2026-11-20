@@ -33,7 +33,7 @@ Creating and editing happens in an overlay window:
 ## 🎨 Persona Properties
 
 - **Name:** Your character name in the roleplay, used by AI characters when addressing you.
-- **Gender:** Ensures consistent grammatical addressing via icon-only single-select pill-badges (`♀️`, `♂️`, `⚧️`, with `Non-Binary` selected by default). Hovering over a pill-badge displays the corresponding label (`Female`, `Male`, or `Non-Binary`).
+- **Gender:** Ensures consistent grammatical addressing via icon-only single-select icon buttons (`♀️`, `♂️`, `⚧️`, with `Non-Binary` selected by default). Hovering over a button displays the corresponding label (`Female`, `Male`, or `Non-Binary`).
 - **Portrait Image:** Image file (PNG, JPG, WEBP), cropped to a square, serving as your avatar in chat and as a reference image for [image generation](chat.md#multimodal-features--input-bar).
 - **Description:** Backstories, motives, behavioral traits, and personal quirks (up to 1,200 characters).
 - **Appearance:** Detailed textual description of physical traits.

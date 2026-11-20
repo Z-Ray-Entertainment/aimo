@@ -24,8 +24,8 @@
                {% if tooltip %}aria-label="{{ tooltip }}"{% endif %}
                {% if is_selected %}checked{% endif %}
                {% if required and loop.first %}required{% endif %}>
-        <span class="aimo-pill-badge aimo-pill-badge--dark aimo-pill-radio-badge">
-          {%- if opt.get("icon") %}<span class="aimo-pill-badge-icon">{{ opt.icon }}</span>{% endif -%}
+        <span class="aimo-btn {% if not opt.get('label') %}aimo-btn-icon {% endif %}aimo-pill-radio-badge">
+          {%- if opt.get("icon") %}<span class="icon-mono">{{ opt.icon }}</span>{% endif -%}
           {%- if opt.get("label") %}<span>{{ opt.label }}</span>{% endif -%}
         </span>
       </label>

@@ -1,4 +1,4 @@
-{% from "macros/buttons.html" import action_button %}
+{% from "macros/buttons.html" import action_button, visibility_toggle %}
 <div class="modal-backdrop" id="new-lorebook-modal" aria-hidden="true">
   <div class="modal-frame" style="max-width: 540px;">
     <div class="modal-header">
@@ -11,12 +11,9 @@
           <label>Name des Lorebooks *</label>
           <input type="text" name="name" required>
         </div>
-        <div style="width: 150px;">
-          <label>Sichtbarkeit</label>
-          <select name="visibility">
-            <option value="private" selected>Privat</option>
-            <option value="public">Öffentlich</option>
-          </select>
+        <div>
+          <label>{{ _("Visibility") }}</label>
+          {{ visibility_toggle(value="private") }}
         </div>
       </div>
       <div>
