@@ -754,6 +754,9 @@ export class AimoChatStream {
     if (!relWrap) return;
 
     relWrap.setAttribute("data-relationship-score", String(relationshipValue));
+    if (tierName) {
+      relWrap.setAttribute("title", tierName);
+    }
     const pct = Math.max(0, Math.min(100, ((relationshipValue + 100) / 200) * 100));
     const fill = relWrap.querySelector(".relationship-fill");
     if (fill) fill.style.width = `${pct}%`;

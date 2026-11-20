@@ -14,18 +14,13 @@
       </button>
     </form>
 
-    <div class="chat-character-portrait-name">
-      {{ character.name }}
-    </div>
-  </div>
-
-  <div class="relationship-bar-wrap aimo-frame chat-glass-panel" data-relationship-score="{{ chat_session.relationship_value }}" style="border-radius: 10px; padding: 0.65rem;">
-    <div class="relationship-header">
-      <span>{{ _('Relationship:') }} <strong id="rel-score-label">{{ relationship_tier_name }}</strong></span>
-      <span class="heart-icon">❤️</span>
-    </div>
-    <div class="relationship-track">
+    <div
+      class="chat-character-portrait-name relationship-bar-wrap"
+      data-relationship-score="{{ chat_session.relationship_value }}"
+      title="{{ relationship_tier_name }}">
       <div class="relationship-fill"></div>
+      <span class="heart-icon" aria-hidden="true">❤️</span>
+      <span class="chat-character-portrait-name-text">{{ character.name }}</span>
     </div>
   </div>
 
