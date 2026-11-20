@@ -7,7 +7,7 @@ from shared.request_parsers import RequestDataParser
 @dataclass
 class CharacterForm:
     name: str = ""
-    gender: str = "female"
+    gender: str = "non-binary"
     visibility: str = "private"
     appearance: str = ""
     description: str = ""
@@ -76,7 +76,7 @@ class CharacterForm:
 
         return cls(
             name=p.to_str(form_data, "name"),
-            gender=p.to_str(form_data, "gender", "female"),
+            gender=p.to_str(form_data, "gender", "non-binary"),
             visibility=p.to_str(form_data, "visibility", "private"),
             appearance=p.to_str(form_data, "appearance"),
             description=p.to_str(form_data, "description"),

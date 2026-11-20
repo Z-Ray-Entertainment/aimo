@@ -32,7 +32,7 @@ The Character Designer uses a modern two-column layout consistent with the Admin
 ## 📝 1. Main Information (`📋 Hauptinformationen`)
 
 - **Name:** Character's name.
-- **Gender:** `male`, `female`, or `non-binary`.
+- **Gender:** Icon-only single-select pill-badges (`♀️`, `♂️`, `⚧️`, with `Non-Binary` selected by default). Hovering over a pill-badge displays the corresponding label (`Female`, `Male`, or `Non-Binary`).
 - **Primary Portrait (Mandatory):** Main 9:16 portrait and 1:1 avatar image used for tiles and default chat presentation. Clicking either preview thumbnail opens it in the fullscreen Image Viewer.
 - **Description & AI Sparkle ✨:**
   - Define personality, speech patterns, quirks, and mannerisms.

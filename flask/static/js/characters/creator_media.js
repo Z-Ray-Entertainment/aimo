@@ -12,7 +12,6 @@ export function initDialogueManager() {
   const nameInput = document.getElementById("char-name-input");
   const sparkleModalBtn = document.getElementById("sparkle-modal-dialogue-btn");
   const descTextarea = document.getElementById("char-description-textarea");
-  const genderSelect = document.querySelector('select[name="gender"]');
 
   if (!hiddenInput || !listContainer) return;
 
@@ -231,9 +230,10 @@ export function initDialogueManager() {
     }
 
     const userLang = (document.documentElement.lang || "de").slice(0, 2).toLowerCase();
+    const genderInput = document.querySelector('input[name="gender"]:checked') || document.querySelector('select[name="gender"]');
     const payload = {
       name: getCharacterName(),
-      gender: genderSelect ? genderSelect.value : "",
+      gender: genderInput ? genderInput.value : "",
       description: desc,
       language: userLang,
       current_trigger: (triggerInput.value || "").trim(),

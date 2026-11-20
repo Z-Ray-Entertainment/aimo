@@ -1,4 +1,5 @@
 {% from "macros/buttons.html" import action_button %}
+{% from "macros/badges.html" import pill_radio_group %}
     <section id="tab-char-info" class="tab-pane {% if active_tab == 'info' %}active{% endif %}">
       <div class="aimo-frame" style="padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
         <div>
@@ -8,19 +9,24 @@
           </label>
           <input type="text" id="char-name-input" name="name" value="{{ form.name }}" required>
         </div>
-        <div style="display: flex; gap: 1rem;">
-          <div style="flex: 1;">
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 220px;">
             <label>
               {{ _("Gender") }} *
-              <span class="field-help-btn" title="{{ _('Sets gender and derived pronouns for the system prompt.') }}">?</span>
             </label>
-            <select name="gender" required>
-              <option value="female" {% if form.gender == 'female' %}selected{% endif %}>{{ _("Female") }}</option>
-              <option value="male" {% if form.gender == 'male' %}selected{% endif %}>{{ _("Male") }}</option>
-              <option value="non-binary" {% if form.gender == 'non-binary' %}selected{% endif %}>{{ _("Non-Binary") }}</option>
-            </select>
+            {{ pill_radio_group(
+                name="gender",
+                options=[
+                  {"value": "female", "title": _("Female"), "icon": "♀️"},
+                  {"value": "male", "title": _("Male"), "icon": "♂️"},
+                  {"value": "non-binary", "title": _("Non-Binary"), "icon": "⚧️"}
+                ],
+                selected=form.gender or "non-binary",
+                required=true,
+                aria_label=_("Gender")
+            ) }}
           </div>
-          <div style="flex: 1;">
+          <div style="flex: 1; min-width: 160px;">
             <label>
               {{ _("Visibility") }} *
               <span class="field-help-btn" title="{{ _('Private = only playable in your account. Public = visible to all users in the Hub.') }}">?</span>
