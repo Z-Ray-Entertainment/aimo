@@ -5,13 +5,10 @@
 <div class="backdrop-manager-grid">
   <!-- Linke Spalte: Aktuelle Vorschau & Status -->
   <div class="aimo-frame backdrop-preview-stage" style="padding: 1.5rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.75rem;">
-      <div>
-        <h2 style="color: var(--gold-accent); margin-bottom: 0.25rem;">{{ _('System-Wide Default Backdrop') }}</h2>
-        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
-          {{ _('Global atmospheric background for all pages and base fallback for roleplay chats.') }}
-        </p>
-      </div>
+    <div class="aimo-page-hint-row aimo-page-hint-row--bordered aimo-page-hint-row--flush">
+      <p class="aimo-page-hint">
+        {{ _('Global atmospheric background for all pages and base fallback for roleplay chats.') }}
+      </p>
       <div>
         {% if settings.default_backdrop_path %}
           <span class="backdrop-meta-badge" title="{{ _('Custom backdrop is active') }}">

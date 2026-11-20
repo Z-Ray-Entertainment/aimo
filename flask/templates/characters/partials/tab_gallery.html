@@ -2,10 +2,9 @@
   <section id="tab-char-gallery" class="tab-pane {% if active_tab == 'gallery' %}active{% endif %}">
     {% if character %}
       <div class="aimo-frame" style="padding: 1.5rem;">
-        <h3 style="color: var(--gold-accent); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
-          🖼️ {{ _("Unlockable 9:16 Gallery Images (Threshold -100 to +100)") }}
-          <span class="field-help-btn" title="{{ _('Exclusive portrait graphics unlocked when reaching a relationship threshold in chat.') }}">?</span>
-        </h3>
+        <p class="aimo-page-hint">
+          {{ _("Exclusive portrait graphics unlocked when reaching a relationship threshold in chat.") }}
+        </p>
 
         <div id="char-gallery-grid" class="card-grid">
           {{ new_button(_("Add 9:16 Image"), modal="add-gallery-modal") }}
@@ -31,7 +30,6 @@
     {% else %}
       <div class="aimo-frame" style="padding: 2.5rem; text-align: center;">
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🖼️</div>
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">{{ _("Gallery Images") }}</h3>
         <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
           {{ _("Please save the character's basic info first to upload and manage 9:16 gallery images.") }}
         </p>

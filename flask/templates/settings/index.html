@@ -9,9 +9,8 @@
 
 {% block settings_content %}
 <div class="aimo-frame" style="padding: 1.5rem;">
-  <div style="margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.75rem;">
-    <h1 style="font-size: 1.4rem; color: var(--gold-accent); margin-bottom: 0.2rem;">{{ _("Player Personas") }}</h1>
-    <p class="text-muted" style="font-size: 0.9rem;">{{ _("Manage your roleplay identities. The star marks your default persona.") }}</p>
+  <div class="aimo-page-hint-row aimo-page-hint-row--bordered">
+    <p class="aimo-page-hint">{{ _("Manage your roleplay identities. The star marks your default persona.") }}</p>
   </div>
 
   {{ persona_grid(g.persona_items, can_manage=has_perm('persona_manage')) }}

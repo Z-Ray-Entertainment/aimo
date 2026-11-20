@@ -9,12 +9,10 @@
 {% macro collaboration_manager(collaborator_tags, is_author=true, is_editable=true, form_id=none, input_name="collaborator_creator_tags") %}
 <div class="collaboration-manager-root aimo-frame" data-form-id="{{ form_id or '' }}" style="padding: 1.5rem;">
 
-  <!-- Header & Explanation -->
-  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.85rem;">
-    <h3 style="color: var(--gold-accent); margin: 0; font-size: 1.15rem; display: flex; align-items: center; gap: 0.5rem;">
-      <span class="icon-mono">👥</span> Kollaboration &amp; Berechtigungen
-      <span class="field-help-btn" title="Kollaboratoren erhalten vollen Bearbeitungszugriff auf diese Kreation (Inhalte, Sprites, Orte &amp; Events), können sie jedoch niemals löschen oder Kollaboratoren verwalten.">?</span>
-    </h3>
+  <div class="aimo-page-hint-row aimo-page-hint-row--bordered">
+    <p class="aimo-page-hint">
+      {{ _("Collaborators receive full edit access to this creation (content, sprites, locations & events), but can never delete it or manage collaborators.") }}
+    </p>
     {% if is_author and form_id %}
       {{ action_button(_("Save collaborators"), type="submit", form=form_id, icon="💾", extra_class="collab-save-btn", title=_("Saves all changes in the form")) }}
     {% endif %}
@@ -32,7 +30,7 @@
       </div>
     </div>
   {% else %}
-    <p style="color: var(--text-muted); font-size: 0.84rem; margin-bottom: 1rem;">
+    <p class="aimo-page-hint">
       Füge den persönlichen <strong>Creator-Tag (UUID4)</strong> befreundeter Autoren hinzu, um ihnen Schreibrechte zu gewähren.
     </p>
   {% endif %}

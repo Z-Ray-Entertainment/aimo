@@ -4,13 +4,10 @@
 
 {% block admin_content %}
 <div class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem;">
-  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.75rem;">
-    <div>
-      <h2 style="color: var(--gold-accent); margin-bottom: 0.25rem;">{{ _("Content Translations") }}</h2>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
-        {{ _("Background translation status for characters, lorebooks, worlds, locations, and events.") }}
-      </p>
-    </div>
+  <div class="aimo-page-hint-row aimo-page-hint-row--bordered aimo-page-hint-row--flush">
+    <p class="aimo-page-hint">
+      {{ _("Background translation status for characters, lorebooks, worlds, locations, and events.") }}
+    </p>
     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
       {{ action_button(_("Start Translation Sync"), icon="🌐", id="admin-trans-sync-btn") }}
       {{ action_button(_("Cancel"), icon="⏹️", variant="danger", id="admin-trans-cancel-btn", disabled=true) }}

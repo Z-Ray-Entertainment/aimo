@@ -2,10 +2,9 @@
   <section id="tab-char-sprites" class="tab-pane {% if active_tab == 'sprites' %}active{% endif %}">
     {% if character %}
       <div class="aimo-frame" style="padding: 1.5rem;">
-        <h3 style="color: var(--gold-accent); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
-          🎭 {{ _("Emotional Sprites (28 Emotions with Variant Stack View)") }}
-          <span class="field-help-btn" title="{{ _('Image variants for 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait.') }}">?</span>
-        </h3>
+        <p class="aimo-page-hint">
+          {{ _("Image variants for 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait.") }}
+        </p>
 
         <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));">
           {% for emotion in emotions %}
@@ -82,7 +81,6 @@
     {% else %}
       <div class="aimo-frame" style="padding: 2.5rem; text-align: center;">
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎭</div>
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">{{ _("Emotional Sprites") }}</h3>
         <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
           {{ _("Please save the character's basic info first to upload sprites for the 28 emotions.") }}
         </p>

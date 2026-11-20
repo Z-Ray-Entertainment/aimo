@@ -6,10 +6,6 @@
 {% set is_google = (settings.llm_backend == 'google_ai') %}
 <div class="aimo-split-stage-grid">
   <form method="POST" action="{{ url_for('admin.services_config') }}" class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
-    <h2 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
-      {{ _('Service Endpoints & Model Tasks') }}
-    </h2>
-
     <div>
       <h3 style="color: var(--gold-accent); font-size: 1rem; margin-bottom: 0.5rem;">{{ _('1. Active AI Backend (Exclusive)') }}</h3>
       <div class="backend-notice-banner" style="margin-bottom: 0.85rem;">

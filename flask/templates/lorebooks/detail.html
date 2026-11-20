@@ -56,10 +56,6 @@
       <input type="hidden" name="return_to" value="{{ get_safe_back_url(url_for('overview.index', tab='lorebooks')) }}">
       <input type="hidden" name="active_tab" value="{{ active_tab }}">
       <div class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; max-width: 800px;">
-        <h3 style="color: var(--gold-accent); margin-top: 0; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-          <span class="icon-mono">📋</span> {{ _("Basic Settings") }}
-        </h3>
-
         <div>
           <label style="font-weight: 600;">
             {{ _("Lorebook Name") }} *

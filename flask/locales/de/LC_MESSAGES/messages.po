@@ -2874,3 +2874,7 @@ msgstr "1:1 Welt-Cover festlegen"
 msgid "1:1 Cover"
 msgstr "1:1 Cover"
 
+#: flask/templates/macros/collaboration.html:14
+msgid "Collaborators receive full edit access to this creation (content, sprites, locations & events), but can never delete it or manage collaborators."
+msgstr "Kollaboratoren erhalten vollen Bearbeitungszugriff auf diese Kreation (Inhalte, Sprites, Orte & Events), können sie jedoch niemals löschen oder Kollaboratoren verwalten."
+
