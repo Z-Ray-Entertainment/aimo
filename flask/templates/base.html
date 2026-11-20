@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
   <title>{% block title %}AIMO — Immersive Roleplay Hub{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
   {% block extra_head %}{% endblock %}
 </head>
 <body class="has-system-backdrop{% block body_class %}{% endblock %}" data-user-language="{{ ui_language | default('en') }}" style="--system-backdrop-url: url('{%- block backdrop_image %}{{ system_backdrop_url }}{% endblock -%}');">
@@ -34,7 +35,6 @@
   <!-- On-Site Toast Container (für Hintergrund-Antworten der KI) -->
   <div id="aimo-toast-container" class="toast-container" aria-live="polite"></div>
 
-  {% include "macros/persona_manager.html" %}
   {{ image_viewer_overlay() }}
 
   <script>
@@ -52,7 +52,6 @@
   </script>
   <script src="{{ url_for('static', filename='js/modals.js') }}"></script>
   <script src="{{ url_for('static', filename='js/image_viewer.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/image_cropper.js') }}"></script>
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   {% block extra_scripts %}{% endblock %}
 </body>

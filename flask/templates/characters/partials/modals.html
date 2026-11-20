@@ -1,0 +1,113 @@
+{% from "macros/buttons.html" import action_button, new_button, modal_close_button %}
+{% from "macros/image_cropper.html" import image_cropper_modal %}
+  {% if character %}
+    <div class="modal-backdrop" id="add-gallery-modal" aria-hidden="true">
+      <div class="modal-frame" style="max-width: 440px;">
+        <div class="modal-header">
+          <h3 style="color: var(--gold-accent);">{{ _("Upload 9:16 Gallery Image") }}</h3>
+          {{ modal_close_button("add-gallery-modal") }}
+        </div>
+        <form method="POST" action="{{ url_for('characters.add_gallery_image', character_id=character.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
+          <div>
+            <label>
+              {{ _("Image File (9:16 Portrait)") }} *
+              <span class="field-help-btn" title="{{ _('Exclusive portrait image for this character.') }}">?</span>
+            </label>
+            <input type="file" name="gallery_image" accept=".png,.jpg,.jpeg,.webp" required>
+          </div>
+          <div>
+            <label>
+              {{ _("Unlock Relationship Level") }} *
+              <span class="field-help-btn" title="{{ _('Required relationship level to unlock this image in chat.') }}">?</span>
+            </label>
+            <select name="unlock_threshold" required>
+              {% for tier in relationship_tiers %}
+                <option value="{{ tier.level }}" {% if tier.level == 20 %}selected{% endif %}>
+                  {{ tier.name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div style="text-align: right; display: flex; justify-content: flex-end; gap: 0.5rem;">
+            {{ action_button(_("Cancel"), modal_close="add-gallery-modal") }}
+            {{ action_button(_("Upload"), type="submit", variant="primary") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- MODAL: Gesprächsstil hinzufügen (Overlay Frame) -->
+  <div class="modal-backdrop" id="add-dialogue-modal" aria-hidden="true">
+    <div class="modal-frame" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 style="color: var(--gold-accent);" id="dialogue-modal-title"><span class="icon-mono">💬</span> {{ _("Add New Dialogue Style") }}</h3>
+        {{ modal_close_button("add-dialogue-modal") }}
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 1rem; padding: 0.5rem 0;">
+        <div>
+          <label style="display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.35rem;">
+            <span class="role-badge user-badge modal-badge-user" title="{{ '{{user}}' }}">{{ g.default_persona.name if g.default_persona else _('You') }}</span>
+            <span>{{ _("Trigger (Player Input)") }} *</span>
+          </label>
+          <textarea id="modal-dialogue-trigger" rows="3" placeholder="{{ _('e.g. Hello! What are you doing out here so late?') }}" style="width: 100%;"></textarea>
+        </div>
+        <div>
+          <label style="display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.35rem;">
+            <span class="role-badge char-badge modal-badge-char" title="{{ '{{char}}' }}">{{ character.name if character else (form.name or _('Character')) }}</span>
+            <span>{{ _("Response (Character Reply)") }} *</span>
+          </label>
+          <textarea id="modal-dialogue-response" rows="3" placeholder="{{ _('e.g. Greetings, wanderer. The woods hold secrets at night...') }}" style="width: 100%;"></textarea>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.65rem; margin-top: 1rem; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem; flex-wrap: wrap;">
+        <div>
+          {{ action_button(_("Fill with AI"), id="sparkle-modal-dialogue-btn", icon="✨", extra_class="btn-sparkle", title=_("Generates trigger and response based on character description")) }}
+        </div>
+        <div style="display: flex; gap: 0.65rem;">
+          {{ action_button(_("Cancel"), icon="✕", modal_close="add-dialogue-modal") }}
+          {{ action_button(_("Add"), icon="➕", variant="primary", id="confirm-add-dialogue-btn") }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Lorebook verknüpfen (Overlay Frame mit Suchfilter) -->
+  <div class="modal-backdrop" id="add-lorebook-modal" aria-hidden="true">
+    <div class="modal-frame" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 style="color: var(--gold-accent);"><span class="icon-mono">📖</span> {{ _("Link Lorebook") }}</h3>
+        {{ modal_close_button("add-lorebook-modal") }}
+      </div>
+      <div style="padding: 0.5rem 0 1rem 0;">
+        <input type="text" id="lorebook-filter-input" placeholder="{{ _('Filter by lorebook name...') }}" class="search-input" style="width: 100%; margin-bottom: 0.85rem;" autocomplete="off">
+        <div id="lorebook-picker-list" class="lorebook-picker-list">
+          {% for lb in lorebooks %}
+            <div class="lorebook-picker-item {% if lb.id in form.linked_lorebook_ids %}already-added{% endif %}" data-id="{{ lb.id }}" data-name="{{ lb.name|lower }}" data-fullname="{{ lb.name }}" data-desc="{{ lb.description or '' }}">
+              <div>
+                <div style="font-weight: 700; color: var(--gold-accent);">
+                  {{ lb.name }}
+                  <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: normal; margin-left: 0.4rem;">({{ lb.visibility }})</span>
+                </div>
+                {% if lb.description %}
+                  <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem;">{{ lb.description }}</div>
+                {% endif %}
+              </div>
+              <span class="picker-status-badge" style="font-size: 0.8rem; color: var(--text-muted);">
+                {% if lb.id in form.linked_lorebook_ids %}✓ {{ _("Linked") }}{% else %}+ {{ _("Add") }}{% endif %}
+              </span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
+        {{ action_button(_("Cancel"), modal_close="add-lorebook-modal") }}
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Dual-Crop Profile (9:16 Porträt & 1:1 Avatar) via Reusable Macro -->
+  {{ image_cropper_modal("portrait-crop-modal", title=_("Set Image Crops"), targets=[
+    {"id": "portrait", "label": _("Portrait"), "short_label": _("Portrait"), "icon": "📱", "ratio": 0.5625, "preview_width": 72, "preview_height": 128, "accent_color": "var(--gold-accent)"},
+    {"id": "avatar", "label": _("Avatar"), "short_label": _("Avatar"), "icon": "👤", "ratio": 1.0, "preview_width": 64, "preview_height": 64, "accent_color": "#64B5F6"}
+  ]) }}

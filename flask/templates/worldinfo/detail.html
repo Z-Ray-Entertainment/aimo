@@ -7,6 +7,12 @@
 {% from "macros/event_manager.html" import event_editor %}
 {% block title %}AIMO — WorldInfo: {{ worldinfo.name }}{% endblock %}
 
+{% block extra_head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/cards.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/i18n_editor.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/image_cropper.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="aimo-sidebar-layout" data-tab-group>
   <!-- Vertikale Seitenleiste links -->
@@ -454,6 +460,7 @@
 {% endblock %}
 
 {% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/image_cropper.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/i18n_editor.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/worldinfo_detail.js') }}" defer></script>
 {% endblock %}

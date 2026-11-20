@@ -4,6 +4,10 @@
 {% from "macros/backend_selector.html" import api_key_field, google_ai_steps_guide, image_gen_options, llm_backend_cards, search_options %}
 {% block title %}AIMO — Erststart-Einrichtung (First-Boot Wizard){% endblock %}
 
+{% block extra_head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin_setup.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="aimo-frame" style="max-width: 720px; margin: 2rem auto; padding: 2rem;">
   <h1 style="color: var(--gold-accent); margin-bottom: 0.45rem;">⚔️ AIMO First-Boot Wizard</h1>

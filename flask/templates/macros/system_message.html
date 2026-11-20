@@ -28,7 +28,7 @@
           </span>
         </div>
         <div class="chat-system-message-actions">
-          <button type="button" onclick="deleteMessagesFrom({{ msg.message_idx }})" class="system-msg-action-btn" title="{{ _('Delete from here') }}">
+          <button type="button" data-action="delete-from" data-msg-idx="{{ msg.message_idx }}" class="system-msg-action-btn" title="{{ _('Delete from here') }}">
             <span class="icon-mono">🗑️</span>
           </button>
         </div>

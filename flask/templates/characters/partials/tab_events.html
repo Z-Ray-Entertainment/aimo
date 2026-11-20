@@ -1,0 +1,43 @@
+{% from "macros/event_manager.html" import event_editor %}
+  <section id="tab-char-events" class="tab-pane {% if active_tab == 'events' %}active{% endif %}">
+    {% if character %}
+      <div class="aimo-frame" style="padding: 1.5rem; margin-bottom: 1.25rem;">
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
+          🎲 {{ _("Character-Specific Random Events") }}
+          <span class="field-help-btn" title="{{ _('Dynamic events that can trigger exclusively in chats with this character.') }}">?</span>
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
+          {{ _("These events are available exclusively in sessions with") }} <strong>{{ character.name }}</strong> {{ _("in the shared random event pool.") }}
+        </p>
+      </div>
+      {{ event_editor(
+          events=events,
+          is_editable=is_editable,
+          add_url=url_for('characters.add_event', character_id=character.id),
+          edit_endpoint='characters.edit_event',
+          delete_endpoint='characters.delete_event',
+          entity_id_param='character_id',
+          entity_id=character.id,
+          loc_map=loc_map,
+          ev_translations=ev_translations,
+          scope_type='character',
+          locations=event_locations,
+          modal_prefix='char',
+          relationship_tiers=relationship_tiers,
+          tier_names_map=gallery_threshold_names,
+          ev_display=ev_display,
+          loc_display=loc_display,
+          origin_language=(character.origin_language if character else ui_language)
+      ) }}
+    {% else %}
+      <div class="aimo-frame" style="padding: 2.5rem; text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎲</div>
+        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">{{ _("Random Events") }}</h3>
+        <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
+          {{ _("Please save the character's basic info first to create character-specific random events.") }}
+        </p>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- MODAL: 9:16 Galeriebild hinzufügen -->
