@@ -42,6 +42,7 @@ def list_worldinfo():
                 "icon": wi.icon,
                 "visibility": wi.visibility,
                 "cover_image_path": wi.cover_image_path,
+                "backdrop_image_path": wi.backdrop_image_path,
                 "lorebook_id": wi.lorebook_id,
                 "locations": [
                     {
@@ -88,6 +89,7 @@ def create_worldinfo():
             icon=data.get("icon", "🌐"),
             visibility=data.get("visibility", "private"),
             cover_image_path=data.get("cover_image_path"),
+            backdrop_image_path=data.get("backdrop_image_path"),
             lorebook_id=lb_id,
         )
         saved = repo.create(wi)
@@ -98,6 +100,7 @@ def create_worldinfo():
                 "icon": saved.icon,
                 "visibility": saved.visibility,
                 "cover_image_path": saved.cover_image_path,
+                "backdrop_image_path": saved.backdrop_image_path,
                 "lorebook_id": saved.lorebook_id,
             }
         ), 201
@@ -224,3 +227,43 @@ def duplicate_worldinfo(worldinfo_id: int):
             return jsonify({"error": "This world is not yet available in your language."}), 403
     copied = repo.duplicate(worldinfo_id, user.id)
     return jsonify({"id": copied.id, "name": copied.name}), 201
+
+
+@api_worldinfo_bp.route("/<int:worldinfo_id>/backdrop", methods=["POST"])
+@require_permission(FunctionPermission.WORLDINFO_EDIT)
+def update_worldinfo_backdrop(worldinfo_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = WorldInfoRepository()
+    wi = repo.get_by_id(worldinfo_id)
+    if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        return jsonify({"error": "WorldInfo not found."}), 404
+
+    service = WorldInfoService()
+    storage = FileStorage()
+
+    file_obj = request.files.get("backdrop")
+    if file_obj and file_obj.filename:
+        try:
+            rel_path = storage.save_background(file_obj.stream, file_obj.filename)
+            service.update_worldinfo(wi, name=wi.name, backdrop_image_path=rel_path)
+            saved = repo.update(wi)
+            return jsonify({"backdrop_image_path": saved.backdrop_image_path, "has_backdrop": True})
+        except AimoError as exc:
+            return jsonify({"error": str(exc)}), 400
+
+    data = request.get_json(silent=True) or request.form.to_dict()
+    if data.get("clear") is True or str(data.get("clear", "")).lower() in ("1", "true", "yes"):
+        service.update_worldinfo(wi, name=wi.name, backdrop_image_path=None)
+        saved = repo.update(wi)
+        return jsonify({"backdrop_image_path": saved.backdrop_image_path, "has_backdrop": False})
+
+    if "backdrop_path" in data:
+        new_path = str(data.get("backdrop_path") or "").strip() or None
+        service.update_worldinfo(wi, name=wi.name, backdrop_image_path=new_path)
+        saved = repo.update(wi)
+        return jsonify(
+            {"backdrop_image_path": saved.backdrop_image_path, "has_backdrop": bool(saved.backdrop_image_path)}
+        )
+
+    return jsonify({"error": "Provide a 'backdrop' file, 'backdrop_path', or 'clear: true'."}), 400

@@ -11,6 +11,7 @@ class WorldInfo:
     visibility: str = "private"
     origin_language: str = "en"
     cover_image_path: str | None = None
+    backdrop_image_path: str | None = None
     lorebook_id: int | None = None
     collaborator_creator_tags: list[str] = field(default_factory=list)
     is_proper_noun: bool = False

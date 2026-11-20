@@ -500,6 +500,15 @@ def backdrop_config():
     existing_locations_with_bg = []
     seen_paths = set()
     for wi in worldinfo_repo.list_all():
+        if wi.backdrop_image_path and wi.backdrop_image_path not in seen_paths:
+            seen_paths.add(wi.backdrop_image_path)
+            existing_locations_with_bg.append(
+                {
+                    "worldinfo_name": wi.name,
+                    "location_name": tr(_("World Backdrop")),
+                    "path": wi.backdrop_image_path,
+                }
+            )
         if wi.id is not None:
             for loc in worldinfo_repo.list_locations(wi.id):
                 if loc.background_image_path and loc.background_image_path not in seen_paths:

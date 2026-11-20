@@ -36,6 +36,10 @@ msgstr "পরিষেবা সেটিংস এবং মডেল সফ�
 msgid "System-wide default backdrop reset (default theme active)."
 msgstr "সিস্টেম-ব্যাপী ডিফল্ট ব্যাকড্রপ রিসেট করা হয়েছে (ডিফল্ট থিম সক্রিয়)।"
 
+#: flask/application/admin/views.py:508
+msgid "World Backdrop"
+msgstr ""
+
 #: flask/application/admin/views.py:487
 msgid "Please select an image file (PNG, JPG, WEBP) to upload."
 msgstr "আপলোড করার জন্য অনুগ্রহ করে একটি ছবির ফাইল (PNG, JPG, WEBP) নির্বাচন করুন।"
@@ -88,11 +92,11 @@ msgstr "চরিত্র পাওয়া যায়নি বা অন�
 msgid "Invalid or inaccessible location selected."
 msgstr "অবৈধ বা অগম্য স্থান নির্বাচিত হয়েছে।"
 
-#: flask/application/characters/views.py:564 flask/application/worldinfo/views.py:383
+#: flask/application/characters/views.py:564 flask/application/worldinfo/views.py:391
 msgid "Event '%(title)s' added."
 msgstr "ঘটনা '%(title)s' যোগ করা হয়েছে।"
 
-#: flask/application/characters/views.py:631 flask/application/worldinfo/views.py:440
+#: flask/application/characters/views.py:631 flask/application/worldinfo/views.py:448
 msgid "Event deleted."
 msgstr "ঘটনা মুছে ফেলা হয়েছে।"
 
@@ -112,7 +116,7 @@ msgstr "৯:১৬ গ্যালারি ছবি যোগ করা হয
 msgid "Sprite '%(name)s' uploaded."
 msgstr "স্প্রাইট '%(name)s' আপলোড করা হয়েছে।"
 
-#: flask/application/characters/views.py:610 flask/application/worldinfo/views.py:422
+#: flask/application/characters/views.py:610 flask/application/worldinfo/views.py:430
 msgid "Event updated."
 msgstr "ঘটনা আপডেট করা হয়েছে।"
 
@@ -164,7 +168,7 @@ msgstr "পুনরায় গণনা ত্রুটি: %(error)s"
 msgid "Invalid WorldInfo."
 msgstr "অবৈধ WorldInfo।"
 
-#: flask/application/chat/views.py:242 flask/application/chat/views.py:560 flask/application/worldinfo/views.py:120 flask/application/worldinfo/views.py:228
+#: flask/application/chat/views.py:242 flask/application/chat/views.py:560 flask/application/worldinfo/views.py:128 flask/application/worldinfo/views.py:236
 msgid "This world is not yet available in your language."
 msgstr "এই বিশ্বটি এখনও আপনার ভাষায় উপলব্ধ নয়।"
 
@@ -192,7 +196,7 @@ msgstr "চিন্তা নিষ্ক্রিয় করা হয়ে
 msgid "Chat title updated."
 msgstr "চ্যাট শিরোনাম আপডেট করা হয়েছে।"
 
-#: flask/application/lorebooks/views.py:135 flask/application/worldinfo/views.py:231
+#: flask/application/lorebooks/views.py:135 flask/application/worldinfo/views.py:239
 msgid "Copy '%(name)s' created successfully."
 msgstr "অনুলিপি '%(name)s' সফলভাবে তৈরি হয়েছে।"
 
@@ -280,7 +284,7 @@ msgstr "অ্যাকাউন্ট সেটিংস সংরক্ষি�
 msgid "Character"
 msgstr "চরিত্র"
 
-#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:404
+#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:405
 msgid "World"
 msgstr "বিশ্ব"
 
@@ -328,11 +332,11 @@ msgstr "প্রাথমিক অ্যাডমিন এবং AI ব্য
 msgid "Cloud AI mode: automatic background translation is disabled. Use the greyed-out flag pill-badges to translate into other registered user languages."
 msgstr "ক্লাউড AI মোড: স্বয়ংক্রিয় ব্যাকগ্রাউন্ড অনুবাদ নিষ্ক্রিয়। অন্যান্য নিবন্ধিত ব্যবহারকারীর ভাষায় অনুবাদ করতে ধূসর পতাকা ব্যাজ ব্যবহার করুন।"
 
-#: flask/application/worldinfo/views.py:246
+#: flask/application/worldinfo/views.py:254
 msgid "WorldInfo deleted."
 msgstr "WorldInfo মুছে ফেলা হয়েছে।"
 
-#: flask/application/worldinfo/views.py:348
+#: flask/application/worldinfo/views.py:356
 msgid "Location deleted."
 msgstr "স্থান মুছে ফেলা হয়েছে।"
 
@@ -340,19 +344,19 @@ msgstr "স্থান মুছে ফেলা হয়েছে।"
 msgid "WorldInfo '%(name)s' created."
 msgstr "WorldInfo '%(name)s' তৈরি হয়েছে।"
 
-#: flask/application/worldinfo/views.py:54 flask/application/worldinfo/views.py:220
+#: flask/application/worldinfo/views.py:54 flask/application/worldinfo/views.py:228
 msgid "WorldInfo not found."
 msgstr "WorldInfo পাওয়া যায়নি।"
 
-#: flask/application/worldinfo/views.py:243
+#: flask/application/worldinfo/views.py:251
 msgid "WorldInfo not found or no permission to delete."
 msgstr "WorldInfo পাওয়া যায়নি বা মুছে ফেলার অনুমতি নেই।"
 
-#: flask/application/worldinfo/views.py:258 flask/application/worldinfo/views.py:300 flask/application/worldinfo/views.py:344 flask/application/worldinfo/views.py:360 flask/application/worldinfo/views.py:397
+#: flask/application/worldinfo/views.py:266 flask/application/worldinfo/views.py:308 flask/application/worldinfo/views.py:352 flask/application/worldinfo/views.py:368 flask/application/worldinfo/views.py:405
 msgid "WorldInfo not found or no permission."
 msgstr "WorldInfo পাওয়া যায়নি বা অনুমতি নেই।"
 
-#: flask/application/worldinfo/views.py:285
+#: flask/application/worldinfo/views.py:293
 msgid "Location '%(name)s' created."
 msgstr "স্থান '%(name)s' তৈরি হয়েছে।"
 
@@ -360,11 +364,11 @@ msgstr "স্থান '%(name)s' তৈরি হয়েছে।"
 msgid "Access denied: You can only edit your own WorldInfos or creations shared with you."
 msgstr "প্রবেশাধিকার প্রত্যাখ্যাত: আপনি কেবল আপনার নিজের WorldInfo বা আপনার সাথে শেয়ার করা সৃষ্টি সম্পাদনা করতে পারেন।"
 
-#: flask/application/worldinfo/views.py:90
+#: flask/application/worldinfo/views.py:98
 msgid "WorldInfo saved."
 msgstr "WorldInfo সংরক্ষিত হয়েছে।"
 
-#: flask/application/worldinfo/views.py:329
+#: flask/application/worldinfo/views.py:337
 msgid "Location updated."
 msgstr "স্থান আপডেট করা হয়েছে।"
 
@@ -604,7 +608,7 @@ msgstr "মুছে ফেলা লক করা"
 msgid "Delete"
 msgstr "মুছুন"
 
-#: flask/i18n.py:125 flask/templates/chat/session.html:971
+#: flask/i18n.py:125 flask/templates/chat/session.html:972
 msgid "Translating..."
 msgstr "অনুবাদ হচ্ছে..."
 
@@ -689,8 +693,8 @@ msgid "Rule: Priority in Chat"
 msgstr "নিয়ম: চ্যাটে অগ্রাধিকার"
 
 #: flask/templates/admin/backdrop.html:50
-msgid "This default backdrop forms the foundational background. In chat, it is only overridden when the current location has its own background image. If a location has no image or roleplay switches to a neutral setting, this system default automatically applies again."
-msgstr "এই ডিফল্ট ব্যাকড্রপটি মূল ভিত্তি তৈরি করে। চ্যাটে এটি কেবল তখনই পরিবর্তিত হয় যখন বর্তমান স্থানের নিজস্ব পটভূমির ছবি থাকে। কোনো স্থানের ছবি না থাকলে বা রোলপ্লে নিরপেক্ষ পরিবেশে গেলে এই সিস্টেম ডিফল্ট স্বয়ংক্রিয়ভাবে আবার প্রযোজ্য হয়।"
+msgid "This default backdrop forms the foundational background (Priority: System → World → Location). In chat, it is overridden by the active WorldInfo backdrop if set, and further overridden when the current location has its own background image."
+msgstr ""
 
 #: flask/templates/admin/backdrop.html:56
 msgid "Do you really want to remove the custom default backdrop and reset to the default theme?"
@@ -1128,7 +1132,7 @@ msgstr "প্রিসেট:"
 msgid "Individual functional permissions (FunctionPermission):"
 msgstr "পৃথক কার্যকরী অনুমতি (FunctionPermission):"
 
-#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:279 flask/templates/chat/session.html:844 flask/templates/lorebooks/detail.html:96
+#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:280 flask/templates/chat/session.html:845 flask/templates/lorebooks/detail.html:96
 msgid "Save"
 msgstr "সংরক্ষণ"
 
@@ -1264,11 +1268,11 @@ msgstr "দৃশ্যমানতা"
 msgid "Private = only playable in your account. Public = visible to all users in the Hub."
 msgstr "ব্যক্তিগত = শুধুমাত্র আপনার অ্যাকাউন্টে খেলার যোগ্য। সর্বজনীন = হাবে সকল ব্যবহারকারীর কাছে দৃশ্যমান।"
 
-#: flask/templates/characters/creator.html:98 flask/templates/lorebooks/detail.html:76 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:108 flask/templates/worldinfo/detail.html:110
+#: flask/templates/characters/creator.html:98 flask/templates/lorebooks/detail.html:76 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:108 flask/templates/worldinfo/detail.html:154
 msgid "Private"
 msgstr "ব্যক্তিগত"
 
-#: flask/templates/characters/creator.html:99 flask/templates/lorebooks/detail.html:77 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:106 flask/templates/worldinfo/detail.html:111
+#: flask/templates/characters/creator.html:99 flask/templates/lorebooks/detail.html:77 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:106 flask/templates/worldinfo/detail.html:155
 msgid "Public"
 msgstr "সর্বজনীন"
 
@@ -1658,7 +1662,7 @@ msgstr "এর সাথে নতুন চ্যাট"
 msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
 msgstr "এই সেশনের জন্য আপনার খেলোয়াড়ের পার্সোনা, সক্রিয় WorldInfo এবং লোরবুক কনফিগার করুন।"
 
-#: flask/templates/chat/select_worldinfo.html:18 flask/templates/chat/session.html:31 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
+#: flask/templates/chat/select_worldinfo.html:18 flask/templates/chat/session.html:32 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
 msgid "Settings"
 msgstr "সেটিংস"
 
@@ -1714,263 +1718,263 @@ msgstr "সামঞ্জস্যপূর্ণ মডেলের জন্�
 msgid "Start Adventure"
 msgstr "অভিযান শুরু করুন"
 
-#: flask/templates/chat/session.html:36
+#: flask/templates/chat/session.html:37
 msgid "Info"
 msgstr "তথ্য"
 
-#: flask/templates/chat/session.html:36
+#: flask/templates/chat/session.html:37
 msgid "Sidebar / Character Info"
 msgstr "সাইডবার / চরিত্রের তথ্য"
 
-#: flask/templates/chat/session.html:42 flask/templates/chat/session.html:67 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
+#: flask/templates/chat/session.html:43 flask/templates/chat/session.html:68 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
 msgid "Location:"
 msgstr "অবস্থান:"
 
-#: flask/templates/chat/session.html:44
+#: flask/templates/chat/session.html:45
 msgid "World:"
 msgstr "জগৎ:"
 
-#: flask/templates/chat/session.html:46
+#: flask/templates/chat/session.html:47
 msgid "Neutral Setting"
 msgstr "নিরপেক্ষ পরিবেশ"
 
-#: flask/templates/chat/session.html:83
+#: flask/templates/chat/session.html:84
 msgid "View LLM prompt (Admin)"
 msgstr "LLM প্রম্পট দেখুন (অ্যাডমিন)"
 
-#: flask/templates/chat/session.html:85 flask/templates/chat/session.html:111
+#: flask/templates/chat/session.html:86 flask/templates/chat/session.html:112
 msgid "Translate message (on-demand)"
 msgstr "বার্তা অনুবাদ করুন (চাহিদা অনুযায়ী)"
 
-#: flask/templates/chat/session.html:86 flask/templates/chat/session.html:112
+#: flask/templates/chat/session.html:87 flask/templates/chat/session.html:113
 msgid "Edit message"
 msgstr "বার্তা সম্পাদনা করুন"
 
-#: flask/templates/chat/session.html:87 flask/templates/chat/session.html:113
+#: flask/templates/chat/session.html:88 flask/templates/chat/session.html:114
 msgid "Duplicate chat from here (Fork)"
 msgstr "এখান থেকে চ্যাট ডুপ্লিকেট করুন (ফর্ক)"
 
-#: flask/templates/chat/session.html:89 flask/templates/chat/session.html:114 flask/templates/macros/system_message.html:27
+#: flask/templates/chat/session.html:90 flask/templates/chat/session.html:115 flask/templates/macros/system_message.html:27
 msgid "Delete from here"
 msgstr "এখান থেকে মুছুন"
 
-#: flask/templates/chat/session.html:121
+#: flask/templates/chat/session.html:122
 msgid "Show/hide ALT text (image description)"
 msgstr "ALT পাঠ্য (ছবির বিবরণ) দেখান/লুকান"
 
-#: flask/templates/chat/session.html:142
+#: flask/templates/chat/session.html:143
 msgid "AI system notice"
 msgstr "AI সিস্টেম বিজ্ঞপ্তি"
 
-#: flask/templates/chat/session.html:144
+#: flask/templates/chat/session.html:145
 msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
 msgstr "এটি একটি AI চ্যাটবট। উত্তরগুলি স্থানীয় বা বাহ্যিক ভাষা মডেল দ্বারা স্বয়ংক্রিয়ভাবে তৈরি হয় এবং অসম্পূর্ণ বা ভুল হতে পারে।"
 
-#: flask/templates/chat/session.html:151
+#: flask/templates/chat/session.html:152
 msgid "Chat options & sessions"
 msgstr "চ্যাট বিকল্প ও সেশন"
 
-#: flask/templates/chat/session.html:151
+#: flask/templates/chat/session.html:152
 msgid "Chat options"
 msgstr "চ্যাট বিকল্প"
 
-#: flask/templates/chat/session.html:157
+#: flask/templates/chat/session.html:158
 msgid "Sessions"
 msgstr "সেশন"
 
-#: flask/templates/chat/session.html:158
+#: flask/templates/chat/session.html:159
 msgid "Start new chat"
 msgstr "নতুন চ্যাট শুরু করুন"
 
-#: flask/templates/chat/session.html:160
+#: flask/templates/chat/session.html:161
 msgid "Delete chat"
 msgstr "চ্যাট মুছুন"
 
-#: flask/templates/chat/session.html:160
+#: flask/templates/chat/session.html:161
 msgid "Do you really want to permanently delete this chat?"
 msgstr "আপনি কি সত্যিই এই চ্যাটটি স্থায়ীভাবে মুছে ফেলতে চান?"
 
-#: flask/templates/chat/session.html:164
+#: flask/templates/chat/session.html:165
 msgid "Attach image (Vision ALT analysis)"
 msgstr "ছবি সংযুক্ত করুন (Vision ALT বিশ্লেষণ)"
 
-#: flask/templates/chat/session.html:172
+#: flask/templates/chat/session.html:173
 msgid "Generate scene image"
 msgstr "দৃশ্যের ছবি তৈরি করুন"
 
-#: flask/templates/chat/session.html:179
+#: flask/templates/chat/session.html:180
 msgid "Cancel image generation"
 msgstr "ছবি তৈরি বাতিল করুন"
 
-#: flask/templates/chat/session.html:190
+#: flask/templates/chat/session.html:191
 msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
 msgstr "আপনার উত্তর বা কাজ লিখুন... (পাঠাতে Enter, নতুন লাইনের জন্য Shift+Enter)"
 
-#: flask/templates/chat/session.html:196
+#: flask/templates/chat/session.html:197
 msgid "Regenerate response – replaces the last AI reply or retries generation"
 msgstr "উত্তর পুনরায় তৈরি করুন – শেষ AI উত্তর প্রতিস্থাপন করে বা পুনরায় চেষ্টা করে"
 
-#: flask/templates/chat/session.html:203
+#: flask/templates/chat/session.html:204
 msgid "Cancel response generation"
 msgstr "উত্তর তৈরি বাতিল করুন"
 
-#: flask/templates/chat/session.html:209
+#: flask/templates/chat/session.html:210
 msgid "Send message (Enter)"
 msgstr "বার্তা পাঠান (Enter)"
 
-#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:828 flask/templates/lorebooks/detail.html:167
+#: flask/templates/chat/session.html:268 flask/templates/chat/session.html:829 flask/templates/lorebooks/detail.html:167
 msgid "Tags (Comma-separated for vectorless RAG)"
 msgstr "ট্যাগ (ভেক্টরবিহীন RAG-এর জন্য কমা দ্বারা পৃথক)"
 
-#: flask/templates/chat/session.html:271 flask/templates/chat/session.html:832
+#: flask/templates/chat/session.html:272 flask/templates/chat/session.html:833
 msgid "Summary"
 msgstr "সারসংক্ষেপ"
 
-#: flask/templates/chat/session.html:276 flask/templates/chat/session.html:838
+#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:839
 msgid "Recalculate"
 msgstr "পুনরায় গণনা করুন"
 
-#: flask/templates/chat/session.html:276 flask/templates/chat/session.html:837
+#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:838
 msgid "Recalculate memory from associated episode messages"
 msgstr "সংশ্লিষ্ট এপিসোড বার্তা থেকে স্মৃতি পুনরায় গণনা করুন"
 
-#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:841
+#: flask/templates/chat/session.html:278 flask/templates/chat/session.html:842
 msgid "Translate"
 msgstr "অনুবাদ করুন"
 
-#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:840
+#: flask/templates/chat/session.html:278 flask/templates/chat/session.html:841
 msgid "Translate memory in-place to your language"
 msgstr "স্মৃতিটি সরাসরি আপনার ভাষায় অনুবাদ করুন"
 
-#: flask/templates/chat/session.html:295
+#: flask/templates/chat/session.html:296
 msgid "Relationship Settings"
 msgstr ""
 
-#: flask/templates/chat/session.html:298
+#: flask/templates/chat/session.html:299
 msgid "Show relationship debug labels"
 msgstr ""
 
-#: flask/templates/chat/session.html:309
+#: flask/templates/chat/session.html:310
 msgid "Reset relationship to default and recalculate from chat history"
 msgstr ""
 
-#: flask/templates/chat/session.html:316
+#: flask/templates/chat/session.html:317
 msgid "Recalculate relationship"
 msgstr ""
 
-#: flask/templates/chat/session.html:339
+#: flask/templates/chat/session.html:340
 msgid "Thinking: Enabled (Click to disable)"
 msgstr "চিন্তা: সক্রিয় (নিষ্ক্রিয় করতে ক্লিক করুন)"
 
-#: flask/templates/chat/session.html:339
+#: flask/templates/chat/session.html:340
 msgid "Thinking: Disabled (Click to enable)"
 msgstr "চিন্তা: নিষ্ক্রিয় (সক্রিয় করতে ক্লিক করুন)"
 
-#: flask/templates/chat/session.html:340
+#: flask/templates/chat/session.html:341
 msgid "Disable thinking"
 msgstr "চিন্তা নিষ্ক্রিয় করুন"
 
-#: flask/templates/chat/session.html:340
+#: flask/templates/chat/session.html:341
 msgid "Enable thinking"
 msgstr "চিন্তা সক্রিয় করুন"
 
-#: flask/templates/chat/session.html:353 flask/templates/macros/cards.html:91
+#: flask/templates/chat/session.html:354 flask/templates/macros/cards.html:91
 msgid "Relationship:"
 msgstr "সম্পর্ক:"
 
-#: flask/templates/chat/session.html:364
+#: flask/templates/chat/session.html:365
 msgid "Active Persona"
 msgstr "সক্রিয় পার্সোনা"
 
-#: flask/templates/chat/session.html:369
+#: flask/templates/chat/session.html:370
 msgid "Edit player persona"
 msgstr "খেলোয়াড়ের পার্সোনা সম্পাদনা করুন"
 
-#: flask/templates/chat/session.html:386
+#: flask/templates/chat/session.html:387
 msgid "Unknown"
 msgstr "অজানা"
 
-#: flask/templates/chat/session.html:387
+#: flask/templates/chat/session.html:388
 msgid "Persona is locked for this chat after the 1st message"
 msgstr "১ম বার্তার পর এই চ্যাটের জন্য পার্সোনা লক হয়ে যায়"
 
-#: flask/templates/chat/session.html:410
+#: flask/templates/chat/session.html:411
 msgid "No World (Neutral)"
 msgstr "কোনো বিশ্ব নেই (নিরপেক্ষ)"
 
-#: flask/templates/chat/session.html:413
+#: flask/templates/chat/session.html:414
 msgid "Switch world"
 msgstr "বিশ্ব পরিবর্তন করুন"
 
-#: flask/templates/chat/session.html:424
+#: flask/templates/chat/session.html:425
 msgid "Current Location"
 msgstr "বর্তমান স্থান"
 
-#: flask/templates/chat/session.html:426
+#: flask/templates/chat/session.html:427
 msgid "-- Choose location --"
 msgstr "-- স্থান নির্বাচন করুন --"
 
-#: flask/templates/chat/session.html:444
+#: flask/templates/chat/session.html:445
 msgid "Enable random events"
 msgstr "এলোমেলো ঘটনা সক্রিয় করুন"
 
-#: flask/templates/chat/session.html:449
+#: flask/templates/chat/session.html:450
 msgid "Admin & creator info: Cooldown until the next random event"
 msgstr "অ্যাডমিন ও নির্মাতার তথ্য: পরবর্তী এলোমেলো ঘটনার আগে অপেক্ষা"
 
-#: flask/templates/chat/session.html:450
+#: flask/templates/chat/session.html:451
 msgid "Next event:"
 msgstr "পরবর্তী ঘটনা:"
 
-#: flask/templates/chat/session.html:453 flask/templates/chat/session.html:457
+#: flask/templates/chat/session.html:454 flask/templates/chat/session.html:458
 msgid "in"
 msgstr "আর"
 
-#: flask/templates/chat/session.html:453
+#: flask/templates/chat/session.html:454
 msgid "message"
 msgstr "বার্তা"
 
-#: flask/templates/chat/session.html:453 flask/templates/chat/session.html:457
+#: flask/templates/chat/session.html:454 flask/templates/chat/session.html:458
 msgid "messages"
 msgstr "বার্তা"
 
-#: flask/templates/chat/session.html:453
+#: flask/templates/chat/session.html:454
 msgid "paused"
 msgstr "বিরতি"
 
-#: flask/templates/chat/session.html:455
+#: flask/templates/chat/session.html:456
 msgid "next message"
 msgstr "পরবর্তী বার্তা"
 
-#: flask/templates/chat/session.html:530
+#: flask/templates/chat/session.html:531
 msgid "Do you really want to delete this session?"
 msgstr "আপনি কি সত্যিই এই সেশনটি মুছে ফেলতে চান?"
 
-#: flask/templates/chat/session.html:532
+#: flask/templates/chat/session.html:533
 msgid "Delete session"
 msgstr "সেশন মুছুন"
 
-#: flask/templates/chat/session.html:756
+#: flask/templates/chat/session.html:757
 msgid "Permanently delete this message and all subsequent messages (including associated memories)?"
 msgstr "এই বার্তা এবং পরবর্তী সমস্ত বার্তা (সংশ্লিষ্ট স্মৃতি সহ) স্থায়ীভাবে মুছে ফেলবেন?"
 
-#: flask/templates/chat/session.html:955
+#: flask/templates/chat/session.html:956
 msgid "Recalculation error"
 msgstr "পুনরায় গণনা ত্রুটি"
 
-#: flask/templates/chat/session.html:957
+#: flask/templates/chat/session.html:958
 msgid "Recalculation error:"
 msgstr "পুনরায় গণনা ত্রুটি:"
 
-#: flask/templates/chat/session.html:994
+#: flask/templates/chat/session.html:995
 msgid "Translated!"
 msgstr "অনূদিত!"
 
-#: flask/templates/chat/session.html:1006
+#: flask/templates/chat/session.html:1007
 msgid "Translation error"
 msgstr "অনুবাদ ত্রুটি"
 
-#: flask/templates/chat/session.html:1008
+#: flask/templates/chat/session.html:1009
 msgid "Translation error:"
 msgstr "অনুবাদ ত্রুটি:"
 
@@ -2082,7 +2086,7 @@ msgstr "সংক্ষিপ্ত তথ্য, ইতিহাস বা ন�
 msgid "Create New Lorebook Entry"
 msgstr "নতুন লোরবুক ভুক্তি তৈরি করুন"
 
-#: flask/templates/lorebooks/detail.html:237 flask/templates/worldinfo/detail.html:196 flask/templates/worldinfo/detail.html:329
+#: flask/templates/lorebooks/detail.html:237 flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:373
 msgid "Tags (Comma-separated)"
 msgstr "ট্যাগ (কমা দ্বারা পৃথক)"
 
@@ -2738,107 +2742,135 @@ msgstr "কভার নির্বাচন করুন"
 msgid "Crop"
 msgstr "ক্রপ করুন"
 
+#: flask/templates/worldinfo/detail.html:106
+msgid "World Backdrop (16:9)"
+msgstr ""
+
 #: flask/templates/worldinfo/detail.html:107
+msgid "Optional 16:9 chat background for this world. Overrides the System Backdrop when a location has no background image of its own (Priority: System → World → Location)."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:119
+msgid "No world backdrop set"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:121
+msgid "Uses System Backdrop unless a location defines its own background."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:131
+msgid "Choose Backdrop"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:137
+msgid "Remove Backdrop"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:141
+msgid "Priority in chat: System → World → Location"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:151
 msgid "Private = only accessible to you. Public = accessible to all users for chats."
 msgstr "ব্যক্তিগত = শুধুমাত্র আপনার জন্য অ্যাক্সেসযোগ্য। সর্বজনীন = চ্যাটের জন্য সকল ব্যবহারকারীর জন্য অ্যাক্সেসযোগ্য।"
 
-#: flask/templates/worldinfo/detail.html:118
+#: flask/templates/worldinfo/detail.html:162
 msgid "Linked Lorebook (Optional)"
 msgstr "যুক্ত লোরবুক (ঐচ্ছিক)"
 
-#: flask/templates/worldinfo/detail.html:119
+#: flask/templates/worldinfo/detail.html:163
 msgid "An optional lorebook automatically included alongside character lorebooks in all chats using this world."
 msgstr "একটি ঐচ্ছিক লোরবুক যা এই জগৎ ব্যবহার করা সমস্ত চ্যাটে চরিত্রের লোরবুকের সাথে স্বয়ংক্রিয়ভাবে অন্তর্ভুক্ত হয়।"
 
-#: flask/templates/worldinfo/detail.html:122
+#: flask/templates/worldinfo/detail.html:166
 msgid "No lorebook linked"
 msgstr "কোনো লোরবুক যুক্ত নেই"
 
-#: flask/templates/worldinfo/detail.html:144
+#: flask/templates/worldinfo/detail.html:188
 msgid "New Location"
 msgstr "নতুন স্থান"
 
-#: flask/templates/worldinfo/detail.html:151 flask/templates/worldinfo/detail.html:154 flask/templates/worldinfo/detail.html:166
+#: flask/templates/worldinfo/detail.html:195 flask/templates/worldinfo/detail.html:198 flask/templates/worldinfo/detail.html:210
 msgid "This location is bound to"
 msgstr "এই স্থানটি এর সাথে আবদ্ধ"
 
-#: flask/templates/worldinfo/detail.html:177
+#: flask/templates/worldinfo/detail.html:221
 msgid "Edit Location:"
 msgstr "স্থান সম্পাদনা করুন:"
 
-#: flask/templates/worldinfo/detail.html:183 flask/templates/worldinfo/detail.html:316
+#: flask/templates/worldinfo/detail.html:227 flask/templates/worldinfo/detail.html:360
 msgid "Location Name"
 msgstr "স্থানের নাম"
 
-#: flask/templates/worldinfo/detail.html:184 flask/templates/worldinfo/detail.html:317
+#: flask/templates/worldinfo/detail.html:228 flask/templates/worldinfo/detail.html:361
 msgid "Name of the location (e.g. Old Library, Griffin Tavern)."
 msgstr "স্থানের নাম (যেমন পুরনো গ্রন্থাগার, গ্রিফিন সরাইখানা)।"
 
-#: flask/templates/worldinfo/detail.html:197 flask/templates/worldinfo/detail.html:330
+#: flask/templates/worldinfo/detail.html:241 flask/templates/worldinfo/detail.html:374
 msgid "Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet)."
 msgstr "পরিবেশের বর্ণনাকারী কমা দ্বারা পৃথক কীওয়ার্ড (যেমন ঘরের ভেতর, আরামদায়ক, শান্ত)।"
 
-#: flask/templates/worldinfo/detail.html:199 flask/templates/worldinfo/detail.html:332
+#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:376
 msgid "Extract Tags"
 msgstr "ট্যাগ বের করুন"
 
-#: flask/templates/worldinfo/detail.html:207 flask/templates/worldinfo/detail.html:340
+#: flask/templates/worldinfo/detail.html:251 flask/templates/worldinfo/detail.html:384
 msgid "16:9 Background Image (PNG, JPG, WEBP)"
 msgstr "১৬:৯ পটভূমি ছবি (PNG, JPG, WEBP)"
 
-#: flask/templates/worldinfo/detail.html:208 flask/templates/worldinfo/detail.html:341
+#: flask/templates/worldinfo/detail.html:252 flask/templates/worldinfo/detail.html:385
 msgid "Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference."
 msgstr "চ্যাট স্টেজের ব্যাকড্রপ এবং ComfyUI রেফারেন্স হিসেবে ব্যবহৃত ল্যান্ডস্কেপ ১৬:৯ ছবি।"
 
-#: flask/templates/worldinfo/detail.html:214 flask/templates/worldinfo/detail.html:347
+#: flask/templates/worldinfo/detail.html:258 flask/templates/worldinfo/detail.html:391
 msgid "Analyze & Describe Image"
 msgstr "ছবি বিশ্লেষণ ও বর্ণনা করুন"
 
-#: flask/templates/worldinfo/detail.html:221 flask/templates/worldinfo/detail.html:354
+#: flask/templates/worldinfo/detail.html:265 flask/templates/worldinfo/detail.html:398
 msgid "Location Description"
 msgstr "স্থানের বিবরণ"
 
-#: flask/templates/worldinfo/detail.html:222 flask/templates/worldinfo/detail.html:355
+#: flask/templates/worldinfo/detail.html:266 flask/templates/worldinfo/detail.html:399
 msgid "Atmospheric description of the environment, sounds, and mood."
 msgstr "পরিবেশ, শব্দ এবং মেজাজের পারিপার্শ্বিক বিবরণ।"
 
-#: flask/templates/worldinfo/detail.html:239 flask/templates/worldinfo/detail.html:372
+#: flask/templates/worldinfo/detail.html:283 flask/templates/worldinfo/detail.html:416
 msgid "Character Binding (Optional)"
 msgstr "চরিত্র বন্ধন (ঐচ্ছিক)"
 
-#: flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:373
+#: flask/templates/worldinfo/detail.html:284 flask/templates/worldinfo/detail.html:417
 msgid "If selected, this location can only be entered when chatting with that specific character."
 msgstr "নির্বাচিত হলে, শুধুমাত্র সেই নির্দিষ্ট চরিত্রের সাথে চ্যাট করার সময়ই এই স্থানে প্রবেশ করা যাবে।"
 
-#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:376
+#: flask/templates/worldinfo/detail.html:287 flask/templates/worldinfo/detail.html:420
 msgid "No character (Freely accessible)"
 msgstr "কোনো চরিত্র নেই (অবাধে প্রবেশযোগ্য)"
 
-#: flask/templates/worldinfo/detail.html:253
+#: flask/templates/worldinfo/detail.html:297
 msgid "Assigned Location Events:"
 msgstr "নির্ধারিত স্থানের ঘটনাসমূহ:"
 
-#: flask/templates/worldinfo/detail.html:258
+#: flask/templates/worldinfo/detail.html:302
 msgid "No specific location events assigned."
 msgstr "কোনো নির্দিষ্ট স্থানের ঘটনা নির্ধারিত নেই।"
 
-#: flask/templates/worldinfo/detail.html:310
+#: flask/templates/worldinfo/detail.html:354
 msgid "Create New Location"
 msgstr "নতুন স্থান তৈরি করুন"
 
-#: flask/templates/worldinfo/detail.html:334
+#: flask/templates/worldinfo/detail.html:378
 msgid "tavern, forest, castle"
 msgstr "সরাইখানা, বন, দুর্গ"
 
-#: flask/templates/worldinfo/detail.html:387
+#: flask/templates/worldinfo/detail.html:431
 msgid "Save Location"
 msgstr "স্থান সংরক্ষণ করুন"
 
-#: flask/templates/worldinfo/detail.html:394
+#: flask/templates/worldinfo/detail.html:438
 msgid "Set 1:1 World Cover"
 msgstr "১:১ জগতের কভার সেট করুন"
 
-#: flask/templates/worldinfo/detail.html:394
+#: flask/templates/worldinfo/detail.html:438
 msgid "1:1 Cover"
 msgstr "১:১ কভার"
 

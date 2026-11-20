@@ -12,7 +12,8 @@
     {% block page_backdrop %}
       <div id="system-default-backdrop"
            class="system-default-backdrop"
-           data-default-backdrop="{{ system_backdrop_url }}">
+           data-default-backdrop="{{ system_backdrop_url }}"
+           data-world-backdrop="{% block world_backdrop_image %}{% endblock %}">
       </div>
     {% endblock %}
 

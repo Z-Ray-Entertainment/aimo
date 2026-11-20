@@ -63,8 +63,8 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
         with get_db_session() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO worldinfos (user_id, name, icon, visibility, origin_language, cover_image_path, lorebook_id, collaborator_creator_tags_json, is_proper_noun, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO worldinfos (user_id, name, icon, visibility, origin_language, cover_image_path, backdrop_image_path, lorebook_id, collaborator_creator_tags_json, is_proper_noun, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     worldinfo.user_id,
@@ -73,6 +73,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     worldinfo.visibility,
                     getattr(worldinfo, "origin_language", "en") or "en",
                     worldinfo.cover_image_path,
+                    worldinfo.backdrop_image_path,
                     worldinfo.lorebook_id,
                     tags_json,
                     1 if getattr(worldinfo, "is_proper_noun", False) else 0,
@@ -100,7 +101,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             conn.execute(
                 """
                 UPDATE worldinfos
-                SET name = ?, icon = ?, visibility = ?, origin_language = ?, cover_image_path = ?, lorebook_id = ?, collaborator_creator_tags_json = ?, is_proper_noun = ?
+                SET name = ?, icon = ?, visibility = ?, origin_language = ?, cover_image_path = ?, backdrop_image_path = ?, lorebook_id = ?, collaborator_creator_tags_json = ?, is_proper_noun = ?
                 WHERE id = ?
                 """,
                 (
@@ -109,6 +110,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                     worldinfo.visibility,
                     getattr(worldinfo, "origin_language", "en") or "en",
                     worldinfo.cover_image_path,
+                    worldinfo.backdrop_image_path,
                     worldinfo.lorebook_id,
                     tags_json,
                     1 if getattr(worldinfo, "is_proper_noun", False) else 0,
@@ -137,6 +139,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             icon=orig.icon,
             visibility="private",
             cover_image_path=orig.cover_image_path,
+            backdrop_image_path=orig.backdrop_image_path,
             lorebook_id=orig.lorebook_id,
             collaborator_creator_tags=[],
             is_proper_noun=orig.is_proper_noun,
@@ -392,6 +395,11 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
             if "cover_image_path" in keys and row["cover_image_path"] is not None
             else None
         )
+        backdrop_path = (
+            str(row["backdrop_image_path"])
+            if "backdrop_image_path" in keys and row["backdrop_image_path"] is not None
+            else None
+        )
         icon_val = str(row["icon"]) if "icon" in keys and row["icon"] is not None else "🌐"
         lb_id = int(row["lorebook_id"]) if "lorebook_id" in keys and row["lorebook_id"] is not None else None
         collaborator_tags = []
@@ -414,6 +422,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
                 else "en"
             ),
             cover_image_path=cover_path,
+            backdrop_image_path=backdrop_path,
             lorebook_id=lb_id,
             collaborator_creator_tags=collaborator_tags,
             is_proper_noun=bool(row["is_proper_noun"]) if "is_proper_noun" in keys and row["is_proper_noun"] is not None else False,

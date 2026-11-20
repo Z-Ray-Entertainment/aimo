@@ -18,6 +18,7 @@ class WorldInfoService:
         icon: str | None = "🌐",
         visibility: str = "private",
         cover_image_path: str | None = None,
+        backdrop_image_path: str | None = None,
         lorebook_id: int | None = None,
         collaborator_creator_tags: list[str] | None = None,
         is_proper_noun: bool = False,
@@ -27,6 +28,7 @@ class WorldInfoService:
         cleaned_icon = icon.strip() if isinstance(icon, str) and icon.strip() else "🌐"
         cleaned_vis = DomainValidator.normalize_visibility(visibility)
         cleaned_cover = cover_image_path.strip() if isinstance(cover_image_path, str) and cover_image_path.strip() else None
+        cleaned_backdrop = backdrop_image_path.strip() if isinstance(backdrop_image_path, str) and backdrop_image_path.strip() else None
         valid_lb_id = int(lorebook_id) if lorebook_id is not None and int(lorebook_id) > 0 else None
 
         return WorldInfo(
@@ -36,6 +38,7 @@ class WorldInfoService:
             icon=cleaned_icon,
             visibility=cleaned_vis,
             cover_image_path=cleaned_cover,
+            backdrop_image_path=cleaned_backdrop,
             lorebook_id=valid_lb_id,
             collaborator_creator_tags=[
                 t.strip().lower() for t in collaborator_creator_tags
@@ -52,6 +55,7 @@ class WorldInfoService:
         icon: str | None | object = ...,
         visibility: str | None = None,
         cover_image_path: str | None | object = ...,
+        backdrop_image_path: str | None | object = ...,
         lorebook_id: int | None | object = ...,
         collaborator_creator_tags: list[str] | None = None,
         is_proper_noun: bool | None = None,
@@ -65,6 +69,12 @@ class WorldInfoService:
             worldinfo.cover_image_path = (
                 cover_image_path.strip()
                 if isinstance(cover_image_path, str) and cover_image_path.strip()
+                else None
+            )
+        if backdrop_image_path is not ...:
+            worldinfo.backdrop_image_path = (
+                backdrop_image_path.strip()
+                if isinstance(backdrop_image_path, str) and backdrop_image_path.strip()
                 else None
             )
         if lorebook_id is not ...:
@@ -367,3 +377,15 @@ class WorldInfoService:
             state.triggered_event_ids.add(chosen_event.id)
 
         return chosen_event
+
+    @staticmethod
+    def resolve_effective_backdrop(
+        system_backdrop_path: str | None,
+        worldinfo: WorldInfo | None = None,
+        location: Location | None = None,
+    ) -> str | None:
+        if location is not None and location.background_image_path:
+            return location.background_image_path
+        if worldinfo is not None and worldinfo.backdrop_image_path:
+            return worldinfo.backdrop_image_path
+        return system_backdrop_path

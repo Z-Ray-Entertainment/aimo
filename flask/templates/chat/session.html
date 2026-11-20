@@ -5,7 +5,8 @@
 {% block title %}AIMO — {{ chat_session.title }} ({{ character.name }}){% endblock %}
 {% block body_class %} chat-page{% endblock %}
 
-{% block backdrop_image %}{%- if current_location and current_location.background_image_path %}{{ url_for('uploaded_file', filename=current_location.background_image_path) }}{% else %}{{ system_backdrop_url or url_for('static', filename='img/cover.svg') }}{% endif -%}{% endblock %}
+{% block backdrop_image %}{%- if current_location and current_location.background_image_path %}{{ url_for('uploaded_file', filename=current_location.background_image_path) }}{% elif worldinfo and worldinfo.backdrop_image_path %}{{ url_for('uploaded_file', filename=worldinfo.backdrop_image_path) }}{% else %}{{ system_backdrop_url or url_for('static', filename='img/cover.svg') }}{% endif -%}{% endblock %}
+{% block world_backdrop_image %}{%- if worldinfo and worldinfo.backdrop_image_path %}{{ url_for('uploaded_file', filename=worldinfo.backdrop_image_path) }}{% endif -%}{% endblock %}
 
 {% block content %}
 <div class="chat-layout">

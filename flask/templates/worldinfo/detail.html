@@ -100,6 +100,50 @@
           </div>
         </div>
 
+        <!-- 16:9 World Backdrop & Vorschau -->
+        <div>
+          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">
+            {{ _("World Backdrop (16:9)") }}
+            <span class="field-help-btn" title="{{ _('Optional 16:9 chat background for this world. Overrides the System Backdrop when a location has no background image of its own (Priority: System → World → Location).') }}">?</span>
+          </label>
+          <div style="display: flex; flex-direction: column; gap: 0.65rem; max-width: 440px;">
+            <div id="worldinfo-backdrop-preview"
+                 class="backdrop-preview-container"
+                 {% if worldinfo.backdrop_image_path %}
+                   style="background-image: url('{{ url_for('uploaded_file', filename=worldinfo.backdrop_image_path) }}');"
+                 {% endif %}>
+              <div id="worldinfo-backdrop-placeholder"
+                   class="backdrop-preview-placeholder"
+                   {% if worldinfo.backdrop_image_path %}style="display: none;"{% endif %}>
+                <span style="font-size: 1.75rem; opacity: 0.85;">🖼️</span>
+                <strong style="color: var(--gold-accent); font-size: 0.92rem;">{{ _("No world backdrop set") }}</strong>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">
+                  {{ _("Uses System Backdrop unless a location defines its own background.") }}
+                </p>
+              </div>
+            </div>
+
+            {% if is_editable %}
+              <input type="hidden" id="worldinfo-remove-backdrop-input" name="remove_backdrop" value="0">
+              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <input type="file" id="worldinfo-backdrop-input" name="backdrop_file" accept=".png,.jpg,.jpeg,.webp" style="display: none;">
+                <label for="worldinfo-backdrop-input" class="aimo-btn" style="cursor: pointer; margin-bottom: 0;">
+                  <span class="icon-mono">🖼️</span> {{ _("Choose Backdrop") }}
+                </label>
+                <button type="button"
+                        id="worldinfo-remove-backdrop-btn"
+                        class="aimo-btn aimo-btn-danger"
+                        {% if not worldinfo.backdrop_image_path %}style="display: none;"{% endif %}>
+                  <span class="icon-mono">🗑️</span> {{ _("Remove Backdrop") }}
+                </button>
+              </div>
+              <span id="worldinfo-backdrop-status" style="font-size: 0.78rem; color: var(--text-muted);">
+                {{ _("Priority in chat: System → World → Location") }}
+              </span>
+            {% endif %}
+          </div>
+        </div>
+
         <!-- Sichtbarkeit -->
         <div>
           <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">

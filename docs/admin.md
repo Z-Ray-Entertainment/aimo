@@ -102,8 +102,8 @@ Each prompt section features a **Standard wiederherstellen** button. Clicking it
 ## 🖼️ System-Backdrop (`/admin/backdrop`)
 
 Configure the global fallback background wallpaper for the application:
-- **Upload Wallpaper:** Upload any 16:9 widescreen wallpaper (PNG, JPG, WEBP) to serve as the global atmospheric background across the entire interface.
-- **Select from Worlds & Locations:** Quick-pick background art directly from any existing WorldInfo location.
+- **Upload Wallpaper:** Upload any 16:9 widescreen wallpaper (PNG, JPG, WEBP) to serve as the global atmospheric background across the entire interface and as the base fallback in chats (Priority: **System → World → Location**).
+- **Select from Worlds & Locations:** Quick-pick background art directly from any existing WorldInfo backdrop or location background.
 - **Reset:** Revert to the default parchment and wood texture theme at any time.
 
 ### Multi-Language System Prompts & Translation Sync
