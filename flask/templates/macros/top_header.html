@@ -52,14 +52,33 @@
         <div class="mobile-menu-group">
           {{ action_button(_("Settings"), href=url_for('settings.index'), icon="⚙️", active=(request.blueprint == 'settings'), extra_class="mobile-nav-btn") }}
 
-          <hr class="aimo-menu-divider">
-
           {% if has_perm('admin_access') %}
             {{ action_button(_("Administration"), href=url_for('admin.users_list'), icon="🛡️", active=(request.blueprint == 'admin'), extra_class="mobile-nav-btn") }}
             <hr class="aimo-menu-divider">
           {% endif %}
 
           {{ action_button(_("Logout"), href=url_for('auth.logout'), icon="🚪", extra_class="mobile-nav-btn") }}
+
+          <hr class="aimo-menu-divider">
+
+          <div class="user-menu-footer-links">
+            {{ action_button(
+              _("Support us on ko-fi"),
+              href="https://ko-fi.com/zrayentertainment",
+              icon_src=url_for('static', filename='img/kofi_symbol.svg'),
+              layout="icon",
+              target="_blank",
+              title=_("Support us on ko-fi")
+            ) }}
+            {{ action_button(
+              _("Visit our Website"),
+              href="https://z-ray.de/" if ui_language == "de" else "https://z-ray.de/en/",
+              icon_src=url_for('static', filename='img/z_ray.webp'),
+              layout="icon",
+              target="_blank",
+              title=_("Visit our Website")
+            ) }}
+          </div>
         </div>
       </div>
     {% endif %}

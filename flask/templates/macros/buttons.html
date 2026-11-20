@@ -32,13 +32,17 @@
 {% endmacro %}
 
 {# Interner Inhalt fuer action_button (Icon, Text, Pfeile) #}
-{% macro _btn_content(text, icon, arrow, layout) %}
+{% macro _btn_content(text, icon, arrow, layout, icon_src=none) %}
   {% if arrow == 'left' %}
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="btn-arrow btn-arrow-left" aria-hidden="true">
       <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
     </svg>
   {% endif %}
-  {% if icon %}<span class="icon-mono">{{ icon }}</span>{% endif %}
+  {% if icon_src %}
+    <img src="{{ icon_src }}" alt="" class="aimo-btn-img" aria-hidden="true">
+  {% elif icon %}
+    <span class="icon-mono">{{ icon }}</span>
+  {% endif %}
   {% if text and layout != 'icon' %}<span>{{ text }}</span>{% endif %}
   {% if arrow == 'right' %}
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="btn-arrow btn-arrow-right" aria-hidden="true">
@@ -48,7 +52,7 @@
 {% endmacro %}
 
 {# Reusable Action/Navigation Button Component (System-weite .aimo-btn Basisklasse); layout: 'full' (Icon + Text) oder 'icon' (nur Icon) #}
-{% macro action_button(text="", href=none, type="button", icon=none, arrow=none, variant="default", size="default", extra_class="", id=none, title=none, onclick=none, modal=none, modal_close=none, layout="full", active=false, disabled=false, form=none, style=none, target=none, aria_label=none, data={}) %}
+{% macro action_button(text="", href=none, type="button", icon=none, icon_src=none, arrow=none, variant="default", size="default", extra_class="", id=none, title=none, onclick=none, modal=none, modal_close=none, layout="full", active=false, disabled=false, form=none, style=none, target=none, aria_label=none, data={}) %}
   {% set variant_class = ' primary' if variant == 'primary' else (' danger' if variant == 'danger' else '') %}
   {% set size_class = ' aimo-btn-lg' if size == 'lg' else (' aimo-btn-sm' if size == 'sm' else '') %}
   {% set layout_class = ' aimo-btn-icon' if layout == 'icon' else '' %}
@@ -59,11 +63,11 @@
   {% set label = aria_label if aria_label else (title if title else (text if layout == 'icon' else none)) %}
   {% if href %}
     <a href="{{ href }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if label and (layout == 'icon' or aria_label) %} aria-label="{{ label }}"{% endif %}{% if disabled %} aria-disabled="true" tabindex="-1"{% endif %}{% if target %} target="{{ target }}"{% if target == '_blank' %} rel="noopener noreferrer"{% endif %}{% endif %}{% if style %} style="{{ style }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{{ data_attrs }}>
-      {{ _btn_content(text, icon, arrow, layout) }}
+      {{ _btn_content(text, icon, arrow, layout, icon_src) }}
     </a>
   {% else %}
     <button type="{{ type }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if form %} form="{{ form }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if label and (layout == 'icon' or aria_label) %} aria-label="{{ label }}"{% endif %}{% if disabled %} disabled{% endif %}{% if style %} style="{{ style }}"{% endif %}{% if modal %} data-modal-open="{{ modal }}"{% endif %}{% if modal_close %} data-modal-close="{{ modal_close }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{{ data_attrs }}>
-      {{ _btn_content(text, icon, arrow, layout) }}
+      {{ _btn_content(text, icon, arrow, layout, icon_src) }}
     </button>
   {% endif %}
 {% endmacro %}
