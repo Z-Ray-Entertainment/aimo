@@ -896,16 +896,22 @@ class AimoChatStream {
       }
       const backdrop = document.getElementById("system-default-backdrop") || document.querySelector(".system-default-backdrop");
       if (backdrop) {
-        const bgPath = resData.location?.background_image_path;
-        if (bgPath && bgPath.trim()) {
-          const cleanPath = bgPath.trim();
-          const bgUrl = (cleanPath.startsWith("/") || cleanPath.startsWith("http"))
-            ? cleanPath
-            : `/uploads/${cleanPath}`;
+        const locBgPath = resData.location?.background_image_path;
+        const worldBgPath = resData.worldinfo_backdrop_path;
+        const effectivePath = (locBgPath && locBgPath.trim())
+          ? locBgPath.trim()
+          : ((worldBgPath && worldBgPath.trim()) ? worldBgPath.trim() : "");
+        if (effectivePath) {
+          const bgUrl = (effectivePath.startsWith("/") || effectivePath.startsWith("http"))
+            ? effectivePath
+            : `/uploads/${effectivePath}`;
           backdrop.style.backgroundImage = `url('${bgUrl}')`;
           document.body.style.setProperty("--system-backdrop-url", `url('${bgUrl}')`);
         } else {
-          const defaultBackdrop = backdrop.getAttribute("data-default-backdrop") || "/static/img/cover.svg";
+          const worldBackdropAttr = backdrop.getAttribute("data-world-backdrop");
+          const defaultBackdrop = (worldBackdropAttr && worldBackdropAttr.trim())
+            ? worldBackdropAttr.trim()
+            : (backdrop.getAttribute("data-default-backdrop") || "/static/img/cover.svg");
           backdrop.style.backgroundImage = `url('${defaultBackdrop}')`;
           document.body.style.setProperty("--system-backdrop-url", `url('${defaultBackdrop}')`);
         }

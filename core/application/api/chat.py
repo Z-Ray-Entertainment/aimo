@@ -1452,6 +1452,7 @@ def switch_location(session_id: int):
                 "description": location.description,
                 "background_image_path": location.background_image_path,
             },
+            "worldinfo_backdrop_path": wi.backdrop_image_path if wi else None,
             "ui_notice": saved_sys_msg.localized_content,
             "system_message": {
                 "id": saved_sys_msg.id,
@@ -1527,17 +1528,23 @@ def generate_scene_image(session_id: int):
     except Exception:
         pass
 
-    if chat_session.active_worldinfo_id and chat_session.current_location_id:
-        loc = wi_repo.get_location(chat_session.current_location_id)
+    if chat_session.active_worldinfo_id:
+        loc = wi_repo.get_location(chat_session.current_location_id) if chat_session.current_location_id else None
+        ref_bg_rel: str | None = None
         if loc:
             location_desc = f"{loc.name}: {loc.description}"
-            if loc.background_image_path:
-                try:
-                    bg_path = storage.resolve_path(loc.background_image_path)
-                    if bg_path.is_file():
-                        ref_images.append(bg_path)
-                except Exception:
-                    pass
+            ref_bg_rel = loc.background_image_path
+        if not ref_bg_rel:
+            active_wi = wi_repo.get_by_id(chat_session.active_worldinfo_id)
+            if active_wi and active_wi.backdrop_image_path:
+                ref_bg_rel = active_wi.backdrop_image_path
+        if ref_bg_rel:
+            try:
+                bg_path = storage.resolve_path(ref_bg_rel)
+                if bg_path.is_file():
+                    ref_images.append(bg_path)
+            except Exception:
+                pass
 
     diffuser_instruction = img_gen.build_scene_prompt_instruction(
         diffuser_prompt=settings.prompts.diffuser_prompt,
@@ -1698,6 +1705,11 @@ def delete_messages_from_idx(session_id: int, message_idx: int):
         if chat_session.current_location_id
         else None
     )
+    active_wi = (
+        wi_repo.get_by_id(chat_session.active_worldinfo_id)
+        if chat_session.active_worldinfo_id
+        else None
+    )
 
     return jsonify(
         {
@@ -1709,6 +1721,7 @@ def delete_messages_from_idx(session_id: int, message_idx: int):
                 "name": curr_loc.name,
                 "background_image_path": curr_loc.background_image_path,
             } if curr_loc else None,
+            "worldinfo_backdrop_path": active_wi.backdrop_image_path if active_wi else None,
         }
     )
 

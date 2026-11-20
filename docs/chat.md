@@ -11,7 +11,7 @@ The chat screen is the centerpiece of aimo. Here, the interactive text adventure
 When starting a new conversation with a character:
 1. **Reiter 1: Settings (Einstellungen):**
    - **Persona Selection:** Select your playing persona. (Once the first message is sent, the persona is permanently locked for that session).
-   - **WorldInfo Selection:** Choose the setting. The character's suggested world is pre-selected. You can also explicitly choose *"Without WorldInfo"* (applies neutral backgrounds and disables random events).
+   - **WorldInfo Selection:** Choose the setting. The character's suggested world is pre-selected. You can also explicitly choose *"Without WorldInfo"* (applies the global System Backdrop and disables random events). When a world is active, the chat background follows the priority **System → World → Location** (a location's own background overrides the world's backdrop, which in turn overrides the System Backdrop).
    - **Session Title:** Optional custom title for the adventure.
    - **Thinking (Reasoning) Toggle:** Option to activate or deactivate deep chain-of-thought reasoning for compatible models (e.g., Gemma 4, DeepSeek-R1). Deactivating provides faster replies without internal thinking steps.
 2. **Reiter 2: Lorebooks (Wissensbücher):**

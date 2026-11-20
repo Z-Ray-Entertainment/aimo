@@ -28,7 +28,8 @@ The WorldInfo Editor is organized in a two-column layout with a vertical sidebar
 ## 📋 1. Basic Settings (`📋 Grundeinstellungen`)
 
 - **World Name:** Setting title (e.g., *"Kingdom of Acheron"*).
-- **1:1 Cover Image:** Square cover artwork for the World Grid tile and world selection dialog. Features an integrated cropping tool (`AimoImageCropper`).
+- **1:1 Cover Image:** Square cover artwork for the World Grid tile and world selection dialog. Features an integrated cropping tool.
+- **World Backdrop (16:9):** Optional 16:9 widescreen background for the chat stage when playing in this world. In chat, backgrounds follow the priority **System → World → Location**: a location's own background takes precedence, followed by the World Backdrop if set, and finally the global System Backdrop. You can upload a new image or remove the World Backdrop at any time.
 - **Visibility:** Toggle between `Private` (visible only to you and collaborators) and `Public` (available for all players in the hub).
 - **Bound Lorebook (Optional):** Creators can attach an encyclopedia ([Lorebook](lorebooks.md)) directly to the world.
   - Whenever a chat session is played in this world, this lorebook is automatically loaded as an active default lorebook.

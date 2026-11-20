@@ -36,6 +36,10 @@ msgstr "บันทึกการตั้งค่าบริการแล
 msgid "System-wide default backdrop reset (default theme active)."
 msgstr "รีเซ็ตพื้นหลังเริ่มต้นทั้งระบบแล้ว (กำลังใช้ธีมเริ่มต้น)"
 
+#: flask/application/admin/views.py:508
+msgid "World Backdrop"
+msgstr ""
+
 #: flask/application/admin/views.py:487
 msgid "Please select an image file (PNG, JPG, WEBP) to upload."
 msgstr "กรุณาเลือกไฟล์ภาพ (PNG, JPG, WEBP) เพื่ออัปโหลด"
@@ -88,11 +92,11 @@ msgstr "ไม่พบตัวละครหรือไม่มีสิท
 msgid "Invalid or inaccessible location selected."
 msgstr "เลือกสถานที่ที่ไม่ถูกต้องหรือไม่สามารถเข้าถึงได้"
 
-#: flask/application/characters/views.py:564 flask/application/worldinfo/views.py:383
+#: flask/application/characters/views.py:564 flask/application/worldinfo/views.py:391
 msgid "Event '%(title)s' added."
 msgstr "เพิ่มเหตุการณ์ '%(title)s' แล้ว"
 
-#: flask/application/characters/views.py:631 flask/application/worldinfo/views.py:440
+#: flask/application/characters/views.py:631 flask/application/worldinfo/views.py:448
 msgid "Event deleted."
 msgstr "ลบเหตุการณ์แล้ว"
 
@@ -112,7 +116,7 @@ msgstr "เพิ่มรูปภาพแกลเลอรี 9:16 แล้
 msgid "Sprite '%(name)s' uploaded."
 msgstr "อัปโหลดสไปรต์ '%(name)s' แล้ว"
 
-#: flask/application/characters/views.py:610 flask/application/worldinfo/views.py:422
+#: flask/application/characters/views.py:610 flask/application/worldinfo/views.py:430
 msgid "Event updated."
 msgstr "อัปเดตเหตุการณ์แล้ว"
 
@@ -164,7 +168,7 @@ msgstr "ข้อผิดพลาดในการคำนวณใหม่
 msgid "Invalid WorldInfo."
 msgstr "WorldInfo ไม่ถูกต้อง"
 
-#: flask/application/chat/views.py:242 flask/application/chat/views.py:560 flask/application/worldinfo/views.py:120 flask/application/worldinfo/views.py:228
+#: flask/application/chat/views.py:242 flask/application/chat/views.py:560 flask/application/worldinfo/views.py:128 flask/application/worldinfo/views.py:236
 msgid "This world is not yet available in your language."
 msgstr "โลกนี้ยังไม่พร้อมใช้งานในภาษาของคุณ"
 
@@ -192,7 +196,7 @@ msgstr "ปิดใช้งานการคิดแล้ว"
 msgid "Chat title updated."
 msgstr "อัปเดตชื่อแชทแล้ว"
 
-#: flask/application/lorebooks/views.py:135 flask/application/worldinfo/views.py:231
+#: flask/application/lorebooks/views.py:135 flask/application/worldinfo/views.py:239
 msgid "Copy '%(name)s' created successfully."
 msgstr "สร้างสำเนา '%(name)s' สำเร็จแล้ว"
 
@@ -280,7 +284,7 @@ msgstr "บันทึกการตั้งค่าบัญชีแล้
 msgid "Character"
 msgstr "ตัวละคร"
 
-#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:404
+#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:405
 msgid "World"
 msgstr "โลก"
 
@@ -328,11 +332,11 @@ msgstr "กำหนดค่าผู้ดูแลระบบเริ่ม
 msgid "Cloud AI mode: automatic background translation is disabled. Use the greyed-out flag pill-badges to translate into other registered user languages."
 msgstr "โหมด AI บนคลาวด์: ปิดการแปลอัตโนมัติในเบื้องหลังแล้ว ใช้ป้ายธงสีเทาเพื่อแปลเป็นภาษาผู้ใช้อื่นที่ลงทะเบียนไว้"
 
-#: flask/application/worldinfo/views.py:246
+#: flask/application/worldinfo/views.py:254
 msgid "WorldInfo deleted."
 msgstr "ลบ WorldInfo แล้ว"
 
-#: flask/application/worldinfo/views.py:348
+#: flask/application/worldinfo/views.py:356
 msgid "Location deleted."
 msgstr "ลบสถานที่แล้ว"
 
@@ -340,19 +344,19 @@ msgstr "ลบสถานที่แล้ว"
 msgid "WorldInfo '%(name)s' created."
 msgstr "สร้าง WorldInfo '%(name)s' แล้ว"
 
-#: flask/application/worldinfo/views.py:54 flask/application/worldinfo/views.py:220
+#: flask/application/worldinfo/views.py:54 flask/application/worldinfo/views.py:228
 msgid "WorldInfo not found."
 msgstr "ไม่พบ WorldInfo"
 
-#: flask/application/worldinfo/views.py:243
+#: flask/application/worldinfo/views.py:251
 msgid "WorldInfo not found or no permission to delete."
 msgstr "ไม่พบ WorldInfo หรือไม่มีสิทธิ์ลบ"
 
-#: flask/application/worldinfo/views.py:258 flask/application/worldinfo/views.py:300 flask/application/worldinfo/views.py:344 flask/application/worldinfo/views.py:360 flask/application/worldinfo/views.py:397
+#: flask/application/worldinfo/views.py:266 flask/application/worldinfo/views.py:308 flask/application/worldinfo/views.py:352 flask/application/worldinfo/views.py:368 flask/application/worldinfo/views.py:405
 msgid "WorldInfo not found or no permission."
 msgstr "ไม่พบ WorldInfo หรือไม่มีสิทธิ์"
 
-#: flask/application/worldinfo/views.py:285
+#: flask/application/worldinfo/views.py:293
 msgid "Location '%(name)s' created."
 msgstr "สร้างสถานที่ '%(name)s' แล้ว"
 
@@ -360,11 +364,11 @@ msgstr "สร้างสถานที่ '%(name)s' แล้ว"
 msgid "Access denied: You can only edit your own WorldInfos or creations shared with you."
 msgstr "ปฏิเสธการเข้าถึง: คุณสามารถแก้ไขได้เฉพาะ WorldInfo ของคุณเองหรือผลงานที่แชร์กับคุณเท่านั้น"
 
-#: flask/application/worldinfo/views.py:90
+#: flask/application/worldinfo/views.py:98
 msgid "WorldInfo saved."
 msgstr "บันทึก WorldInfo แล้ว"
 
-#: flask/application/worldinfo/views.py:329
+#: flask/application/worldinfo/views.py:337
 msgid "Location updated."
 msgstr "อัปเดตสถานที่แล้ว"
 
@@ -604,7 +608,7 @@ msgstr "ล็อกการลบ"
 msgid "Delete"
 msgstr "ลบ"
 
-#: flask/i18n.py:125 flask/templates/chat/session.html:971
+#: flask/i18n.py:125 flask/templates/chat/session.html:972
 msgid "Translating..."
 msgstr "กำลังแปล..."
 
@@ -689,8 +693,8 @@ msgid "Rule: Priority in Chat"
 msgstr "กฎ: ลำดับความสำคัญในแชท"
 
 #: flask/templates/admin/backdrop.html:50
-msgid "This default backdrop forms the foundational background. In chat, it is only overridden when the current location has its own background image. If a location has no image or roleplay switches to a neutral setting, this system default automatically applies again."
-msgstr "พื้นหลังเริ่มต้นนี้เป็นพื้นฐานหลัก ในแชทจะถูกแทนที่ก็ต่อเมื่อสถานที่ปัจจุบันมีภาพพื้นหลังของตัวเอง หากสถานที่ไม่มีภาพหรือการสวมบทบาทเปลี่ยนเป็นฉากที่เป็นกลาง ค่าเริ่มต้นของระบบนี้จะถูกนำมาใช้อีกครั้งโดยอัตโนมัติ"
+msgid "This default backdrop forms the foundational background (Priority: System → World → Location). In chat, it is overridden by the active WorldInfo backdrop if set, and further overridden when the current location has its own background image."
+msgstr ""
 
 #: flask/templates/admin/backdrop.html:56
 msgid "Do you really want to remove the custom default backdrop and reset to the default theme?"
@@ -1128,7 +1132,7 @@ msgstr "พรีเซ็ต:"
 msgid "Individual functional permissions (FunctionPermission):"
 msgstr "สิทธิ์การทำงานแต่ละรายการ (FunctionPermission):"
 
-#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:279 flask/templates/chat/session.html:844 flask/templates/lorebooks/detail.html:96
+#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:280 flask/templates/chat/session.html:845 flask/templates/lorebooks/detail.html:96
 msgid "Save"
 msgstr "บันทึก"
 
@@ -1264,11 +1268,11 @@ msgstr "การมองเห็น"
 msgid "Private = only playable in your account. Public = visible to all users in the Hub."
 msgstr "ส่วนตัว = เล่นได้เฉพาะในบัญชีของคุณ สาธารณะ = ผู้ใช้ทุกคนสามารถมองเห็นได้ในฮับ"
 
-#: flask/templates/characters/creator.html:98 flask/templates/lorebooks/detail.html:76 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:108 flask/templates/worldinfo/detail.html:110
+#: flask/templates/characters/creator.html:98 flask/templates/lorebooks/detail.html:76 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:108 flask/templates/worldinfo/detail.html:154
 msgid "Private"
 msgstr "ส่วนตัว"
 
-#: flask/templates/characters/creator.html:99 flask/templates/lorebooks/detail.html:77 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:106 flask/templates/worldinfo/detail.html:111
+#: flask/templates/characters/creator.html:99 flask/templates/lorebooks/detail.html:77 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:106 flask/templates/worldinfo/detail.html:155
 msgid "Public"
 msgstr "สาธารณะ"
 
@@ -1658,7 +1662,7 @@ msgstr "แชทใหม่กับ"
 msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
 msgstr "กำหนดค่าตัวตนผู้เล่น WorldInfo ที่ใช้งาน และสมุดตำนานสำหรับเซสชันนี้"
 
-#: flask/templates/chat/select_worldinfo.html:18 flask/templates/chat/session.html:31 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
+#: flask/templates/chat/select_worldinfo.html:18 flask/templates/chat/session.html:32 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
 msgid "Settings"
 msgstr "การตั้งค่า"
 
@@ -1714,263 +1718,263 @@ msgstr "เปิดใช้งานการใช้เหตุผลแบ
 msgid "Start Adventure"
 msgstr "เริ่มการผจญภัย"
 
-#: flask/templates/chat/session.html:36
+#: flask/templates/chat/session.html:37
 msgid "Info"
 msgstr "ข้อมูล"
 
-#: flask/templates/chat/session.html:36
+#: flask/templates/chat/session.html:37
 msgid "Sidebar / Character Info"
 msgstr "แถบด้านข้าง / ข้อมูลตัวละคร"
 
-#: flask/templates/chat/session.html:42 flask/templates/chat/session.html:67 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
+#: flask/templates/chat/session.html:43 flask/templates/chat/session.html:68 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
 msgid "Location:"
 msgstr "สถานที่:"
 
-#: flask/templates/chat/session.html:44
+#: flask/templates/chat/session.html:45
 msgid "World:"
 msgstr "โลก:"
 
-#: flask/templates/chat/session.html:46
+#: flask/templates/chat/session.html:47
 msgid "Neutral Setting"
 msgstr "ฉากกลาง"
 
-#: flask/templates/chat/session.html:83
+#: flask/templates/chat/session.html:84
 msgid "View LLM prompt (Admin)"
 msgstr "ดูพรอมต์ LLM (ผู้ดูแลระบบ)"
 
-#: flask/templates/chat/session.html:85 flask/templates/chat/session.html:111
+#: flask/templates/chat/session.html:86 flask/templates/chat/session.html:112
 msgid "Translate message (on-demand)"
 msgstr "แปลข้อความ (ตามต้องการ)"
 
-#: flask/templates/chat/session.html:86 flask/templates/chat/session.html:112
+#: flask/templates/chat/session.html:87 flask/templates/chat/session.html:113
 msgid "Edit message"
 msgstr "แก้ไขข้อความ"
 
-#: flask/templates/chat/session.html:87 flask/templates/chat/session.html:113
+#: flask/templates/chat/session.html:88 flask/templates/chat/session.html:114
 msgid "Duplicate chat from here (Fork)"
 msgstr "ทำซ้ำแชทจากตรงนี้ (Fork)"
 
-#: flask/templates/chat/session.html:89 flask/templates/chat/session.html:114 flask/templates/macros/system_message.html:27
+#: flask/templates/chat/session.html:90 flask/templates/chat/session.html:115 flask/templates/macros/system_message.html:27
 msgid "Delete from here"
 msgstr "ลบจากตรงนี้"
 
-#: flask/templates/chat/session.html:121
+#: flask/templates/chat/session.html:122
 msgid "Show/hide ALT text (image description)"
 msgstr "แสดง/ซ่อนข้อความ ALT (คำอธิบายภาพ)"
 
-#: flask/templates/chat/session.html:142
+#: flask/templates/chat/session.html:143
 msgid "AI system notice"
 msgstr "ประกาศระบบ AI"
 
-#: flask/templates/chat/session.html:144
+#: flask/templates/chat/session.html:145
 msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
 msgstr "นี่คือแชทบอท AI คำตอบถูกสร้างขึ้นโดยอัตโนมัติจากโมเดลภาษาในเครื่องหรือภายนอก และอาจไม่สมบูรณ์หรือไม่ถูกต้อง"
 
-#: flask/templates/chat/session.html:151
+#: flask/templates/chat/session.html:152
 msgid "Chat options & sessions"
 msgstr "ตัวเลือกแชทและเซสชัน"
 
-#: flask/templates/chat/session.html:151
+#: flask/templates/chat/session.html:152
 msgid "Chat options"
 msgstr "ตัวเลือกแชท"
 
-#: flask/templates/chat/session.html:157
+#: flask/templates/chat/session.html:158
 msgid "Sessions"
 msgstr "เซสชัน"
 
-#: flask/templates/chat/session.html:158
+#: flask/templates/chat/session.html:159
 msgid "Start new chat"
 msgstr "เริ่มแชทใหม่"
 
-#: flask/templates/chat/session.html:160
+#: flask/templates/chat/session.html:161
 msgid "Delete chat"
 msgstr "ลบแชท"
 
-#: flask/templates/chat/session.html:160
+#: flask/templates/chat/session.html:161
 msgid "Do you really want to permanently delete this chat?"
 msgstr "คุณต้องการลบแชทนี้อย่างถาวรหรือไม่?"
 
-#: flask/templates/chat/session.html:164
+#: flask/templates/chat/session.html:165
 msgid "Attach image (Vision ALT analysis)"
 msgstr "แนบภาพ (วิเคราะห์ Vision ALT)"
 
-#: flask/templates/chat/session.html:172
+#: flask/templates/chat/session.html:173
 msgid "Generate scene image"
 msgstr "สร้างภาพฉาก"
 
-#: flask/templates/chat/session.html:179
+#: flask/templates/chat/session.html:180
 msgid "Cancel image generation"
 msgstr "ยกเลิกการสร้างภาพ"
 
-#: flask/templates/chat/session.html:190
+#: flask/templates/chat/session.html:191
 msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
 msgstr "เขียนคำตอบหรือการกระทำของคุณ... (Enter เพื่อส่ง, Shift+Enter เพื่อขึ้นบรรทัดใหม่)"
 
-#: flask/templates/chat/session.html:196
+#: flask/templates/chat/session.html:197
 msgid "Regenerate response – replaces the last AI reply or retries generation"
 msgstr "สร้างคำตอบใหม่ – แทนที่คำตอบ AI ล่าสุดหรือลองสร้างใหม่"
 
-#: flask/templates/chat/session.html:203
+#: flask/templates/chat/session.html:204
 msgid "Cancel response generation"
 msgstr "ยกเลิกการสร้างคำตอบ"
 
-#: flask/templates/chat/session.html:209
+#: flask/templates/chat/session.html:210
 msgid "Send message (Enter)"
 msgstr "ส่งข้อความ (Enter)"
 
-#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:828 flask/templates/lorebooks/detail.html:167
+#: flask/templates/chat/session.html:268 flask/templates/chat/session.html:829 flask/templates/lorebooks/detail.html:167
 msgid "Tags (Comma-separated for vectorless RAG)"
 msgstr "แท็ก (คั่นด้วยจุลภาคสำหรับ RAG แบบไม่ใช้เวกเตอร์)"
 
-#: flask/templates/chat/session.html:271 flask/templates/chat/session.html:832
+#: flask/templates/chat/session.html:272 flask/templates/chat/session.html:833
 msgid "Summary"
 msgstr "สรุป"
 
-#: flask/templates/chat/session.html:276 flask/templates/chat/session.html:838
+#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:839
 msgid "Recalculate"
 msgstr "คำนวณใหม่"
 
-#: flask/templates/chat/session.html:276 flask/templates/chat/session.html:837
+#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:838
 msgid "Recalculate memory from associated episode messages"
 msgstr "คำนวณความทรงจำใหม่จากข้อความเหตุการณ์ที่เกี่ยวข้อง"
 
-#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:841
+#: flask/templates/chat/session.html:278 flask/templates/chat/session.html:842
 msgid "Translate"
 msgstr "แปล"
 
-#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:840
+#: flask/templates/chat/session.html:278 flask/templates/chat/session.html:841
 msgid "Translate memory in-place to your language"
 msgstr "แปลความทรงจำในตำแหน่งเดิมเป็นภาษาของคุณ"
 
-#: flask/templates/chat/session.html:295
+#: flask/templates/chat/session.html:296
 msgid "Relationship Settings"
 msgstr ""
 
-#: flask/templates/chat/session.html:298
+#: flask/templates/chat/session.html:299
 msgid "Show relationship debug labels"
 msgstr ""
 
-#: flask/templates/chat/session.html:309
+#: flask/templates/chat/session.html:310
 msgid "Reset relationship to default and recalculate from chat history"
 msgstr ""
 
-#: flask/templates/chat/session.html:316
+#: flask/templates/chat/session.html:317
 msgid "Recalculate relationship"
 msgstr ""
 
-#: flask/templates/chat/session.html:339
+#: flask/templates/chat/session.html:340
 msgid "Thinking: Enabled (Click to disable)"
 msgstr "การคิด: เปิดใช้งาน (คลิกเพื่อปิด)"
 
-#: flask/templates/chat/session.html:339
+#: flask/templates/chat/session.html:340
 msgid "Thinking: Disabled (Click to enable)"
 msgstr "การคิด: ปิดใช้งาน (คลิกเพื่อเปิด)"
 
-#: flask/templates/chat/session.html:340
+#: flask/templates/chat/session.html:341
 msgid "Disable thinking"
 msgstr "ปิดการคิด"
 
-#: flask/templates/chat/session.html:340
+#: flask/templates/chat/session.html:341
 msgid "Enable thinking"
 msgstr "เปิดการคิด"
 
-#: flask/templates/chat/session.html:353 flask/templates/macros/cards.html:91
+#: flask/templates/chat/session.html:354 flask/templates/macros/cards.html:91
 msgid "Relationship:"
 msgstr "ความสัมพันธ์:"
 
-#: flask/templates/chat/session.html:364
+#: flask/templates/chat/session.html:365
 msgid "Active Persona"
 msgstr "เพอร์โซนาที่ใช้งาน"
 
-#: flask/templates/chat/session.html:369
+#: flask/templates/chat/session.html:370
 msgid "Edit player persona"
 msgstr "แก้ไขเพอร์โซนาผู้เล่น"
 
-#: flask/templates/chat/session.html:386
+#: flask/templates/chat/session.html:387
 msgid "Unknown"
 msgstr "ไม่ทราบ"
 
-#: flask/templates/chat/session.html:387
+#: flask/templates/chat/session.html:388
 msgid "Persona is locked for this chat after the 1st message"
 msgstr "เพอร์โซนาจะถูกล็อกสำหรับแชทนี้หลังข้อความแรก"
 
-#: flask/templates/chat/session.html:410
+#: flask/templates/chat/session.html:411
 msgid "No World (Neutral)"
 msgstr "ไม่มีโลก (เป็นกลาง)"
 
-#: flask/templates/chat/session.html:413
+#: flask/templates/chat/session.html:414
 msgid "Switch world"
 msgstr "เปลี่ยนโลก"
 
-#: flask/templates/chat/session.html:424
+#: flask/templates/chat/session.html:425
 msgid "Current Location"
 msgstr "ตำแหน่งปัจจุบัน"
 
-#: flask/templates/chat/session.html:426
+#: flask/templates/chat/session.html:427
 msgid "-- Choose location --"
 msgstr "-- เลือกตำแหน่ง --"
 
-#: flask/templates/chat/session.html:444
+#: flask/templates/chat/session.html:445
 msgid "Enable random events"
 msgstr "เปิดใช้งานเหตุการณ์สุ่ม"
 
-#: flask/templates/chat/session.html:449
+#: flask/templates/chat/session.html:450
 msgid "Admin & creator info: Cooldown until the next random event"
 msgstr "ข้อมูลผู้ดูแลและผู้สร้าง: เวลารอก่อนเหตุการณ์สุ่มถัดไป"
 
-#: flask/templates/chat/session.html:450
+#: flask/templates/chat/session.html:451
 msgid "Next event:"
 msgstr "เหตุการณ์ถัดไป:"
 
-#: flask/templates/chat/session.html:453 flask/templates/chat/session.html:457
+#: flask/templates/chat/session.html:454 flask/templates/chat/session.html:458
 msgid "in"
 msgstr "ในอีก"
 
-#: flask/templates/chat/session.html:453
+#: flask/templates/chat/session.html:454
 msgid "message"
 msgstr "ข้อความ"
 
-#: flask/templates/chat/session.html:453 flask/templates/chat/session.html:457
+#: flask/templates/chat/session.html:454 flask/templates/chat/session.html:458
 msgid "messages"
 msgstr "ข้อความ"
 
-#: flask/templates/chat/session.html:453
+#: flask/templates/chat/session.html:454
 msgid "paused"
 msgstr "หยุดชั่วคราว"
 
-#: flask/templates/chat/session.html:455
+#: flask/templates/chat/session.html:456
 msgid "next message"
 msgstr "ข้อความถัดไป"
 
-#: flask/templates/chat/session.html:530
+#: flask/templates/chat/session.html:531
 msgid "Do you really want to delete this session?"
 msgstr "คุณต้องการลบเซสชันนี้จริงหรือไม่?"
 
-#: flask/templates/chat/session.html:532
+#: flask/templates/chat/session.html:533
 msgid "Delete session"
 msgstr "ลบเซสชัน"
 
-#: flask/templates/chat/session.html:756
+#: flask/templates/chat/session.html:757
 msgid "Permanently delete this message and all subsequent messages (including associated memories)?"
 msgstr "ลบข้อความนี้และข้อความถัดไปทั้งหมด (รวมถึงความทรงจำที่เกี่ยวข้อง) อย่างถาวรหรือไม่?"
 
-#: flask/templates/chat/session.html:955
+#: flask/templates/chat/session.html:956
 msgid "Recalculation error"
 msgstr "ข้อผิดพลาดในการคำนวณใหม่"
 
-#: flask/templates/chat/session.html:957
+#: flask/templates/chat/session.html:958
 msgid "Recalculation error:"
 msgstr "ข้อผิดพลาดในการคำนวณใหม่:"
 
-#: flask/templates/chat/session.html:994
+#: flask/templates/chat/session.html:995
 msgid "Translated!"
 msgstr "แปลแล้ว!"
 
-#: flask/templates/chat/session.html:1006
+#: flask/templates/chat/session.html:1007
 msgid "Translation error"
 msgstr "ข้อผิดพลาดในการแปล"
 
-#: flask/templates/chat/session.html:1008
+#: flask/templates/chat/session.html:1009
 msgid "Translation error:"
 msgstr "ข้อผิดพลาดในการแปล:"
 
@@ -2082,7 +2086,7 @@ msgstr "ข้อเท็จจริง ประวัติ หรือก�
 msgid "Create New Lorebook Entry"
 msgstr "สร้างรายการสมุดตำนานใหม่"
 
-#: flask/templates/lorebooks/detail.html:237 flask/templates/worldinfo/detail.html:196 flask/templates/worldinfo/detail.html:329
+#: flask/templates/lorebooks/detail.html:237 flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:373
 msgid "Tags (Comma-separated)"
 msgstr "แท็ก (คั่นด้วยจุลภาค)"
 
@@ -2738,107 +2742,135 @@ msgstr "เลือกหน้าปก"
 msgid "Crop"
 msgstr "ครอบตัด"
 
+#: flask/templates/worldinfo/detail.html:106
+msgid "World Backdrop (16:9)"
+msgstr ""
+
 #: flask/templates/worldinfo/detail.html:107
+msgid "Optional 16:9 chat background for this world. Overrides the System Backdrop when a location has no background image of its own (Priority: System → World → Location)."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:119
+msgid "No world backdrop set"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:121
+msgid "Uses System Backdrop unless a location defines its own background."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:131
+msgid "Choose Backdrop"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:137
+msgid "Remove Backdrop"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:141
+msgid "Priority in chat: System → World → Location"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:151
 msgid "Private = only accessible to you. Public = accessible to all users for chats."
 msgstr "ส่วนตัว = เข้าถึงได้เฉพาะคุณเท่านั้น สาธารณะ = ผู้ใช้ทุกคนเข้าถึงได้สำหรับแชท"
 
-#: flask/templates/worldinfo/detail.html:118
+#: flask/templates/worldinfo/detail.html:162
 msgid "Linked Lorebook (Optional)"
 msgstr "สมุดตำนานที่เชื่อมโยง (ไม่บังคับ)"
 
-#: flask/templates/worldinfo/detail.html:119
+#: flask/templates/worldinfo/detail.html:163
 msgid "An optional lorebook automatically included alongside character lorebooks in all chats using this world."
 msgstr "สมุดตำนานเพิ่มเติมที่จะถูกรวมเข้ากับสมุดตำนานของตัวละครโดยอัตโนมัติในทุกแชทที่ใช้โลกนี้"
 
-#: flask/templates/worldinfo/detail.html:122
+#: flask/templates/worldinfo/detail.html:166
 msgid "No lorebook linked"
 msgstr "ไม่ได้เชื่อมโยงสมุดตำนาน"
 
-#: flask/templates/worldinfo/detail.html:144
+#: flask/templates/worldinfo/detail.html:188
 msgid "New Location"
 msgstr "สถานที่ใหม่"
 
-#: flask/templates/worldinfo/detail.html:151 flask/templates/worldinfo/detail.html:154 flask/templates/worldinfo/detail.html:166
+#: flask/templates/worldinfo/detail.html:195 flask/templates/worldinfo/detail.html:198 flask/templates/worldinfo/detail.html:210
 msgid "This location is bound to"
 msgstr "สถานที่นี้ผูกไว้กับ"
 
-#: flask/templates/worldinfo/detail.html:177
+#: flask/templates/worldinfo/detail.html:221
 msgid "Edit Location:"
 msgstr "แก้ไขสถานที่:"
 
-#: flask/templates/worldinfo/detail.html:183 flask/templates/worldinfo/detail.html:316
+#: flask/templates/worldinfo/detail.html:227 flask/templates/worldinfo/detail.html:360
 msgid "Location Name"
 msgstr "ชื่อสถานที่"
 
-#: flask/templates/worldinfo/detail.html:184 flask/templates/worldinfo/detail.html:317
+#: flask/templates/worldinfo/detail.html:228 flask/templates/worldinfo/detail.html:361
 msgid "Name of the location (e.g. Old Library, Griffin Tavern)."
 msgstr "ชื่อของสถานที่ (เช่น ห้องสมุดเก่า, โรงเตี๊ยมกริฟฟิน)"
 
-#: flask/templates/worldinfo/detail.html:197 flask/templates/worldinfo/detail.html:330
+#: flask/templates/worldinfo/detail.html:241 flask/templates/worldinfo/detail.html:374
 msgid "Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet)."
 msgstr "คำสำคัญคั่นด้วยจุลภาคที่อธิบายสภาพแวดล้อม (เช่น ในร่ม, อบอุ่น, เงียบสงบ)"
 
-#: flask/templates/worldinfo/detail.html:199 flask/templates/worldinfo/detail.html:332
+#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:376
 msgid "Extract Tags"
 msgstr "แยกแท็ก"
 
-#: flask/templates/worldinfo/detail.html:207 flask/templates/worldinfo/detail.html:340
+#: flask/templates/worldinfo/detail.html:251 flask/templates/worldinfo/detail.html:384
 msgid "16:9 Background Image (PNG, JPG, WEBP)"
 msgstr "รูปภาพพื้นหลัง 16:9 (PNG, JPG, WEBP)"
 
-#: flask/templates/worldinfo/detail.html:208 flask/templates/worldinfo/detail.html:341
+#: flask/templates/worldinfo/detail.html:252 flask/templates/worldinfo/detail.html:385
 msgid "Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference."
 msgstr "รูปภาพแนวนอน 16:9 ที่ใช้เป็นฉากหลังเวทีแชทและข้อมูลอ้างอิงของ ComfyUI"
 
-#: flask/templates/worldinfo/detail.html:214 flask/templates/worldinfo/detail.html:347
+#: flask/templates/worldinfo/detail.html:258 flask/templates/worldinfo/detail.html:391
 msgid "Analyze & Describe Image"
 msgstr "วิเคราะห์และอธิบายรูปภาพ"
 
-#: flask/templates/worldinfo/detail.html:221 flask/templates/worldinfo/detail.html:354
+#: flask/templates/worldinfo/detail.html:265 flask/templates/worldinfo/detail.html:398
 msgid "Location Description"
 msgstr "คำอธิบายสถานที่"
 
-#: flask/templates/worldinfo/detail.html:222 flask/templates/worldinfo/detail.html:355
+#: flask/templates/worldinfo/detail.html:266 flask/templates/worldinfo/detail.html:399
 msgid "Atmospheric description of the environment, sounds, and mood."
 msgstr "คำอธิบายบรรยากาศของสภาพแวดล้อม เสียง และอารมณ์"
 
-#: flask/templates/worldinfo/detail.html:239 flask/templates/worldinfo/detail.html:372
+#: flask/templates/worldinfo/detail.html:283 flask/templates/worldinfo/detail.html:416
 msgid "Character Binding (Optional)"
 msgstr "การผูกตัวละคร (ไม่บังคับ)"
 
-#: flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:373
+#: flask/templates/worldinfo/detail.html:284 flask/templates/worldinfo/detail.html:417
 msgid "If selected, this location can only be entered when chatting with that specific character."
 msgstr "หากเลือก สถานที่นี้จะสามารถเข้าไปได้เฉพาะเมื่อแชทกับตัวละครนั้นเท่านั้น"
 
-#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:376
+#: flask/templates/worldinfo/detail.html:287 flask/templates/worldinfo/detail.html:420
 msgid "No character (Freely accessible)"
 msgstr "ไม่มีตัวละคร (เข้าถึงได้อย่างอิสระ)"
 
-#: flask/templates/worldinfo/detail.html:253
+#: flask/templates/worldinfo/detail.html:297
 msgid "Assigned Location Events:"
 msgstr "เหตุการณ์ของสถานที่ที่กำหนด:"
 
-#: flask/templates/worldinfo/detail.html:258
+#: flask/templates/worldinfo/detail.html:302
 msgid "No specific location events assigned."
 msgstr "ไม่มีเหตุการณ์เฉพาะของสถานที่ที่กำหนดไว้"
 
-#: flask/templates/worldinfo/detail.html:310
+#: flask/templates/worldinfo/detail.html:354
 msgid "Create New Location"
 msgstr "สร้างสถานที่ใหม่"
 
-#: flask/templates/worldinfo/detail.html:334
+#: flask/templates/worldinfo/detail.html:378
 msgid "tavern, forest, castle"
 msgstr "โรงเตี๊ยม, ป่า, ปราสาท"
 
-#: flask/templates/worldinfo/detail.html:387
+#: flask/templates/worldinfo/detail.html:431
 msgid "Save Location"
 msgstr "บันทึกสถานที่"
 
-#: flask/templates/worldinfo/detail.html:394
+#: flask/templates/worldinfo/detail.html:438
 msgid "Set 1:1 World Cover"
 msgstr "ตั้งค่าหน้าปกโลก 1:1"
 
-#: flask/templates/worldinfo/detail.html:394
+#: flask/templates/worldinfo/detail.html:438
 msgid "1:1 Cover"
 msgstr "หน้าปก 1:1"
 

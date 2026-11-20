@@ -36,6 +36,10 @@ msgstr "Configurações de serviço e modelos salvos com sucesso."
 msgid "System-wide default backdrop reset (default theme active)."
 msgstr "Plano de fundo padrão do sistema redefinido (tema padrão ativo)."
 
+#: flask/application/admin/views.py:508
+msgid "World Backdrop"
+msgstr ""
+
 #: flask/application/admin/views.py:487
 msgid "Please select an image file (PNG, JPG, WEBP) to upload."
 msgstr "Selecione um arquivo de imagem (PNG, JPG, WEBP) para enviar."
@@ -88,11 +92,11 @@ msgstr "Personagem não encontrado ou sem permissão."
 msgid "Invalid or inaccessible location selected."
 msgstr "Local selecionado inválido ou inacessível."
 
-#: flask/application/characters/views.py:564 flask/application/worldinfo/views.py:383
+#: flask/application/characters/views.py:564 flask/application/worldinfo/views.py:391
 msgid "Event '%(title)s' added."
 msgstr "Evento '%(title)s' adicionado."
 
-#: flask/application/characters/views.py:631 flask/application/worldinfo/views.py:440
+#: flask/application/characters/views.py:631 flask/application/worldinfo/views.py:448
 msgid "Event deleted."
 msgstr "Evento excluído."
 
@@ -112,7 +116,7 @@ msgstr "Imagem de galeria 9:16 adicionada."
 msgid "Sprite '%(name)s' uploaded."
 msgstr "Sprite '%(name)s' enviado."
 
-#: flask/application/characters/views.py:610 flask/application/worldinfo/views.py:422
+#: flask/application/characters/views.py:610 flask/application/worldinfo/views.py:430
 msgid "Event updated."
 msgstr "Evento atualizado."
 
@@ -164,7 +168,7 @@ msgstr "Erro ao recalcular: %(error)s"
 msgid "Invalid WorldInfo."
 msgstr "WorldInfo inválido."
 
-#: flask/application/chat/views.py:242 flask/application/chat/views.py:560 flask/application/worldinfo/views.py:120 flask/application/worldinfo/views.py:228
+#: flask/application/chat/views.py:242 flask/application/chat/views.py:560 flask/application/worldinfo/views.py:128 flask/application/worldinfo/views.py:236
 msgid "This world is not yet available in your language."
 msgstr "Este mundo ainda não está disponível no seu idioma."
 
@@ -192,7 +196,7 @@ msgstr "Pensamento desativado."
 msgid "Chat title updated."
 msgstr "Título do chat atualizado."
 
-#: flask/application/lorebooks/views.py:135 flask/application/worldinfo/views.py:231
+#: flask/application/lorebooks/views.py:135 flask/application/worldinfo/views.py:239
 msgid "Copy '%(name)s' created successfully."
 msgstr "Cópia '%(name)s' criada com sucesso."
 
@@ -280,7 +284,7 @@ msgstr "Configuración de cuenta guardada."
 msgid "Character"
 msgstr "Personaje"
 
-#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:404
+#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/session.html:405
 msgid "World"
 msgstr "Mundo"
 
@@ -328,11 +332,11 @@ msgstr "Administrador inicial e backend de IA configurados com sucesso!"
 msgid "Cloud AI mode: automatic background translation is disabled. Use the greyed-out flag pill-badges to translate into other registered user languages."
 msgstr "Modo IA na nuvem: a tradução automática em segundo plano está desativada. Use os emblemas de bandeira acinzentados para traduzir para outros idiomas de usuário registrados."
 
-#: flask/application/worldinfo/views.py:246
+#: flask/application/worldinfo/views.py:254
 msgid "WorldInfo deleted."
 msgstr "WorldInfo excluído."
 
-#: flask/application/worldinfo/views.py:348
+#: flask/application/worldinfo/views.py:356
 msgid "Location deleted."
 msgstr "Local excluído."
 
@@ -340,19 +344,19 @@ msgstr "Local excluído."
 msgid "WorldInfo '%(name)s' created."
 msgstr "WorldInfo '%(name)s' criado."
 
-#: flask/application/worldinfo/views.py:54 flask/application/worldinfo/views.py:220
+#: flask/application/worldinfo/views.py:54 flask/application/worldinfo/views.py:228
 msgid "WorldInfo not found."
 msgstr "WorldInfo não encontrado."
 
-#: flask/application/worldinfo/views.py:243
+#: flask/application/worldinfo/views.py:251
 msgid "WorldInfo not found or no permission to delete."
 msgstr "WorldInfo não encontrado ou sem permissão para excluir."
 
-#: flask/application/worldinfo/views.py:258 flask/application/worldinfo/views.py:300 flask/application/worldinfo/views.py:344 flask/application/worldinfo/views.py:360 flask/application/worldinfo/views.py:397
+#: flask/application/worldinfo/views.py:266 flask/application/worldinfo/views.py:308 flask/application/worldinfo/views.py:352 flask/application/worldinfo/views.py:368 flask/application/worldinfo/views.py:405
 msgid "WorldInfo not found or no permission."
 msgstr "WorldInfo não encontrado ou sem permissão."
 
-#: flask/application/worldinfo/views.py:285
+#: flask/application/worldinfo/views.py:293
 msgid "Location '%(name)s' created."
 msgstr "Local '%(name)s' criado."
 
@@ -360,11 +364,11 @@ msgstr "Local '%(name)s' criado."
 msgid "Access denied: You can only edit your own WorldInfos or creations shared with you."
 msgstr "Acesso negado: você só pode editar seus próprios WorldInfos ou criações compartilhadas com você."
 
-#: flask/application/worldinfo/views.py:90
+#: flask/application/worldinfo/views.py:98
 msgid "WorldInfo saved."
 msgstr "WorldInfo salvo."
 
-#: flask/application/worldinfo/views.py:329
+#: flask/application/worldinfo/views.py:337
 msgid "Location updated."
 msgstr "Local atualizado."
 
@@ -604,7 +608,7 @@ msgstr "Exclusão bloqueada"
 msgid "Delete"
 msgstr "Excluir"
 
-#: flask/i18n.py:125 flask/templates/chat/session.html:971
+#: flask/i18n.py:125 flask/templates/chat/session.html:972
 msgid "Translating..."
 msgstr "Traduzindo..."
 
@@ -689,8 +693,8 @@ msgid "Rule: Priority in Chat"
 msgstr "Regra: Prioridade no chat"
 
 #: flask/templates/admin/backdrop.html:50
-msgid "This default backdrop forms the foundational background. In chat, it is only overridden when the current location has its own background image. If a location has no image or roleplay switches to a neutral setting, this system default automatically applies again."
-msgstr "Este plano de fundo padrão forma a base principal. No chat, ele só é substituído quando o local atual possui sua própria imagem de fundo. Se um local não tiver imagem ou o RPG mudar para um cenário neutro, este padrão do sistema volta a ser aplicado."
+msgid "This default backdrop forms the foundational background (Priority: System → World → Location). In chat, it is overridden by the active WorldInfo backdrop if set, and further overridden when the current location has its own background image."
+msgstr ""
 
 #: flask/templates/admin/backdrop.html:56
 msgid "Do you really want to remove the custom default backdrop and reset to the default theme?"
@@ -1128,7 +1132,7 @@ msgstr "Preset:"
 msgid "Individual functional permissions (FunctionPermission):"
 msgstr "Permissões funcionais individuais (FunctionPermission):"
 
-#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:279 flask/templates/chat/session.html:844 flask/templates/lorebooks/detail.html:96
+#: flask/templates/admin/user_form.html:73 flask/templates/characters/creator.html:219 flask/templates/chat/session.html:280 flask/templates/chat/session.html:845 flask/templates/lorebooks/detail.html:96
 msgid "Save"
 msgstr "Salvar"
 
@@ -1264,11 +1268,11 @@ msgstr "Visibilidade"
 msgid "Private = only playable in your account. Public = visible to all users in the Hub."
 msgstr "Privado = jogável apenas na sua conta. Público = visível para todos os usuários no Hub."
 
-#: flask/templates/characters/creator.html:98 flask/templates/lorebooks/detail.html:76 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:108 flask/templates/worldinfo/detail.html:110
+#: flask/templates/characters/creator.html:98 flask/templates/lorebooks/detail.html:76 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:108 flask/templates/worldinfo/detail.html:154
 msgid "Private"
 msgstr "Privado"
 
-#: flask/templates/characters/creator.html:99 flask/templates/lorebooks/detail.html:77 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:106 flask/templates/worldinfo/detail.html:111
+#: flask/templates/characters/creator.html:99 flask/templates/lorebooks/detail.html:77 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:106 flask/templates/worldinfo/detail.html:155
 msgid "Public"
 msgstr "Público"
 
@@ -1658,7 +1662,7 @@ msgstr "Novo chat com"
 msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
 msgstr "Configura tu persona de jugador, WorldInfo activa y lorebooks para esta sesión."
 
-#: flask/templates/chat/select_worldinfo.html:18 flask/templates/chat/session.html:31 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
+#: flask/templates/chat/select_worldinfo.html:18 flask/templates/chat/session.html:32 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:12
 msgid "Settings"
 msgstr "Configurações"
 
@@ -1714,263 +1718,263 @@ msgstr "Activa el razonamiento extendido para modelos compatibles (p. ej. Gemma 
 msgid "Start Adventure"
 msgstr "Iniciar aventura"
 
-#: flask/templates/chat/session.html:36
+#: flask/templates/chat/session.html:37
 msgid "Info"
 msgstr "Info"
 
-#: flask/templates/chat/session.html:36
+#: flask/templates/chat/session.html:37
 msgid "Sidebar / Character Info"
 msgstr "Barra lateral / Info do personagem"
 
-#: flask/templates/chat/session.html:42 flask/templates/chat/session.html:67 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
+#: flask/templates/chat/session.html:43 flask/templates/chat/session.html:68 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
 msgid "Location:"
 msgstr "Local:"
 
-#: flask/templates/chat/session.html:44
+#: flask/templates/chat/session.html:45
 msgid "World:"
 msgstr "Mundo:"
 
-#: flask/templates/chat/session.html:46
+#: flask/templates/chat/session.html:47
 msgid "Neutral Setting"
 msgstr "Cenário Neutro"
 
-#: flask/templates/chat/session.html:83
+#: flask/templates/chat/session.html:84
 msgid "View LLM prompt (Admin)"
 msgstr "Ver prompt do LLM (Admin)"
 
-#: flask/templates/chat/session.html:85 flask/templates/chat/session.html:111
+#: flask/templates/chat/session.html:86 flask/templates/chat/session.html:112
 msgid "Translate message (on-demand)"
 msgstr "Traduzir mensagem (sob demanda)"
 
-#: flask/templates/chat/session.html:86 flask/templates/chat/session.html:112
+#: flask/templates/chat/session.html:87 flask/templates/chat/session.html:113
 msgid "Edit message"
 msgstr "Editar mensagem"
 
-#: flask/templates/chat/session.html:87 flask/templates/chat/session.html:113
+#: flask/templates/chat/session.html:88 flask/templates/chat/session.html:114
 msgid "Duplicate chat from here (Fork)"
 msgstr "Duplicar chat a partir daqui (Fork)"
 
-#: flask/templates/chat/session.html:89 flask/templates/chat/session.html:114 flask/templates/macros/system_message.html:27
+#: flask/templates/chat/session.html:90 flask/templates/chat/session.html:115 flask/templates/macros/system_message.html:27
 msgid "Delete from here"
 msgstr "Excluir a partir daqui"
 
-#: flask/templates/chat/session.html:121
+#: flask/templates/chat/session.html:122
 msgid "Show/hide ALT text (image description)"
 msgstr "Mostrar/ocultar texto ALT (descrição da imagem)"
 
-#: flask/templates/chat/session.html:142
+#: flask/templates/chat/session.html:143
 msgid "AI system notice"
 msgstr "Aviso do sistema de IA"
 
-#: flask/templates/chat/session.html:144
+#: flask/templates/chat/session.html:145
 msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
 msgstr "Este é um chatbot de IA. As respostas são geradas automaticamente por modelos de linguagem locais ou externos e podem estar incompletas ou imprecisas."
 
-#: flask/templates/chat/session.html:151
+#: flask/templates/chat/session.html:152
 msgid "Chat options & sessions"
 msgstr "Opções do chat e sessões"
 
-#: flask/templates/chat/session.html:151
+#: flask/templates/chat/session.html:152
 msgid "Chat options"
 msgstr "Opções do chat"
 
-#: flask/templates/chat/session.html:157
+#: flask/templates/chat/session.html:158
 msgid "Sessions"
 msgstr "Sessões"
 
-#: flask/templates/chat/session.html:158
+#: flask/templates/chat/session.html:159
 msgid "Start new chat"
 msgstr "Iniciar novo chat"
 
-#: flask/templates/chat/session.html:160
+#: flask/templates/chat/session.html:161
 msgid "Delete chat"
 msgstr "Excluir chat"
 
-#: flask/templates/chat/session.html:160
+#: flask/templates/chat/session.html:161
 msgid "Do you really want to permanently delete this chat?"
 msgstr "Deseja realmente excluir este chat permanentemente?"
 
-#: flask/templates/chat/session.html:164
+#: flask/templates/chat/session.html:165
 msgid "Attach image (Vision ALT analysis)"
 msgstr "Anexar imagem (análise Vision ALT)"
 
-#: flask/templates/chat/session.html:172
+#: flask/templates/chat/session.html:173
 msgid "Generate scene image"
 msgstr "Gerar imagem da cena"
 
-#: flask/templates/chat/session.html:179
+#: flask/templates/chat/session.html:180
 msgid "Cancel image generation"
 msgstr "Cancelar geração de imagem"
 
-#: flask/templates/chat/session.html:190
+#: flask/templates/chat/session.html:191
 msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
 msgstr "Escreva sua resposta ou ação... (Enter para enviar, Shift+Enter para quebra de linha)"
 
-#: flask/templates/chat/session.html:196
+#: flask/templates/chat/session.html:197
 msgid "Regenerate response – replaces the last AI reply or retries generation"
 msgstr "Regenerar resposta – substitui a última resposta da IA ou tenta novamente a geração"
 
-#: flask/templates/chat/session.html:203
+#: flask/templates/chat/session.html:204
 msgid "Cancel response generation"
 msgstr "Cancelar geração de resposta"
 
-#: flask/templates/chat/session.html:209
+#: flask/templates/chat/session.html:210
 msgid "Send message (Enter)"
 msgstr "Enviar mensagem (Enter)"
 
-#: flask/templates/chat/session.html:267 flask/templates/chat/session.html:828 flask/templates/lorebooks/detail.html:167
+#: flask/templates/chat/session.html:268 flask/templates/chat/session.html:829 flask/templates/lorebooks/detail.html:167
 msgid "Tags (Comma-separated for vectorless RAG)"
 msgstr "Etiquetas (separadas por comas para RAG)"
 
-#: flask/templates/chat/session.html:271 flask/templates/chat/session.html:832
+#: flask/templates/chat/session.html:272 flask/templates/chat/session.html:833
 msgid "Summary"
 msgstr "Resumo"
 
-#: flask/templates/chat/session.html:276 flask/templates/chat/session.html:838
+#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:839
 msgid "Recalculate"
 msgstr "Recalcular"
 
-#: flask/templates/chat/session.html:276 flask/templates/chat/session.html:837
+#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:838
 msgid "Recalculate memory from associated episode messages"
 msgstr "Recalcular memória a partir das mensagens do episódio associadas"
 
-#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:841
+#: flask/templates/chat/session.html:278 flask/templates/chat/session.html:842
 msgid "Translate"
 msgstr "Traduzir"
 
-#: flask/templates/chat/session.html:277 flask/templates/chat/session.html:840
+#: flask/templates/chat/session.html:278 flask/templates/chat/session.html:841
 msgid "Translate memory in-place to your language"
 msgstr "Traduzir memória no local para o seu idioma"
 
-#: flask/templates/chat/session.html:295
+#: flask/templates/chat/session.html:296
 msgid "Relationship Settings"
 msgstr ""
 
-#: flask/templates/chat/session.html:298
+#: flask/templates/chat/session.html:299
 msgid "Show relationship debug labels"
 msgstr ""
 
-#: flask/templates/chat/session.html:309
+#: flask/templates/chat/session.html:310
 msgid "Reset relationship to default and recalculate from chat history"
 msgstr ""
 
-#: flask/templates/chat/session.html:316
+#: flask/templates/chat/session.html:317
 msgid "Recalculate relationship"
 msgstr ""
 
-#: flask/templates/chat/session.html:339
+#: flask/templates/chat/session.html:340
 msgid "Thinking: Enabled (Click to disable)"
 msgstr "Pensamento: Ativado (Clique para desativar)"
 
-#: flask/templates/chat/session.html:339
+#: flask/templates/chat/session.html:340
 msgid "Thinking: Disabled (Click to enable)"
 msgstr "Pensamento: Desativado (Clique para ativar)"
 
-#: flask/templates/chat/session.html:340
+#: flask/templates/chat/session.html:341
 msgid "Disable thinking"
 msgstr "Desativar pensamento"
 
-#: flask/templates/chat/session.html:340
+#: flask/templates/chat/session.html:341
 msgid "Enable thinking"
 msgstr "Ativar pensamento"
 
-#: flask/templates/chat/session.html:353 flask/templates/macros/cards.html:91
+#: flask/templates/chat/session.html:354 flask/templates/macros/cards.html:91
 msgid "Relationship:"
 msgstr "Relacionamento:"
 
-#: flask/templates/chat/session.html:364
+#: flask/templates/chat/session.html:365
 msgid "Active Persona"
 msgstr "Persona ativa"
 
-#: flask/templates/chat/session.html:369
+#: flask/templates/chat/session.html:370
 msgid "Edit player persona"
 msgstr "Editar persona do jogador"
 
-#: flask/templates/chat/session.html:386
+#: flask/templates/chat/session.html:387
 msgid "Unknown"
 msgstr "Desconhecido"
 
-#: flask/templates/chat/session.html:387
+#: flask/templates/chat/session.html:388
 msgid "Persona is locked for this chat after the 1st message"
 msgstr "A persona fica bloqueada neste chat após a 1.ª mensagem"
 
-#: flask/templates/chat/session.html:410
+#: flask/templates/chat/session.html:411
 msgid "No World (Neutral)"
 msgstr "Sem mundo (Neutro)"
 
-#: flask/templates/chat/session.html:413
+#: flask/templates/chat/session.html:414
 msgid "Switch world"
 msgstr "Trocar de mundo"
 
-#: flask/templates/chat/session.html:424
+#: flask/templates/chat/session.html:425
 msgid "Current Location"
 msgstr "Local atual"
 
-#: flask/templates/chat/session.html:426
+#: flask/templates/chat/session.html:427
 msgid "-- Choose location --"
 msgstr "-- Escolher local --"
 
-#: flask/templates/chat/session.html:444
+#: flask/templates/chat/session.html:445
 msgid "Enable random events"
 msgstr "Ativar eventos aleatórios"
 
-#: flask/templates/chat/session.html:449
+#: flask/templates/chat/session.html:450
 msgid "Admin & creator info: Cooldown until the next random event"
 msgstr "Info de admin e criador: Espera até o próximo evento aleatório"
 
-#: flask/templates/chat/session.html:450
+#: flask/templates/chat/session.html:451
 msgid "Next event:"
 msgstr "Próximo evento:"
 
-#: flask/templates/chat/session.html:453 flask/templates/chat/session.html:457
+#: flask/templates/chat/session.html:454 flask/templates/chat/session.html:458
 msgid "in"
 msgstr "em"
 
-#: flask/templates/chat/session.html:453
+#: flask/templates/chat/session.html:454
 msgid "message"
 msgstr "mensagem"
 
-#: flask/templates/chat/session.html:453 flask/templates/chat/session.html:457
+#: flask/templates/chat/session.html:454 flask/templates/chat/session.html:458
 msgid "messages"
 msgstr "mensagens"
 
-#: flask/templates/chat/session.html:453
+#: flask/templates/chat/session.html:454
 msgid "paused"
 msgstr "pausado"
 
-#: flask/templates/chat/session.html:455
+#: flask/templates/chat/session.html:456
 msgid "next message"
 msgstr "próxima mensagem"
 
-#: flask/templates/chat/session.html:530
+#: flask/templates/chat/session.html:531
 msgid "Do you really want to delete this session?"
 msgstr "Deseja realmente excluir esta sessão?"
 
-#: flask/templates/chat/session.html:532
+#: flask/templates/chat/session.html:533
 msgid "Delete session"
 msgstr "Excluir sessão"
 
-#: flask/templates/chat/session.html:756
+#: flask/templates/chat/session.html:757
 msgid "Permanently delete this message and all subsequent messages (including associated memories)?"
 msgstr "Excluir permanentemente esta mensagem e todas as mensagens subsequentes (incluindo memórias associadas)?"
 
-#: flask/templates/chat/session.html:955
+#: flask/templates/chat/session.html:956
 msgid "Recalculation error"
 msgstr "Erro ao recalcular"
 
-#: flask/templates/chat/session.html:957
+#: flask/templates/chat/session.html:958
 msgid "Recalculation error:"
 msgstr "Erro ao recalcular:"
 
-#: flask/templates/chat/session.html:994
+#: flask/templates/chat/session.html:995
 msgid "Translated!"
 msgstr "Traduzido!"
 
-#: flask/templates/chat/session.html:1006
+#: flask/templates/chat/session.html:1007
 msgid "Translation error"
 msgstr "Erro de tradução"
 
-#: flask/templates/chat/session.html:1008
+#: flask/templates/chat/session.html:1009
 msgid "Translation error:"
 msgstr "Erro de tradução:"
 
@@ -2082,7 +2086,7 @@ msgstr "Datos, historia o reglas compactas para la IA."
 msgid "Create New Lorebook Entry"
 msgstr "Crear nueva entrada de Lorebook"
 
-#: flask/templates/lorebooks/detail.html:237 flask/templates/worldinfo/detail.html:196 flask/templates/worldinfo/detail.html:329
+#: flask/templates/lorebooks/detail.html:237 flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:373
 msgid "Tags (Comma-separated)"
 msgstr "Etiquetas (separadas por comas)"
 
@@ -2738,107 +2742,135 @@ msgstr "Elegir portada"
 msgid "Crop"
 msgstr "Recortar"
 
+#: flask/templates/worldinfo/detail.html:106
+msgid "World Backdrop (16:9)"
+msgstr ""
+
 #: flask/templates/worldinfo/detail.html:107
+msgid "Optional 16:9 chat background for this world. Overrides the System Backdrop when a location has no background image of its own (Priority: System → World → Location)."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:119
+msgid "No world backdrop set"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:121
+msgid "Uses System Backdrop unless a location defines its own background."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:131
+msgid "Choose Backdrop"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:137
+msgid "Remove Backdrop"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:141
+msgid "Priority in chat: System → World → Location"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:151
 msgid "Private = only accessible to you. Public = accessible to all users for chats."
 msgstr "Privado = solo accesible para ti. Público = accesible para todos los usuarios."
 
-#: flask/templates/worldinfo/detail.html:118
+#: flask/templates/worldinfo/detail.html:162
 msgid "Linked Lorebook (Optional)"
 msgstr "Lorebook vinculado (Opcional)"
 
-#: flask/templates/worldinfo/detail.html:119
+#: flask/templates/worldinfo/detail.html:163
 msgid "An optional lorebook automatically included alongside character lorebooks in all chats using this world."
 msgstr "Un lorebook opcional incluido automáticamente en todos los chats de este mundo."
 
-#: flask/templates/worldinfo/detail.html:122
+#: flask/templates/worldinfo/detail.html:166
 msgid "No lorebook linked"
 msgstr "Ningún lorebook vinculado"
 
-#: flask/templates/worldinfo/detail.html:144
+#: flask/templates/worldinfo/detail.html:188
 msgid "New Location"
 msgstr "Novo local"
 
-#: flask/templates/worldinfo/detail.html:151 flask/templates/worldinfo/detail.html:154 flask/templates/worldinfo/detail.html:166
+#: flask/templates/worldinfo/detail.html:195 flask/templates/worldinfo/detail.html:198 flask/templates/worldinfo/detail.html:210
 msgid "This location is bound to"
 msgstr "Este lugar está vinculado a"
 
-#: flask/templates/worldinfo/detail.html:177
+#: flask/templates/worldinfo/detail.html:221
 msgid "Edit Location:"
 msgstr "Editar lugar:"
 
-#: flask/templates/worldinfo/detail.html:183 flask/templates/worldinfo/detail.html:316
+#: flask/templates/worldinfo/detail.html:227 flask/templates/worldinfo/detail.html:360
 msgid "Location Name"
 msgstr "Nombre del lugar"
 
-#: flask/templates/worldinfo/detail.html:184 flask/templates/worldinfo/detail.html:317
+#: flask/templates/worldinfo/detail.html:228 flask/templates/worldinfo/detail.html:361
 msgid "Name of the location (e.g. Old Library, Griffin Tavern)."
 msgstr "Nombre del lugar (p. ej. Biblioteca Antigua, Taberna del Grifo)."
 
-#: flask/templates/worldinfo/detail.html:197 flask/templates/worldinfo/detail.html:330
+#: flask/templates/worldinfo/detail.html:241 flask/templates/worldinfo/detail.html:374
 msgid "Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet)."
 msgstr "Palabras clave separadas por comas que describen el entorno."
 
-#: flask/templates/worldinfo/detail.html:199 flask/templates/worldinfo/detail.html:332
+#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:376
 msgid "Extract Tags"
 msgstr "Extraer etiquetas"
 
-#: flask/templates/worldinfo/detail.html:207 flask/templates/worldinfo/detail.html:340
+#: flask/templates/worldinfo/detail.html:251 flask/templates/worldinfo/detail.html:384
 msgid "16:9 Background Image (PNG, JPG, WEBP)"
 msgstr "Imagen de fondo 16:9 (PNG, JPG, WEBP)"
 
-#: flask/templates/worldinfo/detail.html:208 flask/templates/worldinfo/detail.html:341
+#: flask/templates/worldinfo/detail.html:252 flask/templates/worldinfo/detail.html:385
 msgid "Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference."
 msgstr "Imagen horizontal 16:9 como fondo del chat y referencia para ComfyUI."
 
-#: flask/templates/worldinfo/detail.html:214 flask/templates/worldinfo/detail.html:347
+#: flask/templates/worldinfo/detail.html:258 flask/templates/worldinfo/detail.html:391
 msgid "Analyze & Describe Image"
 msgstr "Analizar y describir imagen"
 
-#: flask/templates/worldinfo/detail.html:221 flask/templates/worldinfo/detail.html:354
+#: flask/templates/worldinfo/detail.html:265 flask/templates/worldinfo/detail.html:398
 msgid "Location Description"
 msgstr "Descripción del lugar"
 
-#: flask/templates/worldinfo/detail.html:222 flask/templates/worldinfo/detail.html:355
+#: flask/templates/worldinfo/detail.html:266 flask/templates/worldinfo/detail.html:399
 msgid "Atmospheric description of the environment, sounds, and mood."
 msgstr "Descripción atmosférica del entorno, sonidos y ambiente."
 
-#: flask/templates/worldinfo/detail.html:239 flask/templates/worldinfo/detail.html:372
+#: flask/templates/worldinfo/detail.html:283 flask/templates/worldinfo/detail.html:416
 msgid "Character Binding (Optional)"
 msgstr "Vinculación de personaje (Opcional)"
 
-#: flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:373
+#: flask/templates/worldinfo/detail.html:284 flask/templates/worldinfo/detail.html:417
 msgid "If selected, this location can only be entered when chatting with that specific character."
 msgstr "Si se selecciona, solo se puede entrar a este lugar al chatear con ese personaje."
 
-#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:376
+#: flask/templates/worldinfo/detail.html:287 flask/templates/worldinfo/detail.html:420
 msgid "No character (Freely accessible)"
 msgstr "Sin personaje (Acceso libre)"
 
-#: flask/templates/worldinfo/detail.html:253
+#: flask/templates/worldinfo/detail.html:297
 msgid "Assigned Location Events:"
 msgstr "Eventos de lugar asignados:"
 
-#: flask/templates/worldinfo/detail.html:258
+#: flask/templates/worldinfo/detail.html:302
 msgid "No specific location events assigned."
 msgstr "No hay eventos específicos asignados a este lugar."
 
-#: flask/templates/worldinfo/detail.html:310
+#: flask/templates/worldinfo/detail.html:354
 msgid "Create New Location"
 msgstr "Crear nuevo lugar"
 
-#: flask/templates/worldinfo/detail.html:334
+#: flask/templates/worldinfo/detail.html:378
 msgid "tavern, forest, castle"
 msgstr "taberna, bosque, castillo"
 
-#: flask/templates/worldinfo/detail.html:387
+#: flask/templates/worldinfo/detail.html:431
 msgid "Save Location"
 msgstr "Guardar lugar"
 
-#: flask/templates/worldinfo/detail.html:394
+#: flask/templates/worldinfo/detail.html:438
 msgid "Set 1:1 World Cover"
 msgstr "Definir portada 1:1 del mundo"
 
-#: flask/templates/worldinfo/detail.html:394
+#: flask/templates/worldinfo/detail.html:438
 msgid "1:1 Cover"
 msgstr "Portada 1:1"
 

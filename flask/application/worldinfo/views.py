@@ -68,6 +68,13 @@ def detail(worldinfo_id: int):
             if cover_file and cover_file.filename:
                 cover_path = storage.save_cover(cover_file.stream, cover_file.filename)
 
+            backdrop_path = worldinfo.backdrop_image_path
+            if request.form.get("remove_backdrop") == "1":
+                backdrop_path = None
+            backdrop_file = request.files.get("backdrop_file")
+            if backdrop_file and backdrop_file.filename:
+                backdrop_path = storage.save_background(backdrop_file.stream, backdrop_file.filename)
+
             raw_lb = request.form.get("lorebook_id", "").strip()
             lb_id = int(raw_lb) if raw_lb and raw_lb.isdigit() and int(raw_lb) > 0 else None
 
@@ -82,6 +89,7 @@ def detail(worldinfo_id: int):
                 icon=worldinfo.icon or "🌐",
                 visibility=request.form.get("visibility", worldinfo.visibility),
                 cover_image_path=cover_path,
+                backdrop_image_path=backdrop_path,
                 lorebook_id=lb_id,
                 collaborator_creator_tags=collaborator_tags,
                 is_proper_noun=bool(request.form.get("is_proper_noun")),

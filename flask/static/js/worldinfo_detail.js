@@ -23,6 +23,40 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
+  // 1b. Setup 16:9 World Backdrop live preview & removal
+  const wiBackdropInput = document.getElementById("worldinfo-backdrop-input");
+  const wiBackdropPreview = document.getElementById("worldinfo-backdrop-preview");
+  const wiBackdropPlaceholder = document.getElementById("worldinfo-backdrop-placeholder");
+  const wiRemoveBackdropBtn = document.getElementById("worldinfo-remove-backdrop-btn");
+  const wiRemoveBackdropInput = document.getElementById("worldinfo-remove-backdrop-input");
+
+  if (wiBackdropInput && wiBackdropPreview) {
+    wiBackdropInput.addEventListener("change", () => {
+      const file = wiBackdropInput.files?.[0];
+      if (!file) return;
+      if (wiRemoveBackdropInput) wiRemoveBackdropInput.value = "0";
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          wiBackdropPreview.style.backgroundImage = `url('${e.target.result}')`;
+          if (wiBackdropPlaceholder) wiBackdropPlaceholder.style.display = "none";
+          if (wiRemoveBackdropBtn) wiRemoveBackdropBtn.style.display = "inline-flex";
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (wiRemoveBackdropBtn && wiBackdropPreview) {
+    wiRemoveBackdropBtn.addEventListener("click", () => {
+      if (wiRemoveBackdropInput) wiRemoveBackdropInput.value = "1";
+      if (wiBackdropInput) wiBackdropInput.value = "";
+      wiBackdropPreview.style.backgroundImage = "";
+      if (wiBackdropPlaceholder) wiBackdropPlaceholder.style.display = "";
+      wiRemoveBackdropBtn.style.display = "none";
+    });
+  }
+
   // Enable / disable new location image analyze button on file pick
   const newLocFileInput = document.getElementById("new-loc-bg-input");
   const newLocAnalyzeBtn = document.getElementById("new-loc-analyze-btn");
