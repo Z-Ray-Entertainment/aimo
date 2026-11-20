@@ -31,16 +31,17 @@
     ] %}
 
     {% for key, label, rows, current_val, default_val in prompt_defs %}
+    {% set is_disabled = (key == 'diffuser_prompt') %}
     <div style="{% if not loop.first %}border-top: 1px solid var(--border-wood-dark); padding-top: 1rem; {% endif %}display: flex; flex-direction: column; gap: 0.4rem;">
       <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
         <label for="prompt-{{ key }}" style="font-weight: bold; margin: 0;">{{ label }}</label>
-        {{ action_button(_("Restore Default"), icon="🔄", size="sm", extra_class="btn-reset-prompt", data={"target": key}, title=_("Resets all languages of this prompt to factory default")) }}
+        {{ action_button(_("Restore Default"), icon="🔄", size="sm", extra_class="btn-reset-prompt", disabled=is_disabled, data={"target": key}, title=_("Resets all languages of this prompt to factory default")) }}
       </div>
       <input type="hidden" name="i18n_{{ key }}" id="i18n-prompt-{{ key }}" value='{{ prompt_variants[key] | tojson }}'>
       <textarea name="{{ key }}"
                 id="prompt-{{ key }}"
                 rows="{{ rows }}"
-                required
+                {% if is_disabled %}disabled{% else %}required{% endif %}
                 data-default-prompt="{{ default_val }}"
                 data-default-variants='{{ default_prompt_variants[key] | tojson }}'
                 data-i18n-field="{{ key }}"

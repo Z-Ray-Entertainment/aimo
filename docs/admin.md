@@ -43,15 +43,7 @@ Choose **strictly one** primary AI backend at any time (Ollama and Google AI Clo
 - **✨ Google AI Cloud (Gemini API):** Enter your Google AI Studio API key (stored masked once saved — leave the input empty to keep the existing key) and click **API-Key & Modelle testen** to verify access and load available cloud models.
 
 ### 2. Image Generation & Web Search Services
-Depending on your active AI backend, configure image generation and prepared web search options:
-- **Image Generation (Chat Magic Wand):**
-  - **Google AI Image** *(only available with Google AI active)*: Uses your API key and a Gemini image model (default: `gemini-3.1-flash-image-preview`) to generate 16:9 scenes.
-  - **ComfyUI (Local):** Connect to your local ComfyUI server URL.
-  - **Deaktiviert:** Hides scene image generation in chat.
-- **Web Search (Prepared):**
-  - Select **Google Search** *(only available with Google AI active)*, **SearXNG (Local)** with a SearXNG URL, or **Deaktiviert**.
-
-When switching back from Google AI Cloud to Ollama, any Google-specific image or search selection automatically adjusts so local and cloud backends never run in parallel.
+Both **Image Generation** (Google AI Image, ComfyUI) and **Web Search** (Google Search, SearXNG) are currently set to **Deaktiviert** by default, with the active provider options disabled in the settings interface.
 
 ### 3. Model Management & Setup-Helper
 - **When Ollama is active (Ollama Model Manager):**
@@ -89,7 +81,7 @@ In roleplay prompts, dynamic template tags can be inserted:
 ### Configurable Prompts
 - **Rollenspiel-Prompt:** The foundation prompt governing how the primary roleplay model embodies characters and generates pure dialogue and narrative text.
 - **Memory-Prompt:** Directives instructing the memory model on creating concise, episodic summaries and relevant tags every 10 messages.
-- **Diffuser-Prompt:** Formulates scenic descriptions into effective visual diffusion prompts for ComfyUI.
+- **Diffuser-Prompt:** Formulates scenic descriptions into visual diffusion prompts *(currently disabled in the editor, including its translation and reset buttons)*.
 - **KI-Autor-Prompt:** Powers the Sparkle assistant (✨) in the character editor to write immersive, third-person descriptive prose based on author notes.
 - **Vision-Prompt:** Directs multimodal vision models in extracting physical appearance features from persona portrait images.
 - **KI-Autor-Dialog-Prompt:** Guides the AI author in formulating authentic, situational dialogue examples (`{{user}}` trigger and `{{char}}` response) based on the character description.

@@ -134,17 +134,17 @@
             <div style="display: flex; flex-direction: column; gap: 0.85rem;">
               <div>
                 <label style="margin-bottom: 0.45rem; display: block;">Bildgenerierung (Szenenbilder im Chat)</label>
-                {{ image_gen_options(form.image_gen_backend if form.image_gen_backend != 'google_ai' else 'comfyui', allow_google=false, id_prefix="setup-ollama-img") }}
-                <div class="conditional-service-box" id="setup-ollama-comfy-box" style="margin-top: 0.6rem;" {% if form.image_gen_backend == 'disabled' %}hidden{% endif %}>
+                {{ image_gen_options('disabled', allow_google=false, id_prefix="setup-ollama-img", disable_providers=true) }}
+                <div class="conditional-service-box" id="setup-ollama-comfy-box" style="margin-top: 0.6rem;" hidden>
                   <label for="setup-ollama-comfyui-url">ComfyUI URL *</label>
-                  <input type="url" id="setup-ollama-comfyui-url" name="comfyui_url" value="{{ form.comfyui_url }}" required>
+                  <input type="url" id="setup-ollama-comfyui-url" name="comfyui_url" value="{{ form.comfyui_url }}">
                 </div>
               </div>
 
               <div>
                 <label style="margin-bottom: 0.45rem; display: block;">Websuche (Vorbereitet)</label>
-                {{ search_options(form.search_backend if form.search_backend != 'google_ai' else 'disabled', allow_google=false, id_prefix="setup-ollama-search") }}
-                <div class="conditional-service-box" id="setup-ollama-searxng-box" style="margin-top: 0.6rem;" {% if form.search_backend != 'searxng' %}hidden{% endif %}>
+                {{ search_options('disabled', allow_google=false, id_prefix="setup-ollama-search", disable_providers=true) }}
+                <div class="conditional-service-box" id="setup-ollama-searxng-box" style="margin-top: 0.6rem;" hidden>
                   <label for="setup-ollama-searxng-url">SearXNG URL *</label>
                   <input type="url" id="setup-ollama-searxng-url" name="searxng_url" value="{{ form.searxng_url }}">
                 </div>
@@ -195,16 +195,16 @@
             <p style="font-size: 0.81rem; color: var(--text-muted); margin-bottom: 0.6rem;">
               Wähle, ob Szenenbilder über Google AI (Gemini Image), einen lokalen ComfyUI-Server oder gar nicht erzeugt werden sollen:
             </p>
-            {{ image_gen_options(form.image_gen_backend if form.llm_backend == 'google_ai' else 'google_ai', allow_google=true, id_prefix="setup-google-img") }}
+            {{ image_gen_options('disabled', allow_google=true, id_prefix="setup-google-img", disable_providers=true) }}
 
-            <div class="conditional-service-box" id="setup-google-image-model-box" style="margin-top: 0.65rem;" {% if form.llm_backend == 'google_ai' and form.image_gen_backend != 'google_ai' %}hidden{% endif %}>
+            <div class="conditional-service-box" id="setup-google-image-model-box" style="margin-top: 0.65rem;" hidden>
               <label for="setup-google-image-model">Google AI Bild-Modell *</label>
               <select id="setup-google-image-model" name="google_ai_image_model">
                 <option value="{{ recommended_google_image_model }}" selected>{{ recommended_google_image_model }}</option>
               </select>
             </div>
 
-            <div class="conditional-service-box" id="setup-google-comfy-box" style="margin-top: 0.65rem;" {% if form.image_gen_backend != 'comfyui' or form.llm_backend != 'google_ai' %}hidden{% endif %}>
+            <div class="conditional-service-box" id="setup-google-comfy-box" style="margin-top: 0.65rem;" hidden>
               <label for="setup-google-comfyui-url">ComfyUI URL *</label>
               <input type="url" id="setup-google-comfyui-url" name="comfyui_url" value="{{ form.comfyui_url }}">
             </div>
@@ -215,9 +215,9 @@
             <p style="font-size: 0.81rem; color: var(--text-muted); margin-bottom: 0.6rem;">
               Wähle, ob für künftige Websuchen Google Search Grounding, SearXNG oder keine Suche verwendet werden soll:
             </p>
-            {{ search_options(form.search_backend, allow_google=true, id_prefix="setup-google-search") }}
+            {{ search_options('disabled', allow_google=true, id_prefix="setup-google-search", disable_providers=true) }}
 
-            <div class="conditional-service-box" id="setup-google-searxng-box" style="margin-top: 0.65rem;" {% if form.search_backend != 'searxng' %}hidden{% endif %}>
+            <div class="conditional-service-box" id="setup-google-searxng-box" style="margin-top: 0.65rem;" hidden>
               <label for="setup-google-searxng-url">SearXNG URL *</label>
               <input type="url" id="setup-google-searxng-url" name="searxng_url" value="{{ form.searxng_url }}">
             </div>
@@ -252,8 +252,8 @@
     const step3Label = document.getElementById("stepper-step3-label");
 
     [
-      [ollamaPanel, backend === "ollama", { image_gen_backend: "comfyui", search_backend: "disabled" }],
-      [googlePanel, backend === "google_ai", { image_gen_backend: "google_ai", search_backend: "disabled" }],
+      [ollamaPanel, backend === "ollama", { image_gen_backend: "disabled", search_backend: "disabled" }],
+      [googlePanel, backend === "google_ai", { image_gen_backend: "disabled", search_backend: "disabled" }],
     ].forEach(([panel, active, defaults]) => {
       if (!panel) return;
       panel.hidden = !active;
@@ -300,7 +300,7 @@
     if (!panel) return;
 
     const imgRadio = panel.querySelector('input[name="image_gen_backend"]:checked');
-    const imgChoice = imgRadio ? imgRadio.value : (backend === "google_ai" ? "google_ai" : "comfyui");
+    const imgChoice = imgRadio ? imgRadio.value : "disabled";
     const comfyBox = document.getElementById(`${prefix}-comfy-box`);
     const comfyInput = document.getElementById(`${prefix}-comfyui-url`);
     if (comfyBox && comfyInput) {

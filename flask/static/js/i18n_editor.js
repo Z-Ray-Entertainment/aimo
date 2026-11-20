@@ -92,17 +92,21 @@ function initEditorI18nFields() {
     const controlsContainer = document.createElement("div");
     controlsContainer.className = "i18n-translate-controls";
 
+    const isFieldDisabled = Boolean(inputEl.disabled);
+
     const translateBtn = document.createElement("button");
     translateBtn.type = "button";
     translateBtn.className = "btn i18n-translate-btn";
     translateBtn.title = "Auto-translate from origin/English into the selected language";
     translateBtn.innerHTML = `<span class="icon-mono">🌐</span> AI Translate`;
+    if (isFieldDisabled) translateBtn.disabled = true;
 
     const deleteBtn = document.createElement("button");
     deleteBtn.type = "button";
     deleteBtn.className = "btn i18n-translate-btn i18n-delete-btn";
     deleteBtn.title = window.t ? window.t("Delete translation for this language") : "Delete translation for this language";
     deleteBtn.innerHTML = `<span class="icon-mono">🗑️</span>`;
+    if (isFieldDisabled) deleteBtn.disabled = true;
 
     controlsContainer.appendChild(translateBtn);
     controlsContainer.appendChild(deleteBtn);
@@ -145,6 +149,7 @@ function initEditorI18nFields() {
 
     const updateDeleteBtnState = () => {
       const canDelete =
+        !isFieldDisabled &&
         Boolean(activeLang) &&
         activeLang !== "en" &&
         (hasContentFor(activeLang) || inputEl.value.trim() !== "");
@@ -170,6 +175,7 @@ function initEditorI18nFields() {
         const flagBtn = document.createElement("button");
         flagBtn.type = "button";
         flagBtn.className = "i18n-flag-btn";
+        if (isFieldDisabled) flagBtn.disabled = true;
         if (!hasText) {
           flagBtn.classList.add("missing");
         }
