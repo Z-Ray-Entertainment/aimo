@@ -143,6 +143,32 @@
     </div>
   </div>
 
+  <!-- MODAL: Ort hinzufügen (Overlay Frame mit Suchfilter) -->
+  <div class="modal-backdrop"
+       id="add-world-location-modal"
+       aria-hidden="true"
+       data-title-preferred="{{ _('Add Preferred Location') }}"
+       data-title-disliked="{{ _('Add Disliked Location') }}"
+       data-add-label="+ {{ _('Add') }}"
+       data-remove-title="{{ _('Remove location') }}"
+       data-empty-all-assigned="{{ _('All locations of this world are already assigned.') }}"
+       data-empty-search="{{ _('No matching locations found.') }}">
+    <div class="modal-frame" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 style="color: var(--gold-accent);" id="world-location-modal-title"><span class="icon-mono">📍</span> {{ _("Add Location") }}</h3>
+        {{ modal_close_button("add-world-location-modal") }}
+      </div>
+      <div style="padding: 0.5rem 0 1rem 0;">
+        <input type="text" id="world-location-filter-input" placeholder="{{ _('Search locations by name or description...') }}" class="search-input" style="width: 100%; margin-bottom: 0.85rem;" autocomplete="off">
+        <div id="world-location-picker-list" class="lorebook-picker-list"></div>
+        <div id="world-location-picker-empty" class="world-location-empty" style="display: none;"></div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
+        {{ action_button(_("Close"), modal_close="add-world-location-modal") }}
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: Dual-Crop Profile (9:16 Porträt & 1:1 Avatar) via Reusable Macro -->
   {{ image_cropper_modal("portrait-crop-modal", title=_("Set Image Crops"), targets=[
     {"id": "portrait", "label": _("Portrait"), "short_label": _("Portrait"), "icon": "📱", "ratio": 0.5625, "preview_width": 72, "preview_height": 128, "accent_color": "var(--gold-accent)"},

@@ -81,7 +81,12 @@ Representative conversation snippets (Few-Shot trigger and response pairs) that 
 ## 🗺️ 5. World Settings (`🗺️ World`)
 
 - **Recommended WorldInfo:** Select a suggested [WorldInfo](worldinfo.md) setting.
-- **Location Preferences:** Specify **preferred locations** (places the character enjoys visiting) and **disliked locations** (places they avoid).
+- **Initial Location of First Message:** Optionally choose a fixed starting location from the linked world for new chats.
+- **Location Preferences (Two-Column Layout):** Specify **Preferred Locations** (places the character enjoys visiting) on the left and **Disliked Locations** (places they avoid) on the right:
+  - Click **➕ Add** in either column header to open a searchable location overlay for the linked world.
+  - Locations already assigned to either *Preferred* or *Disliked* are automatically hidden from the overlay so each location can only belong to one category.
+  - Click any location in the overlay to add it immediately; the overlay stays open so you can add multiple locations in one go, and can be closed with **✕** or **Close**.
+  - Click **🗑️** next to an assigned location to remove it from that list.
 
 ---
 
