@@ -41,13 +41,6 @@ function restoreSpriteScroll() {
 }
 
 function initSpriteScrollHandlers() {
-  document.addEventListener("change", (e) => {
-    const input = e.target.closest("input[data-sprite-auto-submit]");
-    if (!input) return;
-    saveSpriteScrollPos();
-    if (input.form) input.form.submit();
-  });
-
   document.addEventListener("submit", (e) => {
     const form = e.target.closest("form[data-save-sprite-scroll]");
     if (form) saveSpriteScrollPos();

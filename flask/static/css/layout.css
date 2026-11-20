@@ -1009,8 +1009,7 @@ body.aimo-iv-scroll-lock {
 #portrait-preview-img,
 #avatar-preview-img,
 .char-gallery-preview,
-.char-sprite-preview,
-[id^="sprite-modal-"] .card-tile img,
+.aimo-sprite-card .aimo-card-click-area,
 #worldinfo-cover-preview-img,
 #worldinfo-backdrop-preview {
   cursor: zoom-in;

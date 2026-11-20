@@ -379,44 +379,25 @@ export function initImageViewer() {
     });
   }
 
-  const spritesTab = document.getElementById("tab-char-sprites");
-  if (spritesTab) {
-    spritesTab.addEventListener("click", (e) => {
+  const spritesGrid = document.getElementById("char-sprites-grid");
+  if (spritesGrid) {
+    spritesGrid.addEventListener("click", (e) => {
       const target = e.target;
       if (!(target instanceof Element)) return;
       if (target.closest("form, button, label, a")) return;
 
-      const modalImg = target.closest('[id^="sprite-modal-"] .card-tile img');
-      if (modalImg) {
-        const modal = modalImg.closest('[id^="sprite-modal-"]');
-        const modalImgs = Array.from(modal.querySelectorAll(".card-tile img"));
-        const items = modalImgs.map((img) => ({
-          src: img.src,
-          title: img.getAttribute("alt") || "",
-        }));
-        const idx = Math.max(0, modalImgs.indexOf(modalImg));
-        window.AimoImageViewer.open(items, idx);
-        return;
-      }
+      const clickArea = target.closest(".aimo-sprite-card .aimo-card-click-area[data-viewer-src]");
+      if (!clickArea) return;
 
-      const spritePreview = target.closest(".char-sprite-preview");
-      if (spritePreview) {
-        const emotion = spritePreview.getAttribute("data-emotion") || "";
-        const modal = emotion ? document.getElementById(`sprite-modal-${emotion}`) : null;
-        if (modal) {
-          const modalImgs = Array.from(modal.querySelectorAll(".card-tile img"));
-          if (modalImgs.length > 0) {
-            window.AimoImageViewer.open(
-              modalImgs.map((img) => ({ src: img.src, title: img.getAttribute("alt") || "" })),
-              0
-            );
-            return;
-          }
-        }
-        const src = spritePreview.getAttribute("data-viewer-src");
-        if (src) {
-          window.AimoImageViewer.openSingle(src, spritePreview.getAttribute("data-viewer-title") || emotion);
-        }
+      const allAreas = Array.from(spritesGrid.querySelectorAll(".aimo-sprite-card .aimo-card-click-area[data-viewer-src]"));
+      const items = allAreas.map((el) => ({
+        src: el.getAttribute("data-viewer-src") || "",
+        title: el.getAttribute("data-viewer-title") || "",
+      })).filter((item) => item.src);
+
+      if (items.length > 0) {
+        const idx = Math.max(0, allAreas.indexOf(clickArea));
+        window.AimoImageViewer.open(items, idx);
       }
     });
   }

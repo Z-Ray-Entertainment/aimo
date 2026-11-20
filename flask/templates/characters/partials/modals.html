@@ -35,6 +35,43 @@
         </form>
       </div>
     </div>
+
+    {% if available_emotions|length > 0 %}
+      <div class="modal-backdrop" id="add-sprite-modal" aria-hidden="true">
+        <div class="modal-frame" style="max-width: 440px;">
+          <div class="modal-header">
+            <h3 style="color: var(--gold-accent);">{{ _("Add Emotional Sprite") }}</h3>
+            {{ modal_close_button("add-sprite-modal") }}
+          </div>
+          <form method="POST" action="{{ url_for('characters.upload_sprite', character_id=character.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;" data-save-sprite-scroll="1">
+            <div>
+              <label>
+                {{ _("Emotion") }} *
+                <span class="field-help-btn" title="{{ _('Select which emotion this sprite represents.') }}">?</span>
+              </label>
+              <select name="emotion" required>
+                {% for em in available_emotions %}
+                  <option value="{{ em }}">
+                    {{ em }}{% if em == 'neutral' %} ({{ _("Fallback") }}){% endif %}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label>
+                {{ _("Sprite File (PNG, WEBP)") }} *
+                <span class="field-help-btn" title="{{ _('Transparent PNG or WEBP sprite image for this emotion.') }}">?</span>
+              </label>
+              <input type="file" name="sprite_file" accept=".png,.webp" required>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
+              {{ action_button(_("Cancel"), modal_close="add-sprite-modal") }}
+              {{ action_button(_("Upload"), type="submit", icon="💾") }}
+            </div>
+          </form>
+        </div>
+      </div>
+    {% endif %}
   {% endif %}
 
   <!-- MODAL: Gesprächsstil hinzufügen (Overlay Frame) -->

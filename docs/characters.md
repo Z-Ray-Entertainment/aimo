@@ -58,11 +58,11 @@ aimo supports dynamic, transparent sprites (PNG or WEBP) that adapt to the AI ch
 ### The 28 Supported Emotions
 `admire`, `amused`, `anger`, `annoyed`, `approval`, `caring`, `confused`, `curious`, `desire`, `disappointed`, `disapproval`, `disgust`, `embarrassed`, `excited`, `fear`, `gratitude`, `grief`, `joy`, `love`, `nervousness`, `neutral` (Default & Fallback), `optimistic`, `pride`, `realize`, `relief`, `remorse`, `sad`, `surprise`.
 
-### Variants & Stackview
-- **Multiple Variants per Emotion:** You can upload multiple sprites for any single emotion (e.g., `joy_1.png`, `joy_2.webp`).
-- **Paper-Plus Button (📄➕):** Becomes visible once at least one sprite exists for an emotion, enabling you to add additional variants.
-- **Stackview & Eye Button (👁️):** When multiple variants exist, a layered stack effect indicates the variety. Clicking the eye button opens a modal popup to inspect variants and delete individual images. Clicking a sprite preview or variant image opens it in the fullscreen Image Viewer (browsable across all variants of that emotion).
-- **Runtime Random Selection:** When the AI expresses an emotion, the system selects one of the available variants at random.
+### Managing Sprites
+- **Sprite Grid:** Displays all currently assigned emotional sprites for the character, starting with `neutral` (marked with a **Fallback** badge) followed by the remaining assigned emotions in alphabetical order.
+- **Adding Sprites (`+`):** As long as not all 28 emotions have a sprite assigned, an **Add Sprite** tile appears at the beginning of the grid. Clicking it opens a dialog where you select one of the remaining unassigned emotions and upload a PNG or WEBP file. Once all 28 emotions are assigned, the **Add Sprite** tile is hidden.
+- **Fullscreen Preview & Deleting:** Clicking any sprite card opens it in the browsable fullscreen Image Viewer. In edit mode, clicking the trash icon (**🗑️**) in the top-right corner of a card deletes that sprite and makes its emotion available again.
+- **Fallback Behavior:** If the AI expresses an emotion that has no dedicated sprite assigned, the `neutral` sprite is used as a fallback (or the primary portrait if no `neutral` sprite is set).
 
 ---
 

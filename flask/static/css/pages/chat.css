@@ -386,22 +386,6 @@ body.chat-page {
   transition: width 1s linear;
 }
 
-/* Sprite Stackview */
-.sprite-stack {
-  position: relative;
-}
-
-.sprite-stack.has-multiple::before {
-  content: "";
-  position: absolute;
-  inset: -4px 4px 4px -4px;
-  border: 2px solid var(--border-wood-dark);
-  border-radius: var(--radius-card);
-  z-index: 0;
-}
-
-
-
 /* Chat Markdown Formatting */
 .chat-markdown {
   font-size: 0.94rem;

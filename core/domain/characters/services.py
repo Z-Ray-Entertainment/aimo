@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-import random
 
 from domain.characters.exceptions import InvalidCharacterDataError
 from domain.characters.models import (
@@ -225,16 +224,14 @@ class CharacterService:
             raise InvalidCharacterDataError("Sprite file_path must not be empty.")
 
         resolved_emotion = Emotion.resolve(emotion)
-        existing_variants = [
-            sp.variant for sp in character.sprites if sp.emotion == resolved_emotion
-        ]
-        next_variant = 1
-        while next_variant in existing_variants:
-            next_variant += 1
+        if any(sp.emotion == resolved_emotion for sp in character.sprites):
+            raise InvalidCharacterDataError(
+                f"A sprite for emotion '{resolved_emotion.value}' already exists."
+            )
 
         sprite = EmotionalSprite(
             emotion=resolved_emotion,
-            variant=next_variant,
+            variant=1,
             file_path=cleaned_path,
             character_id=character.id,
         )
@@ -264,13 +261,13 @@ class CharacterService:
             sp for sp in character.sprites if sp.emotion == resolved_emotion
         ]
         if matching_sprites:
-            return random.choice(matching_sprites)
+            return matching_sprites[0]
 
         neutral_sprites = [
             sp for sp in character.sprites if sp.emotion == Emotion.NEUTRAL
         ]
         if neutral_sprites:
-            return random.choice(neutral_sprites)
+            return neutral_sprites[0]
 
         return EmotionalSprite(
             emotion=Emotion.NEUTRAL,

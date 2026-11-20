@@ -162,6 +162,12 @@ a.aimo-add-card-tile:active {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.75), 0 0 14px var(--gold-glow);
 }
 
+.aimo-card-tile.aimo-sprite-card {
+  background-size: contain;
+  background-position: center bottom;
+  background-color: rgba(18, 13, 9, 0.85);
+}
+
 .aimo-card-click-area {
   position: absolute;
   inset: 0;

@@ -340,6 +340,18 @@ class CharacterRepository(BaseRepository[Character]):
             )
             return True
 
+    def delete_sprites_by_emotion(self, character_id: int, emotion: str) -> bool:
+        resolved_emotion = Emotion.resolve(emotion).value
+        with get_db_session() as conn:
+            cursor = conn.execute(
+                """
+                DELETE FROM character_sprites
+                WHERE character_id = ? AND emotion = ?
+                """,
+                (character_id, resolved_emotion),
+            )
+            return cursor.rowcount > 0
+
     def add_gallery_image(self, character_id: int, image: CharacterImage) -> CharacterImage:
         with get_db_session() as conn:
             cursor = conn.execute(

@@ -117,10 +117,18 @@ def _render_creator(character=None, form=None):
         if ev.id is not None
     }
 
-    sprites_by_emotion: dict[str, list] = {em: [] for em in STANDARD_28_EMOTIONS}
+    raw_sprites: dict[str, list] = {}
     if character is not None:
         for sp in character.sprites:
-            sprites_by_emotion.setdefault(sp.emotion.value, []).append(sp)
+            raw_sprites.setdefault(sp.emotion.value, []).append(sp)
+
+    ordered_emotions = ["neutral"] + [em for em in STANDARD_28_EMOTIONS if em != "neutral"]
+    sprite_by_emotion = {
+        em: raw_sprites[em][0]
+        for em in ordered_emotions
+        if em in raw_sprites and raw_sprites[em]
+    }
+    available_emotions = [em for em in ordered_emotions if em not in sprite_by_emotion]
 
     active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
     if active_tab not in _VALID_CHARACTER_TABS:
@@ -190,7 +198,8 @@ def _render_creator(character=None, form=None):
         event_translations=event_translations,
         char_translations=char_translations,
         emotions=STANDARD_28_EMOTIONS,
-        sprites_by_emotion=sprites_by_emotion,
+        sprite_by_emotion=sprite_by_emotion,
+        available_emotions=available_emotions,
         relationship_tiers=rel_tiers,
         gallery_threshold_names=gallery_threshold_names,
         active_tab=active_tab,
@@ -512,7 +521,7 @@ def upload_sprite(character_id: int):
                 char_repo=char_repo,
                 storage=storage,
             )
-            flash(tr(_("Sprite '%(name)s' uploaded."), name=f"{emotion.value}_{persisted.variant}"), "success")
+            flash(tr(_("Sprite '%(name)s' uploaded."), name=emotion.value), "success")
         except AimoError as exc:
             flash(str(exc), "error")
 
@@ -530,8 +539,8 @@ def delete_sprite(character_id: int, emotion: str, variant: int):
         flash(tr(_("Character not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
-    char_repo.delete_sprite(character_id, emotion, variant)
-    flash(tr(_("Sprite %(name)s deleted."), name=f"{emotion}_{variant}"), "success")
+    char_repo.delete_sprites_by_emotion(character_id, emotion)
+    flash(tr(_("Sprite %(name)s deleted."), name=emotion), "success")
     return redirect(url_for("characters.edit_character", character_id=character_id, tab="sprites"))
 
 
