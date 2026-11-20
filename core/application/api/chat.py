@@ -1413,10 +1413,70 @@ def switch_location(session_id: int):
         return jsonify({"error": "Chat session not found."}), 404
 
     data = request.get_json(silent=True) or request.form.to_dict()
-    location_id = int(data.get("location_id", 0))
+    raw_loc_id = data.get("location_id")
 
     chat_repo = ChatRepository()
     wi_repo = WorldInfoRepository()
+    chat_service = ChatService()
+    prev_loc_id = chat_session.current_location_id
+
+    if raw_loc_id in (None, "", "world", 0, "0"):
+        if chat_session.active_worldinfo_id is None:
+            return jsonify({"error": "No active WorldInfo in this chat session."}), 400
+        wi = wi_repo.get_by_id(chat_session.active_worldinfo_id)
+        if wi is None or not wi.is_visible_to_user(user.id, is_admin):
+            return jsonify({"error": "WorldInfo not found."}), 404
+
+        target_lang = getattr(user, "language", "en") or "en"
+        world_name = (
+            TranslationRepository().get_localized_field("worldinfo", wi.id, "name", target_lang, wi.name)
+            if wi.id is not None
+            else wi.name
+        )
+
+        chat_service.switch_location(chat_session, None)
+        next_idx = chat_repo.get_next_message_idx(session_id)
+        sys_msg = chat_service.create_location_change_message(
+            session=chat_session,
+            message_idx=next_idx,
+            location_id=None,
+            location_name=world_name,
+            location_description=None,
+            background_image_path=wi.backdrop_image_path,
+            from_location_id=prev_loc_id,
+        )
+        saved_sys_msg = chat_repo.add_message(sys_msg)
+        chat_repo.update_session(chat_session)
+
+        return jsonify(
+            {
+                "status": "switched",
+                "location": None,
+                "worldinfo": {
+                    "id": wi.id,
+                    "name": world_name,
+                    "backdrop_image_path": wi.backdrop_image_path,
+                },
+                "worldinfo_backdrop_path": wi.backdrop_image_path,
+                "ui_notice": saved_sys_msg.localized_content,
+                "system_message": {
+                    "id": saved_sys_msg.id,
+                    "session_id": saved_sys_msg.session_id,
+                    "message_idx": saved_sys_msg.message_idx,
+                    "role": saved_sys_msg.role.value,
+                    "system_type": saved_sys_msg.system_type,
+                    "english_content": saved_sys_msg.english_content,
+                    "localized_content": saved_sys_msg.localized_content,
+                    "metadata": saved_sys_msg.metadata,
+                    "created_at": saved_sys_msg.created_at.isoformat(),
+                },
+            }
+        )
+
+    try:
+        location_id = int(raw_loc_id)
+    except (TypeError, ValueError):
+        return jsonify({"error": "Invalid location_id."}), 400
 
     location = wi_repo.get_location(location_id)
     if location is None:
@@ -1429,7 +1489,6 @@ def switch_location(session_id: int):
     if location.character_id is not None and location.character_id != chat_session.character_id:
         return jsonify({"error": "Dieser Ort ist an einen anderen Charakter gebunden und kann nicht betreten werden."}), 403
 
-    chat_service = ChatService()
     chat_service.switch_location(chat_session, location.id)
     next_idx = chat_repo.get_next_message_idx(session_id)
     sys_msg = chat_service.create_location_change_message(
@@ -1439,6 +1498,7 @@ def switch_location(session_id: int):
         location_name=location.name,
         location_description=location.description,
         background_image_path=location.background_image_path,
+        from_location_id=prev_loc_id,
     )
     saved_sys_msg = chat_repo.add_message(sys_msg)
     chat_repo.update_session(chat_session)

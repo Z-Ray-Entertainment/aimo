@@ -201,11 +201,11 @@ class ChatService:
             ),
             None,
         )
-        forked_current_loc_id = (
-            int(last_loc_msg.metadata["location_id"])
-            if last_loc_msg and last_loc_msg.metadata and "location_id" in last_loc_msg.metadata
-            else (session.initial_location_id or session.current_location_id)
-        )
+        if last_loc_msg and last_loc_msg.metadata and "location_id" in last_loc_msg.metadata:
+            raw_loc = last_loc_msg.metadata["location_id"]
+            forked_current_loc_id = int(raw_loc) if raw_loc is not None else None
+        else:
+            forked_current_loc_id = session.initial_location_id or session.current_location_id
 
         forked_triggered_event_ids = {
             int(m.metadata["event_id"])
@@ -265,7 +265,7 @@ class ChatService:
         self,
         session: ChatSession,
         message_idx: int,
-        location_id: int,
+        location_id: int | None,
         location_name: str,
         location_description: str | None = None,
         background_image_path: str | None = None,
@@ -278,12 +278,19 @@ class ChatService:
             "background_image_path": background_image_path.strip() if background_image_path else None,
             "from_location_id": from_location_id if from_location_id is not None else session.current_location_id,
         }
+        if location_id is None:
+            english_content = f"You returned to {location_name.strip()}."
+            localized_content = f"Ihr seid in die Welt {location_name.strip()} zurückgekehrt{desc_snippet}"
+        else:
+            english_content = f"You travelled to {location_name.strip()}."
+            localized_content = f"Ihr seid nach {location_name.strip()} gegangen{desc_snippet}"
+
         return self.create_system_message(
             session_id=session.id or 0,
             message_idx=message_idx,
             system_type=SystemMessageType.LOCATION_CHANGE,
-            english_content=f"You travelled to {location_name.strip()}.",
-            localized_content=f"Ihr seid nach {location_name.strip()} gegangen{desc_snippet}",
+            english_content=english_content,
+            localized_content=localized_content,
             metadata=meta,
         )
 
@@ -316,7 +323,7 @@ class ChatService:
             metadata=meta,
         )
 
-    def switch_location(self, session: ChatSession, new_location_id: int) -> None:
+    def switch_location(self, session: ChatSession, new_location_id: int | None) -> None:
         session.current_location_id = new_location_id
 
     def recalculate_events_after_deletion(
@@ -351,7 +358,8 @@ class ChatService:
             None,
         )
         if last_loc_msg and last_loc_msg.metadata and "location_id" in last_loc_msg.metadata:
-            session.current_location_id = int(last_loc_msg.metadata["location_id"])
+            raw_loc = last_loc_msg.metadata["location_id"]
+            session.current_location_id = int(raw_loc) if raw_loc is not None else None
         else:
             session.current_location_id = session.initial_location_id
 

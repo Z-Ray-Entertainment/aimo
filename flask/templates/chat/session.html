@@ -424,7 +424,9 @@
         <div>
           <label for="chat-location-select" class="chat-sidebar-label">{{ _('Current Location') }}</label>
           <select id="chat-location-select" class="chat-sidebar-select" onchange="manualSwitchLocation(this.value)">
-            <option value="">{{ _('-- Choose location --') }}</option>
+            <option value="world" {% if not current_location %}selected{% endif %}>
+              🌐 {{ worldinfo.name }} ({{ _('World') }})
+            </option>
             {% for loc in worldinfo_locations %}
               {% if not loc.character_id or loc.character_id == character.id %}
                 <option value="{{ loc.id }}" {% if current_location and loc.id == current_location.id %}selected{% endif %}>
@@ -779,13 +781,15 @@
 
   async function manualSwitchLocation(locationId) {
     if (!locationId) return;
+    const targetId = locationId === "world" ? null : parseInt(locationId, 10);
+    if (targetId !== null && Number.isNaN(targetId)) return;
     if (window.chatStream) {
-      await window.chatStream.switchLocation(parseInt(locationId, 10));
+      await window.chatStream.switchLocation(targetId);
     } else {
       const resp = await fetch(`/api/chat/{{ chat_session.id }}/switch-location`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ location_id: parseInt(locationId, 10) }),
+        body: JSON.stringify({ location_id: targetId }),
       });
       if (resp.ok) {
         window.location.reload();

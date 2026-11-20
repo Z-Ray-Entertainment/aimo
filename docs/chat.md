@@ -66,7 +66,7 @@ Because modern LLMs write with the greatest depth and nuance in English while th
 
 - **Starting Location & Introduction:** The introductory box at the very top of the chat history displays the original starting location where the adventure began.
 - **Character-Bound Location Filtering:** Locations bound to another character are completely hidden from the chat's location dropdown and will never be suggested by the AI narrative. Only unrestricted locations and venues bound to the active character are accessible.
-- **Manual Location Selector:** Located in the right sidebar under the active WorldInfo. Players can freely choose between all accessible locations within the world at any time.
+- **Manual Location Selector:** Located in the right sidebar under the active WorldInfo. Players can freely choose between all accessible locations within the world at any time, or return to the overarching **World** (`🌐 <World Name> (World)`) to leave a specific venue—restoring the world's backdrop and world-level context without being tied to a particular place.
 - **Dynamic AI Location Suggestions:** When the AI narrative suggests travelling to an accessible location (e.g., *"Let us set out into the forest"*):
   - A confirmation button appears in chat: *"Would you like to move to [New Location]? [Yes] [No]"*.
   - **60-Second Countdown:** A red progress bar along the bottom edge of the button steadily shrinks over 60 seconds. If ignored, the prompt silently dissolves.

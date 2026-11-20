@@ -6,7 +6,11 @@
         <div class="chat-system-message-badge">
           <span class="chat-system-message-icon">
             {%- if msg.system_type == 'location_change' -%}
-              📍
+              {%- if msg.metadata and msg.metadata.location_id is none -%}
+                🌐
+              {%- else -%}
+                📍
+              {%- endif -%}
             {%- elif msg.system_type == 'event_trigger' -%}
               ⚡
             {%- else -%}
