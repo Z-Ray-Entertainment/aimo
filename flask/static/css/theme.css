@@ -373,6 +373,14 @@ a.aimo-btn-sm {
   gap: 0;
 }
 
+.aimo-btn-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
 .aimo-btn-sm.aimo-btn-icon {
   width: 1.65rem;
   height: 1.65rem;
@@ -604,6 +612,13 @@ button.aimo-btn.copied-success {
   border: none;
   margin: 0.5rem 0;
   width: 100%;
+}
+
+.user-menu-footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
 }
 
 .mobile-nav-btn {

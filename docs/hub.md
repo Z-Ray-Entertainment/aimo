@@ -12,7 +12,8 @@ In the top-right corner of the header bar, you find a circular button displaying
 - **Creator-Tag:** Your Creator-Tag is shown in **Settings → Account**, where you can copy it with one click. Share it privately with trusted authors so they can add you as a collaborator.
 - **Einstellungen (`⚙️ Einstellungen`):** Available to all logged-in users; opens your personal [User Settings](settings.md) with your [Personas](personas.md).
 - **Admin-Einstellungen (`⚙️ Admin-Einstellungen`):** Visible to administrators; opens the [Administration & Settings](admin.md) area.
-- **Logout (`🚪 Logout`):** Located at the bottom of the menu below a visual divider line to end your current session.
+- **Logout (`🚪 Logout`):** Located below a visual divider line to end your current session.
+- **Support & Website Links:** At the very bottom of the menu below another divider line, two icon buttons link in a new tab to Ko-Fi (*Support us on ko-fi*) and the Z-Ray Entertainment website (*Visit our Website*, automatically opening the German or English edition based on your selected language).
 
 On smaller or mobile screens, the three main Hub navigation sections (*KI-Charaktere*, *Lorebooks*, *Worlds*) also appear at the top of this menu above a divider line.
 
