@@ -133,4 +133,8 @@ aimo/
 
 ## 📜 License
 
-MIT License — see LICENSE file.
+**GNU Affero General Public License v3.0 (AGPL-3.0)** — see [LICENSE](LICENSE) file.
+
+Copyright (c) 2026 Imo Hester
+
+*Architecture, planning, and feature design by Imo Hester; implementation was AI-assisted and manually reviewed and tested.*
