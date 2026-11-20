@@ -2,13 +2,10 @@
   <section id="tab-char-sprites" class="tab-pane {% if active_tab == 'sprites' %}active{% endif %}">
     {% if character %}
       <div class="aimo-frame" style="padding: 1.5rem;">
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+        <h3 style="color: var(--gold-accent); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
           🎭 {{ _("Emotional Sprites (28 Emotions with Variant Stack View)") }}
           <span class="field-help-btn" title="{{ _('Image variants for 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait.') }}">?</span>
         </h3>
-        <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
-          {{ _("When an emotion is detected, a random variant is selected. If none exists, neutral is used as fallback.") }}
-        </p>
 
         <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));">
           {% for emotion in emotions %}

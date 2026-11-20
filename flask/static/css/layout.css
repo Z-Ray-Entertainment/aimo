@@ -551,6 +551,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   width: 17px;
   height: 17px;
   border-radius: 50%;
@@ -566,6 +567,11 @@
   vertical-align: middle;
   transition: all 0.15s ease;
   user-select: none;
+}
+
+label > .field-help-btn,
+h3 > .field-help-btn {
+  margin-left: 0;
 }
 
 .field-help-btn:hover {

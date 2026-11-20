@@ -2,15 +2,10 @@
     <section id="tab-char-lorebooks" class="tab-pane {% if active_tab == 'lorebooks' %}active{% endif %}">
       <div class="aimo-frame" style="padding: 1.5rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
-          <div>
-            <h3 style="color: var(--gold-accent); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
-              📖 {{ _("Linked Lorebooks (Knowledge Compendiums)") }}
-              <span class="field-help-btn" title="{{ _('Knowledge compendiums for this character. Matching entries are automatically loaded into the prompt via tags.') }}">?</span>
-            </h3>
-            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
-              {{ _("Attach knowledge compendiums. Relevant entries are automatically injected via tag matching.") }}
-            </p>
-          </div>
+          <h3 style="color: var(--gold-accent); margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
+            📖 {{ _("Linked Lorebooks (Knowledge Compendiums)") }}
+            <span class="field-help-btn" title="{{ _('Knowledge compendiums for this character. Matching entries are automatically loaded into the prompt via tags.') }}">?</span>
+          </h3>
           {{ action_button(_("Add Lorebook"), icon="➕", modal="add-lorebook-modal") }}
         </div>
 

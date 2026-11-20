@@ -2,13 +2,10 @@
   <section id="tab-char-events" class="tab-pane {% if active_tab == 'events' %}active{% endif %}">
     {% if character %}
       <div class="aimo-frame" style="padding: 1.5rem; margin-bottom: 1.25rem;">
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
+        <h3 style="color: var(--gold-accent); margin-bottom: 0; display: flex; align-items: center; gap: 0.5rem;">
           🎲 {{ _("Character-Specific Random Events") }}
           <span class="field-help-btn" title="{{ _('Dynamic events that can trigger exclusively in chats with this character.') }}">?</span>
         </h3>
-        <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
-          {{ _("These events are available exclusively in sessions with") }} <strong>{{ character.name }}</strong> {{ _("in the shared random event pool.") }}
-        </p>
       </div>
       {{ event_editor(
           events=events,
