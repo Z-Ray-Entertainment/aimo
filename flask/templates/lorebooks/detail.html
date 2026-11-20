@@ -5,6 +5,11 @@
 {% from "macros/collaboration.html" import collaboration_manager %}
 {% block title %}AIMO — Lorebook: {{ lorebook.name }}{% endblock %}
 
+{% block extra_head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/cards.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/i18n_editor.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="aimo-sidebar-layout" data-tab-group>
   <!-- Vertikale Seitenleiste links -->

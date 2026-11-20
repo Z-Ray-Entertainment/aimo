@@ -1,6 +1,12 @@
 {% extends "settings/layout.html" %}
 {% from "macros/cards.html" import persona_grid %}
 
+{% block extra_head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/cards.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/image_cropper.css') }}">
+{% endblock %}
+
 {% block settings_content %}
 <div class="aimo-frame" style="padding: 1.5rem;">
   <div style="margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.75rem;">
@@ -10,4 +16,9 @@
 
   {{ persona_grid(g.persona_items, can_manage=has_perm('persona_manage')) }}
 </div>
+{% include "macros/persona_manager.html" %}
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="{{ url_for('static', filename='js/image_cropper.js') }}" defer></script>
 {% endblock %}

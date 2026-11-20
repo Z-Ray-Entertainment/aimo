@@ -3,6 +3,10 @@
 {% from "macros/lorebook_manager.html" import lorebook_manager, lorebook_picker_modal %}
 {% block title %}AIMO — {{ _("New Adventure with") }} {{ character.name }}{% endblock %}
 
+{% block extra_head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/cards.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="aimo-frame" data-tab-group style="max-width: 720px; margin: 2rem auto; padding: 1.75rem;">
   <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 1rem;">

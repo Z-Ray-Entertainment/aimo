@@ -1,0 +1,113 @@
+{% from "macros/buttons.html" import action_button, modal_close_button %}
+
+<div class="modal-backdrop" id="switch-worldinfo-modal" aria-hidden="true">
+  <div class="modal-frame" style="max-width: 480px;">
+    <div class="modal-header">
+      <h3 style="color: var(--gold-accent);">Welt wechseln</h3>
+      {{ modal_close_button("switch-worldinfo-modal") }}
+    </div>
+    <div style="padding: 0.75rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid #E74C3C; background: rgba(100, 30, 22, 0.35); font-size: 0.86rem;">
+      ⚠️ <strong>Warnung:</strong> Ein Wechsel der Welt während eines laufenden Chats kann zu Inkonsistenzen bei früheren Erinnerungen führen.
+    </div>
+    <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" style="display: flex; flex-direction: column; gap: 1rem;">
+      <input type="hidden" name="action" value="switch_worldinfo">
+      <div>
+        <label>Neue Welt wählen</label>
+        <select name="worldinfo_id">
+          <option value="none" {% if not chat_session.active_worldinfo_id %}selected{% endif %}>Ohne Welt (Neutral)</option>
+          {% for wi in all_worldinfos %}
+            <option value="{{ wi.id }}" {% if chat_session.active_worldinfo_id == wi.id %}selected{% endif %}>
+              {{ wi.icon or '🌐' }} {{ wi.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="text-align: right;">
+        {{ action_button("Welt umschalten", type="submit", variant="primary") }}
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="chat-sessions-modal" aria-hidden="true">
+  <div class="modal-frame" style="max-width: 580px; width: 92%; max-height: 85vh; display: flex; flex-direction: column;">
+    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.6rem; margin-bottom: 0.75rem;">
+      <h3 style="color: var(--gold-accent); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+        <span class="icon-mono">💬</span> Sitzungen mit {{ character.name }}
+      </h3>
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        {{ action_button("Neuer Chat", href=url_for('chat.new_character_chat', character_id=character.id, configure=1), icon="➕", size="sm", variant="primary") }}
+        {{ modal_close_button("chat-sessions-modal") }}
+      </div>
+    </div>
+    <div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; padding-right: 0.25rem;">
+      {% for s in all_sessions %}
+        <div class="aimo-frame chat-glass-panel" style="padding: 0.65rem 0.85rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; border-color: {% if s.id == chat_session.id %}var(--gold-accent){% else %}var(--border-wood-dark){% endif %};">
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem;">
+              <a href="{{ url_for('chat.view_session', session_id=s.id) }}" style="font-weight: 700; color: {% if s.id == chat_session.id %}var(--gold-accent){% else %}var(--text-color){% endif %}; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ s.title or 'Unbenannter Chat' }}
+              </a>
+              {% if s.id == chat_session.id %}
+                <span class="badge" style="font-size: 0.7rem; padding: 0.15rem 0.4rem; background: var(--gold-accent); color: #000; border-radius: 4px; font-weight: bold;">Aktiv</span>
+              {% endif %}
+            </div>
+            <div style="font-size: 0.76rem; color: var(--text-muted);">
+              Erstellt: {{ s.created_at.strftime('%d.%m.%Y %H:%M') if s.created_at else '' }}
+              {% if s.persona %} · Persona: {{ s.persona.name }}{% endif %}
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.4rem; align-items: center;">
+            {% if s.id != chat_session.id %}
+              {{ action_button("Wechseln", href=url_for('chat.view_session', session_id=s.id), size="sm") }}
+            {% endif %}
+            <form method="POST" action="{{ url_for('chat.delete_session', session_id=s.id) }}" onsubmit="return confirm({{ _('Do you really want to delete this session?') | tojson | string | escape }});" style="margin: 0;">
+              <input type="hidden" name="redirect_to" value="{% if s.id == chat_session.id %}overview{% else %}session{% endif %}">
+              {{ action_button(_("Delete"), type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title=_("Delete session")) }}
+            </form>
+          </div>
+        </div>
+      {% else %}
+        <p style="color: var(--text-muted); font-size: 0.88rem;">Keine weiteren Sitzungen vorhanden.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="edit-message-modal" aria-hidden="true">
+  <div class="modal-frame" style="max-width: 540px;">
+    <div class="modal-header">
+      <h3 style="color: var(--gold-accent);">Nachricht bearbeiten</h3>
+      {{ modal_close_button("edit-message-modal") }}
+    </div>
+    <form id="edit-message-form" style="display: flex; flex-direction: column; gap: 0.85rem;">
+      <input type="hidden" id="edit-msg-idx" value="">
+      <textarea id="edit-msg-content" rows="5" required></textarea>
+      <div style="text-align: right;">
+        {{ action_button("Änderung speichern (Sync Kanon)", type="submit", variant="primary", icon="💾") }}
+      </div>
+    </form>
+  </div>
+</div>
+
+{% if is_admin %}
+<div class="modal-backdrop" id="prompt-debug-modal" aria-hidden="true">
+  <div class="modal-frame" style="max-width: 900px; width: 92%; max-height: 85vh; display: flex; flex-direction: column;">
+    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-wood); padding-bottom: 0.6rem; margin-bottom: 0.75rem;">
+      <h3 style="color: var(--gold-accent); margin: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+        <span style="font-family: monospace; font-weight: bold;">{ }</span> LLM Generation Prompt (Admin Debug)
+      </h3>
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        {{ action_button("Kopieren", icon="📋", id="copy-prompt-debug-btn", size="sm", data={"action": "copy-prompt-debug"}) }}
+        {{ modal_close_button("prompt-debug-modal") }}
+      </div>
+    </div>
+    <div style="flex: 1; overflow-y: auto; background: rgba(10, 8, 6, 0.75); border: 1px solid var(--border-wood); border-radius: 8px; padding: 0.85rem; margin-bottom: 0.5rem;">
+      <pre id="prompt-debug-content" style="margin: 0; white-space: pre-wrap; word-break: break-word; font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace; font-size: 0.82rem; color: #E8D8C8; line-height: 1.45;"></pre>
+    </div>
+    <div style="text-align: right; font-size: 0.74rem; color: var(--text-muted);">
+      In-Memory Snapshot zum Inferenzzeitpunkt (nicht in Datenbank persistiert)
+    </div>
+  </div>
+</div>
+{% endif %}

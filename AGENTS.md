@@ -187,6 +187,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 ## 💻 3. Coding Conventions & Guidelines
 
 - **Object-Oriented Programming (OOP):** Consistent encapsulation in classes, entities, and value objects.
+- **File Size & Domain Modularization:** Keep source files, templates, stylesheets, and scripts focused on a single sub-domain or responsibility (soft limit: ~500 lines; hard limit: 700 lines). Files exceeding this threshold must be split into smaller domain-specific modules or packages. Include CSS, JS, and Jinja2 template fragments strictly on the pages/views that actually require them rather than loading page-specific assets globally in `base.html`.
 - **Expressive names & minimal comments:** Code and templates must be self-explanatory through meaningful naming, clean structure, and type hints. Comments in code and templates are only permitted when the code cannot explain itself or when complex domain logic and non-trivial relationships cannot be understood immediately. Trivial or redundant comments (e.g., above self-explanatory includes, functions, HTML elements, or control structures) are strictly forbidden.
 - **No defensive `None` checks:** Avoid defensive `None` checks unless `None` represents an explicit, valid domain state.
 - **Confidentiality:** Never hardcode secrets or API keys; everything is retrieved via `shared/config.py` from environment variables.

@@ -1,28 +1,27 @@
 {% extends "base.html" %}
-{% from "macros/buttons.html" import action_button, menu_item, tab_button, modal_close_button %}
+{% from "macros/buttons.html" import action_button, tab_button %}
 {% from "macros/lorebook_manager.html" import lorebook_manager, lorebook_picker_modal %}
 {% from "macros/system_message.html" import chat_system_message %}
 {% block title %}AIMO — {{ chat_session.title }} ({{ character.name }}){% endblock %}
 {% block body_class %} chat-page{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/chat.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/cards.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/image_cropper.css') }}">
+{% endblock %}
 
 {% block backdrop_image %}{%- if current_location and current_location.background_image_path %}{{ url_for('uploaded_file', filename=current_location.background_image_path) }}{% elif worldinfo and worldinfo.backdrop_image_path %}{{ url_for('uploaded_file', filename=worldinfo.backdrop_image_path) }}{% else %}{{ system_backdrop_url or url_for('static', filename='img/cover.svg') }}{% endif -%}{% endblock %}
 {% block world_backdrop_image %}{%- if worldinfo and worldinfo.backdrop_image_path %}{{ url_for('uploaded_file', filename=worldinfo.backdrop_image_path) }}{% endif -%}{% endblock %}
 
 {% block content %}
 <div class="chat-layout">
-  <!-- Mittlere Hauptbühne: 3-Reiter-Navigation (Chat, Medien, Erinnerungen) -->
   <section id="chat-main-stage" class="aimo-frame chat-main-stage chat-glass-panel">
     <div class="chat-stage-overlay" data-tab-group>
-      <!-- Top Bar mit Zurück-Button & Reitern (nutzen dieselbe Basisklasse .aimo-btn wie im Seitenheader) -->
       <div class="chat-stage-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem; border-bottom: 2px solid var(--border-wood-dark); padding-bottom: 0.5rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <!-- Zurück zur Übersicht (nur Pfeil-Icon, kein Text) -->
           {{ action_button("Zurück zur Übersicht", href=url_for('overview.index', tab='characters'), arrow="left", layout="icon") }}
-
-          <!-- Vertikaler Trennstrich -->
           <div class="chat-header-vdivider"></div>
-
-          <!-- Reiter-Leiste mit .aimo-btn Basisklasse -->
           <div class="rpg-tabs" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0; gap: 0.5rem;">
             {{ tab_button("Chat", "chat-pane-messages", icon="💬", active=true) }}
             {{ tab_button("Medien", "chat-pane-media", icon="🖼️") }}
@@ -31,8 +30,6 @@
             {% if can_debug_relationship %}
               {{ tab_button(_("Settings"), "chat-pane-settings", icon="⚙️") }}
             {% endif %}
-
-            <!-- Mobil: Seitenleiste als Tab rechts von Erinnerungen mit vertikalem Trennstrich davor -->
             <div class="chat-header-vdivider mobile-tab-only"></div>
             {{ tab_button(_("Info"), "chat-pane-sidebar", icon="👤", extra_class="mobile-tab-only", title=_("Sidebar / Character Info")) }}
           </div>
@@ -63,7 +60,6 @@
         </div>
       </div>
 
-      <!-- TAB 1: Chat-Konversation -->
       <div id="chat-pane-messages" class="tab-pane active">
         <div
           id="chat-messages-list"
@@ -95,13 +91,13 @@
                     <strong>{{ character.name }}</strong>
                     <div style="display: flex; gap: 0.4rem;">
                       {% if is_admin and msg.message_idx > 0 %}
-                        <button type="button" class="btn-prompt-debug" onclick="window.openPromptDebugModal({{ msg.message_idx }})" style="background:none; border:none; color:var(--gold-accent); cursor:pointer; font-family:monospace; font-weight:bold; font-size:0.85rem;" title="{{ _('View LLM prompt (Admin)') }}"><span class="icon-mono">{ }</span></button>
+                        <button type="button" class="btn-prompt-debug" data-action="prompt-debug" data-msg-idx="{{ msg.message_idx }}" style="background:none; border:none; color:var(--gold-accent); cursor:pointer; font-family:monospace; font-weight:bold; font-size:0.85rem;" title="{{ _('View LLM prompt (Admin)') }}"><span class="icon-mono">{ }</span></button>
                       {% endif %}
-                      <button type="button" onclick="window.translateChatMessage({{ msg.message_idx }}, this)" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Translate message (on-demand)') }}"><span class="icon-mono">🌐</span></button>
-                      <button type="button" onclick="openEditMessageModal({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Edit message') }}"><span class="icon-mono">✏️</span></button>
-                      <button type="button" onclick="forkChatAt({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Duplicate chat from here (Fork)') }}"><span class="icon-mono">🌿</span></button>
+                      <button type="button" data-action="translate-msg" data-msg-idx="{{ msg.message_idx }}" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Translate message (on-demand)') }}"><span class="icon-mono">🌐</span></button>
+                      <button type="button" data-action="edit-msg" data-msg-idx="{{ msg.message_idx }}" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Edit message') }}"><span class="icon-mono">✏️</span></button>
+                      <button type="button" data-action="fork-chat" data-msg-idx="{{ msg.message_idx }}" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Duplicate chat from here (Fork)') }}"><span class="icon-mono">🌿</span></button>
                       {% if msg.message_idx > 0 %}
-                        <button type="button" onclick="deleteMessagesFrom({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Delete from here') }}"><span class="icon-mono">🗑️</span></button>
+                        <button type="button" data-action="delete-from" data-msg-idx="{{ msg.message_idx }}" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Delete from here') }}"><span class="icon-mono">🗑️</span></button>
                       {% endif %}
                     </div>
                   </div>
@@ -123,17 +119,17 @@
                   <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem; font-size: 0.76rem; color: var(--gold-accent);">
                     <strong>{{ persona.name if persona else 'Du' }}</strong>
                     <div style="display: flex; gap: 0.4rem;">
-                      <button type="button" onclick="window.translateChatMessage({{ msg.message_idx }}, this)" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Translate message (on-demand)') }}"><span class="icon-mono">🌐</span></button>
-                      <button type="button" onclick="openEditMessageModal({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Edit message') }}"><span class="icon-mono">✏️</span></button>
-                      <button type="button" onclick="forkChatAt({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Duplicate chat from here (Fork)') }}"><span class="icon-mono">🌿</span></button>
-                      <button type="button" onclick="deleteMessagesFrom({{ msg.message_idx }})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Delete from here') }}"><span class="icon-mono">🗑️</span></button>
+                      <button type="button" data-action="translate-msg" data-msg-idx="{{ msg.message_idx }}" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Translate message (on-demand)') }}"><span class="icon-mono">🌐</span></button>
+                      <button type="button" data-action="edit-msg" data-msg-idx="{{ msg.message_idx }}" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Edit message') }}"><span class="icon-mono">✏️</span></button>
+                      <button type="button" data-action="fork-chat" data-msg-idx="{{ msg.message_idx }}" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Duplicate chat from here (Fork)') }}"><span class="icon-mono">🌿</span></button>
+                      <button type="button" data-action="delete-from" data-msg-idx="{{ msg.message_idx }}" style="background:none; border:none; color:var(--text-muted); cursor:pointer;" title="{{ _('Delete from here') }}"><span class="icon-mono">🗑️</span></button>
                     </div>
                   </div>
                   {% if msg.image_path %}
                     <div class="chat-uploaded-image-wrap" style="margin-bottom: 0.45rem;">
                       <img src="{{ url_for('uploaded_file', filename=msg.image_path) }}" alt="Upload" style="max-width: 220px; border-radius: 8px; border: 1px solid var(--gold-accent); display: block;">
                       <div style="margin-top: 0.25rem;">
-                        <button type="button" class="btn-eye-alt" onclick="window.toggleImageAltText({{ msg.message_idx }})" title="{{ _('Show/hide ALT text (image description)') }}">
+                        <button type="button" class="btn-eye-alt" data-action="toggle-alt" data-msg-idx="{{ msg.message_idx }}" title="{{ _('Show/hide ALT text (image description)') }}">
                           <span class="icon-mono">👁️</span>
                         </button>
                       </div>
@@ -149,94 +145,15 @@
           {% endfor %}
         </div>
 
-        <!-- 60s Countdown Container für Ortswechsel -->
         <div id="location-switch-container"></div>
 
-        <!-- Eingabeleiste unten: Angedockter KI-Systemhinweis + Vereinheitlichter Kasten mit Overlay-Buttons -->
-        <div class="chat-input-wrapper">
-          <div class="chat-input-disclaimer" role="note" aria-label="{{ _('AI system notice') }}">
-            <span class="chat-input-disclaimer-icon">ℹ️</span>
-            <span class="chat-input-disclaimer-text">{{ _('This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate.') }}</span>
-          </div>
+        {% include "chat/partials/input_bar.html" %}
 
-          <form id="chat-input-form" class="chat-input-box">
-          <!-- Links bündig: Hamburger-Menü (Sitzungen, Neuer Chat, Löschen), Attach & ComfyUI -->
-          <div class="chat-input-actions-left">
-            <div class="chat-menu-dropdown-wrapper" id="chat-menu-dropdown-wrapper">
-              <button type="button" class="chat-input-btn" id="chat-menu-toggle-btn" title="{{ _('Chat options & sessions') }}" aria-label="{{ _('Chat options') }}" aria-expanded="false">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-                  <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                </svg>
-              </button>
-              <div class="chat-menu-dropdown" id="chat-menu-dropdown" role="menu">
-                {{ menu_item(_('Sessions'), icon='💬', modal='chat-sessions-modal') }}
-                {{ menu_item(_('Start new chat'), icon='➕', href=url_for('chat.new_character_chat', character_id=character.id, configure=1)) }}
-                <div class="chat-menu-dropdown-divider"></div>
-                {{ menu_item(_('Delete chat'), icon='🗑️', danger=true, onclick="if (confirm('" ~ _('Do you really want to permanently delete this chat?') ~ "')) { document.getElementById('delete-current-chat-form').submit(); }") }}
-              </div>
-            </div>
-
-            <label class="chat-input-btn chat-overlay-btn" title="{{ _('Attach image (Vision ALT analysis)') }}">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-                <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5a2.5 2.5 0 0 1 5 0v10.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5V6H9v9.5a3 3 0 0 0 6 0V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/>
-              </svg>
-              <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp" style="display: none;" onchange="document.getElementById('upload-file-indicator').textContent = this.files[0] ? this.files[0].name : '';">
-            </label>
-
-            {% if image_gen_available %}
-              <button type="button" class="chat-input-btn chat-overlay-btn" onclick="window.chatStream.triggerComfyUIGeneration()" title="{{ _('Generate scene image') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-                  <path d="m19 9 1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/>
-                </svg>
-              </button>
-
-              <!-- Abbrechen-Button während ComfyUI-Bildgenerierung -->
-              <button type="button" id="cancel-image-gen-btn" class="chat-input-btn chat-overlay-btn btn-abort-turn" style="display: none;" onclick="window.chatStream.cancelComfyUIGeneration()" title="{{ _('Cancel image generation') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
-                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
-                </svg>
-              </button>
-            {% endif %}
-          </div>
-
-          <!-- Mitte: Textarea ohne eigenen Rahmen & Datei-Indikator -->
-          <div class="chat-input-content">
-            <div id="upload-file-indicator"></div>
-            <textarea id="chat-message-textarea" name="message" rows="5" placeholder="{{ _('Write your response or action... (Enter to send, Shift+Enter for new line)') }}"></textarea>
-          </div>
-
-          <!-- Rechts: Re-Generate, Abort & Senden als Overlay-Buttons -->
-          <div class="chat-input-actions-right">
-            <!-- Re-Generate Button -->
-            <button type="button" id="chat-regenerate-btn" class="chat-input-btn chat-overlay-btn btn-regenerate-icon" onclick="window.chatStream.regenerateLastTurn()" title="{{ _('Regenerate response – replaces the last AI reply or retries generation') }}">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" class="icon-regenerate" aria-hidden="true">
-                <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
-              </svg>
-            </button>
-
-            <!-- Abbrechen-Button während aktiver Antwort-Generierung -->
-            <button type="button" id="chat-abort-btn" class="chat-input-btn chat-overlay-btn btn-abort-turn" style="display: none;" onclick="window.chatStream.abortTurn()" title="{{ _('Cancel response generation') }}">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
-                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
-              </svg>
-            </button>
-
-            <button type="submit" id="chat-send-btn" class="chat-input-btn chat-overlay-btn" title="{{ _('Send message (Enter)') }}">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-              </svg>
-            </button>
-          </div>
-        </form>
-        </div>
-
-        <!-- Separates Formular für Chat löschen (verhindert invalides verschachteltes <form>) -->
         <form id="delete-current-chat-form" method="POST" action="{{ url_for('chat.delete_session', session_id=chat_session.id) }}" style="display: none;">
           <input type="hidden" name="redirect_to" value="overview">
         </form>
       </div>
 
-      <!-- TAB 2: Medien (Freigeschaltete 9:16-Galeriebilder & Generierungen) -->
       <div id="chat-pane-media" class="tab-pane">
         <h3 style="color: var(--gold-accent); margin-bottom: 0.75rem;">Freigeschaltete 9:16 Charakter-Bilder (Beziehung: <span id="gallery-rel-tier-label">{{ relationship_tier_name }}</span>)</h3>
         <div id="unlocked-gallery-grid" class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); margin-bottom: 1.5rem;">
@@ -264,7 +181,6 @@
         </div>
       </div>
 
-      <!-- TAB 3: Erinnerungen (Memories) -->
       <div id="chat-pane-memories" class="tab-pane">
         <div style="margin-bottom: 1rem;">
           <h3 style="color: var(--gold-accent);">Gespeicherte Episoden-Erinnerungen (10-Nachrichten-Intervall)</h3>
@@ -288,8 +204,8 @@
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 0.25rem; flex-wrap: wrap;">
                 <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
-                  {{ action_button(_("Recalculate"), icon="🔄", size="sm", onclick="window.recalculateMemory(" ~ chat_session.id ~ ", " ~ mem.id ~ ", this)", title=_("Recalculate memory from associated episode messages")) }}
-                  {{ action_button(_("Translate"), icon="🌐", size="sm", onclick="window.translateMemory(" ~ chat_session.id ~ ", " ~ mem.id ~ ", this)", title=_("Translate memory in-place to your language")) }}
+                  {{ action_button(_("Recalculate"), icon="🔄", size="sm", data={"action": "recalculate-memory", "session-id": chat_session.id, "mem-id": mem.id}, title=_("Recalculate memory from associated episode messages")) }}
+                  {{ action_button(_("Translate"), icon="🌐", size="sm", data={"action": "translate-memory", "session-id": chat_session.id, "mem-id": mem.id}, title=_("Translate memory in-place to your language")) }}
                 </div>
                 {{ action_button(_("Save"), type="submit", variant="primary", size="sm", icon="💾") }}
               </div>
@@ -299,34 +215,25 @@
         <p id="chat-memories-empty" style="color: var(--text-muted);{% if memories %} display: none;{% endif %}">Noch keine Erinnerungen generiert (entstehen automatisch alle 10 Nachrichten).</p>
       </div>
 
-      <!-- TAB 4: Lorebooks -->
       <div id="chat-pane-lorebooks" class="tab-pane" style="padding: 1rem 0;">
         {{ lorebook_manager(lorebook_data, is_new_chat=false, session_id=chat_session.id, modal_id="session-add-lorebook-modal") }}
       </div>
 
       {% if can_debug_relationship %}
-        <!-- TAB 5: Settings (Admin / Author) -->
         <div id="chat-pane-settings" class="tab-pane" style="padding: 1rem 0;">
           <h3 style="color: var(--gold-accent); margin-bottom: 0.75rem;">{{ _('Relationship Settings') }}</h3>
           <div class="aimo-frame chat-glass-panel" style="padding: 1rem; border-radius: 10px; display: flex; flex-direction: column; gap: 1rem; width: 100%;">
             <label style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; cursor: pointer;" for="toggle-rel-debug-checkbox">
               <span>{{ _('Show relationship debug labels') }}</span>
               <span class="aimo-switch">
-                <input
-                  type="checkbox"
-                  id="toggle-rel-debug-checkbox"
-                  onchange="window.chatStream && window.chatStream.setRelationshipDebug(this.checked);">
+                <input type="checkbox" id="toggle-rel-debug-checkbox">
                 <span class="aimo-switch-slider"></span>
               </span>
             </label>
             {% if is_admin %}
               <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 0.85rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
                 <span style="font-size: 0.88rem; color: var(--text-muted);">{{ _('Reset relationship to default and recalculate from chat history') }}</span>
-                <button
-                  type="button"
-                  id="recalculate-rel-btn"
-                  class="aimo-btn"
-                  onclick="window.chatStream && window.chatStream.recalculateRelationship(this);">
+                <button type="button" id="recalculate-rel-btn" class="aimo-btn" data-action="recalculate-rel">
                   <span class="icon-mono">🔄</span>
                   <span>{{ _('Recalculate relationship') }}</span>
                 </button>
@@ -338,726 +245,16 @@
     </div>
   </section>
 
-  <!-- Rechte Info-Box: Sprite (9:16), Beziehungsbalken, Persona, Welt & Aktueller Ort, Events -->
-  <aside id="chat-pane-sidebar" class="aimo-frame chat-glass-panel chat-sidebar-pane">
-    <!-- Aktives Charakter-Sprite (2/3 der Seitenleistenhöhe, Seitenverhältnisse beibehalten) -->
-    <div class="aimo-frame chat-glass-panel chat-character-portrait-frame">
-      <img id="active-character-sprite" src="{{ url_for('uploaded_file', filename=active_sprite.file_path) }}" alt="{{ character.name }}" onerror="this.src='/static/img/cover.svg'">
-
-      <!-- Brain Thinking Overlay Button oben rechts im Charakterbild -->
-      <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" class="chat-thinking-overlay-form">
-        <input type="hidden" name="action" value="toggle_thinking">
-        <input type="hidden" name="thinking_enabled" value="{{ '0' if chat_session.thinking_enabled else '1' }}">
-        <button
-          type="submit"
-          class="chat-thinking-badge-btn {% if chat_session.thinking_enabled %}is-active{% else %}is-inactive{% endif %}"
-          title="{{ _('Thinking: Enabled (Click to disable)') if chat_session.thinking_enabled else _('Thinking: Disabled (Click to enable)') }}"
-          aria-label="{{ _('Disable thinking') if chat_session.thinking_enabled else _('Enable thinking') }}">
-          <span class="chat-thinking-brain-icon" aria-hidden="true">🧠</span>
-        </button>
-      </form>
-
-      <div class="chat-character-portrait-name">
-        {{ character.name }}
-      </div>
-    </div>
-
-    <!-- Beziehungsbalken (-100 bis +100) -->
-    <div class="relationship-bar-wrap aimo-frame chat-glass-panel" data-relationship-score="{{ chat_session.relationship_value }}" style="border-radius: 10px; padding: 0.65rem;">
-      <div class="relationship-header">
-        <span>{{ _('Relationship:') }} <strong id="rel-score-label">{{ relationship_tier_name }}</strong></span>
-        <span class="heart-icon">❤️</span>
-      </div>
-      <div class="relationship-track">
-        <div class="relationship-fill"></div>
-      </div>
-    </div>
-
-    <!-- Aktive Spieler-Persona (gesperrt nach 1. Nachricht) -->
-    <div class="chat-sidebar-section">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-        <span class="chat-sidebar-label" style="margin-bottom: 0;">{{ _('Active Persona') }}</span>
-        {% if persona %}
-          <button
-            type="button"
-            style="background: none; border: none; cursor: pointer; color: var(--gold-accent);"
-            title="{{ _('Edit player persona') }}"
-            data-persona-id="{{ persona.id }}"
-            data-persona-name="{{ persona.name }}"
-            data-persona-gender="{{ persona.gender.value }}"
-            data-persona-description="{{ persona.description }}"
-            data-persona-appearance="{{ persona.appearance }}"
-            data-persona-i18n-description='{{ (persona_i18n_description or {}) | tojson }}'
-            data-persona-i18n-appearance='{{ (persona_i18n_appearance or {}) | tojson }}'
-            data-persona-portrait-url="{{ url_for('uploaded_file', filename=persona.portrait_path) }}"
-            data-persona-in-use="1"
-            onclick="openEditPersonaFromBtn(this);">
-            <span class="icon-mono">✏️</span>
-          </button>
-        {% endif %}
-      </div>
-      {% if chat_session.persona_locked %}
-        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.45rem 0.65rem; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--border-wood-dark);">
-          <span>👤 {{ persona.name if persona else _('Unknown') }}</span>
-          <span title="{{ _('Persona is locked for this chat after the 1st message') }}">🔒</span>
-        </div>
-      {% else %}
-        <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}">
-          <input type="hidden" name="action" value="change_persona">
-          <select name="persona_id" onchange="this.form.submit()" style="padding: 0.4rem;">
-            {% for p in user_personas %}
-              <option value="{{ p.id }}" {% if persona and p.id == persona.id %}selected{% endif %}>{{ p.name }}</option>
-            {% endfor %}
-          </select>
-        </form>
-      {% endif %}
-    </div>
-
-    <!-- Welt, Aktueller Ort & Zufalls-Events (Gemeinsamer Block ohne interne Trennstriche) -->
-    <div class="chat-sidebar-world-section">
-      <div>
-        <span class="chat-sidebar-label">{{ _('World') }}</span>
-        <div class="chat-field-box">
-          <div class="chat-field-content">
-            {% if worldinfo %}
-              {{ worldinfo.icon or '🌐' }} {{ worldinfo.name }}
-            {% else %}
-              {{ _('No World (Neutral)') }}
-            {% endif %}
-          </div>
-          <button
-            type="button"
-            id="chat-world-backdrop-btn"
-            class="chat-input-btn chat-backdrop-viewer-btn"
-            data-backdrop-url="{{ url_for('uploaded_file', filename=worldinfo.backdrop_image_path) if worldinfo and worldinfo.backdrop_image_path else '' }}"
-            data-backdrop-title="{{ worldinfo.name if worldinfo else '' }}"
-            title="{{ _('View world backdrop') }}"
-            aria-label="{{ _('View world backdrop') }}"
-            {% if not (worldinfo and worldinfo.backdrop_image_path) %}hidden{% endif %}>
-            <span class="icon-mono" aria-hidden="true">🖼️</span>
-          </button>
-          <button type="button" class="chat-input-btn" data-modal-open="switch-worldinfo-modal" title="{{ _('Switch world') }}" aria-label="{{ _('Switch world') }}">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
-              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Aktueller Ort (Direkt unter Welt ohne Trennstrich) -->
-      {% if worldinfo and worldinfo_locations %}
-        <div>
-          <label for="chat-location-select" class="chat-sidebar-label">{{ _('Current Location') }}</label>
-          <select id="chat-location-select" class="chat-sidebar-select" onchange="manualSwitchLocation(this.value)">
-            <option value="world" {% if not current_location %}selected{% endif %}>
-              🌐 {{ worldinfo.name }} ({{ _('World') }})
-            </option>
-            {% for loc in worldinfo_locations %}
-              {% if not loc.character_id or loc.character_id == character.id %}
-                <option value="{{ loc.id }}" {% if current_location and loc.id == current_location.id %}selected{% endif %}>
-                  📍 {{ loc.name }}
-                </option>
-              {% endif %}
-            {% endfor %}
-          </select>
-        </div>
-      {% endif %}
-
-      <!-- Checkbox: Zufalls-Events aktivieren/deaktivieren (gehört zur Welt, ohne Trennstrich) -->
-      {% if (worldinfo and worldinfo_events) or character_events %}
-        <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" class="chat-sidebar-events-toggle">
-          <input type="hidden" name="action" value="toggle_events">
-          <label>
-            <input type="checkbox" name="events_enabled" value="1" {% if chat_session.events_enabled %}checked{% endif %} onchange="this.form.submit()">
-            <span>🎲 {{ _('Enable random events') }}</span>
-          </label>
-        </form>
-
-        {% if can_view_event_counter %}
-          <div class="chat-sidebar-admin-event-counter" id="admin-event-counter-box" title="{{ _('Admin & creator info: Cooldown until the next random event') }}">
-            <span class="icon-mono">⏳</span> {{ _('Next event:') }} 
-            <span id="admin-event-counter-status">
-              {%- if not chat_session.events_enabled -%}
-                {{ _('in') }} <strong id="admin-event-counter-val">{{ chat_session.cooldown_counter }}</strong> {{ _('message') if chat_session.cooldown_counter == 1 else _('messages') }} <span class="counter-paused-label">({{ _('paused') }})</span>
-              {%- elif chat_session.cooldown_counter <= 1 -%}
-                <strong id="admin-event-counter-val">{{ _('next message') }}</strong>
-              {%- else -%}
-                {{ _('in') }} <strong id="admin-event-counter-val">{{ chat_session.cooldown_counter }}</strong> {{ _('messages') }}
-              {%- endif -%}
-            </span>
-          </div>
-        {% endif %}
-      {% endif %}
-    </div>
-  </aside>
+  {% include "chat/partials/sidebar.html" %}
 </div>
 
-<!-- Modal: Welt wechseln mit Inkonsistenz-Warnung -->
-<div class="modal-backdrop" id="switch-worldinfo-modal" aria-hidden="true">
-  <div class="modal-frame" style="max-width: 480px;">
-    <div class="modal-header">
-      <h3 style="color: var(--gold-accent);">Welt wechseln</h3>
-      {{ modal_close_button("switch-worldinfo-modal") }}
-    </div>
-    <div style="padding: 0.75rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid #E74C3C; background: rgba(100, 30, 22, 0.35); font-size: 0.86rem;">
-      ⚠️ <strong>Warnung:</strong> Ein Wechsel der Welt während eines laufenden Chats kann zu Inkonsistenzen bei früheren Erinnerungen führen.
-    </div>
-    <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" style="display: flex; flex-direction: column; gap: 1rem;">
-      <input type="hidden" name="action" value="switch_worldinfo">
-      <div>
-        <label>Neue Welt wählen</label>
-        <select name="worldinfo_id">
-          <option value="none" {% if not chat_session.active_worldinfo_id %}selected{% endif %}>Ohne Welt (Neutral)</option>
-          {% for wi in all_worldinfos %}
-            <option value="{{ wi.id }}" {% if chat_session.active_worldinfo_id == wi.id %}selected{% endif %}>
-              {{ wi.icon or '🌐' }} {{ wi.name }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-      <div style="text-align: right;">
-        {{ action_button("Welt umschalten", type="submit", variant="primary") }}
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- Modal: Sitzungen-Übersicht -->
-<div class="modal-backdrop" id="chat-sessions-modal" aria-hidden="true">
-  <div class="modal-frame" style="max-width: 580px; width: 92%; max-height: 85vh; display: flex; flex-direction: column;">
-    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.6rem; margin-bottom: 0.75rem;">
-      <h3 style="color: var(--gold-accent); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-        <span class="icon-mono">💬</span> Sitzungen mit {{ character.name }}
-      </h3>
-      <div style="display: flex; gap: 0.5rem; align-items: center;">
-        {{ action_button("Neuer Chat", href=url_for('chat.new_character_chat', character_id=character.id, configure=1), icon="➕", size="sm", variant="primary") }}
-        {{ modal_close_button("chat-sessions-modal") }}
-      </div>
-    </div>
-    <div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; padding-right: 0.25rem;">
-      {% for s in all_sessions %}
-        <div class="aimo-frame chat-glass-panel" style="padding: 0.65rem 0.85rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; border-color: {% if s.id == chat_session.id %}var(--gold-accent){% else %}var(--border-wood-dark){% endif %};">
-          <div style="flex: 1; min-width: 0;">
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem;">
-              <a href="{{ url_for('chat.view_session', session_id=s.id) }}" style="font-weight: 700; color: {% if s.id == chat_session.id %}var(--gold-accent){% else %}var(--text-color){% endif %}; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                {{ s.title or 'Unbenannter Chat' }}
-              </a>
-              {% if s.id == chat_session.id %}
-                <span class="badge" style="font-size: 0.7rem; padding: 0.15rem 0.4rem; background: var(--gold-accent); color: #000; border-radius: 4px; font-weight: bold;">Aktiv</span>
-              {% endif %}
-            </div>
-            <div style="font-size: 0.76rem; color: var(--text-muted);">
-              Erstellt: {{ s.created_at.strftime('%d.%m.%Y %H:%M') if s.created_at else '' }}
-              {% if s.persona %} · Persona: {{ s.persona.name }}{% endif %}
-            </div>
-          </div>
-          <div style="display: flex; gap: 0.4rem; align-items: center;">
-            {% if s.id != chat_session.id %}
-              {{ action_button("Wechseln", href=url_for('chat.view_session', session_id=s.id), size="sm") }}
-            {% endif %}
-            <form method="POST" action="{{ url_for('chat.delete_session', session_id=s.id) }}" onsubmit="return confirm({{ _('Do you really want to delete this session?') | tojson | string | escape }});" style="margin: 0;">
-              <input type="hidden" name="redirect_to" value="{% if s.id == chat_session.id %}overview{% else %}session{% endif %}">
-              {{ action_button(_("Delete"), type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title=_("Delete session")) }}
-            </form>
-          </div>
-        </div>
-      {% else %}
-        <p style="color: var(--text-muted); font-size: 0.88rem;">Keine weiteren Sitzungen vorhanden.</p>
-      {% endfor %}
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Nachricht nachträglich bearbeiten -->
-<div class="modal-backdrop" id="edit-message-modal" aria-hidden="true">
-  <div class="modal-frame" style="max-width: 540px;">
-    <div class="modal-header">
-      <h3 style="color: var(--gold-accent);">Nachricht bearbeiten</h3>
-      {{ modal_close_button("edit-message-modal") }}
-    </div>
-    <form id="edit-message-form" onsubmit="submitEditMessage(event)" style="display: flex; flex-direction: column; gap: 0.85rem;">
-      <input type="hidden" id="edit-msg-idx" value="">
-      <textarea id="edit-msg-content" rows="5" required></textarea>
-      <div style="text-align: right;">
-        {{ action_button("Änderung speichern (Sync Kanon)", type="submit", variant="primary", icon="💾") }}
-      </div>
-    </form>
-  </div>
-</div>
-
-{% if is_admin %}
-<!-- Modal: LLM Inferenz Prompt (Admin Debug Overlay) -->
-<div class="modal-backdrop" id="prompt-debug-modal" aria-hidden="true">
-  <div class="modal-frame" style="max-width: 900px; width: 92%; max-height: 85vh; display: flex; flex-direction: column;">
-    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-wood); padding-bottom: 0.6rem; margin-bottom: 0.75rem;">
-      <h3 style="color: var(--gold-accent); margin: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
-        <span style="font-family: monospace; font-weight: bold;">{ }</span> LLM Generation Prompt (Admin Debug)
-      </h3>
-      <div style="display: flex; gap: 0.5rem; align-items: center;">
-        {{ action_button("Kopieren", icon="📋", id="copy-prompt-debug-btn", size="sm", onclick="copyPromptDebugText()") }}
-        {{ modal_close_button("prompt-debug-modal") }}
-      </div>
-    </div>
-    <div style="flex: 1; overflow-y: auto; background: rgba(10, 8, 6, 0.75); border: 1px solid var(--border-wood); border-radius: 8px; padding: 0.85rem; margin-bottom: 0.5rem;">
-      <pre id="prompt-debug-content" style="margin: 0; white-space: pre-wrap; word-break: break-word; font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace; font-size: 0.82rem; color: #E8D8C8; line-height: 1.45;"></pre>
-    </div>
-    <div style="text-align: right; font-size: 0.74rem; color: var(--text-muted);">
-      In-Memory Snapshot zum Inferenzzeitpunkt (nicht in Datenbank persistiert)
-    </div>
-  </div>
-</div>
-{% endif %}
+{% include "chat/partials/modals.html" %}
+{{ lorebook_picker_modal("session-add-lorebook-modal", lorebook_data.available_lorebooks) }}
+{% include "macros/persona_manager.html" %}
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/stream.js') }}?v=2.2"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    // Format all initial messages with Markdown
-    document.querySelectorAll(".chat-markdown").forEach((el) => {
-      const raw = el.getAttribute("data-raw-content") ?? el.textContent ?? "";
-      el.innerHTML = window.renderChatMarkdown(raw);
-    });
-
-    window.chatStream = new AimoChatStream({{ chat_session.id }});
-    const chatForm = document.getElementById("chat-input-form");
-    const chatTextarea = document.getElementById("chat-message-textarea");
-
-    if (chatForm) {
-      chatForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        window.chatStream.sendMessage(chatForm);
-      });
-    }
-
-    if (chatTextarea && chatForm) {
-      chatTextarea.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          window.chatStream.sendMessage(chatForm);
-        }
-      });
-    }
-
-    const list = document.getElementById("chat-messages-list");
-    if (list) list.scrollTop = list.scrollHeight;
-
-    // Hamburger-Menü Toggle & Close bei Klick außerhalb / Escape
-    const menuToggle = document.getElementById("chat-menu-toggle-btn");
-    const menuWrapper = document.getElementById("chat-menu-dropdown-wrapper");
-    if (menuToggle && menuWrapper) {
-      menuToggle.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const isExpanded = menuWrapper.classList.toggle("open");
-        menuToggle.setAttribute("aria-expanded", isExpanded ? "true" : "false");
-      });
-      document.addEventListener("click", (e) => {
-        if (!menuWrapper.contains(e.target)) {
-          menuWrapper.classList.remove("open");
-          menuToggle.setAttribute("aria-expanded", "false");
-        }
-      });
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && menuWrapper.classList.contains("open")) {
-          menuWrapper.classList.remove("open");
-          menuToggle.setAttribute("aria-expanded", "false");
-        }
-      });
-    }
-
-    // Reiter "Erinnerungen": Beim Klick stets aktuelle Erinnerungen vom Server abrufen
-    const memTabBtn = document.querySelector('[data-tab-target="chat-pane-memories"]');
-    if (memTabBtn) {
-      memTabBtn.addEventListener("click", () => {
-        if (typeof window.refreshSessionMemories === "function") {
-          window.refreshSessionMemories();
-        }
-      });
-    }
-
-    // Mobil: Seitenleiste als Tab in Hauptcontainer synchronisieren
-    function syncSidebarLayout() {
-      const mql = window.matchMedia("(max-width: 991px)");
-      const sidebar = document.getElementById("chat-pane-sidebar");
-      const overlay = document.querySelector(".chat-stage-overlay");
-      const layout = document.querySelector(".chat-layout");
-      const sidebarTabBtn = document.querySelector('[data-tab-target="chat-pane-sidebar"]');
-      const chatTabBtn = document.querySelector('[data-tab-target="chat-pane-messages"]');
-
-      if (!sidebar || !overlay || !layout) return;
-
-      if (mql.matches) {
-        if (sidebar.parentElement !== overlay) {
-          sidebar.classList.add("tab-pane");
-          overlay.appendChild(sidebar);
-        }
-      } else {
-        if (sidebar.parentElement !== layout) {
-          const wasActive = sidebar.classList.contains("active");
-          sidebar.classList.remove("tab-pane", "active");
-          layout.appendChild(sidebar);
-          if (sidebarTabBtn) sidebarTabBtn.classList.remove("active");
-          if (wasActive && chatTabBtn) {
-            chatTabBtn.click();
-          }
-        }
-      }
-    }
-
-    syncSidebarLayout();
-    const mobileMql = window.matchMedia("(max-width: 991px)");
-    if (mobileMql.addEventListener) {
-      mobileMql.addEventListener("change", syncSidebarLayout);
-    } else if (mobileMql.addListener) {
-      mobileMql.addListener(syncSidebarLayout);
-    }
-
-    window.chatStream.checkPendingGeneration();
-  });
-
-  window.toggleImageAltText = function (msgIdx) {
-    const altEl = document.getElementById(`msg-alt-${msgIdx}`);
-    if (!altEl) return;
-    altEl.style.display = altEl.style.display === "none" ? "block" : "none";
-  };
-
-  window.translateChatMessage = async function (msgIdx, btnEl) {
-    const list = document.getElementById("chat-messages-list");
-    const sysLang = list?.getAttribute("data-sys-lang") || (navigator.language || "de").slice(0, 2).toLowerCase();
-    const textEl = document.getElementById(`msg-text-${msgIdx}`);
-    if (!textEl) return;
-
-    if (btnEl) {
-      btnEl.disabled = true;
-      btnEl.style.opacity = "0.5";
-    }
-    try {
-      const resp = await fetch(`/api/chat/{{ chat_session.id }}/messages/${msgIdx}/translate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ target_language: sysLang }),
-      });
-      if (resp.ok) {
-        const data = await resp.json();
-        if (data.translated_text) {
-          textEl.setAttribute("data-raw-content", data.translated_text);
-          textEl.innerHTML = window.renderChatMarkdown(data.translated_text);
-        }
-      }
-    } finally {
-      if (btnEl) {
-        btnEl.disabled = false;
-        btnEl.style.opacity = "1";
-      }
-    }
-  };
-
-  function openEditMessageModal(msgIdx, fallbackText) {
-    document.getElementById("edit-msg-idx").value = msgIdx;
-    const textEl = document.getElementById(`msg-text-${msgIdx}`);
-    const rawText = textEl ? (textEl.getAttribute("data-raw-content") ?? textEl.textContent) : (fallbackText || "");
-    document.getElementById("edit-msg-content").value = rawText;
-    window.AimoModals.open("edit-message-modal");
-  }
-
-  async function submitEditMessage(e) {
-    e.preventDefault();
-    const idx = document.getElementById("edit-msg-idx").value;
-    const content = document.getElementById("edit-msg-content").value;
-    const resp = await fetch(`/api/chat/{{ chat_session.id }}/messages/${idx}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: content, language: "de" }),
-    });
-    if (resp.ok) {
-      const data = await resp.json();
-      const textEl = document.getElementById(`msg-text-${idx}`);
-      if (textEl) {
-        textEl.setAttribute("data-raw-content", data.localized_content);
-        textEl.innerHTML = window.renderChatMarkdown(data.localized_content);
-      }
-      window.AimoModals.close("edit-message-modal");
-    }
-  }
-
-  async function deleteMessagesFrom(msgIdx) {
-    if (!confirm({{ _("Permanently delete this message and all subsequent messages (including associated memories)?") | tojson }})) return;
-    const resp = await fetch(`/api/chat/{{ chat_session.id }}/messages/${msgIdx}`, {
-      method: "DELETE",
-    });
-    if (resp.ok) {
-      window.location.reload();
-    }
-  }
-  window.deleteMessagesFrom = deleteMessagesFrom;
-
-  async function forkChatAt(msgIdx) {
-    const resp = await fetch(`/api/chat/{{ chat_session.id }}/fork`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fork_point_idx: msgIdx }),
-    });
-    if (resp.ok) {
-      const data = await resp.json();
-      window.location.href = `/chat/session/${data.forked_session_id}`;
-    }
-  }
-  window.forkChatAt = forkChatAt;
-
-  async function manualSwitchLocation(locationId) {
-    if (!locationId) return;
-    const targetId = locationId === "world" ? null : parseInt(locationId, 10);
-    if (targetId !== null && Number.isNaN(targetId)) return;
-    if (window.chatStream) {
-      await window.chatStream.switchLocation(targetId);
-    } else {
-      const resp = await fetch(`/api/chat/{{ chat_session.id }}/switch-location`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ location_id: targetId }),
-      });
-      if (resp.ok) {
-        window.location.reload();
-      }
-    }
-  }
-  window.manualSwitchLocation = manualSwitchLocation;
-
-  window.refreshSessionMemories = async function() {
-    try {
-      const resp = await fetch(`/api/chat/{{ chat_session.id }}/memories`);
-      if (!resp.ok) return;
-      const data = await resp.json();
-      const memories = data.memories || [];
-
-      const countEl = document.getElementById("memories-count");
-      if (countEl) countEl.textContent = String(memories.length);
-
-      const listEl = document.getElementById("chat-memories-list");
-      const emptyEl = document.getElementById("chat-memories-empty");
-      if (!listEl) return;
-
-      if (memories.length === 0) {
-        listEl.innerHTML = "";
-        if (emptyEl) emptyEl.style.display = "block";
-        return;
-      }
-
-      if (emptyEl) emptyEl.style.display = "none";
-
-      let html = "";
-      for (const mem of memories) {
-        const tagsStr = (mem.tags || []).join(", ");
-        html += `
-          <form id="memory-form-${mem.id}" method="POST" action="/chat/session/{{ chat_session.id }}/memories/${mem.id}/edit" class="aimo-frame" style="padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem;">
-            <div style="display: flex; gap: 0.75rem; align-items: center;">
-              <input type="text" name="title" value="${escapeHtml(mem.title || '')}" required style="font-weight: 700;">
-              <span style="font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;">Nachricht #${mem.message_idx}</span>
-            </div>
-            <div>
-              <label style="font-size: 0.78rem; color: var(--text-muted);">{{ _("Tags (Comma-separated for vectorless RAG)") }}</label>
-              <input type="text" name="tags" value="${escapeHtml(tagsStr)}">
-            </div>
-            <div>
-              <label style="font-size: 0.78rem; color: var(--text-muted);">{{ _("Summary") }}</label>
-              <textarea name="summary" rows="3" required>${escapeHtml(mem.summary || '')}</textarea>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 0.25rem; flex-wrap: wrap;">
-              <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
-                <button type="button" class="aimo-btn aimo-btn-sm" onclick="window.recalculateMemory({{ chat_session.id }}, ${mem.id}, this)" title="{{ _('Recalculate memory from associated episode messages') }}">
-                  <span class="icon-mono">🔄</span> <span>{{ _('Recalculate') }}</span>
-                </button>
-                <button type="button" class="aimo-btn aimo-btn-sm" onclick="window.translateMemory({{ chat_session.id }}, ${mem.id}, this)" title="{{ _('Translate memory in-place to your language') }}">
-                  <span class="icon-mono">🌐</span> <span>{{ _('Translate') }}</span>
-                </button>
-              </div>
-              <button type="submit" class="aimo-btn primary aimo-btn-sm"><span class="icon-mono">💾</span> <span>{{ _('Save') }}</span></button>
-            </div>
-          </form>
-        `;
-      }
-      listEl.innerHTML = html;
-    } catch (err) {
-      console.error("Fehler beim Aktualisieren der Erinnerungen:", err);
-    }
-  };
-
-  window._adminPromptCache = window._adminPromptCache || {};
-
-  window.openPromptDebugModal = async function(msgIdx) {
-    const pre = document.getElementById("prompt-debug-content");
-    if (!pre) return;
-
-    pre.textContent = "Lade Prompt aus dem Arbeitsspeicher...";
-    if (window.AimoModals) {
-      window.AimoModals.open("prompt-debug-modal");
-    } else {
-      const modal = document.getElementById("prompt-debug-modal");
-      if (modal) modal.style.display = "flex";
-    }
-
-    if (window._adminPromptCache[msgIdx]) {
-      pre.textContent = window._adminPromptCache[msgIdx];
-      return;
-    }
-
-    const list = document.getElementById("chat-messages-list");
-    const sessionId = list ? list.dataset.sessionId : "{{ chat_session.id }}";
-
-    try {
-      const resp = await fetch(`/api/chat/${sessionId}/messages/${msgIdx}/prompt`);
-      if (!resp.ok) {
-        if (resp.status === 404) {
-          pre.textContent = "Dieser Prompt ist nicht mehr im Arbeitsspeicher vorhanden (Puffer überschritten oder Server wurde neu gestartet).";
-        } else if (resp.status === 403) {
-          pre.textContent = "Zugriff verweigert: Nur Administratoren dürfen Prompts einsehen.";
-        } else {
-          pre.textContent = `Fehler beim Abrufen des Prompts (HTTP ${resp.status}).`;
-        }
-        return;
-      }
-      const data = await resp.json();
-      if (data && data.prompt) {
-        window._adminPromptCache[msgIdx] = data.prompt;
-        pre.textContent = data.prompt;
-      } else {
-        pre.textContent = "Kein Prompt für diese Nachricht im Arbeitsspeicher verfügbar.";
-      }
-    } catch (err) {
-      pre.textContent = `Netzwerkfehler: ${err.message}`;
-    }
-  };
-
-  window.copyPromptDebugText = function() {
-    const pre = document.getElementById("prompt-debug-content");
-    if (!pre || !pre.textContent) return;
-    navigator.clipboard.writeText(pre.textContent).then(() => {
-      const btn = document.getElementById("copy-prompt-debug-btn");
-      if (btn) {
-        const orig = btn.textContent;
-        btn.textContent = "✓ Kopiert!";
-        setTimeout(() => { btn.textContent = orig; }, 1800);
-      }
-    });
-  };
-
-  window.recalculateMemory = async function(sessionId, memoryId, btnEl) {
-    if (!sessionId || !memoryId) return;
-    const form = document.getElementById(`memory-form-${memoryId}`) || (btnEl ? btnEl.closest("form") : null);
-    if (!form) return;
-
-    const originalBtnHtml = btnEl.innerHTML;
-    btnEl.disabled = true;
-    btnEl.innerHTML = '<span class="icon-mono">⏳</span> Berechne...';
-
-    const titleInput = form.querySelector('input[name="title"]');
-    const tagsInput = form.querySelector('input[name="tags"]');
-    const summaryInput = form.querySelector('textarea[name="summary"]');
-
-    try {
-      const resp = await fetch(`/api/chat/${sessionId}/memories/${memoryId}/recalculate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" }
-      });
-      const data = await resp.json();
-      if (!resp.ok) {
-        throw new Error(data.error || `HTTP ${resp.status}`);
-      }
-
-      if (titleInput && data.title) titleInput.value = data.title;
-      if (tagsInput && data.tags) {
-        tagsInput.value = Array.isArray(data.tags) ? data.tags.join(", ") : data.tags;
-      }
-      if (summaryInput && data.summary) summaryInput.value = data.summary;
-
-      btnEl.innerHTML = '<span class="icon-mono">✓</span> Neu berechnet!';
-      btnEl.style.borderColor = "var(--gold-accent)";
-      btnEl.style.color = "var(--gold-accent)";
-
-      setTimeout(() => {
-        btnEl.disabled = false;
-        btnEl.innerHTML = originalBtnHtml;
-        btnEl.style.borderColor = "";
-        btnEl.style.color = "";
-      }, 3000);
-    } catch (err) {
-      if (window.showToastError) {
-        window.showToastError(err.message, {{ _("Recalculation error") | tojson }});
-      } else {
-        alert({{ _("Recalculation error:") | tojson }} + " " + err.message);
-      }
-      btnEl.disabled = false;
-      btnEl.innerHTML = originalBtnHtml;
-    }
-  };
-
-  window.translateMemory = async function(sessionId, memoryId, btnEl) {
-    if (!sessionId || !memoryId) return;
-    const form = document.getElementById(`memory-form-${memoryId}`) || (btnEl ? btnEl.closest("form") : null);
-    if (!form) return;
-
-    const originalBtnHtml = btnEl.innerHTML;
-    btnEl.disabled = true;
-    btnEl.innerHTML = '<span class="icon-mono">⏳</span> ' + {{ _("Translating...") | tojson }};
-
-    const titleInput = form.querySelector('input[name="title"]');
-    const tagsInput = form.querySelector('input[name="tags"]');
-    const summaryInput = form.querySelector('textarea[name="summary"]');
-
-    try {
-      const resp = await fetch(`/api/chat/${sessionId}/memories/${memoryId}/translate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({})
-      });
-      const data = await resp.json();
-      if (!resp.ok) {
-        throw new Error(data.error || `HTTP ${resp.status}`);
-      }
-
-      if (titleInput && data.title) titleInput.value = data.title;
-      if (tagsInput && data.tags) {
-        tagsInput.value = Array.isArray(data.tags) ? data.tags.join(", ") : data.tags;
-      }
-      if (summaryInput && data.summary) summaryInput.value = data.summary;
-
-      btnEl.innerHTML = '<span class="icon-mono">✓</span> ' + {{ _("Translated!") | tojson }};
-      btnEl.style.borderColor = "var(--gold-accent)";
-      btnEl.style.color = "var(--gold-accent)";
-
-      setTimeout(() => {
-        btnEl.disabled = false;
-        btnEl.innerHTML = originalBtnHtml;
-        btnEl.style.borderColor = "";
-        btnEl.style.color = "";
-      }, 3000);
-    } catch (err) {
-      if (window.showToastError) {
-        window.showToastError(err.message, {{ _("Translation error") | tojson }});
-      } else {
-        alert({{ _("Translation error:") | tojson }} + " " + err.message);
-      }
-      btnEl.disabled = false;
-      btnEl.innerHTML = originalBtnHtml;
-    }
-  };
-</script>
-
-<!-- Modal: Lorebook zum Chat hinzufügen -->
-{{ lorebook_picker_modal("session-add-lorebook-modal", lorebook_data.available_lorebooks) }}
-
-<script src="{{ url_for('static', filename='js/lorebook_manager.js') }}"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    if (typeof window.initLorebookManager === "function") {
-      window.initLorebookManager({
-        rootSelector: ".lorebook-manager-root",
-        isNewChat: false,
-        sessionId: {{ chat_session.id }},
-        modalId: "session-add-lorebook-modal",
-        countBadgeSelector: "#session-lorebooks-count",
-      });
-    }
-  });
-</script>
+<script src="{{ url_for('static', filename='js/image_cropper.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/lorebook_manager.js') }}" defer></script>
+<script type="module" src="{{ url_for('static', filename='js/chat/session_actions.js') }}"></script>
 {% endblock %}

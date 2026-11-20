@@ -1,0 +1,155 @@
+{% from "macros/buttons.html" import action_button %}
+    <section id="tab-char-info" class="tab-pane {% if active_tab == 'info' %}active{% endif %}">
+      <div class="aimo-frame" style="padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+        <div>
+          <label>
+            {{ _("Character Name") }} *
+            <span class="field-help-btn" title="{{ _('The unique name of your AI character. Replaces {{char}} in prompts.') }}">?</span>
+          </label>
+          <input type="text" id="char-name-input" name="name" value="{{ form.name }}" required>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <div style="flex: 1;">
+            <label>
+              {{ _("Gender") }} *
+              <span class="field-help-btn" title="{{ _('Sets gender and derived pronouns for the system prompt.') }}">?</span>
+            </label>
+            <select name="gender" required>
+              <option value="female" {% if form.gender == 'female' %}selected{% endif %}>{{ _("Female") }}</option>
+              <option value="male" {% if form.gender == 'male' %}selected{% endif %}>{{ _("Male") }}</option>
+              <option value="non-binary" {% if form.gender == 'non-binary' %}selected{% endif %}>{{ _("Non-Binary") }}</option>
+            </select>
+          </div>
+          <div style="flex: 1;">
+            <label>
+              {{ _("Visibility") }} *
+              <span class="field-help-btn" title="{{ _('Private = only playable in your account. Public = visible to all users in the Hub.') }}">?</span>
+            </label>
+            <select name="visibility" required>
+              <option value="private" {% if form.visibility == 'private' %}selected{% endif %}>{{ _("Private") }}</option>
+              <option value="public" {% if form.visibility == 'public' %}selected{% endif %}>{{ _("Public") }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label>
+            {{ _('Primary Portrait (9:16) & Avatar (1:1) (Required upload)') }} *
+            <span class="field-help-btn" title="{{ _('Character images:\n• 9:16 Portrait: Chat sidebar & fullscreen view\n• 1:1 Avatar: Character cards in Hub & chat bubbles') }}">?</span>
+          </label>
+          <div style="display: flex; gap: 1rem; align-items: flex-start; margin-top: 0.35rem; flex-wrap: wrap;">
+            <div style="display: flex; gap: 0.85rem; align-items: center; flex-wrap: wrap;">
+              <!-- 9:16 Portrait Preview -->
+              <div style="text-align: center;">
+                <div id="portrait-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 54px; height: 96px; border-radius: 8px; border: 2px solid var(--gold-accent); overflow: hidden; background: rgba(15, 11, 8, 0.9); margin-bottom: 0.25rem;" title="{{ _('Portrait') }}">
+                  <img id="portrait-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.primary_portrait_path) }}{% endif %}" alt="{{ _('Portrait') }}" style="width: 100%; height: 100%; object-fit: cover;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
+                </div>
+                <span style="font-size: 0.7rem; color: var(--gold-accent); font-weight: 600;">{{ _('Portrait') }}</span>
+              </div>
+
+              <!-- 1:1 Avatar Preview -->
+              <div style="text-align: center;">
+                <div id="avatar-preview-wrap" style="{% if not character %}display: none;{% endif %} width: 64px; height: 64px; border-radius: 10px; border: 2px solid #64B5F6; overflow: hidden; background: rgba(15, 11, 8, 0.9); margin-bottom: 0.25rem;" title="{{ _('Avatar') }}">
+                  <img id="avatar-preview-img" src="{% if character %}{{ url_for('uploaded_file', filename=character.avatar_path or character.primary_portrait_path) }}{% endif %}" alt="{{ _('Avatar') }}" style="width: 100%; height: 100%; object-fit: cover; object-position: top center;" crossorigin="anonymous" onerror="this.src='/static/img/cover.svg'">
+                </div>
+                <span style="font-size: 0.7rem; color: #64B5F6; font-weight: 600;">{{ _('Avatar') }}</span>
+              </div>
+            </div>
+
+            <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 0.45rem;">
+              <input type="file" id="primary-portrait-input" name="primary_portrait" accept=".png,.jpg,.jpeg,.webp" {% if not character %}required{% endif %}>
+              <input type="file" id="avatar-portrait-input" name="avatar_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
+              <input type="file" id="card-portrait-input" name="card_portrait" style="display: none;" accept=".png,.jpg,.jpeg,.webp">
+              <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+                {{ action_button(_("Adjust crops"), icon="✂️", id="open-crop-btn", size="sm", disabled=(not character)) }}
+                <span id="crop-status-badge" style="display: none; font-size: 0.8rem; color: #4CAF50; font-weight: 600;">✓ {{ _('Crops active') }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label>
+            {{ _('Initial Relationship Status') }} *
+            <span class="field-help-btn" title="{{ _('Initial Relationship Status:\nStarting level of affection (e.g., Pure Hatred, Neutral, Blind Devotion). Controls the initial roleplay behavior of {{char}} toward the player.') }}">?</span>
+          </label>
+          <select name="initial_relationship" required>
+            {% for tier in relationship_tiers %}
+              <option value="{{ tier.level }}" {% if form.initial_relationship == tier.level %}selected{% endif %}>
+                {{ tier.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Charakterbeschreibung -->
+        <div style="grid-column: 1 / -1;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <label>
+              {{ _("Character Description & Personality") }} *
+              <span class="field-help-btn" title="{{ _('Core identity, traits, backstory, fears, and motivations.') }}">?</span>
+            </label>
+            {{ action_button(_("AI Author Optimization"), icon="✨", id="sparkle-improve-btn", extra_class="btn-sparkle") }}
+          </div>
+          <input type="hidden" name="i18n_description" id="i18n-char-description" value='{{ char_translations.get("description", {}) | tojson if char_translations is defined else "{}" }}'>
+          <textarea
+            id="char-description-textarea"
+            name="description"
+            rows="6"
+            maxlength="6000"
+            data-i18n-field="description"
+            data-i18n-entity-type="character"
+            data-i18n-entity-id="{{ character.id if character else '' }}"
+            data-i18n-origin="{{ character.origin_language if character else ui_language }}"
+            data-i18n-hidden="i18n-char-description"
+            required>{{ form.description }}</textarea>
+        </div>
+
+        <!-- Aussehen des Charakters mit Vision-AI Extraktion -->
+        <div style="grid-column: 1 / -1;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <label>
+              {{ _("Physical Appearance") }}
+              <span class="field-help-btn" title="{{ _('Detailed visual appearance for prompts and AI image generation.') }}">?</span>
+            </label>
+            {{ action_button(_("Extract Appearance from Image"), icon="👁️", id="extract-appearance-btn", extra_class="btn-sparkle", title=_("Analyzes the portrait image using a Vision LLM")) }}
+          </div>
+          <input type="hidden" name="i18n_appearance" id="i18n-char-appearance" value='{{ char_translations.get("appearance", {}) | tojson if char_translations is defined else "{}" }}'>
+          <textarea
+            id="char-appearance-textarea"
+            name="appearance"
+            rows="4"
+            data-i18n-field="appearance"
+            data-i18n-entity-type="character"
+            data-i18n-entity-id="{{ character.id if character else '' }}"
+            data-i18n-origin="{{ character.origin_language if character else ui_language }}"
+            data-i18n-hidden="i18n-char-appearance"
+            placeholder="{{ _('Physical appearance (e.g. emerald eyes, shoulder-length black hair, silver armor)...') }}">{{ form.appearance }}</textarea>
+        </div>
+
+        <!-- Erste Nachricht -->
+        <div style="grid-column: 1 / -1;">
+          <label>
+            {{ _("First Message (Welcome Message)") }} *
+            <span class="field-help-btn" title="{{ _('The character\'s direct opening greeting to the player.') }}">?</span>
+          </label>
+          <input type="hidden" name="i18n_first_message" id="i18n-char-first-msg" value='{{ char_translations.get("first_message", {}) | tojson if char_translations is defined else "{}" }}'>
+          <textarea
+            name="first_message"
+            rows="4"
+            data-i18n-field="first_message"
+            data-i18n-entity-type="character"
+            data-i18n-entity-id="{{ character.id if character else '' }}"
+            data-i18n-origin="{{ character.origin_language if character else ui_language }}"
+            data-i18n-hidden="i18n-char-first-msg"
+            required>{{ form.first_message }}</textarea>
+        </div>
+
+        <!-- Bottom Save Action Row -->
+        <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-wood-dark);">
+          {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: Gesprächsstile -->

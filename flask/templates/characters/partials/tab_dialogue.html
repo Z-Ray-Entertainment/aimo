@@ -1,0 +1,47 @@
+{% from "macros/buttons.html" import new_button %}
+    <section id="tab-char-dialogue" class="tab-pane {% if active_tab == 'dialogue' %}active{% endif %}">
+      <div class="aimo-frame" style="padding: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h3 style="color: var(--gold-accent); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              💬 {{ _("Dialogue Styles (Few-Shot Examples)") }}
+              <span class="field-help-btn" title="{{ _('Typical player trigger and character response pairs injected into the prompt.') }}">?</span>
+            </h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
+              {{ _("Define typical trigger-response examples to guide the AI's tone, dialect, and reactions.") }}
+            </p>
+          </div>
+          {{ action_button(_("Add Dialogue Style"), icon="➕", variant="primary", modal="add-dialogue-modal") }}
+        </div>
+
+        <div id="dialogue-examples-list" class="dialogue-examples-list">
+          {% for ex in form.dialogue_examples %}
+            <div class="dialogue-example-item" data-index="{{ loop.index0 }}">
+              <div class="dialogue-item-header">
+                <span class="dialogue-index-label"><span class="icon-mono">💬</span> {{ _("Example") }} {{ loop.index }}</span>
+                <div class="dialogue-item-actions">
+                  {{ action_button(_("Edit"), icon="✏️", layout="icon", size="sm", extra_class="edit-dialogue-btn dialogue-action-btn", data={"index": loop.index0}, title=_("Edit example")) }}
+                  {{ action_button(_("Delete"), icon="🗑️", layout="icon", variant="danger", size="sm", extra_class="delete-dialogue-btn dialogue-action-btn", data={"index": loop.index0}, title=_("Delete example")) }}
+                </div>
+              </div>
+              <!-- Trigger: Rechtsbündig, {{text}} {{user}} -->
+              <div class="dialogue-entry-trigger">
+                <div class="dialogue-text">{{ ex.trigger | replace('{{user}}', g.default_persona.name if g.default_persona else _('You')) | replace('{{char}}', character.name if character else (form.name or _('Character'))) }}</div>
+                <span class="role-badge user-badge" title="{{ '{{user}}' }}">{{ g.default_persona.name if g.default_persona else _('You') }}</span>
+              </div>
+              <!-- Response: Linksbündig, {{char}} {{text}} -->
+              <div class="dialogue-entry-response">
+                <span class="role-badge char-badge" title="{{ '{{char}}' }}">{{ character.name if character else (form.name or _('Character')) }}</span>
+                <div class="dialogue-text">{{ ex.response | replace('{{user}}', g.default_persona.name if g.default_persona else _('You')) | replace('{{char}}', character.name if character else (form.name or _('Character'))) }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div id="dialogue-empty-notice" class="aimo-frame" style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.9rem; {% if form.dialogue_examples|length > 0 %}display: none;{% endif %}">
+          {{ _("No dialogue styles added yet. Click 'Add Dialogue Style' to create examples.") }}
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: World -->

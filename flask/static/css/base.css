@@ -1,0 +1,728 @@
+:root {
+  --header-height: 64px;
+  --border-wood: #A77445;
+  --border-wood-dark: #8B5A2B;
+  --bg-leather: #6E472A;
+  --bg-leather-hover: #825634;
+  --gold-accent: #D4AF37;
+  --gold-glow: rgba(212, 175, 55, 0.45);
+  --bg-panel: rgba(30, 22, 16, 0.88);
+  --bg-panel-light: rgba(45, 34, 24, 0.92);
+  --bg-input: rgba(18, 13, 9, 0.85);
+  --text-main: #F4EAD5;
+  --text-muted: #B8A68E;
+  --heart-broken: #7A1C1C;
+  --heart-cold: #A93226;
+  --heart-neutral: #C08B5C;
+  --heart-warm: #E74C3C;
+  --heart-love: #FF69B4;
+  --sparkle-gold: #FFD700;
+  --sparkle-violet: #B388FF;
+  --radius-card: 12px;
+  --radius-btn: 10px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--text-main);
+  background-color: #14100C;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body.has-system-backdrop {
+  background-color: #14100c;
+  background-image: radial-gradient(circle at center, rgba(16, 12, 9, 0.35) 0%, rgba(14, 10, 8, 0.72) 100%),
+                    linear-gradient(to bottom, rgba(14, 10, 8, 0.3) 0%, rgba(14, 10, 8, 0.65) 100%),
+                    var(--system-backdrop-url, none);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+body.has-system-backdrop::before {
+  display: none;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 16, 12, 0.85);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.app-overlay {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: var(--gold-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* System-wide AIMO Frame Component (.aimo-frame) */
+.aimo-frame,
+.modal-frame {
+  border: 2px solid var(--border-wood);
+  border-radius: var(--radius-card);
+  background: var(--bg-panel);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 235, 200, 0.08);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  background: var(--bg-input);
+  color: var(--text-main);
+  border: 2px solid var(--border-wood-dark);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 8px var(--gold-glow);
+}
+
+/* RPG Buttons */
+.btn,
+button.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  background: var(--bg-leather);
+  color: var(--text-main);
+  border: 1px solid var(--gold-accent);
+  border-radius: var(--radius-btn);
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+
+.btn:hover,
+button.btn:hover {
+  background: var(--bg-leather-hover);
+  box-shadow: 0 0 12px var(--gold-glow);
+  text-decoration: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-danger {
+  background: #641E16;
+  border-color: #E74C3C;
+}
+
+.btn-abort-turn {
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.btn-abort-turn:hover {
+  color: #ff6b6b !important;
+  transform: scale(1.15);
+}
+
+#chat-abort-btn:hover {
+  color: #ff6b6b !important;
+  background: rgba(255, 107, 107, 0.15) !important;
+  box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
+}
+
+.btn-sparkle {
+  background: linear-gradient(135deg, #4A235A, #6E472A);
+  border-color: var(--sparkle-gold);
+  color: var(--sparkle-gold);
+}
+
+/* Monochrome Standard Icons vs Special Colored Icons */
+.icon-mono {
+  filter: grayscale(100%) brightness(1.2);
+  display: inline-block;
+}
+
+.icon-sparkle {
+  color: var(--sparkle-gold);
+  text-shadow: 0 0 6px var(--sparkle-violet);
+}
+
+/* System-wide AIMO Button Component (.aimo-btn) */
+.aimo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.38rem 0.85rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--text-muted);
+  background: rgba(40, 28, 19, 0.75);
+  border: 1px solid var(--border-wood-dark);
+  border-radius: var(--radius-btn);
+  text-decoration: none !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-sizing: border-box;
+  line-height: normal;
+}
+
+.aimo-btn:hover,
+.aimo-btn:focus,
+a.aimo-btn:hover,
+a.aimo-btn:focus {
+  color: var(--text-main);
+  border-color: var(--gold-accent);
+  background: var(--bg-leather);
+  box-shadow: 0 0 8px var(--gold-glow);
+  text-decoration: none !important;
+}
+
+.aimo-btn:active,
+a.aimo-btn:active {
+  transform: translateY(1px);
+  text-decoration: none !important;
+}
+
+.aimo-btn.active,
+a.aimo-btn.active {
+  background: var(--bg-leather);
+  color: var(--gold-accent);
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 10px var(--gold-glow);
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.aimo-btn.primary,
+button.aimo-btn.primary,
+a.aimo-btn.primary {
+  background: var(--bg-leather);
+  color: var(--gold-accent);
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 10px var(--gold-glow);
+  font-weight: 700;
+}
+
+.aimo-btn.primary:hover,
+button.aimo-btn.primary:hover,
+a.aimo-btn.primary:hover,
+.aimo-btn.primary:focus,
+button.aimo-btn.primary:focus,
+a.aimo-btn.primary:focus {
+  background: var(--bg-leather-hover);
+  color: var(--text-main);
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 14px var(--gold-glow);
+}
+
+.aimo-btn.danger,
+button.aimo-btn.danger,
+a.aimo-btn.danger {
+  background: #641E16;
+  border-color: #E74C3C;
+  color: #ff7675;
+}
+
+.aimo-btn.danger:hover,
+button.aimo-btn.danger:hover,
+a.aimo-btn.danger:hover {
+  background: #7A241B;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
+}
+
+.aimo-btn:disabled,
+button.aimo-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  border-color: var(--border-wood-dark) !important;
+  background: var(--bg-surface) !important;
+  color: var(--text-muted) !important;
+  pointer-events: none;
+}
+
+/* Animated Loading States for Action Buttons (Chat-style bouncing dots) */
+.aimo-btn.is-loading,
+button.aimo-btn.is-loading {
+  cursor: wait !important;
+  pointer-events: none !important;
+  opacity: 0.95 !important;
+  background: linear-gradient(135deg, #4A235A, #6E472A) !important;
+  border-color: var(--sparkle-gold) !important;
+  color: var(--sparkle-gold) !important;
+}
+
+.aimo-btn .thinking-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.aimo-btn .thinking-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--sparkle-gold);
+  animation: aimoThinkingBounce 1.3s infinite ease-in-out both;
+}
+
+.aimo-btn .thinking-dots span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.aimo-btn .thinking-dots span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.aimo-btn-lg,
+button.aimo-btn-lg,
+a.aimo-btn-lg {
+  padding: 0.55rem 1.15rem;
+  font-size: 0.92rem;
+}
+
+.aimo-btn-sm,
+button.aimo-btn-sm,
+a.aimo-btn-sm {
+  padding: 0.25rem 0.55rem;
+  font-size: 0.78rem;
+}
+
+.aimo-btn.aimo-btn-icon {
+  padding: 0.38rem;
+  width: 2rem;
+  height: 2rem;
+  gap: 0;
+}
+
+.aimo-btn-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+.aimo-btn-sm.aimo-btn-icon {
+  width: 1.65rem;
+  height: 1.65rem;
+  padding: 0.2rem;
+}
+
+.aimo-btn-lg.aimo-btn-icon {
+  width: 2.6rem;
+  height: 2.6rem;
+}
+
+.aimo-btn.w-100,
+.w-100 {
+  width: 100% !important;
+}
+
+.aimo-btn .btn-arrow {
+  display: inline-block;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.aimo-btn:hover .btn-arrow-left {
+  transform: translateX(-3px);
+}
+
+.aimo-btn:hover .btn-arrow-right {
+  transform: translateX(3px);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  position: relative;
+}
+
+.persona-avatar-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--border-wood-dark);
+  border-radius: 24px;
+  background: var(--bg-panel-light);
+  color: var(--text-main);
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+}
+
+.persona-avatar-btn:hover,
+.persona-avatar-btn:focus,
+a.persona-avatar-btn:hover,
+a.persona-avatar-btn:focus {
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 8px var(--gold-glow);
+  text-decoration: none !important;
+}
+
+.persona-avatar-btn span {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.persona-avatar-btn img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--gold-accent);
+}
+
+.persona-avatar-btn.user-menu-toggle {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold-accent);
+  background: var(--bg-panel-light);
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.persona-avatar-btn.user-menu-toggle img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: none;
+  display: block;
+}
+
+.persona-avatar-btn.user-menu-toggle.open {
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.aimo-btn.copied-success,
+button.aimo-btn.copied-success {
+  color: #58D68D !important;
+  border-color: rgba(88, 214, 141, 0.65) !important;
+}
+
+/* System-weiter RPG Toggle-Switch (.aimo-switch) */
+.aimo-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.aimo-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.aimo-switch-slider {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  background-color: var(--bg-wood-dark, #1c140e);
+  border: 1px solid var(--border-wood-dark, #3d2a1d);
+  border-radius: 24px;
+  transition: all 0.25s ease;
+}
+
+.aimo-switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--text-muted, #9c8a78);
+  border-radius: 50%;
+  transition: all 0.25s ease;
+}
+
+.aimo-switch input:checked + .aimo-switch-slider {
+  background-color: rgba(212, 163, 89, 0.25);
+  border-color: var(--gold-accent, #d4a359);
+}
+
+.aimo-switch input:checked + .aimo-switch-slider:before {
+  transform: translateX(20px);
+  background-color: var(--gold-accent, #d4a359);
+  box-shadow: 0 0 6px rgba(212, 163, 89, 0.6);
+}
+
+.aimo-switch input:focus-visible + .aimo-switch-slider {
+  outline: 2px solid var(--gold-accent, #d4a359);
+}
+
+.aimo-switch input:disabled + .aimo-switch-slider {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: #4a3a2d;
+}
+
+.aimo-switch.disabled {
+  cursor: not-allowed;
+}
+
+/* Reusable Dual-Thumb Range Slider (.aimo-dual-range) */
+.aimo-dual-range {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.65rem 0.85rem 0.75rem 0.85rem;
+  background: var(--bg-input);
+  border: 2px solid var(--border-wood-dark);
+  border-radius: 10px;
+}
+
+.aimo-dual-range-label {
+  text-align: center;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--gold-accent);
+  letter-spacing: 0.01em;
+}
+
+.aimo-dual-range-wrap {
+  position: relative;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.aimo-dual-range-track {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: #241911;
+  border-radius: 6px;
+  border: 1px solid var(--border-wood-dark);
+  overflow: hidden;
+}
+
+.aimo-dual-range-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--heart-broken), var(--heart-neutral), var(--heart-love));
+}
+
+.aimo-dual-range-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.aimo-dual-range-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.aimo-dual-range-input::-webkit-slider-runnable-track {
+  height: 8px;
+  background: transparent;
+}
+
+.aimo-dual-range-input::-moz-range-track {
+  height: 8px;
+  background: transparent;
+}
+
+.aimo-dual-range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg-leather);
+  border: 2px solid var(--gold-accent);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.7), 0 0 6px var(--gold-glow);
+  cursor: pointer;
+  margin-top: -5px;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.aimo-dual-range-input::-moz-range-thumb {
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg-leather);
+  border: 2px solid var(--gold-accent);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.7), 0 0 6px var(--gold-glow);
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.aimo-dual-range-input::-webkit-slider-thumb:hover,
+.aimo-dual-range-input::-moz-range-thumb:hover {
+  background: var(--bg-leather-hover);
+  transform: scale(1.12);
+}
+
+/* Reusable Pill Badge Component (.aimo-pill-badge) */
+.aimo-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-height: 1.55rem;
+  padding: 0.18rem 0.6rem;
+  background: rgba(45, 70, 95, 0.9);
+  border: 1px solid var(--gold-accent);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  color: var(--text-main);
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.aimo-pill-badge-icon {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.aimo-pill-badge--wood {
+  background: rgba(110, 71, 42, 0.9);
+  border-color: var(--gold-accent);
+  color: var(--text-main);
+}
+
+.aimo-pill-badge--heart {
+  background: rgba(95, 35, 45, 0.9);
+  border-color: var(--gold-accent);
+  color: var(--text-main);
+}
+
+.aimo-pill-badge--danger {
+  background: rgba(100, 30, 22, 0.85);
+  border-color: #E74C3C;
+  color: #ff7675;
+}
+
+.aimo-pill-badge--dark {
+  background: rgba(18, 13, 9, 0.85);
+  border-color: var(--border-wood);
+  color: var(--text-muted);
+}
+
+.aimo-pill-badge--leather {
+  background: rgba(45, 32, 22, 0.8);
+  border-color: var(--border-wood);
+  color: var(--text-main);
+}
+
+.aimo-pill-badge--outline {
+  background: transparent;
+  border-color: var(--border-wood);
+  color: var(--text-main);
+}
+
+.aimo-pill-badge--gold {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: var(--gold-accent);
+  color: var(--gold-accent);
+}
+
+.aimo-pill-badge--success {
+  background: rgba(18, 13, 9, 0.85);
+  border-color: rgba(104, 211, 145, 0.4);
+  color: #68d391;
+}
+
+.aimo-pill-badge--info {
+  background: rgba(18, 13, 9, 0.85);
+  border-color: rgba(99, 179, 237, 0.4);
+  color: #63b3ed;
+}
+
+/* Bidirectional & RTL Support (ar, ur) */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+textarea,
+.chat-msg-text {
+  unicode-bidi: plaintext;
+}
+
+[dir="rtl"] body,
+[dir="rtl"] th,
+[dir="rtl"] td,
+[dir="rtl"] .aimo-frame,
+[dir="rtl"] .modal-frame {
+  text-align: start;
+}
+
+[dir="rtl"] .aimo-copy-field input {
+  padding-right: 0.75rem;
+  padding-left: 2.75rem;
+}
+
+[dir="rtl"] .aimo-copy-field .aimo-copy-field-btn {
+  right: auto;
+  left: 0.35rem;
+}
+
+[dir="rtl"] .user-menu-dropdown,
+[dir="rtl"] .mobile-dropdown-menu {
+  right: auto;
+  left: 0;
+}
+

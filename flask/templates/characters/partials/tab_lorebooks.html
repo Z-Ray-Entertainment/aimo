@@ -1,0 +1,46 @@
+{% from "macros/buttons.html" import action_button, new_button %}
+    <section id="tab-char-lorebooks" class="tab-pane {% if active_tab == 'lorebooks' %}active{% endif %}">
+      <div class="aimo-frame" style="padding: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h3 style="color: var(--gold-accent); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              📖 {{ _("Linked Lorebooks (Knowledge Compendiums)") }}
+              <span class="field-help-btn" title="{{ _('Knowledge compendiums for this character. Matching entries are automatically loaded into the prompt via tags.') }}">?</span>
+            </h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
+              {{ _("Attach knowledge compendiums. Relevant entries are automatically injected via tag matching.") }}
+            </p>
+          </div>
+          {{ action_button(_("Add Lorebook"), icon="➕", variant="primary", modal="add-lorebook-modal") }}
+        </div>
+
+        <div id="linked-lorebooks-list" class="lorebook-list">
+          {% for lb in lorebooks %}
+            {% if lb.id in form.linked_lorebook_ids %}
+              <div class="lorebook-list-item" data-lorebook-id="{{ lb.id }}" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                <input type="hidden" name="linked_lorebook_ids" value="{{ lb.id }}">
+                <div style="flex: 1; min-width: 200px;">
+                  <div style="font-weight: 700; color: var(--gold-accent); font-size: 0.95rem;">{{ lb.name }}</div>
+                  {% if lb.description %}
+                    <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.15rem;">{{ lb.description }}</div>
+                  {% endif %}
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.65rem;">
+                  <select name="lorebook_world_condition_{{ lb.id }}" style="font-size: 0.82rem; padding: 0.35rem 0.6rem; max-width: 240px;" title="{{ _('When should this lorebook be active?') }}">
+                    <option value="" {% if not form.lorebook_world_conditions.get(lb.id) %}selected{% endif %}>🌍 {{ _("All Worlds (Always active)") }}</option>
+                    {% for wi in worldinfos %}
+                      <option value="{{ wi.id }}" {% if form.lorebook_world_conditions.get(lb.id) == wi.id %}selected{% endif %}>🌐 {{ _("Only in world:") }} {{ wi.name }}</option>
+                    {% endfor %}
+                  </select>
+                  {{ action_button(_("Unlink"), icon="🗑️", layout="icon", variant="danger", size="sm", extra_class="remove-lorebook-btn", data={"id": lb.id}, title=_("Unlink lorebook")) }}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div id="lorebook-empty-notice" class="aimo-frame" style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.9rem; {% if form.linked_lorebook_ids|length > 0 %}display: none;{% endif %}">
+          {{ _("No lorebooks linked. Click 'Add Lorebook' to select compendiums.") }}
+        </div>
+      </div>
+    </section>

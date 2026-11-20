@@ -2,6 +2,10 @@
 {% from "macros/buttons.html" import action_button %}
 {% block title %}AIMO — {{ _("Settings") }}{% endblock %}
 
+{% block extra_head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin_setup.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="aimo-sidebar-layout">
   <!-- Vertikale Seitenleiste links -->
