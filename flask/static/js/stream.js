@@ -770,7 +770,9 @@ class AimoChatStream {
     row.setAttribute("data-message-idx", msg.message_idx);
     row.setAttribute("data-system-type", msg.system_type || "general");
 
-    const icon = msg.system_type === "location_change" ? "📍" : (msg.system_type === "event_trigger" ? "⚡" : "⚙️");
+    const icon = msg.system_type === "location_change"
+      ? (msg.metadata && msg.metadata.location_id === null ? "🌐" : "📍")
+      : (msg.system_type === "event_trigger" ? "⚡" : "⚙️");
     const locName = msg.metadata?.location_name || "";
     const eventTitle = msg.metadata?.event_title || "";
     const title = msg.system_type === "location_change"
@@ -881,13 +883,13 @@ class AimoChatStream {
   }
 
   async switchLocation(locationId) {
-    if (!locationId) return null;
+    if (locationId === undefined) return null;
     const resp = await fetch(`/api/chat/${this.sessionId}/switch-location`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ location_id: locationId }),
     });
-    const resData = await resp.json();
+    const resData = await resp.json().catch(() => ({}));
     if (resp.ok) {
       if (resData.system_message) {
         this.appendSystemMessage(resData.system_message);
@@ -917,12 +919,16 @@ class AimoChatStream {
         }
       }
       const locIndicator = document.getElementById("chat-location-indicator");
-      if (locIndicator && resData.location?.name) {
-        locIndicator.innerHTML = `📍 Ort: <strong>${escapeHtml(resData.location.name)}</strong>`;
+      if (locIndicator) {
+        if (resData.location?.name) {
+          locIndicator.innerHTML = `📍 ${escapeHtml(window.t ? window.t("Location:") : "Location:")} <strong>${escapeHtml(resData.location.name)}</strong>`;
+        } else if (resData.worldinfo?.name) {
+          locIndicator.innerHTML = `🌐 ${escapeHtml(window.t ? window.t("World:") : "World:")} <strong>${escapeHtml(resData.worldinfo.name)}</strong>`;
+        }
       }
       const locSelect = document.getElementById("chat-location-select");
       if (locSelect) {
-        locSelect.value = String(locationId);
+        locSelect.value = locationId === null ? "world" : String(locationId);
       }
       return resData;
     } else {
