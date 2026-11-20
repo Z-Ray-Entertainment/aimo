@@ -463,7 +463,9 @@ def backdrop_config():
 
     if request.method == "POST":
         action = request.form.get("action", "")
-        if action == "clear" or "clear" in request.form:
+        uploaded_file = request.files.get("backdrop_file")
+        has_upload = bool(uploaded_file and uploaded_file.filename)
+        if action == "clear" or "clear" in request.form or (request.form.get("remove_backdrop") == "1" and not has_upload):
             try:
                 settings = settings_service.update_default_backdrop(settings, None)
                 settings_repo.save_settings(settings)

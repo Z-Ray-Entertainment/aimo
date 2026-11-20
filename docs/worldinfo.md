@@ -50,7 +50,7 @@ A gallery of all locales in this world:
   - **Name:** E.g., *"The Drunken Troll Tavern"*, *"Forgotten Glade"*.
   - **Tags:** Keywords for environment matching.
   - **Character Binding (Optional):** Creators can optionally restrict this location to a specific character. Only chats played with this designated character can visit or enter this venue. For all other characters, the location is inaccessible and omitted from their in-chat location options.
-  - **16:9 Background Image:** Landscape image upload (PNG, JPG, WEBP). Serves as the atmospheric chat background and is passed to ComfyUI for consistent image generation. When a background image is set, a `🖼️` button next to the analyze button opens it in the fullscreen Image Viewer.
+  - **16:9 Background Image:** Landscape image upload (PNG, JPG, WEBP) with live 16:9 preview. Serves as the atmospheric chat background and is passed to ComfyUI for consistent image generation. Click the preview to inspect it in the fullscreen Image Viewer, or click **Remove Backdrop** to clear the location's background.
   - **Vision-ALT Tag & Interactive Text Expansion:** Upon image upload, a Vision model generates a visual scene description. The system then prompts interactively: *"Would you like to expand the location description with this AI image description?"*.
   - **Event Assignment:** List of world events tied specifically to this location.
 
