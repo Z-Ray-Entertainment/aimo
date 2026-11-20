@@ -28,8 +28,8 @@ The WorldInfo Editor is organized in a two-column layout with a vertical sidebar
 ## 📋 1. Basic Settings (`📋 Grundeinstellungen`)
 
 - **World Name:** Setting title (e.g., *"Kingdom of Acheron"*).
-- **1:1 Cover Image:** Square cover artwork for the World Grid tile and world selection dialog. Features an integrated cropping tool.
-- **World Backdrop (16:9):** Optional 16:9 widescreen background for the chat stage when playing in this world. In chat, backgrounds follow the priority **System → World → Location**: a location's own background takes precedence, followed by the World Backdrop if set, and finally the global System Backdrop. You can upload a new image or remove the World Backdrop at any time.
+- **1:1 Cover Image:** Square cover artwork for the World Grid tile and world selection dialog. Features an integrated cropping tool. Clicking the cover preview opens it in the fullscreen Image Viewer.
+- **World Backdrop (16:9):** Optional 16:9 widescreen background for the chat stage when playing in this world. In chat, backgrounds follow the priority **System → World → Location**: a location's own background takes precedence, followed by the World Backdrop if set, and finally the global System Backdrop. You can upload a new image, click the backdrop preview to inspect it in the fullscreen Image Viewer, or remove the World Backdrop at any time.
 - **Visibility:** Toggle between `Private` (visible only to you and collaborators) and `Public` (available for all players in the hub).
 - **Bound Lorebook (Optional):** Creators can attach an encyclopedia ([Lorebook](lorebooks.md)) directly to the world.
   - Whenever a chat session is played in this world, this lorebook is automatically loaded as an active default lorebook.
@@ -43,14 +43,14 @@ The WorldInfo Editor is organized in a two-column layout with a vertical sidebar
 A gallery of all locales in this world:
 - First tile (`+`) to register a new place.
 - **Grid Overview & Locked Locations:**
-  - Each place is displayed as an atmospheric card tile (capsule) with its 16:9 preview and description snippet.
+  - Each place is displayed as an atmospheric card tile (capsule) with its 16:9 preview and description snippet. Places with a background image also display a `🖼️` button in the upper-right corner of the preview to open the backdrop directly in the fullscreen Image Viewer.
   - **Character Lock (`🔒`):** Locations bound to a specific character display a lock badge in the upper-left corner of the capsule and a character pill next to the title.
   - **Hover Tooltip:** Hovering the mouse cursor over a locked capsule displays the tooltip: *"Dieser Ort ist an [Name] gebunden"*.
 - **Location Overlay (Modal):**
   - **Name:** E.g., *"The Drunken Troll Tavern"*, *"Forgotten Glade"*.
   - **Tags:** Keywords for environment matching.
   - **Character Binding (Optional):** Creators can optionally restrict this location to a specific character. Only chats played with this designated character can visit or enter this venue. For all other characters, the location is inaccessible and omitted from their in-chat location options.
-  - **16:9 Background Image:** Landscape image upload (PNG, JPG, WEBP). Serves as the atmospheric chat background and is passed to ComfyUI for consistent image generation.
+  - **16:9 Background Image:** Landscape image upload (PNG, JPG, WEBP). Serves as the atmospheric chat background and is passed to ComfyUI for consistent image generation. When a background image is set, a `🖼️` button next to the analyze button opens it in the fullscreen Image Viewer.
   - **Vision-ALT Tag & Interactive Text Expansion:** Upon image upload, a Vision model generates a visual scene description. The system then prompts interactively: *"Would you like to expand the location description with this AI image description?"*.
   - **Event Assignment:** List of world events tied specifically to this location.
 

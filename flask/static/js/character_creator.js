@@ -697,6 +697,98 @@
     });
   }
 
+  function initImageViewer() {
+    if (!window.AimoImageViewer) return;
+
+    const portraitImg = document.getElementById("portrait-preview-img");
+    if (portraitImg) {
+      portraitImg.addEventListener("click", () => {
+        if (portraitImg.src) {
+          window.AimoImageViewer.openSingle(portraitImg.src, portraitImg.alt || "Portrait");
+        }
+      });
+    }
+
+    const avatarImg = document.getElementById("avatar-preview-img");
+    if (avatarImg) {
+      avatarImg.addEventListener("click", () => {
+        if (avatarImg.src) {
+          window.AimoImageViewer.openSingle(avatarImg.src, avatarImg.alt || "Avatar");
+        }
+      });
+    }
+
+    const galleryGrid = document.getElementById("char-gallery-grid");
+    if (galleryGrid) {
+      galleryGrid.addEventListener("click", (e) => {
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+        if (target.closest("form, button, a")) return;
+        const preview = target.closest(".char-gallery-preview");
+        if (!preview) return;
+
+        const previews = Array.from(galleryGrid.querySelectorAll(".char-gallery-preview"));
+        const items = [];
+        let startIndex = 0;
+        for (const el of previews) {
+          const src = el.getAttribute("data-viewer-src");
+          if (!src) continue;
+          if (el === preview) startIndex = items.length;
+          items.push({
+            src,
+            title: el.getAttribute("data-viewer-title") || "",
+            subtitle: el.getAttribute("data-viewer-subtitle") || "",
+          });
+        }
+        if (items.length > 0) {
+          window.AimoImageViewer.open(items, startIndex);
+        }
+      });
+    }
+
+    const spritesTab = document.getElementById("tab-char-sprites");
+    if (spritesTab) {
+      spritesTab.addEventListener("click", (e) => {
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+        if (target.closest("form, button, label, a")) return;
+
+        const modalImg = target.closest('[id^="sprite-modal-"] .card-tile img');
+        if (modalImg) {
+          const modal = modalImg.closest('[id^="sprite-modal-"]');
+          const modalImgs = Array.from(modal.querySelectorAll(".card-tile img"));
+          const items = modalImgs.map((img) => ({
+            src: img.src,
+            title: img.getAttribute("alt") || "",
+          }));
+          const idx = Math.max(0, modalImgs.indexOf(modalImg));
+          window.AimoImageViewer.open(items, idx);
+          return;
+        }
+
+        const spritePreview = target.closest(".char-sprite-preview");
+        if (spritePreview) {
+          const emotion = spritePreview.getAttribute("data-emotion") || "";
+          const modal = emotion ? document.getElementById(`sprite-modal-${emotion}`) : null;
+          if (modal) {
+            const modalImgs = Array.from(modal.querySelectorAll(".card-tile img"));
+            if (modalImgs.length > 0) {
+              window.AimoImageViewer.open(
+                modalImgs.map((img) => ({ src: img.src, title: img.getAttribute("alt") || "" })),
+                0
+              );
+              return;
+            }
+          }
+          const src = spritePreview.getAttribute("data-viewer-src");
+          if (src) {
+            window.AimoImageViewer.openSingle(src, spritePreview.getAttribute("data-viewer-title") || emotion);
+          }
+        }
+      });
+    }
+  }
+
   function init() {
     restoreSpriteScroll();
     initSparkleAuthor();
@@ -705,6 +797,7 @@
     initDialogueManager();
     initLorebooksManager();
     initCropper();
+    initImageViewer();
   }
 
   if (document.readyState === "loading") {

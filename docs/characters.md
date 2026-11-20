@@ -33,7 +33,7 @@ The Character Designer uses a modern two-column layout consistent with the Admin
 
 - **Name:** Character's name.
 - **Gender:** `male`, `female`, or `non-binary`.
-- **Primary Portrait (Mandatory):** Main portrait image used for tiles and default chat presentation.
+- **Primary Portrait (Mandatory):** Main 9:16 portrait and 1:1 avatar image used for tiles and default chat presentation. Clicking either preview thumbnail opens it in the fullscreen Image Viewer.
 - **Description & AI Sparkle ✨:**
   - Define personality, speech patterns, quirks, and mannerisms.
   - **KI-Autor Optimierung (AI Writing Assistant ✨):** Clicking this button above the description textarea automatically drafts or enhances the character description based on the provided character name and draft text. The assistant writes exclusively in natural, continuous prose paragraphs without markdown, headings, bullet lists, or bolding. While generating, the button displays animated bouncing dots alongside "Optimiere Beschreibung" and upon completion populates the description field directly with status feedback.
@@ -45,6 +45,7 @@ The Character Designer uses a modern two-column layout consistent with the Admin
 
 - Smartphone/portrait-oriented images (9:16 aspect ratio).
 - **Affection Threshold:** Assign a relationship tier (from *Pure Hatred* to *Blind Devotion*) to each image. As soon as your relationship in a chat reaches this tier, the image unlocks under the *"Media"* tab!
+- **Fullscreen Gallery:** Clicking any gallery image opens all uploaded gallery images in a browsable fullscreen Image Viewer.
 
 ---
 
@@ -58,7 +59,7 @@ aimo supports dynamic, transparent sprites (PNG or WEBP) that adapt to the AI ch
 ### Variants & Stackview
 - **Multiple Variants per Emotion:** You can upload multiple sprites for any single emotion (e.g., `joy_1.png`, `joy_2.webp`).
 - **Paper-Plus Button (📄➕):** Becomes visible once at least one sprite exists for an emotion, enabling you to add additional variants.
-- **Stackview & Eye Button (👁️):** When multiple variants exist, a layered stack effect indicates the variety. Clicking the eye button opens a modal popup to inspect variants and delete individual images.
+- **Stackview & Eye Button (👁️):** When multiple variants exist, a layered stack effect indicates the variety. Clicking the eye button opens a modal popup to inspect variants and delete individual images. Clicking a sprite preview or variant image opens it in the fullscreen Image Viewer (browsable across all variants of that emotion).
 - **Runtime Random Selection:** When the AI expresses an emotion, the system selects one of the available variants at random.
 
 ---

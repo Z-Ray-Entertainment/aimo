@@ -420,12 +420,16 @@
           {{ _("Reward the player with exclusive character graphics as the relationship grows in chat.") }}
         </p>
 
-        <div class="card-grid">
+        <div id="char-gallery-grid" class="card-grid">
           {{ new_button(_("Add 9:16 Image"), modal="add-gallery-modal") }}
 
           {% for img in character.gallery_images %}
             <div class="card-tile" style="justify-content: space-between;">
-              <div style="flex: 1; background-image: url('{{ url_for('uploaded_file', filename=img.file_path) }}'); background-size: cover; background-position: center; min-height: 240px; position: relative;">
+              <div class="char-gallery-preview"
+                   data-viewer-src="{{ url_for('uploaded_file', filename=img.file_path) }}"
+                   data-viewer-title="{{ character.name }}"
+                   data-viewer-subtitle="{{ _('Unlocks at relationship:') }} {{ gallery_threshold_names.get(img.unlock_threshold, img.unlock_threshold) }}"
+                   style="flex: 1; background-image: url('{{ url_for('uploaded_file', filename=img.file_path) }}'); background-size: cover; background-position: center; min-height: 240px; position: relative;">
                 <form method="POST" action="{{ url_for('characters.delete_gallery_image', character_id=character.id, image_id=img.id) }}" style="position: absolute; top: 0.5rem; right: 0.5rem;">
                   {{ action_button(_("Delete"), type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title=_("Delete image")) }}
                 </form>
@@ -474,7 +478,11 @@
                   </label>
                 </form>
               {% else %}
-                <div style="flex: 1; background-image: url('{{ url_for('uploaded_file', filename=sp_list[0].file_path) }}'); background-size: contain; background-repeat: no-repeat; background-position: center; position: relative; min-height: 185px;">
+                <div class="char-sprite-preview"
+                     data-emotion="{{ emotion }}"
+                     data-viewer-src="{{ url_for('uploaded_file', filename=sp_list[0].file_path) }}"
+                     data-viewer-title="{{ character.name }} — {{ emotion }}"
+                     style="flex: 1; background-image: url('{{ url_for('uploaded_file', filename=sp_list[0].file_path) }}'); background-size: contain; background-repeat: no-repeat; background-position: center; position: relative; min-height: 185px;">
                   <!-- Top Right Action Overlay -->
                   <div style="position: absolute; top: 0.4rem; right: 0.4rem; display: flex; gap: 0.35rem;">
                     <form method="POST" action="{{ url_for('characters.upload_sprite', character_id=character.id) }}" enctype="multipart/form-data">

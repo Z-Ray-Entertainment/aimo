@@ -38,14 +38,28 @@
           </div>
         </div>
 
-        <div id="chat-location-indicator" style="font-size: 0.85rem; color: var(--gold-accent);">
-          {% if current_location %}
-            📍 {{ _("Location:") }} <strong>{{ current_location.name }}</strong>
-          {% elif worldinfo %}
-            🌐 {{ _("World:") }} <strong>{{ worldinfo.name }}</strong>
-          {% else %}
-            🕯️ {{ _("Neutral Setting") }}
-          {% endif %}
+        <div style="display: flex; align-items: center; gap: 0.45rem;">
+          <div id="chat-location-indicator" style="font-size: 0.85rem; color: var(--gold-accent);">
+            {% if current_location %}
+              📍 {{ _("Location:") }} <strong>{{ current_location.name }}</strong>
+            {% elif worldinfo %}
+              🌐 {{ _("World:") }} <strong>{{ worldinfo.name }}</strong>
+            {% else %}
+              🕯️ {{ _("Neutral Setting") }}
+            {% endif %}
+          </div>
+          <button
+            type="button"
+            id="chat-location-backdrop-btn"
+            class="chat-input-btn chat-backdrop-viewer-btn"
+            style="width: 28px; height: 28px; font-size: 0.85rem;"
+            data-backdrop-url="{{ url_for('uploaded_file', filename=current_location.background_image_path) if current_location and current_location.background_image_path else '' }}"
+            data-backdrop-title="{{ current_location.name if current_location else '' }}"
+            title="{{ _('View location backdrop') }}"
+            aria-label="{{ _('View location backdrop') }}"
+            {% if not (current_location and current_location.background_image_path) %}hidden{% endif %}>
+            <span class="icon-mono" aria-hidden="true">🖼️</span>
+          </button>
         </div>
       </div>
 
@@ -225,9 +239,9 @@
       <!-- TAB 2: Medien (Freigeschaltete 9:16-Galeriebilder & Generierungen) -->
       <div id="chat-pane-media" class="tab-pane">
         <h3 style="color: var(--gold-accent); margin-bottom: 0.75rem;">Freigeschaltete 9:16 Charakter-Bilder (Beziehung: <span id="gallery-rel-tier-label">{{ relationship_tier_name }}</span>)</h3>
-        <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); margin-bottom: 1.5rem;">
+        <div id="unlocked-gallery-grid" class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); margin-bottom: 1.5rem;">
           {% for img in unlocked_gallery %}
-            <div class="card-tile" style="min-height: 260px;">
+            <div class="card-tile" style="min-height: 260px;" data-viewer-title="{{ character.name }}" data-viewer-subtitle="{{ _('Unlock at:') }} {{ gallery_threshold_names.get(img.unlock_threshold, img.unlock_threshold) }}">
               <img src="{{ url_for('uploaded_file', filename=img.file_path) }}" alt="Gallery" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/static/img/cover.svg'">
               <div style="position: absolute; bottom: 0; inset-inline: 0; background: rgba(15, 10, 7, 0.85); padding: 0.3rem 0.5rem; font-size: 0.75rem; text-align: center; color: var(--gold-accent);">
                 Freischaltung ab: {{ gallery_threshold_names.get(img.unlock_threshold, img.unlock_threshold) }}
@@ -411,6 +425,17 @@
               {{ _('No World (Neutral)') }}
             {% endif %}
           </div>
+          <button
+            type="button"
+            id="chat-world-backdrop-btn"
+            class="chat-input-btn chat-backdrop-viewer-btn"
+            data-backdrop-url="{{ url_for('uploaded_file', filename=worldinfo.backdrop_image_path) if worldinfo and worldinfo.backdrop_image_path else '' }}"
+            data-backdrop-title="{{ worldinfo.name if worldinfo else '' }}"
+            title="{{ _('View world backdrop') }}"
+            aria-label="{{ _('View world backdrop') }}"
+            {% if not (worldinfo and worldinfo.backdrop_image_path) %}hidden{% endif %}>
+            <span class="icon-mono" aria-hidden="true">🖼️</span>
+          </button>
           <button type="button" class="chat-input-btn" data-modal-open="switch-worldinfo-modal" title="{{ _('Switch world') }}" aria-label="{{ _('Switch world') }}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
               <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
