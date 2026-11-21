@@ -170,6 +170,12 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
         ]
         from i18n import get_js_translations
         ui_lang = getattr(g, "ui_language", "en")
+        current_user = getattr(g, "current_user", None)
+        ember_particles_enabled = (
+            bool(current_user.ember_particles_enabled)
+            if current_user is not None
+            else True
+        )
         return {
             "has_perm": has_perm,
             "has_creator_permission": has_creator_permission,
@@ -181,6 +187,7 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
             "ui_dir": get_text_direction(ui_lang),
             "aimo_languages": aimo_languages,
             "aimo_js_i18n": get_js_translations(ui_lang),
+            "ember_particles_enabled": ember_particles_enabled,
         }
 
     if config_class.GZIP_ENABLED:

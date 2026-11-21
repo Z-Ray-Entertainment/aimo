@@ -1,4 +1,5 @@
 {% from "macros/image_viewer.html" import image_viewer_overlay %}
+{% from "macros/ember_bokeh.html" import ember_bokeh_overlay %}
 <!DOCTYPE html>
 <html lang="{{ ui_language | default('en') }}" dir="{{ ui_dir | default('ltr') }}">
 <head>
@@ -8,6 +9,9 @@
   <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  {% if ember_particles_enabled %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/ember_bokeh.css') }}">
+  {% endif %}
   {% block extra_head %}{% endblock %}
 </head>
 <body class="has-system-backdrop{% block body_class %}{% endblock %}" data-user-language="{{ ui_language | default('en') }}" style="--system-backdrop-url: url('{%- block backdrop_image %}{{ system_backdrop_url }}{% endblock -%}');">
@@ -19,6 +23,10 @@
            data-world-backdrop="{% block world_backdrop_image %}{% endblock %}">
       </div>
     {% endblock %}
+
+    {% if ember_particles_enabled %}
+      {{ ember_bokeh_overlay() }}
+    {% endif %}
 
     {% include "macros/top_header.html" %}
 

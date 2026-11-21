@@ -1,0 +1,96 @@
+.ember-bokeh-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ember-particle {
+  position: absolute;
+  top: 0;
+  left: var(--ember-x, 50%);
+  width: var(--ember-size, 20px);
+  height: var(--ember-size, 20px);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 38% 38%,
+    var(--ember-core, rgba(255, 220, 130, 0.9)) 0%,
+    var(--ember-mid, rgba(255, 132, 42, 0.45)) 48%,
+    rgba(232, 74, 27, 0) 74%
+  );
+  filter: blur(var(--ember-blur, 2px));
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: ember-rise var(--ember-duration, 16s) linear infinite;
+  animation-delay: var(--ember-delay, 0s);
+}
+
+@keyframes ember-rise {
+  0% {
+    transform: translate3d(0, 108vh, 0) scale(0.72);
+    opacity: 0;
+  }
+  14% {
+    opacity: var(--ember-opacity, 0.32);
+  }
+  52% {
+    transform: translate3d(calc(var(--ember-drift, 24px) * 0.55), 48vh, 0) scale(1.06);
+    opacity: var(--ember-opacity, 0.32);
+  }
+  84% {
+    opacity: calc(var(--ember-opacity, 0.32) * 0.72);
+  }
+  100% {
+    transform: translate3d(var(--ember-drift, 24px), -14vh, 0) scale(0.64);
+    opacity: 0;
+  }
+}
+
+.ember-particle:nth-child(3n + 1) {
+  --ember-core: rgba(255, 224, 138, 0.92);
+  --ember-mid: rgba(255, 168, 60, 0.44);
+}
+
+.ember-particle:nth-child(3n + 2) {
+  --ember-core: rgba(255, 184, 92, 0.88);
+  --ember-mid: rgba(255, 108, 36, 0.46);
+}
+
+.ember-particle:nth-child(3n) {
+  --ember-core: rgba(255, 146, 74, 0.86);
+  --ember-mid: rgba(226, 68, 22, 0.42);
+}
+
+.ember-particle:nth-child(1)  { --ember-x: 4%;  --ember-size: 26px; --ember-blur: 3px;   --ember-opacity: 0.28; --ember-duration: 17s; --ember-delay: -3s;  --ember-drift: 22px; }
+.ember-particle:nth-child(2)  { --ember-x: 9%;  --ember-size: 14px; --ember-blur: 1.5px; --ember-opacity: 0.36; --ember-duration: 13s; --ember-delay: -9s;  --ember-drift: -18px; }
+.ember-particle:nth-child(3)  { --ember-x: 13%; --ember-size: 36px; --ember-blur: 5px;   --ember-opacity: 0.22; --ember-duration: 21s; --ember-delay: -14s; --ember-drift: 30px; }
+.ember-particle:nth-child(4)  { --ember-x: 18%; --ember-size: 16px; --ember-blur: 1.5px; --ember-opacity: 0.38; --ember-duration: 14s; --ember-delay: -6s;  --ember-drift: -24px; }
+.ember-particle:nth-child(5)  { --ember-x: 22%; --ember-size: 24px; --ember-blur: 2.5px; --ember-opacity: 0.30; --ember-duration: 18s; --ember-delay: -11s; --ember-drift: 18px; }
+.ember-particle:nth-child(6)  { --ember-x: 27%; --ember-size: 12px; --ember-blur: 1px;   --ember-opacity: 0.40; --ember-duration: 12s; --ember-delay: -2s;  --ember-drift: 26px; }
+.ember-particle:nth-child(7)  { --ember-x: 31%; --ember-size: 40px; --ember-blur: 6px;   --ember-opacity: 0.20; --ember-duration: 22s; --ember-delay: -16s; --ember-drift: -28px; }
+.ember-particle:nth-child(8)  { --ember-x: 36%; --ember-size: 18px; --ember-blur: 2px;   --ember-opacity: 0.34; --ember-duration: 15s; --ember-delay: -8s;  --ember-drift: 16px; }
+.ember-particle:nth-child(9)  { --ember-x: 41%; --ember-size: 28px; --ember-blur: 3.5px; --ember-opacity: 0.26; --ember-duration: 19s; --ember-delay: -1s;  --ember-drift: -20px; }
+.ember-particle:nth-child(10) { --ember-x: 45%; --ember-size: 14px; --ember-blur: 1.5px; --ember-opacity: 0.36; --ember-duration: 13s; --ember-delay: -10s; --ember-drift: 28px; }
+.ember-particle:nth-child(11) { --ember-x: 50%; --ember-size: 32px; --ember-blur: 4px;   --ember-opacity: 0.24; --ember-duration: 20s; --ember-delay: -5s;  --ember-drift: -16px; }
+.ember-particle:nth-child(12) { --ember-x: 54%; --ember-size: 15px; --ember-blur: 1.5px; --ember-opacity: 0.38; --ember-duration: 14s; --ember-delay: -12s; --ember-drift: 20px; }
+.ember-particle:nth-child(13) { --ember-x: 59%; --ember-size: 22px; --ember-blur: 2.5px; --ember-opacity: 0.30; --ember-duration: 16s; --ember-delay: -7s;  --ember-drift: -26px; }
+.ember-particle:nth-child(14) { --ember-x: 63%; --ember-size: 38px; --ember-blur: 5.5px; --ember-opacity: 0.21; --ember-duration: 23s; --ember-delay: -18s; --ember-drift: 32px; }
+.ember-particle:nth-child(15) { --ember-x: 68%; --ember-size: 13px; --ember-blur: 1px;   --ember-opacity: 0.40; --ember-duration: 11s; --ember-delay: -4s;  --ember-drift: -18px; }
+.ember-particle:nth-child(16) { --ember-x: 72%; --ember-size: 25px; --ember-blur: 3px;   --ember-opacity: 0.28; --ember-duration: 17s; --ember-delay: -13s; --ember-drift: 24px; }
+.ember-particle:nth-child(17) { --ember-x: 77%; --ember-size: 17px; --ember-blur: 2px;   --ember-opacity: 0.34; --ember-duration: 15s; --ember-delay: -2s;  --ember-drift: -22px; }
+.ember-particle:nth-child(18) { --ember-x: 81%; --ember-size: 34px; --ember-blur: 4.5px; --ember-opacity: 0.23; --ember-duration: 20s; --ember-delay: -15s; --ember-drift: 18px; }
+.ember-particle:nth-child(19) { --ember-x: 86%; --ember-size: 14px; --ember-blur: 1.5px; --ember-opacity: 0.38; --ember-duration: 12s; --ember-delay: -9s;  --ember-drift: -28px; }
+.ember-particle:nth-child(20) { --ember-x: 90%; --ember-size: 26px; --ember-blur: 3px;   --ember-opacity: 0.28; --ember-duration: 18s; --ember-delay: -6s;  --ember-drift: 22px; }
+.ember-particle:nth-child(21) { --ember-x: 94%; --ember-size: 18px; --ember-blur: 2px;   --ember-opacity: 0.32; --ember-duration: 14s; --ember-delay: -11s; --ember-drift: -16px; }
+.ember-particle:nth-child(22) { --ember-x: 16%; --ember-size: 20px; --ember-blur: 2.5px; --ember-opacity: 0.30; --ember-duration: 16s; --ember-delay: -17s; --ember-drift: 34px; }
+.ember-particle:nth-child(23) { --ember-x: 38%; --ember-size: 15px; --ember-blur: 1.5px; --ember-opacity: 0.36; --ember-duration: 13s; --ember-delay: -19s; --ember-drift: -24px; }
+.ember-particle:nth-child(24) { --ember-x: 57%; --ember-size: 22px; --ember-blur: 2.5px; --ember-opacity: 0.30; --ember-duration: 17s; --ember-delay: -20s; --ember-drift: 26px; }
+.ember-particle:nth-child(25) { --ember-x: 75%; --ember-size: 16px; --ember-blur: 2px;   --ember-opacity: 0.35; --ember-duration: 15s; --ember-delay: -8s;  --ember-drift: -20px; }
+.ember-particle:nth-child(26) { --ember-x: 88%; --ember-size: 28px; --ember-blur: 3.5px; --ember-opacity: 0.26; --ember-duration: 19s; --ember-delay: -14s; --ember-drift: -26px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ember-bokeh-layer {
+    display: none;
+  }
+}

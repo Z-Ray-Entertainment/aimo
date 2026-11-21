@@ -46,6 +46,20 @@
     </div>
   {% endcall %}
 
+  {% call form_section(_("Appearance"), _("Visual background effects for your personal interface.")) %}
+    <label for="account-ember-particles" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; cursor: pointer; margin: 0;">
+      <span>{{ _("Animated Ember Bokeh Background") }}</span>
+      <span class="aimo-switch">
+        <input type="checkbox"
+               id="account-ember-particles"
+               name="ember_particles_enabled"
+               value="1"
+               {% if g.current_user.ember_particles_enabled %}checked{% endif %}>
+        <span class="aimo-switch-slider"></span>
+      </span>
+    </label>
+  {% endcall %}
+
   <div style="display: flex; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid var(--border-wood-dark);">
     {{ action_button(_("Save"), type="submit", icon="💾") }}
   </div>

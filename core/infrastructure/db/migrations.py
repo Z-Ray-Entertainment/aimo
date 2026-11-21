@@ -38,6 +38,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE system_settings ADD COLUMN default_backdrop_path TEXT",
         "ALTER TABLE users ADD COLUMN creator_tag TEXT",
         "ALTER TABLE users ADD COLUMN language TEXT NOT NULL DEFAULT ''",
+        "ALTER TABLE users ADD COLUMN ember_particles_enabled INTEGER NOT NULL DEFAULT 1",
         "ALTER TABLE characters ADD COLUMN collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]'",
         "ALTER TABLE worldinfos ADD COLUMN collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]'",
         "ALTER TABLE lorebooks ADD COLUMN collaborator_creator_tags_json TEXT NOT NULL DEFAULT '[]'",
