@@ -26,7 +26,7 @@ def add_location(worldinfo_id: int):
         flash(tr(_("Location '%(name)s' added."), name=form.name), "success")
     else:
         flash(payload.get("error") or tr(_("Failed to add location.")), "error")
-    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="locations"))
+    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="places"))
 
 
 @worldinfo_bp.route("/<int:worldinfo_id>/locations/<int:location_id>/edit", methods=["POST"])
@@ -56,7 +56,7 @@ def edit_location(worldinfo_id: int, location_id: int):
         flash(tr(_("Location updated.")), "success")
     else:
         flash(payload.get("error") or tr(_("Failed to update location.")), "error")
-    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="locations"))
+    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="places"))
 
 
 @worldinfo_bp.route("/<int:worldinfo_id>/locations/<int:location_id>/delete", methods=["POST"])
@@ -67,7 +67,7 @@ def delete_location(worldinfo_id: int, location_id: int):
         flash(tr(_("Location deleted.")), "success")
     else:
         flash(payload.get("error") or tr(_("Failed to delete location.")), "error")
-    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="locations"))
+    return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="places"))
 
 
 @worldinfo_bp.route("/<int:worldinfo_id>/events/<int:event_id>/edit", methods=["POST"])

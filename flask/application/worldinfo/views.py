@@ -88,6 +88,9 @@ def detail(worldinfo_id: int):
 
     _, lb_data = core_get("/api/lorebooks")
     _, char_data = core_get("/api/characters")
+    active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
+    if active_tab not in ("info", "places", "events", "collab"):
+        active_tab = "info"
     return render_template(
         "worldinfo/detail.html",
         worldinfo=worldinfo,
@@ -97,7 +100,7 @@ def detail(worldinfo_id: int):
         characters=wrap_dto(char_data.get("characters", [])),
         is_editable=is_editable,
         is_author=is_author,
-        active_tab=request.args.get("tab", "general"),
+        active_tab=active_tab,
         location_i18n={},
         event_i18n={},
     )
