@@ -1,17 +1,8 @@
 from flask import Blueprint, g, render_template, request
 
-from application.auth.decorators import get_current_user, is_admin, require_auth
-from application.translation_helpers import (
-    is_character_ready_for_language,
-    is_lorebook_ready_for_language,
-    is_worldinfo_ready_for_language,
-)
-from infrastructure.repositories.character_repository import CharacterRepository
-from infrastructure.repositories.lorebook_repository import LorebookRepository
-from infrastructure.repositories.persona_repository import PersonaRepository
-from infrastructure.repositories.relationship_repository import RelationshipRepository
-from infrastructure.repositories.translation_repository import TranslationRepository
-from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
+from application.auth.decorators import get_current_user, require_auth
+from application.core_client import core_get
+from application.view_models import wrap_dto
 
 overview_bp = Blueprint("overview", __name__)
 
@@ -21,173 +12,75 @@ overview_bp = Blueprint("overview", __name__)
 @require_auth
 def index():
     user = get_current_user()
-    assert user is not None and user.id is not None
-
-    char_repo = CharacterRepository()
-    lb_repo = LorebookRepository()
-    wi_repo = WorldInfoRepository()
-    persona_repo = PersonaRepository()
-    rel_repo = RelationshipRepository()
-    sys_lang = user.language if user.language else "en"
-
-    gender_filter = request.args.get("gender", "").strip().lower()
-    chat_filter = request.args.get("chatted", "").strip().lower()
-    author_filter = request.args.get("author", "").strip().lower()
-    visibility_filter = request.args.get("visibility", "").strip().lower()
+    gender_filter = request.args.get("gender", "all").strip().lower()
+    chat_filter = request.args.get("chat", "all").strip().lower()
+    author_filter = request.args.get("author", "all").strip().lower()
+    visibility_filter = request.args.get("visibility", "all").strip().lower()
     sort_by = request.args.get("sort", "newest").strip().lower()
     active_tab = request.args.get("tab", "characters").strip().lower()
-    if active_tab not in ("characters", "lorebooks", "worldinfo"):
+    if active_tab not in ("characters", "lorebooks", "worldinfos"):
         active_tab = "characters"
 
-    trans_repo = TranslationRepository()
-    has_missing_translations = False
+    status, data = core_get("/api/overview")
+    if status != 200:
+        data = {}
 
-    raw_characters = char_repo.list_visible(user.id)
     character_cards = []
-    for char in raw_characters:
-        if char.id is None:
+    for char in wrap_dto(data.get("characters", [])):
+        if gender_filter != "all" and str(getattr(char, "gender", "")).lower() != gender_filter:
             continue
-        is_editable = char.is_editable_by_user(user.id, is_admin(), user.creator_tag)
-        is_ready = is_character_ready_for_language(char, sys_lang, trans_repo, wi_repo)
-        if not is_ready:
-            has_missing_translations = True
-            if not is_editable:
-                continue
-        if author_filter == "mine" and char.user_id != user.id:
+        if visibility_filter != "all" and str(char.visibility).lower() != visibility_filter:
             continue
-        if author_filter == "collaborations":
-            is_collab = (
-                char.user_id != user.id
-                and bool(user.creator_tag)
-                and (user.creator_tag in (char.collaborator_creator_tags or []))
-            )
-            if not is_collab:
-                continue
-        if gender_filter and char.gender.value != gender_filter:
+        if author_filter == "mine" and not char.editable:
             continue
-        msg_count = char_repo.get_message_count_for_user(char.id, user.id)
-        if chat_filter == "chatted" and msg_count == 0:
-            continue
-        if chat_filter == "unchatted" and msg_count > 0:
-            continue
-        best_rel = char_repo.get_best_relationship_for_user(
-            char.id, user.id, default_value=float(char.initial_relationship)
-        )
-        tier = rel_repo.get_tier(best_rel, language=sys_lang)
-        char.description = trans_repo.get_localized_field(
-            "character", char.id, "description", sys_lang, char.description
-        )
         character_cards.append(
             {
                 "character": char,
-                "message_count": msg_count,
-                "best_relationship": best_rel,
-                "relationship_tier_name": tier.name,
-                "is_editable": is_editable,
-                "translation_pending": not is_ready,
+                "sessions": [s for s in wrap_dto(data.get("sessions", [])) if s.character_id == char.id],
+                "relationship_tier_name": getattr(char, "relationship_tier_name", "Stranger"),
+                "is_editable": bool(char.editable),
+                "translation_pending": False,
             }
         )
 
-    if sort_by == "chatted_first":
-        character_cards.sort(key=lambda c: c["message_count"], reverse=True)
-    elif sort_by == "relationship":
-        character_cards.sort(key=lambda c: c["best_relationship"], reverse=True)
+    if sort_by == "name":
+        character_cards.sort(key=lambda item: (item["character"].name or "").lower())
     else:
-        character_cards.sort(key=lambda c: c["character"].id or 0, reverse=True)
+        character_cards.sort(key=lambda item: item["character"].id or 0, reverse=True)
 
-    lorebooks = lb_repo.list_visible(user.id)
     lorebook_cards = []
+    lorebooks = wrap_dto(data.get("lorebooks", []))
     for lb in lorebooks:
-        if lb.id is None:
+        if visibility_filter != "all" and str(lb.visibility).lower() != visibility_filter:
             continue
-        is_editable = lb.is_editable_by_user(user.id, is_admin(), user.creator_tag)
-        is_ready = is_lorebook_ready_for_language(lb, sys_lang, trans_repo)
-        if not is_ready:
-            has_missing_translations = True
-            if not is_editable:
-                continue
-        if visibility_filter in ("public", "private") and lb.visibility != visibility_filter:
+        if author_filter == "mine" and not lb.editable:
             continue
-        if author_filter == "mine" and lb.user_id != user.id:
-            continue
-        if author_filter == "collaborations":
-            is_collab = (
-                lb.user_id != user.id
-                and bool(user.creator_tag)
-                and (user.creator_tag in (lb.collaborator_creator_tags or []))
-            )
-            if not is_collab:
-                continue
-        if not getattr(lb, "is_proper_noun", False):
-            lb.name = trans_repo.get_localized_field("lorebook", lb.id, "name", sys_lang, lb.name)
-        lb.description = trans_repo.get_localized_field(
-            "lorebook", lb.id, "description", sys_lang, lb.description
-        )
-        entries = lb_repo.list_entries(lb.id, user_id=user.id, is_admin=is_admin())
-        all_tags = []
-        for e in entries:
-            for t in e.tags:
-                if t not in all_tags:
-                    all_tags.append(t)
         lorebook_cards.append(
             {
                 "lorebook": lb,
-                "entry_count": len(entries),
-                "tags": all_tags[:8],
-                "is_editable": is_editable,
-                "translation_pending": not is_ready,
+                "entry_count": int(getattr(lb, "entry_count", 0)),
+                "is_editable": bool(lb.editable),
+                "translation_pending": False,
             }
         )
 
-    if sort_by == "name":
-        lorebook_cards.sort(key=lambda item: (item["lorebook"].name or "").lower())
-    else:
-        lorebook_cards.sort(key=lambda item: item["lorebook"].id or 0, reverse=True)
-
-    worldinfos = wi_repo.list_visible(user.id)
     worldinfo_cards = []
-    for wi in worldinfos:
-        if wi.id is None:
+    for wi in wrap_dto(data.get("worldinfos", [])):
+        if visibility_filter != "all" and str(wi.visibility).lower() != visibility_filter:
             continue
-        is_editable = wi.is_editable_by_user(user.id, is_admin(), user.creator_tag)
-        is_ready = is_worldinfo_ready_for_language(wi, sys_lang, trans_repo, wi_repo)
-        if not is_ready:
-            has_missing_translations = True
-            if not is_editable:
-                continue
-        if visibility_filter in ("public", "private") and wi.visibility != visibility_filter:
+        if author_filter == "mine" and not wi.editable:
             continue
-        if author_filter == "mine" and wi.user_id != user.id:
-            continue
-        if author_filter == "collaborations":
-            is_collab = (
-                wi.user_id != user.id
-                and bool(user.creator_tag)
-                and (user.creator_tag in (wi.collaborator_creator_tags or []))
-            )
-            if not is_collab:
-                continue
-        locations = wi_repo.list_locations(wi.id)
-        events = wi_repo.list_events(wi.id)
-        if not getattr(wi, "is_proper_noun", False):
-            wi.name = trans_repo.get_localized_field("worldinfo", wi.id, "name", sys_lang, wi.name)
         worldinfo_cards.append(
             {
                 "worldinfo": wi,
-                "location_count": len(locations),
-                "event_count": len(events),
-                "is_editable": is_editable,
-                "translation_pending": not is_ready,
+                "location_count": int(getattr(wi, "location_count", 0)),
+                "event_count": int(getattr(wi, "event_count", 0)),
+                "is_editable": bool(wi.editable),
+                "translation_pending": False,
             }
         )
 
-    if sort_by == "name":
-        worldinfo_cards.sort(key=lambda item: (item["worldinfo"].name or "").lower())
-    else:
-        worldinfo_cards.sort(key=lambda item: item["worldinfo"].id or 0, reverse=True)
-
     persona_items = getattr(g, "persona_items", [])
-
     return render_template(
         "overview/index.html",
         character_cards=character_cards,
@@ -201,5 +94,6 @@ def index():
         visibility_filter=visibility_filter,
         sort_by=sort_by,
         active_tab=active_tab,
-        has_missing_translations=has_missing_translations,
+        has_missing_translations=False,
+        current_user=user,
     )

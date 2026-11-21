@@ -1,6 +1,24 @@
 from dataclasses import dataclass
 
-from shared.request_parsers import RequestDataParser
+from security import RequestDataParser
+
+
+@dataclass
+class LorebookForm:
+    name: str = ""
+    description: str = ""
+    visibility: str = "private"
+    is_proper_noun: bool = False
+
+    @classmethod
+    def from_request(cls, form_data) -> "LorebookForm":
+        p = RequestDataParser
+        return cls(
+            name=p.to_str(form_data, "name"),
+            description=p.to_str(form_data, "description"),
+            visibility=p.to_str(form_data, "visibility", "private"),
+            is_proper_noun=p.to_bool(form_data, "is_proper_noun"),
+        )
 
 
 @dataclass

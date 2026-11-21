@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 import json
 
-from shared.request_parsers import RequestDataParser
+from security import RequestDataParser
 
 
 @dataclass

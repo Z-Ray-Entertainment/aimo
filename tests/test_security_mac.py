@@ -162,12 +162,25 @@ class SecurityMACTimingTests(unittest.TestCase):
         web_spec.loader.exec_module(web_mod)
 
         cls.core_app = core_mod.create_core_app(Config)
-        cls.web_app = web_mod.create_webui_app(Config)
         cls.core_client = cls.core_app.test_client()
+
+        import threading
+        from werkzeug.serving import make_server
+
+        cls._core_server = make_server("127.0.0.1", 0, cls.core_app, threaded=True)
+        cls._core_port = cls._core_server.server_port
+        os.environ["AIMO_CORE_URL"] = f"http://127.0.0.1:{cls._core_port}"
+        cls._core_thread = threading.Thread(target=cls._core_server.serve_forever, daemon=True)
+        cls._core_thread.start()
+
+        cls.web_app = web_mod.create_webui_app(Config)
         cls.web_client = cls.web_app.test_client()
 
     @classmethod
     def tearDownClass(cls) -> None:
+        if hasattr(cls, "_core_server"):
+            cls._core_server.shutdown()
+            cls._core_server.server_close()
         cls._tmp_dir.cleanup()
 
     def _signed_core_headers(self, user_id: int) -> dict[str, str]:

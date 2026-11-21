@@ -107,6 +107,19 @@ def register_gzip_compression(app: Flask, min_size: int = 500) -> None:
 
 class RequestDataParser:
     @staticmethod
+    def to_opt_int(data: Any, key: str) -> int | None:
+        if not hasattr(data, "get"):
+            return None
+        raw = data.get(key)
+        if raw in (None, "", "0", 0, "world", "none"):
+            return None
+        try:
+            parsed = int(raw)
+            return parsed if parsed > 0 else None
+        except (ValueError, TypeError):
+            return None
+
+    @staticmethod
     def to_int(
         data: Any,
         key: str,
