@@ -92,12 +92,18 @@
         badge.style.color = "#58D68D";
         badge.style.fontWeight = "700";
         badge.textContent = `✔ ${SETUP_I18N.ready || "Ready"}`;
-        if (pullBtn) pullBtn.hidden = true;
+        if (pullBtn) {
+          pullBtn.hidden = true;
+          pullBtn.style.display = "none";
+        }
       } else {
         badge.style.color = "#F5B041";
         badge.style.fontWeight = "400";
         badge.textContent = `⏳ ${SETUP_I18N.missing || "Missing"}`;
-        if (pullBtn) pullBtn.hidden = false;
+        if (pullBtn) {
+          pullBtn.hidden = false;
+          pullBtn.style.display = "";
+        }
       }
     });
   }
@@ -178,6 +184,9 @@
         }
       }
     } catch (_) {
+      if ( backend === "ollama") {
+        updateOllamaRoleCards([]);
+      }
       if (statusEl) {
         statusEl.className = "backend-status-line is-err";
         statusEl.textContent = `✕ ${SETUP_I18N.connError}`;
