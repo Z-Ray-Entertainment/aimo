@@ -2,7 +2,7 @@
 {% from "macros/buttons.html" import action_button %}
 {% from "macros/copy_field.html" import copy_field %}
 {% from "macros/backend_selector.html" import api_key_field, google_ai_steps_guide, image_gen_options, llm_backend_cards, search_options %}
-{% block title %}AIMO — Erststart-Einrichtung (First-Boot Wizard){% endblock %}
+{% block title %}AImo — Erststart-Einrichtung (First-Boot Wizard){% endblock %}
 
 {% block extra_head %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin_setup.css') }}">
@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="aimo-frame" style="max-width: 720px; margin: 2rem auto; padding: 2rem;">
-  <h1 style="color: var(--gold-accent); margin-bottom: 0.45rem;">⚔️ AIMO First-Boot Wizard</h1>
+  <h1 style="color: var(--gold-accent); margin-bottom: 0.45rem;">⚔️ AImo First-Boot Wizard</h1>
   <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.92rem;">
     Richte den unentziehbaren initialen Administrator sowie dein exklusives KI-Backend ein.
   </p>
@@ -62,7 +62,7 @@
         2. KI-Backend auswählen
       </h3>
       <div class="backend-notice-banner">
-        <strong>Exklusive Wahl:</strong> AIMO unterstützt entweder lokales <strong>Ollama</strong> oder <strong>Google AI Cloud</strong> – ein Parallelbetrieb beider KI-Backends ist nicht vorgesehen. Du kannst dies später jederzeit unter <em>Admin → Services &amp; Modelle</em> umstellen.
+        <strong>Exklusive Wahl:</strong> AImo unterstützt entweder lokales <strong>Ollama</strong> oder <strong>Google AI Cloud</strong> – ein Parallelbetrieb beider KI-Backends ist nicht vorgesehen. Du kannst dies später jederzeit unter <em>Admin → Services &amp; Modelle</em> umstellen.
       </div>
 
       {{ llm_backend_cards(form.llm_backend, field_name="llm_backend", id_prefix="setup-backend") }}
@@ -94,7 +94,7 @@
               <span class="icon-mono">🧙‍♂️</span> Setup-Helper für Ollama: Empfohlene Modelle pro Rolle
             </div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">
-              Lade diese 3 Modelle auf deinem Ollama-Server (AIMO weist die Aufgabenrollen automatisch zu):
+              Lade diese 3 Modelle auf deinem Ollama-Server (AImo weist die Aufgabenrollen automatisch zu):
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 0.45rem;" id="setup-ollama-role-cards">

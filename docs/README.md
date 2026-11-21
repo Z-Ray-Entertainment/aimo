@@ -1,6 +1,6 @@
-# 📖 aimo — User Manual & Documentation
+# 📖 AImo — User Manual & Documentation
 
-Welcome to the official user manual for **aimo**, the platform for immersive local AI roleplay with a modern RPG design.
+Welcome to the official user manual for **AImo**, the platform for immersive local AI roleplay with a modern RPG design.
 
 This manual is intended for end users, story creators, and administrators, detailing all features and interaction mechanics within the application.
 
@@ -69,7 +69,7 @@ This manual is intended for end users, story creators, and administrators, detai
 
 ## 🎨 Design & Interaction Concept
 
-aimo features an immersive **modern RPG interface**:
+AImo features an immersive **modern RPG interface**:
 - **Background:** Semi-transparent with an atmospheric cover image.
 - **Borders & Frames:** Warm light brown wood tones with rounded corners for all input fields, overlays, and cards.
 - **Buttons:** Warm leather-brown backgrounds with subtle gold borders.

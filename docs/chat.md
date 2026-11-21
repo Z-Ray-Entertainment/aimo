@@ -2,7 +2,7 @@
 
 [← Back to Overview](README.md) | [← Worlds & Places](worldinfo.md) | [Administration & Settings →](admin.md)
 
-The chat screen is the centerpiece of aimo. Here, the interactive text adventure unfolds with live token streaming, emotional sprites, dynamic location transitions, and generative imagery.
+The chat screen is the centerpiece of AImo. Here, the interactive text adventure unfolds with live token streaming, emotional sprites, dynamic location transitions, and generative imagery.
 
 ---
 
@@ -61,7 +61,7 @@ Under the **Lorebooks** tab in the central chat container (and in the New Chat w
 
 ## ⚡ Live Streaming & Seamless Localization
 
-Because modern LLMs write with the greatest depth and nuance in English while the UI operates in your localized language, aimo employs a two-stage streaming workflow:
+Because modern LLMs write with the greatest depth and nuance in English while the UI operates in your localized language, AImo employs a two-stage streaming workflow:
 1. **Live Stream (English):** When submitted, a *"Thinking..."* state appears. The raw English token stream streams into the message bubble in real time — **dimmed in gray and rendered in smaller text** so you can follow the generation progress.
 2. **Translation Swap:** The instant generation finishes, a brief spinner appears and the dimmed English text is cleanly replaced by the **final translated text** in standard font size.
 

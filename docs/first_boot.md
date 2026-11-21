@@ -2,7 +2,7 @@
 
 [← Back to Overview](README.md)
 
-On the very first launch of **aimo** (when no SQLite database or user accounts exist), the system automatically directs you to the **First-Boot Setup Wizard**.
+On the very first launch of **AImo** (when no SQLite database or user accounts exist), the system automatically directs you to the **First-Boot Setup Wizard**.
 
 ---
 

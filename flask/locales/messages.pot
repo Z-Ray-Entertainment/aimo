@@ -933,7 +933,7 @@ msgid "1. Active AI Backend (Exclusive)"
 msgstr ""
 
 #: flask/templates/admin/services.html:12
-msgid "AIMO always operates exactly one AI backend (either Ollama or Google AI Cloud) – no parallel operation."
+msgid "AImo always operates exactly one AI backend (either Ollama or Google AI Cloud) – no parallel operation."
 msgstr ""
 
 #: flask/templates/admin/services.html:18
@@ -1263,11 +1263,11 @@ msgid "Really delete user %(username)s?"
 msgstr ""
 
 #: flask/templates/auth/login.html:3
-msgid "AIMO — Login"
+msgid "AImo — Login"
 msgstr ""
 
 #: flask/templates/auth/login.html:7
-msgid "AIMO Login"
+msgid "AImo Login"
 msgstr ""
 
 #: flask/templates/auth/login.html:9

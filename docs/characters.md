@@ -53,7 +53,7 @@ The Character Designer uses a modern two-column layout consistent with the Admin
 
 ## 🎭 3. Emotional Sprites (`🎭 Emotionale Sprites`)
 
-aimo supports dynamic, transparent sprites (PNG or WEBP) that adapt to the AI character's current emotional state during conversations.
+AImo supports dynamic, transparent sprites (PNG or WEBP) that adapt to the AI character's current emotional state during conversations.
 
 ### The 28 Supported Emotions
 `admire`, `amused`, `anger`, `annoyed`, `approval`, `caring`, `confused`, `curious`, `desire`, `disappointed`, `disapproval`, `disgust`, `embarrassed`, `excited`, `fear`, `gratitude`, `grief`, `joy`, `love`, `nervousness`, `neutral` (Default & Fallback), `optimistic`, `pride`, `realize`, `relief`, `remorse`, `sad`, `surprise`.

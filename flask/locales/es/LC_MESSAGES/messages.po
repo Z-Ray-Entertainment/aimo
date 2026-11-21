@@ -933,8 +933,8 @@ msgid "1. Active AI Backend (Exclusive)"
 msgstr "1. Backend de IA activo (Exclusivo)"
 
 #: flask/templates/admin/services.html:12
-msgid "AIMO always operates exactly one AI backend (either Ollama or Google AI Cloud) – no parallel operation."
-msgstr "AIMO siempre opera exactamente un backend de IA (Ollama o Google AI Cloud), sin operación paralela."
+msgid "AImo always operates exactly one AI backend (either Ollama or Google AI Cloud) – no parallel operation."
+msgstr "AImo siempre opera exactamente un backend de IA (Ollama o Google AI Cloud), sin operación paralela."
 
 #: flask/templates/admin/services.html:18
 msgid "Ollama API URL"
@@ -1273,12 +1273,12 @@ msgid "Really delete user %(username)s?"
 msgstr "¿Realmente desea eliminar al usuario %(username)s?"
 
 #: flask/templates/auth/login.html:3
-msgid "AIMO — Login"
-msgstr "AIMO — Iniciar sesión"
+msgid "AImo — Login"
+msgstr "AImo — Iniciar sesión"
 
 #: flask/templates/auth/login.html:7
-msgid "AIMO Login"
-msgstr "Inicio de sesión en AIMO"
+msgid "AImo Login"
+msgstr "Inicio de sesión en AImo"
 
 #: flask/templates/auth/login.html:9
 msgid "Sign in to enter your roleplay worlds."

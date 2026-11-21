@@ -73,7 +73,7 @@ Lorebooks can be connected at three distinct levels:
 
 ## 🔍 How Knowledge is Injected into Chat (Vectorless Tag-RAG)
 
-aimo utilizes **strict rule-based tag matching** without external vector databases:
+AImo utilizes **strict rule-based tag matching** without external vector databases:
 - If words mentioned in the ongoing dialogue match any tags in an active lorebook entry, that entry is automatically loaded into the AI's context for the next response.
 - **Smart Relevance Prioritization:** Entries matching words from your latest message or fitting the current conversation topic (such as character-linked lorebooks during personal conversations or world lorebooks during exploration) are prioritized. When many entries match at once, the top entries are included in full detail while secondary matches are provided as concise key-fact summaries.
 - If a topic is not mentioned, the entry remains dormant. This keeps the AI's working memory lean and focused.

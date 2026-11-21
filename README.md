@@ -1,4 +1,4 @@
-# aimo — Immersive AI Roleplay with Modern RPG Design
+# AImo — Immersive AI Roleplay with Modern RPG Design
 
 > [!IMPORTANT]
 > **Notice on AI-Assisted Development (Human-in-the-Loop Principle):**
@@ -9,7 +9,7 @@
 >
 > THIS IS STILL WIP, WHILE IT WORKS IT IS STILL ALPHA
 
-`aimo` is a modular roleplaying platform for interactive AI storytelling and text adventures. The system bridges either local language and vision models (Ollama) or cloud models (Google AI Studio / Gemini API) alongside generative image pipelines (ComfyUI or Google AI Image) with an atmospheric tabletop RPG interface.
+**AImo** is a modular roleplaying platform for interactive AI storytelling and text adventures. The system bridges either local language and vision models (Ollama) or cloud models (Google AI Studio / Gemini API) alongside generative image pipelines (ComfyUI or Google AI Image) with an atmospheric tabletop RPG interface.
 
 ---
 
