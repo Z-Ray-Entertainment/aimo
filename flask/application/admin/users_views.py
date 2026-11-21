@@ -9,6 +9,14 @@ from application.view_models import FunctionPermission, wrap_dto
 from i18n import gettext_noop as _
 
 
+_ALL_PERMS = [p.value for p in FunctionPermission]
+_PRESET_MAP = {
+    "admin": sorted(_ALL_PERMS),
+    "creator": sorted(p for p in _ALL_PERMS if p != FunctionPermission.ADMIN_ACCESS.value),
+    "user": sorted([FunctionPermission.CHAT_ACCESS.value, FunctionPermission.PERSONA_MANAGE.value]),
+}
+
+
 @admin_bp.route("/users", methods=["GET"])
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def users_list():
@@ -19,15 +27,14 @@ def users_list():
 @admin_bp.route("/users/new", methods=["GET", "POST"])
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def create_user():
+    form = AdminUserForm.from_request(request.form) if request.method == "POST" else AdminUserForm(preset="user")
     if request.method == "POST":
-        form = AdminUserForm.from_request(request.form)
         status, payload = core_post(
             "/api/admin/users",
             json={
                 "username": form.username,
                 "email": form.email,
                 "password": form.password,
-                "language": form.language,
                 "preset": form.preset,
                 "permissions": form.permissions,
             },
@@ -36,7 +43,15 @@ def create_user():
             flash(tr(_("User created successfully.")), "success")
             return redirect(url_for("admin.users_list"))
         flash(payload.get("error") or tr(_("Failed to create user.")), "error")
-    return render_template("admin/user_form.html", user=None, all_permissions=[p.value for p in FunctionPermission])
+    return render_template(
+        "admin/user_form.html",
+        user=None,
+        target_user=None,
+        form=form,
+        all_permissions=_ALL_PERMS,
+        presets=list(_PRESET_MAP.keys()),
+        preset_map=_PRESET_MAP,
+    )
 
 
 @admin_bp.route("/users/<int:user_id>/edit", methods=["GET", "POST"])
@@ -47,7 +62,6 @@ def edit_user(user_id: int):
         body: dict = {
             "username": form.username,
             "email": form.email,
-            "language": form.language,
             "permissions": form.permissions,
         }
         if form.password:
@@ -62,7 +76,21 @@ def edit_user(user_id: int):
     if status != 200:
         flash(tr(_("User not found.")), "error")
         return redirect(url_for("admin.users_list"))
-    return render_template("admin/user_form.html", user=wrap_dto(data), all_permissions=[p.value for p in FunctionPermission])
+    target_user = wrap_dto(data)
+    form = AdminUserForm(
+        username=target_user.username,
+        email=target_user.email,
+        permissions=list(getattr(target_user, "permissions", []) or []),
+    )
+    return render_template(
+        "admin/user_form.html",
+        user=target_user,
+        target_user=target_user,
+        form=form,
+        all_permissions=_ALL_PERMS,
+        presets=list(_PRESET_MAP.keys()),
+        preset_map=_PRESET_MAP,
+    )
 
 
 @admin_bp.route("/users/<int:user_id>/delete", methods=["POST"])

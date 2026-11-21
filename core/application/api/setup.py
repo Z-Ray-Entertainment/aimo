@@ -9,6 +9,7 @@ from domain.permissions.services import PermissionService
 from domain.personas.models import Gender
 from domain.personas.services import PersonaService
 from domain.settings.services import SettingsService
+from infrastructure.image_gen.google_ai import GoogleAIImageGenProvider
 from infrastructure.llm.factory import LLM_PROVIDER_CLASSES, get_llm_provider_class
 from infrastructure.provider_registry import ProviderRegistry
 from infrastructure.repositories.persona_repository import PersonaRepository
@@ -32,6 +33,8 @@ def setup_status():
             "description": cls.DESCRIPTION,
             "default_config": cls.get_default_config(),
             "recommended_tasks": cls.get_recommended_task_models(),
+            "recommended_models": cls.get_recommended_models(),
+            "unique_recommended_models": cls.get_unique_recommended_models(),
         }
         for cls in LLM_PROVIDER_CLASSES.values()
     ]
@@ -41,6 +44,7 @@ def setup_status():
             "llm_backend": settings.llm_backend,
             "image_gen_backend": settings.image_gen_backend,
             "search_backend": settings.search_backend,
+            "recommended_google_image_model": GoogleAIImageGenProvider.get_recommended_model() or "",
             "llm_providers": llm_providers,
         }
     )

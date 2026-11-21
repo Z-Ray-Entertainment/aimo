@@ -212,11 +212,38 @@ def check_services_health():
 @api_admin_bp.route("/backdrop", methods=["GET"])
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def get_backdrop():
+    from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
+
     settings = SettingsRepository().get_settings()
+    worldinfo_repo = WorldInfoRepository()
+    existing_locations_with_bg = []
+    seen_paths = set()
+    for wi in worldinfo_repo.list_all():
+        if wi.backdrop_image_path and wi.backdrop_image_path not in seen_paths:
+            seen_paths.add(wi.backdrop_image_path)
+            existing_locations_with_bg.append(
+                {
+                    "worldinfo_name": wi.name,
+                    "location_name": "World Backdrop",
+                    "path": wi.backdrop_image_path,
+                }
+            )
+        if wi.id is not None:
+            for loc in worldinfo_repo.list_locations(wi.id):
+                if loc.background_image_path and loc.background_image_path not in seen_paths:
+                    seen_paths.add(loc.background_image_path)
+                    existing_locations_with_bg.append(
+                        {
+                            "worldinfo_name": wi.name,
+                            "location_name": loc.name,
+                            "path": loc.background_image_path,
+                        }
+                    )
     return jsonify(
         {
             "default_backdrop_path": settings.default_backdrop_path,
             "has_backdrop": bool(settings.default_backdrop_path),
+            "existing_locations_with_bg": existing_locations_with_bg,
         }
     )
 

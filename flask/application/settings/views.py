@@ -35,28 +35,83 @@ def creations():
     if status != 200:
         data = {}
 
+    editable_chars = [c for c in wrap_dto(data.get("characters", [])) if c.editable]
+    editable_worlds = [w for w in wrap_dto(data.get("worldinfos", [])) if w.editable]
+    editable_lbs = [lb for lb in wrap_dto(data.get("lorebooks", [])) if lb.editable]
+
+    char_count = len(editable_chars)
+    world_count = len(editable_worlds)
+    lorebook_count = len(editable_lbs)
+    total_count = char_count + world_count + lorebook_count
+
     all_items: list[dict] = []
     if type_filter in ("all", "character"):
-        for c in wrap_dto(data.get("characters", [])):
-            if not c.editable:
-                continue
+        for c in editable_chars:
             if q and q not in (c.name or "").lower():
                 continue
-            all_items.append({"type": "character", "id": c.id, "name": c.name, "visibility": c.visibility, "url": url_for("characters.edit_character", character_id=c.id)})
-    if type_filter in ("all", "worldinfo"):
-        for w in wrap_dto(data.get("worldinfos", [])):
-            if not w.editable:
+            role = "author" if getattr(c, "user_id", None) == user.id else "collaborator"
+            if role_filter in ("author", "mine") and role != "author":
                 continue
+            if role_filter in ("collaborator", "collaborations") and role != "collaborator":
+                continue
+            img_path = getattr(c, "avatar_path", None) or getattr(c, "primary_portrait_path", None)
+            all_items.append(
+                {
+                    "type": "character",
+                    "id": c.id,
+                    "name": c.name,
+                    "visibility": c.visibility,
+                    "role": role,
+                    "image_url": url_for("uploaded_file", filename=img_path) if img_path else None,
+                    "edit_url": url_for("characters.edit_character", character_id=c.id),
+                    "url": url_for("characters.edit_character", character_id=c.id),
+                }
+            )
+    if type_filter in ("all", "worldinfo"):
+        for w in editable_worlds:
             if q and q not in (w.name or "").lower():
                 continue
-            all_items.append({"type": "worldinfo", "id": w.id, "name": w.name, "visibility": w.visibility, "url": url_for("worldinfo.detail", worldinfo_id=w.id)})
-    if type_filter in ("all", "lorebook"):
-        for lb in wrap_dto(data.get("lorebooks", [])):
-            if not lb.editable:
+            role = "author" if getattr(w, "user_id", None) == user.id else "collaborator"
+            if role_filter in ("author", "mine") and role != "author":
                 continue
+            if role_filter in ("collaborator", "collaborations") and role != "collaborator":
+                continue
+            cover = getattr(w, "cover_image_path", None)
+            all_items.append(
+                {
+                    "type": "worldinfo",
+                    "id": w.id,
+                    "name": w.name,
+                    "visibility": w.visibility,
+                    "role": role,
+                    "icon": getattr(w, "icon", "🌐") or "🌐",
+                    "image_url": url_for("uploaded_file", filename=cover) if cover else None,
+                    "edit_url": url_for("worldinfo.detail", worldinfo_id=w.id),
+                    "url": url_for("worldinfo.detail", worldinfo_id=w.id),
+                }
+            )
+    if type_filter in ("all", "lorebook"):
+        for lb in editable_lbs:
             if q and q not in (lb.name or "").lower():
                 continue
-            all_items.append({"type": "lorebook", "id": lb.id, "name": lb.name, "visibility": lb.visibility, "url": url_for("lorebooks.detail", lorebook_id=lb.id)})
+            role = "author" if getattr(lb, "user_id", None) == user.id else "collaborator"
+            if role_filter in ("author", "mine") and role != "author":
+                continue
+            if role_filter in ("collaborator", "collaborations") and role != "collaborator":
+                continue
+            all_items.append(
+                {
+                    "type": "lorebook",
+                    "id": lb.id,
+                    "name": lb.name,
+                    "visibility": lb.visibility,
+                    "role": role,
+                    "icon": "📜",
+                    "image_url": None,
+                    "edit_url": url_for("lorebooks.detail", lorebook_id=lb.id),
+                    "url": url_for("lorebooks.detail", lorebook_id=lb.id),
+                }
+            )
 
     if sort_by == "name":
         all_items.sort(key=lambda item: (item["name"] or "").lower())
@@ -65,7 +120,11 @@ def creations():
 
     return render_template(
         "settings/creations.html",
-        items=all_items,
+        items=wrap_dto(all_items),
+        total_count=total_count,
+        char_count=char_count,
+        world_count=world_count,
+        lorebook_count=lorebook_count,
         type_filter=type_filter,
         role_filter=role_filter,
         sort_by=sort_by,
