@@ -130,7 +130,8 @@ def post_message(session_id: int):
                 "user_message": {
                     "id": user_msg.id,
                     "message_idx": user_msg.message_idx,
-                    "localized_content": user_msg.localized_content,
+                    "content": user_msg.content,
+                    "localized_content": user_msg.content,
                     "image_path": user_msg.image_path,
                     "image_alt_text": user_msg.image_alt_text,
                 },

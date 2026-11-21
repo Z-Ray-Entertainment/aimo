@@ -305,18 +305,18 @@ def edit_message(session_id: int, message_idx: int):
     if msg is None:
         return jsonify({"error": "Message not found."}), 404
 
-    if msg.english_content:
-        old_hash = trans_service.compute_source_hash(msg.english_content)
+    if msg.content:
+        old_hash = trans_service.compute_source_hash(msg.content)
         trans_repo.invalidate(old_hash)
 
-    msg.english_content = new_text
-    msg.localized_content = new_text
+    msg.content = new_text
     chat_repo.update_message(msg)
 
     return jsonify(
         {
             "message_idx": msg.message_idx,
-            "english_content": msg.english_content,
-            "localized_content": msg.localized_content,
+            "content": msg.content,
+            "english_content": msg.content,
+            "localized_content": msg.content,
         }
     )

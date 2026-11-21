@@ -28,8 +28,9 @@ def serialize_system_message(msg: Message) -> dict[str, Any]:
         "message_idx": msg.message_idx,
         "role": msg.role.value,
         "system_type": msg.system_type,
-        "english_content": msg.english_content,
-        "localized_content": msg.localized_content,
+        "content": msg.content,
+        "english_content": msg.content,
+        "localized_content": msg.content,
         "metadata": msg.metadata,
         "created_at": msg.created_at.isoformat(),
     }

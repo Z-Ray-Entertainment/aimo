@@ -30,14 +30,33 @@ class Message:
     session_id: int
     message_idx: int
     role: MessageRole
-    english_content: str
-    localized_content: str
+    content: str
     image_path: str | None = None
     image_alt_text: str | None = None
     emotion_tag: str | None = None
     system_type: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
     created_at: datetime = field(default_factory=utc_now)
+
+    @property
+    def effective_text(self) -> str:
+        return (self.content or self.image_alt_text or "").strip()
+
+    @property
+    def localized_content(self) -> str:
+        return self.content
+
+    @localized_content.setter
+    def localized_content(self, value: str) -> None:
+        self.content = value
+
+    @property
+    def english_content(self) -> str:
+        return self.content
+
+    @english_content.setter
+    def english_content(self, value: str) -> None:
+        self.content = value
 
 
 @dataclass

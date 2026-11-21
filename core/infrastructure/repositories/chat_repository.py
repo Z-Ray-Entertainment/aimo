@@ -146,18 +146,19 @@ class ChatRepository(BaseRepository[ChatSession]):
             cursor = conn.execute(
                 """
                 INSERT INTO chat_messages (
-                    session_id, message_idx, role, english_content,
+                    session_id, message_idx, role, content, english_content,
                     localized_content, image_path, image_alt_text, emotion_tag,
                     system_type, metadata_json, created_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     message.session_id,
                     message.message_idx,
                     message.role.value,
-                    message.english_content,
-                    message.localized_content,
+                    message.content,
+                    message.content,
+                    message.content,
                     message.image_path,
                     message.image_alt_text,
                     message.emotion_tag,
@@ -186,13 +187,14 @@ class ChatRepository(BaseRepository[ChatSession]):
             conn.execute(
                 """
                 UPDATE chat_messages
-                SET english_content = ?, localized_content = ?, image_path = ?,
+                SET content = ?, english_content = ?, localized_content = ?, image_path = ?,
                     image_alt_text = ?, emotion_tag = ?, system_type = ?, metadata_json = ?
                 WHERE id = ?
                 """,
                 (
-                    message.english_content,
-                    message.localized_content,
+                    message.content,
+                    message.content,
+                    message.content,
                     message.image_path,
                     message.image_alt_text,
                     message.emotion_tag,
@@ -369,13 +371,17 @@ class ChatRepository(BaseRepository[ChatSession]):
         except (json.JSONDecodeError, TypeError, ValueError):
             metadata = {}
 
+        raw_content = (
+            str(row["content"])
+            if "content" in keys and row["content"]
+            else (str(row["localized_content"]) if row["localized_content"] else str(row["english_content"]))
+        )
         return Message(
             id=int(row["id"]),
             session_id=int(row["session_id"]),
             message_idx=int(row["message_idx"]),
             role=MessageRole.resolve(str(row["role"])),
-            english_content=str(row["english_content"]),
-            localized_content=str(row["localized_content"]),
+            content=raw_content,
             image_path=str(row["image_path"]) if row["image_path"] is not None else None,
             image_alt_text=(
                 str(row["image_alt_text"]) if row["image_alt_text"] is not None else None

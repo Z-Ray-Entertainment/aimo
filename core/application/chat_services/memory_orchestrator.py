@@ -56,7 +56,7 @@ def run_async_memory_extraction(session_id: int) -> None:
             resolved_mem_prompt = resolve_memory_prompt(settings, user_lang)
 
             msg_dicts = [
-                {"role": m.role.value, "content": m.localized_content or m.english_content or ""}
+                {"role": m.role.value, "content": m.effective_text}
                 for m in chunk
             ]
             with interactive_llm_guard():

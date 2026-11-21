@@ -355,7 +355,7 @@ def generate_scene_image(session_id: int):
         for m in chat_repo.get_messages(session_id, limit=12)
         if m.role in (MessageRole.USER, MessageRole.CHARACTER)
     ][-4:]
-    scene_text = "\n".join(f"{m.role.value}: {m.english_content}" for m in recent_msgs)
+    scene_text = "\n".join(f"{m.role.value}: {m.effective_text}" for m in recent_msgs)
     location_desc = "Neutral background"
     ref_images: list[Path] = []
 

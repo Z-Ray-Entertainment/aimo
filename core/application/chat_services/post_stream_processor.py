@@ -143,8 +143,7 @@ def finalize_streamed_turn(
         session_id=session.id,
         message_idx=ai_next_idx,
         role=MessageRole.CHARACTER,
-        english_content=english_reply,
-        localized_content=english_reply,
+        content=english_reply,
         emotion_tag=detected_emotion.value,
         metadata={
             "relationship_impact": impact.value,
@@ -163,6 +162,7 @@ def finalize_streamed_turn(
         "notification_id": task.task_id,
         "message_id": saved_ai_msg.id,
         "message_idx": saved_ai_msg.message_idx,
+        "content": english_reply,
         "english_content": english_reply,
         "localized_content": english_reply,
         "emotion": detected_emotion.value,

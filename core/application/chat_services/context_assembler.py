@@ -132,19 +132,13 @@ def assemble_turn_context(
     recent_messages = [
         m for m in raw_recent if m.role in (MessageRole.USER, MessageRole.CHARACTER)
     ][-10:]
-    combined_context_text = " ".join(
-        (m.localized_content or m.english_content or "") for m in recent_messages[-2:]
-    )
+    combined_context_text = " ".join(m.effective_text for m in recent_messages[-2:])
     active_tags = extract_active_tags(combined_context_text)
     latest_user_msg = next(
         (m for m in reversed(recent_messages) if m.role == MessageRole.USER),
         None,
     )
-    latest_user_text = (
-        (latest_user_msg.localized_content or latest_user_msg.english_content or "")
-        if latest_user_msg is not None
-        else ""
-    )
+    latest_user_text = latest_user_msg.effective_text if latest_user_msg is not None else ""
     latest_user_tags = extract_active_tags(latest_user_text)
 
     focus_analyzer = PythonFocusAnalyzer()

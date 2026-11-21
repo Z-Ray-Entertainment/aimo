@@ -119,7 +119,7 @@ def translate_chat_message(session_id: int, message_idx: int):
     if msg is None:
         return jsonify({"error": "Message not found."}), 404
 
-    source_text = (msg.english_content or msg.localized_content or "").strip()
+    source_text = msg.content.strip()
     if not source_text:
         return jsonify({"error": "Message has no translatable text."}), 400
 
@@ -144,7 +144,7 @@ def translate_chat_message(session_id: int, message_idx: int):
             )
             trans_repo.save_translation(rec)
 
-    msg.localized_content = translated
+    msg.content = translated
     chat_repo.update_message(msg)
 
     return jsonify(

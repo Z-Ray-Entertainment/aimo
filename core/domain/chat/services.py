@@ -121,8 +121,7 @@ class ChatService:
             if character.first_message.strip()
             else f"*{character.name} looks at you.*"
         )
-        welcome_en = replace_roleplay_placeholders(raw_welcome, character.name, persona_name)
-        welcome_loc = replace_roleplay_placeholders(
+        welcome_content = replace_roleplay_placeholders(
             (localized_welcome_text.strip() if localized_welcome_text and localized_welcome_text.strip() else raw_welcome),
             character.name,
             persona_name,
@@ -132,8 +131,7 @@ class ChatService:
             session_id=0,
             message_idx=0,
             role=MessageRole.CHARACTER,
-            english_content=welcome_en,
-            localized_content=welcome_loc,
+            content=welcome_content,
             emotion_tag=Emotion.NEUTRAL.value,
             created_at=now,
         )
@@ -176,8 +174,7 @@ class ChatService:
                 session_id=0,
                 message_idx=msg.message_idx,
                 role=msg.role,
-                english_content=msg.english_content,
-                localized_content=msg.localized_content,
+                content=msg.content,
                 image_path=msg.image_path,
                 image_alt_text=msg.image_alt_text,
                 emotion_tag=msg.emotion_tag,
@@ -237,8 +234,7 @@ class ChatService:
             session_id=session_id,
             message_idx=message_idx,
             role=MessageRole.SYSTEM,
-            english_content=english_content.strip(),
-            localized_content=localized_content.strip(),
+            content=(localized_content or english_content).strip(),
             system_type=stype,
             metadata=dict(metadata) if metadata else {},
             created_at=datetime.now(timezone.utc),

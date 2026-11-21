@@ -46,6 +46,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE chat_sessions ADD COLUMN initial_location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL",
         "ALTER TABLE chat_messages ADD COLUMN system_type TEXT",
         "ALTER TABLE chat_messages ADD COLUMN metadata_json TEXT NOT NULL DEFAULT '{}'",
+        "ALTER TABLE chat_messages ADD COLUMN content TEXT NOT NULL DEFAULT ''",
         "ALTER TABLE chat_sessions ADD COLUMN thinking_enabled INTEGER NOT NULL DEFAULT 0",
         "ALTER TABLE system_settings ADD COLUMN dialogue_author_prompt TEXT",
         "ALTER TABLE system_settings ADD COLUMN llm_backend TEXT NOT NULL DEFAULT 'ollama'",
@@ -77,6 +78,9 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
 
     try:
         conn.execute("UPDATE chat_sessions SET initial_location_id = current_location_id WHERE initial_location_id IS NULL AND current_location_id IS NOT NULL")
+        conn.execute(
+            "UPDATE chat_messages SET content = COALESCE(NULLIF(localized_content, ''), english_content, '') WHERE content = ''"
+        )
         conn.execute("CREATE INDEX IF NOT EXISTS ix_locations_character_id ON locations (character_id)")
         conn.execute("CREATE INDEX IF NOT EXISTS ix_users_creator_tag ON users (creator_tag)")
         user_rows = conn.execute("SELECT id FROM users WHERE creator_tag IS NULL OR creator_tag = ''").fetchall()

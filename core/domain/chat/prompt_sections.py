@@ -209,12 +209,7 @@ def format_single_message(
         if msg.role == MessageRole.USER
         else f"{character_name} ({t(_('You'), language)})"
     )
-    raw_content = (
-        (msg.localized_content or msg.english_content)
-        if language != "en"
-        else (msg.english_content or msg.localized_content)
-    )
-    content = (raw_content or "").strip()
+    content = (msg.content or "").strip()
     if distill and msg.role == MessageRole.CHARACTER:
         content = distill_message_dialogue(content, max_chars=380)
     elif distill and msg.role == MessageRole.USER and len(content) > 340:

@@ -179,6 +179,7 @@ CREATE TABLE IF NOT EXISTS chat_messages (
     session_id INTEGER NOT NULL REFERENCES chat_sessions(id) ON DELETE CASCADE,
     message_idx INTEGER NOT NULL,
     role TEXT NOT NULL,
+    content TEXT NOT NULL DEFAULT '',
     english_content TEXT NOT NULL DEFAULT '',
     localized_content TEXT NOT NULL DEFAULT '',
     image_path TEXT,

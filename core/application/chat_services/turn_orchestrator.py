@@ -63,7 +63,7 @@ def start_background_turn(
     if existing_user_msg is not None:
         saved_user_msg = existing_user_msg
         image_path = saved_user_msg.image_path
-        cleaned_user_text = saved_user_msg.localized_content or ""
+        cleaned_user_text = saved_user_msg.content or ""
     else:
         image_path = None
         if uploaded_image_file and uploaded_image_file.filename:
@@ -82,8 +82,7 @@ def start_background_turn(
             session_id=session_id,
             message_idx=next_idx,
             role=MessageRole.USER,
-            english_content=cleaned_user_text or "An uploaded image.",
-            localized_content=cleaned_user_text,
+            content=cleaned_user_text,
             image_path=image_path,
             image_alt_text=None,
             created_at=datetime.now(timezone.utc),
@@ -203,21 +202,27 @@ def start_background_turn(
             settings = w_settings_repo.get_settings()
             llm = get_llm_provider(settings)
 
+            target_lang = (task.user_language or "en").strip().lower()[:2]
             if image_path:
                 if existing_user_msg is not None and saved_user_msg.image_alt_text:
                     image_alt_text = saved_user_msg.image_alt_text
                 else:
+                    from domain.translation.models import LANGUAGE_METADATA
+
+                    lang_label = LANGUAGE_METADATA.get(target_lang, {}).get("label", target_lang)
                     try:
                         resolved_img = w_storage.resolve_path(image_path)
                         image_alt_text = llm.analyze_image(
                             image_path=resolved_img,
-                            prompt="Describe what is shown in this image concisely in English for a roleplay conversation.",
+                            prompt=(
+                                f"Describe what is shown in this image concisely in {lang_label} ({target_lang}) "
+                                "for a roleplay conversation."
+                            ),
                             model=settings.tasks.vision_model,
                         ).strip()
                     except Exception:
-                        image_alt_text = "An uploaded image."
+                        image_alt_text = ""
                     saved_user_msg.image_alt_text = image_alt_text
-                    saved_user_msg.english_content = cleaned_user_text or image_alt_text
                     w_chat_repo.update_message(saved_user_msg)
 
                 with task.condition:
@@ -226,10 +231,8 @@ def start_background_turn(
                     task.status = "thinking"
                     task.condition.notify_all()
             elif existing_user_msg is None:
-                saved_user_msg.english_content = cleaned_user_text
+                saved_user_msg.content = cleaned_user_text
                 w_chat_repo.update_message(saved_user_msg)
-
-            target_lang = (task.user_language or "en").strip().lower()[:2]
             ctx = assemble_turn_context(
                 session=w_session,
                 character=w_character,
