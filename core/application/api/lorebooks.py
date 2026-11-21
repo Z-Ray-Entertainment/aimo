@@ -192,3 +192,104 @@ def suggest_tags():
         return jsonify({"tags": clean_tags, "tags_string": ", ".join(clean_tags)})
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 502
+
+
+@api_lorebooks_bp.route("/<int:lorebook_id>", methods=["GET"])
+@require_auth
+def get_lorebook_detail(lorebook_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = LorebookRepository()
+    lb = repo.get_by_id(lorebook_id)
+    if lb is None or not lb.is_visible_to_user(user.id, is_admin()):
+        return jsonify({"error": "Lorebook not found."}), 404
+    entries = repo.list_entries(lorebook_id)
+    return jsonify(
+        {
+            "id": lb.id,
+            "user_id": lb.user_id,
+            "name": lb.name,
+            "description": lb.description,
+            "visibility": lb.visibility,
+            "origin_language": lb.origin_language,
+            "is_proper_noun": lb.is_proper_noun,
+            "editable": lb.is_editable_by_user(user.id, is_admin(), user.creator_tag),
+            "deletable": lb.is_deletable_by_user(user.id, is_admin()),
+            "entries": [
+                {
+                    "id": e.id,
+                    "title": e.title,
+                    "tags": e.tags,
+                    "content": e.content,
+                    "visibility": e.visibility,
+                    "is_proper_noun": e.is_proper_noun,
+                }
+                for e in entries
+                if e.is_visible_to_user(lb.user_id, user.id, is_admin())
+            ],
+        }
+    )
+
+
+@api_lorebooks_bp.route("/<int:lorebook_id>", methods=["PUT"])
+@require_permission(FunctionPermission.LOREBOOK_EDIT)
+def update_lorebook_detail(lorebook_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = LorebookRepository()
+    lb = repo.get_by_id(lorebook_id)
+    if lb is None or not lb.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        return jsonify({"error": "Lorebook not found."}), 404
+    data = request.get_json(silent=True) or request.form.to_dict()
+    try:
+        updated = LorebookService().update_lorebook(
+            lb,
+            name=data.get("name", lb.name),
+            description=data.get("description", lb.description),
+            visibility=data.get("visibility", lb.visibility),
+            is_proper_noun=bool(data.get("is_proper_noun", lb.is_proper_noun)),
+        )
+        saved = repo.update(updated)
+        return jsonify({"id": saved.id, "name": saved.name})
+    except AimoError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@api_lorebooks_bp.route("/<int:lorebook_id>", methods=["DELETE"])
+@require_permission(FunctionPermission.LOREBOOK_DELETE)
+def delete_lorebook_detail(lorebook_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = LorebookRepository()
+    lb = repo.get_by_id(lorebook_id)
+    if lb is None or not lb.is_deletable_by_user(user.id, is_admin()):
+        return jsonify({"error": "Lorebook not found."}), 404
+    return jsonify({"deleted": repo.delete(lorebook_id)})
+
+
+@api_lorebooks_bp.route("/entries/<int:entry_id>", methods=["PUT"])
+@require_permission(FunctionPermission.LOREBOOK_EDIT)
+def update_lorebook_entry(entry_id: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    repo = LorebookRepository()
+    entry = repo.get_entry(entry_id)
+    if entry is None:
+        return jsonify({"error": "Entry not found."}), 404
+    lb = repo.get_by_id(entry.lorebook_id)
+    if lb is None or not lb.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        return jsonify({"error": "Lorebook not found."}), 404
+    data = request.get_json(silent=True) or request.form.to_dict()
+    try:
+        updated = LorebookService().update_entry(
+            entry,
+            title=data.get("title", entry.title),
+            tags=data.get("tags", entry.tags),
+            content=data.get("content", entry.content),
+            visibility=data.get("visibility", entry.visibility),
+            is_proper_noun=bool(data.get("is_proper_noun", entry.is_proper_noun)),
+        )
+        saved = repo.update_entry(updated)
+        return jsonify({"id": saved.id, "title": saved.title, "tags": saved.tags})
+    except AimoError as exc:
+        return jsonify({"error": str(exc)}), 400

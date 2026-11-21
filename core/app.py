@@ -10,10 +10,17 @@ from flask import Flask, jsonify, request
 
 from application.api import (
     api_admin_bp,
+    api_admin_config_bp,
+    api_admin_users_bp,
+    api_auth_bp,
     api_characters_bp,
     api_chat_bp,
     api_lorebooks_bp,
+    api_overview_bp,
     api_personas_bp,
+    api_settings_bp,
+    api_setup_bp,
+    api_uploads_bp,
     api_worldinfo_bp,
 )
 from application.api.auth import get_expected_client_key, verify_client_key
@@ -55,10 +62,17 @@ def create_core_app(config_class: type[Config] = Config) -> Flask:
     ).start()
 
     app.register_blueprint(api_admin_bp)
+    app.register_blueprint(api_admin_config_bp)
+    app.register_blueprint(api_admin_users_bp)
+    app.register_blueprint(api_auth_bp)
     app.register_blueprint(api_characters_bp)
     app.register_blueprint(api_chat_bp)
     app.register_blueprint(api_lorebooks_bp)
+    app.register_blueprint(api_overview_bp)
     app.register_blueprint(api_personas_bp)
+    app.register_blueprint(api_settings_bp)
+    app.register_blueprint(api_setup_bp)
+    app.register_blueprint(api_uploads_bp)
     app.register_blueprint(api_worldinfo_bp)
 
     @app.before_request
