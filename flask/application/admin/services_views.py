@@ -32,7 +32,7 @@ def services_config():
                 "tasks": {
                     "roleplay_model": form.roleplay_model,
                     "memory_model": form.memory_model,
-                    "utility_model": form.assistant_model,
+                    "assistant_model": form.assistant_model,
                     "vision_model": form.vision_model,
                     "classification_model": form.classification_model,
                 },
@@ -53,12 +53,12 @@ def services_config():
     _, cfg = core_get("/api/admin/services")
     _, health = core_get("/api/admin/health")
     _, models_data = core_get("/api/admin/models")
-    _, rec_data = core_get("/api/admin/models/recommended")
 
     llm_cfgs = cfg.get("llm_configs", {})
     img_cfgs = cfg.get("image_gen_configs", {})
     search_cfgs = cfg.get("search_configs", {})
     google_key = llm_cfgs.get("google_ai", {}).get("api_key", "")
+    rec_google_img = cfg.get("recommended_google_image_model") or "gemini-3.1-flash-image-preview"
 
     return render_template(
         "admin/services.html",
@@ -66,17 +66,20 @@ def services_config():
         ollama_url=llm_cfgs.get("ollama", {}).get("base_url", "http://localhost:11434"),
         comfyui_url=img_cfgs.get("comfyui", {}).get("base_url", "http://localhost:8188"),
         searxng_url=search_cfgs.get("searxng", {}).get("base_url", "http://localhost:8080"),
-        google_ai_image_model=img_cfgs.get("google_ai", {}).get("model", "gemini-3.1-flash-image-preview"),
+        google_ai_image_model=img_cfgs.get("google_ai", {}).get("model", rec_google_img),
         installed_models=models_data.get("models", []),
         available_image_models=models_data.get("image_models", []),
-        ollama_grouped_recommended={},
-        ollama_unique_models=[],
-        google_recommended_models=rec_data.get("models", []),
-        recommended_by_backend=rec_data.get("recommended_by_backend", {}),
-        recommended_google_image_model="gemini-3.1-flash-image-preview",
+        ollama_grouped_recommended=wrap_dto(cfg.get("ollama_grouped_recommended", [])),
+        ollama_unique_models=cfg.get("ollama_unique_models", []),
+        google_recommended_models=cfg.get("google_recommended_models", {}),
+        recommended_by_backend=cfg.get("recommended_by_backend", {}),
+        recommended_google_image_model=rec_google_img,
         llm_healthy=bool(health.get("llm_healthy")),
         ollama_healthy=bool(health.get("llm_healthy") and cfg.get("llm_backend") == "ollama"),
         comfy_healthy=bool(health.get("image_gen_healthy") and cfg.get("image_gen_backend") == "comfyui"),
+        image_gen_healthy=bool(health.get("image_gen_healthy")),
         has_google_api_key=bool(google_key),
+        has_google_ai_api_key=bool(google_key),
         google_api_key_hint=mask_secret(google_key),
+        google_ai_api_key_hint=mask_secret(google_key),
     )

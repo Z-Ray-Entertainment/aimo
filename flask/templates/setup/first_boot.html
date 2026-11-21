@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button %}
-{% from "macros/copy_field.html" import copy_field %}
-{% from "macros/backend_selector.html" import api_key_field, google_ai_steps_guide, image_gen_options, llm_backend_cards, search_options %}
+{% from "macros/backend_selector.html" import api_key_field, google_ai_steps_guide, llm_backend_cards %}
 {% block title %}AImo — {{ _("First-Boot Wizard") }}{% endblock %}
 
 {% block extra_head %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin_setup.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/setup.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -32,6 +31,8 @@
 
   <form id="first-boot-form" method="POST" action="{{ url_for('setup.first_boot') }}">
     <input type="hidden" name="active_step" id="setup-active-step" value="{{ form.active_step }}">
+    <input type="hidden" name="image_gen_backend" value="disabled">
+    <input type="hidden" name="search_backend" value="disabled">
 
     <section class="wizard-step-pane{% if form.active_step == 1 %} active{% endif %}" data-step-pane="1">
       <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.35rem;">
@@ -94,7 +95,7 @@
               <span class="icon-mono">🧙‍♂️</span> {{ _("Setup Helper for Ollama: Recommended Models per Role") }}
             </div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">
-              {{ _("Pull these 3 models on your Ollama server (AImo assigns task roles automatically):") }}
+              {{ _("Recommended models per role (missing models can be downloaded directly via Pull):") }}
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 0.45rem;" id="setup-ollama-role-cards">
@@ -104,16 +105,24 @@
                     <strong>{{ info.role_name }}</strong>
                     <code style="color: var(--gold-accent); font-size: 0.76rem;">{{ info.model }}</code>
                   </div>
-                  <span class="ollama-model-check-badge" style="font-size: 0.75rem; color: var(--text-muted);">{{ _("Unchecked") }}</span>
+                  <div style="display: flex; align-items: center; gap: 0.45rem; flex-shrink: 0;">
+                    <span class="ollama-model-check-badge" style="font-size: 0.75rem; color: var(--text-muted);">{{ _("Unchecked") }}</span>
+                    <button type="button"
+                            class="aimo-btn aimo-btn-sm ollama-model-pull-btn"
+                            data-pull-model="{{ info.model }}"
+                            onclick="pullSetupOllamaModel('{{ info.model }}')"
+                            style="display: none;"
+                            hidden>
+                      <span class="icon-mono">📥</span>
+                      <span>{{ _("Pull") }}</span>
+                    </button>
+                  </div>
                 </div>
               {% endfor %}
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.25rem;">
-              <span style="font-size: 0.78rem; color: var(--text-muted);">{{ _("Terminal commands to copy:") }}</span>
-              {% for m in ollama_unique_models %}
-                {{ copy_field("ollama pull " ~ m, _("Copy command:") ~ " ollama pull " ~ m) }}
-              {% endfor %}
+            <div id="setup-pull-progress-box" style="display: none; margin-top: 0.5rem; padding: 0.6rem; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--gold-accent); font-size: 0.8rem; color: var(--gold-accent);">
+              {{ _("Starting download...") }}
             </div>
           </div>
 
@@ -132,29 +141,6 @@
               {% endfor %}
             </div>
           </details>
-
-          <div class="aimo-form-section">
-            <h3>{{ _("Optional Additional Services") }}</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.85rem;">
-              <div>
-                <label style="margin-bottom: 0.45rem; display: block;">{{ _("Image Generation (Scene images in chat)") }}</label>
-                {{ image_gen_options('disabled', allow_google=false, id_prefix="setup-ollama-img", disable_providers=true) }}
-                <div class="conditional-service-box" id="setup-ollama-comfy-box" style="margin-top: 0.6rem;" hidden>
-                  <label for="setup-ollama-comfyui-url">{{ _("ComfyUI URL") }} *</label>
-                  <input type="url" id="setup-ollama-comfyui-url" name="comfyui_url" value="{{ form.comfyui_url }}">
-                </div>
-              </div>
-
-              <div>
-                <label style="margin-bottom: 0.45rem; display: block;">{{ _("Web Search (Prepared)") }}</label>
-                {{ search_options('disabled', allow_google=false, id_prefix="setup-ollama-search", disable_providers=true) }}
-                <div class="conditional-service-box" id="setup-ollama-searxng-box" style="margin-top: 0.6rem;" hidden>
-                  <label for="setup-ollama-searxng-url">{{ _("SearXNG URL") }} *</label>
-                  <input type="url" id="setup-ollama-searxng-url" name="searxng_url" value="{{ form.searxng_url }}">
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -193,39 +179,6 @@
               {% endfor %}
             </div>
           </details>
-
-          <div class="aimo-form-section">
-            <h3>{{ _("Image Generation (Scene images in chat)") }}</h3>
-            <p style="font-size: 0.81rem; color: var(--text-muted); margin-bottom: 0.6rem;">
-              {{ _("Choose whether scene images should be generated via Google AI (Gemini Image), a local ComfyUI server, or not at all:") }}
-            </p>
-            {{ image_gen_options('disabled', allow_google=true, id_prefix="setup-google-img", disable_providers=true) }}
-
-            <div class="conditional-service-box" id="setup-google-image-model-box" style="margin-top: 0.65rem;" hidden>
-              <label for="setup-google-image-model">{{ _("Google AI Image Model") }} *</label>
-              <select id="setup-google-image-model" name="google_ai_image_model">
-                <option value="{{ recommended_google_image_model }}" selected>{{ recommended_google_image_model }}</option>
-              </select>
-            </div>
-
-            <div class="conditional-service-box" id="setup-google-comfy-box" style="margin-top: 0.65rem;" hidden>
-              <label for="setup-google-comfyui-url">{{ _("ComfyUI URL") }} *</label>
-              <input type="url" id="setup-google-comfyui-url" name="comfyui_url" value="{{ form.comfyui_url }}">
-            </div>
-          </div>
-
-          <div class="aimo-form-section">
-            <h3>{{ _("Web Search (Prepared)") }}</h3>
-            <p style="font-size: 0.81rem; color: var(--text-muted); margin-bottom: 0.6rem;">
-              {{ _("Choose whether future web searches should use Google Search Grounding, SearXNG, or no search:") }}
-            </p>
-            {{ search_options('disabled', allow_google=true, id_prefix="setup-google-search", disable_providers=true) }}
-
-            <div class="conditional-service-box" id="setup-google-searxng-box" style="margin-top: 0.65rem;" hidden>
-              <label for="setup-google-searxng-url">{{ _("SearXNG URL") }} *</label>
-              <input type="url" id="setup-google-searxng-url" name="searxng_url" value="{{ form.searxng_url }}">
-            </div>
-          </div>
         </div>
       </div>
 
@@ -239,259 +192,28 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-  const SETUP_RECOMMENDED = {{ recommended_by_backend|tojson }};
-  const SETUP_DEFAULT_IMG_MODEL = {{ recommended_google_image_model|tojson }};
-  const SETUP_I18N = {
-    configureGoogle: {{ _("Configure Google AI") | tojson }},
-    configureOllama: {{ _("Configure Ollama") | tojson }},
-    ready: {{ _("Ready") | tojson }},
-    missing: {{ _("Missing") | tojson }},
-    checkingConn: {{ _("Checking connection") | tojson }},
-    checkingConnDot: {{ _("Checking connection...") | tojson }},
-    googleValid: {{ _("API key valid — {count} text/vision models and {img_count} image models available.") | tojson }},
-    ollamaReachable: {{ _("Ollama reachable — {count} installed model(s) found.") | tojson }},
-    connFailed: {{ _("Connection failed.") | tojson }},
-    connError: {{ _("Connection error while testing backend.") | tojson }}
-  };
-  let currentStep = {{ form.active_step }};
-
-  function getSelectedBackend() {
-    const checked = document.querySelector('input[name="llm_backend"]:checked');
-    return checked ? checked.value : "ollama";
+<script id="setup-wizard-config" type="application/json">{{ {
+  "recommendedByBackend": recommended_by_backend,
+  "defaultImageModel": recommended_google_image_model,
+  "verifyUrl": url_for('setup.verify_backend'),
+  "pullUrl": "/api/setup/models/pull",
+  "activeStep": form.active_step,
+  "i18n": {
+    "configureBackend": _("Configure Backend"),
+    "configureGoogle": _("Configure Google AI"),
+    "configureOllama": _("Configure Ollama"),
+    "ready": _("Ready"),
+    "missing": _("Missing"),
+    "checkingConn": _("Checking connection"),
+    "checkingConnDot": _("Checking connection..."),
+    "googleValid": _("API key valid — {count} text/vision models and {img_count} image models available."),
+    "ollamaReachable": _("Ollama reachable — {count} installed model(s) found."),
+    "connFailed": _("Connection failed."),
+    "connError": _("Connection error while testing backend."),
+    "downloadingModel": _("Downloading model '{model}'..."),
+    "modelInstalled": _("Model '{model}' installed successfully!"),
+    "downloadError": _("Error downloading '{model}'.")
   }
-
-  function syncStep3Panels() {
-    const backend = getSelectedBackend();
-    const ollamaPanel = document.getElementById("setup-step3-ollama");
-    const googlePanel = document.getElementById("setup-step3-google_ai");
-    const step3Label = document.getElementById("stepper-step3-label");
-
-    [
-      [ollamaPanel, backend === "ollama", { image_gen_backend: "disabled", search_backend: "disabled" }],
-      [googlePanel, backend === "google_ai", { image_gen_backend: "disabled", search_backend: "disabled" }],
-    ].forEach(([panel, active, defaults]) => {
-      if (!panel) return;
-      panel.hidden = !active;
-      panel.querySelectorAll("input, select, textarea").forEach((el) => {
-        if (el.type === "radio") {
-          const fieldName = el.dataset.fieldName || el.getAttribute("name");
-          if (fieldName) {
-            el.dataset.fieldName = fieldName;
-          }
-          if (active && el.dataset.fieldName) {
-            el.setAttribute("name", el.dataset.fieldName);
-          } else if (!active) {
-            el.removeAttribute("name");
-          }
-        }
-        el.disabled = !active;
-      });
-
-      if (active) {
-        Object.entries(defaults).forEach(([groupName, fallbackVal]) => {
-          const groupRadios = Array.from(
-            panel.querySelectorAll(`input[type="radio"][name="${groupName}"]`)
-          );
-          if (groupRadios.length > 0 && !groupRadios.some((r) => r.checked)) {
-            const targetRadio =
-              groupRadios.find((r) => r.defaultChecked) ||
-              groupRadios.find((r) => r.value === fallbackVal) ||
-              groupRadios[0];
-            if (targetRadio) targetRadio.checked = true;
-          }
-        });
-      }
-    });
-
-    if (step3Label) {
-      step3Label.textContent = backend === "google_ai" ? SETUP_I18N.configureGoogle : SETUP_I18N.configureOllama;
-    }
-    syncConditionalSubservices(backend);
-  }
-
-  function syncConditionalSubservices(backend) {
-    const prefix = backend === "google_ai" ? "setup-google" : "setup-ollama";
-    const panel = document.getElementById(backend === "google_ai" ? "setup-step3-google_ai" : "setup-step3-ollama");
-    if (!panel) return;
-
-    const imgRadio = panel.querySelector('input[name="image_gen_backend"]:checked');
-    const imgChoice = imgRadio ? imgRadio.value : "disabled";
-    const comfyBox = document.getElementById(`${prefix}-comfy-box`);
-    const comfyInput = document.getElementById(`${prefix}-comfyui-url`);
-    if (comfyBox && comfyInput) {
-      const showComfy = imgChoice === "comfyui";
-      comfyBox.hidden = !showComfy;
-      comfyInput.disabled = !showComfy || panel.hidden;
-      comfyInput.required = showComfy && !panel.hidden;
-    }
-
-    if (backend === "google_ai") {
-      const gImgBox = document.getElementById("setup-google-image-model-box");
-      const gImgSelect = document.getElementById("setup-google-image-model");
-      if (gImgBox && gImgSelect) {
-        const showGImg = imgChoice === "google_ai";
-        gImgBox.hidden = !showGImg;
-        gImgSelect.disabled = !showGImg || panel.hidden;
-      }
-    }
-
-    const searchRadio = panel.querySelector('input[name="search_backend"]:checked');
-    const searchChoice = searchRadio ? searchRadio.value : "disabled";
-    const searxBox = document.getElementById(`${prefix}-searxng-box`);
-    const searxInput = document.getElementById(`${prefix}-searxng-url`);
-    if (searxBox && searxInput) {
-      const showSearx = searchChoice === "searxng";
-      searxBox.hidden = !showSearx;
-      searxInput.disabled = !showSearx || panel.hidden;
-      searxInput.required = showSearx && !panel.hidden;
-    }
-  }
-
-  function goToSetupStep(targetStep) {
-    if (targetStep > currentStep && currentStep === 1) {
-      const step1Inputs = document.querySelectorAll('[data-step-pane="1"] input[required]');
-      for (const inp of step1Inputs) {
-        if (!inp.reportValidity()) {
-          return;
-        }
-      }
-    }
-
-    currentStep = targetStep;
-    const stepInput = document.getElementById("setup-active-step");
-    if (stepInput) stepInput.value = String(targetStep);
-
-    document.querySelectorAll("[data-step-pane]").forEach((pane) => {
-      const num = parseInt(pane.getAttribute("data-step-pane"), 10);
-      pane.classList.toggle("active", num === targetStep);
-    });
-
-    document.querySelectorAll("[data-step-indicator]").forEach((ind) => {
-      const num = parseInt(ind.getAttribute("data-step-indicator"), 10);
-      ind.classList.toggle("is-active", num === targetStep);
-      ind.classList.toggle("is-done", num < targetStep);
-    });
-
-    if (targetStep === 3) {
-      syncStep3Panels();
-    }
-  }
-
-  function populateSetupSelectOptions(backend, textModels, imageModels) {
-    const recMap = SETUP_RECOMMENDED[backend] || {};
-    document.querySelectorAll(`select[data-role-select^="${backend}:"]`).forEach((sel) => {
-      const roleKey = sel.getAttribute("data-role-select").split(":")[1];
-      const preferred = sel.value || recMap[roleKey] || "";
-      const options = Array.from(new Set([...(textModels || []), recMap[roleKey], preferred].filter(Boolean)));
-      sel.innerHTML = "";
-      options.forEach((m) => {
-        const opt = document.createElement("option");
-        opt.value = m;
-        opt.textContent = m;
-        if (m === preferred) opt.selected = true;
-        sel.appendChild(opt);
-      });
-    });
-
-    if (backend === "google_ai") {
-      const imgSel = document.getElementById("setup-google-image-model");
-      if (imgSel) {
-        const current = imgSel.value || SETUP_DEFAULT_IMG_MODEL;
-        const imgOptions = Array.from(new Set([...(imageModels || []), SETUP_DEFAULT_IMG_MODEL, current].filter(Boolean)));
-        imgSel.innerHTML = "";
-        imgOptions.forEach((m) => {
-          const opt = document.createElement("option");
-          opt.value = m;
-          opt.textContent = m;
-          if (m === current) opt.selected = true;
-          imgSel.appendChild(opt);
-        });
-      }
-    } else {
-      const installedSet = new Set(textModels || []);
-      document.querySelectorAll("#setup-ollama-role-cards [data-recommended-model]").forEach((row) => {
-        const targetModel = row.getAttribute("data-recommended-model");
-        const badge = row.querySelector(".ollama-model-check-badge");
-        if (!badge) return;
-        if (installedSet.has(targetModel)) {
-          badge.style.color = "#58D68D";
-          badge.textContent = `✔ ${SETUP_I18N.ready}`;
-        } else {
-          badge.style.color = "#F5B041";
-          badge.textContent = `⏳ ${SETUP_I18N.missing}`;
-        }
-      });
-    }
-  }
-
-  async function verifySetupBackend(backend) {
-    const btn = document.getElementById(backend === "google_ai" ? "verify-google-btn" : "verify-ollama-btn");
-    const statusEl = document.getElementById(`setup-${backend}-status`);
-    const ollamaUrl = document.getElementById("setup-ollama-url")?.value?.trim() || "";
-    const apiKey = document.getElementById("setup-google-api-key")?.value?.trim() || "";
-
-    const origHtml = window.setButtonLoading ? window.setButtonLoading(btn, SETUP_I18N.checkingConn) : null;
-    if (statusEl) {
-      statusEl.className = "backend-status-line is-warn";
-      statusEl.textContent = `⏳ ${SETUP_I18N.checkingConnDot}`;
-    }
-
-    try {
-      const resp = await fetch("{{ url_for('setup.verify_backend') }}", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          llm_backend: backend,
-          ollama_url: ollamaUrl,
-          google_ai_api_key: apiKey,
-        }),
-      });
-      const data = await resp.json();
-      if (data.healthy) {
-        const count = Array.isArray(data.models) ? data.models.length : 0;
-        if (statusEl) {
-          statusEl.className = "backend-status-line is-ok";
-          statusEl.textContent =
-            backend === "google_ai"
-              ? `✓ ${SETUP_I18N.googleValid.replace("{count}", count).replace("{img_count}", (data.image_models || []).length)}`
-              : `✓ ${SETUP_I18N.ollamaReachable.replace("{count}", count)}`;
-        }
-        populateSetupSelectOptions(backend, data.models || [], data.image_models || []);
-      } else {
-        if (statusEl) {
-          statusEl.className = "backend-status-line is-err";
-          statusEl.textContent = `✕ ${data.error || SETUP_I18N.connFailed}`;
-        }
-      }
-    } catch (_) {
-      if (statusEl) {
-        statusEl.className = "backend-status-line is-err";
-        statusEl.textContent = `✕ ${SETUP_I18N.connError}`;
-      }
-    } finally {
-      if (window.resetButtonLoading && origHtml !== null) {
-        window.resetButtonLoading(btn, origHtml);
-      }
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll('input[name="llm_backend"]').forEach((radio) => {
-      radio.addEventListener("change", () => {
-        if (currentStep === 3) {
-          syncStep3Panels();
-        }
-      });
-    });
-
-    document.querySelectorAll('input[name="image_gen_backend"], input[name="search_backend"]').forEach((radio) => {
-      radio.addEventListener("change", () => {
-        syncConditionalSubservices(getSelectedBackend());
-      });
-    });
-
-    syncStep3Panels();
-  });
-</script>
+}|tojson }}</script>
+<script src="{{ url_for('static', filename='js/setup_wizard.js') }}" defer></script>
 {% endblock %}

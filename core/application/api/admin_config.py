@@ -6,6 +6,9 @@ from application.api.auth import require_permission
 from application.api.helpers import parse_request_payload
 from domain.permissions.models import FunctionPermission
 from domain.settings.services import SettingsService
+from infrastructure.image_gen.google_ai import GoogleAIImageGenProvider
+from infrastructure.llm.google_ai import GoogleAILLMProvider
+from infrastructure.llm.ollama import OllamaLLMProvider
 from infrastructure.provider_registry import ProviderRegistry
 from infrastructure.repositories.settings_repository import SettingsRepository
 from infrastructure.repositories.translation_repository import TranslationRepository
@@ -15,10 +18,21 @@ from shared.exceptions import AimoError
 api_admin_config_bp = Blueprint("api_admin_config", __name__, url_prefix="/api/admin")
 
 
+def _group_recommended_models(role_models: dict[str, dict[str, str]]) -> list[dict[str, object]]:
+    grouped: dict[str, list[str]] = {}
+    for info in role_models.values():
+        model_id = info.get("model", "")
+        role_name = info.get("role_name", "")
+        if model_id:
+            grouped.setdefault(model_id, []).append(role_name)
+    return [{"model": model_id, "roles": roles} for model_id, roles in grouped.items()]
+
+
 @api_admin_config_bp.route("/services", methods=["GET"])
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def get_services_config():
     settings = SettingsRepository().get_settings()
+    ollama_rec = OllamaLLMProvider.get_recommended_models()
     return jsonify(
         {
             "llm_backend": settings.llm_backend,
@@ -30,7 +44,7 @@ def get_services_config():
             "tasks": {
                 "roleplay_model": settings.tasks.roleplay_model,
                 "memory_model": settings.tasks.memory_model,
-                "utility_model": settings.tasks.utility_model,
+                "assistant_model": settings.tasks.assistant_model,
                 "vision_model": settings.tasks.vision_model,
                 "classification_model": settings.tasks.classification_model,
             },
@@ -41,6 +55,11 @@ def get_services_config():
                 "repeat_penalty": settings.params.repeat_penalty,
                 "max_tokens": settings.params.max_tokens,
             },
+            "ollama_grouped_recommended": _group_recommended_models(ollama_rec),
+            "ollama_unique_models": OllamaLLMProvider.get_unique_recommended_models(),
+            "google_recommended_models": GoogleAILLMProvider.get_recommended_models(),
+            "recommended_by_backend": ProviderRegistry.get_recommended_task_models_by_backend(),
+            "recommended_google_image_model": GoogleAIImageGenProvider.get_recommended_model() or "",
         }
     )
 
@@ -85,8 +104,37 @@ def update_services_config():
 @api_admin_config_bp.route("/prompts", methods=["GET"])
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def get_prompts_config():
+    from domain.settings.models import PROMPT_KEYS, SystemPrompts, get_default_prompt, is_default_prompt
+    from domain.translation.models import SUPPORTED_LANGUAGES
+    from infrastructure.llm.factory import get_llm_provider_class
+
     settings = SettingsRepository().get_settings()
+    defaults = SystemPrompts()
     trans_repo = TranslationRepository()
+
+    prompt_variants: dict[str, dict[str, dict]] = {}
+    default_prompt_variants: dict[str, dict[str, dict]] = {}
+    for key in PROMPT_KEYS:
+        default_map = {
+            lang: {
+                "content": get_default_prompt(key, lang),
+                "text": get_default_prompt(key, lang),
+                "is_outdated": False,
+                "outdated": False,
+            }
+            for lang in SUPPORTED_LANGUAGES
+        }
+        default_prompt_variants[key] = default_map
+        current_val = getattr(settings.prompts, key, "")
+        if is_default_prompt(key, current_val):
+            prompt_variants[key] = default_map
+        else:
+            stored = trans_repo.get_field_translations("system_prompt", 1, key)
+            if "en" not in stored and current_val:
+                stored["en"] = {"content": current_val, "text": current_val, "is_outdated": False, "outdated": False}
+            prompt_variants[key] = stored
+
+    is_cloud_llm = get_llm_provider_class(settings.llm_backend).is_cloud_provider()
     return jsonify(
         {
             "prompts": {
@@ -94,8 +142,20 @@ def get_prompts_config():
                 "memory_prompt": settings.prompts.memory_prompt,
                 "dialogue_author_prompt": settings.prompts.dialogue_author_prompt,
                 "diffuser_prompt": settings.prompts.diffuser_prompt,
+                "sparkle_assistant_prompt": settings.prompts.sparkle_assistant_prompt,
                 "vision_persona_prompt": settings.prompts.vision_persona_prompt,
             },
+            "defaults": {
+                "roleplay_prompt": defaults.roleplay_prompt,
+                "memory_prompt": defaults.memory_prompt,
+                "dialogue_author_prompt": defaults.dialogue_author_prompt,
+                "diffuser_prompt": defaults.diffuser_prompt,
+                "sparkle_assistant_prompt": defaults.sparkle_assistant_prompt,
+                "vision_persona_prompt": defaults.vision_persona_prompt,
+            },
+            "prompt_variants": prompt_variants,
+            "default_prompt_variants": default_prompt_variants,
+            "is_cloud_llm": is_cloud_llm,
             "i18n": trans_repo.get_entity_translations_map("system_prompt", 1),
         }
     )

@@ -37,9 +37,15 @@ def prompts_config():
         flash(payload.get("error") or tr(_("Failed to save prompts.")), "error")
 
     _, data = core_get("/api/admin/prompts")
+    prompts_dto = wrap_dto(data.get("prompts", {}))
     return render_template(
         "admin/prompts.html",
-        prompts=wrap_dto(data.get("prompts", {})),
+        settings=wrap_dto({"prompts": prompts_dto}),
+        prompts=prompts_dto,
+        defaults=wrap_dto(data.get("defaults", {})),
+        prompt_variants=data.get("prompt_variants", {}),
+        default_prompt_variants=data.get("default_prompt_variants", {}),
+        is_cloud_llm=bool(data.get("is_cloud_llm")),
         prompt_i18n=data.get("i18n", {}),
     )
 
@@ -66,7 +72,12 @@ def backdrop_config():
         return redirect(url_for("admin.backdrop_config"))
 
     _, data = core_get("/api/admin/backdrop")
-    return render_template("admin/backdrop.html", current_backdrop=data.get("default_backdrop_path"))
+    return render_template(
+        "admin/backdrop.html",
+        current_backdrop=data.get("default_backdrop_path"),
+        settings=wrap_dto({"default_backdrop_path": data.get("default_backdrop_path")}),
+        existing_locations_with_bg=wrap_dto(data.get("existing_locations_with_bg", [])),
+    )
 
 
 @admin_bp.route("/translations", methods=["GET"])

@@ -1,4 +1,3 @@
-import { escapeHtml, renderChatMarkdown } from "./markdown.js";
 import {
   appendSystemMessage as renderSystemMessage,
   appendUiNotice as renderUiNotice,
@@ -7,6 +6,25 @@ import {
   createThinkingBubble as renderThinkingBubble,
   setTurnRelationshipDebugNotice as renderTurnRelationshipDebugNotice,
 } from "./message_renderer.js";
+import {
+  appendImageToGallery as addGalleryTile,
+  cancelComfyUIGeneration as doCancelImageGen,
+  decrementEventCounterOptimistic as doDecrementEventCounter,
+  initImageViewerBindings as bindImageViewers,
+  openGridGallery as doOpenGridGallery,
+  showLocationSwitchCountdown as doShowLocationCountdown,
+  switchLocation as doSwitchLocation,
+  triggerComfyUIGeneration as doTriggerImageGen,
+  updateEventCounter as doUpdateEventCounter,
+} from "./stream_media.js";
+import {
+  appendRelationshipDebugNotice as doAppendRelDebugNotice,
+  initRelationshipDebugToggle as doInitRelDebugToggle,
+  recalculateRelationship as doRecalcRelationship,
+  setRelationshipDebug as doSetRelDebug,
+  updateRelationshipUI as doUpdateRelationshipUI,
+} from "./stream_relationship.js";
+import { startSSEStream as runSSEStream } from "./stream_sse.js";
 
 export class AimoChatStream {
   constructor(sessionId) {
@@ -74,29 +92,7 @@ export class AimoChatStream {
   }
 
   appendImageToGallery(imgUrl, mediaKey) {
-    const grid = document.getElementById("session-media-grid");
-    if (!grid || !imgUrl) return null;
-    const emptyMsg = document.getElementById("session-media-empty");
-    if (emptyMsg) emptyMsg.remove();
-
-    if (mediaKey) {
-      const existing = grid.querySelector(`[data-media-path="${CSS.escape(mediaKey)}"]`);
-      if (existing) {
-        const img = existing.querySelector("img");
-        if (img) img.src = imgUrl;
-        return existing;
-      }
-    }
-
-    const tile = document.createElement("div");
-    tile.className = "aimo-card-tile";
-    tile.style.backgroundImage = `url('${encodeURI(imgUrl)}')`;
-    if (mediaKey) {
-      tile.setAttribute("data-media-path", mediaKey);
-    }
-    tile.innerHTML = `<img src="${escapeHtml(imgUrl)}" alt="Chat Media" style="display: none;">`;
-    grid.appendChild(tile);
-    return tile;
+    return addGalleryTile(imgUrl, mediaKey);
   }
 
   async checkPendingGeneration() {
@@ -153,7 +149,6 @@ export class AimoChatStream {
     if (fileInput) fileInput.value = "";
     if (fileIndicator) fileIndicator.textContent = "";
 
-    // 1. Nutzernachricht sofort im Chat anzeigen & ggf. Bild sofort in die Galerie einfügen
     let tempGalleryTile = null;
     if (localPreviewUrl) {
       tempGalleryTile = this.appendImageToGallery(localPreviewUrl, null);
@@ -164,12 +159,10 @@ export class AimoChatStream {
       local_image_url: localPreviewUrl,
     });
 
-    // 2. Visuelles Feedback sofort anzeigen (bei Bild-Upload zuerst "[char] schaut sich das Bild an")
     const thinkingUI = this.createThinkingBubble(messagesList, {
       isAnalyzingImage: hasFile,
     });
 
-    // 3. Event-Cooldown sofort dynamisch um 1 verringern (optimistisches UI-Update)
     this.decrementEventCounterOptimistic();
 
     try {
@@ -182,7 +175,7 @@ export class AimoChatStream {
         if (thinkingUI?.row) thinkingUI.row.remove();
         if (userRow) userRow.remove();
         if (tempGalleryTile) tempGalleryTile.remove();
-        
+
         const errStr = String(prepData.error || "");
         if (prepResp.status === 504 || prepData.is_timeout || /timeout|zeitüberschreitung/i.test(errStr)) {
           window.showToastWarning ? window.showToastWarning(errStr || window.t("Timeout while sending."), window.t("Timeout")) : alert(errStr);
@@ -269,263 +262,11 @@ export class AimoChatStream {
   }
 
   startSSEStream(container, thinkingUI) {
-    const ui = thinkingUI || this.createThinkingBubble(container);
-    const meta = this.getChatMetadata();
-    const sidebarSprite = document.getElementById("active-character-sprite");
-
-    return new Promise((resolve) => {
-      let rawTokens = "";
-      let isCompleted = false;
-      let hasErrorHandled = false;
-
-      const handleError = (errMsg, title) => {
-        if (isCompleted || hasErrorHandled) return;
-        hasErrorHandled = true;
-        es.close();
-        if (this.eventSource === es) {
-          this.eventSource = null;
-        }
-        if (ui?.row && !ui.row.hasAttribute("data-message-idx")) {
-          ui.row.remove();
-        }
-        this.activeThinkingUI = null;
-
-        const errStr = String(errMsg || "");
-        if (/timeout|zeitüberschreitung/i.test(errStr)) {
-          if (window.showToastWarning) {
-            window.showToastWarning(errStr, window.t("Timeout"));
-          } else {
-            alert(window.t("Timeout: {error}", { error: errStr }));
-          }
-        } else if (/core service unreachable|backend/i.test(errStr)) {
-          if (window.showToastError) {
-            window.showToastError(window.t("Connection to backend (aimo-core) lost."), window.t("Backend connection error"));
-          } else {
-            alert(window.t("Backend connection error"));
-          }
-        } else {
-          if (window.showToastError) {
-            window.showToastError(errStr || window.t("Connection to Ollama (or LLMProvider) lost."), title || window.t("Ollama connection error"));
-          } else {
-            alert(window.t("Ollama connection error: {error}", { error: errStr }));
-          }
-        }
-        resolve();
-      };
-
-      const es = new EventSource(`/api/chat/${this.sessionId}/stream?language=${encodeURIComponent(meta.sysLang || "de")}`);
-      this.eventSource = es;
-
-      es.addEventListener("aborted", (e) => {
-        isCompleted = true;
-        es.close();
-        if (this.eventSource === es) {
-          this.eventSource = null;
-        }
-        if (ui?.row) {
-          ui.row.remove();
-        }
-        this.activeThinkingUI = null;
-        resolve();
-      });
-
-      es.addEventListener("error", (e) => {
-        let errMessage = "Verbindung zu Ollama unterbrochen.";
-        try {
-          if (e.data) {
-            const data = JSON.parse(e.data);
-            if (data.error) errMessage = data.error;
-          }
-        } catch (_) {}
-        handleError(errMessage, "Ollama-Verbindungsfehler");
-      });
-
-      es.addEventListener("image_analyzed", (e) => {
-        try {
-          const data = JSON.parse(e.data);
-          const label = ui.thinkingBox?.querySelector(".thinking-label");
-          if (label) {
-            label.textContent = `${meta.characterName} denkt über eine Antwort nach`;
-          }
-          if (data.user_message_idx !== undefined) {
-            const altEl = document.getElementById(`msg-alt-${data.user_message_idx}`);
-            if (altEl) {
-              altEl.textContent = data.image_alt_text || "Keine Bildbeschreibung verfügbar.";
-            }
-          }
-        } catch (_) {}
-      });
-
-      es.addEventListener("token", (e) => {
-        const data = JSON.parse(e.data);
-        rawTokens += data.token || "";
-        const label = ui.thinkingBox?.querySelector(".thinking-label");
-        if (label && !rawTokens.trim()) {
-          label.textContent = `${meta.characterName} denkt über eine Antwort nach`;
-        } else if (label) {
-          label.textContent = `${meta.characterName} antwortet`;
-        }
-        if (ui.statusEl) {
-          ui.statusEl.innerHTML = renderChatMarkdown(rawTokens);
-        }
-        if (container) container.scrollTop = container.scrollHeight;
-      });
-
-      es.addEventListener("system_message", (e) => {
-        try {
-          const sysMsg = JSON.parse(e.data);
-          if (!container.querySelector(`[data-message-idx="${sysMsg.message_idx}"]`)) {
-            this.appendSystemMessage(sysMsg, ui?.row);
-          }
-        } catch (_) {}
-      });
-
-      es.addEventListener("generation_done", () => {
-        const label = ui.thinkingBox?.querySelector(".thinking-label");
-        if (label) {
-          label.textContent = `${meta.characterName} ordnet Stimmung & Szene ein`;
-        }
-      });
-
-      es.addEventListener("message_complete", (e) => {
-        const data = JSON.parse(e.data);
-
-        if (data.notification_id) {
-          fetch(`/api/chat/notifications/${encodeURIComponent(data.notification_id)}/ack`, {
-            method: "POST",
-          }).catch(() => {});
-        }
-
-        if (ui.thinkingBox) ui.thinkingBox.remove();
-        if (ui.statusEl) ui.statusEl.remove();
-
-        if (data.prompt && data.message_idx !== undefined) {
-          window._adminPromptCache = window._adminPromptCache || {};
-          window._adminPromptCache[data.message_idx] = data.prompt;
-        }
-
-        const finalContent = data.localized_content || data.english_content || "";
-        const finalDiv = document.createElement("div");
-        finalDiv.className = "chat-markdown";
-        if (data.message_idx !== undefined) {
-          ui.row.setAttribute("data-message-idx", data.message_idx);
-          finalDiv.id = `msg-text-${data.message_idx}`;
-          const actionsDiv = ui.header?.querySelector(".chat-bubble-actions");
-          if (actionsDiv) {
-            actionsDiv.innerHTML = this.buildActionButtonsHtml(data.message_idx, true);
-          }
-        }
-        finalDiv.setAttribute("data-raw-content", finalContent);
-        finalDiv.innerHTML = renderChatMarkdown(finalContent);
-        ui.bubble.appendChild(finalDiv);
-
-        // Nur das große Charakter-Sprite in der rechten Seitenleiste aktualisieren, NICHT das Chat-Bubble-Icon
-        if (data.sprite_path && sidebarSprite) {
-          sidebarSprite.src = `/uploads/${data.sprite_path}`;
-        }
-
-        if (typeof data.relationship_value === "number") {
-          this.updateRelationshipUI(
-            data.relationship_value,
-            data.relationship_tier_name,
-            data.relationship_impact
-          );
-          this.setTurnRelationshipDebugNotice(
-            data.message_idx,
-            data.relationship_impact,
-            data.relationship_delta
-          );
-        }
-
-        if (data.suggested_location) {
-          this.showLocationSwitchCountdown(data.suggested_location);
-        }
-
-        if (data.cooldown_counter !== undefined && data.cooldown_counter !== null) {
-          this.updateEventCounter(data.cooldown_counter, data.events_enabled);
-        }
-
-        setTimeout(() => {
-          if (typeof window.refreshSessionMemories === "function") {
-            window.refreshSessionMemories();
-          }
-        }, 3500);
-
-        isCompleted = true;
-        es.close();
-        if (this.eventSource === es) {
-          this.eventSource = null;
-        }
-        this.activeThinkingUI = null;
-        if (container) container.scrollTop = container.scrollHeight;
-        resolve();
-      });
-
-      es.onerror = () => {
-        handleError("Verbindung zum Chat-Stream oder zu Ollama unterbrochen.", "Ollama-Verbindungsfehler");
-      };
-    });
+    return runSSEStream(this, container, thinkingUI);
   }
 
   showLocationSwitchCountdown(locationObj) {
-    const bannerContainer = document.getElementById("location-switch-container");
-    if (!bannerContainer) return;
-
-    if (this.countdownTimer) {
-      clearInterval(this.countdownTimer);
-    }
-
-    bannerContainer.innerHTML = `
-      <div class="location-prompt-banner" id="loc-prompt-banner">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem;">
-          <span>Zu <strong>${escapeHtml(locationObj.name)}</strong> wechseln?</span>
-          <div style="display:flex; gap:0.5rem;">
-            <button type="button" class="btn" id="loc-confirm-yes">Ja</button>
-            <button type="button" class="btn btn-danger" id="loc-confirm-no">Nein</button>
-          </div>
-        </div>
-        <div class="countdown-bar-track">
-          <div class="countdown-bar-fill" id="loc-countdown-fill"></div>
-        </div>
-      </div>
-    `;
-
-    let remaining = 60;
-    let isPaused = false;
-    const fillEl = document.getElementById("loc-countdown-fill");
-    const bannerEl = document.getElementById("loc-prompt-banner");
-
-    if (bannerEl) {
-      bannerEl.addEventListener("mouseenter", () => {
-        isPaused = true;
-      });
-      bannerEl.addEventListener("mouseleave", () => {
-        isPaused = false;
-      });
-    }
-
-    this.countdownTimer = setInterval(() => {
-      if (isPaused) return;
-      remaining -= 1;
-      if (fillEl) {
-        fillEl.style.width = `${(remaining / 60) * 100}%`;
-      }
-      if (remaining <= 0) {
-        clearInterval(this.countdownTimer);
-        bannerContainer.innerHTML = "";
-      }
-    }, 1000);
-
-    document.getElementById("loc-confirm-no")?.addEventListener("click", () => {
-      clearInterval(this.countdownTimer);
-      bannerContainer.innerHTML = "";
-    });
-
-    document.getElementById("loc-confirm-yes")?.addEventListener("click", async () => {
-      clearInterval(this.countdownTimer);
-      bannerContainer.innerHTML = "";
-      await this.switchLocation(locationObj.id);
-    });
+    doShowLocationCountdown(this, locationObj);
   }
 
   appendSystemMessage(msg, insertBeforeEl = null) {
@@ -533,190 +274,23 @@ export class AimoChatStream {
   }
 
   decrementEventCounterOptimistic() {
-    const statusEl = document.getElementById("admin-event-counter-status");
-    const valEl = document.getElementById("admin-event-counter-val");
-    if (!statusEl) return;
-    const eventsToggle = document.getElementById("toggle-events-checkbox");
-    if (eventsToggle && !eventsToggle.checked) return;
-    if (statusEl.textContent.includes("(pausiert)")) return;
-
-    let currentVal = valEl ? parseInt(valEl.textContent.trim(), 10) : NaN;
-    if (isNaN(currentVal)) {
-      if (statusEl.textContent.includes("nächste Nachricht")) {
-        currentVal = 1;
-      } else {
-        return;
-      }
-    }
-
-    const nextVal = Math.max(0, currentVal - 1);
-    if (nextVal <= 1) {
-      statusEl.innerHTML = `<strong id="admin-event-counter-val">nächste Nachricht</strong>`;
-    } else {
-      statusEl.innerHTML = `in <strong id="admin-event-counter-val">${nextVal}</strong> Nachrichten`;
-    }
+    doDecrementEventCounter();
   }
 
   updateEventCounter(counter, eventsEnabled) {
-    const statusEl = document.getElementById("admin-event-counter-status");
-    if (!statusEl || counter === undefined || counter === null) return;
-    const isPaused = eventsEnabled === false;
-    const val = parseInt(counter, 10);
-    if (isNaN(val)) return;
-
-    if (isPaused) {
-      statusEl.innerHTML = `in <strong id="admin-event-counter-val">${val}</strong> ${val === 1 ? "Nachricht" : "Nachrichten"} <span class="counter-paused-label">(pausiert)</span>`;
-    } else if (val <= 1) {
-      statusEl.innerHTML = `<strong id="admin-event-counter-val">nächste Nachricht</strong>`;
-    } else {
-      statusEl.innerHTML = `in <strong id="admin-event-counter-val">${val}</strong> Nachrichten`;
-    }
+    doUpdateEventCounter(counter, eventsEnabled);
   }
 
   async switchLocation(locationId) {
-    if (locationId === undefined) return null;
-    const resp = await fetch(`/api/chat/${this.sessionId}/switch-location`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ location_id: locationId }),
-    });
-    const resData = await resp.json().catch(() => ({}));
-    if (resp.ok) {
-      if (resData.system_message) {
-        this.appendSystemMessage(resData.system_message);
-      } else if (resData.ui_notice) {
-        this.appendUiNotice(resData.ui_notice);
-      }
-      const backdrop = document.getElementById("system-default-backdrop") || document.querySelector(".system-default-backdrop");
-      if (backdrop) {
-        const locBgPath = resData.location?.background_image_path;
-        const worldBgPath = resData.worldinfo_backdrop_path;
-        const effectivePath = (locBgPath && locBgPath.trim())
-          ? locBgPath.trim()
-          : ((worldBgPath && worldBgPath.trim()) ? worldBgPath.trim() : "");
-        if (effectivePath) {
-          const bgUrl = (effectivePath.startsWith("/") || effectivePath.startsWith("http"))
-            ? effectivePath
-            : `/uploads/${effectivePath}`;
-          backdrop.style.backgroundImage = `url('${bgUrl}')`;
-          document.body.style.setProperty("--system-backdrop-url", `url('${bgUrl}')`);
-        } else {
-          const worldBackdropAttr = backdrop.getAttribute("data-world-backdrop");
-          const defaultBackdrop = (worldBackdropAttr && worldBackdropAttr.trim())
-            ? worldBackdropAttr.trim()
-            : (backdrop.getAttribute("data-default-backdrop") || "/static/img/cover.svg");
-          backdrop.style.backgroundImage = `url('${defaultBackdrop}')`;
-          document.body.style.setProperty("--system-backdrop-url", `url('${defaultBackdrop}')`);
-        }
-      }
-      const locIndicator = document.getElementById("chat-location-indicator");
-      if (locIndicator) {
-        if (resData.location?.name) {
-          locIndicator.innerHTML = `📍 ${escapeHtml(window.t ? window.t("Location:") : "Location:")} <strong>${escapeHtml(resData.location.name)}</strong>`;
-        } else if (resData.worldinfo?.name) {
-          locIndicator.innerHTML = `🌐 ${escapeHtml(window.t ? window.t("World:") : "World:")} <strong>${escapeHtml(resData.worldinfo.name)}</strong>`;
-        }
-      }
-      const locSelect = document.getElementById("chat-location-select");
-      if (locSelect) {
-        locSelect.value = locationId === null ? "world" : String(locationId);
-      }
-      const locBackdropBtn = document.getElementById("chat-location-backdrop-btn");
-      if (locBackdropBtn) {
-        const locBgPath = resData.location?.background_image_path?.trim();
-        if (locBgPath) {
-          const bgUrl = (locBgPath.startsWith("/") || locBgPath.startsWith("http"))
-            ? locBgPath
-            : `/uploads/${locBgPath}`;
-          locBackdropBtn.setAttribute("data-backdrop-url", bgUrl);
-          locBackdropBtn.setAttribute("data-backdrop-title", resData.location?.name || "");
-          locBackdropBtn.hidden = false;
-        } else {
-          locBackdropBtn.setAttribute("data-backdrop-url", "");
-          locBackdropBtn.setAttribute("data-backdrop-title", "");
-          locBackdropBtn.hidden = true;
-        }
-      }
-      return resData;
-    } else {
-      const errStr = resData.error || "Fehler beim Wechseln des Ortes.";
-      window.showToastError ? window.showToastError(errStr) : alert(errStr);
-    }
-    return null;
+    return doSwitchLocation(this, locationId);
   }
 
   async triggerComfyUIGeneration() {
-    if (this.isGeneratingImage) return;
-    this.isGeneratingImage = true;
-
-    const input = document.querySelector("#chat-input-form textarea, #chat-input-form input[name='message']");
-    const submitBtn = document.getElementById("chat-send-btn") || document.querySelector("#chat-input-form button[type='submit']");
-    const regenBtn = document.getElementById("chat-regenerate-btn");
-    const cancelBtn = document.getElementById("cancel-image-gen-btn");
-    const messagesList = document.getElementById("chat-messages-list");
-
-    if (input) input.disabled = true;
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.style.display = "none";
-    }
-    if (regenBtn) {
-      regenBtn.disabled = true;
-      regenBtn.style.display = "none";
-    }
-    if (cancelBtn) cancelBtn.style.display = "inline-flex";
-
-    const notice = document.createElement("div");
-    notice.className = "system-ui-notice";
-    notice.textContent = "Bild wird generiert...";
-    if (messagesList) {
-      messagesList.appendChild(notice);
-      messagesList.scrollTop = messagesList.scrollHeight;
-    }
-
-    try {
-      const resp = await fetch(`/api/chat/${this.sessionId}/generate-image`, {
-        method: "POST",
-      });
-      const data = await resp.json();
-      if (resp.ok && data.image_path) {
-        notice.innerHTML = `<img src="/uploads/${data.image_path}" alt="Generierte Szene" class="chat-generated-scene-img" style="max-width:320px; border-radius:10px; border:2px solid var(--gold-accent); margin-top:0.4rem;">`;
-        this.appendImageToGallery(`/uploads/${data.image_path}`, data.image_path);
-      } else {
-        notice.textContent = data.error || "Bildgenerierung abgebrochen oder fehlgeschlagen.";
-      }
-    } finally {
-      this.isGeneratingImage = false;
-      if (input) input.disabled = false;
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.style.display = "";
-      }
-      if (regenBtn) {
-        regenBtn.disabled = false;
-        regenBtn.style.display = "inline-flex";
-      }
-      if (cancelBtn) cancelBtn.style.display = "none";
-    }
+    return doTriggerImageGen(this);
   }
 
   async cancelComfyUIGeneration() {
-    await fetch(`/api/chat/${this.sessionId}/cancel-image`, { method: "POST" });
-    this.isGeneratingImage = false;
-    const input = document.querySelector("#chat-input-form textarea, #chat-input-form input[name='message']");
-    const submitBtn = document.getElementById("chat-send-btn") || document.querySelector("#chat-input-form button[type='submit']");
-    const regenBtn = document.getElementById("chat-regenerate-btn");
-    const cancelBtn = document.getElementById("cancel-image-gen-btn");
-    if (input) input.disabled = false;
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.style.display = "";
-    }
-    if (regenBtn) {
-      regenBtn.disabled = false;
-      regenBtn.style.display = "inline-flex";
-    }
-    if (cancelBtn) cancelBtn.style.display = "none";
+    return doCancelImageGen(this);
   }
 
   async abortTurn() {
@@ -742,60 +316,7 @@ export class AimoChatStream {
   }
 
   updateRelationshipUI(relationshipValue, tierName, relationshipImpact) {
-    const relLabel = document.getElementById("rel-score-label");
-    if (relLabel && tierName) {
-      relLabel.textContent = tierName;
-    }
-    const galleryRelLabel = document.getElementById("gallery-rel-tier-label");
-    if (galleryRelLabel && tierName) {
-      galleryRelLabel.textContent = tierName;
-    }
-    const relWrap = document.querySelector(".relationship-bar-wrap[data-relationship-score]");
-    if (!relWrap) return;
-
-    relWrap.setAttribute("data-relationship-score", String(relationshipValue));
-    if (tierName) {
-      relWrap.setAttribute("title", tierName);
-    }
-    const pct = Math.max(0, Math.min(100, ((relationshipValue + 100) / 200) * 100));
-    const fill = relWrap.querySelector(".relationship-fill");
-    if (fill) fill.style.width = `${pct}%`;
-
-    const heartIcon = relWrap.querySelector(".heart-icon");
-    if (heartIcon) {
-      const score = relationshipValue;
-      if (score <= -60) {
-        heartIcon.textContent = "💔";
-        heartIcon.style.color = "#7A1C1C";
-      } else if (score < 0) {
-        heartIcon.textContent = "❤️‍🩹";
-        heartIcon.style.color = "#A93226";
-      } else if (score < 50) {
-        heartIcon.textContent = "❤️";
-        heartIcon.style.color = "#E74C3C";
-      } else {
-        heartIcon.textContent = "💖";
-        heartIcon.style.color = "#FF69B4";
-      }
-    }
-
-    const pulseClassMap = {
-      positive: "relationship-pulse-positive",
-      very_positive: "relationship-pulse-positive",
-      negative: "relationship-pulse-negative",
-      very_negative: "relationship-pulse-negative",
-    };
-    const pulseClass = pulseClassMap[relationshipImpact];
-    if (pulseClass) {
-      relWrap.classList.remove("relationship-pulse-positive", "relationship-pulse-negative");
-      void relWrap.offsetWidth;
-      relWrap.classList.add(pulseClass);
-      relWrap.addEventListener(
-        "animationend",
-        () => relWrap.classList.remove(pulseClass),
-        { once: true }
-      );
-    }
+    doUpdateRelationshipUI(relationshipValue, tierName, relationshipImpact);
   }
 
   appendUiNotice(text) {
@@ -807,91 +328,19 @@ export class AimoChatStream {
   }
 
   appendRelationshipDebugNotice(relationshipValue, tierName, impact, delta, evaluatedTurns = null) {
-    if (!this.getChatMetadata().isAdmin) return;
-    if (typeof relationshipValue !== "number") return;
-    const deltaText =
-      typeof delta === "number" ? `${delta >= 0 ? "+" : ""}${delta}` : "?";
-    const prefix =
-      typeof evaluatedTurns === "number"
-        ? `[Debug Relationship Recalc (${evaluatedTurns} turns)]`
-        : "[Debug Relationship]";
-    const impactLabel = impact || "neutral";
-    const tierLabel = tierName || "";
-    this.appendUiNotice(
-      `${prefix} ${impactLabel} (${deltaText}) → ${relationshipValue} (${tierLabel})`
-    );
+    doAppendRelDebugNotice(this, relationshipValue, tierName, impact, delta, evaluatedTurns);
   }
 
   setRelationshipDebug(enabled) {
-    const messagesList = document.getElementById("chat-messages-list");
-    const checkbox = document.getElementById("toggle-rel-debug-checkbox");
-    if (messagesList) {
-      messagesList.classList.toggle("show-rel-debug", Boolean(enabled));
-    }
-    if (checkbox) {
-      checkbox.checked = Boolean(enabled);
-    }
-    try {
-      localStorage.setItem("aimo_rel_debug", enabled ? "1" : "0");
-    } catch (_) {}
+    doSetRelDebug(enabled);
   }
 
   initRelationshipDebugToggle() {
-    const meta = this.getChatMetadata();
-    if (!meta.isAdmin && !meta.canDebugRel) return;
-    let enabled = false;
-    try {
-      enabled = localStorage.getItem("aimo_rel_debug") === "1";
-    } catch (_) {}
-    this.setRelationshipDebug(enabled);
+    doInitRelDebugToggle(this);
   }
 
   async recalculateRelationship(btn) {
-    if (this.isSending || this.isGeneratingImage) return;
-    const origHtml = window.setButtonLoading ? window.setButtonLoading(btn, "⏳") : btn?.innerHTML;
-    if (btn) btn.disabled = true;
-
-    try {
-      const resp = await fetch(`/api/chat/${this.sessionId}/recalculate-relationship`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ language: this.getChatMetadata().sysLang }),
-      });
-      const data = await resp.json().catch(() => ({}));
-      if (!resp.ok) {
-        const msg = data.error || window.t("Failed to recalculate relationship.");
-        window.showToastError ? window.showToastError(msg, window.t("Error")) : alert(msg);
-        return;
-      }
-      if (Array.isArray(data.turn_results)) {
-        data.turn_results.forEach((turn) => {
-          this.setTurnRelationshipDebugNotice(turn.message_idx, turn.impact, turn.delta);
-        });
-      }
-      if (typeof data.relationship_value === "number") {
-        this.updateRelationshipUI(
-          data.relationship_value,
-          data.relationship_tier_name,
-          data.relationship_impact
-        );
-        this.appendRelationshipDebugNotice(
-          data.relationship_value,
-          data.relationship_tier_name,
-          data.relationship_impact,
-          data.relationship_delta,
-          data.evaluated_turns
-        );
-      }
-    } catch (err) {
-      const msg = window.t("Connection error: {error}", { error: err.message });
-      window.showToastError ? window.showToastError(msg, window.t("Error")) : alert(msg);
-    } finally {
-      if (window.resetButtonLoading && btn) {
-        window.resetButtonLoading(btn, origHtml);
-      } else if (btn) {
-        btn.disabled = false;
-      }
-    }
+    return doRecalcRelationship(this, btn);
   }
 
   async regenerateLastTurn() {
@@ -946,100 +395,11 @@ export class AimoChatStream {
   }
 
   openGridGallery(gridEl, clickedTile) {
-    if (!window.AimoImageViewer || !gridEl || !clickedTile) return;
-    const tiles = Array.from(gridEl.querySelectorAll(".aimo-card-tile"));
-    const items = [];
-    let startIndex = 0;
-
-    for (const tile of tiles) {
-      const img = tile.querySelector("img");
-      const src = img?.getAttribute("src") || img?.src;
-      if (!src) continue;
-      if (tile === clickedTile) {
-        startIndex = items.length;
-      }
-      items.push({
-        src,
-        title: tile.getAttribute("data-viewer-title") || img.getAttribute("alt") || "",
-        subtitle: tile.getAttribute("data-viewer-subtitle") || "",
-        alt: img.getAttribute("alt") || "",
-      });
-    }
-
-    if (items.length > 0) {
-      window.AimoImageViewer.open(items, startIndex);
-    }
+    doOpenGridGallery(gridEl, clickedTile);
   }
 
   initImageViewerBindings() {
-    const openSingle = (src, title = "", subtitle = "") => {
-      if (window.AimoImageViewer && src) {
-        window.AimoImageViewer.openSingle(src, title, subtitle);
-      }
-    };
-
-    const sidebarSprite = document.getElementById("active-character-sprite");
-    if (sidebarSprite) {
-      sidebarSprite.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const meta = this.getChatMetadata();
-        openSingle(sidebarSprite.src, meta.characterName || sidebarSprite.alt || "");
-      });
-    }
-
-    const bindBackdropBtn = (btnId) => {
-      const btn = document.getElementById(btnId);
-      if (!btn) return;
-      btn.addEventListener("click", () => {
-        const url = btn.getAttribute("data-backdrop-url");
-        const title = btn.getAttribute("data-backdrop-title") || "";
-        if (url) openSingle(url, title);
-      });
-    };
-    bindBackdropBtn("chat-world-backdrop-btn");
-    bindBackdropBtn("chat-location-backdrop-btn");
-
-    const messagesList = document.getElementById("chat-messages-list");
-    if (messagesList) {
-      messagesList.addEventListener("click", (e) => {
-        const target = e.target;
-        if (!(target instanceof Element)) return;
-
-        const charAvatar = target.closest(".chat-bubble-row.character .chat-avatar");
-        if (charAvatar) {
-          const meta = this.getChatMetadata();
-          openSingle(charAvatar.src, meta.characterName || charAvatar.alt || "");
-          return;
-        }
-
-        const uploadedImg = target.closest(".chat-uploaded-image-wrap img");
-        if (uploadedImg) {
-          openSingle(uploadedImg.src, uploadedImg.getAttribute("alt") || "");
-          return;
-        }
-
-        const generatedImg = target.closest(".chat-generated-scene-img");
-        if (generatedImg) {
-          openSingle(generatedImg.src, generatedImg.getAttribute("alt") || "");
-        }
-      });
-    }
-
-    const unlockedGrid = document.getElementById("unlocked-gallery-grid");
-    if (unlockedGrid) {
-      unlockedGrid.addEventListener("click", (e) => {
-        const tile = e.target instanceof Element ? e.target.closest(".aimo-card-tile") : null;
-        if (tile) this.openGridGallery(unlockedGrid, tile);
-      });
-    }
-
-    const sessionMediaGrid = document.getElementById("session-media-grid");
-    if (sessionMediaGrid) {
-      sessionMediaGrid.addEventListener("click", (e) => {
-        const tile = e.target instanceof Element ? e.target.closest(".aimo-card-tile") : null;
-        if (tile) this.openGridGallery(sessionMediaGrid, tile);
-      });
-    }
+    bindImageViewers(this);
   }
 }
 

@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify
 from application.api.auth import require_permission
 from application.api.helpers import parse_request_payload
 from domain.auth.services import AuthService
-from domain.permissions.models import FunctionPermission, Preset
+from domain.permissions.models import FunctionPermission, Preset, UserPermissions
 from domain.permissions.services import PermissionService
 from domain.personas.models import Gender
 from domain.personas.services import PersonaService
@@ -55,19 +55,24 @@ def create_user():
             username=str(data.get("username") or "").strip(),
             email=str(data.get("email") or "").strip(),
             password=str(data.get("password") or ""),
-            language=str(data.get("language") or "en").strip().lower()[:2] or "en",
         )
+        raw_lang = str(data.get("language") or "").strip()
+        if raw_lang:
+            auth_service.assign_language(user, raw_lang)
         if user_repo.get_by_email(user.email) is not None:
             return jsonify({"error": "Email already exists."}), 409
 
+        saved = user_repo.create(user)
+        perms = UserPermissions(user_id=saved.id, permissions=set())
         raw_perms = data.get("permissions")
         if isinstance(raw_perms, list):
-            perms = perm_service.create_from_flags(0, [str(p) for p in raw_perms])
+            for flag in raw_perms:
+                perm_service.grant_permission(saved, perms, str(flag))
         else:
             preset = Preset.resolve(str(data.get("preset") or Preset.USER.value))
-            perms = perm_service.create_for_preset(0, preset)
+            perm_service.assign_preset(saved, perms, preset)
+        user_repo.save_permissions(perms)
 
-        saved = user_repo.create_user(user, perms)
         PersonaRepository().create(
             PersonaService().create_persona(
                 user_id=saved.id,
@@ -106,24 +111,28 @@ def update_user(user_id: int):
     perm_service = PermissionService()
     try:
         if "username" in data and str(data["username"]).strip():
-            target.username = str(data["username"]).strip()
+            auth_service.update_name(target, str(data["username"]).strip())
         if "email" in data and str(data["email"]).strip():
-            target.email = str(data["email"]).strip().lower()
+            auth_service.update_email(target, str(data["email"]).strip().lower())
         if "language" in data:
-            target.language = str(data["language"]).strip().lower()[:2] or "en"
+            auth_service.assign_language(target, str(data["language"]).strip())
         if "password" in data and str(data["password"]):
-            target.password_hash = auth_service.hash_password(str(data["password"]))
+            auth_service.change_password(target, str(data["password"]))
 
-        saved = user_repo.update_user(target)
-        if "permissions" in data and isinstance(data["permissions"], list):
+        saved = user_repo.update(target)
+        if "preset" in data and data["preset"]:
             current_perms = user_repo.get_permissions(user_id)
-            if current_perms is not None:
-                updated_perms = perm_service.update_permissions(
-                    current_perms,
-                    target_is_initial_admin=target.is_initial_admin,
-                    new_permissions=[str(p) for p in data["permissions"]],
-                )
-                user_repo.save_permissions(updated_perms)
+            perm_service.assign_preset(saved, current_perms, str(data["preset"]))
+            user_repo.save_permissions(current_perms)
+        elif "permissions" in data and isinstance(data["permissions"], list):
+            current_perms = user_repo.get_permissions(user_id)
+            desired = {FunctionPermission.resolve(str(p)).value for p in data["permissions"]}
+            for existing_flag in list(current_perms.permissions):
+                if existing_flag not in desired:
+                    perm_service.revoke_permission(saved, current_perms, existing_flag)
+            for new_flag in desired:
+                perm_service.grant_permission(saved, current_perms, new_flag)
+            user_repo.save_permissions(current_perms)
 
         return jsonify(_serialize_user(saved, user_repo.get_permissions(user_id)))
     except (AimoError, ValueError) as exc:
@@ -138,8 +147,8 @@ def delete_user(user_id: int):
     if target is None:
         return jsonify({"error": "User not found."}), 404
     try:
-        PermissionService().assert_can_delete_user(target.is_initial_admin)
-        user_repo.delete_user(user_id)
+        PermissionService().assert_modifiable_user(target)
+        user_repo.delete(user_id)
         return jsonify({"deleted": True})
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 403

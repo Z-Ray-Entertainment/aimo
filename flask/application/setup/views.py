@@ -42,7 +42,7 @@ def first_boot():
             "apply_recommended_models": bool(form.apply_recommended_models),
             "roleplay_model": form.roleplay_model,
             "memory_model": form.memory_model,
-            "utility_model": form.utility_model,
+            "assistant_model": form.assistant_model,
             "vision_model": form.vision_model,
             "classification_model": form.classification_model,
         }
@@ -79,14 +79,16 @@ def _render_first_boot(form: FirstBootForm, status_data: dict):
     recommended_by_backend = {
         pid: p.get("recommended_tasks", {}) for pid, p in providers.items()
     }
+    ollama_info = providers.get("ollama", {})
+    google_info = providers.get("google_ai", {})
     return render_template(
         "setup/first_boot.html",
         form=form,
         has_env_google_key=False,
         env_google_key_hint=mask_secret(""),
-        ollama_recommended=[],
-        google_recommended=[],
+        ollama_recommended=ollama_info.get("recommended_models", {}),
+        google_recommended=google_info.get("recommended_models", {}),
         recommended_by_backend=recommended_by_backend,
-        recommended_google_image_model="gemini-3.1-flash-image-preview",
-        ollama_unique_models=[],
+        recommended_google_image_model=status_data.get("recommended_google_image_model") or "gemini-3.1-flash-image-preview",
+        ollama_unique_models=ollama_info.get("unique_recommended_models", []),
     )

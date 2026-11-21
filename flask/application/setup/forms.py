@@ -17,7 +17,7 @@ class FirstBootForm:
     llm_backend: str = "ollama"
     ollama_url: str = "http://localhost:11434"
     google_ai_api_key: str = ""
-    image_gen_backend: str = "comfyui"
+    image_gen_backend: str = "disabled"
     comfyui_url: str = "http://localhost:8188"
     google_ai_image_model: str = "gemini-3.1-flash-image-preview"
     search_backend: str = "disabled"
@@ -44,14 +44,14 @@ class FirstBootForm:
             llm_backend=RequestDataParser.to_str(form_data, "llm_backend", "ollama").lower(),
             ollama_url=RequestDataParser.to_str(form_data, "ollama_url", "http://localhost:11434"),
             google_ai_api_key=RequestDataParser.to_str(form_data, "google_ai_api_key"),
-            image_gen_backend=RequestDataParser.to_str(form_data, "image_gen_backend", "comfyui").lower(),
+            image_gen_backend=RequestDataParser.to_str(form_data, "image_gen_backend", "disabled").lower(),
             comfyui_url=RequestDataParser.to_str(form_data, "comfyui_url", "http://localhost:8188"),
             google_ai_image_model=RequestDataParser.to_str(
                 form_data, "google_ai_image_model", "gemini-3.1-flash-image-preview"
             ),
             search_backend=RequestDataParser.to_str(form_data, "search_backend", "disabled").lower(),
             searxng_url=RequestDataParser.to_str(form_data, "searxng_url", "http://localhost:8080"),
-            apply_recommended_models=RequestDataParser.to_bool(form_data, "apply_recommended_models", True),
+            apply_recommended_models=RequestDataParser.to_bool(form_data, "apply_recommended_models", False),
             roleplay_model=RequestDataParser.to_str(form_data, "roleplay_model"),
             memory_model=RequestDataParser.to_str(form_data, "memory_model"),
             assistant_model=RequestDataParser.to_str(form_data, "assistant_model"),
