@@ -182,13 +182,16 @@ def analyze_uploaded_or_existing_portrait():
             if portrait_file and portrait_file.filename:
                 portrait_path = storage.save_portrait(portrait_file.stream, portrait_file.filename)
 
-        if not portrait_path and raw_path:
-            portrait_path = raw_path
-        elif not portrait_path and raw_pid and str(raw_pid).isdigit():
+        if not portrait_path and raw_pid and str(raw_pid).isdigit():
             persona = repo.get_by_id(int(raw_pid))
             if persona is None or persona.user_id != user.id:
                 return jsonify({"error": "Persona nicht gefunden."}), 404
             portrait_path = persona.portrait_path
+        elif not portrait_path and raw_path:
+            owned_paths = {p.portrait_path for p in repo.list_for_user(user.id) if p.portrait_path}
+            if raw_path not in owned_paths:
+                return jsonify({"error": "Persona nicht gefunden."}), 404
+            portrait_path = raw_path
 
         if not portrait_path:
             return jsonify({"error": "Bitte wähle zuerst ein Porträtbild aus."}), 400
@@ -214,10 +217,10 @@ def analyze_uploaded_or_existing_portrait():
             prompt=prompt,
         )
         return jsonify({"appearance": appearance, "portrait_path": portrait_path})
-    except AimoError as exc:
-        return jsonify({"error": str(exc)}), 502
-    except Exception as exc:
-        return jsonify({"error": f"Bildanalyse fehlgeschlagen: {exc}"}), 502
+    except AimoError:
+        return jsonify({"error": "Bildanalyse fehlgeschlagen."}), 502
+    except Exception:
+        return jsonify({"error": "Bildanalyse fehlgeschlagen."}), 502
 
 
 @api_personas_bp.route("/<int:persona_id>/analyze", methods=["POST"])

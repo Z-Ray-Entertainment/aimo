@@ -38,7 +38,7 @@ def edit_memory(session_id: int, memory_id: int):
 
     chat_repo = ChatRepository()
     chat_session = chat_repo.get_session(session_id)
-    if chat_session is None or (chat_session.user_id != user.id and not user.is_initial_admin):
+    if chat_session is None or chat_session.user_id != user.id:
         return redirect(url_for("overview.index"))
 
     mem_repo = MemoryRepository()
@@ -70,7 +70,7 @@ def delete_memory(session_id: int, memory_id: int):
 
     chat_repo = ChatRepository()
     chat_session = chat_repo.get_session(session_id)
-    if chat_session is None or (chat_session.user_id != user.id and not user.is_initial_admin):
+    if chat_session is None or chat_session.user_id != user.id:
         return redirect(url_for("overview.index"))
 
     mem_repo = MemoryRepository()
@@ -93,7 +93,7 @@ def recalculate_memory(session_id: int, memory_id: int):
     mem_service = MemoryService()
 
     chat_session = chat_repo.get_session(session_id)
-    if chat_session is None or (chat_session.user_id != user.id and not user.is_initial_admin):
+    if chat_session is None or chat_session.user_id != user.id:
         if request.is_json or request.headers.get("Accept") == "application/json":
             return {"error": "Session not found."}, 404
         flash(tr(_("Chat session not found.")), "error")
@@ -151,10 +151,10 @@ def recalculate_memory(session_id: int, memory_id: int):
                 "summary": target_memory.summary,
             }
         flash(tr(_("Memory recalculated successfully.")), "success")
-    except Exception as exc:
+    except Exception:
         if request.is_json or request.headers.get("Accept") == "application/json":
-            return {"error": str(exc)}, 500
-        flash(tr(_("Recalculation error: %(error)s"), error=exc), "error")
+            return {"error": "Memory recalculation failed."}, 500
+        flash(tr(_("Recalculation failed.")), "error")
 
     return redirect(url_for("chat.view_session", session_id=session_id))
 

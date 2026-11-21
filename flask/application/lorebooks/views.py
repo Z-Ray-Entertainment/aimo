@@ -228,6 +228,11 @@ def delete_entry(lorebook_id: int, entry_id: int):
         flash(tr(_("Lorebook not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
+    entry = repo.get_entry(entry_id)
+    if entry is None or entry.lorebook_id != lorebook_id:
+        flash(tr(_("Entry not found.")), "error")
+        return redirect(url_for("lorebooks.detail", lorebook_id=lorebook_id, tab="entries"))
+
     repo.delete_entry(entry_id)
     flash(tr(_("Entry deleted.")), "success")
     return redirect(url_for("lorebooks.detail", lorebook_id=lorebook_id, tab="entries"))

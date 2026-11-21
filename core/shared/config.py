@@ -48,8 +48,10 @@ class Config:
     UPLOAD_DIR: Path = UPLOAD_DIR
     UPLOAD_PATH: Path = UPLOAD_DIR
 
-    SECRET_KEY: str = os.getenv("AIMO_SECRET_KEY", "aimo-dev-only-change-in-production")
+    DEV_SECRET_KEY_DEFAULT: str = "aimo-dev-only-change-in-production"
+    SECRET_KEY: str = os.getenv("AIMO_SECRET_KEY", DEV_SECRET_KEY_DEFAULT)
     CLIENT_KEY: str = os.getenv("CLIENT_KEY", "")
+    SESSION_COOKIE_SECURE: bool = os.getenv("AIMO_SESSION_COOKIE_SECURE", "false").lower() in ("1", "true", "yes")
 
     CORE_HOST: str = os.getenv("AIMO_CORE_HOST", "127.0.0.1")
     CORE_PORT: int = int(os.getenv("AIMO_CORE_PORT", "5001"))

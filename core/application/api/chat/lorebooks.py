@@ -123,7 +123,11 @@ def get_session_lorebooks(session_id: int):
 
     default_lorebooks = []
     for lb_id in sorted(default_ids):
-        lb = all_map.get(lb_id) or lb_repo.get_by_id(lb_id)
+        lb = all_map.get(lb_id)
+        if lb is None:
+            candidate = lb_repo.get_by_id(lb_id)
+            if candidate is not None and candidate.is_visible_to_user(user.id, is_admin):
+                lb = candidate
         if lb:
             in_char = lb_id in char_lb_ids
             in_wi = lb_id == wi_lb_id
@@ -167,7 +171,11 @@ def get_session_lorebooks(session_id: int):
     for lb_id in chat_session.custom_lorebook_ids:
         if lb_id in default_ids:
             continue
-        lb = all_map.get(lb_id) or lb_repo.get_by_id(lb_id)
+        lb = all_map.get(lb_id)
+        if lb is None:
+            candidate = lb_repo.get_by_id(lb_id)
+            if candidate is not None and candidate.is_visible_to_user(user.id, is_admin):
+                lb = candidate
         if lb:
             is_active = lb.id not in chat_session.disabled_lorebook_ids
             custom_lorebooks.append(_format_lb(lb, "custom", is_active=is_active))
@@ -209,7 +217,7 @@ def get_session_lorebooks(session_id: int):
 def toggle_session_lorebook(session_id: int):
     user = get_current_user()
     assert user is not None and user.id is not None
-    chat_session, _ = _get_authorized_session(session_id, user)
+    chat_session, is_admin = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
 
@@ -224,6 +232,10 @@ def toggle_session_lorebook(session_id: int):
         lb_id = int(lorebook_id)
     except (ValueError, TypeError):
         return jsonify({"error": "Invalid lorebook_id."}), 400
+
+    lb = LorebookRepository().get_by_id(lb_id)
+    if lb is None or not lb.is_visible_to_user(user.id, is_admin):
+        return jsonify({"error": "Lorebook not found."}), 404
 
     active = data.get("active")
     if active is None:

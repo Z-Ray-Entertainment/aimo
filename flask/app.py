@@ -11,7 +11,8 @@ for path_entry in (str(CORE_DIR), str(FLASK_DIR)):
         sys.path.remove(path_entry)
     sys.path.insert(0, path_entry)
 
-from flask import Flask, abort, g, redirect, request, send_from_directory, url_for
+from flask import Flask, abort, g, jsonify, redirect, request, send_from_directory, url_for
+from urllib.parse import urlparse
 
 from application.admin import admin_bp
 from application.auth import (
@@ -41,11 +42,19 @@ from infrastructure.storage.file_storage import FileStorage
 from shared.config import Config
 from shared.exceptions import InfrastructureError
 from shared.http_compression import register_gzip_compression
+from shared.security import is_debug_enabled, validate_secret_key
 from asset_minifier import ensure_minified_assets
 from i18n import ensure_compiled_locales, get_text_direction, get_translator, normalize_language
 
 
 def create_webui_app(config_class: type[Config] = Config) -> Flask:
+    is_debug = is_debug_enabled(os.getenv("AIMO_DEBUG"))
+    validate_secret_key(
+        config_class.SECRET_KEY,
+        config_class.DEV_SECRET_KEY_DEFAULT,
+        debug=is_debug,
+    )
+
     app = Flask(
         __name__,
         static_folder=str(FLASK_DIR / "static"),
@@ -53,10 +62,12 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
     )
     app.config.from_object(config_class)
     app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 86400
+    app.config["SESSION_COOKIE_HTTPONLY"] = True
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+    app.config["SESSION_COOKIE_SECURE"] = bool(config_class.SESSION_COOKIE_SECURE)
     app.secret_key = config_class.SECRET_KEY
 
     ensure_compiled_locales()
-    is_debug = os.getenv("AIMO_DEBUG", "false").lower() in ("1", "true", "yes")
     use_minified_assets = config_class.MINIFY_ASSETS and not is_debug
     if use_minified_assets:
         ensure_minified_assets(FLASK_DIR / "static")
@@ -99,6 +110,12 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
 
     @app.route("/uploads/<path:filename>")
     def uploaded_file(filename: str):
+        user = get_current_user()
+        if user is None:
+            settings = SettingsRepository().get_settings()
+            default_bg = (settings.default_backdrop_path or "").strip() if settings else ""
+            if not default_bg or filename != default_bg:
+                abort(401)
         storage = FileStorage(config_class.UPLOAD_DIR)
         try:
             resolved = storage.resolve_path(filename)
@@ -108,6 +125,22 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
             return send_from_directory(str(FLASK_DIR / "static" / "img"), "cover.svg", max_age=86400)
         rel = resolved.relative_to(storage.base_upload_dir)
         return send_from_directory(str(storage.base_upload_dir), str(rel), max_age=86400)
+
+    @app.before_request
+    def enforce_same_origin_on_mutations():
+        if request.method not in ("POST", "PUT", "DELETE", "PATCH"):
+            return None
+        origin = request.headers.get("Origin")
+        referer = request.headers.get("Referer")
+        expected_host = request.host
+        source_url = origin or referer
+        if source_url:
+            parsed = urlparse(source_url)
+            if parsed.netloc and parsed.netloc != expected_host:
+                if request.path.startswith("/api/"):
+                    return jsonify({"error": "Cross-origin request blocked."}), 403
+                abort(403)
+        return None
 
     @app.before_request
     def load_user_and_check_first_boot():
@@ -189,6 +222,24 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
             "aimo_js_i18n": get_js_translations(ui_lang),
             "ember_particles_enabled": ember_particles_enabled,
         }
+
+    @app.errorhandler(403)
+    def handle_forbidden(_err):
+        if request.path.startswith("/api/"):
+            return jsonify({"error": "Forbidden."}), 403
+        return "Forbidden", 403
+
+    @app.errorhandler(404)
+    def handle_not_found(_err):
+        if request.path.startswith("/api/"):
+            return jsonify({"error": "Resource not found."}), 404
+        return "Not Found", 404
+
+    @app.errorhandler(500)
+    def handle_internal_error(_err):
+        if request.path.startswith("/api/"):
+            return jsonify({"error": "Internal server error."}), 500
+        return "Internal Server Error", 500
 
     if config_class.GZIP_ENABLED:
         register_gzip_compression(app, min_size=config_class.GZIP_MIN_BYTES)

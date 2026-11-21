@@ -354,6 +354,11 @@ def delete_location(worldinfo_id: int, location_id: int):
         flash(tr(_("WorldInfo not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
 
+    loc = repo.get_location(location_id)
+    if loc is None or loc.worldinfo_id != worldinfo_id:
+        flash(tr(_("Location not found.")), "error")
+        return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="places"))
+
     repo.delete_location(location_id)
     flash(tr(_("Location deleted.")), "success")
     return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="places"))
@@ -445,6 +450,11 @@ def delete_event(worldinfo_id: int, event_id: int):
     if worldinfo is None or not worldinfo.is_editable_by_user(user.id, is_admin(), user.creator_tag):
         flash(tr(_("WorldInfo not found or no permission.")), "error")
         return redirect(url_for("overview.index"))
+
+    ev = repo.get_event(event_id)
+    if ev is None or ev.worldinfo_id != worldinfo_id:
+        flash(tr(_("Event not found.")), "error")
+        return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="events"))
 
     repo.delete_event(event_id)
     flash(tr(_("Event deleted.")), "success")

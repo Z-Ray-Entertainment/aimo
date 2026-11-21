@@ -164,9 +164,6 @@ def translate_arbitrary_text():
     data = request.get_json(silent=True) or request.form.to_dict()
     source_text = str(data.get("text", "")).strip()
     target_lang = str(data.get("target_language", "de")).strip().lower()
-    entity_type = str(data.get("entity_type", "")).strip()
-    entity_id_raw = data.get("entity_id")
-    field_name = str(data.get("field_name", "")).strip()
 
     if not source_text:
         return jsonify({"error": "Text is required."}), 400
@@ -191,16 +188,6 @@ def translate_arbitrary_text():
             translated_text=translated,
         )
         trans_repo.save_translation(rec)
-
-        if entity_type and field_name and entity_id_raw is not None and str(entity_id_raw).isdigit():
-            trans_repo.save_field_translation(
-                entity_type=entity_type,
-                entity_id=int(entity_id_raw),
-                field_name=field_name,
-                language=target_lang,
-                text_content=translated,
-                is_outdated=False,
-            )
 
     return jsonify(
         {

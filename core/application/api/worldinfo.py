@@ -162,13 +162,25 @@ def analyze_location_background():
     llm = get_llm_provider(settings)
 
     try:
+        user = get_current_user()
+        assert user is not None and user.id is not None
         if bg_file and bg_file.filename:
             bg_path = storage.save_background(bg_file.stream, bg_file.filename)
         else:
+            wi_repo = WorldInfoRepository()
+            editable_paths: set[str] = set()
+            for wi in wi_repo.list_all(user.id):
+                if wi.id is not None and wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+                    if wi.backdrop_image_path:
+                        editable_paths.add(wi.backdrop_image_path)
+                    for loc in wi_repo.list_locations(wi.id):
+                        if loc.background_image_path:
+                            editable_paths.add(loc.background_image_path)
+            if existing_bg_path not in editable_paths:
+                return jsonify({"error": "Background image not found."}), 404
             bg_path = existing_bg_path
 
-        user = get_current_user()
-        target_lang = (user.language if user and user.language else "en").strip().lower()[:2]
+        target_lang = (user.language or "en").strip().lower()[:2]
         from domain.translation.models import LANGUAGE_METADATA
         lang_label = LANGUAGE_METADATA.get(target_lang, {}).get("label", target_lang)
         resolved = storage.resolve_path(bg_path)
