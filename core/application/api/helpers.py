@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Any
 
 from flask import jsonify, request
 
@@ -10,7 +10,10 @@ from domain.chat.models import Message
 
 
 def require_current_user() -> User:
-    return cast(User, get_current_user())
+    user = get_current_user()
+    if user is None:
+        raise RuntimeError("require_current_user() called without an authenticated user.")
+    return user
 
 
 def parse_request_payload() -> dict[str, Any]:
