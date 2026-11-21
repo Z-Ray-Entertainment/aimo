@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, redirect, request, url_for
 
 from application.auth.decorators import get_current_user, require_permission
-from application.ui_helpers import tr
+from application.ui_helpers import get_safe_back_url, tr
 from i18n import gettext_noop as _
 from domain.permissions.models import FunctionPermission
 from domain.personas.models import Gender
@@ -30,6 +30,8 @@ def create_persona():
         if portrait_file and portrait_file.filename:
             portrait_path = storage.save_portrait(portrait_file.stream, portrait_file.filename)
         elif preuploaded:
+            if not preuploaded.startswith("portraits/") or ".." in preuploaded or preuploaded.startswith("/"):
+                raise AimoError("Invalid preuploaded portrait path.")
             portrait_path = preuploaded
         else:
             portrait_path = "portraits/default_persona.png"
@@ -63,7 +65,7 @@ def create_persona():
     except AimoError as exc:
         flash(str(exc), "error")
 
-    return redirect(request.referrer or url_for("overview.index"))
+    return redirect(get_safe_back_url(url_for("overview.index")))
 
 
 @personas_bp.route("/<int:persona_id>/edit", methods=["POST"])
@@ -88,6 +90,8 @@ def edit_persona(persona_id: int):
         if portrait_file and portrait_file.filename:
             portrait_path = storage.save_portrait(portrait_file.stream, portrait_file.filename)
         elif preuploaded:
+            if not preuploaded.startswith("portraits/") or ".." in preuploaded or preuploaded.startswith("/"):
+                raise AimoError("Invalid preuploaded portrait path.")
             portrait_path = preuploaded
 
         service.update_persona(
@@ -112,7 +116,7 @@ def edit_persona(persona_id: int):
     except AimoError as exc:
         flash(str(exc), "error")
 
-    return redirect(request.referrer or url_for("overview.index"))
+    return redirect(get_safe_back_url(url_for("overview.index")))
 
 
 @personas_bp.route("/<int:persona_id>/default", methods=["POST"])
@@ -125,7 +129,7 @@ def set_default(persona_id: int):
     if persona and persona.user_id == user.id:
         repo.set_default(user.id, persona_id)
         flash(tr(_("'%(name)s' is now your default persona."), name=persona.name), "success")
-    return redirect(request.referrer or url_for("overview.index"))
+    return redirect(get_safe_back_url(url_for("overview.index")))
 
 
 @personas_bp.route("/<int:persona_id>/delete", methods=["POST"])
@@ -149,4 +153,4 @@ def delete_persona(persona_id: int):
     except AimoError as exc:
         flash(str(exc), "error")
 
-    return redirect(request.referrer or url_for("overview.index"))
+    return redirect(get_safe_back_url(url_for("overview.index")))

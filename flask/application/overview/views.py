@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, g, render_template, request
 
 from application.auth.decorators import get_current_user, is_admin, require_auth
 from application.translation_helpers import (
@@ -186,18 +186,7 @@ def index():
     else:
         worldinfo_cards.sort(key=lambda item: item["worldinfo"].id or 0, reverse=True)
 
-    personas = persona_repo.list_for_user(user.id)
-    persona_items = []
-    for p in personas:
-        p_trans = trans_repo.get_entity_translations_map("persona", p.id) if p.id else {}
-        persona_items.append(
-            {
-                "persona": p,
-                "in_use": persona_repo.is_used_in_any_session(p.id) if p.id else False,
-                "i18n_description": p_trans.get("description", {}),
-                "i18n_appearance": p_trans.get("appearance", {}),
-            }
-        )
+    persona_items = getattr(g, "persona_items", [])
 
     return render_template(
         "overview/index.html",

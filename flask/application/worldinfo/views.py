@@ -132,7 +132,7 @@ def detail(worldinfo_id: int):
     is_author = (worldinfo.user_id == user.id or is_admin())
 
     if request.method == "POST":
-        if not is_editable:
+        if not has_perm(FunctionPermission.WORLDINFO_EDIT) or not is_editable:
             flash(tr(_("Access denied: You can only edit your own WorldInfos or creations shared with you.")), "error")
             return redirect(url_for("overview.index"))
         try:
@@ -450,6 +450,11 @@ def add_event(worldinfo_id: int):
         return redirect(url_for("overview.index"))
 
     form = EventForm.from_request(request.form)
+    if form.location_id is not None:
+        loc = repo.get_location(form.location_id)
+        if loc is None or loc.worldinfo_id != worldinfo_id:
+            flash(tr(_("Selected location does not belong to this WorldInfo.")), "error")
+            return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="events"))
     service = WorldInfoService()
     try:
         ev = service.add_event(
@@ -487,6 +492,11 @@ def edit_event(worldinfo_id: int, event_id: int):
         return redirect(url_for("overview.index"))
 
     form = EventForm.from_request(request.form)
+    if form.location_id is not None:
+        loc = repo.get_location(form.location_id)
+        if loc is None or loc.worldinfo_id != worldinfo_id:
+            flash(tr(_("Selected location does not belong to this WorldInfo.")), "error")
+            return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id, tab="events"))
     service = WorldInfoService()
     ev = repo.get_event(event_id)
     if ev is not None and ev.worldinfo_id == worldinfo_id:

@@ -161,7 +161,7 @@ def create_webui_app(config_class: type[Config] = Config) -> Flask:
         else:
             best_lang = request.accept_languages.best_match(list(LANGUAGE_METADATA.keys()))
             g.ui_language = normalize_language(best_lang, default="en")
-        if user is not None and user.id is not None:
+        if user is not None and user.id is not None and not request.path.startswith("/api/"):
             persona_repo = PersonaRepository()
             trans_repo = TranslationRepository()
             personas = persona_repo.list_for_user(user.id)

@@ -98,7 +98,7 @@ def detail(lorebook_id: int):
     is_author = (lorebook.user_id == user.id or is_admin())
 
     if request.method == "POST":
-        if not is_editable:
+        if not has_perm(FunctionPermission.LOREBOOK_EDIT) or not is_editable:
             flash(tr(_("Access denied: You can only edit your own lorebooks or creations shared with you.")), "error")
             return redirect(url_for("overview.index"))
         try:
