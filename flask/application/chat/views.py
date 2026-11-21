@@ -2,7 +2,6 @@ from flask import flash, g, redirect, render_template, request, url_for
 
 from application.auth.decorators import get_current_user, is_admin, require_permission
 from application.chat import chat_bp
-from application.chat.helpers import build_lorebook_view_data
 from application.core_client import core_delete, core_get, core_post, core_put
 from application.ui_helpers import tr
 from application.view_models import FunctionPermission, wrap_dto
@@ -45,37 +44,9 @@ def new_character_chat(character_id: int):
         return redirect(url_for("overview.index"))
 
     _, wi_data = core_get("/api/worldinfo")
-    _, lb_data = core_get("/api/lorebooks")
+    _, setup_data = core_get(f"/api/chat/character/{character_id}/setup")
     character = wrap_dto(char_data)
     worldinfos = wrap_dto(wi_data.get("worldinfos", []))
-    all_lorebooks = wrap_dto(lb_data.get("lorebooks", []))
-    suggested_wi = next(
-        (w for w in worldinfos if w.id == getattr(character, "suggested_worldinfo_id", None)),
-        None,
-    )
-    lorebook_data = build_lorebook_view_data(
-        user.id,
-        all_lorebooks,
-        worldinfos,
-        character,
-        worldinfo=suggested_wi,
-        is_admin=is_admin(),
-    )
-    lb_map = {lb.id: lb for lb in all_lorebooks}
-    worldinfo_names_map = {str(w.id): w.name for w in worldinfos}
-    worldinfo_lorebooks_map = {}
-    for w in worldinfos:
-        wi_lb_id = getattr(w, "lorebook_id", None)
-        if wi_lb_id and wi_lb_id in lb_map:
-            lb = lb_map[wi_lb_id]
-            worldinfo_lorebooks_map[str(w.id)] = {
-                "id": lb.id,
-                "name": lb.name,
-                "description": getattr(lb, "description", "") or "",
-                "tags": sorted(getattr(lb, "tags", []) or []),
-                "entry_count": int(getattr(lb, "entry_count", 0) or 0),
-                "source": "World",
-            }
 
     return render_template(
         "chat/select_worldinfo.html",
@@ -83,9 +54,9 @@ def new_character_chat(character_id: int):
         worldinfos=worldinfos,
         personas=[item["persona"] for item in getattr(g, "persona_items", [])],
         default_persona=getattr(g, "default_persona", None),
-        lorebook_data=lorebook_data,
-        worldinfo_lorebooks_map=worldinfo_lorebooks_map,
-        worldinfo_names_map=worldinfo_names_map,
+        lorebook_data=setup_data.get("lorebook_data", {}),
+        worldinfo_lorebooks_map=setup_data.get("worldinfo_lorebooks_map", {}),
+        worldinfo_names_map=setup_data.get("worldinfo_names_map", {}),
         character_lorebook_world_conditions=getattr(character, "lorebook_world_conditions", {}) or {},
     )
 
@@ -103,7 +74,6 @@ def view_session(session_id: int):
     _, char_data = core_get(f"/api/characters/{chat_session.character_id}")
     _, mem_data = core_get(f"/api/chat/{session_id}/memories")
     _, wi_list_data = core_get("/api/worldinfo")
-    _, lb_data = core_get("/api/lorebooks")
     _, tiers_data = core_get("/api/characters/relationship-tiers")
     _, health_data = core_get("/api/admin/health")
     _, sessions_data = core_get("/api/chat/sessions")
@@ -116,7 +86,6 @@ def view_session(session_id: int):
 
     character = wrap_dto(char_data)
     all_worldinfos = wrap_dto(wi_list_data.get("worldinfos", []))
-    all_lorebooks = wrap_dto(lb_data.get("lorebooks", []))
     persona_items = getattr(g, "persona_items", [])
     persona_item = next(
         (item for item in persona_items if item["persona"].id == chat_session.persona_id),
@@ -151,15 +120,7 @@ def view_session(session_id: int):
     )
     session_media_images = [m.image_path for m in messages if getattr(m, "image_path", None)]
     gallery_threshold_names = {t.level: t.name for t in wrap_dto(tiers_data.get("tiers", []))}
-    lorebook_data = build_lorebook_view_data(
-        user.id,
-        all_lorebooks,
-        all_worldinfos,
-        character,
-        worldinfo=active_wi,
-        chat_session=chat_session,
-        is_admin=admin_flag,
-    )
+    lorebook_data = data.get("lorebook_data", {})
     all_sessions = wrap_dto(sessions_data.get("sessions", []))
     image_gen_available = bool(health_data.get("image_gen_enabled") and health_data.get("image_gen_healthy"))
 

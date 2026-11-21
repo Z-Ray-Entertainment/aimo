@@ -6,6 +6,7 @@ from application.api.auth import get_current_user, is_admin, require_permission
 from application.api.chat import api_chat_bp
 from application.api.chat.shared import _get_authorized_session
 from application.api.helpers import parse_request_payload
+from application.chat_services.lorebook_resolver import build_worldinfo_lorebooks_map, resolve_session_lorebooks
 from domain.chat.services import ChatService
 from domain.permissions.models import FunctionPermission
 from infrastructure.repositories.character_repository import CharacterRepository
@@ -80,17 +81,62 @@ def create_chat_session():
         return jsonify({"error": str(exc)}), 400
 
 
+@api_chat_bp.route("/character/<int:character_id>/setup", methods=["GET"])
+@require_permission(FunctionPermission.CHAT_ACCESS)
+def get_new_chat_setup(character_id: int):
+    user = get_current_user()
+    admin_flag = is_admin()
+    character = CharacterRepository().get_by_id(character_id)
+    if character is None or not character.is_visible_to_user(user.id, admin_flag):
+        return jsonify({"error": "Character not found."}), 404
+
+    worldinfos = WorldInfoRepository().list_visible(user.id)
+    suggested_wi = next(
+        (w for w in worldinfos if w.id == character.suggested_worldinfo_id),
+        None,
+    )
+    return jsonify(
+        {
+            "lorebook_data": resolve_session_lorebooks(
+                user.id,
+                character,
+                worldinfo=suggested_wi,
+                is_admin=admin_flag,
+            ),
+            "worldinfo_lorebooks_map": build_worldinfo_lorebooks_map(
+                user.id,
+                worldinfos,
+                is_admin=admin_flag,
+            ),
+            "worldinfo_names_map": {str(w.id): w.name for w in worldinfos if w.id is not None},
+        }
+    )
+
+
 @api_chat_bp.route("/<int:session_id>", methods=["GET"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def get_chat_session(session_id: int):
     user = get_current_user()
-    chat_session, _ = _get_authorized_session(session_id, user)
+    chat_session, admin_flag = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
 
     messages = ChatRepository().get_messages(session_id, limit=None)
     user_lang = (user.language or "en")[:2].lower()
     tier = RelationshipRepository().get_tier(chat_session.relationship_value, language=user_lang)
+    character = CharacterRepository().get_by_id(chat_session.character_id)
+    worldinfo = (
+        WorldInfoRepository().get_by_id(chat_session.active_worldinfo_id)
+        if chat_session.active_worldinfo_id
+        else None
+    )
+    lorebook_data = resolve_session_lorebooks(
+        user.id,
+        character,
+        worldinfo=worldinfo,
+        chat_session=chat_session,
+        is_admin=admin_flag,
+    )
     return jsonify(
         {
             "session": {
@@ -109,6 +155,7 @@ def get_chat_session(session_id: int):
                 "disabled_lorebook_ids": list(chat_session.disabled_lorebook_ids or []),
                 "custom_lorebook_ids": list(chat_session.custom_lorebook_ids or []),
             },
+            "lorebook_data": lorebook_data,
             "messages": [
                 {
                     "id": m.id,
