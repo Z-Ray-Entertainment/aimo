@@ -42,7 +42,7 @@ def first_boot():
             "apply_recommended_models": bool(form.apply_recommended_models),
             "roleplay_model": form.roleplay_model,
             "memory_model": form.memory_model,
-            "utility_model": form.utility_model,
+            "assistant_model": form.assistant_model,
             "vision_model": form.vision_model,
             "classification_model": form.classification_model,
         }

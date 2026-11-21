@@ -123,10 +123,12 @@ def complete_first_boot():
             email=email,
             password=password,
             is_initial_admin=True,
-            language=language,
         )
-        perms = perm_service.create_for_preset(0, Preset.ADMIN)
-        saved_user = user_repo.create_user(user, perms)
+        auth_service.assign_language(user, language)
+        saved_user = user_repo.create(user)
+        perms = user_repo.get_permissions(saved_user.id)
+        perm_service.assign_preset(saved_user, perms, Preset.ADMIN)
+        user_repo.save_permissions(perms)
 
         persona = persona_service.create_persona(
             user_id=saved_user.id,
@@ -155,17 +157,17 @@ def complete_first_boot():
             search_backend=search_backend,
             search_configs=search_configs,
         )
-        if data.get("apply_recommended_models", True):
-            ProviderRegistry.apply_recommended_models(settings)
-        else:
+        ProviderRegistry.apply_recommended_models(settings)
+        custom_roleplay = str(data.get("roleplay_model") or "").strip()
+        if custom_roleplay or not data.get("apply_recommended_models", True):
             SettingsService().apply_task_model_map(
                 settings,
                 {
-                    "roleplay_model": str(data.get("roleplay_model") or settings.tasks.roleplay_model),
-                    "memory_model": str(data.get("memory_model") or settings.tasks.memory_model),
-                    "utility_model": str(data.get("utility_model") or settings.tasks.utility_model),
-                    "vision_model": str(data.get("vision_model") or settings.tasks.vision_model),
-                    "classification_model": str(data.get("classification_model") or settings.tasks.classification_model),
+                    "roleplay": custom_roleplay or settings.tasks.roleplay_model,
+                    "memory": str(data.get("memory_model") or settings.tasks.memory_model).strip(),
+                    "assistant": str(data.get("assistant_model") or settings.tasks.assistant_model).strip(),
+                    "vision": str(data.get("vision_model") or settings.tasks.vision_model).strip(),
+                    "classification": str(data.get("classification_model") or settings.tasks.classification_model).strip(),
                 },
             )
         settings_repo.save_settings(settings)
