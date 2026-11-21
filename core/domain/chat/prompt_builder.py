@@ -397,12 +397,7 @@ class PromptBuilder:
         language: str = "en",
     ) -> str:
         if worldinfo is None:
-            lines = [t(_("Active World: None (Neutral setting, no specific world events)."), language)]
-            if triggered_event is not None:
-                ev_label = t(_("Active Narrative Event ({title}):"), language).format(title=triggered_event.title)
-                ev_hint = t(_("(Notice and organically weave this unfolding event into your immediate reaction and dialogue.)"), language)
-                lines.append(f"{ev_label} {triggered_event.description.strip()} {ev_hint}")
-            return "\n".join(lines)
+            return t(_("Active World: None (Neutral setting, no specific world events)."), language)
 
         world_label = t(_("World Name:"), language)
         lines = [f"{world_label} {worldinfo.name}"]

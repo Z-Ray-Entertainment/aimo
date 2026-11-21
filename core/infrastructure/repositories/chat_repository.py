@@ -219,11 +219,6 @@ class ChatRepository:
                 (session_id, message_idx),
             )
             return bool(cursor.rowcount and cursor.rowcount > 0)
-            row = conn.execute(
-                "SELECT * FROM chat_messages WHERE id = ?",
-                (message.id,),
-            ).fetchone()
-            return self._message_to_entity(row)
 
     def get_message_by_idx(self, session_id: int, message_idx: int) -> Message | None:
         with get_db_session() as conn:

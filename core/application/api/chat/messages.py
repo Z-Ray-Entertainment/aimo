@@ -157,6 +157,11 @@ def regenerate_turn(session_id: int):
 @api_chat_bp.route("/<int:session_id>/messages/<int:message_idx>/prompt", methods=["GET"])
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def get_message_prompt(session_id: int, message_idx: int):
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
     with _TASKS_LOCK:
         prompt = _ADMIN_PROMPT_CACHE.get((session_id, message_idx))
     if prompt is None:
@@ -181,7 +186,10 @@ def fork_chat_session(session_id: int):
         return jsonify({"error": "Session not found."}), 404
 
     data = request.get_json(silent=True) or request.form.to_dict()
-    fork_point_idx = int(data.get("fork_point_idx", 0))
+    try:
+        fork_point_idx = int(data.get("fork_point_idx", 0))
+    except (TypeError, ValueError):
+        return jsonify({"error": "Invalid fork_point_idx."}), 400
 
     chat_repo = ChatRepository()
     mem_repo = MemoryRepository()

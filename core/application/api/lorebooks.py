@@ -136,6 +136,14 @@ def duplicate_lorebook(lorebook_id: int):
     orig = repo.get_by_id(lorebook_id)
     if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
         return jsonify({"error": "Lorebook not found."}), 404
+    if not orig.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        from application.translation_helpers import is_lorebook_ready_for_language
+        from infrastructure.repositories.translation_repository import TranslationRepository
+
+        trans_repo = TranslationRepository()
+        user_lang = (user.language or "en")[:2].lower()
+        if not is_lorebook_ready_for_language(orig, user_lang, trans_repo, repo):
+            return jsonify({"error": "This lorebook is not yet available in your language."}), 403
     copied = repo.duplicate(lorebook_id, user.id)
     return jsonify({"id": copied.id, "name": copied.name}), 201
 

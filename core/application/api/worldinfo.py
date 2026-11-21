@@ -124,6 +124,10 @@ def create_event():
 
         loc_raw = data.get("location_id")
         location_id = int(loc_raw) if loc_raw not in (None, "", "world", "0", 0) else None
+        if location_id is not None:
+            loc = repo.get_location(location_id)
+            if loc is None or loc.worldinfo_id != worldinfo_id:
+                return jsonify({"error": "Location does not belong to this WorldInfo."}), 400
         event = service.add_event(
             worldinfo_id=worldinfo_id,
             title=data.get("title", ""),
@@ -272,6 +276,13 @@ def update_worldinfo_backdrop(worldinfo_id: int):
 
     if "backdrop_path" in data:
         new_path = str(data.get("backdrop_path") or "").strip() or None
+        if new_path is not None:
+            try:
+                resolved_backdrop = storage.resolve_path(new_path)
+            except AimoError as exc:
+                return jsonify({"error": str(exc)}), 400
+            if not resolved_backdrop.is_file():
+                return jsonify({"error": "Backdrop file not found."}), 404
         service.update_worldinfo(wi, name=wi.name, backdrop_image_path=new_path)
         saved = repo.update(wi)
         return jsonify(

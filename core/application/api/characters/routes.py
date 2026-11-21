@@ -24,6 +24,7 @@ from shared.request_parsers import RequestDataParser
 
 
 from application.api.characters import api_characters_bp
+from application.api.characters.events import _serialize_character_event
 
 @api_characters_bp.route("", methods=["GET"])
 @require_auth
@@ -203,6 +204,11 @@ def duplicate_character(character_id: int):
     orig = char_repo.get_by_id(character_id)
     if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
         return jsonify({"error": "Character not found."}), 404
+    if not orig.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        trans_repo = TranslationRepository()
+        user_lang = (user.language or "en")[:2].lower()
+        if not is_character_ready_for_language(orig, user_lang, trans_repo):
+            return jsonify({"error": "This character is not yet available in your language."}), 403
     copied = char_repo.duplicate(character_id, user.id)
     return jsonify({"id": copied.id, "name": copied.name}), 201
 

@@ -400,14 +400,21 @@ def _start_background_turn(
                     triggered_event.description,
                 )
 
-            recent_messages = w_chat_repo.get_messages(session_id, limit=10)
+            raw_recent = w_chat_repo.get_messages(session_id, limit=30)
+            recent_messages = [
+                m for m in raw_recent if m.role in (MessageRole.USER, MessageRole.CHARACTER)
+            ][-10:]
             combined_context_text = " ".join(
                 (m.localized_content or m.english_content or "") for m in recent_messages[-2:]
             )
             active_tags = _extract_active_tags(combined_context_text)
+            latest_user_msg = next(
+                (m for m in reversed(recent_messages) if m.role == MessageRole.USER),
+                None,
+            )
             latest_user_text = (
-                (recent_messages[-1].localized_content or recent_messages[-1].english_content or "")
-                if recent_messages
+                (latest_user_msg.localized_content or latest_user_msg.english_content or "")
+                if latest_user_msg is not None
                 else ""
             )
             latest_user_tags = _extract_active_tags(latest_user_text)

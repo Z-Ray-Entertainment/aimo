@@ -32,9 +32,9 @@ class RelationshipImpact(StrEnum):
 
 RELATIONSHIP_IMPACT_DELTAS: dict[RelationshipImpact, float] = {
     RelationshipImpact.VERY_NEGATIVE: -2.0,
-    RelationshipImpact.NEGATIVE: -1,
+    RelationshipImpact.NEGATIVE: -0.5,
     RelationshipImpact.NEUTRAL: 0.1,
-    RelationshipImpact.POSITIVE: 1,
+    RelationshipImpact.POSITIVE: 0.5,
     RelationshipImpact.VERY_POSITIVE: 2.0,
 }
 
