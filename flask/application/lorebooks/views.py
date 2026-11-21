@@ -13,7 +13,7 @@ lorebooks_bp = Blueprint("lorebooks", __name__, url_prefix="/lorebooks")
 @lorebooks_bp.route("/new", methods=["GET", "POST"])
 @lorebooks_bp.route("/create", methods=["POST"])
 @require_permission(FunctionPermission.LOREBOOK_CREATE)
-def create():
+def new_lorebook():
     if request.method == "POST":
         form = LorebookForm.from_request(request.form)
         status, payload = core_post(
@@ -32,7 +32,16 @@ def create():
         flash(payload.get("error") or tr(_("Failed to create lorebook.")), "error")
         return redirect(url_for("overview.index"))
 
-    return render_template("lorebooks/new.html")
+    return render_template(
+        "lorebooks/detail.html",
+        lorebook=None,
+        form_data={},
+        is_editable=True,
+        is_author=True,
+        entries=[],
+        active_tab="info",
+        entry_translations={},
+    )
 
 
 @lorebooks_bp.route("/<int:lorebook_id>", methods=["GET", "POST"])
@@ -80,7 +89,7 @@ def detail(lorebook_id: int):
 
 @lorebooks_bp.route("/<int:lorebook_id>/duplicate", methods=["POST"])
 @require_permission(FunctionPermission.LOREBOOK_CREATE)
-def duplicate(lorebook_id: int):
+def duplicate_lorebook(lorebook_id: int):
     status, payload = core_post(f"/api/lorebooks/{lorebook_id}/duplicate")
     if status < 400 and payload.get("id"):
         flash(tr(_("Lorebook copied as '%(name)s'."), name=payload.get("name", "")), "success")
@@ -91,7 +100,7 @@ def duplicate(lorebook_id: int):
 
 @lorebooks_bp.route("/<int:lorebook_id>/delete", methods=["POST"])
 @require_permission(FunctionPermission.LOREBOOK_DELETE)
-def delete(lorebook_id: int):
+def delete_lorebook(lorebook_id: int):
     status, payload = core_delete(f"/api/lorebooks/{lorebook_id}")
     if status < 400:
         flash(tr(_("Lorebook deleted.")), "success")

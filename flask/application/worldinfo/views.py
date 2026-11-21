@@ -13,7 +13,7 @@ worldinfo_bp = Blueprint("worldinfo", __name__, url_prefix="/worldinfo")
 @worldinfo_bp.route("/new", methods=["GET", "POST"])
 @worldinfo_bp.route("/create", methods=["POST"])
 @require_permission(FunctionPermission.WORLDINFO_CREATE)
-def create():
+def new_worldinfo():
     if request.method == "POST":
         form = WorldInfoForm.from_request(request.form)
         status, payload = core_post(
@@ -34,7 +34,24 @@ def create():
         return redirect(url_for("overview.index"))
 
     _, lb_data = core_get("/api/lorebooks")
-    return render_template("worldinfo/new.html", lorebooks=wrap_dto(lb_data.get("lorebooks", [])))
+    return render_template(
+        "worldinfo/detail.html",
+        worldinfo=None,
+        form_data={},
+        is_editable=True,
+        is_author=True,
+        active_tab="info",
+        lorebooks=wrap_dto(lb_data.get("lorebooks", [])),
+        locations=[],
+        events=[],
+        available_characters=[],
+        character_map={},
+        loc_map={},
+        loc_display={},
+        ev_display={},
+        location_i18n={},
+        event_i18n={},
+    )
 
 
 @worldinfo_bp.route("/<int:worldinfo_id>", methods=["GET", "POST"])
@@ -88,7 +105,7 @@ def detail(worldinfo_id: int):
 
 @worldinfo_bp.route("/<int:worldinfo_id>/duplicate", methods=["POST"])
 @require_permission(FunctionPermission.WORLDINFO_CREATE)
-def duplicate(worldinfo_id: int):
+def duplicate_worldinfo(worldinfo_id: int):
     status, payload = core_post(f"/api/worldinfo/{worldinfo_id}/duplicate")
     if status < 400 and payload.get("id"):
         flash(tr(_("WorldInfo copied as '%(name)s'."), name=payload.get("name", "")), "success")
@@ -99,7 +116,7 @@ def duplicate(worldinfo_id: int):
 
 @worldinfo_bp.route("/<int:worldinfo_id>/delete", methods=["POST"])
 @require_permission(FunctionPermission.WORLDINFO_DELETE)
-def delete(worldinfo_id: int):
+def delete_worldinfo(worldinfo_id: int):
     status, payload = core_delete(f"/api/worldinfo/{worldinfo_id}")
     if status < 400:
         flash(tr(_("WorldInfo deleted.")), "success")

@@ -42,7 +42,7 @@ def creations():
                 continue
             if q and q not in (c.name or "").lower():
                 continue
-            all_items.append({"type": "character", "id": c.id, "name": c.name, "visibility": c.visibility, "url": url_for("characters.detail", character_id=c.id)})
+            all_items.append({"type": "character", "id": c.id, "name": c.name, "visibility": c.visibility, "url": url_for("characters.edit_character", character_id=c.id)})
     if type_filter in ("all", "worldinfo"):
         for w in wrap_dto(data.get("worldinfos", [])):
             if not w.editable:

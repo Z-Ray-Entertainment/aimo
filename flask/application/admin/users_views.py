@@ -18,7 +18,7 @@ def users_list():
 
 @admin_bp.route("/users/new", methods=["GET", "POST"])
 @require_permission(FunctionPermission.ADMIN_ACCESS)
-def user_new():
+def create_user():
     if request.method == "POST":
         form = AdminUserForm.from_request(request.form)
         status, payload = core_post(
@@ -41,7 +41,7 @@ def user_new():
 
 @admin_bp.route("/users/<int:user_id>/edit", methods=["GET", "POST"])
 @require_permission(FunctionPermission.ADMIN_ACCESS)
-def user_edit(user_id: int):
+def edit_user(user_id: int):
     if request.method == "POST":
         form = AdminUserForm.from_request(request.form)
         body: dict = {
@@ -67,7 +67,7 @@ def user_edit(user_id: int):
 
 @admin_bp.route("/users/<int:user_id>/delete", methods=["POST"])
 @require_permission(FunctionPermission.ADMIN_ACCESS)
-def user_delete(user_id: int):
+def delete_user(user_id: int):
     status, payload = core_delete(f"/api/admin/users/{user_id}")
     if status < 400:
         flash(tr(_("User deleted.")), "success")

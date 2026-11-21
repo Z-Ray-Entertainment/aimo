@@ -1,27 +1,26 @@
-from flask import Blueprint, flash, g, redirect, render_template, request, url_for
+from flask import flash, g, redirect, render_template, request, url_for
 
 from application.auth.decorators import get_current_user, is_admin, require_permission
+from application.chat import chat_bp
 from application.core_client import core_delete, core_get, core_post, core_put
 from application.ui_helpers import tr
 from application.view_models import FunctionPermission, wrap_dto
 from i18n import gettext_noop as _
 
-chat_bp = Blueprint("chat", __name__, url_prefix="/chat")
-
 
 @chat_bp.route("/character/<int:character_id>", methods=["GET"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
-def select_or_create(character_id: int):
+def open_character_chat(character_id: int):
     status, data = core_get("/api/chat/sessions")
     sessions = [s for s in wrap_dto(data.get("sessions", [])) if s.character_id == character_id] if status == 200 else []
     if sessions:
         return redirect(url_for("chat.view_session", session_id=sessions[0].id))
-    return redirect(url_for("chat.start_new_session", character_id=character_id))
+    return redirect(url_for("chat.new_character_chat", character_id=character_id))
 
 
 @chat_bp.route("/character/<int:character_id>/new", methods=["GET", "POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
-def start_new_session(character_id: int):
+def new_character_chat(character_id: int):
     _, char_data = core_get(f"/api/characters/{character_id}")
     if not char_data.get("id"):
         flash(tr(_("Character not found.")), "error")
@@ -134,6 +133,3 @@ def delete_session(session_id: int):
     else:
         flash(payload.get("error") or tr(_("Chat session not found.")), "error")
     return redirect(url_for("overview.index"))
-
-
-from application.chat import memory_views as _memory_views  # noqa: E402, F401

@@ -395,6 +395,48 @@ def create_worldinfo_location(worldinfo_id: int):
         return jsonify({"error": str(exc)}), 400
 
 
+@api_worldinfo_bp.route("/<int:worldinfo_id>/locations/<int:location_id>", methods=["PUT"])
+@require_permission(FunctionPermission.WORLDINFO_EDIT)
+def update_worldinfo_location(worldinfo_id: int, location_id: int):
+    user = get_current_user()
+    repo = WorldInfoRepository()
+    wi = repo.get_by_id(worldinfo_id)
+    if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        return jsonify({"error": "WorldInfo not found."}), 404
+    loc = repo.get_location(location_id)
+    if loc is None or loc.worldinfo_id != worldinfo_id:
+        return jsonify({"error": "Location not found."}), 404
+
+    data = request.get_json(silent=True) or request.form.to_dict()
+    bg_path = data.get("background_image_path") or loc.background_image_path
+    if RequestDataParser.to_bool(data, "remove_background"):
+        bg_path = None
+    bg_file = request.files.get("background_file")
+    try:
+        if bg_file and bg_file.filename:
+            bg_path = FileStorage().save_background(bg_file.stream, bg_file.filename)
+        WorldInfoService().update_location(
+            location=loc,
+            name=RequestDataParser.to_str(data, "name", default=loc.name),
+            tags=data.get("tags", loc.tags),
+            description=RequestDataParser.to_str(data, "description", default=loc.description),
+            bg_path=bg_path,
+            is_proper_noun=RequestDataParser.to_bool(data, "is_proper_noun")
+            if "is_proper_noun" in data
+            else None,
+        )
+        saved = repo.update_location(loc)
+        return jsonify(
+            {
+                "id": saved.id,
+                "name": saved.name,
+                "background_image_path": saved.background_image_path,
+            }
+        )
+    except (AimoError, ValueError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
 @api_worldinfo_bp.route("/<int:worldinfo_id>/locations/<int:location_id>", methods=["DELETE"])
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def delete_worldinfo_location(worldinfo_id: int, location_id: int):
@@ -407,6 +449,36 @@ def delete_worldinfo_location(worldinfo_id: int, location_id: int):
     if loc is None or loc.worldinfo_id != worldinfo_id:
         return jsonify({"error": "Location not found."}), 404
     return jsonify({"deleted": repo.delete_location(location_id)})
+
+
+@api_worldinfo_bp.route("/<int:worldinfo_id>/events/<int:event_id>", methods=["PUT"])
+@require_permission(FunctionPermission.WORLDINFO_EDIT)
+def update_worldinfo_event(worldinfo_id: int, event_id: int):
+    user = get_current_user()
+    repo = WorldInfoRepository()
+    wi = repo.get_by_id(worldinfo_id)
+    if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        return jsonify({"error": "WorldInfo not found."}), 404
+    ev = repo.get_event(event_id)
+    if ev is None or ev.worldinfo_id != worldinfo_id:
+        return jsonify({"error": "Event not found."}), 404
+
+    data = request.get_json(silent=True) or request.form.to_dict()
+    try:
+        WorldInfoService().update_event(
+            event=ev,
+            title=RequestDataParser.to_str(data, "title", default=ev.title),
+            description=RequestDataParser.to_str(data, "description", default=ev.description),
+            probability=RequestDataParser.to_int(data, "probability", default=ev.probability),
+            one_shot=RequestDataParser.to_bool(data, "one_shot"),
+            location_id=RequestDataParser.to_opt_int(data, "location_id"),
+            min_relationship=RequestDataParser.to_opt_int(data, "min_relationship"),
+            max_relationship=RequestDataParser.to_opt_int(data, "max_relationship"),
+        )
+        saved = repo.update_event(ev)
+        return jsonify({"id": saved.id, "title": saved.title})
+    except (AimoError, ValueError) as exc:
+        return jsonify({"error": str(exc)}), 400
 
 
 @api_worldinfo_bp.route("/<int:worldinfo_id>/events/<int:event_id>", methods=["DELETE"])

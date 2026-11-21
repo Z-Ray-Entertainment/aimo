@@ -14,6 +14,7 @@ from domain.translation.models import LANGUAGE_METADATA
 from domain.worldinfo.services import WorldInfoService
 from infrastructure.llm.factory import get_llm_provider
 from infrastructure.repositories.character_repository import CharacterRepository
+from infrastructure.repositories.relationship_repository import RelationshipRepository
 from infrastructure.repositories.settings_repository import SettingsRepository
 from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
@@ -210,6 +211,15 @@ def duplicate_character(character_id: int):
     return jsonify({"id": copied.id, "name": copied.name}), 201
 
 
+@api_characters_bp.route("/relationship-tiers", methods=["GET"])
+@require_auth
+def list_relationship_tiers():
+    user = get_current_user()
+    lang = (user.language or "en")[:2].lower()
+    tiers = RelationshipRepository().list_tiers(lang)
+    return jsonify({"tiers": [{"level": t.level, "name": t.name} for t in tiers]})
+
+
 @api_characters_bp.route("/<int:character_id>", methods=["GET"])
 @require_auth
 def get_character_detail(character_id: int):
@@ -218,6 +228,7 @@ def get_character_detail(character_id: int):
     char = char_repo.get_by_id(character_id)
     if char is None or not char.is_visible_to_user(user.id, is_admin()):
         return jsonify({"error": "Character not found."}), 404
+    events = WorldInfoRepository().list_character_events(character_id)
     return jsonify(
         {
             "id": char.id,
@@ -240,6 +251,25 @@ def get_character_detail(character_id: int):
             "initial_relationship": char.initial_relationship,
             "preferred_location_ids": char.preferred_location_ids,
             "disliked_location_ids": char.disliked_location_ids,
+            "collaborator_creator_tags": char.collaborator_creator_tags,
+            "sprites": [
+                {
+                    "id": sp.id,
+                    "emotion": sp.emotion.value,
+                    "variant": sp.variant,
+                    "file_path": sp.file_path,
+                }
+                for sp in char.sprites
+            ],
+            "gallery_images": [
+                {
+                    "id": img.id,
+                    "file_path": img.file_path,
+                    "unlock_threshold": img.unlock_threshold,
+                }
+                for img in char.gallery_images
+            ],
+            "events": [_serialize_character_event(ev) for ev in events],
             "editable": char.is_editable_by_user(user.id, is_admin(), user.creator_tag),
             "deletable": char.is_deletable_by_user(user.id, is_admin()),
         }

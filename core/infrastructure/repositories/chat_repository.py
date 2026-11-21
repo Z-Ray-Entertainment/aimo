@@ -23,6 +23,18 @@ class ChatRepository(BaseRepository[ChatSession]):
             ).fetchall()
             return [self._session_to_entity(row) for row in rows]
 
+    def list_all_sessions_for_user(self, user_id: int) -> list[ChatSession]:
+        with get_db_session() as conn:
+            rows = conn.execute(
+                """
+                SELECT * FROM chat_sessions
+                WHERE user_id = ?
+                ORDER BY last_message_at DESC, id DESC
+                """,
+                (user_id,),
+            ).fetchall()
+            return [self._session_to_entity(row) for row in rows]
+
     def get_session(self, session_id: int) -> ChatSession | None:
         with get_db_session() as conn:
             row = conn.execute(

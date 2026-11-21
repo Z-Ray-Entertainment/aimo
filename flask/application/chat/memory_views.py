@@ -2,7 +2,7 @@ from flask import flash, redirect, request, url_for
 
 from application.auth.decorators import require_permission
 from application.chat.forms import MemoryEditForm
-from application.chat.views import chat_bp
+from application.chat import chat_bp
 from application.core_client import core_delete, core_post, core_put
 from application.ui_helpers import tr
 from application.view_models import FunctionPermission

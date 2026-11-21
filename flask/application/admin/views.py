@@ -71,7 +71,7 @@ def backdrop_config():
 
 @admin_bp.route("/translations", methods=["GET"])
 @require_permission(FunctionPermission.ADMIN_ACCESS)
-def translations_status():
+def translations_config():
     _, status_data = core_get("/api/admin/translations/status")
     return render_template("admin/translations.html", worker_status=status_data)
 

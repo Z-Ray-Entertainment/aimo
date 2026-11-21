@@ -79,3 +79,66 @@ def delete_sprite(character_id: int, emotion: str, variant: int):
     return jsonify({"deleted": deleted})
 
 
+@api_characters_bp.route("/<int:character_id>/gallery", methods=["POST"])
+@require_permission(FunctionPermission.CHARACTER_EDIT)
+def add_gallery_image(character_id: int):
+    user = get_current_user()
+    char_repo = CharacterRepository()
+    character = char_repo.get_by_id(character_id)
+    if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        return jsonify({"error": "Character not found."}), 404
+
+    img_file = request.files.get("gallery_image")
+    if img_file is None or not img_file.filename:
+        return jsonify({"error": "No gallery image provided."}), 400
+
+    threshold = RequestDataParser.to_int(request.form, "unlock_threshold", default=0)
+    try:
+        saved_path = FileStorage().save_portrait(img_file.stream, img_file.filename)
+        img_entity = CharacterService().add_gallery_image(character, saved_path, threshold)
+        persisted = char_repo.add_gallery_image(character_id, img_entity)
+        return jsonify(
+            {
+                "id": persisted.id,
+                "file_path": persisted.file_path,
+                "unlock_threshold": persisted.unlock_threshold,
+            }
+        ), 201
+    except (AimoError, ValueError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@api_characters_bp.route("/<int:character_id>/gallery/<int:image_id>", methods=["PUT"])
+@require_permission(FunctionPermission.CHARACTER_EDIT)
+def update_gallery_image(character_id: int, image_id: int):
+    user = get_current_user()
+    char_repo = CharacterRepository()
+    character = char_repo.get_by_id(character_id)
+    if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        return jsonify({"error": "Character not found."}), 404
+    if not any(img.id == image_id for img in character.gallery_images):
+        return jsonify({"error": "Gallery image not found."}), 404
+
+    data = request.get_json(silent=True) or request.form.to_dict()
+    try:
+        threshold = RequestDataParser.to_int(data, "unlock_threshold", default=0)
+        validated = CharacterService().validate_gallery_threshold(threshold)
+        char_repo.update_gallery_image_threshold(image_id, validated)
+        return jsonify({"id": image_id, "unlock_threshold": validated})
+    except (AimoError, ValueError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@api_characters_bp.route("/<int:character_id>/gallery/<int:image_id>", methods=["DELETE"])
+@require_permission(FunctionPermission.CHARACTER_EDIT)
+def delete_gallery_image(character_id: int, image_id: int):
+    user = get_current_user()
+    char_repo = CharacterRepository()
+    character = char_repo.get_by_id(character_id)
+    if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        return jsonify({"error": "Character not found."}), 404
+    if not any(img.id == image_id for img in character.gallery_images):
+        return jsonify({"error": "Gallery image not found."}), 404
+    return jsonify({"deleted": char_repo.delete_gallery_image(image_id)})
+
+
