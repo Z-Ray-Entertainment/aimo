@@ -30,7 +30,7 @@ Depending on your choice in Step 2, the wizard configures the selected backend:
     - **✨ Assistant:** `gemma4:e4b`
     - **👁️ Vision:** `gemma4:e4b`
     - **🏷️ Classification:** `llama3.2:1b`
-  - **Integrated Model Manager:** After checking the Ollama connection, each role row displays whether its recommended model is **✔ Ready** or **⏳ Missing**. For any missing model, a **📥 Pull** button appears directly on that row to download and install the model inside the wizard with live progress feedback. Once installed, the Pull button automatically yields to the **✔ Ready** badge.
+  - **Integrated Model Manager:** After checking the Ollama connection, each role row displays **✔ Ready** if its recommended model is already installed, or a **📥 Pull** button if the model is missing so you can download and install it directly inside the wizard with live progress feedback. Once installed, the Pull button automatically yields to the **✔ Ready** badge.
 - **If Google AI Cloud is selected:**
   - Enter and verify your **Google AI API Key** and optionally customize the Gemini model assignment per role.
 

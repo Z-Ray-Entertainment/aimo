@@ -89,6 +89,8 @@
       const pullBtn = row.querySelector(".ollama-model-pull-btn");
       if (!badge) return;
       if (installedOllamaModels.has(targetModel)) {
+        badge.hidden = false;
+        badge.style.display = "";
         badge.style.color = "#58D68D";
         badge.style.fontWeight = "700";
         badge.textContent = `✔ ${SETUP_I18N.ready || "Ready"}`;
@@ -97,9 +99,8 @@
           pullBtn.style.display = "none";
         }
       } else {
-        badge.style.color = "#F5B041";
-        badge.style.fontWeight = "400";
-        badge.textContent = `⏳ ${SETUP_I18N.missing || "Missing"}`;
+        badge.hidden = true;
+        badge.style.display = "none";
         if (pullBtn) {
           pullBtn.hidden = false;
           pullBtn.style.display = "";
