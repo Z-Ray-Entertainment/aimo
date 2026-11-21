@@ -65,7 +65,6 @@ logger = logging.getLogger(__name__)
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def recalculate_relationship(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -185,7 +184,6 @@ def recalculate_relationship(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def switch_location(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, is_admin = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Chat session not found."}), 404
@@ -314,7 +312,6 @@ def switch_location(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def generate_scene_image(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -451,7 +448,6 @@ def generate_scene_image(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def cancel_image(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404

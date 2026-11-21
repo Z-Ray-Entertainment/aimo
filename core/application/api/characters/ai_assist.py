@@ -295,7 +295,6 @@ def extract_appearance():
             except (TypeError, ValueError):
                 return jsonify({"error": "Invalid character_id."}), 400
             user = get_current_user()
-            assert user is not None and user.id is not None
             char = CharacterRepository().get_by_id(parsed_char_id)
             if char is None or not char.is_editable_by_user(user.id, is_admin(), user.creator_tag):
                 return jsonify({"error": "Character not found."}), 404
@@ -317,7 +316,6 @@ def extract_appearance():
             except (TypeError, ValueError):
                 return jsonify({"error": "Invalid character_id."}), 400
             user = get_current_user()
-            assert user is not None and user.id is not None
             char = CharacterRepository().get_by_id(parsed_char_id)
             if char is None or not char.is_editable_by_user(user.id, is_admin(), user.creator_tag):
                 return jsonify({"error": "Character not found."}), 404

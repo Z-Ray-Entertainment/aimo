@@ -68,7 +68,6 @@ def create_user():
             perms = perm_service.create_for_preset(0, preset)
 
         saved = user_repo.create_user(user, perms)
-        assert saved.id is not None
         PersonaRepository().create(
             PersonaService().create_persona(
                 user_id=saved.id,

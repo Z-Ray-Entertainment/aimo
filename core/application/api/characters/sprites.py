@@ -30,7 +30,6 @@ from application.api.characters import api_characters_bp
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def upload_sprite(character_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
 
     char_repo = CharacterRepository()
     char_service = CharacterService()
@@ -72,7 +71,6 @@ def upload_sprite(character_id: int):
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def delete_sprite(character_id: int, emotion: str, variant: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     character = char_repo.get_by_id(character_id)
     if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):

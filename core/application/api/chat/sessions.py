@@ -21,7 +21,6 @@ from shared.exceptions import AimoError
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def list_chat_sessions():
     user = get_current_user()
-    assert user is not None and user.id is not None
     sessions = ChatRepository().list_all_sessions_for_user(user.id)
     return jsonify(
         {
@@ -45,7 +44,6 @@ def list_chat_sessions():
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def create_chat_session():
     user = get_current_user()
-    assert user is not None and user.id is not None
     data = parse_request_payload()
     try:
         character_id = int(data.get("character_id", 0))
@@ -86,7 +84,6 @@ def create_chat_session():
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def get_chat_session(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -132,7 +129,6 @@ def get_chat_session(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def update_chat_session(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, admin_flag = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -173,7 +169,6 @@ def update_chat_session(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def delete_chat_session(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -185,7 +180,6 @@ def delete_chat_session(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def update_chat_memory(session_id: int, memory_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -212,7 +206,6 @@ def update_chat_memory(session_id: int, memory_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def delete_chat_memory(session_id: int, memory_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404

@@ -22,7 +22,6 @@ api_overview_bp = Blueprint("api_overview", __name__, url_prefix="/api/overview"
 @require_auth
 def get_overview():
     user = require_current_user()
-    assert user.id is not None
     admin_flag = is_admin()
     user_lang = (user.language or "en")[:2].lower()
     trans_repo = TranslationRepository()

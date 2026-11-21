@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 from flask import jsonify, request
 
@@ -10,9 +10,7 @@ from domain.chat.models import Message
 
 
 def require_current_user() -> User:
-    user = get_current_user()
-    assert user is not None and user.id is not None
-    return user
+    return cast(User, get_current_user())
 
 
 def parse_request_payload() -> dict[str, Any]:

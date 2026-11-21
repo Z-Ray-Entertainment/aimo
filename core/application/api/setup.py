@@ -92,7 +92,6 @@ def complete_first_boot():
         )
         perms = perm_service.create_for_preset(0, Preset.ADMIN)
         saved_user = user_repo.create_user(user, perms)
-        assert saved_user.id is not None
 
         persona = persona_service.create_persona(
             user_id=saved_user.id,

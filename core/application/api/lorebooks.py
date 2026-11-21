@@ -52,7 +52,6 @@ def list_lorebooks():
 @require_permission(FunctionPermission.LOREBOOK_CREATE)
 def create_lorebook():
     user = get_current_user()
-    assert user is not None and user.id is not None
     data = request.get_json(silent=True) or request.form.to_dict()
     service = LorebookService()
     repo = LorebookRepository()
@@ -80,7 +79,6 @@ def create_lorebook():
 @require_permission(FunctionPermission.LOREBOOK_EDIT)
 def add_lorebook_entry(lorebook_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = LorebookRepository()
     lb = repo.get_by_id(lorebook_id)
     if lb is None or not lb.is_editable_by_user(user.id, is_admin(), user.creator_tag):
@@ -115,7 +113,6 @@ def add_lorebook_entry(lorebook_id: int):
 @require_permission(FunctionPermission.LOREBOOK_EDIT)
 def delete_lorebook_entry(entry_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = LorebookRepository()
     entry = repo.get_entry(entry_id)
     if entry is None:
@@ -131,7 +128,6 @@ def delete_lorebook_entry(entry_id: int):
 @require_permission(FunctionPermission.LOREBOOK_CREATE)
 def duplicate_lorebook(lorebook_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = LorebookRepository()
     orig = repo.get_by_id(lorebook_id)
     if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
@@ -198,7 +194,6 @@ def suggest_tags():
 @require_auth
 def get_lorebook_detail(lorebook_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = LorebookRepository()
     lb = repo.get_by_id(lorebook_id)
     if lb is None or not lb.is_visible_to_user(user.id, is_admin()):
@@ -235,7 +230,6 @@ def get_lorebook_detail(lorebook_id: int):
 @require_permission(FunctionPermission.LOREBOOK_EDIT)
 def update_lorebook_detail(lorebook_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = LorebookRepository()
     lb = repo.get_by_id(lorebook_id)
     if lb is None or not lb.is_editable_by_user(user.id, is_admin(), user.creator_tag):
@@ -259,7 +253,6 @@ def update_lorebook_detail(lorebook_id: int):
 @require_permission(FunctionPermission.LOREBOOK_DELETE)
 def delete_lorebook_detail(lorebook_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = LorebookRepository()
     lb = repo.get_by_id(lorebook_id)
     if lb is None or not lb.is_deletable_by_user(user.id, is_admin()):
@@ -271,7 +264,6 @@ def delete_lorebook_detail(lorebook_id: int):
 @require_permission(FunctionPermission.LOREBOOK_EDIT)
 def update_lorebook_entry(entry_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = LorebookRepository()
     entry = repo.get_entry(entry_id)
     if entry is None:

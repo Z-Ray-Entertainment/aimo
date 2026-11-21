@@ -18,7 +18,6 @@ api_personas_bp = Blueprint("api_personas", __name__, url_prefix="/api/personas"
 @require_auth
 def list_personas():
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = PersonaRepository()
     trans_repo = TranslationRepository()
     personas = repo.list_for_user(user.id)
@@ -46,7 +45,6 @@ def list_personas():
 @require_permission(FunctionPermission.PERSONA_MANAGE)
 def create_persona():
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = PersonaRepository()
     trans_repo = TranslationRepository()
     service = PersonaService()
@@ -104,7 +102,6 @@ def create_persona():
 @require_permission(FunctionPermission.PERSONA_MANAGE)
 def update_persona(persona_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = PersonaRepository()
     trans_repo = TranslationRepository()
     service = PersonaService()
@@ -163,7 +160,6 @@ def update_persona(persona_id: int):
 @require_permission(FunctionPermission.PERSONA_MANAGE)
 def analyze_uploaded_or_existing_portrait():
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = PersonaRepository()
     service = PersonaService()
     storage = FileStorage()
@@ -227,7 +223,6 @@ def analyze_uploaded_or_existing_portrait():
 @require_permission(FunctionPermission.PERSONA_MANAGE)
 def analyze_persona_portrait(persona_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = PersonaRepository()
     service = PersonaService()
     storage = FileStorage()
@@ -264,7 +259,6 @@ def analyze_persona_portrait(persona_id: int):
 @require_permission(FunctionPermission.PERSONA_MANAGE)
 def set_default_persona(persona_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = PersonaRepository()
     persona = repo.get_by_id(persona_id)
     if persona is None or persona.user_id != user.id:
@@ -277,7 +271,6 @@ def set_default_persona(persona_id: int):
 @require_permission(FunctionPermission.PERSONA_MANAGE)
 def delete_persona(persona_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = PersonaRepository()
     service = PersonaService()
 

@@ -65,7 +65,6 @@ logger = logging.getLogger(__name__)
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def get_session_lorebooks(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, is_admin = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -215,7 +214,6 @@ def get_session_lorebooks(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def toggle_session_lorebook(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, is_admin = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -270,7 +268,6 @@ def toggle_session_lorebook(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def add_session_custom_lorebook(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, is_admin = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -322,7 +319,6 @@ def add_session_custom_lorebook(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def remove_session_custom_lorebook(session_id: int, lorebook_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404

@@ -70,7 +70,6 @@ logger = logging.getLogger(__name__)
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def list_session_memories(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -97,7 +96,6 @@ def list_session_memories(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def recalculate_memory(session_id: int, memory_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -173,7 +171,6 @@ def recalculate_memory(session_id: int, memory_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def translate_memory(session_id: int, memory_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404

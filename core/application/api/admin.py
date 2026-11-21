@@ -332,7 +332,6 @@ def notify_translation_worker():
             return jsonify({"error": "Invalid entity_id."}), 400
 
         user = get_current_user()
-        assert user is not None and user.id is not None
         admin_flag = is_admin()
         authorized = False
         if etype == "system_prompt":

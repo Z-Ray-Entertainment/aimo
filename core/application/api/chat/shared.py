@@ -39,7 +39,6 @@ def require_chat_session(view_func: Callable[..., Any]) -> Callable[..., Any]:
     @wraps(view_func)
     def wrapped(session_id: int, *args: Any, **kwargs: Any) -> Any:
         user = get_current_user()
-        assert user is not None and user.id is not None
         chat_session, admin_flag = _get_authorized_session(session_id, user)
         if chat_session is None:
             return jsonify({"error": "Session not found."}), 404

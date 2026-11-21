@@ -68,7 +68,6 @@ def register():
             return jsonify({"error": "Email already registered."}), 409
         perms = PermissionService().create_for_preset(0, Preset.USER)
         saved = user_repo.create_user(user, perms)
-        assert saved.id is not None
         default_persona = PersonaService().create_persona(
             user_id=saved.id,
             name=saved.username,
@@ -87,7 +86,6 @@ def register():
 @require_auth
 def get_me():
     user = get_current_user()
-    assert user is not None and user.id is not None
     perms = get_current_permissions()
     persona_repo = PersonaRepository()
     trans_repo = TranslationRepository()

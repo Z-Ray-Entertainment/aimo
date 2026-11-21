@@ -83,7 +83,6 @@ def _revert_relationship_for_messages(
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def regenerate_turn(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, is_admin = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -157,7 +156,6 @@ def regenerate_turn(session_id: int):
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def get_message_prompt(session_id: int, message_idx: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -179,7 +177,6 @@ def get_message_prompt(session_id: int, message_idx: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def fork_chat_session(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     orig_session, _ = _get_authorized_session(session_id, user)
     if orig_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -203,7 +200,6 @@ def fork_chat_session(session_id: int):
     )
     forked_session.user_id = user.id
     saved_fork = chat_repo.create_session(forked_session)
-    assert saved_fork.id is not None
 
     for msg in filtered_messages:
         msg.session_id = saved_fork.id
@@ -228,7 +224,6 @@ def fork_chat_session(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def delete_messages_from_idx(session_id: int, message_idx: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -287,7 +282,6 @@ def delete_messages_from_idx(session_id: int, message_idx: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def edit_message(session_id: int, message_idx: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404

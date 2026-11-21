@@ -74,7 +74,6 @@ def assemble_turn_context(
     target_lang: str,
     triggered_event: Event | None,
 ) -> AssembledTurnContext:
-    assert session.id is not None
     trans_repo = TranslationRepository()
     wi_repo = WorldInfoRepository()
     chat_repo = ChatRepository()

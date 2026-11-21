@@ -76,7 +76,6 @@ def list_worldinfo():
 @require_permission(FunctionPermission.WORLDINFO_CREATE)
 def create_worldinfo():
     user = get_current_user()
-    assert user is not None and user.id is not None
     data = request.get_json(silent=True) or request.form.to_dict()
     service = WorldInfoService()
     repo = WorldInfoRepository()
@@ -112,7 +111,6 @@ def create_worldinfo():
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def create_event():
     user = get_current_user()
-    assert user is not None and user.id is not None
     data = request.get_json(silent=True) or request.form.to_dict()
     service = WorldInfoService()
     repo = WorldInfoRepository()
@@ -167,7 +165,6 @@ def analyze_location_background():
 
     try:
         user = get_current_user()
-        assert user is not None and user.id is not None
         if bg_file and bg_file.filename:
             bg_path = storage.save_background(bg_file.stream, bg_file.filename)
         else:
@@ -231,7 +228,6 @@ def extract_location_tags():
 @require_permission(FunctionPermission.WORLDINFO_CREATE)
 def duplicate_worldinfo(worldinfo_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     orig = repo.get_by_id(worldinfo_id)
     if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
@@ -249,7 +245,6 @@ def duplicate_worldinfo(worldinfo_id: int):
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def update_worldinfo_backdrop(worldinfo_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     wi = repo.get_by_id(worldinfo_id)
     if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
@@ -296,7 +291,6 @@ def update_worldinfo_backdrop(worldinfo_id: int):
 @require_auth
 def get_worldinfo_detail(worldinfo_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     wi = repo.get_by_id(worldinfo_id)
     if wi is None or not wi.is_visible_to_user(user.id, is_admin()):
@@ -347,7 +341,6 @@ def get_worldinfo_detail(worldinfo_id: int):
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def update_worldinfo_detail(worldinfo_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     wi = repo.get_by_id(worldinfo_id)
     if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
@@ -372,7 +365,6 @@ def update_worldinfo_detail(worldinfo_id: int):
 @require_permission(FunctionPermission.WORLDINFO_DELETE)
 def delete_worldinfo_detail(worldinfo_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     wi = repo.get_by_id(worldinfo_id)
     if wi is None or not wi.is_deletable_by_user(user.id, is_admin()):
@@ -384,7 +376,6 @@ def delete_worldinfo_detail(worldinfo_id: int):
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def create_worldinfo_location(worldinfo_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     wi = repo.get_by_id(worldinfo_id)
     if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
@@ -408,7 +399,6 @@ def create_worldinfo_location(worldinfo_id: int):
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def delete_worldinfo_location(worldinfo_id: int, location_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     wi = repo.get_by_id(worldinfo_id)
     if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
@@ -423,7 +413,6 @@ def delete_worldinfo_location(worldinfo_id: int, location_id: int):
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def delete_worldinfo_event(worldinfo_id: int, event_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     wi = repo.get_by_id(worldinfo_id)
     if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):

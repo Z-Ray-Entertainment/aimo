@@ -72,7 +72,6 @@ def duplicate_character_entity(repo, character_id: int, target_user_id: int) -> 
         sprites=[],
     )
     saved = repo.save(clone)
-    assert saved.id is not None
 
     _copy_field_translations("character", character_id, saved.id)
 
@@ -131,7 +130,6 @@ def duplicate_character_entity(repo, character_id: int, target_user_id: int) -> 
             )
 
     reloaded = repo.get_by_id(saved.id)
-    assert reloaded is not None
     return reloaded
 
 
@@ -158,7 +156,6 @@ def duplicate_worldinfo_entity(repo, worldinfo_id: int, target_user_id: int) -> 
         is_proper_noun=orig.is_proper_noun,
     )
     saved = repo.create(clone)
-    assert saved.id is not None
     _copy_field_translations("worldinfo", worldinfo_id, saved.id)
 
     loc_map: dict[int, int] = {}
@@ -178,7 +175,6 @@ def duplicate_worldinfo_entity(repo, worldinfo_id: int, target_user_id: int) -> 
                 is_proper_noun=loc.is_proper_noun,
             )
         )
-        assert saved_loc.id is not None
         loc_map[loc.id] = saved_loc.id
         _copy_field_translations("worldinfo_location", loc.id, saved_loc.id)
 
@@ -200,7 +196,6 @@ def duplicate_worldinfo_entity(repo, worldinfo_id: int, target_user_id: int) -> 
             _copy_field_translations("worldinfo_event", ev.id, saved_ev.id)
 
     reloaded = repo.get_by_id(saved.id)
-    assert reloaded is not None
     return reloaded
 
 
@@ -222,7 +217,6 @@ def duplicate_lorebook_entity(repo, lorebook_id: int, target_user_id: int) -> Lo
         is_proper_noun=orig.is_proper_noun,
     )
     saved = repo.create(clone)
-    assert saved.id is not None
     _copy_field_translations("lorebook", lorebook_id, saved.id)
 
     for entry in repo.list_entries(lorebook_id):
@@ -241,5 +235,4 @@ def duplicate_lorebook_entity(repo, lorebook_id: int, target_user_id: int) -> Lo
             _copy_field_translations("lorebook_entry", entry.id, saved_entry.id)
 
     reloaded = repo.get_by_id(saved.id)
-    assert reloaded is not None
     return reloaded

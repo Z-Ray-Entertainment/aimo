@@ -59,7 +59,6 @@ def finalize_streamed_turn(
     cleaned_user_text: str,
     target_ai_idx: int | None,
 ) -> dict | None:
-    assert session.id is not None
     chat_repo = ChatRepository()
     rel_repo = RelationshipRepository()
     char_service = CharacterService()

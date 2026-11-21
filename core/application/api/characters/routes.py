@@ -30,7 +30,6 @@ from application.api.characters.events import _serialize_character_event
 @require_auth
 def list_characters():
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     wi_repo = WorldInfoRepository()
     trans_repo = TranslationRepository()
@@ -121,7 +120,6 @@ def list_characters():
 @require_permission(FunctionPermission.CHARACTER_CREATE)
 def create_character():
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_service = CharacterService()
     char_repo = CharacterRepository()
     storage = FileStorage()
@@ -199,7 +197,6 @@ def create_character():
 @require_permission(FunctionPermission.CHARACTER_CREATE)
 def duplicate_character(character_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     orig = char_repo.get_by_id(character_id)
     if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
@@ -217,7 +214,6 @@ def duplicate_character(character_id: int):
 @require_auth
 def get_character_detail(character_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     char = char_repo.get_by_id(character_id)
     if char is None or not char.is_visible_to_user(user.id, is_admin()):
@@ -254,7 +250,6 @@ def get_character_detail(character_id: int):
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def update_character_detail(character_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     char = char_repo.get_by_id(character_id)
     if char is None or not char.is_editable_by_user(user.id, is_admin(), user.creator_tag):
@@ -282,7 +277,6 @@ def update_character_detail(character_id: int):
 @require_permission(FunctionPermission.CHARACTER_DELETE)
 def delete_character_detail(character_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     char = char_repo.get_by_id(character_id)
     if char is None or not char.is_deletable_by_user(user.id, is_admin()):

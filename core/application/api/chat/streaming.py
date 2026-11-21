@@ -90,7 +90,6 @@ def _stream_from_task(task: BackgroundTurnTask):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def post_message(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, is_admin_flag = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -156,7 +155,6 @@ def post_message(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def stream_session_response(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, is_admin_flag = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -190,7 +188,6 @@ def stream_session_response(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def get_session_generation_status(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -217,7 +214,6 @@ def get_session_generation_status(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def abort_generation(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404

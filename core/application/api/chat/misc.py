@@ -65,7 +65,6 @@ logger = logging.getLogger(__name__)
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def poll_chat_notifications():
     user = get_current_user()
-    assert user is not None and user.id is not None
 
     raw_active = request.args.get("active_session_id", "").strip()
     active_session_id = int(raw_active) if raw_active.isdigit() else None
@@ -87,7 +86,6 @@ def poll_chat_notifications():
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def ack_chat_notification(notification_id: str):
     user = get_current_user()
-    assert user is not None and user.id is not None
 
     with _TASKS_LOCK:
         notifs = _USER_NOTIFICATIONS.get(user.id, [])
@@ -102,7 +100,6 @@ def ack_chat_notification(notification_id: str):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def translate_chat_message(session_id: int, message_idx: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -200,7 +197,6 @@ def translate_arbitrary_text():
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def toggle_session_thinking(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404

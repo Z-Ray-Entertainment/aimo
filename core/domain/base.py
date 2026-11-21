@@ -31,7 +31,8 @@ class ResolvableStrEnum(StrEnum):
         if not isinstance(raw, str):
             if strict:
                 raise ValueError(f"Invalid {cls.__name__} value: '{raw}'")
-            assert default is not None
+            if default is None:
+                raise ValueError(f"Default value required for {cls.__name__}.")
             return default
         cleaned = cls._normalize_raw(raw)
         cleaned = cls._get_aliases().get(cleaned, cleaned)
@@ -40,7 +41,8 @@ class ResolvableStrEnum(StrEnum):
                 return member
         if strict:
             raise ValueError(f"Unknown {cls.__name__}: '{raw}'")
-        assert default is not None
+        if default is None:
+            raise ValueError(f"Default value required for {cls.__name__}.")
         return default
 
 
