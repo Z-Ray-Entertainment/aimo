@@ -1,27 +1,21 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime
 from enum import StrEnum
 from typing import Any
 
+from domain.base import OwnedEntityMixin, ResolvableStrEnum, utc_now
 
-class MessageRole(StrEnum):
+
+class MessageRole(ResolvableStrEnum):
     USER = "user"
     CHARACTER = "character"
     SYSTEM = "system"
 
     @classmethod
     def resolve(cls, raw: str | "MessageRole") -> "MessageRole":
-        if isinstance(raw, cls):
-            return raw
-        if not isinstance(raw, str):
-            return cls.USER
-        cleaned = raw.strip().lower()
-        for member in cls:
-            if cleaned == member.value or cleaned.upper() == member.name:
-                return member
-        return cls.USER
+        return cls.resolve_value(raw, default=cls.USER)
 
 
 class SystemMessageType(StrEnum):
@@ -43,11 +37,11 @@ class Message:
     emotion_tag: str | None = None
     system_type: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=utc_now)
 
 
 @dataclass
-class ChatSession:
+class ChatSession(OwnedEntityMixin):
     id: int | None
     user_id: int
     character_id: int
@@ -60,10 +54,10 @@ class ChatSession:
     events_enabled: bool = True
     thinking_enabled: bool = False
     cooldown_counter: int = 25
-    last_message_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    last_message_at: datetime = field(default_factory=utc_now)
     parent_session_id: int | None = None
     persona_locked: bool = False
     triggered_event_ids: set[int] = field(default_factory=set)
     disabled_lorebook_ids: set[int] = field(default_factory=set)
     custom_lorebook_ids: list[int] = field(default_factory=list)
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=utc_now)

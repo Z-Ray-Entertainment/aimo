@@ -1,11 +1,11 @@
-from enum import Enum
+from enum import StrEnum
 import re
 
 from domain.chat.models import Message, MessageRole
 from shared.i18n import gettext_noop as _, t
 
 
-class SceneFocus(str, Enum):
+class SceneFocus(StrEnum):
     INTIMACY_BIO = "intimacy_bio"
     WORLD_EXPLORATION = "world_exploration"
     EVENT_ACTION = "event_action"

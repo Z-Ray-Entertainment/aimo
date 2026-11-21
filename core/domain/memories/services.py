@@ -1,25 +1,16 @@
-from datetime import datetime, timezone
 import json
 import re
-from typing import Any, Protocol
+from typing import Any
 
+from domain.base import TextGenerationProvider, utc_now
 from domain.memories.exceptions import InvalidMemoryDataError
 from domain.memories.models import Memory
+from domain.rag import score_and_rank_tagged_items
 from domain.settings.models import ModelParameters
-from shared.utils import count_tags_overlap, parse_tags, tags_overlap
+from domain.validation import DomainValidator
+from shared.utils import parse_tags
 
-
-class MemoryLLMProvider(Protocol):
-    def generate(
-        self,
-        prompt: str,
-        model: str,
-        params: ModelParameters,
-        stop: list[str] | None = None,
-        format: str | dict | None = None,
-        think: bool | None = None,
-    ) -> str:
-        ...
+MemoryLLMProvider = TextGenerationProvider
 
 
 class MemoryService:
@@ -34,21 +25,15 @@ class MemoryService:
         tags: list[str] | str,
         summary: str,
     ) -> Memory:
-        if isinstance(chat_session_id, bool) or not isinstance(chat_session_id, int) or chat_session_id <= 0:
-            raise InvalidMemoryDataError("A valid positive chat_session_id is required.")
+        DomainValidator.validate_positive_id(chat_session_id, "chat_session_id", InvalidMemoryDataError)
         if isinstance(message_idx, bool) or not isinstance(message_idx, int) or message_idx < 0:
             raise InvalidMemoryDataError("message_idx must be a non-negative integer.")
 
-        cleaned_title = title.strip() if isinstance(title, str) else ""
-        if not cleaned_title:
-            raise InvalidMemoryDataError("Memory title must not be empty.")
-
+        cleaned_title = DomainValidator.validate_required_string(title, "Memory title", InvalidMemoryDataError)
         normalized_tags = parse_tags(tags)
-        cleaned_summary = summary.strip() if isinstance(summary, str) else ""
-        if not cleaned_summary:
-            raise InvalidMemoryDataError("Memory summary must not be empty.")
+        cleaned_summary = DomainValidator.validate_required_string(summary, "Memory summary", InvalidMemoryDataError)
 
-        now = datetime.now(timezone.utc)
+        now = utc_now()
         return Memory(
             id=None,
             chat_session_id=chat_session_id,
@@ -67,18 +52,10 @@ class MemoryService:
         tags: list[str] | str,
         summary: str,
     ) -> Memory:
-        cleaned_title = title.strip() if isinstance(title, str) else ""
-        if not cleaned_title:
-            raise InvalidMemoryDataError("Memory title must not be empty.")
-
-        cleaned_summary = summary.strip() if isinstance(summary, str) else ""
-        if not cleaned_summary:
-            raise InvalidMemoryDataError("Memory summary must not be empty.")
-
-        memory.title = cleaned_title
+        memory.title = DomainValidator.validate_required_string(title, "Memory title", InvalidMemoryDataError)
         memory.tags = parse_tags(tags)
-        memory.summary = cleaned_summary
-        memory.updated_at = datetime.now(timezone.utc)
+        memory.summary = DomainValidator.validate_required_string(summary, "Memory summary", InvalidMemoryDataError)
+        memory.updated_at = utc_now()
         return memory
 
     def extract_memory_and_title(
@@ -251,43 +228,36 @@ class MemoryService:
         if not normalized_active:
             return []
         normalized_latest = parse_tags(latest_tags) if latest_tags else []
-        focus_list = list(focus_keywords) if focus_keywords else []
+        focus_set = set(focus_keywords) if focus_keywords else set()
 
-        scored: list[tuple[float, int, Memory]] = []
-        for idx, mem in enumerate(memories):
-            overlap = count_tags_overlap(mem.tags, normalized_active)
-            if overlap <= 0:
-                continue
-            freshness = count_tags_overlap(mem.tags, normalized_latest) * 20.0 if normalized_latest else 0.0
-            focus_hit = count_tags_overlap(mem.tags, focus_list) * 8.0 if focus_list else 0.0
-            recency = float(getattr(mem, "message_idx", 0) or 0) * 0.05
-            score = (overlap * 10.0) + freshness + focus_hit + recency
-            scored.append((score, idx, mem))
+        indexed = list(enumerate(memories))
+        ranked = score_and_rank_tagged_items(
+            indexed,
+            get_tags=lambda pair: pair[1].tags,
+            get_text_parts=lambda pair: (pair[1].title, pair[1].summary, " ".join(pair[1].tags)),
+            get_order_key=lambda pair: pair[0],
+            active_tags=normalized_active,
+            latest_user_tags=normalized_latest,
+            focus_keywords=focus_set,
+            extra_bonus_fn=lambda pair: float(pair[1].message_idx) * 0.05,
+            max_results=max_results if max_results and max_results > 0 else len(memories) or 1,
+        )
+        return [pair[1] for pair in ranked]
 
-        scored.sort(key=lambda item: (item[0], item[1]), reverse=True)
-        matched = [item[2] for item in scored]
-        if max_results is not None and max_results > 0:
-            return matched[:max_results]
-        return matched
+    @staticmethod
+    def _filter_memories_up_to(memories: list[Memory], max_idx: int) -> list[Memory]:
+        return [mem for mem in memories if mem.message_idx <= max_idx]
 
     def cascade_delete_memories(
         self,
         memories: list[Memory],
         deleted_message_idx: int,
     ) -> list[Memory]:
-        return [
-            mem
-            for mem in memories
-            if mem.message_idx <= deleted_message_idx
-        ]
+        return self._filter_memories_up_to(memories, deleted_message_idx)
 
     def filter_memories_for_fork(
         self,
         memories: list[Memory],
         fork_point_idx: int,
     ) -> list[Memory]:
-        return [
-            mem
-            for mem in memories
-            if mem.message_idx <= fork_point_idx
-        ]
+        return self._filter_memories_up_to(memories, fork_point_idx)

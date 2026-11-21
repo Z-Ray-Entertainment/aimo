@@ -1,9 +1,8 @@
-from datetime import datetime, timezone
 import json
 import random
 import re
-from typing import Any
 
+from domain.base import TextGenerationProvider, utc_now
 from domain.validation import DomainValidator
 from domain.worldinfo.exceptions import InvalidWorldInfoDataError
 from domain.worldinfo.models import Event, EventCooldownState, Location, WorldInfo
@@ -40,12 +39,9 @@ class WorldInfoService:
             cover_image_path=cleaned_cover,
             backdrop_image_path=cleaned_backdrop,
             lorebook_id=valid_lb_id,
-            collaborator_creator_tags=[
-                t.strip().lower() for t in collaborator_creator_tags
-                if isinstance(t, str) and t.strip()
-            ] if collaborator_creator_tags else [],
+            collaborator_creator_tags=DomainValidator.normalize_collaborator_tags(collaborator_creator_tags),
             is_proper_noun=bool(is_proper_noun),
-            created_at=datetime.now(timezone.utc),
+            created_at=utc_now(),
         )
 
     def update_worldinfo(
@@ -80,10 +76,7 @@ class WorldInfoService:
         if lorebook_id is not ...:
             worldinfo.lorebook_id = int(lorebook_id) if lorebook_id is not None and int(lorebook_id) > 0 else None
         if collaborator_creator_tags is not None:
-            worldinfo.collaborator_creator_tags = [
-                t.strip().lower() for t in collaborator_creator_tags
-                if isinstance(t, str) and t.strip()
-            ]
+            worldinfo.collaborator_creator_tags = DomainValidator.normalize_collaborator_tags(collaborator_creator_tags)
         if is_proper_noun is not None:
             worldinfo.is_proper_noun = bool(is_proper_noun)
         return worldinfo
@@ -91,7 +84,7 @@ class WorldInfoService:
     def extract_tags_from_description(
         self,
         description: str,
-        llm_provider: Any,
+        llm_provider: TextGenerationProvider,
         model: str,
     ) -> list[str]:
         cleaned_desc = description.strip()
@@ -113,7 +106,7 @@ class WorldInfoService:
         except Exception:
             return []
 
-        cleaned_output = re.sub(r"<think>.*?</think>", "", raw_output, flags=re.DOTALL).strip()
+        cleaned_output = DomainValidator.strip_llm_thinking_tags(raw_output)
         if not cleaned_output and raw_output:
             cleaned_output = re.sub(r"<think>.*", "", raw_output, flags=re.DOTALL).strip() or raw_output
         cleaned_output = re.sub(r"^```(?:json)?\s*", "", cleaned_output, flags=re.MULTILINE)

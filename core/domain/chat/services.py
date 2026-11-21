@@ -190,31 +190,14 @@ class ChatService:
         ]
         has_user_msg = any(m.role == MessageRole.USER for m in filtered_messages)
 
-        last_loc_msg = next(
-            (
-                m
-                for m in reversed(filtered_messages)
-                if m.role == MessageRole.SYSTEM
-                and m.system_type == SystemMessageType.LOCATION_CHANGE.value
-                and m.metadata
-                and "location_id" in m.metadata
-            ),
-            None,
-        )
+        last_loc_msg = self._find_last_location_message(filtered_messages)
         if last_loc_msg and last_loc_msg.metadata and "location_id" in last_loc_msg.metadata:
             raw_loc = last_loc_msg.metadata["location_id"]
             forked_current_loc_id = int(raw_loc) if raw_loc is not None else None
         else:
             forked_current_loc_id = session.initial_location_id or session.current_location_id
 
-        forked_triggered_event_ids = {
-            int(m.metadata["event_id"])
-            for m in filtered_messages
-            if m.role == MessageRole.SYSTEM
-            and m.system_type == SystemMessageType.EVENT_TRIGGER.value
-            and m.metadata
-            and "event_id" in m.metadata
-        }
+        forked_triggered_event_ids = self._collect_triggered_event_ids(filtered_messages)
 
         forked_session = ChatSession(
             id=None,
@@ -326,30 +309,23 @@ class ChatService:
     def switch_location(self, session: ChatSession, new_location_id: int | None) -> None:
         session.current_location_id = new_location_id
 
-    def recalculate_events_after_deletion(
-        self,
-        session: ChatSession,
-        remaining_messages: list[Message],
-    ) -> None:
-        remaining_event_ids = {
+    @staticmethod
+    def _collect_triggered_event_ids(messages: list[Message]) -> set[int]:
+        return {
             int(m.metadata["event_id"])
-            for m in remaining_messages
+            for m in messages
             if m.role == MessageRole.SYSTEM
             and m.system_type == SystemMessageType.EVENT_TRIGGER.value
             and m.metadata
             and "event_id" in m.metadata
         }
-        session.triggered_event_ids = remaining_event_ids
 
-    def recalculate_current_location_after_deletion(
-        self,
-        session: ChatSession,
-        remaining_messages: list[Message],
-    ) -> None:
-        last_loc_msg = next(
+    @staticmethod
+    def _find_last_location_message(messages: list[Message]) -> Message | None:
+        return next(
             (
                 m
-                for m in reversed(remaining_messages)
+                for m in reversed(messages)
                 if m.role == MessageRole.SYSTEM
                 and m.system_type == SystemMessageType.LOCATION_CHANGE.value
                 and m.metadata
@@ -357,6 +333,20 @@ class ChatService:
             ),
             None,
         )
+
+    def recalculate_events_after_deletion(
+        self,
+        session: ChatSession,
+        remaining_messages: list[Message],
+    ) -> None:
+        session.triggered_event_ids = self._collect_triggered_event_ids(remaining_messages)
+
+    def recalculate_current_location_after_deletion(
+        self,
+        session: ChatSession,
+        remaining_messages: list[Message],
+    ) -> None:
+        last_loc_msg = self._find_last_location_message(remaining_messages)
         if last_loc_msg and last_loc_msg.metadata and "location_id" in last_loc_msg.metadata:
             raw_loc = last_loc_msg.metadata["location_id"]
             session.current_location_id = int(raw_loc) if raw_loc is not None else None

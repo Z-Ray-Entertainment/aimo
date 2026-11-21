@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import StrEnum
 import math
 from typing import Mapping
 
+from domain.base import ResolvableStrEnum
 from shared.i18n import gettext_noop as _, t
 
 
-class RelationshipImpact(StrEnum):
+class RelationshipImpact(ResolvableStrEnum):
     VERY_NEGATIVE = "very_negative"
     NEGATIVE = "negative"
     NEUTRAL = "neutral"
@@ -20,14 +20,12 @@ class RelationshipImpact(StrEnum):
         return RELATIONSHIP_IMPACT_DELTAS[self]
 
     @classmethod
+    def _normalize_raw(cls, raw: str) -> str:
+        return raw.strip().lower().replace("-", "_").replace(" ", "_")
+
+    @classmethod
     def resolve(cls, raw: str | None) -> "RelationshipImpact":
-        if not raw:
-            return cls.NEUTRAL
-        normalized = raw.strip().lower().replace("-", "_").replace(" ", "_")
-        for member in cls:
-            if member.value == normalized:
-                return member
-        return cls.NEUTRAL
+        return cls.resolve_value(raw, default=cls.NEUTRAL)
 
 
 RELATIONSHIP_IMPACT_DELTAS: dict[RelationshipImpact, float] = {

@@ -204,29 +204,39 @@ class ServiceSettings:
     def parameters(self) -> ModelParameters:
         return self.params
 
+    @staticmethod
+    def _get_provider_config(
+        store: dict[str, dict[str, str]],
+        default_backend: str,
+        backend: str | None,
+    ) -> dict[str, str]:
+        key = (backend or default_backend).strip().lower()
+        return dict(store.get(key, {}))
+
+    @staticmethod
+    def _set_provider_config(
+        store: dict[str, dict[str, str]],
+        backend: str,
+        values: dict[str, str],
+    ) -> None:
+        key = backend.strip().lower()
+        if key:
+            store[key] = {str(k): str(v) for k, v in values.items()}
+
     def get_llm_config(self, backend: str | None = None) -> dict[str, str]:
-        key = (backend or self.llm_backend).strip().lower()
-        return dict(self.llm_configs.get(key, {}))
+        return self._get_provider_config(self.llm_configs, self.llm_backend, backend)
 
     def set_llm_config(self, backend: str, values: dict[str, str]) -> None:
-        key = backend.strip().lower()
-        if key:
-            self.llm_configs[key] = {str(k): str(v) for k, v in values.items()}
+        self._set_provider_config(self.llm_configs, backend, values)
 
     def get_image_gen_config(self, backend: str | None = None) -> dict[str, str]:
-        key = (backend or self.image_gen_backend).strip().lower()
-        return dict(self.image_gen_configs.get(key, {}))
+        return self._get_provider_config(self.image_gen_configs, self.image_gen_backend, backend)
 
     def set_image_gen_config(self, backend: str, values: dict[str, str]) -> None:
-        key = backend.strip().lower()
-        if key:
-            self.image_gen_configs[key] = {str(k): str(v) for k, v in values.items()}
+        self._set_provider_config(self.image_gen_configs, backend, values)
 
     def get_search_config(self, backend: str | None = None) -> dict[str, str]:
-        key = (backend or self.search_backend).strip().lower()
-        return dict(self.search_configs.get(key, {}))
+        return self._get_provider_config(self.search_configs, self.search_backend, backend)
 
     def set_search_config(self, backend: str, values: dict[str, str]) -> None:
-        key = backend.strip().lower()
-        if key:
-            self.search_configs[key] = {str(k): str(v) for k, v in values.items()}
+        self._set_provider_config(self.search_configs, backend, values)

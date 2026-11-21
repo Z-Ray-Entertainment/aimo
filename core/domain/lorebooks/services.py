@@ -1,9 +1,9 @@
-from datetime import datetime, timezone
-
+from domain.base import utc_now
 from domain.lorebooks.exceptions import InvalidLorebookDataError
 from domain.lorebooks.models import Lorebook, LorebookEntry
+from domain.rag import score_and_rank_tagged_items
 from domain.validation import DomainValidator
-from shared.utils import count_tags_overlap, parse_tags, tags_overlap
+from shared.utils import parse_tags
 
 
 class LorebookService:
@@ -27,12 +27,9 @@ class LorebookService:
             name=cleaned_name,
             description=cleaned_desc,
             visibility=cleaned_vis,
-            collaborator_creator_tags=[
-                t.strip().lower() for t in collaborator_creator_tags
-                if isinstance(t, str) and t.strip()
-            ] if collaborator_creator_tags else [],
+            collaborator_creator_tags=DomainValidator.normalize_collaborator_tags(collaborator_creator_tags),
             is_proper_noun=bool(is_proper_noun),
-            created_at=datetime.now(timezone.utc),
+            created_at=utc_now(),
         )
 
     def update_lorebook(
@@ -49,10 +46,7 @@ class LorebookService:
         if visibility is not None:
             lorebook.visibility = DomainValidator.normalize_visibility(visibility)
         if collaborator_creator_tags is not None:
-            lorebook.collaborator_creator_tags = [
-                t.strip().lower() for t in collaborator_creator_tags
-                if isinstance(t, str) and t.strip()
-            ]
+            lorebook.collaborator_creator_tags = DomainValidator.normalize_collaborator_tags(collaborator_creator_tags)
         if is_proper_noun is not None:
             lorebook.is_proper_noun = bool(is_proper_noun)
         return lorebook
@@ -66,24 +60,17 @@ class LorebookService:
         visibility: str = "public",
         is_proper_noun: bool = False,
     ) -> LorebookEntry:
-        if isinstance(lorebook_id, bool) or not isinstance(lorebook_id, int) or lorebook_id <= 0:
-            raise InvalidLorebookDataError("A valid positive lorebook_id is required.")
-
-        cleaned_title = title.strip() if isinstance(title, str) else ""
-        if not cleaned_title:
-            raise InvalidLorebookDataError("Lorebook entry title must not be empty.")
+        DomainValidator.validate_positive_id(lorebook_id, "lorebook_id", InvalidLorebookDataError)
+        cleaned_title = DomainValidator.validate_required_string(title, "Lorebook entry title", InvalidLorebookDataError)
 
         normalized_tags = parse_tags(tags)
         if not normalized_tags:
             raise InvalidLorebookDataError("Lorebook entry must have at least one tag.")
 
-        cleaned_content = content.strip() if isinstance(content, str) else ""
-        if not cleaned_content:
-            raise InvalidLorebookDataError("Lorebook entry content must not be empty.")
-
+        cleaned_content = DomainValidator.validate_required_string(content, "Lorebook entry content", InvalidLorebookDataError)
         cleaned_vis = DomainValidator.normalize_visibility(visibility)
 
-        now = datetime.now(timezone.utc)
+        now = utc_now()
         return LorebookEntry(
             id=None,
             lorebook_id=lorebook_id,
@@ -105,17 +92,13 @@ class LorebookService:
         visibility: str | None = None,
         is_proper_noun: bool | None = None,
     ) -> LorebookEntry:
-        cleaned_title = title.strip() if isinstance(title, str) else ""
-        if not cleaned_title:
-            raise InvalidLorebookDataError("Lorebook entry title must not be empty.")
+        cleaned_title = DomainValidator.validate_required_string(title, "Lorebook entry title", InvalidLorebookDataError)
 
         normalized_tags = parse_tags(tags)
         if not normalized_tags:
             raise InvalidLorebookDataError("Lorebook entry must have at least one tag.")
 
-        cleaned_content = content.strip() if isinstance(content, str) else ""
-        if not cleaned_content:
-            raise InvalidLorebookDataError("Lorebook entry content must not be empty.")
+        cleaned_content = DomainValidator.validate_required_string(content, "Lorebook entry content", InvalidLorebookDataError)
 
         entry.title = cleaned_title
         entry.tags = normalized_tags
@@ -124,12 +107,11 @@ class LorebookService:
             entry.visibility = DomainValidator.normalize_visibility(visibility)
         if is_proper_noun is not None:
             entry.is_proper_noun = bool(is_proper_noun)
-        entry.updated_at = datetime.now(timezone.utc)
+        entry.updated_at = utc_now()
         return entry
 
     def delete_entry(self, entry: LorebookEntry) -> None:
-        if entry is None:
-            raise InvalidLorebookDataError("Lorebook entry to delete must not be None.")
+        return None
 
     def search_entries_by_tags(
         self,
@@ -144,22 +126,23 @@ class LorebookService:
         if not normalized_active:
             return []
         normalized_latest = parse_tags(latest_tags) if latest_tags else []
-        focus_list = list(focus_keywords) if focus_keywords else []
+        focus_set = set(focus_keywords) if focus_keywords else set()
         pref_set = set(preferred_lorebook_ids) if preferred_lorebook_ids else set()
 
-        scored: list[tuple[float, int, LorebookEntry]] = []
-        for idx, entry in enumerate(entries):
-            overlap = count_tags_overlap(entry.tags, normalized_active)
-            if overlap <= 0:
-                continue
-            freshness = count_tags_overlap(entry.tags, normalized_latest) * 20.0 if normalized_latest else 0.0
-            focus_hit = count_tags_overlap(entry.tags, focus_list) * 8.0 if focus_list else 0.0
-            source_bonus = 20.0 if pref_set and entry.lorebook_id in pref_set else 0.0
-            score = (overlap * 10.0) + freshness + focus_hit + source_bonus
-            scored.append((score, -idx, entry))
-
-        scored.sort(key=lambda item: (item[0], item[1]), reverse=True)
-        matched = [item[2] for item in scored]
-        if max_results is not None and max_results > 0:
-            return matched[:max_results]
-        return matched
+        indexed = list(enumerate(entries))
+        ranked = score_and_rank_tagged_items(
+            indexed,
+            get_tags=lambda pair: pair[1].tags,
+            get_text_parts=lambda pair: (pair[1].title, pair[1].content, " ".join(pair[1].tags)),
+            get_order_key=lambda pair: -pair[0],
+            active_tags=normalized_active,
+            latest_user_tags=normalized_latest,
+            focus_keywords=focus_set,
+            extra_bonus_fn=(
+                (lambda pair: 20.0 if pair[1].lorebook_id in pref_set else 0.0)
+                if pref_set
+                else None
+            ),
+            max_results=max_results if max_results and max_results > 0 else len(entries) or 1,
+        )
+        return [pair[1] for pair in ranked]
