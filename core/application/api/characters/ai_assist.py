@@ -290,19 +290,45 @@ def extract_appearance():
         data = request.get_json(silent=True) or {}
         char_id = data.get("character_id")
         if char_id:
-            char = CharacterRepository().get_by_id(int(char_id))
-            if char:
+            try:
+                parsed_char_id = int(char_id)
+            except (TypeError, ValueError):
+                return jsonify({"error": "Invalid character_id."}), 400
+            user = get_current_user()
+            char = CharacterRepository().get_by_id(parsed_char_id)
+            if char is None or not char.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+                return jsonify({"error": "Character not found."}), 404
+            req_portrait = (data.get("portrait_path") or "").strip()
+            allowed_paths = {p for p in (char.primary_portrait_path, char.avatar_path, char.card_image_path) if p}
+            if req_portrait:
+                if req_portrait not in allowed_paths:
+                    return jsonify({"error": "Portrait path does not belong to character."}), 403
+                portrait_path = req_portrait
+            else:
                 portrait_path = char.primary_portrait_path
-        if not portrait_path:
-            portrait_path = data.get("portrait_path")
+        elif data.get("portrait_path"):
+            return jsonify({"error": "character_id is required when referencing an existing portrait_path."}), 400
     else:
         char_id = request.form.get("character_id")
         if char_id:
-            char = CharacterRepository().get_by_id(int(char_id))
-            if char:
+            try:
+                parsed_char_id = int(char_id)
+            except (TypeError, ValueError):
+                return jsonify({"error": "Invalid character_id."}), 400
+            user = get_current_user()
+            char = CharacterRepository().get_by_id(parsed_char_id)
+            if char is None or not char.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+                return jsonify({"error": "Character not found."}), 404
+            req_portrait = (request.form.get("portrait_path") or "").strip()
+            allowed_paths = {p for p in (char.primary_portrait_path, char.avatar_path, char.card_image_path) if p}
+            if req_portrait:
+                if req_portrait not in allowed_paths:
+                    return jsonify({"error": "Portrait path does not belong to character."}), 403
+                portrait_path = req_portrait
+            else:
                 portrait_path = char.primary_portrait_path
-        if not portrait_path:
-            portrait_path = request.form.get("portrait_path")
+        elif request.form.get("portrait_path"):
+            return jsonify({"error": "character_id is required when referencing an existing portrait_path."}), 400
 
     if not portrait_path:
         return jsonify({"error": "Bitte lade zuerst ein Porträtbild hoch."}), 400

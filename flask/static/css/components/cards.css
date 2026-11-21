@@ -1,10 +1,3 @@
-/* Grid & Cards */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.25rem;
-}
-
 /* =============================================================================
    AIMO System-wide Card & Grid System (.aimo-card-*)
    ============================================================================= */
@@ -48,23 +41,6 @@
   .aimo-card-grid .aimo-card-tile {
     min-height: 160px;
   }
-}
-
-.card-tile {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  border: 2px solid var(--border-wood);
-  border-radius: var(--radius-card, 10px);
-  background: var(--bg-panel);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 235, 200, 0.08);
-  transition: transform 0.18s, box-shadow 0.18s;
-}
-
-.card-tile:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.7), 0 0 10px var(--gold-glow);
 }
 
 /* Reusable New Action Tile / Button (.aimo-add-card-tile) */
@@ -276,6 +252,11 @@ a.aimo-add-card-tile:active {
   opacity: 0.95;
 }
 
+.aimo-card-tile:has(.aimo-card-scroll-overlay):hover .aimo-card-center-icon {
+  opacity: 0;
+  transform: scale(0.92);
+}
+
 /* Hover Description Scroll Overlay */
 .aimo-card-scroll-overlay {
   position: absolute;
@@ -350,46 +331,6 @@ a.aimo-add-card-tile:active {
   gap: 0.25rem;
 }
 
-/* Legacy Support for Older Character Cards */
-.char-card-bg {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  background-size: cover;
-  background-position: center top;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.char-scroll-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 11, 8, 0.82);
-  padding: 0.85rem;
-  overflow-y: auto;
-  opacity: 0;
-  transition: opacity 0.25s;
-  font-size: 0.86rem;
-  line-height: 1.4;
-}
-
-.card-tile:hover .char-scroll-overlay {
-  opacity: 1;
-}
-
-.char-msg-badge {
-  position: absolute;
-  bottom: 0.5rem;
-  left: 0.5rem;
-  background: rgba(18, 13, 9, 0.88);
-  border: 1px solid var(--border-wood);
-  border-radius: 14px;
-  padding: 0.2rem 0.55rem;
-  font-size: 0.78rem;
-  z-index: 2;
-}
-
 /* Location Lock Badge in Places Grid Overview */
 .location-lock-badge {
   position: absolute;
@@ -410,7 +351,7 @@ a.aimo-add-card-tile:active {
   transition: transform 0.18s ease, border-color 0.18s ease;
 }
 
-.card-tile:hover .location-lock-badge {
+.aimo-card-tile:hover .location-lock-badge {
   border-color: var(--gold-accent);
   transform: scale(1.08);
 }

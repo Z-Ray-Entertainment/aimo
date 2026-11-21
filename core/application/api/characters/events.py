@@ -77,7 +77,6 @@ def _validate_character_event_location(
 @require_auth
 def list_character_events(character_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     character = char_repo.get_by_id(character_id)
     if character is None or not character.is_visible_to_user(user.id, is_admin()):
@@ -92,7 +91,6 @@ def list_character_events(character_id: int):
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def create_character_event(character_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     character = char_repo.get_by_id(character_id)
     if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
@@ -128,7 +126,6 @@ def create_character_event(character_id: int):
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def update_character_event(character_id: int, event_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     character = char_repo.get_by_id(character_id)
     if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):
@@ -167,7 +164,6 @@ def update_character_event(character_id: int, event_id: int):
 @require_permission(FunctionPermission.CHARACTER_EDIT)
 def delete_character_event(character_id: int, event_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     character = char_repo.get_by_id(character_id)
     if character is None or not character.is_editable_by_user(user.id, is_admin(), user.creator_tag):

@@ -51,7 +51,6 @@ from application.api.chat.shared import (
     _ACTIVE_IMAGE_TASKS,
     _ADMIN_PROMPT_CACHE,
     _BACKGROUND_TASKS,
-    _PENDING_PROMPTS,
     _TASKS_LOCK,
     _USER_NOTIFICATIONS,
     _BackgroundTurnTask,
@@ -62,7 +61,7 @@ from application.api.chat.shared import (
 
 logger = logging.getLogger(__name__)
 
-from application.api.chat.streaming import _start_background_turn
+from application.chat_services.turn_orchestrator import start_background_turn as _start_background_turn
 
 def _revert_relationship_for_messages(
     chat_service: ChatService,
@@ -84,7 +83,6 @@ def _revert_relationship_for_messages(
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def regenerate_turn(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, is_admin = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -157,6 +155,10 @@ def regenerate_turn(session_id: int):
 @api_chat_bp.route("/<int:session_id>/messages/<int:message_idx>/prompt", methods=["GET"])
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def get_message_prompt(session_id: int, message_idx: int):
+    user = get_current_user()
+    chat_session, _ = _get_authorized_session(session_id, user)
+    if chat_session is None:
+        return jsonify({"error": "Session not found."}), 404
     with _TASKS_LOCK:
         prompt = _ADMIN_PROMPT_CACHE.get((session_id, message_idx))
     if prompt is None:
@@ -175,13 +177,15 @@ def get_message_prompt(session_id: int, message_idx: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def fork_chat_session(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     orig_session, _ = _get_authorized_session(session_id, user)
     if orig_session is None:
         return jsonify({"error": "Session not found."}), 404
 
     data = request.get_json(silent=True) or request.form.to_dict()
-    fork_point_idx = int(data.get("fork_point_idx", 0))
+    try:
+        fork_point_idx = int(data.get("fork_point_idx", 0))
+    except (TypeError, ValueError):
+        return jsonify({"error": "Invalid fork_point_idx."}), 400
 
     chat_repo = ChatRepository()
     mem_repo = MemoryRepository()
@@ -196,7 +200,6 @@ def fork_chat_session(session_id: int):
     )
     forked_session.user_id = user.id
     saved_fork = chat_repo.create_session(forked_session)
-    assert saved_fork.id is not None
 
     for msg in filtered_messages:
         msg.session_id = saved_fork.id
@@ -221,7 +224,6 @@ def fork_chat_session(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def delete_messages_from_idx(session_id: int, message_idx: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -280,7 +282,6 @@ def delete_messages_from_idx(session_id: int, message_idx: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def edit_message(session_id: int, message_idx: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -298,18 +299,18 @@ def edit_message(session_id: int, message_idx: int):
     if msg is None:
         return jsonify({"error": "Message not found."}), 404
 
-    if msg.english_content:
-        old_hash = trans_service.compute_source_hash(msg.english_content)
+    if msg.content:
+        old_hash = trans_service.compute_source_hash(msg.content)
         trans_repo.invalidate(old_hash)
 
-    msg.english_content = new_text
-    msg.localized_content = new_text
+    msg.content = new_text
     chat_repo.update_message(msg)
 
     return jsonify(
         {
             "message_idx": msg.message_idx,
-            "english_content": msg.english_content,
-            "localized_content": msg.localized_content,
+            "content": msg.content,
+            "english_content": msg.content,
+            "localized_content": msg.content,
         }
     )

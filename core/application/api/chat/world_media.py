@@ -51,7 +51,6 @@ from application.api.chat.shared import (
     _ACTIVE_IMAGE_TASKS,
     _ADMIN_PROMPT_CACHE,
     _BACKGROUND_TASKS,
-    _PENDING_PROMPTS,
     _TASKS_LOCK,
     _USER_NOTIFICATIONS,
     _BackgroundTurnTask,
@@ -66,7 +65,6 @@ logger = logging.getLogger(__name__)
 @require_permission(FunctionPermission.ADMIN_ACCESS)
 def recalculate_relationship(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -186,7 +184,6 @@ def recalculate_relationship(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def switch_location(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, is_admin = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Chat session not found."}), 404
@@ -257,12 +254,15 @@ def switch_location(session_id: int):
     except (TypeError, ValueError):
         return jsonify({"error": "Invalid location_id."}), 400
 
+    if chat_session.active_worldinfo_id is None:
+        return jsonify({"error": "No active world is selected for this chat session."}), 400
+
     location = wi_repo.get_location(location_id)
-    if location is None:
+    if location is None or location.worldinfo_id != chat_session.active_worldinfo_id:
         return jsonify({"error": "Location not found."}), 404
 
     wi = wi_repo.get_by_id(location.worldinfo_id)
-    if wi and not wi.is_visible_to_user(user.id, is_admin):
+    if wi is None or not wi.is_visible_to_user(user.id, is_admin):
         return jsonify({"error": "Location not found."}), 404
 
     if location.character_id is not None and location.character_id != chat_session.character_id:
@@ -312,7 +312,6 @@ def switch_location(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def generate_scene_image(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -348,8 +347,12 @@ def generate_scene_image(session_id: int):
         return jsonify({"error": "Bildgenerierung ist deaktiviert."}), 400
     llm = get_llm_provider(settings)
 
-    recent_msgs = chat_repo.get_messages(session_id, limit=4)
-    scene_text = "\n".join(f"{m.role.value}: {m.english_content}" for m in recent_msgs)
+    recent_msgs = [
+        m
+        for m in chat_repo.get_messages(session_id, limit=12)
+        if m.role in (MessageRole.USER, MessageRole.CHARACTER)
+    ][-4:]
+    scene_text = "\n".join(f"{m.role.value}: {m.effective_text}" for m in recent_msgs)
     location_desc = "Neutral background"
     ref_images: list[Path] = []
 
@@ -445,7 +448,6 @@ def generate_scene_image(session_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def cancel_image(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404

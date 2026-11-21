@@ -117,7 +117,7 @@
     // 1. Search Filtering in Modal
     if (modalEl) {
       const searchInput = modalEl.querySelector(".search-input");
-      const grid = modalEl.querySelector(".card-grid");
+      const grid = modalEl.querySelector(".aimo-card-grid");
       if (searchInput && grid) {
         searchInput.addEventListener("input", () => {
           const query = searchInput.value.trim().toLowerCase();

@@ -17,7 +17,7 @@ def _resolve_writable_dir(preferred: Path, fallback_name: str) -> Path:
         if os.access(preferred, os.W_OK):
             return preferred
         try:
-            preferred.chmod(0o777)
+            preferred.chmod(0o750)
             if os.access(preferred, os.W_OK):
                 return preferred
         except OSError:

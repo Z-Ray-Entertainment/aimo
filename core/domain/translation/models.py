@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from enum import StrEnum
+from datetime import datetime
 import hashlib
 
+from domain.base import ResolvableStrEnum, utc_now
 
-class Language(StrEnum):
+
+class Language(ResolvableStrEnum):
     EN = "en"
     ZH = "zh"
     HI = "hi"
@@ -29,16 +30,12 @@ class Language(StrEnum):
     TH = "th"
 
     @classmethod
+    def _normalize_raw(cls, raw: str) -> str:
+        return raw.strip().lower()[:2]
+
+    @classmethod
     def resolve(cls, raw: str | "Language") -> "Language":
-        if isinstance(raw, cls):
-            return raw
-        if not isinstance(raw, str):
-            return cls.EN
-        cleaned = raw.strip().lower()[:2]
-        for member in cls:
-            if cleaned == member.value:
-                return member
-        return cls.EN
+        return cls.resolve_value(raw, default=cls.EN)
 
 
 LANGUAGE_METADATA: dict[str, dict[str, str]] = {

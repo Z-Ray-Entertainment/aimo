@@ -1,33 +1,30 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from enum import StrEnum
+from datetime import datetime
+
+from domain.base import OwnedEntityMixin, ResolvableStrEnum, utc_now
 
 
-class Gender(StrEnum):
+class Gender(ResolvableStrEnum):
     MALE = "male"
     FEMALE = "female"
     NON_BINARY = "non-binary"
 
     @classmethod
+    def _normalize_raw(cls, raw: str) -> str:
+        return raw.strip().lower().replace("_", "-")
+
+    @classmethod
     def resolve(cls, raw: str | "Gender") -> "Gender":
-        if isinstance(raw, cls):
-            return raw
-        if not isinstance(raw, str):
-            raise ValueError(f"Invalid gender value: '{raw}'")
-        normalized = raw.strip().lower().replace("_", "-")
-        for member in cls:
-            if normalized == member.value or normalized.upper() == member.name:
-                return member
-        raise ValueError(f"Unknown gender: '{raw}'")
+        return cls.resolve_value(raw, strict=True)
 
 
 MAX_PERSONA_DESCRIPTION_LENGTH: int = 1200
 
 
 @dataclass
-class UserPersona:
+class UserPersona(OwnedEntityMixin):
     id: int | None
     user_id: int
     name: str
@@ -37,4 +34,4 @@ class UserPersona:
     appearance: str = ""
     origin_language: str = "en"
     is_default: bool = False
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=utc_now)

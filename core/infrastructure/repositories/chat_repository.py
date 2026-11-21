@@ -2,11 +2,11 @@ import json
 import sqlite3
 
 from domain.chat.models import ChatSession, Message, MessageRole
-from infrastructure.database import get_db_session
-from infrastructure.repositories.orm_models import format_datetime, parse_datetime
+from infrastructure.database import format_datetime, get_db_session, parse_datetime
+from infrastructure.repositories.base import BaseRepository
 
 
-class ChatRepository:
+class ChatRepository(BaseRepository[ChatSession]):
     def list_sessions_for_character(
         self,
         character_id: int,
@@ -146,18 +146,19 @@ class ChatRepository:
             cursor = conn.execute(
                 """
                 INSERT INTO chat_messages (
-                    session_id, message_idx, role, english_content,
+                    session_id, message_idx, role, content, english_content,
                     localized_content, image_path, image_alt_text, emotion_tag,
                     system_type, metadata_json, created_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     message.session_id,
                     message.message_idx,
                     message.role.value,
-                    message.english_content,
-                    message.localized_content,
+                    message.content,
+                    message.content,
+                    message.content,
                     message.image_path,
                     message.image_alt_text,
                     message.emotion_tag,
@@ -186,13 +187,14 @@ class ChatRepository:
             conn.execute(
                 """
                 UPDATE chat_messages
-                SET english_content = ?, localized_content = ?, image_path = ?,
+                SET content = ?, english_content = ?, localized_content = ?, image_path = ?,
                     image_alt_text = ?, emotion_tag = ?, system_type = ?, metadata_json = ?
                 WHERE id = ?
                 """,
                 (
-                    message.english_content,
-                    message.localized_content,
+                    message.content,
+                    message.content,
+                    message.content,
                     message.image_path,
                     message.image_alt_text,
                     message.emotion_tag,
@@ -219,11 +221,6 @@ class ChatRepository:
                 (session_id, message_idx),
             )
             return bool(cursor.rowcount and cursor.rowcount > 0)
-            row = conn.execute(
-                "SELECT * FROM chat_messages WHERE id = ?",
-                (message.id,),
-            ).fetchone()
-            return self._message_to_entity(row)
 
     def get_message_by_idx(self, session_id: int, message_idx: int) -> Message | None:
         with get_db_session() as conn:
@@ -374,13 +371,17 @@ class ChatRepository:
         except (json.JSONDecodeError, TypeError, ValueError):
             metadata = {}
 
+        raw_content = (
+            str(row["content"])
+            if "content" in keys and row["content"]
+            else (str(row["localized_content"]) if row["localized_content"] else str(row["english_content"]))
+        )
         return Message(
             id=int(row["id"]),
             session_id=int(row["session_id"]),
             message_idx=int(row["message_idx"]),
             role=MessageRole.resolve(str(row["role"])),
-            english_content=str(row["english_content"]),
-            localized_content=str(row["localized_content"]),
+            content=raw_content,
             image_path=str(row["image_path"]) if row["image_path"] is not None else None,
             image_alt_text=(
                 str(row["image_alt_text"]) if row["image_alt_text"] is not None else None

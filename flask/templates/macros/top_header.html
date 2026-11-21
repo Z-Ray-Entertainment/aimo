@@ -30,7 +30,7 @@
               aria-label="{{ _('Open menu') }}"
               aria-expanded="false"
               aria-controls="mobile-dropdown-menu"
-              title="{{ g.default_persona.name if g.default_persona else 'Benutzermenü' }}">
+              title="{{ g.default_persona.name if g.default_persona else _('User menu') }}">
         {% if g.default_persona %}
           <img src="{{ url_for('uploaded_file', filename=g.default_persona.portrait_path) }}" alt="{{ g.default_persona.name }}" onerror="this.src='/static/img/cover.svg'">
         {% else %}

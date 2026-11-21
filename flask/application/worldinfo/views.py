@@ -16,6 +16,80 @@ from shared.exceptions import AimoError
 worldinfo_bp = Blueprint("worldinfo", __name__, url_prefix="/worldinfo")
 
 
+@worldinfo_bp.route("/new", methods=["GET", "POST"])
+@require_permission(FunctionPermission.WORLDINFO_CREATE)
+def new_worldinfo():
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    service = WorldInfoService()
+    repo = WorldInfoRepository()
+    lorebooks = LorebookRepository().list_visible(user.id)
+    form_data = {
+        "name": "",
+        "visibility": "private",
+        "lorebook_id": None,
+        "is_proper_noun": False,
+    }
+    if request.method == "POST":
+        raw_lb = request.form.get("lorebook_id", "").strip()
+        lb_id = int(raw_lb) if raw_lb and raw_lb.isdigit() and int(raw_lb) > 0 else None
+        form_data = {
+            "name": request.form.get("name", ""),
+            "visibility": request.form.get("visibility", "private"),
+            "lorebook_id": lb_id,
+            "is_proper_noun": bool(request.form.get("is_proper_noun")),
+        }
+        try:
+            storage = FileStorage()
+            cover_path = None
+            cover_file = request.files.get("cover_file")
+            if cover_file and cover_file.filename:
+                cover_path = storage.save_cover(cover_file.stream, cover_file.filename)
+
+            backdrop_path = None
+            if request.form.get("remove_backdrop") != "1":
+                backdrop_file = request.files.get("backdrop_file")
+                if backdrop_file and backdrop_file.filename:
+                    backdrop_path = storage.save_background(backdrop_file.stream, backdrop_file.filename)
+
+            wi = service.create_worldinfo(
+                user_id=user.id,
+                name=form_data["name"],
+                icon="🌐",
+                visibility=form_data["visibility"],
+                cover_image_path=cover_path,
+                backdrop_image_path=backdrop_path,
+                lorebook_id=lb_id,
+                is_proper_noun=form_data["is_proper_noun"],
+            )
+            saved = repo.create(wi)
+            flash(tr(_("WorldInfo '%(name)s' created."), name=saved.name), "success")
+            return redirect(url_for("worldinfo.detail", worldinfo_id=saved.id))
+        except AimoError as exc:
+            flash(str(exc), "error")
+
+    return render_template(
+        "worldinfo/detail.html",
+        worldinfo=None,
+        form_data=form_data,
+        is_editable=True,
+        is_author=True,
+        active_tab="info",
+        lorebooks=lorebooks,
+        locations=[],
+        events=[],
+        available_characters=[],
+        character_map={},
+        loc_map={},
+        loc_display={},
+        ev_display={},
+        loc_translations={},
+        ev_translations={},
+        location_translations={},
+        event_translations={},
+    )
+
+
 @worldinfo_bp.route("/create", methods=["POST"])
 @require_permission(FunctionPermission.WORLDINFO_CREATE)
 def create_worldinfo():

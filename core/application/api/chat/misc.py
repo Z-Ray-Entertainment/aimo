@@ -51,7 +51,6 @@ from application.api.chat.shared import (
     _ACTIVE_IMAGE_TASKS,
     _ADMIN_PROMPT_CACHE,
     _BACKGROUND_TASKS,
-    _PENDING_PROMPTS,
     _TASKS_LOCK,
     _USER_NOTIFICATIONS,
     _BackgroundTurnTask,
@@ -66,7 +65,6 @@ logger = logging.getLogger(__name__)
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def poll_chat_notifications():
     user = get_current_user()
-    assert user is not None and user.id is not None
 
     raw_active = request.args.get("active_session_id", "").strip()
     active_session_id = int(raw_active) if raw_active.isdigit() else None
@@ -88,7 +86,6 @@ def poll_chat_notifications():
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def ack_chat_notification(notification_id: str):
     user = get_current_user()
-    assert user is not None and user.id is not None
 
     with _TASKS_LOCK:
         notifs = _USER_NOTIFICATIONS.get(user.id, [])
@@ -103,7 +100,6 @@ def ack_chat_notification(notification_id: str):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def translate_chat_message(session_id: int, message_idx: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404
@@ -120,7 +116,7 @@ def translate_chat_message(session_id: int, message_idx: int):
     if msg is None:
         return jsonify({"error": "Message not found."}), 404
 
-    source_text = (msg.english_content or msg.localized_content or "").strip()
+    source_text = msg.content.strip()
     if not source_text:
         return jsonify({"error": "Message has no translatable text."}), 400
 
@@ -145,7 +141,7 @@ def translate_chat_message(session_id: int, message_idx: int):
             )
             trans_repo.save_translation(rec)
 
-    msg.localized_content = translated
+    msg.content = translated
     chat_repo.update_message(msg)
 
     return jsonify(
@@ -201,7 +197,6 @@ def translate_arbitrary_text():
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def toggle_session_thinking(session_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     chat_session, _ = _get_authorized_session(session_id, user)
     if chat_session is None:
         return jsonify({"error": "Session not found."}), 404

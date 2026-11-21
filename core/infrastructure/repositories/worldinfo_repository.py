@@ -2,52 +2,24 @@ import json
 import sqlite3
 
 from domain.worldinfo.models import Event, Location, WorldInfo
-from infrastructure.database import get_db_session
-from infrastructure.repositories.base import BaseRepository
-from infrastructure.repositories.orm_models import format_datetime, parse_datetime
+from infrastructure.database import format_datetime, get_db_session, parse_datetime
+from infrastructure.repositories.base import CollaborativeRepository
+from infrastructure.repositories.duplication import duplicate_worldinfo_entity
 
 
-class WorldInfoRepository(BaseRepository[WorldInfo]):
+class WorldInfoRepository(CollaborativeRepository[WorldInfo]):
+    def _rows_to_entities(
+        self, conn: sqlite3.Connection, rows: list[sqlite3.Row]
+    ) -> list[WorldInfo]:
+        return [self._to_entity(row) for row in rows]
+
     def list_visible(self, user_id: int) -> list[WorldInfo]:
         return self._list_visible("worldinfos", user_id, self._to_entity)
 
     def list_for_user_creations(
         self, user_id: int, creator_tag: str | None = None
     ) -> list[WorldInfo]:
-        with get_db_session() as conn:
-            if creator_tag:
-                pattern = f"%{creator_tag.strip().lower()}%"
-                rows = conn.execute(
-                    """
-                    SELECT * FROM worldinfos
-                    WHERE user_id = ? OR collaborator_creator_tags_json LIKE ?
-                    ORDER BY id DESC
-                    """,
-                    (user_id, pattern),
-                ).fetchall()
-            else:
-                rows = conn.execute(
-                    """
-                    SELECT * FROM worldinfos
-                    WHERE user_id = ?
-                    ORDER BY id DESC
-                    """,
-                    (user_id,),
-                ).fetchall()
-            entities = [self._to_entity(row) for row in rows]
-            if creator_tag:
-                normalized_tag = creator_tag.strip().lower()
-                return [
-                    w
-                    for w in entities
-                    if w.user_id == user_id
-                    or (
-                        w.collaborator_creator_tags
-                        and normalized_tag
-                        in [t.lower() for t in w.collaborator_creator_tags]
-                    )
-                ]
-            return entities
+        return self._list_creations("worldinfos", user_id, creator_tag)
 
     def list_all(self, user_id: int | None = None) -> list[WorldInfo]:
         if user_id is not None:
@@ -127,66 +99,7 @@ class WorldInfoRepository(BaseRepository[WorldInfo]):
         return self._delete_by_id("worldinfos", worldinfo_id)
 
     def duplicate(self, worldinfo_id: int, target_user_id: int) -> WorldInfo:
-        orig = self.get_by_id(worldinfo_id)
-        if orig is None:
-            raise ValueError(f"WorldInfo {worldinfo_id} not found.")
-
-        copy_name = f"{orig.name} (Kopie)"
-        clone = WorldInfo(
-            id=None,
-            user_id=target_user_id,
-            name=copy_name,
-            icon=orig.icon,
-            visibility="private",
-            cover_image_path=orig.cover_image_path,
-            backdrop_image_path=orig.backdrop_image_path,
-            lorebook_id=orig.lorebook_id,
-            collaborator_creator_tags=[],
-            is_proper_noun=orig.is_proper_noun,
-        )
-        saved = self.create(clone)
-        assert saved.id is not None
-
-        # Duplicate locations with ID mapping
-        loc_map: dict[int, int] = {}
-        orig_locations = self.list_locations(worldinfo_id)
-        for loc in orig_locations:
-            if loc.id is None:
-                continue
-            clone_loc = Location(
-                id=None,
-                worldinfo_id=saved.id,
-                name=loc.name,
-                tags=list(loc.tags),
-                description=loc.description,
-                background_image_path=loc.background_image_path,
-                vision_alt_text=loc.vision_alt_text,
-                character_id=loc.character_id,
-                is_proper_noun=loc.is_proper_noun,
-            )
-            saved_loc = self.add_location(clone_loc)
-            assert saved_loc.id is not None
-            loc_map[loc.id] = saved_loc.id
-
-        # Duplicate events with remapped location_id
-        orig_events = self.list_events(worldinfo_id)
-        for ev in orig_events:
-            mapped_loc_id = loc_map.get(ev.location_id) if ev.location_id is not None else None
-            clone_ev = Event(
-                id=None,
-                worldinfo_id=saved.id,
-                title=ev.title,
-                probability=ev.probability,
-                one_shot=ev.one_shot,
-                description=ev.description,
-                location_id=mapped_loc_id,
-                is_proper_noun=ev.is_proper_noun,
-            )
-            self.add_event(clone_ev)
-
-        reloaded = self.get_by_id(saved.id)
-        assert reloaded is not None
-        return reloaded
+        return duplicate_worldinfo_entity(self, worldinfo_id, target_user_id)
 
     def add_location(self, location: Location) -> Location:
         with get_db_session() as conn:

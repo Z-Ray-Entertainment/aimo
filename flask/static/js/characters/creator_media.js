@@ -328,9 +328,9 @@ export function initImageViewer() {
   const galleryGrid = document.getElementById("char-gallery-grid");
   if (galleryGrid) {
     const openGalleryViewer = (startIndex) => {
-      const previews = Array.from(galleryGrid.querySelectorAll(".char-gallery-preview"));
+      const zoomButtons = Array.from(galleryGrid.querySelectorAll(".char-gallery-zoom-btn[data-viewer-src]"));
       const items = [];
-      for (const el of previews) {
+      for (const el of zoomButtons) {
         const src = el.getAttribute("data-viewer-src");
         if (!src) continue;
         items.push({
@@ -353,19 +353,18 @@ export function initImageViewer() {
       if (zoomBtn) {
         e.preventDefault();
         e.stopPropagation();
-        const preview = zoomBtn.closest(".char-gallery-preview");
-        const idx = preview ? Number.parseInt(preview.getAttribute("data-gallery-index") || "0", 10) : 0;
+        const idx = Number.parseInt(zoomBtn.getAttribute("data-gallery-index") || "0", 10);
         openGalleryViewer(idx);
         return;
       }
 
-      const cardTile = target.closest(".card-tile");
-      if (cardTile && cardTile.hasAttribute("data-modal-open")) return;
+      const modalTrigger = target.closest("[data-modal-open]");
+      if (modalTrigger) return;
       if (target.closest("form, button, a")) return;
 
-      const preview = target.closest(".char-gallery-preview");
-      if (!preview) return;
-      const idx = Number.parseInt(preview.getAttribute("data-gallery-index") || "0", 10);
+      const clickArea = target.closest("[data-viewer-src]");
+      if (!clickArea) return;
+      const idx = Number.parseInt(clickArea.getAttribute("data-gallery-index") || "0", 10);
       openGalleryViewer(idx);
     });
 

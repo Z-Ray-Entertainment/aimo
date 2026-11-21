@@ -11,21 +11,21 @@ The **Character Designer** allows creators to craft detailed interactive AI char
 The Character Designer uses a modern two-column layout consistent with the Administration and Settings panels:
 - **Left Sidebar Navigation:**
   - **Sidebar Header:** Displays the character's name and icon (`🎭`).
-  - **Vertical Navigation Menu:** Direct access to all eight functional areas:
-    1. **📋 Main Information (`Hauptinformationen`):** Core persona details, name, gender, bio, and welcome message.
-    2. **🖼️ Unlockable Gallery Images (`Galeriebilder`):** High-resolution 9:16 artwork tied to affection thresholds.
-    3. **🎭 Emotional Sprites (`Emotionale Sprites`):** Dynamic 28-emotion sprites that adapt during chat.
-    4. **💬 Dialogue Styles (`Gesprächsstile`):** Representative conversation examples.
-    5. **🗺️ World Settings (`World`):** Recommended world and location preferences.
-    6. **🎲 Random Events (`Zufalls-Events`):** Character-specific dynamic random events with optional location constraints.
-    7. **📖 Linked Lorebooks (`Lorebooks`):** Encyclopedias bound directly to the character.
-    8. **👥 Collaboration (`Kollaboration`):** Co-creator access management.
-  - **Sidebar Footer:** Includes a quick return button (`← Zurück zur Übersicht`) to navigate back to the character gallery or creations overview.
+  - **Vertical Navigation Menu:** Direct access to all eight functional areas (when creating a new character, all secondary tabs remain locked until **Main Info** has been saved once):
+    1. **📋 Main Information:** Core persona details, name, gender, bio, and welcome message.
+    2. **🖼️ Gallery Images:** High-resolution 9:16 artwork tied to affection thresholds.
+    3. **🎭 Emotional Sprites:** Dynamic 28-emotion sprites that adapt during chat.
+    4. **💬 Dialogue Styles:** Representative conversation examples.
+    5. **🗺️ World:** Recommended world and location preferences.
+    6. **🎲 Random Events:** Character-specific dynamic random events with optional location constraints.
+    7. **📖 Lorebooks:** Encyclopedias bound directly to the character.
+    8. **👥 Collaboration:** Co-creator access management.
+  - **Sidebar Footer:** Includes a quick return button to navigate back to the character gallery or creations overview.
 - **Right Main Stage:**
   - **Header Bar:** Shows the character title, read-only status (for non-editable characters), and action buttons:
-    - **Save (`💾 Speichern`):** Saves character data and dialogue styles.
-    - **Duplicate (`📄 Kopieren`):** Deep-clones the character into an independent duplicate you own.
-    - **Delete (`🗑️ Löschen`):** Reserved for the author and administrators.
+    - **Save (`💾`):** Single save action for character data, dialogue styles, world preferences, linked lorebooks, and collaborator tags.
+    - **Copy (`📄`):** Deep-clones the character into an independent duplicate you own.
+    - **Delete (`🗑️`):** Reserved for the author and administrators, protected by a confirmation dialog.
 
 ---
 

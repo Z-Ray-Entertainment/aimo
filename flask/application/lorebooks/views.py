@@ -13,6 +13,52 @@ from shared.exceptions import AimoError
 lorebooks_bp = Blueprint("lorebooks", __name__, url_prefix="/lorebooks")
 
 
+@lorebooks_bp.route("/new", methods=["GET", "POST"])
+@require_permission(FunctionPermission.LOREBOOK_CREATE)
+def new_lorebook():
+    user = get_current_user()
+    assert user is not None and user.id is not None
+    service = LorebookService()
+    repo = LorebookRepository()
+    form_data = {
+        "name": "",
+        "description": "",
+        "visibility": "private",
+        "is_proper_noun": False,
+    }
+    if request.method == "POST":
+        form_data = {
+            "name": request.form.get("name", ""),
+            "description": request.form.get("description", ""),
+            "visibility": request.form.get("visibility", "private"),
+            "is_proper_noun": bool(request.form.get("is_proper_noun")),
+        }
+        try:
+            lb = service.create_lorebook(
+                user_id=user.id,
+                name=form_data["name"],
+                description=form_data["description"],
+                visibility=form_data["visibility"],
+                is_proper_noun=form_data["is_proper_noun"],
+            )
+            saved = repo.create(lb)
+            flash(tr(_("Lorebook '%(name)s' created."), name=saved.name), "success")
+            return redirect(url_for("lorebooks.detail", lorebook_id=saved.id))
+        except AimoError as exc:
+            flash(str(exc), "error")
+
+    return render_template(
+        "lorebooks/detail.html",
+        lorebook=None,
+        form_data=form_data,
+        is_editable=True,
+        is_author=True,
+        entries=[],
+        active_tab="info",
+        entry_translations={},
+    )
+
+
 @lorebooks_bp.route("/create", methods=["POST"])
 @require_permission(FunctionPermission.LOREBOOK_CREATE)
 def create_lorebook():

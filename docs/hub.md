@@ -43,13 +43,15 @@ The central gallery of all AI characters accessible to you (public characters cr
 
 ### 2. Tab: Lorebooks (`📜`)
 Overview of all thematic knowledge encyclopedias.
-- First tile (`+`) to add a new lorebook.
-- Tiles show title, tags, and entry count. Clicking a tile opens the [Lorebook Editor](lorebooks.md).
+- **New Lorebook (`+`):** Opens the [Lorebook Editor](lorebooks.md) directly to create a new lorebook.
+- **Tiles:** Show visibility (`Public` / `Private`), translation status badge if pending, title, and entry count. Hovering displays the lorebook description overlay. Clicking a tile opens the [Lorebook Editor](lorebooks.md).
+- **Filters & Sorting:** Filter by **Visibility** (*All*, *Public*, *Private*), **Author** (*All Lorebooks*, *Only Mine*, *Collaborations* for creators), and **Sort Order** (*Newest First*, *Name (A-Z)*).
 
 ### 3. Tab: WorldInfo (`🌐`)
 Overview of all world settings.
-- First tile (`+`) to create a new world.
-- Tiles display an icon symbol (`icon`), title, and count of included locations. Clicking a tile opens the [WorldInfo Editor](worldinfo.md).
+- **New World (`+`):** Opens the [WorldInfo Editor](worldinfo.md) directly to create a new world.
+- **Tiles:** Display cover artwork (or world icon), visibility (`Public` / `Private`), title, and counts of included locations and events. Clicking a tile opens the [WorldInfo Editor](worldinfo.md).
+- **Filters & Sorting:** Filter by **Visibility** (*All*, *Public*, *Private*), **Author** (*All Worlds*, *Only Mine*, *Collaborations* for creators), and **Sort Order** (*Newest First*, *Name (A-Z)*).
 
 ---
 

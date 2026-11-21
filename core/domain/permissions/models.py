@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from enum import StrEnum
+
+from domain.base import ResolvableStrEnum
 
 
-class FunctionPermission(StrEnum):
+class FunctionPermission(ResolvableStrEnum):
     ADMIN_ACCESS = "admin_access"
     CHARACTER_CREATE = "character_create"
     CHARACTER_EDIT = "character_edit"
@@ -20,29 +21,17 @@ class FunctionPermission(StrEnum):
 
     @classmethod
     def resolve(cls, raw: str | "FunctionPermission") -> "FunctionPermission":
-        if isinstance(raw, cls):
-            return raw
-        normalized = raw.strip()
-        for member in cls:
-            if normalized.lower() == member.value or normalized.upper() == member.name:
-                return member
-        raise ValueError(f"Unknown functional permission: '{raw}'")
+        return cls.resolve_value(raw, strict=True)
 
 
-class Preset(StrEnum):
+class Preset(ResolvableStrEnum):
     ADMIN = "Admin"
     CREATOR = "Creator"
     USER = "User"
 
     @classmethod
     def resolve(cls, raw: str | "Preset") -> "Preset":
-        if isinstance(raw, cls):
-            return raw
-        normalized = raw.strip()
-        for member in cls:
-            if normalized.lower() == member.value.lower() or normalized.upper() == member.name:
-                return member
-        raise ValueError(f"Unknown permission preset: '{raw}'")
+        return cls.resolve_value(raw, strict=True)
 
 
 PRESET_PERMISSIONS: dict[Preset, frozenset[str]] = {

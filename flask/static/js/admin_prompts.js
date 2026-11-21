@@ -1,10 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".btn-reset-prompt").forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", async () => {
       const targetName = btn.dataset.target;
       if (!targetName) return;
 
-      if (!confirm(window.t("Reset this prompt in all languages back to the built-in default?"))) {
+      const confirmed = window.aimoConfirm
+        ? await window.aimoConfirm({
+            message: window.t("Reset this prompt in all languages back to the built-in default?"),
+            variant: "default",
+          })
+        : false;
+      if (!confirmed) {
         return;
       }
 

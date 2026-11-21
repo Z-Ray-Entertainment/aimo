@@ -32,7 +32,7 @@
                   <div></div>
                 {% endif %}
                 {% if is_editable %}
-                  <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp.variant) }}" style="margin: 0;" data-save-sprite-scroll="1">
+                  <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp.variant) }}" style="margin: 0;" data-save-sprite-scroll="1" data-confirm="{{ _('Really delete this sprite?') }}">
                     {{ action_button(_("Delete"), type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title=_("Delete sprite")) }}
                   </form>
                 {% endif %}

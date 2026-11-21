@@ -10,10 +10,17 @@ from flask import Flask, jsonify, request
 
 from application.api import (
     api_admin_bp,
+    api_admin_config_bp,
+    api_admin_users_bp,
+    api_auth_bp,
     api_characters_bp,
     api_chat_bp,
     api_lorebooks_bp,
+    api_overview_bp,
     api_personas_bp,
+    api_settings_bp,
+    api_setup_bp,
+    api_uploads_bp,
     api_worldinfo_bp,
 )
 from application.api.auth import get_expected_client_key, verify_client_key
@@ -24,6 +31,7 @@ from infrastructure.translation.worker import get_translation_worker
 from shared.config import Config
 from shared.http_compression import register_gzip_compression
 from shared.i18n import ensure_compiled_locales
+from shared.llm_activity import is_interactive_llm_busy
 from shared.security import is_debug_enabled, validate_secret_key
 
 
@@ -49,13 +57,22 @@ def create_core_app(config_class: type[Config] = Config) -> Flask:
     ensure_compiled_locales(CORE_DIR / "locales")
     init_db()
     FileStorage(config_class.UPLOAD_DIR)
-    get_translation_worker(is_busy_fn=has_active_chat_tasks).start()
+    get_translation_worker(
+        is_busy_fn=lambda: has_active_chat_tasks() or is_interactive_llm_busy()
+    ).start()
 
     app.register_blueprint(api_admin_bp)
+    app.register_blueprint(api_admin_config_bp)
+    app.register_blueprint(api_admin_users_bp)
+    app.register_blueprint(api_auth_bp)
     app.register_blueprint(api_characters_bp)
     app.register_blueprint(api_chat_bp)
     app.register_blueprint(api_lorebooks_bp)
+    app.register_blueprint(api_overview_bp)
     app.register_blueprint(api_personas_bp)
+    app.register_blueprint(api_settings_bp)
+    app.register_blueprint(api_setup_bp)
+    app.register_blueprint(api_uploads_bp)
     app.register_blueprint(api_worldinfo_bp)
 
     @app.before_request
@@ -91,5 +108,5 @@ if __name__ == "__main__":
     application = create_core_app()
     host = os.getenv("AIMO_CORE_HOST", os.getenv("AIMO_HOST", "127.0.0.1"))
     port = int(os.getenv("AIMO_CORE_PORT", os.getenv("AIMO_PORT", "5001")))
-    debug = os.getenv("AIMO_DEBUG", "false").lower() in ("1", "true", "yes")
+    debug = is_debug_enabled(os.getenv("AIMO_DEBUG"))
     application.run(host=host, port=port, debug=debug, threaded=True)

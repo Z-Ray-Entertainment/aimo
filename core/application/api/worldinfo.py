@@ -76,7 +76,6 @@ def list_worldinfo():
 @require_permission(FunctionPermission.WORLDINFO_CREATE)
 def create_worldinfo():
     user = get_current_user()
-    assert user is not None and user.id is not None
     data = request.get_json(silent=True) or request.form.to_dict()
     service = WorldInfoService()
     repo = WorldInfoRepository()
@@ -112,7 +111,6 @@ def create_worldinfo():
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def create_event():
     user = get_current_user()
-    assert user is not None and user.id is not None
     data = request.get_json(silent=True) or request.form.to_dict()
     service = WorldInfoService()
     repo = WorldInfoRepository()
@@ -124,6 +122,10 @@ def create_event():
 
         loc_raw = data.get("location_id")
         location_id = int(loc_raw) if loc_raw not in (None, "", "world", "0", 0) else None
+        if location_id is not None:
+            loc = repo.get_location(location_id)
+            if loc is None or loc.worldinfo_id != worldinfo_id:
+                return jsonify({"error": "Location does not belong to this WorldInfo."}), 400
         event = service.add_event(
             worldinfo_id=worldinfo_id,
             title=data.get("title", ""),
@@ -163,7 +165,6 @@ def analyze_location_background():
 
     try:
         user = get_current_user()
-        assert user is not None and user.id is not None
         if bg_file and bg_file.filename:
             bg_path = storage.save_background(bg_file.stream, bg_file.filename)
         else:
@@ -227,7 +228,6 @@ def extract_location_tags():
 @require_permission(FunctionPermission.WORLDINFO_CREATE)
 def duplicate_worldinfo(worldinfo_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     orig = repo.get_by_id(worldinfo_id)
     if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
@@ -245,7 +245,6 @@ def duplicate_worldinfo(worldinfo_id: int):
 @require_permission(FunctionPermission.WORLDINFO_EDIT)
 def update_worldinfo_backdrop(worldinfo_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     repo = WorldInfoRepository()
     wi = repo.get_by_id(worldinfo_id)
     if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
@@ -272,6 +271,13 @@ def update_worldinfo_backdrop(worldinfo_id: int):
 
     if "backdrop_path" in data:
         new_path = str(data.get("backdrop_path") or "").strip() or None
+        if new_path is not None:
+            try:
+                resolved_backdrop = storage.resolve_path(new_path)
+            except AimoError as exc:
+                return jsonify({"error": str(exc)}), 400
+            if not resolved_backdrop.is_file():
+                return jsonify({"error": "Backdrop file not found."}), 404
         service.update_worldinfo(wi, name=wi.name, backdrop_image_path=new_path)
         saved = repo.update(wi)
         return jsonify(
@@ -279,3 +285,139 @@ def update_worldinfo_backdrop(worldinfo_id: int):
         )
 
     return jsonify({"error": "Provide a 'backdrop' file, 'backdrop_path', or 'clear: true'."}), 400
+
+
+@api_worldinfo_bp.route("/<int:worldinfo_id>", methods=["GET"])
+@require_auth
+def get_worldinfo_detail(worldinfo_id: int):
+    user = get_current_user()
+    repo = WorldInfoRepository()
+    wi = repo.get_by_id(worldinfo_id)
+    if wi is None or not wi.is_visible_to_user(user.id, is_admin()):
+        return jsonify({"error": "WorldInfo not found."}), 404
+    locations = repo.list_locations(worldinfo_id)
+    events = repo.list_events(worldinfo_id)
+    return jsonify(
+        {
+            "id": wi.id,
+            "user_id": wi.user_id,
+            "name": wi.name,
+            "icon": wi.icon,
+            "visibility": wi.visibility,
+            "origin_language": wi.origin_language,
+            "cover_image_path": wi.cover_image_path,
+            "backdrop_image_path": wi.backdrop_image_path,
+            "lorebook_id": wi.lorebook_id,
+            "is_proper_noun": wi.is_proper_noun,
+            "editable": wi.is_editable_by_user(user.id, is_admin(), user.creator_tag),
+            "deletable": wi.is_deletable_by_user(user.id, is_admin()),
+            "locations": [
+                {
+                    "id": loc.id,
+                    "name": loc.name,
+                    "tags": loc.tags,
+                    "description": loc.description,
+                    "background_image_path": loc.background_image_path,
+                    "character_id": loc.character_id,
+                }
+                for loc in locations
+            ],
+            "events": [
+                {
+                    "id": ev.id,
+                    "location_id": ev.location_id,
+                    "title": ev.title,
+                    "probability": ev.probability,
+                    "one_shot": ev.one_shot,
+                    "description": ev.description,
+                }
+                for ev in events
+            ],
+        }
+    )
+
+
+@api_worldinfo_bp.route("/<int:worldinfo_id>", methods=["PUT"])
+@require_permission(FunctionPermission.WORLDINFO_EDIT)
+def update_worldinfo_detail(worldinfo_id: int):
+    user = get_current_user()
+    repo = WorldInfoRepository()
+    wi = repo.get_by_id(worldinfo_id)
+    if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        return jsonify({"error": "WorldInfo not found."}), 404
+    data = request.get_json(silent=True) or request.form.to_dict()
+    try:
+        updated = WorldInfoService().update_worldinfo(
+            wi,
+            name=data.get("name", wi.name),
+            icon=data.get("icon", wi.icon),
+            visibility=data.get("visibility", wi.visibility),
+            lorebook_id=data.get("lorebook_id", wi.lorebook_id),
+            is_proper_noun=bool(data.get("is_proper_noun", wi.is_proper_noun)),
+        )
+        saved = repo.update(updated)
+        return jsonify({"id": saved.id, "name": saved.name})
+    except AimoError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@api_worldinfo_bp.route("/<int:worldinfo_id>", methods=["DELETE"])
+@require_permission(FunctionPermission.WORLDINFO_DELETE)
+def delete_worldinfo_detail(worldinfo_id: int):
+    user = get_current_user()
+    repo = WorldInfoRepository()
+    wi = repo.get_by_id(worldinfo_id)
+    if wi is None or not wi.is_deletable_by_user(user.id, is_admin()):
+        return jsonify({"error": "WorldInfo not found."}), 404
+    return jsonify({"deleted": repo.delete(worldinfo_id)})
+
+
+@api_worldinfo_bp.route("/<int:worldinfo_id>/locations", methods=["POST"])
+@require_permission(FunctionPermission.WORLDINFO_EDIT)
+def create_worldinfo_location(worldinfo_id: int):
+    user = get_current_user()
+    repo = WorldInfoRepository()
+    wi = repo.get_by_id(worldinfo_id)
+    if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        return jsonify({"error": "WorldInfo not found."}), 404
+    data = request.get_json(silent=True) or request.form.to_dict()
+    try:
+        loc = WorldInfoService().add_location(
+            worldinfo_id=worldinfo_id,
+            name=data.get("name", ""),
+            tags=data.get("tags", ""),
+            description=data.get("description", ""),
+            bg_path=data.get("background_image_path"),
+        )
+        saved = repo.add_location(loc)
+        return jsonify({"id": saved.id, "name": saved.name}), 201
+    except AimoError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@api_worldinfo_bp.route("/<int:worldinfo_id>/locations/<int:location_id>", methods=["DELETE"])
+@require_permission(FunctionPermission.WORLDINFO_EDIT)
+def delete_worldinfo_location(worldinfo_id: int, location_id: int):
+    user = get_current_user()
+    repo = WorldInfoRepository()
+    wi = repo.get_by_id(worldinfo_id)
+    if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        return jsonify({"error": "WorldInfo not found."}), 404
+    loc = repo.get_location(location_id)
+    if loc is None or loc.worldinfo_id != worldinfo_id:
+        return jsonify({"error": "Location not found."}), 404
+    return jsonify({"deleted": repo.delete_location(location_id)})
+
+
+@api_worldinfo_bp.route("/<int:worldinfo_id>/events/<int:event_id>", methods=["DELETE"])
+@require_permission(FunctionPermission.WORLDINFO_EDIT)
+def delete_worldinfo_event(worldinfo_id: int, event_id: int):
+    user = get_current_user()
+    repo = WorldInfoRepository()
+    wi = repo.get_by_id(worldinfo_id)
+    if wi is None or not wi.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        return jsonify({"error": "WorldInfo not found."}), 404
+    ev = repo.get_event(event_id)
+    if ev is None or ev.worldinfo_id != worldinfo_id:
+        return jsonify({"error": "Event not found."}), 404
+    return jsonify({"deleted": repo.delete_event(event_id)})

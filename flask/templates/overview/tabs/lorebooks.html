@@ -1,28 +1,33 @@
-{% from "macros/buttons.html" import new_button %}
-{% from "macros/badges.html" import pill_badge %}
+{% from "macros/cards.html" import lorebook_grid %}
 <section id="tab-lorebooks" class="tab-pane{% if (active_tab|default('')) == 'lorebooks' %} active{% endif %}">
-  <div class="card-grid">
+  <form method="GET" action="{{ url_for('overview.index') }}" class="aimo-frame" style="padding: 0.85rem 1.2rem; margin-bottom: 1.25rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+    <input type="hidden" name="tab" value="lorebooks">
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Visibility") }}</label>
+      <select name="visibility" onchange="this.form.submit()">
+        <option value="" {% if not visibility_filter %}selected{% endif %}>{{ _("All") }}</option>
+        <option value="public" {% if visibility_filter == 'public' %}selected{% endif %}>{{ _("Public") }}</option>
+        <option value="private" {% if visibility_filter == 'private' %}selected{% endif %}>{{ _("Private") }}</option>
+      </select>
+    </div>
     {% if has_perm('lorebook_create') %}
-      {{ new_button(_("New Lorebook"), modal="new-lorebook-modal") }}
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Author") }}</label>
+      <select name="author" onchange="this.form.submit()">
+        <option value="" {% if not author_filter %}selected{% endif %}>{{ _("All Lorebooks") }}</option>
+        <option value="mine" {% if author_filter == 'mine' %}selected{% endif %}>{{ _("Only Mine (Creator)") }}</option>
+        <option value="collaborations" {% if author_filter == 'collaborations' %}selected{% endif %}>{{ _("Collaborations") }}</option>
+      </select>
+    </div>
     {% endif %}
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Sort Order") }}</label>
+      <select name="sort" onchange="this.form.submit()">
+        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>{{ _("Newest First") }}</option>
+        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>{{ _("Name (A-Z)") }}</option>
+      </select>
+    </div>
+  </form>
 
-    {% for item in lorebook_cards %}
-      {% set lb = item.lorebook %}
-      <a href="{{ url_for('lorebooks.detail', lorebook_id=lb.id) }}" class="card-tile" style="padding: 1.25rem; justify-content: space-between; text-decoration: none;">
-        <div>
-          <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;"><span class="icon-mono">📜</span> {{ lb.name }}</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">{{ lb.description }}</p>
-          <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
-            {% for tag in item.tags %}
-              {{ pill_badge("#" ~ tag, variant="dark") }}
-            {% endfor %}
-          </div>
-        </div>
-        <div style="margin-top: 1rem; font-size: 0.85rem; color: var(--gold-accent);">
-          {{ item.entry_count }} {{ _("Entries") }} →
-        </div>
-      </a>
-    {% endfor %}
-  </div>
+  {{ lorebook_grid(lorebook_cards, can_create=has_perm('lorebook_create')) }}
 </section>
-

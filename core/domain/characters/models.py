@@ -1,19 +1,22 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from enum import StrEnum
+from datetime import datetime
+from typing import ClassVar
 
+from domain.base import PublishableEntityMixin, ResolvableStrEnum, utc_now
 from domain.personas.models import Gender
 
-_EMOTION_ALIASES: dict[str, str] = {
-    "emberassed": "embarrassed",
-    "relife": "relief",
-    "suprise": "surprise",
-}
 
+class Emotion(ResolvableStrEnum):
+    @classmethod
+    def _get_aliases(cls) -> dict[str, str]:
+        return {
+            "emberassed": "embarrassed",
+            "relife": "relief",
+            "suprise": "surprise",
+        }
 
-class Emotion(StrEnum):
     ADMIRE = "admire"
     AMUSED = "amused"
     ANGER = "anger"
@@ -50,16 +53,7 @@ class Emotion(StrEnum):
 
     @classmethod
     def resolve(cls, raw: str | "Emotion") -> "Emotion":
-        if isinstance(raw, cls):
-            return raw
-        if not isinstance(raw, str):
-            return cls.NEUTRAL
-        cleaned = raw.strip().lower()
-        cleaned = _EMOTION_ALIASES.get(cleaned, cleaned)
-        for member in cls:
-            if cleaned == member.value or cleaned.upper() == member.name:
-                return member
-        return cls.NEUTRAL
+        return cls.resolve_value(raw, default=cls.NEUTRAL)
 
 
 @dataclass
@@ -80,7 +74,7 @@ class CharacterImage:
 
 
 @dataclass
-class Character:
+class Character(PublishableEntityMixin):
     id: int | None
     user_id: int
     name: str
@@ -104,23 +98,5 @@ class Character:
     disliked_location_ids: list[int] = field(default_factory=list)
     gallery_images: list[CharacterImage] = field(default_factory=list)
     sprites: list[EmotionalSprite] = field(default_factory=list)
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-
-    def is_visible_to_user(self, user_id: int, is_admin: bool = False) -> bool:
-        return self.visibility == "public" or self.user_id == user_id or is_admin
-
-    def is_editable_by_user(
-        self,
-        user_id: int,
-        is_admin: bool = False,
-        creator_tag: str | None = None,
-    ) -> bool:
-        if self.user_id == user_id or is_admin:
-            return True
-        if creator_tag and creator_tag in self.collaborator_creator_tags:
-            return True
-        return False
-
-    def is_deletable_by_user(self, user_id: int, is_admin: bool = False) -> bool:
-        return self.user_id == user_id or is_admin
+    created_at: datetime = field(default_factory=utc_now)
 

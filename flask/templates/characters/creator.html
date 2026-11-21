@@ -26,11 +26,11 @@
       {{ tab_button(_("Main Info"), "tab-char-info", icon="📋", active=(active_tab == 'info'), extra_class="aimo-sidebar-nav-item") }}
       {{ tab_button(_("Gallery Images"), "tab-char-gallery", icon="🖼️", active=(active_tab == 'gallery'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
       {{ tab_button(_("Emotional Sprites"), "tab-char-sprites", icon="🎭", active=(active_tab == 'sprites'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button(_("Dialogue Styles"), "tab-char-dialogue", icon="💬", active=(active_tab == 'dialogue'), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button(_("World"), "tab-char-world", icon="🗺️", active=(active_tab == 'world'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Dialogue Styles"), "tab-char-dialogue", icon="💬", active=(active_tab == 'dialogue'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("World"), "tab-char-world", icon="🗺️", active=(active_tab == 'world'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
       {{ tab_button(_("Random Events"), "tab-char-events", icon="🎲", active=(active_tab == 'events'), count=(events|length if character else none), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button(_("Lorebooks"), "tab-char-lorebooks", icon="📖", active=(active_tab == 'lorebooks'), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button(_("Collaboration"), "tab-char-collab", icon="👥", active=(active_tab == 'collab'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Lorebooks"), "tab-char-lorebooks", icon="📖", active=(active_tab == 'lorebooks'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Collaboration"), "tab-char-collab", icon="👥", active=(active_tab == 'collab'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
     </nav>
 
     <div class="aimo-sidebar-footer">

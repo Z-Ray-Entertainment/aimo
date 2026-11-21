@@ -121,7 +121,7 @@
             </div>
           </div>
         </form>
-        <form id="edit-persona-delete-form" method="POST" action="" style="display: none;" onsubmit="return confirm({{ _('Really delete persona?') | tojson | string | escape }});"></form>
+        <form id="edit-persona-delete-form" method="POST" action="" style="display: none;" data-confirm="{{ _('Really delete persona?') }}"></form>
       </div>
     </div>
   </div>

@@ -6,40 +6,17 @@ from typing import Any, ClassVar
 import requests
 
 from domain.settings.models import ServiceSettings
-from domain.settings.services import SettingsService
+from infrastructure.http_utils import UrlBackendConfigMixin, ensure_response_ok
 from infrastructure.image_gen.interface import ImageGenProvider
 from shared.config import Config
 from shared.exceptions import InfrastructureError
 
 
-class ComfyUIImageGenProvider(ImageGenProvider):
+class ComfyUIImageGenProvider(UrlBackendConfigMixin, ImageGenProvider):
     PROVIDER_ID: ClassVar[str] = "comfyui"
     DISPLAY_NAME: ClassVar[str] = "ComfyUI (Lokal)"
     DEFAULT_BASE_URL: ClassVar[str] = Config.DEFAULT_COMFYUI_URL
-
-    @classmethod
-    def get_default_config(cls) -> dict[str, str]:
-        return {"base_url": cls.DEFAULT_BASE_URL}
-
-    @classmethod
-    def validate_active_config(
-        cls,
-        submitted: dict[str, str],
-        existing: dict[str, str],
-    ) -> dict[str, str]:
-        raw_url = (submitted.get("base_url") or "").strip() or (existing.get("base_url") or "").strip()
-        return {"base_url": SettingsService.validate_url("comfyui_url", raw_url)}
-
-    @classmethod
-    def validate_inactive_config(
-        cls,
-        submitted: dict[str, str],
-        existing: dict[str, str],
-    ) -> dict[str, str]:
-        raw_url = (submitted.get("base_url") or "").strip()
-        if raw_url:
-            return {"base_url": SettingsService.validate_url("comfyui_url", raw_url)}
-        return {"base_url": (existing.get("base_url") or "").strip() or cls.DEFAULT_BASE_URL}
+    URL_FIELD_NAME: ClassVar[str] = "comfyui_url"
 
     @classmethod
     def from_settings(cls, settings: ServiceSettings) -> "ComfyUIImageGenProvider":

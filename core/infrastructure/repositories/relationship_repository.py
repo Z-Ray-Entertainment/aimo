@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from pathlib import Path
-import sqlite3
 
 from domain.chat.relationship import (
     CANONICAL_RELATIONSHIP_TIERS,
@@ -10,10 +9,11 @@ from domain.chat.relationship import (
     RelationshipTier,
     get_relationship_tier,
 )
-from infrastructure.database import create_connection, get_db_session
+from infrastructure.database import get_db_session
+from infrastructure.repositories.base import BaseRepository
 
 
-class RelationshipRepository:
+class RelationshipRepository(BaseRepository[RelationshipTier]):
     def __init__(self, db_path: Path | str | None = None) -> None:
         self.db_path = db_path
 

@@ -34,7 +34,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE chat_sessions ADD COLUMN custom_lorebook_ids_json TEXT NOT NULL DEFAULT '[]'",
         "ALTER TABLE lorebook_entries ADD COLUMN visibility TEXT NOT NULL DEFAULT 'public'",
         "ALTER TABLE characters ADD COLUMN lorebook_world_conditions_json TEXT NOT NULL DEFAULT '{}'",
-        "ALTER TABLE system_settings ADD COLUMN classification_model TEXT NOT NULL DEFAULT 'hf.co/mradermacher/MN-Violet-Lotus-12B-GGUF:Q4_K_M'",
+        "ALTER TABLE system_settings ADD COLUMN classification_model TEXT NOT NULL DEFAULT ''",
         "ALTER TABLE system_settings ADD COLUMN default_backdrop_path TEXT",
         "ALTER TABLE users ADD COLUMN creator_tag TEXT",
         "ALTER TABLE users ADD COLUMN language TEXT NOT NULL DEFAULT ''",
@@ -46,6 +46,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
         "ALTER TABLE chat_sessions ADD COLUMN initial_location_id INTEGER REFERENCES locations(id) ON DELETE SET NULL",
         "ALTER TABLE chat_messages ADD COLUMN system_type TEXT",
         "ALTER TABLE chat_messages ADD COLUMN metadata_json TEXT NOT NULL DEFAULT '{}'",
+        "ALTER TABLE chat_messages ADD COLUMN content TEXT NOT NULL DEFAULT ''",
         "ALTER TABLE chat_sessions ADD COLUMN thinking_enabled INTEGER NOT NULL DEFAULT 0",
         "ALTER TABLE system_settings ADD COLUMN dialogue_author_prompt TEXT",
         "ALTER TABLE system_settings ADD COLUMN llm_backend TEXT NOT NULL DEFAULT 'ollama'",
@@ -77,6 +78,9 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
 
     try:
         conn.execute("UPDATE chat_sessions SET initial_location_id = current_location_id WHERE initial_location_id IS NULL AND current_location_id IS NOT NULL")
+        conn.execute(
+            "UPDATE chat_messages SET content = COALESCE(NULLIF(localized_content, ''), english_content, '') WHERE content = ''"
+        )
         conn.execute("CREATE INDEX IF NOT EXISTS ix_locations_character_id ON locations (character_id)")
         conn.execute("CREATE INDEX IF NOT EXISTS ix_users_creator_tag ON users (creator_tag)")
         user_rows = conn.execute("SELECT id FROM users WHERE creator_tag IS NULL OR creator_tag = ''").fetchall()
@@ -135,6 +139,7 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
             if not has_char_col or wi_notnull:
                 has_min_rel = any(c["name"] == "min_relationship" for c in ev_cols)
                 has_max_rel = any(c["name"] == "max_relationship" for c in ev_cols)
+                has_proper_noun = any(c["name"] == "is_proper_noun" for c in ev_cols)
                 conn.execute(
                     """
                     CREATE TABLE events_new (
@@ -147,17 +152,19 @@ def _ensure_incremental_migrations(conn: sqlite3.Connection) -> None:
                         one_shot INTEGER NOT NULL DEFAULT 0,
                         description TEXT NOT NULL DEFAULT '',
                         min_relationship INTEGER,
-                        max_relationship INTEGER
+                        max_relationship INTEGER,
+                        is_proper_noun INTEGER NOT NULL DEFAULT 0
                     )
                     """
                 )
                 char_expr = "character_id" if has_char_col else "NULL"
                 min_rel_expr = "min_relationship" if has_min_rel else "NULL"
                 max_rel_expr = "max_relationship" if has_max_rel else "NULL"
+                proper_noun_expr = "is_proper_noun" if has_proper_noun else "0"
                 conn.execute(
                     f"""
-                    INSERT INTO events_new (id, worldinfo_id, character_id, location_id, title, probability, one_shot, description, min_relationship, max_relationship)
-                    SELECT id, worldinfo_id, {char_expr}, location_id, title, probability, one_shot, description, {min_rel_expr}, {max_rel_expr} FROM events
+                    INSERT INTO events_new (id, worldinfo_id, character_id, location_id, title, probability, one_shot, description, min_relationship, max_relationship, is_proper_noun)
+                    SELECT id, worldinfo_id, {char_expr}, location_id, title, probability, one_shot, description, {min_rel_expr}, {max_rel_expr}, {proper_noun_expr} FROM events
                     """
                 )
                 conn.execute("DROP TABLE events")
@@ -203,7 +210,7 @@ def _migrate_origin_language_and_seed_translations(conn: sqlite3.Connection) -> 
         if not migrated_any:
             return
 
-        now_str = format_datetime(datetime.now(timezone.utc))
+        now_str = datetime.now(timezone.utc).isoformat()
 
         def _seed_field(entity_type: str, entity_id: int, field_name: str, lang: str, text: str) -> None:
             cleaned = (text or "").strip()

@@ -8,6 +8,7 @@ from application.api.chat import (  # noqa: E402, F401
     memories,
     messages,
     misc,
+    sessions,
     streaming,
     world_media,
 )

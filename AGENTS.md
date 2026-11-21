@@ -26,7 +26,7 @@ aimo/
 │   └── settings/          # ServiceSettings, task assignments, inference parameters, system prompts
 ├── infrastructure/        # Persistence, external services & file storage
 │   ├── database.py        # SQLite connection with WAL mode & concurrency (timeout=30s)
-│   ├── repositories/      # SQLAlchemy ORM mappings & repositories for all domains
+│   ├── repositories/      # SQLite repositories (BaseRepository & CollaborativeRepository) for all domains
 │   ├── llm/               # Modular LLM provider layer (interface.py, factory.py, ollama.py)
 │   ├── image_gen/         # Modular image generation layer (interface.py, factory.py, comfyui.py)
 │   ├── voice/             # Modular voice TTS layer (interface.py, factory.py, stub.py)
@@ -192,7 +192,7 @@ The prompt for the roleplay model must strictly be assembled in this exact order
 - **No defensive `None` checks:** Avoid defensive `None` checks unless `None` represents an explicit, valid domain state.
 - **Confidentiality:** Never hardcode secrets or API keys; everything is retrieved via `shared/config.py` from environment variables.
 - **Testing Policy:** Automated tests are **written only when explicitly requested by the user**.
-- **PyPI Minimalism:** Favor the Python standard library. External packages only when strictly necessary (`Flask`, `SQLAlchemy`, `bcrypt`, `requests`, `python-dotenv`).
+- **PyPI Minimalism:** Favor the Python standard library. External packages only when strictly necessary (`Flask`, `bcrypt`, `requests`, `python-dotenv`).
 - **CSS-First for Layout & Animations:** Layout wrapping (`flex-wrap: wrap`, CSS Grid with `repeat(auto-fit, minmax(...))`, media queries) and visual animations (transitions, `@keyframes`, opacity, transforms, hover states) **must strictly be implemented with pure CSS**. JavaScript must only be used if a layout or animation behavior is technically impossible to achieve via CSS alone.
 - **Reusable UI Components First:** For EVERY UI element (buttons, modals, badges, dropdowns, cards, form fields, icons, etc.), reusable, standardized components (shared CSS classes, Jinja2 macros such as in `templates/macros/`, standardized HTML/SVG snippets) must be created and consistently reused whenever possible, rather than implementing ad-hoc isolated solutions or duplicating styles. Existing base components (e.g., `.aimo-btn`, `.chat-input-btn`, `.modal-backdrop`, `.aimo-card-tile`) must always be prioritized and extended.
 - **Synchronous Documentation Maintenance (Current State / IST-Zustand):** With EVERY new feature and EVERY modification to existing features or UI workflows, end-user documentation in `docs/` (e.g., `README.md`, `lorebooks.md`, `characters.md`, `worldinfo.md`, `hub.md`, `chat.md`, etc.) **must** be updated simultaneously in the same step. Documentation always describes **exclusively the current state (IST-Zustand)** (no changelogs, no before/after comparisons, and no explanations of historical states).

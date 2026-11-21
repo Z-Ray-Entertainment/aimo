@@ -1,7 +1,4 @@
-from datetime import datetime, timezone
-import re
-from typing import Protocol
-
+from domain.base import TextGenerationProvider
 from domain.settings.models import ModelParameters
 from domain.translation.exceptions import InvalidTranslationDataError
 from domain.translation.models import (
@@ -10,19 +7,9 @@ from domain.translation.models import (
     TranslationRecord,
     compute_source_hash,
 )
+from domain.validation import DomainValidator
 
-
-class TranslationLLMProvider(Protocol):
-    def generate(
-        self,
-        prompt: str,
-        model: str,
-        params: ModelParameters,
-        stop: list[str] | None = None,
-        format: str | dict | None = None,
-        think: bool | None = None,
-    ) -> str:
-        ...
+TranslationLLMProvider = TextGenerationProvider
 
 
 class TranslationService:
@@ -38,6 +25,27 @@ class TranslationService:
     def compute_source_hash(text: str) -> str:
         return compute_source_hash(text)
 
+    def _invoke_translation_llm(
+        self,
+        llm_provider: TranslationLLMProvider,
+        prompt: str,
+        model: str,
+    ) -> str:
+        try:
+            raw = llm_provider.generate(
+                prompt=prompt,
+                model=model,
+                params=self._default_params,
+                think=False,
+            ).strip()
+        except TypeError:
+            raw = llm_provider.generate(
+                prompt=prompt,
+                model=model,
+                params=self._default_params,
+            ).strip()
+        return DomainValidator.strip_llm_thinking_tags(raw)
+
     def translate_to_english(
         self,
         text: str,
@@ -48,7 +56,7 @@ class TranslationService:
         if not isinstance(text, str) or not text.strip():
             return ""
         cleaned = text.strip()
-        lang = source_language.strip().lower()[:2] if isinstance(source_language, str) else "de"
+        lang = source_language.strip().lower()[:2] if isinstance(source_language, str) else "en"
         if lang == Language.EN.value:
             return cleaned
 
@@ -58,25 +66,7 @@ class TranslationService:
             f"Text:\n{cleaned}"
         )
         try:
-            try:
-                translated = llm_provider.generate(
-                    prompt=prompt,
-                    model=model,
-                    params=self._default_params,
-                    think=False,
-                ).strip()
-            except TypeError:
-                translated = llm_provider.generate(
-                    prompt=prompt,
-                    model=model,
-                    params=self._default_params,
-                ).strip()
-            translated = re.sub(
-                r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
-                "",
-                translated,
-                flags=re.DOTALL | re.IGNORECASE,
-            ).strip()
+            translated = self._invoke_translation_llm(llm_provider, prompt, model)
             return translated or cleaned
         except Exception:
             return cleaned
@@ -92,7 +82,7 @@ class TranslationService:
         if not isinstance(english_text, str) or not english_text.strip():
             return ""
         cleaned_en = english_text.strip()
-        lang = target_language.strip().lower()[:2] if isinstance(target_language, str) else "de"
+        lang = target_language.strip().lower()[:2] if isinstance(target_language, str) else "en"
         if lang == Language.EN.value:
             return cleaned_en
 
@@ -103,32 +93,15 @@ class TranslationService:
         if source_hash in cache_records:
             return cache_records[source_hash]
 
+        lang_label = LANGUAGE_METADATA.get(lang, {}).get("label", lang)
         prompt = (
-            f"Translate the following English roleplay text into natural, expressive '{lang}' "
-            "(German if 'de'). Preserve tone, character voice, and narrative style.\n"
+            f"Translate the following English roleplay text into natural, expressive {lang_label} ('{lang}'). "
+            "Preserve tone, character voice, and narrative style.\n"
             "Output ONLY the translated text without quotes, explanations, or commentary.\n\n"
             f"English Text:\n{cleaned_en}"
         )
         try:
-            try:
-                translated = llm_provider.generate(
-                    prompt=prompt,
-                    model=model,
-                    params=self._default_params,
-                    think=False,
-                ).strip()
-            except TypeError:
-                translated = llm_provider.generate(
-                    prompt=prompt,
-                    model=model,
-                    params=self._default_params,
-                ).strip()
-            translated = re.sub(
-                r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
-                "",
-                translated,
-                flags=re.DOTALL | re.IGNORECASE,
-            ).strip()
+            translated = self._invoke_translation_llm(llm_provider, prompt, model)
             result = translated or cleaned_en
         except Exception:
             result = cleaned_en
@@ -147,7 +120,7 @@ class TranslationService:
         if not isinstance(text, str) or not text.strip():
             return ""
         cleaned = text.strip()
-        lang = target_language.strip().lower()[:2] if isinstance(target_language, str) else "de"
+        lang = target_language.strip().lower()[:2] if isinstance(target_language, str) else "en"
         lang_label = LANGUAGE_METADATA.get(lang, {}).get("label", lang)
 
         prompt = (
@@ -158,25 +131,7 @@ class TranslationService:
             f"Text:\n{cleaned}"
         )
         try:
-            try:
-                translated = llm_provider.generate(
-                    prompt=prompt,
-                    model=model,
-                    params=self._default_params,
-                    think=False,
-                ).strip()
-            except TypeError:
-                translated = llm_provider.generate(
-                    prompt=prompt,
-                    model=model,
-                    params=self._default_params,
-                ).strip()
-            translated = re.sub(
-                r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
-                "",
-                translated,
-                flags=re.DOTALL | re.IGNORECASE,
-            ).strip()
+            translated = self._invoke_translation_llm(llm_provider, prompt, model)
             return translated or cleaned
         except Exception:
             return cleaned
@@ -230,27 +185,9 @@ class TranslationService:
                     close_fn = getattr(stream, "close", None)
                     if callable(close_fn):
                         close_fn()
-                translated = "".join(chunks).strip()
+                translated = DomainValidator.strip_llm_thinking_tags("".join(chunks))
             else:
-                try:
-                    translated = llm_provider.generate(
-                        prompt=prompt,
-                        model=model,
-                        params=self._default_params,
-                        think=False,
-                    ).strip()
-                except TypeError:
-                    translated = llm_provider.generate(
-                        prompt=prompt,
-                        model=model,
-                        params=self._default_params,
-                    ).strip()
-            translated = re.sub(
-                r"<(?:think|thought|reasoning)>.*?</(?:think|thought|reasoning)>",
-                "",
-                translated,
-                flags=re.DOTALL | re.IGNORECASE,
-            ).strip()
+                translated = self._invoke_translation_llm(llm_provider, prompt, model)
             return translated or None
         except Exception:
             return None

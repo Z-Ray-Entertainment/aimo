@@ -562,7 +562,7 @@
     }
 
     const confirmPullAll = {{ _("Download the following %(count)s recommended model(s) sequentially?", count="__COUNT__") | tojson }}.replace("__COUNT__", missing.length) + "\n\n- " + missing.join("\n- ");
-    if (!confirm(confirmPullAll)) {
+    if (!(await window.aimoConfirm({ message: confirmPullAll, variant: "default" }))) {
       return;
     }
 
@@ -573,7 +573,7 @@
       const success = await pullOllamaModel(isLast);
       if (!success && !isLast) {
         const confirmContinue = {{ _("Download of '%(model)s' failed. Continue with the next model anyway?", model="__MODEL__") | tojson }}.replace("__MODEL__", model);
-        if (!confirm(confirmContinue)) {
+        if (!(await window.aimoConfirm({ message: confirmContinue, variant: "default" }))) {
           break;
         }
       }
@@ -643,7 +643,7 @@
 
   async function deleteOllamaModel(modelName) {
     const confirmDelete = {{ _("Really delete model '%(model)s' from Ollama?", model="__MODEL__") | tojson }}.replace("__MODEL__", modelName);
-    if (!confirm(confirmDelete)) return;
+    if (!(await window.aimoConfirm({ message: confirmDelete }))) return;
     const resp = await fetch(`/api/admin/models/${encodeURIComponent(modelName)}`, {
       method: "DELETE",
     });

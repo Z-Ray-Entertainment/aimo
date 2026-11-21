@@ -24,12 +24,12 @@ from shared.request_parsers import RequestDataParser
 
 
 from application.api.characters import api_characters_bp
+from application.api.characters.events import _serialize_character_event
 
 @api_characters_bp.route("", methods=["GET"])
 @require_auth
 def list_characters():
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     wi_repo = WorldInfoRepository()
     trans_repo = TranslationRepository()
@@ -120,7 +120,6 @@ def list_characters():
 @require_permission(FunctionPermission.CHARACTER_CREATE)
 def create_character():
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_service = CharacterService()
     char_repo = CharacterRepository()
     storage = FileStorage()
@@ -198,12 +197,90 @@ def create_character():
 @require_permission(FunctionPermission.CHARACTER_CREATE)
 def duplicate_character(character_id: int):
     user = get_current_user()
-    assert user is not None and user.id is not None
     char_repo = CharacterRepository()
     orig = char_repo.get_by_id(character_id)
     if orig is None or not orig.is_visible_to_user(user.id, is_admin()):
         return jsonify({"error": "Character not found."}), 404
+    if not orig.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        trans_repo = TranslationRepository()
+        user_lang = (user.language or "en")[:2].lower()
+        if not is_character_ready_for_language(orig, user_lang, trans_repo):
+            return jsonify({"error": "This character is not yet available in your language."}), 403
     copied = char_repo.duplicate(character_id, user.id)
     return jsonify({"id": copied.id, "name": copied.name}), 201
+
+
+@api_characters_bp.route("/<int:character_id>", methods=["GET"])
+@require_auth
+def get_character_detail(character_id: int):
+    user = get_current_user()
+    char_repo = CharacterRepository()
+    char = char_repo.get_by_id(character_id)
+    if char is None or not char.is_visible_to_user(user.id, is_admin()):
+        return jsonify({"error": "Character not found."}), 404
+    return jsonify(
+        {
+            "id": char.id,
+            "user_id": char.user_id,
+            "name": char.name,
+            "gender": char.gender.value,
+            "visibility": char.visibility,
+            "origin_language": char.origin_language,
+            "primary_portrait_path": char.primary_portrait_path,
+            "avatar_path": char.avatar_path,
+            "card_image_path": char.card_image_path,
+            "appearance": char.appearance,
+            "description": char.description,
+            "first_message": char.first_message,
+            "dialogue_examples": char.dialogue_examples,
+            "linked_lorebook_ids": char.linked_lorebook_ids,
+            "lorebook_world_conditions": char.lorebook_world_conditions,
+            "suggested_worldinfo_id": char.suggested_worldinfo_id,
+            "initial_location_id": char.initial_location_id,
+            "initial_relationship": char.initial_relationship,
+            "preferred_location_ids": char.preferred_location_ids,
+            "disliked_location_ids": char.disliked_location_ids,
+            "editable": char.is_editable_by_user(user.id, is_admin(), user.creator_tag),
+            "deletable": char.is_deletable_by_user(user.id, is_admin()),
+        }
+    )
+
+
+@api_characters_bp.route("/<int:character_id>", methods=["PUT"])
+@require_permission(FunctionPermission.CHARACTER_EDIT)
+def update_character_detail(character_id: int):
+    user = get_current_user()
+    char_repo = CharacterRepository()
+    char = char_repo.get_by_id(character_id)
+    if char is None or not char.is_editable_by_user(user.id, is_admin(), user.creator_tag):
+        return jsonify({"error": "Character not found."}), 404
+    data = request.get_json(silent=True) or request.form.to_dict()
+    try:
+        updated = CharacterService().update_character(
+            char,
+            name=data.get("name", char.name),
+            gender=data.get("gender", char.gender.value),
+            primary_portrait_path=data.get("primary_portrait_path", char.primary_portrait_path),
+            description=data.get("description", char.description),
+            first_message=data.get("first_message", char.first_message),
+            visibility=data.get("visibility", char.visibility),
+            appearance=data.get("appearance", char.appearance),
+            initial_relationship=int(data.get("initial_relationship", char.initial_relationship)),
+        )
+        saved = char_repo.save(updated)
+        return jsonify({"id": saved.id, "name": saved.name})
+    except (AimoError, ValueError) as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@api_characters_bp.route("/<int:character_id>", methods=["DELETE"])
+@require_permission(FunctionPermission.CHARACTER_DELETE)
+def delete_character_detail(character_id: int):
+    user = get_current_user()
+    char_repo = CharacterRepository()
+    char = char_repo.get_by_id(character_id)
+    if char is None or not char.is_deletable_by_user(user.id, is_admin()):
+        return jsonify({"error": "Character not found."}), 404
+    return jsonify({"deleted": char_repo.delete(character_id)})
 
 

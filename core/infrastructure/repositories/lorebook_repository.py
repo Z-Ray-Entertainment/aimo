@@ -2,52 +2,24 @@ import json
 import sqlite3
 
 from domain.lorebooks.models import Lorebook, LorebookEntry
-from infrastructure.database import get_db_session
-from infrastructure.repositories.base import BaseRepository
-from infrastructure.repositories.orm_models import format_datetime, parse_datetime
+from infrastructure.database import format_datetime, get_db_session, parse_datetime
+from infrastructure.repositories.base import CollaborativeRepository
+from infrastructure.repositories.duplication import duplicate_lorebook_entity
 
 
-class LorebookRepository(BaseRepository[Lorebook]):
+class LorebookRepository(CollaborativeRepository[Lorebook]):
+    def _rows_to_entities(
+        self, conn: sqlite3.Connection, rows: list[sqlite3.Row]
+    ) -> list[Lorebook]:
+        return [self._to_entity(row) for row in rows]
+
     def list_visible(self, user_id: int) -> list[Lorebook]:
         return self._list_visible("lorebooks", user_id, self._to_entity)
 
     def list_for_user_creations(
         self, user_id: int, creator_tag: str | None = None
     ) -> list[Lorebook]:
-        with get_db_session() as conn:
-            if creator_tag:
-                pattern = f"%{creator_tag.strip().lower()}%"
-                rows = conn.execute(
-                    """
-                    SELECT * FROM lorebooks
-                    WHERE user_id = ? OR collaborator_creator_tags_json LIKE ?
-                    ORDER BY id DESC
-                    """,
-                    (user_id, pattern),
-                ).fetchall()
-            else:
-                rows = conn.execute(
-                    """
-                    SELECT * FROM lorebooks
-                    WHERE user_id = ?
-                    ORDER BY id DESC
-                    """,
-                    (user_id,),
-                ).fetchall()
-            entities = [self._to_entity(row) for row in rows]
-            if creator_tag:
-                normalized_tag = creator_tag.strip().lower()
-                return [
-                    lb
-                    for lb in entities
-                    if lb.user_id == user_id
-                    or (
-                        lb.collaborator_creator_tags
-                        and normalized_tag
-                        in [t.lower() for t in lb.collaborator_creator_tags]
-                    )
-                ]
-            return entities
+        return self._list_creations("lorebooks", user_id, creator_tag)
 
     def list_for_user(self, user_id: int | None = None) -> list[Lorebook]:
         if user_id is not None:
@@ -121,40 +93,7 @@ class LorebookRepository(BaseRepository[Lorebook]):
         return self._delete_by_id("lorebooks", lorebook_id)
 
     def duplicate(self, lorebook_id: int, target_user_id: int) -> Lorebook:
-        orig = self.get_by_id(lorebook_id)
-        if orig is None:
-            raise ValueError(f"Lorebook {lorebook_id} not found.")
-
-        copy_name = f"{orig.name} (Kopie)"
-        clone = Lorebook(
-            id=None,
-            user_id=target_user_id,
-            name=copy_name,
-            description=orig.description,
-            visibility="private",
-            collaborator_creator_tags=[],
-            is_proper_noun=orig.is_proper_noun,
-        )
-        saved = self.create(clone)
-        assert saved.id is not None
-
-        # Duplicate entries
-        orig_entries = self.list_entries(lorebook_id)
-        for entry in orig_entries:
-            clone_entry = LorebookEntry(
-                id=None,
-                lorebook_id=saved.id,
-                title=entry.title,
-                tags=list(entry.tags),
-                content=entry.content,
-                visibility=entry.visibility,
-                is_proper_noun=entry.is_proper_noun,
-            )
-            self.add_entry(clone_entry)
-
-        reloaded = self.get_by_id(saved.id)
-        assert reloaded is not None
-        return reloaded
+        return duplicate_lorebook_entity(self, lorebook_id, target_user_id)
 
     def add_entry(self, entry: LorebookEntry) -> LorebookEntry:
         created_str = format_datetime(entry.created_at)

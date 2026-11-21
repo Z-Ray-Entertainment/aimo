@@ -4,6 +4,7 @@
    ============================================================================= #}
 {% from "macros/buttons.html" import action_button, new_button, modal_close_button %}
 {% from "macros/badges.html" import pill_badge %}
+{% from "macros/cards.html" import aimo_card_grid, aimo_card_container %}
 
 {% macro _event_location_select(scope_type, selected_location_id=none, locations=none, loc_display=none) %}
 <select name="location_id">
@@ -142,7 +143,7 @@
 {% endmacro %}
 
 {% macro event_editor(events, is_editable, add_url, edit_endpoint, delete_endpoint, entity_id_param, entity_id, loc_map, ev_translations, scope_type='worldinfo', locations=none, modal_prefix='ev', relationship_tiers=none, tier_names_map=none, ev_display=none, loc_display=none, origin_language=none) %}
-<div class="card-grid">
+{% call aimo_card_grid() %}
   {% if is_editable %}
     {{ new_button(_("New Event"), modal="new-event-modal-" ~ modal_prefix) }}
   {% endif %}
@@ -151,33 +152,39 @@
     {% set ev_disp = ev_display.get(ev.id, {}) if ev_display else {} %}
     {% set disp_ev_title = ev_disp.get("title", ev.title) %}
     {% set disp_ev_desc = ev_disp.get("description", ev.description) %}
-    <div class="card-tile" style="padding: 1.2rem; justify-content: space-between; {% if is_editable %}cursor: pointer;{% endif %}" {% if is_editable %}data-modal-open="edit-event-modal-{{ modal_prefix }}-{{ ev.id }}"{% endif %}>
-      <div>
-        <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.6rem;">
-          <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
-            {% if ev.location_id and loc_map and ev.location_id in loc_map %}
-              {% set disp_badge_loc = loc_display.get(ev.location_id, {}).get("name", loc_map[ev.location_id].name) if loc_display else loc_map[ev.location_id].name %}
-              {{ pill_badge(_("Location:") ~ " " ~ disp_badge_loc, icon="📍", variant="wood") }}
-            {% elif scope_type == 'character' %}
-              {{ pill_badge(_("Character-wide (Everywhere)"), icon="🎭", variant="default") }}
-            {% else %}
-              {{ pill_badge(_("Entire World"), icon="🌍", variant="default") }}
-            {% endif %}
-            {% if scope_type == 'character' and (ev.min_relationship is not none or ev.max_relationship is not none) %}
-              {{ pill_badge(icon="❤️", variant="heart", title=_("Relationship-bound")) }}
-            {% endif %}
-          </div>
-          <span style="font-size: 0.8rem; font-weight: 700; color: var(--gold-accent);">{{ ev.probability }}%</span>
+    {% set bg_style = "background: radial-gradient(circle at center, rgba(42, 28, 19, 0.95), rgba(15, 10, 7, 0.98));" %}
+    {% set click_attrs = {'data-modal-open': 'edit-event-modal-' ~ modal_prefix ~ '-' ~ ev.id} if is_editable else none %}
+    {% call aimo_card_container(none, disp_ev_title, bg_style, description=disp_ev_desc, click_attrs=click_attrs) %}
+      <div class="aimo-card-header">
+        <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
+          {% if ev.location_id and loc_map and ev.location_id in loc_map %}
+            {% set disp_badge_loc = loc_display.get(ev.location_id, {}).get("name", loc_map[ev.location_id].name) if loc_display else loc_map[ev.location_id].name %}
+            {{ pill_badge(disp_badge_loc, icon="📍", variant="wood", extra_class="aimo-card-badge") }}
+          {% elif scope_type == 'character' %}
+            {{ pill_badge(_("Character-wide"), icon="🎭", variant="dark", extra_class="aimo-card-badge") }}
+          {% else %}
+            {{ pill_badge(_("Entire World"), icon="🌍", variant="dark", extra_class="aimo-card-badge") }}
+          {% endif %}
+          {% if scope_type == 'character' and (ev.min_relationship is not none or ev.max_relationship is not none) %}
+            {{ pill_badge(icon="❤️", variant="heart", title=_("Relationship-bound"), extra_class="aimo-card-badge") }}
+          {% endif %}
         </div>
-
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.4rem;">{{ disp_ev_title }}</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">{{ disp_ev_desc[:140] }}{% if disp_ev_desc|length > 140 %}...{% endif %}</p>
+        <span class="aimo-card-stat-pill">{{ ev.probability }}%</span>
       </div>
 
-      <div style="margin-top: 0.75rem; font-size: 0.78rem; color: var(--text-muted);">
-        {% if ev.one_shot %}⚡ {{ _("One-Shot (Max. 1x per session)") }}{% else %}🔄 {{ _("Repeatable") }}{% endif %}
+      <div class="aimo-card-center-icon">
+        🎲
       </div>
-    </div>
+
+      <div class="aimo-card-footer">
+        <h3 class="aimo-card-title">{{ disp_ev_title }}</h3>
+        <div class="aimo-card-stats">
+          <span class="aimo-card-stat-pill">
+            {% if ev.one_shot %}⚡ {{ _("One-Shot") }}{% else %}🔄 {{ _("Repeatable") }}{% endif %}
+          </span>
+        </div>
+      </div>
+    {% endcall %}
 
     {% if is_editable %}
       <div class="modal-backdrop" id="edit-event-modal-{{ modal_prefix }}-{{ ev.id }}" aria-hidden="true">
@@ -196,12 +203,12 @@
               </div>
             </div>
           </form>
-          <form id="delete-ev-form-{{ modal_prefix }}-{{ ev.id }}" method="POST" action="{{ url_for(delete_endpoint, **{entity_id_param: entity_id, 'event_id': ev.id}) }}" style="display: none;"></form>
+          <form id="delete-ev-form-{{ modal_prefix }}-{{ ev.id }}" method="POST" action="{{ url_for(delete_endpoint, **{entity_id_param: entity_id, 'event_id': ev.id}) }}" data-confirm="{{ _('Really delete this event?') }}" style="display: none;"></form>
         </div>
       </div>
     {% endif %}
   {% endfor %}
-</div>
+{% endcall %}
 
 {% if is_editable %}
   <div class="modal-backdrop" id="new-event-modal-{{ modal_prefix }}" aria-hidden="true">

@@ -4,7 +4,7 @@ window.toggleSecretVisibility = function toggleSecretVisibility(inputId, btnEl) 
   const isPassword = input.type === "password";
   input.type = isPassword ? "text" : "password";
   if (btnEl) {
-    btnEl.title = isPassword ? "API-Key verbergen" : "API-Key anzeigen";
+    btnEl.title = isPassword ? window.t("Hide API key") : window.t("Show API key");
   }
 };
 
@@ -496,4 +496,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  let lastInvalidTabSwitchAt = 0;
+  document.addEventListener("invalid", (e) => {
+    const target = e.target;
+    if (!(target instanceof HTMLElement)) return;
+    const now = Date.now();
+    if (now - lastInvalidTabSwitchAt < 300) return;
+    const pane = target.closest(".tab-pane");
+    const tabGroup = target.closest("[data-tab-group]");
+    if (pane && tabGroup && !pane.classList.contains("active") && pane.id) {
+      const tabBtn = tabGroup.querySelector(`[data-tab-target="${CSS.escape(pane.id)}"]`);
+      if (tabBtn && !tabBtn.disabled) {
+        lastInvalidTabSwitchAt = now;
+        tabBtn.click();
+        setTimeout(() => {
+          try {
+            target.focus({ preventScroll: false });
+          } catch (_) {}
+        }, 0);
+        if (typeof window.showToast === "function") {
+          window.showToast({
+            type: "warning",
+            message: window.t("Please fill in all required fields."),
+          });
+        }
+      }
+    }
+  }, true);
 });

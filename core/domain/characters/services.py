@@ -53,10 +53,7 @@ class CharacterService:
         if cleaned_vis not in ("private", "public"):
             raise InvalidCharacterDataError("Visibility must be 'private' or 'public'.")
 
-        if isinstance(initial_relationship, bool) or not isinstance(initial_relationship, int) or not (-100 <= initial_relationship <= 100):
-            raise InvalidCharacterDataError(
-                "initial_relationship must be an integer between -100 and 100."
-            )
+        DomainValidator.validate_int_range(initial_relationship, "initial_relationship", -100, 100, InvalidCharacterDataError)
 
         cleaned_avatar = avatar_path.strip() if isinstance(avatar_path, str) and avatar_path.strip() else None
         cleaned_card = card_image_path.strip() if isinstance(card_image_path, str) and card_image_path.strip() else None
@@ -78,10 +75,7 @@ class CharacterService:
             avatar_path=cleaned_avatar,
             card_image_path=cleaned_card,
             appearance=cleaned_appearance,
-            collaborator_creator_tags=[
-                t.strip().lower() for t in collaborator_creator_tags
-                if isinstance(t, str) and t.strip()
-            ] if collaborator_creator_tags else [],
+            collaborator_creator_tags=DomainValidator.normalize_collaborator_tags(collaborator_creator_tags),
             dialogue_examples=list(dialogue_examples or []),
             linked_lorebook_ids=list(linked_lorebook_ids or []),
             lorebook_world_conditions=dict(lorebook_world_conditions or {}),
@@ -138,10 +132,7 @@ class CharacterService:
         if cleaned_vis not in ("private", "public"):
             raise InvalidCharacterDataError("Visibility must be 'private' or 'public'.")
 
-        if isinstance(initial_relationship, bool) or not isinstance(initial_relationship, int) or not (-100 <= initial_relationship <= 100):
-            raise InvalidCharacterDataError(
-                "initial_relationship must be an integer between -100 and 100."
-            )
+        DomainValidator.validate_int_range(initial_relationship, "initial_relationship", -100, 100, InvalidCharacterDataError)
 
         character.name = cleaned_name
         character.gender = resolved_gender
@@ -179,18 +170,17 @@ class CharacterService:
 
         character.initial_relationship = initial_relationship
         if collaborator_creator_tags is not None:
-            character.collaborator_creator_tags = [
-                t.strip().lower() for t in collaborator_creator_tags
-                if isinstance(t, str) and t.strip()
-            ]
+            character.collaborator_creator_tags = DomainValidator.normalize_collaborator_tags(collaborator_creator_tags)
         return character
 
     def validate_gallery_threshold(self, threshold: int) -> int:
-        if isinstance(threshold, bool) or not isinstance(threshold, int) or not (-100 <= threshold <= 100):
-            raise InvalidCharacterDataError(
-                "Gallery image unlock_threshold must be an integer between -100 and 100."
-            )
-        return threshold
+        return DomainValidator.validate_int_range(
+            threshold,
+            "Gallery image unlock_threshold",
+            -100,
+            100,
+            InvalidCharacterDataError,
+        )
 
     def add_gallery_image(
         self,

@@ -258,7 +258,14 @@ def update_backdrop():
         )
 
     if "backdrop_path" in data:
-        new_path = data.get("backdrop_path")
+        new_path = str(data.get("backdrop_path") or "").strip() or None
+        if new_path is not None:
+            try:
+                resolved = storage.resolve_path(new_path)
+            except AimoError as exc:
+                return jsonify({"error": str(exc)}), 400
+            if not resolved.is_file():
+                return jsonify({"error": "Backdrop file not found."}), 404
         settings = settings_service.update_default_backdrop(settings, new_path)
         settings_repo.save_settings(settings)
         return jsonify(
@@ -318,8 +325,38 @@ def notify_translation_worker():
     eid = data.get("entity_id")
     fname = str(data.get("field_name") or "").strip()
     has_missing = False
-    if etype and eid and fname:
+    if etype and eid is not None and fname:
+        try:
+            entity_id = int(eid)
+        except (TypeError, ValueError):
+            return jsonify({"error": "Invalid entity_id."}), 400
+
+        user = get_current_user()
+        admin_flag = is_admin()
+        authorized = False
+        if etype == "system_prompt":
+            authorized = admin_flag
+        elif etype == "character":
+            from infrastructure.repositories.character_repository import CharacterRepository
+            char = CharacterRepository().get_by_id(entity_id)
+            authorized = char is not None and char.is_editable_by_user(user.id, admin_flag, user.creator_tag)
+        elif etype == "lorebook":
+            from infrastructure.repositories.lorebook_repository import LorebookRepository
+            lb = LorebookRepository().get_by_id(entity_id)
+            authorized = lb is not None and lb.is_editable_by_user(user.id, admin_flag, user.creator_tag)
+        elif etype == "worldinfo":
+            from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
+            wi = WorldInfoRepository().get_by_id(entity_id)
+            authorized = wi is not None and wi.is_editable_by_user(user.id, admin_flag, user.creator_tag)
+        elif etype == "persona":
+            from infrastructure.repositories.persona_repository import PersonaRepository
+            persona = PersonaRepository().get_by_id(entity_id)
+            authorized = persona is not None and (persona.user_id == user.id or admin_flag)
+
+        if not authorized:
+            return jsonify({"error": "Entity not found."}), 404
+
         target_langs = UserRepository().list_distinct_languages()
-        missing = TranslationRepository().get_missing_languages(etype, int(eid), fname, target_langs)
+        missing = TranslationRepository().get_missing_languages(etype, entity_id, fname, target_langs)
         has_missing = bool(missing)
     return jsonify({"is_cloud": True, "has_missing": has_missing})

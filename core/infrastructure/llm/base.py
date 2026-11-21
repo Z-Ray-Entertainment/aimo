@@ -174,6 +174,8 @@ class BaseLLMProvider(LLMProvider):
         if evaluate_relationship:
             char_label = character_name.strip() if character_name and character_name.strip() else "Character"
             context_lines.append(f"Character: {char_label}")
+            if relationship_tier and relationship_tier.strip():
+                context_lines.append(f"Current relationship tier: {relationship_tier.strip()}")
             if user_text and user_text.strip():
                 context_lines.append(f"Player message:\n{user_text.strip()}")
             context_lines.append(f"Character reply:\n{text}")
