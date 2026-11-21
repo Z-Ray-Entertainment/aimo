@@ -8,12 +8,58 @@ from domain.characters.models import (
     EmotionalSprite,
     Gender,
 )
-from infrastructure.database import get_db_session
-from infrastructure.repositories.base import BaseRepository
-from infrastructure.repositories.orm_models import format_datetime, parse_datetime
+from infrastructure.database import format_datetime, get_db_session, parse_datetime
+from infrastructure.repositories.base import CollaborativeRepository
+from infrastructure.repositories.duplication import duplicate_character_entity
 
 
-class CharacterRepository(BaseRepository[Character]):
+class CharacterRepository(CollaborativeRepository[Character]):
+    def _rows_to_entities(
+        self, conn: sqlite3.Connection, rows: list[sqlite3.Row]
+    ) -> list[Character]:
+        if not rows:
+            return []
+        char_ids = [int(r["id"]) for r in rows]
+        placeholders = ",".join("?" for _ in char_ids)
+        img_rows = conn.execute(
+            f"SELECT * FROM character_images WHERE character_id IN ({placeholders}) ORDER BY id ASC",
+            tuple(char_ids),
+        ).fetchall()
+        sprite_rows = conn.execute(
+            f"SELECT * FROM character_sprites WHERE character_id IN ({placeholders}) ORDER BY id ASC",
+            tuple(char_ids),
+        ).fetchall()
+
+        gallery_map: dict[int, list[CharacterImage]] = {cid: [] for cid in char_ids}
+        for img in img_rows:
+            cid = int(img["character_id"])
+            gallery_map.setdefault(cid, []).append(
+                CharacterImage(
+                    id=int(img["id"]),
+                    character_id=cid,
+                    file_path=str(img["file_path"]),
+                    unlock_threshold=int(img["unlock_threshold"]),
+                )
+            )
+
+        sprite_map: dict[int, list[EmotionalSprite]] = {cid: [] for cid in char_ids}
+        for sp in sprite_rows:
+            cid = int(sp["character_id"])
+            sprite_map.setdefault(cid, []).append(
+                EmotionalSprite(
+                    id=int(sp["id"]),
+                    character_id=cid,
+                    emotion=Emotion.resolve(str(sp["emotion"])),
+                    variant=int(sp["variant"]),
+                    file_path=str(sp["file_path"]),
+                )
+            )
+
+        return [
+            self._row_to_entity(row, gallery_map.get(int(row["id"]), []), sprite_map.get(int(row["id"]), []))
+            for row in rows
+        ]
+
     def list_visible(self, user_id: int) -> list[Character]:
         with get_db_session() as conn:
             rows = conn.execute(
@@ -24,45 +70,12 @@ class CharacterRepository(BaseRepository[Character]):
                 """,
                 (user_id,),
             ).fetchall()
-            return [self._to_entity(conn, row) for row in rows]
+            return self._rows_to_entities(conn, rows)
 
     def list_for_user_creations(
         self, user_id: int, creator_tag: str | None = None
     ) -> list[Character]:
-        with get_db_session() as conn:
-            if creator_tag:
-                pattern = f"%{creator_tag.strip().lower()}%"
-                rows = conn.execute(
-                    """
-                    SELECT * FROM characters
-                    WHERE user_id = ? OR collaborator_creator_tags_json LIKE ?
-                    ORDER BY id DESC
-                    """,
-                    (user_id, pattern),
-                ).fetchall()
-            else:
-                rows = conn.execute(
-                    """
-                    SELECT * FROM characters
-                    WHERE user_id = ?
-                    ORDER BY id DESC
-                    """,
-                    (user_id,),
-                ).fetchall()
-            entities = [self._to_entity(conn, row) for row in rows]
-            if creator_tag:
-                normalized_tag = creator_tag.strip().lower()
-                return [
-                    c
-                    for c in entities
-                    if c.user_id == user_id
-                    or (
-                        c.collaborator_creator_tags
-                        and normalized_tag
-                        in [t.lower() for t in c.collaborator_creator_tags]
-                    )
-                ]
-            return entities
+        return self._list_creations("characters", user_id, creator_tag)
 
     def get_by_id(self, character_id: int) -> Character | None:
         with get_db_session() as conn:
@@ -72,7 +85,7 @@ class CharacterRepository(BaseRepository[Character]):
             ).fetchone()
             if row is None:
                 return None
-            return self._to_entity(conn, row)
+            return self._rows_to_entities(conn, [row])[0]
 
     def save(self, character: Character) -> Character:
         created_str = format_datetime(character.created_at)
@@ -94,16 +107,16 @@ class CharacterRepository(BaseRepository[Character]):
                         character.name,
                         character.gender.value,
                         character.visibility,
-                        getattr(character, "origin_language", "en") or "en",
-                        json.dumps(getattr(character, "collaborator_creator_tags", []) or []),
+                        character.origin_language or "en",
+                        json.dumps(character.collaborator_creator_tags),
                         character.primary_portrait_path,
                         character.avatar_path,
                         character.card_image_path,
-                        getattr(character, "appearance", "") or "",
+                        character.appearance or "",
                         character.description,
                         json.dumps(character.dialogue_examples),
                         json.dumps(character.linked_lorebook_ids),
-                        json.dumps(getattr(character, "lorebook_world_conditions", {}) or {}),
+                        json.dumps(character.lorebook_world_conditions),
                         character.suggested_worldinfo_id,
                         character.first_message,
                         character.initial_location_id,
@@ -136,16 +149,16 @@ class CharacterRepository(BaseRepository[Character]):
                         character.name,
                         character.gender.value,
                         character.visibility,
-                        getattr(character, "origin_language", "en") or "en",
-                        json.dumps(getattr(character, "collaborator_creator_tags", []) or []),
+                        character.origin_language or "en",
+                        json.dumps(character.collaborator_creator_tags),
                         character.primary_portrait_path,
                         character.avatar_path,
                         character.card_image_path,
-                        getattr(character, "appearance", "") or "",
+                        character.appearance or "",
                         character.description,
                         json.dumps(character.dialogue_examples),
                         json.dumps(character.linked_lorebook_ids),
-                        json.dumps(getattr(character, "lorebook_world_conditions", {}) or {}),
+                        json.dumps(character.lorebook_world_conditions),
                         character.suggested_worldinfo_id,
                         character.first_message,
                         character.initial_location_id,
@@ -159,145 +172,13 @@ class CharacterRepository(BaseRepository[Character]):
                 "SELECT * FROM characters WHERE id = ?",
                 (character.id,),
             ).fetchone()
-            return self._to_entity(conn, row)
+            return self._rows_to_entities(conn, [row])[0]
 
     def delete(self, character_id: int) -> bool:
         return self._delete_by_id("characters", character_id)
 
     def duplicate(self, character_id: int, target_user_id: int) -> Character:
-        from infrastructure.repositories.translation_repository import TranslationRepository
-        from shared.i18n import gettext_noop as _, t
-
-        orig = self.get_by_id(character_id)
-        if orig is None:
-            raise ValueError(f"Character {character_id} not found.")
-
-        with get_db_session() as conn:
-            u_row = conn.execute(
-                "SELECT language FROM users WHERE id = ?",
-                (target_user_id,),
-            ).fetchone()
-        target_lang = (
-            str(u_row["language"]).strip().lower()[:2]
-            if u_row and u_row["language"]
-            else "en"
-        ) or "en"
-
-        trans_repo = TranslationRepository()
-        orig_trans = trans_repo.get_entity_translations_map("character", character_id)
-        has_target_desc = bool(orig_trans.get("description", {}).get(target_lang, {}).get("text", "").strip())
-
-        copy_suffix = t(_("Copy"), target_lang)
-        copy_name = f"{orig.name} ({copy_suffix})"
-        clone_origin_lang = target_lang if has_target_desc else (getattr(orig, "origin_language", "en") or "en")
-        clone_desc = trans_repo.get_localized_field("character", character_id, "description", target_lang, orig.description)
-        clone_app = trans_repo.get_localized_field(
-            "character", character_id, "appearance", target_lang, getattr(orig, "appearance", "") or ""
-        )
-        clone_first = trans_repo.get_localized_field("character", character_id, "first_message", target_lang, orig.first_message)
-
-        clone = Character(
-            id=None,
-            user_id=target_user_id,
-            name=copy_name,
-            gender=orig.gender,
-            visibility="private",
-            origin_language=clone_origin_lang,
-            collaborator_creator_tags=[],
-            primary_portrait_path=orig.primary_portrait_path,
-            avatar_path=orig.avatar_path,
-            card_image_path=orig.card_image_path,
-            appearance=clone_app,
-            description=clone_desc,
-            dialogue_examples=list(orig.dialogue_examples),
-            linked_lorebook_ids=list(orig.linked_lorebook_ids),
-            lorebook_world_conditions=dict(getattr(orig, "lorebook_world_conditions", {}) or {}),
-            suggested_worldinfo_id=orig.suggested_worldinfo_id,
-            first_message=clone_first,
-            initial_location_id=orig.initial_location_id,
-            initial_relationship=orig.initial_relationship,
-            preferred_location_ids=list(orig.preferred_location_ids),
-            disliked_location_ids=list(orig.disliked_location_ids),
-            gallery_images=[],
-            sprites=[],
-        )
-        saved = self.save(clone)
-        assert saved.id is not None
-
-        # Copy existing field translations
-        with get_db_session() as conn:
-            conn.execute(
-                """
-                INSERT OR IGNORE INTO entity_field_translations (
-                    entity_type, entity_id, field_name, language, text_content, is_outdated, updated_at
-                )
-                SELECT entity_type, ?, field_name, language, text_content, is_outdated, updated_at
-                FROM entity_field_translations
-                WHERE entity_type = 'character' AND entity_id = ?
-                """,
-                (saved.id, character_id),
-            )
-
-        # Deep-copy gallery images
-        for img in orig.gallery_images:
-            self.add_gallery_image(
-                saved.id,
-                CharacterImage(
-                    id=None,
-                    character_id=saved.id,
-                    file_path=img.file_path,
-                    unlock_threshold=img.unlock_threshold,
-                ),
-            )
-
-        # Deep-copy sprites
-        for sp in orig.sprites:
-            self.add_sprite(
-                saved.id,
-                EmotionalSprite(
-                    id=None,
-                    character_id=saved.id,
-                    emotion=sp.emotion,
-                    variant=sp.variant,
-                    file_path=sp.file_path,
-                ),
-            )
-
-        # Deep-copy character-specific events
-        with get_db_session() as conn:
-            ev_rows = conn.execute(
-                """
-                SELECT worldinfo_id, location_id, title, probability, one_shot, description,
-                       min_relationship, max_relationship
-                FROM events WHERE character_id = ? ORDER BY id ASC
-                """,
-                (character_id,),
-            ).fetchall()
-            for ev in ev_rows:
-                conn.execute(
-                    """
-                    INSERT INTO events (
-                        worldinfo_id, character_id, location_id, title, probability, one_shot, description,
-                        min_relationship, max_relationship
-                    )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """,
-                    (
-                        ev["worldinfo_id"],
-                        saved.id,
-                        ev["location_id"],
-                        ev["title"],
-                        ev["probability"],
-                        ev["one_shot"],
-                        ev["description"],
-                        ev["min_relationship"],
-                        ev["max_relationship"],
-                    ),
-                )
-
-        reloaded = self.get_by_id(saved.id)
-        assert reloaded is not None
-        return reloaded
+        return duplicate_character_entity(self, character_id, target_user_id)
 
     def add_sprite(self, character_id: int, sprite: EmotionalSprite) -> EmotionalSprite:
         with get_db_session() as conn:
@@ -445,84 +326,33 @@ class CharacterRepository(BaseRepository[Character]):
                 for r in rows
             ]
 
-    @staticmethod
-    def _to_entity(conn: sqlite3.Connection, row: sqlite3.Row) -> Character:
-        def _load_list(raw: str) -> list:
-            try:
-                val = json.loads(raw)
-                return list(val) if isinstance(val, list) else []
-            except json.JSONDecodeError:
-                return []
-
-        def _load_dict(raw: str) -> dict[int, int]:
-            try:
-                val = json.loads(raw)
-                if isinstance(val, dict):
-                    return {int(k): int(v) for k, v in val.items() if str(k).isdigit() and str(v).isdigit()}
-                return {}
-            except (json.JSONDecodeError, ValueError):
-                return {}
-
-        char_id = int(row["id"])
-        img_rows = conn.execute(
-            "SELECT * FROM character_images WHERE character_id = ? ORDER BY id ASC",
-            (char_id,),
-        ).fetchall()
-        gallery = [
-            CharacterImage(
-                id=int(img["id"]),
-                character_id=int(img["character_id"]),
-                file_path=str(img["file_path"]),
-                unlock_threshold=int(img["unlock_threshold"]),
-            )
-            for img in img_rows
-        ]
-
-        sprite_rows = conn.execute(
-            "SELECT * FROM character_sprites WHERE character_id = ? ORDER BY id ASC",
-            (char_id,),
-        ).fetchall()
-        sprites = [
-            EmotionalSprite(
-                id=int(sp["id"]),
-                character_id=int(sp["character_id"]),
-                emotion=Emotion.resolve(str(sp["emotion"])),
-                variant=int(sp["variant"]),
-                file_path=str(sp["file_path"]),
-            )
-            for sp in sprite_rows
-        ]
-
+    @classmethod
+    def _row_to_entity(
+        cls,
+        row: sqlite3.Row,
+        gallery: list[CharacterImage],
+        sprites: list[EmotionalSprite],
+    ) -> Character:
+        raw_conditions = cls._row_json_dict(row, "lorebook_world_conditions_json")
+        world_conditions = {
+            int(k): int(v)
+            for k, v in raw_conditions.items()
+            if str(k).isdigit() and str(v).isdigit()
+        }
         return Character(
-            id=char_id,
+            id=int(row["id"]),
             user_id=int(row["user_id"]),
             name=str(row["name"]),
             gender=Gender.resolve(str(row["gender"])),
             visibility=str(row["visibility"]),
-            origin_language=(
-                str(row["origin_language"])
-                if ("origin_language" in row.keys() and row["origin_language"])
-                else "en"
-            ),
+            origin_language=cls._row_str(row, "origin_language", "en") or "en",
             collaborator_creator_tags=[
-                str(t) for t in _load_list(str(row["collaborator_creator_tags_json"]))
-            ] if "collaborator_creator_tags_json" in row.keys() and row["collaborator_creator_tags_json"] else [],
+                str(t) for t in cls._row_json_list(row, "collaborator_creator_tags_json")
+            ],
             primary_portrait_path=str(row["primary_portrait_path"]),
-            avatar_path=(
-                str(row["avatar_path"])
-                if ("avatar_path" in row.keys() and row["avatar_path"])
-                else None
-            ),
-            card_image_path=(
-                str(row["card_image_path"])
-                if ("card_image_path" in row.keys() and row["card_image_path"])
-                else None
-            ),
-            appearance=(
-                str(row["appearance"])
-                if ("appearance" in row.keys() and row["appearance"])
-                else ""
-            ),
+            avatar_path=cls._row_opt_str(row, "avatar_path"),
+            card_image_path=cls._row_opt_str(row, "card_image_path"),
+            appearance=cls._row_str(row, "appearance"),
             description=str(row["description"]),
             dialogue_examples=[
                 (
@@ -533,28 +363,16 @@ class CharacterRepository(BaseRepository[Character]):
                     if isinstance(x, dict)
                     else {"trigger": "", "response": str(x)}
                 )
-                for x in _load_list(str(row["dialogue_examples_json"]))
+                for x in cls._row_json_list(row, "dialogue_examples_json")
             ],
-            linked_lorebook_ids=[int(x) for x in _load_list(str(row["linked_lorebook_ids_json"]))],
-            lorebook_world_conditions=_load_dict(str(row["lorebook_world_conditions_json"])) if "lorebook_world_conditions_json" in row.keys() and row["lorebook_world_conditions_json"] else {},
-            suggested_worldinfo_id=(
-                int(row["suggested_worldinfo_id"])
-                if row["suggested_worldinfo_id"] is not None
-                else None
-            ),
+            linked_lorebook_ids=[int(x) for x in cls._row_json_list(row, "linked_lorebook_ids_json")],
+            lorebook_world_conditions=world_conditions,
+            suggested_worldinfo_id=cls._row_opt_int(row, "suggested_worldinfo_id"),
             first_message=str(row["first_message"]),
-            initial_location_id=(
-                int(row["initial_location_id"])
-                if row["initial_location_id"] is not None
-                else None
-            ),
+            initial_location_id=cls._row_opt_int(row, "initial_location_id"),
             initial_relationship=int(row["initial_relationship"]),
-            preferred_location_ids=[
-                int(x) for x in _load_list(str(row["preferred_location_ids_json"]))
-            ],
-            disliked_location_ids=[
-                int(x) for x in _load_list(str(row["disliked_location_ids_json"]))
-            ],
+            preferred_location_ids=[int(x) for x in cls._row_json_list(row, "preferred_location_ids_json")],
+            disliked_location_ids=[int(x) for x in cls._row_json_list(row, "disliked_location_ids_json")],
             gallery_images=gallery,
             sprites=sprites,
             created_at=parse_datetime(row["created_at"]),

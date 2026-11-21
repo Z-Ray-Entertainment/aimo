@@ -3,11 +3,11 @@ import json
 import sqlite3
 
 from domain.translation.models import TranslationRecord, compute_source_hash
-from infrastructure.database import get_db_session
-from infrastructure.repositories.orm_models import format_datetime, parse_datetime
+from infrastructure.database import format_datetime, get_db_session, parse_datetime
+from infrastructure.repositories.base import BaseRepository
 
 
-class TranslationRepository:
+class TranslationRepository(BaseRepository[TranslationRecord]):
     def get_translation(
         self,
         source_hash: str,

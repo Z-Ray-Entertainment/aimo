@@ -1,9 +1,8 @@
 import sqlite3
 
 from domain.personas.models import Gender, UserPersona
-from infrastructure.database import get_db_session
+from infrastructure.database import format_datetime, get_db_session, parse_datetime
 from infrastructure.repositories.base import BaseRepository
-from infrastructure.repositories.orm_models import format_datetime, parse_datetime
 
 
 class PersonaRepository(BaseRepository[UserPersona]):
@@ -15,11 +14,7 @@ class PersonaRepository(BaseRepository[UserPersona]):
         )
 
     def list_all(self) -> list[UserPersona]:
-        return self._fetch_all(
-            "SELECT * FROM personas ORDER BY id ASC",
-            (),
-            self._to_entity,
-        )
+        return self._list_all("personas", self._to_entity)
 
     def get_by_id(self, persona_id: int) -> UserPersona | None:
         return self._get_by_id("personas", persona_id, self._to_entity)

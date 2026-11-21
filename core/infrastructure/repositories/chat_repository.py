@@ -2,11 +2,11 @@ import json
 import sqlite3
 
 from domain.chat.models import ChatSession, Message, MessageRole
-from infrastructure.database import get_db_session
-from infrastructure.repositories.orm_models import format_datetime, parse_datetime
+from infrastructure.database import format_datetime, get_db_session, parse_datetime
+from infrastructure.repositories.base import BaseRepository
 
 
-class ChatRepository:
+class ChatRepository(BaseRepository[ChatSession]):
     def list_sessions_for_character(
         self,
         character_id: int,

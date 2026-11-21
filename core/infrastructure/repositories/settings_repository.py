@@ -9,6 +9,7 @@ from domain.settings.models import (
     TaskAssignment,
 )
 from infrastructure.database import get_db_session
+from infrastructure.repositories.base import BaseRepository
 from infrastructure.image_gen.comfyui import ComfyUIImageGenProvider
 from infrastructure.image_gen.factory import IMAGE_GEN_PROVIDER_CLASSES
 from infrastructure.image_gen.google_ai import GoogleAIImageGenProvider
@@ -20,7 +21,7 @@ from infrastructure.search.factory import SEARCH_PROVIDER_CLASSES
 from infrastructure.search.stub import DisabledSearchProvider, SearXNGSearchStubProvider
 
 
-class SettingsRepository:
+class SettingsRepository(BaseRepository[ServiceSettings]):
     def get_settings(self) -> ServiceSettings:
         with get_db_session() as conn:
             row = conn.execute(
