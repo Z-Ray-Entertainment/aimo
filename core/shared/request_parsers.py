@@ -27,19 +27,20 @@ class RequestDataParser:
             return default
 
     @staticmethod
-    def to_int(
+    def _to_bounded_number(
         data: Any,
         key: str,
-        default: int = 0,
-        min_val: int | None = None,
-        max_val: int | None = None,
-    ) -> int:
+        caster: type[int] | type[float],
+        default: Any,
+        min_val: Any = None,
+        max_val: Any = None,
+    ) -> Any:
         if not hasattr(data, "get"):
             res = default
         else:
             raw = data.get(key, default)
             try:
-                res = int(raw)
+                res = caster(raw)
             except (ValueError, TypeError):
                 res = default
         if min_val is not None:
@@ -48,27 +49,27 @@ class RequestDataParser:
             res = min(max_val, res)
         return res
 
-    @staticmethod
+    @classmethod
+    def to_int(
+        cls,
+        data: Any,
+        key: str,
+        default: int = 0,
+        min_val: int | None = None,
+        max_val: int | None = None,
+    ) -> int:
+        return cls._to_bounded_number(data, key, int, default, min_val, max_val)
+
+    @classmethod
     def to_float(
+        cls,
         data: Any,
         key: str,
         default: float = 0.0,
         min_val: float | None = None,
         max_val: float | None = None,
     ) -> float:
-        if not hasattr(data, "get"):
-            res = default
-        else:
-            raw = data.get(key, default)
-            try:
-                res = float(raw)
-            except (ValueError, TypeError):
-                res = default
-        if min_val is not None:
-            res = max(min_val, res)
-        if max_val is not None:
-            res = min(max_val, res)
-        return res
+        return cls._to_bounded_number(data, key, float, default, min_val, max_val)
 
     @staticmethod
     def to_bool(data: Any, key: str, default: bool = False) -> bool:

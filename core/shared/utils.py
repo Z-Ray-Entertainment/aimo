@@ -173,23 +173,13 @@ def sanitize_filename(filename: str) -> str:
     return sanitized or "unnamed_file"
 
 
-_CHAR_PLACEHOLDER_RE = re.compile(r"\{\{\s*char\s*\}\}|\{\s*char\s*\}", re.IGNORECASE)
-_USER_PLACEHOLDER_RE = re.compile(r"\{\{\s*user\s*\}\}|\{\s*user\s*\}", re.IGNORECASE)
-
-_CHAR_GENDER_RE = re.compile(r"\{\{\s*char_gender\s*\}\}|\{\s*char_gender\s*\}", re.IGNORECASE)
-_USER_GENDER_RE = re.compile(r"\{\{\s*user_gender\s*\}\}|\{\s*user_gender\s*\}", re.IGNORECASE)
-
-_CHAR_PRONOUNS_RE = re.compile(r"\{\{\s*char_pronouns\s*\}\}|\{\s*char_pronouns\s*\}", re.IGNORECASE)
-_USER_PRONOUNS_RE = re.compile(r"\{\{\s*user_pronouns\s*\}\}|\{\s*user_pronouns\s*\}", re.IGNORECASE)
-
-_CHAR_SUBJECT_RE = re.compile(r"\{\{\s*char_subject\s*\}\}|\{\s*char_subject\s*\}", re.IGNORECASE)
-_USER_SUBJECT_RE = re.compile(r"\{\{\s*user_subject\s*\}\}|\{\s*user_subject\s*\}", re.IGNORECASE)
-
-_CHAR_OBJECT_RE = re.compile(r"\{\{\s*char_object\s*\}\}|\{\s*char_object\s*\}", re.IGNORECASE)
-_USER_OBJECT_RE = re.compile(r"\{\{\s*user_object\s*\}\}|\{\s*user_object\s*\}", re.IGNORECASE)
-
-_CHAR_POSSESSIVE_RE = re.compile(r"\{\{\s*char_possessive\s*\}\}|\{\s*char_possessive\s*\}", re.IGNORECASE)
-_USER_POSSESSIVE_RE = re.compile(r"\{\{\s*user_possessive\s*\}\}|\{\s*user_possessive\s*\}", re.IGNORECASE)
+_ROLEPLAY_PLACEHOLDER_RE = re.compile(
+    r"\{\{\s*(char|user|char_gender|user_gender|char_pronouns|user_pronouns|"
+    r"char_subject|user_subject|char_object|user_object|char_possessive|user_possessive)\s*\}\}"
+    r"|\{\s*(char|user|char_gender|user_gender|char_pronouns|user_pronouns|"
+    r"char_subject|user_subject|char_object|user_object|char_possessive|user_possessive)\s*\}",
+    re.IGNORECASE,
+)
 
 
 def get_gender_forms(gender: str | None) -> dict[str, str]:
@@ -229,23 +219,31 @@ def replace_roleplay_placeholders(
 ) -> str:
     if not text:
         return ""
-    result = _CHAR_PLACEHOLDER_RE.sub(character_name, text)
-    result = _USER_PLACEHOLDER_RE.sub(persona_name, result)
-
+    replacements: dict[str, str] = {
+        "char": character_name,
+        "user": persona_name,
+    }
     if character_gender is not None:
         c_forms = get_gender_forms(character_gender)
-        result = _CHAR_GENDER_RE.sub(c_forms["gender"], result)
-        result = _CHAR_PRONOUNS_RE.sub(c_forms["pronouns"], result)
-        result = _CHAR_SUBJECT_RE.sub(c_forms["subject"], result)
-        result = _CHAR_OBJECT_RE.sub(c_forms["object"], result)
-        result = _CHAR_POSSESSIVE_RE.sub(c_forms["possessive"], result)
-
+        replacements.update({
+            "char_gender": c_forms["gender"],
+            "char_pronouns": c_forms["pronouns"],
+            "char_subject": c_forms["subject"],
+            "char_object": c_forms["object"],
+            "char_possessive": c_forms["possessive"],
+        })
     if persona_gender is not None:
         u_forms = get_gender_forms(persona_gender)
-        result = _USER_GENDER_RE.sub(u_forms["gender"], result)
-        result = _USER_PRONOUNS_RE.sub(u_forms["pronouns"], result)
-        result = _USER_SUBJECT_RE.sub(u_forms["subject"], result)
-        result = _USER_OBJECT_RE.sub(u_forms["object"], result)
-        result = _USER_POSSESSIVE_RE.sub(u_forms["possessive"], result)
+        replacements.update({
+            "user_gender": u_forms["gender"],
+            "user_pronouns": u_forms["pronouns"],
+            "user_subject": u_forms["subject"],
+            "user_object": u_forms["object"],
+            "user_possessive": u_forms["possessive"],
+        })
 
-    return result
+    def _replace(match: re.Match[str]) -> str:
+        key = (match.group(1) or match.group(2) or "").lower()
+        return replacements.get(key, match.group(0))
+
+    return _ROLEPLAY_PLACEHOLDER_RE.sub(_replace, text)

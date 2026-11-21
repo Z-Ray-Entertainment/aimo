@@ -1,20 +1,25 @@
-import base64
-import json
-import re
 from collections.abc import Iterator
+import json
 from pathlib import Path
+import re
+import threading
 from typing import Any, ClassVar
 
 import requests
 
 from domain.settings.models import ModelParameters, ServiceSettings
-from domain.settings.services import SettingsService
+from infrastructure.http_utils import (
+    UrlBackendConfigMixin,
+    decode_utf8_line,
+    encode_image_base64,
+    ensure_response_ok,
+)
 from infrastructure.llm.base import BaseLLMProvider
 from shared.config import Config
 from shared.exceptions import InfrastructureError
 
 
-class OllamaLLMProvider(BaseLLMProvider):
+class OllamaLLMProvider(UrlBackendConfigMixin, BaseLLMProvider):
     PROVIDER_ID: ClassVar[str] = "ollama"
     DISPLAY_NAME: ClassVar[str] = "Ollama (Lokal / Self-Hosted)"
     BADGE_LABEL: ClassVar[str] = "Lokal"
@@ -23,6 +28,7 @@ class OllamaLLMProvider(BaseLLMProvider):
         "Modelle werden lokal geladen und verwaltet."
     )
     DEFAULT_BASE_URL: ClassVar[str] = Config.DEFAULT_OLLAMA_URL
+    URL_FIELD_NAME: ClassVar[str] = "ollama_url"
 
     RECOMMENDED_ROLEPLAY_MODEL: ClassVar[str] = (
         "igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest"
@@ -74,34 +80,6 @@ class OllamaLLMProvider(BaseLLMProvider):
         return not cleaned.startswith("gemini-") and not cleaned.startswith("models/gemini-")
 
     @classmethod
-    def get_default_config(cls) -> dict[str, str]:
-        return {"base_url": cls.DEFAULT_BASE_URL}
-
-    @classmethod
-    def validate_active_config(
-        cls,
-        submitted: dict[str, str],
-        existing: dict[str, str],
-        clear_secret: bool = False,
-    ) -> dict[str, str]:
-        raw_url = (submitted.get("base_url") or "").strip() or (existing.get("base_url") or "").strip()
-        validated = SettingsService.validate_url("ollama_url", raw_url)
-        return {"base_url": validated}
-
-    @classmethod
-    def validate_inactive_config(
-        cls,
-        submitted: dict[str, str],
-        existing: dict[str, str],
-        clear_secret: bool = False,
-    ) -> dict[str, str]:
-        raw_url = (submitted.get("base_url") or "").strip()
-        if raw_url:
-            return {"base_url": SettingsService.validate_url("ollama_url", raw_url)}
-        existing_url = (existing.get("base_url") or "").strip() or cls.DEFAULT_BASE_URL
-        return {"base_url": existing_url}
-
-    @classmethod
     def from_settings(cls, settings: ServiceSettings) -> "OllamaLLMProvider":
         cfg = settings.get_llm_config(cls.PROVIDER_ID)
         base_url = cfg.get("base_url") or cls.DEFAULT_BASE_URL
@@ -127,6 +105,7 @@ class OllamaLLMProvider(BaseLLMProvider):
         return f"Ollama-Verbindungsfehler ({model}): {raw_err}"
 
     _SCHEMA_UNSUPPORTED_CACHE: set[str] = set()
+    _CACHE_LOCK: ClassVar[threading.Lock] = threading.Lock()
 
     def __init__(
         self,
@@ -168,8 +147,9 @@ class OllamaLLMProvider(BaseLLMProvider):
             )
             response.encoding = "utf-8"
             if response.status_code == 400 and think is not None and "think" in response.text.lower():
+                response.close()
                 payload.pop("think", None)
-                response = requests.post(
+                response = self._session.post(
                     f"{self.base_url}/api/generate",
                     json=payload,
                     stream=True,
@@ -178,11 +158,11 @@ class OllamaLLMProvider(BaseLLMProvider):
                 response.encoding = "utf-8"
             with response:
                 response.encoding = "utf-8"
-                self._ensure_ok(response, "Ollama streaming generation")
+                ensure_response_ok(response, "Ollama streaming generation")
                 for raw_line in response.iter_lines(decode_unicode=False):
                     if not raw_line:
                         continue
-                    line_str = self._decode_utf8_line(raw_line)
+                    line_str = decode_utf8_line(raw_line)
                     try:
                         chunk = json.loads(line_str)
                     except json.JSONDecodeError as exc:
@@ -269,18 +249,7 @@ class OllamaLLMProvider(BaseLLMProvider):
         return str(data.get("response", "")).strip()
 
     def analyze_image(self, image_path: Path, prompt: str, model: str) -> str:
-        resolved_path = Path(image_path).resolve()
-        if not resolved_path.is_file():
-            raise InfrastructureError(
-                f"Image file for vision analysis does not exist: '{resolved_path}'."
-            )
-
-        try:
-            encoded_image = base64.b64encode(resolved_path.read_bytes()).decode("ascii")
-        except OSError as exc:
-            raise InfrastructureError(
-                f"Failed to read image file '{resolved_path}': {exc}"
-            ) from exc
+        encoded_image = encode_image_base64(image_path)
 
         payload: dict[str, Any] = {
             "model": model,
@@ -289,12 +258,12 @@ class OllamaLLMProvider(BaseLLMProvider):
             "stream": False,
         }
         try:
-            response = requests.post(
+            response = self._session.post(
                 f"{self.base_url}/api/generate",
                 json=payload,
                 timeout=self.request_timeout,
             )
-            self._ensure_ok(response, "Ollama vision analysis")
+            ensure_response_ok(response, "Ollama vision analysis")
             data = response.json()
         except (requests.RequestException, ValueError) as exc:
             raise InfrastructureError(
@@ -307,11 +276,11 @@ class OllamaLLMProvider(BaseLLMProvider):
 
     def list_models(self) -> list[str]:
         try:
-            response = requests.get(
+            response = self._session.get(
                 f"{self.base_url}/api/tags",
                 timeout=self.request_timeout,
             )
-            self._ensure_ok(response, "Ollama list models")
+            ensure_response_ok(response, "Ollama list models")
             data = response.json()
         except (requests.RequestException, ValueError) as exc:
             raise InfrastructureError(
@@ -334,18 +303,18 @@ class OllamaLLMProvider(BaseLLMProvider):
 
         payload = {"name": cleaned_name, "stream": True}
         try:
-            with requests.post(
+            with self._session.post(
                 f"{self.base_url}/api/pull",
                 json=payload,
                 stream=True,
                 timeout=self.pull_timeout,
             ) as response:
                 response.encoding = "utf-8"
-                self._ensure_ok(response, f"Ollama pull model '{cleaned_name}'")
+                ensure_response_ok(response, f"Ollama pull model '{cleaned_name}'")
                 for raw_line in response.iter_lines(decode_unicode=False):
                     if not raw_line:
                         continue
-                    line_str = self._decode_utf8_line(raw_line)
+                    line_str = decode_utf8_line(raw_line)
                     try:
                         event = json.loads(line_str)
                     except json.JSONDecodeError as exc:
@@ -369,14 +338,14 @@ class OllamaLLMProvider(BaseLLMProvider):
             raise InfrastructureError("Model name for delete_model must not be empty.")
 
         try:
-            response = requests.delete(
+            response = self._session.delete(
                 f"{self.base_url}/api/delete",
                 json={"name": cleaned_name},
                 timeout=self.request_timeout,
             )
             if response.status_code == 404:
                 return False
-            self._ensure_ok(response, f"Ollama delete model '{cleaned_name}'")
+            ensure_response_ok(response, f"Ollama delete model '{cleaned_name}'")
             return True
         except requests.RequestException as exc:
             raise InfrastructureError(
@@ -385,7 +354,7 @@ class OllamaLLMProvider(BaseLLMProvider):
 
     def check_health(self) -> bool:
         try:
-            response = requests.get(
+            response = self._session.get(
                 f"{self.base_url}/api/tags",
                 timeout=(5.0, 5.0),
             )
@@ -400,11 +369,12 @@ class OllamaLLMProvider(BaseLLMProvider):
         if not cleaned_name:
             return None
         cache_key = f"{self.base_url}::{cleaned_name}"
-        if cache_key in self._MODEL_CTX_CACHE:
-            return self._MODEL_CTX_CACHE[cache_key]
+        with self._CACHE_LOCK:
+            if cache_key in self._MODEL_CTX_CACHE:
+                return self._MODEL_CTX_CACHE[cache_key]
 
         try:
-            response = requests.post(
+            response = self._session.post(
                 f"{self.base_url}/api/show",
                 json={"name": cleaned_name},
                 timeout=(3.0, 5.0),

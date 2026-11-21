@@ -1,6 +1,5 @@
-import base64
-from io import BytesIO
 from pathlib import Path
+import threading
 import time
 from typing import Any, ClassVar
 
@@ -30,7 +29,7 @@ class GoogleAIImageGenProvider(ImageGenProvider):
 
     _HEALTH_CACHE: dict[tuple[str, str], tuple[float, bool]] = {}
     _HEALTH_TTL_SECONDS: float = 60.0
-    _CANCELLED_TASKS: set[str] = set()
+    _HEALTH_LOCK: ClassVar[threading.Lock] = threading.Lock()
 
     @classmethod
     def get_default_config(cls) -> dict[str, str]:
@@ -188,31 +187,31 @@ class GoogleAIImageGenProvider(ImageGenProvider):
         return target_path
 
     def cancel_generation(self, task_id: str) -> None:
-        cleaned = task_id.strip() if isinstance(task_id, str) else ""
-        if cleaned:
-            self._CANCELLED_TASKS.add(cleaned)
+        return None
 
     def check_health(self) -> bool:
         if not self.api_key or not self.model:
             return False
         cache_key = (f"{self.base_url}:{hash(self.api_key)}", self.model)
         now = time.monotonic()
-        cached = self._HEALTH_CACHE.get(cache_key)
-        if cached and (now - cached[0]) < self._HEALTH_TTL_SECONDS:
-            return cached[1]
+        with self._HEALTH_LOCK:
+            cached = self._HEALTH_CACHE.get(cache_key)
+            if cached and (now - cached[0]) < self._HEALTH_TTL_SECONDS:
+                return cached[1]
 
         healthy = False
         try:
             response = requests.get(
                 f"{self.base_url}/models/{self.model}",
-                headers={"x-goog-api-key": self.api_key},
+                headers=build_google_headers(self.api_key),
                 timeout=(3.0, 4.0),
             )
             healthy = response.status_code == 200
         except requests.RequestException:
             healthy = False
 
-        self._HEALTH_CACHE[cache_key] = (now, healthy)
+        with self._HEALTH_LOCK:
+            self._HEALTH_CACHE[cache_key] = (now, healthy)
         return healthy
 
     @staticmethod
