@@ -4,6 +4,17 @@ from enum import StrEnum
 from typing import Any
 
 
+class EnumString(str):
+    """String subclass exposing `.value` for templates expecting domain Enum values."""
+
+    @property
+    def value(self) -> str:
+        return str(self)
+
+
+_ENUM_FIELDS = {"gender", "role", "emotion"}
+
+
 class AttrDict(dict):
     """Dictionary supporting attribute access for Jinja2 templates and Flask views."""
 
@@ -24,7 +35,13 @@ class AttrDict(dict):
 
 def wrap_dto(obj: Any) -> Any:
     if isinstance(obj, dict) and not isinstance(obj, AttrDict):
-        return AttrDict({k: wrap_dto(v) for k, v in obj.items()})
+        wrapped: dict[str, Any] = {}
+        for k, v in obj.items():
+            if k in _ENUM_FIELDS and isinstance(v, str):
+                wrapped[k] = EnumString(v)
+            else:
+                wrapped[k] = wrap_dto(v)
+        return AttrDict(wrapped)
     if isinstance(obj, list):
         return [wrap_dto(item) for item in obj]
     return obj

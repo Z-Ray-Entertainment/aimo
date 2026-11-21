@@ -2,6 +2,7 @@ from flask import flash, g, redirect, render_template, request, url_for
 
 from application.auth.decorators import get_current_user, is_admin, require_permission
 from application.chat import chat_bp
+from application.chat.helpers import build_lorebook_view_data
 from application.core_client import core_delete, core_get, core_post, core_put
 from application.ui_helpers import tr
 from application.view_models import FunctionPermission, wrap_dto
@@ -21,6 +22,7 @@ def open_character_chat(character_id: int):
 @chat_bp.route("/character/<int:character_id>/new", methods=["GET", "POST"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def new_character_chat(character_id: int):
+    user = get_current_user()
     _, char_data = core_get(f"/api/characters/{character_id}")
     if not char_data.get("id"):
         flash(tr(_("Character not found.")), "error")
@@ -43,18 +45,55 @@ def new_character_chat(character_id: int):
         return redirect(url_for("overview.index"))
 
     _, wi_data = core_get("/api/worldinfo")
+    _, lb_data = core_get("/api/lorebooks")
+    character = wrap_dto(char_data)
+    worldinfos = wrap_dto(wi_data.get("worldinfos", []))
+    all_lorebooks = wrap_dto(lb_data.get("lorebooks", []))
+    suggested_wi = next(
+        (w for w in worldinfos if w.id == getattr(character, "suggested_worldinfo_id", None)),
+        None,
+    )
+    lorebook_data = build_lorebook_view_data(
+        user.id,
+        all_lorebooks,
+        worldinfos,
+        character,
+        worldinfo=suggested_wi,
+        is_admin=is_admin(),
+    )
+    lb_map = {lb.id: lb for lb in all_lorebooks}
+    worldinfo_names_map = {str(w.id): w.name for w in worldinfos}
+    worldinfo_lorebooks_map = {}
+    for w in worldinfos:
+        wi_lb_id = getattr(w, "lorebook_id", None)
+        if wi_lb_id and wi_lb_id in lb_map:
+            lb = lb_map[wi_lb_id]
+            worldinfo_lorebooks_map[str(w.id)] = {
+                "id": lb.id,
+                "name": lb.name,
+                "description": getattr(lb, "description", "") or "",
+                "tags": sorted(getattr(lb, "tags", []) or []),
+                "entry_count": int(getattr(lb, "entry_count", 0) or 0),
+                "source": "World",
+            }
+
     return render_template(
         "chat/select_worldinfo.html",
-        character=wrap_dto(char_data),
-        worldinfos=wrap_dto(wi_data.get("worldinfos", [])),
+        character=character,
+        worldinfos=worldinfos,
         personas=[item["persona"] for item in getattr(g, "persona_items", [])],
         default_persona=getattr(g, "default_persona", None),
+        lorebook_data=lorebook_data,
+        worldinfo_lorebooks_map=worldinfo_lorebooks_map,
+        worldinfo_names_map=worldinfo_names_map,
+        character_lorebook_world_conditions=getattr(character, "lorebook_world_conditions", {}) or {},
     )
 
 
 @chat_bp.route("/session/<int:session_id>", methods=["GET"])
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def view_session(session_id: int):
+    user = get_current_user()
     status, data = core_get(f"/api/chat/{session_id}")
     if status != 200 or not data.get("session"):
         flash(tr(_("Chat session not found.")), "error")
@@ -64,6 +103,8 @@ def view_session(session_id: int):
     _, char_data = core_get(f"/api/characters/{chat_session.character_id}")
     _, mem_data = core_get(f"/api/chat/{session_id}/memories")
     _, wi_list_data = core_get("/api/worldinfo")
+    _, lb_data = core_get("/api/lorebooks")
+    _, tiers_data = core_get("/api/characters/relationship-tiers")
     _, health_data = core_get("/api/admin/health")
     _, sessions_data = core_get("/api/chat/sessions")
 
@@ -74,30 +115,88 @@ def view_session(session_id: int):
             active_wi = wrap_dto(wi_detail)
 
     character = wrap_dto(char_data)
+    all_worldinfos = wrap_dto(wi_list_data.get("worldinfos", []))
+    all_lorebooks = wrap_dto(lb_data.get("lorebooks", []))
+    persona_items = getattr(g, "persona_items", [])
     persona_item = next(
-        (item for item in getattr(g, "persona_items", []) if item["persona"].id == chat_session.persona_id),
+        (item for item in persona_items if item["persona"].id == chat_session.persona_id),
         None,
     )
     persona = persona_item["persona"] if persona_item else getattr(g, "default_persona", None)
+    user_personas = [item["persona"] for item in persona_items]
     admin_flag = is_admin()
     can_debug = admin_flag or bool(char_data.get("editable"))
+
+    messages = wrap_dto(data.get("messages", []))
+    worldinfo_locations = list(getattr(active_wi, "locations", []) or []) if active_wi else []
+    worldinfo_events = list(getattr(active_wi, "events", []) or []) if active_wi else []
+    current_location = next(
+        (loc for loc in worldinfo_locations if loc.id == getattr(chat_session, "current_location_id", None)),
+        None,
+    )
+    initial_location = next(
+        (loc for loc in worldinfo_locations if loc.id == getattr(character, "initial_location_id", None)),
+        None,
+    )
+    character_events = list(getattr(character, "events", []) or [])
+    rel_score = float(getattr(chat_session, "relationship_score", 0.0) or 0.0)
+    unlocked_gallery = [
+        img
+        for img in (getattr(character, "gallery_images", []) or [])
+        if getattr(img, "unlock_threshold", 0) <= rel_score
+    ]
+    active_sprite = next(
+        (sp for sp in (getattr(character, "sprites", []) or []) if sp.emotion == "neutral"),
+        None,
+    )
+    session_media_images = [m.image_path for m in messages if getattr(m, "image_path", None)]
+    gallery_threshold_names = {t.level: t.name for t in wrap_dto(tiers_data.get("tiers", []))}
+    lorebook_data = build_lorebook_view_data(
+        user.id,
+        all_lorebooks,
+        all_worldinfos,
+        character,
+        worldinfo=active_wi,
+        chat_session=chat_session,
+        is_admin=admin_flag,
+    )
+    all_sessions = wrap_dto(sessions_data.get("sessions", []))
+    image_gen_available = bool(health_data.get("image_gen_enabled") and health_data.get("image_gen_healthy"))
 
     return render_template(
         "chat/session.html",
         chat_session=chat_session,
         character=character,
         persona=persona,
-        messages=wrap_dto(data.get("messages", [])),
+        persona_i18n_description=persona_item.get("i18n_description", {}) if persona_item else {},
+        persona_i18n_appearance=persona_item.get("i18n_appearance", {}) if persona_item else {},
+        user_personas=user_personas,
+        personas=user_personas,
+        all_sessions=all_sessions,
+        sessions=all_sessions,
+        messages=messages,
         memories=wrap_dto(mem_data.get("memories", [])),
+        lorebook_data=lorebook_data,
         worldinfo=active_wi,
-        all_worldinfos=wrap_dto(wi_list_data.get("worldinfos", [])),
-        personas=[item["persona"] for item in getattr(g, "persona_items", [])],
-        sessions=wrap_dto(sessions_data.get("sessions", [])),
+        current_location=current_location,
+        initial_location=initial_location,
+        worldinfo_locations=worldinfo_locations,
+        worldinfo_events=worldinfo_events,
+        character_events=character_events,
+        all_worldinfos=all_worldinfos,
+        active_sprite=active_sprite,
+        unlocked_gallery=unlocked_gallery,
+        session_media_images=session_media_images,
+        sys_lang=getattr(g, "ui_language", "en"),
         relationship_tier_name=chat_session.relationship_tier_name,
-        image_gen_available=bool(health_data.get("image_gen_enabled") and health_data.get("image_gen_healthy")),
+        gallery_threshold_names=gallery_threshold_names,
+        image_gen_available=image_gen_available,
+        comfyui_available=image_gen_available,
+        is_admin=admin_flag,
         can_debug_relationship=can_debug,
         can_view_event_counter=can_debug,
-        current_user=get_current_user(),
+        active_tab=request.args.get("tab", "messages"),
+        current_user=user,
     )
 
 

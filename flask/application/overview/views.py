@@ -25,6 +25,7 @@ def index():
     if status != 200:
         data = {}
 
+    sessions_all = wrap_dto(data.get("sessions", []))
     character_cards = []
     for char in wrap_dto(data.get("characters", [])):
         if gender_filter != "all" and str(getattr(char, "gender", "")).lower() != gender_filter:
@@ -33,18 +34,29 @@ def index():
             continue
         if author_filter == "mine" and not char.editable:
             continue
+        msg_count = int(getattr(char, "message_count", 0))
+        if chat_filter == "chatted" and msg_count == 0:
+            continue
+        if chat_filter == "unchatted" and msg_count > 0:
+            continue
         character_cards.append(
             {
                 "character": char,
-                "sessions": [s for s in wrap_dto(data.get("sessions", [])) if s.character_id == char.id],
+                "sessions": [s for s in sessions_all if s.character_id == char.id],
+                "message_count": msg_count,
+                "best_relationship": float(getattr(char, "best_relationship", 0.0)),
                 "relationship_tier_name": getattr(char, "relationship_tier_name", "Stranger"),
                 "is_editable": bool(char.editable),
-                "translation_pending": False,
+                "translation_pending": bool(getattr(char, "translation_pending", False)),
             }
         )
 
     if sort_by == "name":
         character_cards.sort(key=lambda item: (item["character"].name or "").lower())
+    elif sort_by == "chatted_first":
+        character_cards.sort(key=lambda item: item["message_count"], reverse=True)
+    elif sort_by == "relationship":
+        character_cards.sort(key=lambda item: item["best_relationship"], reverse=True)
     else:
         character_cards.sort(key=lambda item: item["character"].id or 0, reverse=True)
 
@@ -60,7 +72,7 @@ def index():
                 "lorebook": lb,
                 "entry_count": int(getattr(lb, "entry_count", 0)),
                 "is_editable": bool(lb.editable),
-                "translation_pending": False,
+                "translation_pending": bool(getattr(lb, "translation_pending", False)),
             }
         )
 
@@ -76,7 +88,7 @@ def index():
                 "location_count": int(getattr(wi, "location_count", 0)),
                 "event_count": int(getattr(wi, "event_count", 0)),
                 "is_editable": bool(wi.editable),
-                "translation_pending": False,
+                "translation_pending": bool(getattr(wi, "translation_pending", False)),
             }
         )
 
@@ -94,6 +106,6 @@ def index():
         visibility_filter=visibility_filter,
         sort_by=sort_by,
         active_tab=active_tab,
-        has_missing_translations=False,
+        has_missing_translations=bool(data.get("has_missing_translations", False)),
         current_user=user,
     )
