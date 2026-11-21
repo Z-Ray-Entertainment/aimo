@@ -54,9 +54,6 @@ is_admin = AuthContext.is_admin
 def require_auth(view_func: Callable[..., Any]) -> Callable[..., Any]:
     @wraps(view_func)
     def wrapped(*args: Any, **kwargs: Any) -> Any:
-        ok, err_resp = verify_client_key()
-        if not ok:
-            return err_resp
         user = get_current_user()
         if user is None:
             return jsonify({"error": "Authentication required."}), 401
@@ -69,9 +66,6 @@ def require_permission(*permissions: str | FunctionPermission) -> Callable[..., 
     def decorator(view_func: Callable[..., Any]) -> Callable[..., Any]:
         @wraps(view_func)
         def wrapped(*args: Any, **kwargs: Any) -> Any:
-            ok, err_resp = verify_client_key()
-            if not ok:
-                return err_resp
             user = get_current_user()
             if user is None:
                 return jsonify({"error": "Authentication required."}), 401

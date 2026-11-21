@@ -51,7 +51,6 @@ from application.api.chat.shared import (
     _ACTIVE_IMAGE_TASKS,
     _ADMIN_PROMPT_CACHE,
     _BACKGROUND_TASKS,
-    _PENDING_PROMPTS,
     _TASKS_LOCK,
     _USER_NOTIFICATIONS,
     _BackgroundTurnTask,
