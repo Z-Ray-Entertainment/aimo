@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import gettext
 from pathlib import Path
+import shutil
+import subprocess
 from threading import Lock
 
 FLASK_LOCALES_DIR = Path(__file__).resolve().parent / "locales"
@@ -53,9 +55,22 @@ def gettext_noop(msgid: str) -> str:
 
 
 def ensure_compiled_locales() -> int:
-    from shared.i18n import ensure_compiled_locales as _ensure_compiled_locales
-
-    compiled = _ensure_compiled_locales(FLASK_LOCALES_DIR)
+    msgfmt_bin = shutil.which("msgfmt")
+    if not msgfmt_bin or not FLASK_LOCALES_DIR.is_dir():
+        return 0
+    compiled = 0
+    for po_path in FLASK_LOCALES_DIR.glob("*/LC_MESSAGES/messages.po"):
+        mo_path = po_path.with_suffix(".mo")
+        if mo_path.is_file() and mo_path.stat().st_mtime >= po_path.stat().st_mtime:
+            continue
+        res = subprocess.run(
+            [msgfmt_bin, "-o", str(mo_path), str(po_path)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if res.returncode == 0:
+            compiled += 1
     if compiled:
         with _CACHE_LOCK:
             _TRANSLATOR_CACHE.clear()

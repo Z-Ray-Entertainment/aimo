@@ -1,15 +1,10 @@
 from flask import Blueprint, flash, redirect, request, url_for
 
-from application.auth.decorators import get_current_user, require_permission
-from application.ui_helpers import tr
+from application.auth.decorators import require_permission
+from application.core_client import core_delete, core_post, core_put
+from application.ui_helpers import get_safe_back_url, notify_author_translation_hint, tr
+from application.view_models import FunctionPermission, Gender
 from i18n import gettext_noop as _
-from domain.permissions.models import FunctionPermission
-from domain.personas.models import Gender
-from domain.personas.services import PersonaService
-from infrastructure.repositories.persona_repository import PersonaRepository
-from infrastructure.repositories.translation_repository import TranslationRepository
-from infrastructure.storage.file_storage import FileStorage
-from shared.exceptions import AimoError
 
 personas_bp = Blueprint("personas", __name__, url_prefix="/personas")
 
@@ -17,136 +12,87 @@ personas_bp = Blueprint("personas", __name__, url_prefix="/personas")
 @personas_bp.route("/create", methods=["POST"])
 @require_permission(FunctionPermission.PERSONA_MANAGE)
 def create_persona():
-    user = get_current_user()
-    assert user is not None and user.id is not None
-    repo = PersonaRepository()
-    trans_repo = TranslationRepository()
-    service = PersonaService()
-    storage = FileStorage()
+    preuploaded = request.form.get("preuploaded_portrait_path", "").strip()
+    if preuploaded and (not preuploaded.startswith("portraits/") or ".." in preuploaded or preuploaded.startswith("/")):
+        flash(tr(_("Invalid preuploaded portrait path.")), "error")
+        return redirect(get_safe_back_url(url_for("overview.index")))
 
-    try:
-        portrait_file = request.files.get("portrait")
-        preuploaded = request.form.get("preuploaded_portrait_path", "").strip()
-        if portrait_file and portrait_file.filename:
-            portrait_path = storage.save_portrait(portrait_file.stream, portrait_file.filename)
-        elif preuploaded:
-            portrait_path = preuploaded
-        else:
-            portrait_path = "portraits/default_persona.png"
+    files = {}
+    portrait_file = request.files.get("portrait")
+    if portrait_file and portrait_file.filename:
+        files["portrait"] = (portrait_file.filename, portrait_file.stream, portrait_file.mimetype or "application/octet-stream")
 
-        existing = repo.list_for_user(user.id)
-        is_default = bool(request.form.get("is_default")) or len(existing) == 0
-
-        persona = service.create_persona(
-            user_id=user.id,
-            name=request.form.get("name", ""),
-            gender=request.form.get("gender", Gender.NON_BINARY.value),
-            portrait_path=portrait_path,
-            description=request.form.get("description", ""),
-            appearance=request.form.get("appearance", ""),
-            is_default=is_default,
-        )
-        persona.origin_language = (user.language or "en")[:2].lower()
-
-        saved = repo.create(persona)
-        if saved.id is not None:
-            from application.ui_helpers import notify_author_translation_hint
-
-            trans_repo.save_field_variants_json(
-                "persona", saved.id, "description", request.form.get("i18n_description")
-            )
-            trans_repo.save_field_variants_json(
-                "persona", saved.id, "appearance", request.form.get("i18n_appearance")
-            )
-            notify_author_translation_hint("persona", saved.id, "description")
-        flash(tr(_("Persona '%(name)s' created successfully."), name=persona.name), "success")
-    except AimoError as exc:
-        flash(str(exc), "error")
-
-    return redirect(request.referrer or url_for("overview.index"))
+    form_data = {
+        "name": request.form.get("name", ""),
+        "gender": request.form.get("gender", Gender.NON_BINARY.value),
+        "description": request.form.get("description", ""),
+        "appearance": request.form.get("appearance", ""),
+        "is_default": "true" if request.form.get("is_default") else "false",
+        "preuploaded_portrait_path": preuploaded,
+        "i18n_description": request.form.get("i18n_description", ""),
+        "i18n_appearance": request.form.get("i18n_appearance", ""),
+    }
+    status, payload = core_post("/api/personas", data=form_data, files=files or None)
+    if status < 400:
+        if payload.get("id"):
+            notify_author_translation_hint("persona", int(payload["id"]), "description")
+        flash(tr(_("Persona '%(name)s' created successfully."), name=payload.get("name", form_data["name"])), "success")
+    else:
+        flash(payload.get("error") or tr(_("Failed to create persona.")), "error")
+    return redirect(get_safe_back_url(url_for("overview.index")))
 
 
 @personas_bp.route("/<int:persona_id>/edit", methods=["POST"])
 @require_permission(FunctionPermission.PERSONA_MANAGE)
 def edit_persona(persona_id: int):
-    user = get_current_user()
-    assert user is not None and user.id is not None
-    repo = PersonaRepository()
-    trans_repo = TranslationRepository()
-    service = PersonaService()
-    storage = FileStorage()
+    preuploaded = request.form.get("preuploaded_portrait_path", "").strip()
+    if preuploaded and (not preuploaded.startswith("portraits/") or ".." in preuploaded or preuploaded.startswith("/")):
+        flash(tr(_("Invalid preuploaded portrait path.")), "error")
+        return redirect(get_safe_back_url(url_for("overview.index")))
 
-    persona = repo.get_by_id(persona_id)
-    if persona is None or persona.user_id != user.id:
-        flash(tr(_("Persona not found.")), "error")
-        return redirect(url_for("overview.index"))
+    files = {}
+    portrait_file = request.files.get("portrait")
+    if portrait_file and portrait_file.filename:
+        files["portrait"] = (portrait_file.filename, portrait_file.stream, portrait_file.mimetype or "application/octet-stream")
 
-    try:
-        portrait_path = persona.portrait_path
-        portrait_file = request.files.get("portrait")
-        preuploaded = request.form.get("preuploaded_portrait_path", "").strip()
-        if portrait_file and portrait_file.filename:
-            portrait_path = storage.save_portrait(portrait_file.stream, portrait_file.filename)
-        elif preuploaded:
-            portrait_path = preuploaded
-
-        service.update_persona(
-            persona=persona,
-            name=request.form.get("name", persona.name),
-            gender=request.form.get("gender", persona.gender.value),
-            portrait_path=portrait_path,
-            description=request.form.get("description", persona.description),
-            appearance=request.form.get("appearance", persona.appearance),
-        )
-
-        if request.form.get("is_default"):
-            persona.is_default = True
-        repo.update(persona)
-        trans_repo.save_field_variants_json(
-            "persona", persona_id, "description", request.form.get("i18n_description")
-        )
-        trans_repo.save_field_variants_json(
-            "persona", persona_id, "appearance", request.form.get("i18n_appearance")
-        )
-        flash(tr(_("Persona '%(name)s' updated."), name=persona.name), "success")
-    except AimoError as exc:
-        flash(str(exc), "error")
-
-    return redirect(request.referrer or url_for("overview.index"))
+    form_data = {
+        "name": request.form.get("name", ""),
+        "gender": request.form.get("gender", ""),
+        "description": request.form.get("description", ""),
+        "appearance": request.form.get("appearance", ""),
+        "is_default": "true" if request.form.get("is_default") else "false",
+        "preuploaded_portrait_path": preuploaded,
+        "i18n_description": request.form.get("i18n_description", ""),
+        "i18n_appearance": request.form.get("i18n_appearance", ""),
+    }
+    if files:
+        status, payload = core_post(f"/api/personas/{persona_id}", data=form_data, files=files)
+    else:
+        status, payload = core_put(f"/api/personas/{persona_id}", json=form_data)
+    if status < 400:
+        flash(tr(_("Persona '%(name)s' updated."), name=payload.get("name", form_data["name"])), "success")
+    else:
+        flash(payload.get("error") or tr(_("Persona not found.")), "error")
+    return redirect(get_safe_back_url(url_for("overview.index")))
 
 
 @personas_bp.route("/<int:persona_id>/default", methods=["POST"])
 @require_permission(FunctionPermission.PERSONA_MANAGE)
 def set_default(persona_id: int):
-    user = get_current_user()
-    assert user is not None and user.id is not None
-    repo = PersonaRepository()
-    persona = repo.get_by_id(persona_id)
-    if persona and persona.user_id == user.id:
-        repo.set_default(user.id, persona_id)
-        flash(tr(_("'%(name)s' is now your default persona."), name=persona.name), "success")
-    return redirect(request.referrer or url_for("overview.index"))
+    status, payload = core_post(f"/api/personas/{persona_id}/default")
+    if status < 400:
+        flash(tr(_("'%(name)s' is now your default persona."), name=payload.get("name", "")), "success")
+    else:
+        flash(payload.get("error") or tr(_("Persona not found.")), "error")
+    return redirect(get_safe_back_url(url_for("overview.index")))
 
 
 @personas_bp.route("/<int:persona_id>/delete", methods=["POST"])
 @require_permission(FunctionPermission.PERSONA_MANAGE)
 def delete_persona(persona_id: int):
-    user = get_current_user()
-    assert user is not None and user.id is not None
-    repo = PersonaRepository()
-    service = PersonaService()
-
-    persona = repo.get_by_id(persona_id)
-    if persona is None or persona.user_id != user.id:
-        flash(tr(_("Persona not found.")), "error")
-        return redirect(url_for("overview.index"))
-
-    try:
-        in_use = repo.is_used_in_any_session(persona_id)
-        service.delete_persona(persona, has_active_chats=in_use)
-        repo.delete(persona_id)
-        flash(tr(_("Persona '%(name)s' deleted."), name=persona.name), "success")
-    except AimoError as exc:
-        flash(str(exc), "error")
-
-    return redirect(request.referrer or url_for("overview.index"))
+    status, payload = core_delete(f"/api/personas/{persona_id}")
+    if status < 400:
+        flash(tr(_("Persona deleted.")), "success")
+    else:
+        flash(payload.get("error") or tr(_("Persona not found.")), "error")
+    return redirect(get_safe_back_url(url_for("overview.index")))

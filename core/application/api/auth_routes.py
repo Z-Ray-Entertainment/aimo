@@ -29,13 +29,12 @@ def login():
     client_ip = (request.remote_addr or "unknown").strip()
     rate_key = f"{client_ip}:{email}"
 
-    allowed, retry_after = _LOGIN_LIMITER.is_allowed(rate_key)
-    if not allowed:
-        return jsonify({"error": "Too many failed login attempts.", "retry_after": retry_after}), 429
+    if _LOGIN_LIMITER.is_rate_limited(rate_key):
+        return jsonify({"error": "Too many failed login attempts."}), 429
 
     user_repo = UserRepository()
     user = user_repo.get_by_email(email)
-    if user is None or not AuthService().verify_password(password, user.password_hash):
+    if not AuthService().authenticate_with_lookup(user, password) or user is None:
         _LOGIN_LIMITER.record_failure(rate_key)
         return jsonify({"error": "Invalid email or password."}), 401
 

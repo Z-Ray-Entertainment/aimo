@@ -1,6 +1,26 @@
 from dataclasses import dataclass
 
-from shared.request_parsers import RequestDataParser
+from security import RequestDataParser
+
+
+@dataclass
+class WorldInfoForm:
+    name: str = ""
+    icon: str = "🌐"
+    visibility: str = "private"
+    lorebook_id: int | None = None
+    is_proper_noun: bool = False
+
+    @classmethod
+    def from_request(cls, form_data) -> "WorldInfoForm":
+        p = RequestDataParser
+        return cls(
+            name=p.to_str(form_data, "name"),
+            icon=p.to_str(form_data, "icon", "🌐"),
+            visibility=p.to_str(form_data, "visibility", "private"),
+            lorebook_id=p.to_opt_int(form_data, "lorebook_id"),
+            is_proper_noun=p.to_bool(form_data, "is_proper_noun"),
+        )
 
 
 @dataclass
