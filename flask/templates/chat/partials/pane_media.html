@@ -1,0 +1,47 @@
+<div id="chat-pane-media" class="tab-pane">
+  <h3 style="color: var(--gold-accent); margin-bottom: 0.75rem;">{{ _("Unlocked 9:16 Character Images (Relationship:") }} <span id="gallery-rel-tier-label">{{ relationship_tier_name }}</span>)</h3>
+  <div id="unlocked-gallery-grid" class="aimo-card-grid" style="margin-bottom: 1.5rem;">
+    {% for img in unlocked_gallery %}
+      <div class="aimo-card-tile" style="background-image: url('{{ url_for('uploaded_file', filename=img.file_path) }}'), url('/static/img/cover.svg');" data-viewer-title="{{ character.name }}" data-viewer-subtitle="{{ _('Unlock at:') }} {{ gallery_threshold_names.get(img.unlock_threshold, img.unlock_threshold) }}">
+        <img src="{{ url_for('uploaded_file', filename=img.file_path) }}" alt="{{ character.name }}" style="display: none;">
+        <div class="aimo-card-overlay"></div>
+        <div class="aimo-card-content">
+          <div class="aimo-card-header"></div>
+          <div class="aimo-card-footer">
+            <div class="aimo-card-stats">
+              <span class="aimo-card-stat-pill">❤️ {{ _("Unlock at:") }} {{ gallery_threshold_names.get(img.unlock_threshold, img.unlock_threshold) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <p style="color: var(--text-muted); font-size: 0.9rem; grid-column: 1 / -1;">{{ _("No gallery images unlocked for the current relationship level yet.") }}</p>
+    {% endfor %}
+  </div>
+
+  <h3 style="color: var(--gold-accent); margin-bottom: 0.75rem;">{{ _("Images Shared & Generated in This Session") }}</h3>
+  <div id="session-media-grid" class="aimo-card-grid">
+    {% for path in session_media_images %}
+      <div class="aimo-card-tile" style="background-image: url('{{ url_for('uploaded_file', filename=path) }}');" data-media-path="{{ path }}">
+        <img src="{{ url_for('uploaded_file', filename=path) }}" alt="{{ _('Chat Media') }}" style="display: none;">
+      </div>
+    {% else %}
+      <p id="session-media-empty" style="color: var(--text-muted); font-size: 0.9rem; grid-column: 1 / -1;">{{ _("No images uploaded in this chat yet.") }}</p>
+    {% endfor %}
+  </div>
+
+  <div class="chat-media-world-row" {% if not (worldinfo and worldinfo.backdrop_image_path) %}hidden{% endif %}>
+    <button
+      type="button"
+      id="chat-world-backdrop-btn"
+      class="aimo-btn chat-backdrop-viewer-btn"
+      data-backdrop-url="{{ url_for('uploaded_file', filename=worldinfo.backdrop_image_path) if worldinfo and worldinfo.backdrop_image_path else '' }}"
+      data-backdrop-title="{{ worldinfo.name if worldinfo else '' }}"
+      title="{{ _('View world backdrop') }}"
+      aria-label="{{ _('View world backdrop') }}"
+      {% if not (worldinfo and worldinfo.backdrop_image_path) %}hidden{% endif %}>
+      <span class="icon-mono" aria-hidden="true">🖼️</span>
+      <span>{{ _('View world backdrop') }}</span>
+    </button>
+  </div>
+</div>
