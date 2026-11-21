@@ -1,5 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
+from application.core_client import core_get
 from application.auth.decorators import get_current_user, has_perm, is_admin as is_admin_user, require_permission
 from application.chat.forms import MemoryEditForm, StartChatForm
 from application.translation_helpers import is_worldinfo_ready_for_language
@@ -317,16 +318,18 @@ def view_session(session_id: int):
         m.image_path for m in messages if m.image_path
     ]
 
-    settings = SettingsRepository().get_settings()
-    img_gen = get_image_gen_provider(settings)
-    image_gen_available = type(img_gen).is_enabled() and img_gen.check_health()
+    health_status, health_data = core_get("/api/admin/health")
+    image_gen_available = bool(
+        health_status == 200
+        and health_data.get("image_gen_enabled")
+        and health_data.get("image_gen_healthy")
+    )
     persona_trans = (
         trans_repo.get_entity_translations_map("persona", persona.id)
         if persona and persona.id
         else {}
     )
 
-    is_admin = bool(user and (user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS)))
     can_debug_relationship = (
         is_admin
         or bool(character and character.is_editable_by_user(user.id, is_admin, user.creator_tag))

@@ -1,6 +1,7 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-from application.auth.decorators import get_current_user, has_perm, is_admin as is_admin_user, require_permission
+from application.core_client import core_post
+from application.auth.decorators import get_current_user, require_permission
 from application.chat.forms import MemoryEditForm, StartChatForm
 from application.translation_helpers import is_worldinfo_ready_for_language
 from application.ui_helpers import tr
@@ -106,55 +107,15 @@ def recalculate_memory(session_id: int, memory_id: int):
         flash(tr(_("Memory not found.")), "error")
         return redirect(url_for("chat.view_session", session_id=session_id))
 
-    all_messages = chat_repo.get_messages(session_id, limit=None)
-    narrative_msgs = mem_service.filter_narrative_messages(all_messages)
-    all_memories = mem_repo.list_for_session(session_id)
-
-    chunk = mem_service.extract_messages_for_memory(
-        memories=all_memories,
-        target_memory=target_memory,
-        all_narrative_messages=narrative_msgs,
-        chunk_size=10,
-    )
-    if not chunk:
+    status, payload = core_post(f"/api/chat/{session_id}/memories/{memory_id}/recalculate")
+    if status < 400:
         if request.is_json or request.headers.get("Accept") == "application/json":
-            return {"error": "No narrative messages found for this memory episode."}, 400
-        flash(tr(_("No messages found for this memory episode.")), "error")
-        return redirect(url_for("chat.view_session", session_id=session_id))
-
-    try:
-        settings = settings_repo.get_settings()
-        llm = get_llm_provider(settings)
-        msg_dicts = [
-            {"role": m.role.value, "content": m.english_content or m.localized_content or ""}
-            for m in chunk
-        ]
-        title, tags, summary, _ = mem_service.extract_memory_and_title(
-            last_10_messages=msg_dicts,
-            memory_prompt=settings.prompts.memory_prompt,
-            llm_provider=llm,
-            model=settings.tasks.memory_model,
-            params=settings.params,
-        )
-        mem_service.update_memory(
-            memory=target_memory,
-            title=title,
-            tags=tags,
-            summary=summary,
-        )
-        mem_repo.update_memory(target_memory)
-        if request.is_json or request.headers.get("Accept") == "application/json":
-            return {
-                "id": target_memory.id,
-                "title": target_memory.title,
-                "tags": target_memory.tags,
-                "summary": target_memory.summary,
-            }
+            return payload
         flash(tr(_("Memory recalculated successfully.")), "success")
-    except Exception:
+    else:
         if request.is_json or request.headers.get("Accept") == "application/json":
-            return {"error": "Memory recalculation failed."}, 500
-        flash(tr(_("Recalculation failed.")), "error")
+            return payload or {"error": "Memory recalculation failed."}, status
+        flash(payload.get("error") or tr(_("Recalculation failed.")), "error")
 
     return redirect(url_for("chat.view_session", session_id=session_id))
 

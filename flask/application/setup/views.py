@@ -137,18 +137,18 @@ def verify_backend():
         abort(404)
 
     data = request.get_json(silent=True) or request.form.to_dict()
-    raw_backend = str(data.get("llm_backend") or OllamaLLMProvider.PROVIDER_ID).strip().lower()
+    raw_backend = str(data.get("llm_backend") or "ollama").strip().lower()
     submitted_cfg = {
         "base_url": str(data.get("ollama_url") or data.get("base_url") or "").strip(),
-        "api_key": str(data.get("google_ai_api_key") or data.get("api_key") or "").strip()
-        or GoogleAILLMProvider.DEFAULT_API_KEY.strip(),
+        "api_key": str(data.get("google_ai_api_key") or data.get("api_key") or "").strip(),
     }
+    from application.core_client import core_post
 
-    result = probe_llm_backend(
-        backend=raw_backend,
-        submitted_config=submitted_cfg,
+    status_code, payload = core_post(
+        "/api/setup/verify-backend",
+        json={"llm_backend": raw_backend, "config": submitted_cfg},
     )
-    return jsonify(result)
+    return jsonify(payload), status_code
 
 
 def _render_first_boot(form: FirstBootForm, env_google_key: str):
