@@ -190,6 +190,14 @@ button.btn:hover {
   text-shadow: 0 0 6px var(--sparkle-violet);
 }
 
+.aimo-brand-icon {
+  width: 1.3em;
+  height: 1.3em;
+  vertical-align: -0.22em;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
 /* System-wide AIMO Button Component (.aimo-btn) */
 .aimo-btn {
   display: inline-flex;
