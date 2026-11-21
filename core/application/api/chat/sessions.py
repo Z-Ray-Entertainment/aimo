@@ -104,7 +104,10 @@ def get_chat_session(session_id: int):
                 "events_enabled": chat_session.events_enabled,
                 "thinking_enabled": chat_session.thinking_enabled,
                 "cooldown_counter": chat_session.cooldown_counter,
+                "relationship_value": chat_session.relationship_value,
                 "relationship_tier_name": tier.name,
+                "disabled_lorebook_ids": list(chat_session.disabled_lorebook_ids or []),
+                "custom_lorebook_ids": list(chat_session.custom_lorebook_ids or []),
             },
             "messages": [
                 {
@@ -117,6 +120,7 @@ def get_chat_session(session_id: int):
                     "localized_content": m.content,
                     "image_path": m.image_path,
                     "emotion_tag": m.emotion_tag,
+                    "metadata": m.metadata or {},
                     "created_at": m.created_at.isoformat(),
                 }
                 for m in messages

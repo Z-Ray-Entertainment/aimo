@@ -139,7 +139,7 @@ def view_session(session_id: int):
         None,
     )
     character_events = list(getattr(character, "events", []) or [])
-    rel_score = float(getattr(chat_session, "relationship_score", 0.0) or 0.0)
+    rel_score = float(getattr(chat_session, "relationship_value", 0.0) or 0.0)
     unlocked_gallery = [
         img
         for img in (getattr(character, "gallery_images", []) or [])
