@@ -207,7 +207,8 @@ def recalculate_memory(session_id: int, memory_id: int):
             params=settings.params,
         )
     except Exception as exc:
-        return jsonify({"error": f"LLM memory generation failed: {exc}"}), 502
+        logger.exception("LLM memory generation failed for session %s, memory %s: %s", session_id, memory_id, exc)
+        return jsonify({"error": "LLM memory generation failed."}), 502
 
     try:
         mem_service.update_memory(
@@ -293,7 +294,8 @@ def translate_memory(session_id: int, memory_id: int):
                 if parsed:
                     translated_tags = parsed
     except Exception as exc:
-        return jsonify({"error": f"LLM memory translation failed: {exc}"}), 502
+        logger.exception("LLM memory translation failed for session %s, memory %s: %s", session_id, memory_id, exc)
+        return jsonify({"error": "LLM memory translation failed."}), 502
 
     new_title = translated_title or target_memory.title
     new_summary = translated_summary or target_memory.summary

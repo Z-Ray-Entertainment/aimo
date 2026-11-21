@@ -5,6 +5,8 @@ from domain.auth.models import User
 from domain.translation.models import Language
 from shared.utils import hash_password, verify_password
 
+_DUMMY_PASSWORD_HASH: str = hash_password("aimo-constant-time-dummy-password")
+
 
 class AuthService:
     def create_user(
@@ -35,6 +37,16 @@ class AuthService:
 
     def authenticate_user(self, user: User, password: str) -> bool:
         if not password or not user.password_hash:
+            return False
+        return verify_password(password, user.password_hash)
+
+    def authenticate_with_lookup(self, user: User | None, password: str) -> bool:
+        """Constant-cost verification so unknown emails never skip bcrypt work."""
+        if user is None or not user.password_hash:
+            verify_password(password or "dummy", _DUMMY_PASSWORD_HASH)
+            return False
+        if not password:
+            verify_password("dummy", _DUMMY_PASSWORD_HASH)
             return False
         return verify_password(password, user.password_hash)
 

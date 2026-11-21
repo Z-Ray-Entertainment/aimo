@@ -1,11 +1,14 @@
+import logging
 import os
 from typing import Any
 
-from flask import Blueprint, Response, jsonify, request, session, stream_with_context
+from flask import Blueprint, Response, current_app, jsonify, request, session, stream_with_context
 import requests
 
 from shared.config import Config
+from shared.security import sign_user_id
 
+logger = logging.getLogger(__name__)
 core_proxy_bp = Blueprint("core_proxy", __name__)
 
 
@@ -23,8 +26,13 @@ def build_core_headers(extra_headers: dict[str, str] | None = None) -> dict[str,
     if client_key:
         headers["X-Client-Key"] = client_key
     user_id = session.get("user_id")
-    if user_id is not None:
-        headers["X-User-Id"] = str(user_id)
+    if user_id is not None and str(user_id).isdigit():
+        uid_int = int(user_id)
+        secret = str(current_app.secret_key or Config.SECRET_KEY or "")
+        ts, sig = sign_user_id(uid_int, secret)
+        headers["X-User-Id"] = str(uid_int)
+        headers["X-User-Timestamp"] = ts
+        headers["X-User-Signature"] = sig
     if extra_headers:
         headers.update(extra_headers)
     return headers
@@ -35,6 +43,10 @@ def build_core_headers(extra_headers: dict[str, str] | None = None) -> dict[str,
     methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
 )
 def proxy_to_core(subpath: str) -> Any:
+    user_id = session.get("user_id")
+    if not user_id or not str(user_id).isdigit():
+        return jsonify({"error": "Authentication required."}), 401
+
     core_url = f"{get_core_base_url()}/api/{subpath}"
     headers = build_core_headers()
 
@@ -42,6 +54,10 @@ def proxy_to_core(subpath: str) -> Any:
         val = request.headers.get(hdr)
         if val:
             headers[hdr] = val
+
+    forwarded_params = {
+        k: v for k, v in request.args.to_dict(flat=False).items() if k != "user_id"
+    }
 
     is_sse = (
         subpath.endswith("/stream")
@@ -53,17 +69,19 @@ def proxy_to_core(subpath: str) -> Any:
         upstream = requests.request(
             method=request.method,
             url=core_url,
-            params=request.args.to_dict(flat=False),
+            params=forwarded_params,
             data=request.get_data(),
             headers=headers,
             cookies=request.cookies,
             stream=is_sse,
             timeout=(10, 600) if is_sse else (10, 300),
         )
-    except requests.exceptions.Timeout as exc:
-        return jsonify({"error": f"Core service timeout: {exc}", "is_timeout": True}), 504
-    except requests.RequestException as exc:
-        return jsonify({"error": f"Core service unreachable: {exc}", "is_backend_down": True}), 502
+    except requests.exceptions.Timeout:
+        logger.warning("Core service timeout while proxying /api/%s", subpath)
+        return jsonify({"error": "Core service timeout.", "is_timeout": True}), 504
+    except requests.RequestException:
+        logger.warning("Core service unreachable while proxying /api/%s", subpath)
+        return jsonify({"error": "Core service unreachable.", "is_backend_down": True}), 502
 
     content_type = upstream.headers.get("Content-Type", "application/json")
     if is_sse or "text/event-stream" in content_type:

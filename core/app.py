@@ -24,6 +24,7 @@ from infrastructure.translation.worker import get_translation_worker
 from shared.config import Config
 from shared.http_compression import register_gzip_compression
 from shared.i18n import ensure_compiled_locales
+from shared.security import is_debug_enabled, validate_secret_key
 
 
 def create_core_app(config_class: type[Config] = Config) -> Flask:
@@ -32,10 +33,18 @@ def create_core_app(config_class: type[Config] = Config) -> Flask:
         raise RuntimeError(
             "CLIENT_KEY environment variable is required to start the aimo core service."
         )
+    validate_secret_key(
+        config_class.SECRET_KEY,
+        config_class.DEV_SECRET_KEY_DEFAULT,
+        debug=is_debug_enabled(os.getenv("AIMO_DEBUG")),
+    )
 
     app = Flask(__name__)
     app.config.from_object(config_class)
     app.secret_key = config_class.SECRET_KEY
+    app.config["SESSION_COOKIE_HTTPONLY"] = True
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+    app.config["SESSION_COOKIE_SECURE"] = bool(config_class.SESSION_COOKIE_SECURE)
 
     ensure_compiled_locales(CORE_DIR / "locales")
     init_db()
@@ -61,6 +70,14 @@ def create_core_app(config_class: type[Config] = Config) -> Flask:
     @app.route("/api/ping", methods=["GET"])
     def ping():
         return jsonify({"status": "ok", "service": "aimo-core"})
+
+    @app.errorhandler(404)
+    def handle_not_found(_err):
+        return jsonify({"error": "Resource not found."}), 404
+
+    @app.errorhandler(500)
+    def handle_internal_error(_err):
+        return jsonify({"error": "Internal server error."}), 500
 
     if config_class.GZIP_ENABLED:
         register_gzip_compression(app, min_size=config_class.GZIP_MIN_BYTES)

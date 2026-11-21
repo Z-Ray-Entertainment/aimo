@@ -2,7 +2,7 @@ import json
 
 from flask import Blueprint, Response, jsonify, request, stream_with_context
 
-from application.api.auth import require_permission
+from application.api.auth import require_auth, require_permission
 from domain.permissions.models import FunctionPermission
 from infrastructure.image_gen.factory import (
     get_image_gen_provider,
@@ -300,8 +300,8 @@ def cancel_translation_sync():
 
 
 @api_admin_bp.route("/translations/notify", methods=["POST"])
+@require_auth
 def notify_translation_worker():
-    from application.api.auth import require_auth as _req_auth
     from infrastructure.llm.factory import get_llm_provider_class
     from infrastructure.repositories.translation_repository import TranslationRepository
     from infrastructure.repositories.user_repository import UserRepository

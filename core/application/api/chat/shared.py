@@ -128,11 +128,9 @@ def _get_authorized_session(session_id: int, user) -> tuple[ChatSession | None, 
         return None, False
     chat_repo = ChatRepository()
     chat_session = chat_repo.get_session(session_id)
-    if chat_session is None:
+    if chat_session is None or chat_session.user_id != user.id:
         return None, False
     is_admin = bool(user.is_initial_admin or has_perm(FunctionPermission.ADMIN_ACCESS))
-    if chat_session.user_id != user.id and not is_admin:
-        return None, False
     char_repo = CharacterRepository()
     character = char_repo.get_by_id(chat_session.character_id)
     if character is None or not character.is_visible_to_user(user.id, is_admin):

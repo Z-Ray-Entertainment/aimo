@@ -1,9 +1,10 @@
-from flask import g, request, session
+from flask import current_app, g, request, session
 
 from domain.auth.models import User
 from domain.permissions.models import FunctionPermission, UserPermissions
 from domain.permissions.services import PermissionService
 from infrastructure.repositories.user_repository import UserRepository
+from shared.security import verify_user_id_signature
 
 
 class AuthContext:
@@ -14,11 +15,17 @@ class AuthContext:
         if hasattr(g, "current_user"):
             return g.current_user
 
-        raw_uid = (
-            request.headers.get("X-User-Id")
-            or session.get("user_id")
-            or request.args.get("user_id")
-        )
+        raw_uid: int | str | None = None
+        header_uid = (request.headers.get("X-User-Id") or "").strip()
+        if header_uid:
+            header_ts = (request.headers.get("X-User-Timestamp") or "").strip()
+            header_sig = (request.headers.get("X-User-Signature") or "").strip()
+            secret = str(current_app.secret_key or "")
+            if verify_user_id_signature(header_uid, header_ts, header_sig, secret):
+                raw_uid = header_uid
+        else:
+            raw_uid = session.get("user_id")
+
         if not raw_uid or not str(raw_uid).isdigit():
             g.current_user = None
             return None
