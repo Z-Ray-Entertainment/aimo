@@ -48,7 +48,7 @@
       </form>
     {% endif %}
     {% if can_delete and delete_url %}
-      <form method="POST" action="{{ delete_url }}" style="display: inline;" onsubmit="return confirm('{{ eff_delete_confirm }}');">
+      <form method="POST" action="{{ delete_url }}" style="display: inline;" data-confirm="{{ eff_delete_confirm }}">
         {{ action_button(_("Delete"), type="submit", variant="danger", icon="🗑️") }}
       </form>
     {% endif %}

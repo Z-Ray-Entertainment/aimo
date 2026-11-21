@@ -52,9 +52,13 @@ msgstr "新的系统默认背景保存成功。"
 msgid "System-wide default backdrop assigned successfully."
 msgstr "系统默认背景分配成功。"
 
-#: flask/application/auth/views.py:33
+#: flask/application/auth/views.py:45
 msgid "Invalid email address or password."
 msgstr "邮箱地址或密码无效。"
+
+#: flask/application/auth/views.py:25
+msgid "Too many login attempts. Please wait a moment and try again."
+msgstr ""
 
 #: flask/application/characters/views.py:401
 msgid "Copy '%(name)s' created as draft."
@@ -100,11 +104,11 @@ msgstr "画廊图片已更新。"
 msgid "Invalid or inaccessible location selected."
 msgstr "所选地点无效或不可访问。"
 
-#: flask/application/characters/views.py:605 flask/application/worldinfo/views.py:393
+#: flask/application/characters/views.py:605 flask/application/worldinfo/views.py:472
 msgid "Event '%(title)s' added."
 msgstr "事件“%(title)s”已添加。"
 
-#: flask/application/characters/views.py:672 flask/application/worldinfo/views.py:450
+#: flask/application/characters/views.py:672 flask/application/worldinfo/views.py:534
 msgid "Event deleted."
 msgstr "事件已删除。"
 
@@ -124,7 +128,7 @@ msgstr "已添加 9:16 图库图片。"
 msgid "Sprite '%(name)s' uploaded."
 msgstr "立绘“%(name)s”已上传。"
 
-#: flask/application/characters/views.py:651 flask/application/worldinfo/views.py:432
+#: flask/application/characters/views.py:651 flask/application/worldinfo/views.py:511
 msgid "Event updated."
 msgstr "事件已更新。"
 
@@ -153,8 +157,8 @@ msgid "Memory updated."
 msgstr "记忆已更新。"
 
 #: flask/application/chat/memory_views.py:157
-msgid "Recalculation error: %(error)s"
-msgstr "重新计算错误：%(error)s"
+msgid "Recalculation failed."
+msgstr ""
 
 #: flask/application/chat/views.py:479
 msgid "Chat session deleted."
@@ -176,7 +180,7 @@ msgstr "此会话的玩家设定已更新。"
 msgid "Invalid WorldInfo."
 msgstr "无效的 WorldInfo。"
 
-#: flask/application/chat/views.py:106 flask/application/chat/views.py:430 flask/application/worldinfo/views.py:128 flask/application/worldinfo/views.py:236
+#: flask/application/chat/views.py:106 flask/application/chat/views.py:430 flask/application/worldinfo/views.py:202 flask/application/worldinfo/views.py:310
 msgid "This world is not yet available in your language."
 msgstr "此世界尚未提供您的语言版本。"
 
@@ -204,51 +208,55 @@ msgstr "思考已禁用。"
 msgid "Chat title updated."
 msgstr "聊天标题已更新。"
 
-#: flask/application/lorebooks/views.py:135 flask/application/worldinfo/views.py:239
+#: flask/application/lorebooks/views.py:181 flask/application/worldinfo/views.py:313
 msgid "Copy '%(name)s' created successfully."
 msgstr "副本“%(name)s”创建成功。"
 
-#: flask/application/lorebooks/views.py:150
+#: flask/application/lorebooks/views.py:196
 msgid "Lorebook deleted."
 msgstr "世界书已删除。"
 
-#: flask/application/lorebooks/views.py:232
+#: flask/application/lorebooks/views.py:283
 msgid "Entry deleted."
 msgstr "条目已删除。"
 
-#: flask/application/lorebooks/views.py:31
+#: flask/application/lorebooks/views.py:77 flask/application/lorebooks/views.py:45
 msgid "Lorebook '%(name)s' created."
 msgstr "世界书“%(name)s”已创建。"
 
-#: flask/application/lorebooks/views.py:48 flask/application/lorebooks/views.py:132
+#: flask/application/lorebooks/views.py:94 flask/application/lorebooks/views.py:178
 msgid "Lorebook not found."
 msgstr "未找到世界书。"
 
-#: flask/application/lorebooks/views.py:147
+#: flask/application/lorebooks/views.py:193
 msgid "Lorebook not found or no permission to delete."
 msgstr "未找到世界书或无权删除。"
 
-#: flask/application/lorebooks/views.py:162 flask/application/lorebooks/views.py:194 flask/application/lorebooks/views.py:228
+#: flask/application/lorebooks/views.py:208 flask/application/lorebooks/views.py:240 flask/application/lorebooks/views.py:274
 msgid "Lorebook not found or no permission."
 msgstr "未找到世界书或无权限。"
 
-#: flask/application/lorebooks/views.py:180
+#: flask/application/lorebooks/views.py:226
 msgid "Entry '%(title)s' added."
 msgstr "条目“%(title)s”已添加。"
 
-#: flask/application/lorebooks/views.py:56
+#: flask/application/lorebooks/views.py:279
+msgid "Entry not found."
+msgstr ""
+
+#: flask/application/lorebooks/views.py:102
 msgid "Access denied: You can only edit your own lorebooks or creations shared with you."
 msgstr "拒绝访问：您只能编辑自己的世界书或共享给您的作品。"
 
-#: flask/application/lorebooks/views.py:73
+#: flask/application/lorebooks/views.py:119
 msgid "Lorebook updated."
 msgstr "世界书已更新。"
 
-#: flask/application/lorebooks/views.py:88
+#: flask/application/lorebooks/views.py:134
 msgid "This lorebook is not yet available in your language."
 msgstr "此世界书尚未提供您的语言版本。"
 
-#: flask/application/lorebooks/views.py:214
+#: flask/application/lorebooks/views.py:260
 msgid "Entry saved."
 msgstr "条目已保存。"
 
@@ -284,19 +292,19 @@ msgstr "男性"
 msgid "Non-Binary"
 msgstr "非二元性别"
 
-#: flask/application/settings/views.py:244
+#: flask/application/settings/views.py:245
 msgid "Account settings saved."
 msgstr "账户设置已保存。"
 
-#: flask/application/settings/views.py:74 flask/i18n.py:132 flask/templates/characters/partials/modals.html:94 flask/templates/characters/partials/tab_dialogue.html:23 flask/templates/characters/partials/tab_dialogue.html:28
+#: flask/application/settings/views.py:74 flask/i18n.py:138 flask/templates/characters/partials/modals.html:94 flask/templates/characters/partials/tab_dialogue.html:23 flask/templates/characters/partials/tab_dialogue.html:28
 msgid "Character"
 msgstr "角色"
 
-#: flask/application/settings/views.py:100 flask/i18n.py:135 flask/templates/characters/creator.html:30 flask/templates/chat/partials/sidebar.html:34 flask/templates/chat/session.html:279
+#: flask/application/settings/views.py:100 flask/i18n.py:141 flask/templates/characters/creator.html:30 flask/templates/chat/partials/sidebar.html:34 flask/templates/chat/session.html:285
 msgid "World"
 msgstr "世界"
 
-#: flask/application/settings/views.py:125 flask/i18n.py:133
+#: flask/application/settings/views.py:125 flask/i18n.py:139
 msgid "Lorebook"
 msgstr "世界书"
 
@@ -328,7 +336,7 @@ msgstr "地点"
 msgid "Events"
 msgstr "事件"
 
-#: flask/application/settings/views.py:136 flask/templates/lorebooks/detail.html:27 flask/templates/macros/lorebook_manager.html:78 flask/templates/macros/lorebook_manager.html:151 flask/templates/macros/lorebook_manager.html:224
+#: flask/application/settings/views.py:136 flask/templates/lorebooks/detail.html:31 flask/templates/macros/cards.html:239 flask/templates/macros/lorebook_manager.html:78 flask/templates/macros/lorebook_manager.html:151
 msgid "Entries"
 msgstr "条目"
 
@@ -340,43 +348,51 @@ msgstr "初始管理员和 AI 后端配置成功！"
 msgid "Cloud AI mode: automatic background translation is disabled. Use the greyed-out flag pill-badges to translate into other registered user languages."
 msgstr "云端 AI 模式：已禁用自动后台翻译。请使用灰色的国旗徽章翻译为其他已注册的用户语言。"
 
-#: flask/application/worldinfo/views.py:254
+#: flask/application/worldinfo/views.py:328
 msgid "WorldInfo deleted."
 msgstr "WorldInfo 已删除。"
 
-#: flask/application/worldinfo/views.py:358
+#: flask/application/worldinfo/views.py:437
 msgid "Location deleted."
 msgstr "地点已删除。"
 
-#: flask/application/worldinfo/views.py:37
+#: flask/application/worldinfo/views.py:111 flask/application/worldinfo/views.py:66
 msgid "WorldInfo '%(name)s' created."
 msgstr "WorldInfo“%(name)s”已创建。"
 
-#: flask/application/worldinfo/views.py:54 flask/application/worldinfo/views.py:228
+#: flask/application/worldinfo/views.py:128 flask/application/worldinfo/views.py:302
 msgid "WorldInfo not found."
 msgstr "未找到 WorldInfo。"
 
-#: flask/application/worldinfo/views.py:251
+#: flask/application/worldinfo/views.py:325
 msgid "WorldInfo not found or no permission to delete."
 msgstr "未找到 WorldInfo 或无权删除。"
 
-#: flask/application/worldinfo/views.py:266 flask/application/worldinfo/views.py:308 flask/application/worldinfo/views.py:354 flask/application/worldinfo/views.py:370 flask/application/worldinfo/views.py:407
+#: flask/application/worldinfo/views.py:340 flask/application/worldinfo/views.py:382 flask/application/worldinfo/views.py:428 flask/application/worldinfo/views.py:449 flask/application/worldinfo/views.py:486
 msgid "WorldInfo not found or no permission."
 msgstr "未找到 WorldInfo 或无权限。"
 
-#: flask/application/worldinfo/views.py:293
+#: flask/application/worldinfo/views.py:367
 msgid "Location '%(name)s' created."
 msgstr "地点“%(name)s”已创建。"
 
-#: flask/application/worldinfo/views.py:62
+#: flask/application/worldinfo/views.py:433
+msgid "Location not found."
+msgstr ""
+
+#: flask/application/worldinfo/views.py:530
+msgid "Event not found."
+msgstr ""
+
+#: flask/application/worldinfo/views.py:136
 msgid "Access denied: You can only edit your own WorldInfos or creations shared with you."
 msgstr "拒绝访问：您只能编辑自己的 WorldInfo 或共享给您的作品。"
 
-#: flask/application/worldinfo/views.py:98
+#: flask/application/worldinfo/views.py:172
 msgid "WorldInfo saved."
 msgstr "WorldInfo 已保存。"
 
-#: flask/application/worldinfo/views.py:339
+#: flask/application/worldinfo/views.py:413
 msgid "Location updated."
 msgstr "地点已更新。"
 
@@ -512,339 +528,363 @@ msgstr "警告"
 msgid "Notice"
 msgstr "提示"
 
-#: flask/i18n.py:99 flask/templates/characters/partials/modals.html:167 flask/templates/macros/buttons.html:83 flask/templates/macros/buttons.html:84 flask/templates/macros/image_viewer.html:12
+#: flask/i18n.py:99 flask/templates/characters/partials/modals.html:167 flask/templates/macros/buttons.html:84 flask/templates/macros/buttons.html:85 flask/templates/macros/image_viewer.html:12
 msgid "Close"
 msgstr "关闭"
 
-#: flask/i18n.py:100 flask/templates/characters/partials/tab_info.html:67
+#: flask/i18n.py:100 flask/templates/macros/confirm_modal.html:6
+msgid "Confirm action"
+msgstr ""
+
+#: flask/i18n.py:101 flask/templates/macros/confirm_modal.html:12
+msgid "Confirm"
+msgstr ""
+
+#: flask/i18n.py:102 flask/templates/admin/translations.html:13 flask/templates/admin/user_form.html:72 flask/templates/characters/partials/modals.html:32 flask/templates/characters/partials/modals.html:68
+msgid "Cancel"
+msgstr "取消"
+
+#: flask/i18n.py:103
+msgid "Please fill in all required fields."
+msgstr ""
+
+#: flask/i18n.py:104
+msgid "Hide API key"
+msgstr ""
+
+#: flask/i18n.py:105
+msgid "Show API key"
+msgstr ""
+
+#: flask/i18n.py:106 flask/templates/characters/partials/tab_info.html:67
 msgid "Crops active"
 msgstr "裁剪已启用"
 
-#: flask/i18n.py:101 flask/templates/worldinfo/detail.html:110
+#: flask/i18n.py:107 flask/templates/worldinfo/detail.html:110
 msgid "1:1 Cover active"
 msgstr "1:1 封面已启用"
 
-#: flask/i18n.py:102
+#: flask/i18n.py:108
 msgid "Analyzing image"
 msgstr "正在分析图像"
 
-#: flask/i18n.py:103
+#: flask/i18n.py:109
 msgid "✨ Analyzing portrait and extracting appearance"
 msgstr "✨ 正在分析肖像并提取外貌"
 
-#: flask/i18n.py:104
+#: flask/i18n.py:110
 msgid "Drafting dialogue"
 msgstr "正在起草对话"
 
-#: flask/i18n.py:105
+#: flask/i18n.py:111
 msgid "✨ Analyzing character description"
 msgstr "✨ 正在分析角色描述"
 
-#: flask/i18n.py:106
+#: flask/i18n.py:112
 msgid "✨ Formulating response"
 msgstr "✨ 正在生成回复"
 
-#: flask/i18n.py:107
+#: flask/i18n.py:113
 msgid "⏳ Analyzing image (Save & Close locked)"
 msgstr "⏳ 正在分析图像（保存与关闭已锁定）"
 
-#: flask/i18n.py:108
+#: flask/i18n.py:114
 msgid "Not translated yet (click to enter manually or AI translate)"
 msgstr "尚未翻译（点击手动输入或 AI 翻译）"
 
-#: flask/i18n.py:109
+#: flask/i18n.py:115
 msgid "Translation may be outdated (click to review)"
 msgstr "翻译可能已过时（点击查看）"
 
-#: flask/i18n.py:110
+#: flask/i18n.py:116
 msgid "Appearance extracted from image successfully."
 msgstr "已成功从图像中提取外貌。"
 
-#: flask/i18n.py:111
+#: flask/i18n.py:117
 msgid "No appearance extracted."
 msgstr "未提取到外貌信息。"
 
-#: flask/i18n.py:112
+#: flask/i18n.py:118
 msgid "Server error ({status}): Could not extract appearance."
 msgstr "服务器错误 ({status})：无法提取外貌。"
 
-#: flask/i18n.py:113
+#: flask/i18n.py:119
 msgid "Please select a portrait image first to extract image features."
 msgstr "请先选择一张肖像图片以提取图像特征。"
 
-#: flask/i18n.py:114
+#: flask/i18n.py:120
 msgid "Image features extracted"
 msgstr "已提取图像特征"
 
-#: flask/i18n.py:115
+#: flask/i18n.py:121
 msgid "Image analysis failed."
 msgstr "图像分析失败。"
 
-#: flask/i18n.py:116
+#: flask/i18n.py:122
 msgid "Image analysis error"
 msgstr "图像分析错误"
 
-#: flask/i18n.py:117
+#: flask/i18n.py:123
 msgid "Connection error during image analysis."
 msgstr "图像分析期间发生连接错误。"
 
-#: flask/i18n.py:118
+#: flask/i18n.py:124
 msgid "Connection error"
 msgstr "连接错误"
 
-#: flask/i18n.py:119
+#: flask/i18n.py:125
 msgid "Create New Persona"
 msgstr "创建新玩家设定"
 
-#: flask/i18n.py:120
+#: flask/i18n.py:126
 msgid "Edit Persona"
 msgstr "编辑玩家设定"
 
-#: flask/i18n.py:121
+#: flask/i18n.py:127
 msgid "Used in active chats (deletion protection)"
 msgstr "正在活跃聊天中使用（删除保护）"
 
-#: flask/i18n.py:122
+#: flask/i18n.py:128
 msgid "Delete persona"
 msgstr "删除玩家设定"
 
-#: flask/i18n.py:123
+#: flask/i18n.py:129
 msgid "Deletion locked"
 msgstr "删除已锁定"
 
-#: flask/i18n.py:124 flask/templates/admin/services.html:250 flask/templates/admin/users.html:40 flask/templates/characters/partials/tab_dialogue.html:18 flask/templates/characters/partials/tab_gallery.html:62
+#: flask/i18n.py:130 flask/templates/admin/services.html:250 flask/templates/admin/users.html:40 flask/templates/characters/partials/tab_dialogue.html:18 flask/templates/characters/partials/tab_gallery.html:74
 msgid "Delete"
 msgstr "删除"
 
-#: flask/i18n.py:125
+#: flask/i18n.py:131
 msgid "Translating..."
 msgstr "翻译中..."
 
-#: flask/i18n.py:126
+#: flask/i18n.py:132
 msgid "Translation paused"
 msgstr "翻译已暂停"
 
-#: flask/i18n.py:127
+#: flask/i18n.py:133
 msgid "Cloud AI Mode (On-Demand)"
 msgstr "云端 AI 模式（按需）"
 
-#: flask/i18n.py:128
+#: flask/i18n.py:134
 msgid "Idle"
 msgstr "空闲"
 
-#: flask/i18n.py:129
+#: flask/i18n.py:135
 msgid "No active translation"
 msgstr "当前无活动翻译"
 
-#: flask/i18n.py:130
+#: flask/i18n.py:136
 msgid "Last finished:"
 msgstr "上次完成："
 
-#: flask/i18n.py:131
+#: flask/i18n.py:137
 msgid "Error:"
 msgstr "错误："
 
-#: flask/i18n.py:134
+#: flask/i18n.py:140
 msgid "Lorebook Entry"
 msgstr "世界书条目"
 
-#: flask/i18n.py:136
+#: flask/i18n.py:142
 msgid "Location"
 msgstr "地点"
 
-#: flask/i18n.py:137
+#: flask/i18n.py:143
 msgid "Location Tags"
 msgstr "地点标签"
 
-#: flask/i18n.py:138
+#: flask/i18n.py:144
 msgid "Event"
 msgstr "事件"
 
-#: flask/i18n.py:139
+#: flask/i18n.py:145
 msgid "Character Event"
 msgstr "角色事件"
 
-#: flask/i18n.py:140
+#: flask/i18n.py:146
 msgid "admire"
 msgstr "钦佩"
 
-#: flask/i18n.py:141
+#: flask/i18n.py:147
 msgid "amused"
 msgstr "逗乐"
 
-#: flask/i18n.py:142
+#: flask/i18n.py:148
 msgid "anger"
 msgstr "愤怒"
 
-#: flask/i18n.py:143
+#: flask/i18n.py:149
 msgid "annoyed"
 msgstr "烦躁"
 
-#: flask/i18n.py:144
+#: flask/i18n.py:150
 msgid "approval"
 msgstr "赞同"
 
-#: flask/i18n.py:145
+#: flask/i18n.py:151
 msgid "caring"
 msgstr "关怀"
 
-#: flask/i18n.py:146
+#: flask/i18n.py:152
 msgid "confused"
 msgstr "困惑"
 
-#: flask/i18n.py:147
+#: flask/i18n.py:153
 msgid "curious"
 msgstr "好奇"
 
-#: flask/i18n.py:148
+#: flask/i18n.py:154
 msgid "desire"
 msgstr "渴望"
 
-#: flask/i18n.py:149
+#: flask/i18n.py:155
 msgid "disappointed"
 msgstr "失望"
 
-#: flask/i18n.py:150
+#: flask/i18n.py:156
 msgid "disapproval"
 msgstr "不赞成"
 
-#: flask/i18n.py:151
+#: flask/i18n.py:157
 msgid "disgust"
 msgstr "厌恶"
 
-#: flask/i18n.py:152
+#: flask/i18n.py:158
 msgid "embarrassed"
 msgstr "尴尬"
 
-#: flask/i18n.py:153
+#: flask/i18n.py:159
 msgid "excited"
 msgstr "兴奋"
 
-#: flask/i18n.py:154
+#: flask/i18n.py:160
 msgid "fear"
 msgstr "恐惧"
 
-#: flask/i18n.py:155
+#: flask/i18n.py:161
 msgid "gratitude"
 msgstr "感激"
 
-#: flask/i18n.py:156
+#: flask/i18n.py:162
 msgid "grief"
 msgstr "悲痛"
 
-#: flask/i18n.py:157
+#: flask/i18n.py:163
 msgid "joy"
 msgstr "喜悦"
 
-#: flask/i18n.py:158
+#: flask/i18n.py:164
 msgid "love"
 msgstr "爱意"
 
-#: flask/i18n.py:159
+#: flask/i18n.py:165
 msgid "nervousness"
 msgstr "紧张"
 
-#: flask/i18n.py:160
+#: flask/i18n.py:166
 msgid "neutral"
 msgstr "平静"
 
-#: flask/i18n.py:161
+#: flask/i18n.py:167
 msgid "optimistic"
 msgstr "乐观"
 
-#: flask/i18n.py:162
+#: flask/i18n.py:168
 msgid "pride"
 msgstr "自豪"
 
-#: flask/i18n.py:163
+#: flask/i18n.py:169
 msgid "realize"
 msgstr "领悟"
 
-#: flask/i18n.py:164
+#: flask/i18n.py:170
 msgid "relief"
 msgstr "宽慰"
 
-#: flask/i18n.py:165
+#: flask/i18n.py:171
 msgid "remorse"
 msgstr "懊悔"
 
-#: flask/i18n.py:166
+#: flask/i18n.py:172
 msgid "sad"
 msgstr "悲伤"
 
-#: flask/i18n.py:167
+#: flask/i18n.py:173
 msgid "surprise"
 msgstr "惊讶"
 
-#: flask/templates/admin/backdrop.html:14
+#: flask/templates/admin/backdrop.html:15
 msgid "Global atmospheric background for all pages and base fallback for roleplay chats."
 msgstr "所有页面的全局氛围背景以及角色扮演聊天的默认回退背景。"
-
-#: flask/templates/admin/backdrop.html:18
-msgid "Custom backdrop is active"
-msgstr "自定义背景已启用"
 
 #: flask/templates/admin/backdrop.html:19
 msgid "Custom backdrop active"
 msgstr "自定义背景已启用"
 
-#: flask/templates/admin/backdrop.html:22
-msgid "Default RPG theme cover is active"
-msgstr "默认 RPG 主题封面已启用"
+#: flask/templates/admin/backdrop.html:19
+msgid "Custom backdrop is active"
+msgstr "自定义背景已启用"
 
-#: flask/templates/admin/backdrop.html:23
+#: flask/templates/admin/backdrop.html:21
 msgid "Default Theme (Cover)"
 msgstr "默认主题（封面）"
 
-#: flask/templates/admin/backdrop.html:37
+#: flask/templates/admin/backdrop.html:21
+msgid "Default RPG theme cover is active"
+msgstr "默认 RPG 主题封面已启用"
+
+#: flask/templates/admin/backdrop.html:34
 msgid "No custom backdrop set"
 msgstr "未设置自定义背景"
 
-#: flask/templates/admin/backdrop.html:38
+#: flask/templates/admin/backdrop.html:35
 msgid "Currently using the dark RPG default cover. Choose a 16:9 image below or select an existing location."
 msgstr "当前使用深色 RPG 默认封面。请在下方选择 16:9 图片或选择现有地点。"
 
-#: flask/templates/admin/backdrop.html:39 flask/templates/macros/backdrop_selector.html:54 flask/templates/worldinfo/detail.html:130 flask/templates/worldinfo/detail.html:255 flask/templates/worldinfo/detail.html:398
+#: flask/templates/admin/backdrop.html:36 flask/templates/macros/backdrop_selector.html:54 flask/templates/worldinfo/detail.html:129 flask/templates/worldinfo/detail.html:253 flask/templates/worldinfo/detail.html:400
 msgid "Choose Backdrop"
 msgstr "选择背景"
 
-#: flask/templates/admin/backdrop.html:40 flask/templates/macros/backdrop_selector.html:62 flask/templates/worldinfo/detail.html:131 flask/templates/worldinfo/detail.html:256 flask/templates/worldinfo/detail.html:399
+#: flask/templates/admin/backdrop.html:37 flask/templates/macros/backdrop_selector.html:62 flask/templates/worldinfo/detail.html:130 flask/templates/worldinfo/detail.html:254 flask/templates/worldinfo/detail.html:401
 msgid "Remove Backdrop"
 msgstr "移除背景"
 
-#: flask/templates/admin/backdrop.html:41
+#: flask/templates/admin/backdrop.html:38
 msgid "Recommended: 16:9 widescreen (e.g., 1920×1080 or 2560×1440). Supported formats: PNG, JPG, WEBP."
 msgstr "推荐：16:9 宽屏（如 1920×1080 或 2560×1440）。支持格式：PNG、JPG、WEBP。"
 
-#: flask/templates/admin/backdrop.html:42 flask/templates/admin/layout.html:31
+#: flask/templates/admin/backdrop.html:39 flask/templates/admin/layout.html:31
 msgid "System Backdrop"
 msgstr "系统背景图"
 
-#: flask/templates/admin/backdrop.html:47
+#: flask/templates/admin/backdrop.html:44
 msgid "Rule: Priority in Chat"
 msgstr "规则：聊天中的优先级"
 
-#: flask/templates/admin/backdrop.html:50
+#: flask/templates/admin/backdrop.html:47
 msgid "This default backdrop forms the foundational background (Priority: System → World → Location). In chat, it is overridden by the active WorldInfo backdrop if set, and further overridden when the current location has its own background image."
 msgstr "此默认背景构成基础背景（优先级：系统 → 世界 → 地点）。在聊天中，若设置了活动世界背景则会覆盖它，若当前地点有自己的背景图则会进一步覆盖。"
 
-#: flask/templates/admin/backdrop.html:55
+#: flask/templates/admin/backdrop.html:52
 msgid "Save as System Backdrop"
 msgstr "保存为系统背景"
 
-#: flask/templates/admin/backdrop.html:64
+#: flask/templates/admin/backdrop.html:61
 msgid "Choose from Existing Locations"
 msgstr "从现有地点中选择"
 
-#: flask/templates/admin/backdrop.html:66
+#: flask/templates/admin/backdrop.html:63
 msgid "available"
 msgstr "可用"
 
-#: flask/templates/admin/backdrop.html:71
+#: flask/templates/admin/backdrop.html:68
 msgid "Click on an existing location to adopt its background image as the system default:"
 msgstr "点击现有地点以将其背景图片设为系统默认："
 
-#: flask/templates/admin/backdrop.html:89
+#: flask/templates/admin/backdrop.html:86
 msgid "No locations with background images have been saved in WorldInfos yet."
 msgstr "WorldInfo 中尚未保存带有背景图片的地点。"
 
@@ -876,55 +916,55 @@ msgstr "内容翻译"
 msgid "Back to Hub"
 msgstr "返回主页"
 
-#: flask/templates/admin/prompts.html:15
+#: flask/templates/admin/prompts.html:14
 msgid "Prompt Placeholders"
 msgstr "提示词占位符"
 
-#: flask/templates/admin/prompts.html:18
+#: flask/templates/admin/prompts.html:17
 msgid "You can use"
 msgstr "您可以使用"
 
-#: flask/templates/admin/prompts.html:18
+#: flask/templates/admin/prompts.html:17
 msgid "(character name) and"
 msgstr "（角色名称）和"
 
-#: flask/templates/admin/prompts.html:18
+#: flask/templates/admin/prompts.html:17
 msgid "(player persona name) in prompts. These are replaced dynamically at runtime."
 msgstr "（玩家人设名称）用于提示词中。这些占位符将在运行时动态替换。"
 
-#: flask/templates/admin/prompts.html:23
+#: flask/templates/admin/prompts.html:22
 msgid "Roleplay Prompt"
 msgstr "角色扮演提示词"
 
-#: flask/templates/admin/prompts.html:24
+#: flask/templates/admin/prompts.html:23
 msgid "Memory Prompt"
 msgstr "记忆提示词"
 
-#: flask/templates/admin/prompts.html:25
+#: flask/templates/admin/prompts.html:24
 msgid "Diffuser Prompt"
 msgstr "生图提示词"
 
-#: flask/templates/admin/prompts.html:26
+#: flask/templates/admin/prompts.html:25
 msgid "AI Author Prompt"
 msgstr "AI 作者提示词"
 
-#: flask/templates/admin/prompts.html:27
+#: flask/templates/admin/prompts.html:26
 msgid "Vision Prompt"
 msgstr "视觉提示词"
 
-#: flask/templates/admin/prompts.html:28
+#: flask/templates/admin/prompts.html:27
 msgid "AI Dialogue Author Prompt"
 msgstr "AI 对话作者提示词"
 
-#: flask/templates/admin/prompts.html:36
+#: flask/templates/admin/prompts.html:35
 msgid "Restore Default"
 msgstr "恢复默认"
 
-#: flask/templates/admin/prompts.html:36
+#: flask/templates/admin/prompts.html:35
 msgid "Resets all languages of this prompt to factory default"
 msgstr "将此提示词的所有语言重置为出厂默认设置"
 
-#: flask/templates/admin/prompts.html:54
+#: flask/templates/admin/prompts.html:53
 msgid "Save Prompts"
 msgstr "保存提示词"
 
@@ -952,7 +992,7 @@ msgstr "无法访问"
 msgid "Test"
 msgstr "测试"
 
-#: flask/templates/admin/services.html:31
+#: flask/templates/admin/services.html:31 flask/templates/setup/first_boot.html:170
 msgid "Google AI API Key"
 msgstr "Google AI API 密钥"
 
@@ -964,7 +1004,7 @@ msgstr "无法访问 / 无效"
 msgid "Not configured"
 msgstr "未配置"
 
-#: flask/templates/admin/services.html:38
+#: flask/templates/admin/services.html:38 flask/templates/setup/first_boot.html:173
 msgid "Test API Key & Models"
 msgstr "测试 API 密钥和模型"
 
@@ -972,7 +1012,7 @@ msgstr "测试 API 密钥和模型"
 msgid "2. Image Generation & Web Search"
 msgstr "2. 图像生成与网页搜索"
 
-#: flask/templates/admin/services.html:49
+#: flask/templates/admin/services.html:49 flask/templates/setup/first_boot.html:140 flask/templates/setup/first_boot.html:198
 msgid "Image Generation (Scene images in chat)"
 msgstr "图像生成（聊天中的场景图）"
 
@@ -984,11 +1024,11 @@ msgstr "ComfyUI API URL"
 msgid "Offline"
 msgstr "离线"
 
-#: flask/templates/admin/services.html:62
+#: flask/templates/admin/services.html:62 flask/templates/setup/first_boot.html:205
 msgid "Google AI Image Model"
 msgstr "Google AI 图像模型"
 
-#: flask/templates/admin/services.html:64 flask/templates/admin/services.html:215
+#: flask/templates/admin/services.html:64 flask/templates/admin/services.html:215 flask/templates/setup/first_boot.html:248
 msgid "Ready"
 msgstr "就绪"
 
@@ -996,7 +1036,7 @@ msgstr "就绪"
 msgid "Not checked / Offline"
 msgstr "未检查 / 离线"
 
-#: flask/templates/admin/services.html:76
+#: flask/templates/admin/services.html:76 flask/templates/setup/first_boot.html:149 flask/templates/setup/first_boot.html:218
 msgid "Web Search (Prepared)"
 msgstr "网页搜索（已准备）"
 
@@ -1092,7 +1132,7 @@ msgstr "各角色推荐模型："
 msgid "Click to copy into pull input"
 msgstr "点击复制到拉取输入框"
 
-#: flask/templates/admin/services.html:217
+#: flask/templates/admin/services.html:217 flask/templates/setup/first_boot.html:249
 msgid "Missing"
 msgstr "缺失"
 
@@ -1176,10 +1216,6 @@ msgstr "角色、世界书、世界、地点和事件的后台翻译状态。"
 msgid "Start Translation Sync"
 msgstr "启动翻译同步"
 
-#: flask/templates/admin/translations.html:13 flask/templates/admin/user_form.html:72 flask/templates/characters/partials/modals.html:32 flask/templates/characters/partials/modals.html:68 flask/templates/characters/partials/modals.html:105
-msgid "Cancel"
-msgstr "取消"
-
 #: flask/templates/admin/translations.html:20
 msgid "Status:"
 msgstr "状态："
@@ -1208,11 +1244,11 @@ msgstr "超级管理员保护："
 msgid "This is the initial administrator. Their permissions are permanently locked to full access (Admin) and cannot be revoked."
 msgstr "这是初始管理员。其权限已永久锁定为完全访问权限（Admin），无法撤销。"
 
-#: flask/templates/admin/user_form.html:23
+#: flask/templates/admin/user_form.html:23 flask/templates/setup/first_boot.html:44
 msgid "Username"
 msgstr "用户名"
 
-#: flask/templates/admin/user_form.html:27 flask/templates/auth/login.html:14 flask/templates/settings/account.html:18
+#: flask/templates/admin/user_form.html:27 flask/templates/auth/login.html:14 flask/templates/settings/account.html:18 flask/templates/setup/first_boot.html:48
 msgid "Email address"
 msgstr "电子邮箱地址"
 
@@ -1236,7 +1272,7 @@ msgstr "预设："
 msgid "Individual functional permissions (FunctionPermission):"
 msgstr "单项功能权限 (FunctionPermission)："
 
-#: flask/templates/admin/user_form.html:73 flask/templates/characters/partials/tab_gallery.html:65 flask/templates/characters/partials/tab_info.html:152 flask/templates/chat/session.html:223 flask/templates/lorebooks/detail.html:95
+#: flask/templates/admin/user_form.html:73 flask/templates/characters/partials/tab_gallery.html:77 flask/templates/chat/session.html:229 flask/templates/lorebooks/detail.html:188 flask/templates/macros/collaboration.html:111
 msgid "Save"
 msgstr "保存"
 
@@ -1284,7 +1320,7 @@ msgstr "AImo 登录"
 msgid "Sign in to enter your roleplay worlds."
 msgstr "登录以进入你的角色扮演世界。"
 
-#: flask/templates/auth/login.html:18 flask/templates/settings/account.html:23
+#: flask/templates/auth/login.html:18 flask/templates/settings/account.html:23 flask/templates/setup/first_boot.html:52
 msgid "Password"
 msgstr "密码"
 
@@ -1308,7 +1344,7 @@ msgstr "基本信息"
 msgid "Gallery Images"
 msgstr "画廊图片"
 
-#: flask/templates/characters/creator.html:27 flask/templates/characters/creator.html:28 flask/templates/characters/creator.html:31
+#: flask/templates/characters/creator.html:27 flask/templates/characters/creator.html:28 flask/templates/characters/creator.html:29 flask/templates/characters/creator.html:30 flask/templates/characters/creator.html:31
 msgid "Please save basic info first"
 msgstr "请先保存基本信息"
 
@@ -1320,19 +1356,19 @@ msgstr "情绪立绘"
 msgid "Dialogue Styles"
 msgstr "对话风格"
 
-#: flask/templates/characters/creator.html:31 flask/templates/chat/session.html:304 flask/templates/worldinfo/detail.html:33
+#: flask/templates/characters/creator.html:31 flask/templates/chat/session.html:310 flask/templates/worldinfo/detail.html:37
 msgid "Random Events"
 msgstr "随机事件"
 
-#: flask/templates/characters/creator.html:32 flask/templates/chat/select_worldinfo.html:23 flask/templates/macros/top_header.html:18 flask/templates/macros/top_header.html:45 flask/templates/settings/creations.html:23
+#: flask/templates/characters/creator.html:32 flask/templates/chat/select_worldinfo.html:23 flask/templates/chat/session.html:29 flask/templates/macros/top_header.html:18 flask/templates/macros/top_header.html:45
 msgid "Lorebooks"
 msgstr "世界书"
 
-#: flask/templates/characters/creator.html:33 flask/templates/lorebooks/detail.html:28 flask/templates/worldinfo/detail.html:34
+#: flask/templates/characters/creator.html:33 flask/templates/lorebooks/detail.html:32 flask/templates/worldinfo/detail.html:38
 msgid "Collaboration"
 msgstr "协作"
 
-#: flask/templates/characters/creator.html:37 flask/templates/lorebooks/detail.html:32 flask/templates/worldinfo/detail.html:38
+#: flask/templates/characters/creator.html:37 flask/templates/chat/session.html:23 flask/templates/lorebooks/detail.html:36 flask/templates/worldinfo/detail.html:42
 msgid "Back to Overview"
 msgstr "返回概览"
 
@@ -1356,11 +1392,11 @@ msgstr "图片文件（9:16 竖屏肖像）"
 msgid "Exclusive portrait image for this character."
 msgstr "此角色的专属肖像图片。"
 
-#: flask/templates/characters/partials/modals.html:20 flask/templates/characters/partials/tab_gallery.html:50
+#: flask/templates/characters/partials/modals.html:20 flask/templates/characters/partials/tab_gallery.html:62
 msgid "Unlock Relationship Level"
 msgstr "解锁关系等级"
 
-#: flask/templates/characters/partials/modals.html:21 flask/templates/characters/partials/tab_gallery.html:51
+#: flask/templates/characters/partials/modals.html:21 flask/templates/characters/partials/tab_gallery.html:63
 msgid "Required relationship level to unlock this image in chat."
 msgstr "在聊天中解锁此图片所需的关系等级。"
 
@@ -1512,27 +1548,31 @@ msgstr "仅在与该角色的聊天中触发的动态事件。"
 msgid "Please save the character's basic info first to create character-specific random events."
 msgstr "请先保存角色的基本信息，然后再创建角色专属随机事件。"
 
-#: flask/templates/characters/partials/tab_gallery.html:6
+#: flask/templates/characters/partials/tab_gallery.html:7
 msgid "Exclusive portrait graphics unlocked when reaching a relationship threshold in chat."
 msgstr "在聊天中达到特定关系阈值时解锁的专属肖像图片。"
 
-#: flask/templates/characters/partials/tab_gallery.html:12
+#: flask/templates/characters/partials/tab_gallery.html:14
 msgid "Add 9:16 Image"
 msgstr "添加 9:16 图片"
 
-#: flask/templates/characters/partials/tab_gallery.html:21 flask/templates/characters/partials/tab_gallery.html:28
+#: flask/templates/characters/partials/tab_gallery.html:21 flask/templates/characters/partials/tab_gallery.html:30
 msgid "Unlocks at relationship:"
 msgstr "解锁所需关系值："
 
-#: flask/templates/characters/partials/tab_gallery.html:24 flask/templates/characters/partials/tab_gallery.html:45
+#: flask/templates/characters/partials/tab_gallery.html:31 flask/templates/characters/partials/tab_gallery.html:32 flask/templates/characters/partials/tab_gallery.html:57
 msgid "View fullscreen"
 msgstr "全屏查看"
 
-#: flask/templates/characters/partials/tab_gallery.html:36
+#: flask/templates/characters/partials/tab_gallery.html:48
 msgid "Edit 9:16 Gallery Image"
 msgstr "编辑 9:16 画廊图片"
 
-#: flask/templates/characters/partials/tab_gallery.html:79
+#: flask/templates/characters/partials/tab_gallery.html:81
+msgid "Really delete this gallery image?"
+msgstr ""
+
+#: flask/templates/characters/partials/tab_gallery.html:92
 msgid "Please save the character's basic info first to upload and manage 9:16 gallery images."
 msgstr "请先保存角色的基本信息，然后再上传和管理 9:16 画廊图片。"
 
@@ -1548,7 +1588,7 @@ msgstr "AI 角色的唯一名称。在提示词中替换 {{char}}。"
 msgid "Gender"
 msgstr "性别"
 
-#: flask/templates/characters/partials/tab_info.html:31 flask/templates/lorebooks/detail.html:74 flask/templates/lorebooks/detail.html:156 flask/templates/lorebooks/detail.html:224 flask/templates/overview/modals/new_lorebook.html:15
+#: flask/templates/characters/partials/tab_info.html:31 flask/templates/lorebooks/detail.html:76 flask/templates/lorebooks/detail.html:152 flask/templates/lorebooks/detail.html:221 flask/templates/overview/tabs/lorebooks.html:6
 msgid "Visibility"
 msgstr "可见性"
 
@@ -1665,6 +1705,10 @@ msgstr "添加立绘"
 #: flask/templates/characters/partials/tab_sprites.html:30
 msgid "Used when no sprite matches the detected emotion"
 msgstr "当没有立绘匹配检测到的情绪时使用"
+
+#: flask/templates/characters/partials/tab_sprites.html:35
+msgid "Really delete this sprite?"
+msgstr ""
 
 #: flask/templates/characters/partials/tab_sprites.html:36
 msgid "Delete sprite"
@@ -1790,13 +1834,65 @@ msgstr "取消回复生成"
 msgid "Send message (Enter)"
 msgstr "发送消息 (Enter)"
 
-#: flask/templates/chat/partials/modals.html:35
+#: flask/templates/chat/partials/modals.html:8
+msgid "Sessions with"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:11
+msgid "New Chat"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:21
+msgid "Untitled Chat"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:24
+msgid "Active"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:28
+msgid "Created:"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:29
+msgid "Persona:"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:34
+msgid "Switch"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:36
 msgid "Do you really want to delete this session?"
 msgstr "确定要删除此会话吗？"
 
-#: flask/templates/chat/partials/modals.html:37
+#: flask/templates/chat/partials/modals.html:38
 msgid "Delete session"
 msgstr "删除会话"
+
+#: flask/templates/chat/partials/modals.html:43
+msgid "No other sessions available."
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:52 flask/templates/chat/session.html:95 flask/templates/chat/session.html:121
+msgid "Edit message"
+msgstr "编辑消息"
+
+#: flask/templates/chat/partials/modals.html:60
+msgid "Save changes (Sync canon)"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:71
+msgid "LLM Generation Prompt (Admin Debug)"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:74 flask/templates/macros/collaboration.html:66 flask/templates/macros/editor_header.html:47
+msgid "Copy"
+msgstr "复制"
+
+#: flask/templates/chat/partials/modals.html:82
+msgid "In-memory snapshot at inference time (not persisted to database)"
+msgstr ""
 
 #: flask/templates/chat/partials/sidebar.html:11
 msgid "Thinking: Enabled (Click to disable)"
@@ -1914,6 +2010,18 @@ msgstr "为兼容模型（如 Gemma 4、DeepSeek-R1）启用扩展思维链推�
 msgid "Start Adventure"
 msgstr "开始冒险"
 
+#: flask/templates/chat/session.html:26
+msgid "Chat"
+msgstr ""
+
+#: flask/templates/chat/session.html:27
+msgid "Media"
+msgstr ""
+
+#: flask/templates/chat/session.html:28
+msgid "Memories"
+msgstr ""
+
 #: flask/templates/chat/session.html:32
 msgid "Info"
 msgstr "信息"
@@ -1922,7 +2030,7 @@ msgstr "信息"
 msgid "Sidebar / Character Info"
 msgstr "侧边栏 / 角色信息"
 
-#: flask/templates/chat/session.html:39 flask/templates/chat/session.html:76 flask/templates/macros/event_manager.html:16 flask/templates/macros/event_manager.html:22 flask/templates/macros/event_manager.html:160
+#: flask/templates/chat/session.html:39 flask/templates/chat/session.html:76 flask/templates/macros/event_manager.html:17 flask/templates/macros/event_manager.html:23
 msgid "Location:"
 msgstr "地点："
 
@@ -1934,7 +2042,7 @@ msgstr "世界："
 msgid "Neutral Setting"
 msgstr "中性设定"
 
-#: flask/templates/chat/session.html:53 flask/templates/chat/session.html:54 flask/templates/worldinfo/detail.html:187 flask/templates/worldinfo/detail.html:188
+#: flask/templates/chat/session.html:53 flask/templates/chat/session.html:54 flask/templates/worldinfo/detail.html:181 flask/templates/worldinfo/detail.html:182
 msgid "View location backdrop"
 msgstr "查看地点背景"
 
@@ -1945,10 +2053,6 @@ msgstr "查看 LLM 提示词（管理员）"
 #: flask/templates/chat/session.html:94 flask/templates/chat/session.html:120
 msgid "Translate message (on-demand)"
 msgstr "翻译消息（按需）"
-
-#: flask/templates/chat/session.html:95 flask/templates/chat/session.html:121
-msgid "Edit message"
-msgstr "编辑消息"
 
 #: flask/templates/chat/session.html:96 flask/templates/chat/session.html:122
 msgid "Duplicate chat from here (Fork)"
@@ -1962,199 +2066,247 @@ msgstr "从此处删除"
 msgid "Show/hide ALT text (image description)"
 msgstr "显示/隐藏 ALT 文本（图像描述）"
 
-#: flask/templates/chat/session.html:159
+#: flask/templates/chat/session.html:134
+msgid "No image description available."
+msgstr ""
+
+#: flask/templates/chat/session.html:156
+msgid "Unlocked 9:16 Character Images (Relationship:"
+msgstr ""
+
+#: flask/templates/chat/session.html:159 flask/templates/chat/session.html:166
 msgid "Unlock at:"
 msgstr "解锁等级："
 
-#: flask/templates/chat/session.html:188 flask/templates/chat/session.html:189 flask/templates/chat/session.html:192
+#: flask/templates/chat/session.html:172
+msgid "No gallery images unlocked for the current relationship level yet."
+msgstr ""
+
+#: flask/templates/chat/session.html:176
+msgid "Images Shared & Generated in This Session"
+msgstr ""
+
+#: flask/templates/chat/session.html:180
+msgid "Chat Media"
+msgstr ""
+
+#: flask/templates/chat/session.html:183
+msgid "No images uploaded in this chat yet."
+msgstr ""
+
+#: flask/templates/chat/session.html:194 flask/templates/chat/session.html:195 flask/templates/chat/session.html:198
 msgid "View world backdrop"
 msgstr "查看世界背景"
 
-#: flask/templates/chat/session.html:211 flask/templates/lorebooks/detail.html:164
+#: flask/templates/chat/session.html:205
+msgid "Saved Episodic Memories (10-Message Interval)"
+msgstr ""
+
+#: flask/templates/chat/session.html:206
+msgid "Memories are summarized automatically in the background and injected into the prompt via keyword tags."
+msgstr ""
+
+#: flask/templates/chat/session.html:214
+msgid "Message #{idx}"
+msgstr ""
+
+#: flask/templates/chat/session.html:217 flask/templates/lorebooks/detail.html:160
 msgid "Tags (Comma-separated for vectorless RAG)"
 msgstr "标签（逗号分隔，用于无向量 RAG）"
 
-#: flask/templates/chat/session.html:215
+#: flask/templates/chat/session.html:221
 msgid "Summary"
 msgstr "摘要"
 
-#: flask/templates/chat/session.html:220
+#: flask/templates/chat/session.html:226
 msgid "Recalculate"
 msgstr "重新计算"
 
-#: flask/templates/chat/session.html:220
+#: flask/templates/chat/session.html:226
 msgid "Recalculate memory from associated episode messages"
 msgstr "根据关联的情景消息重新计算记忆"
 
-#: flask/templates/chat/session.html:221
+#: flask/templates/chat/session.html:227
 msgid "Translate"
 msgstr "翻译"
 
-#: flask/templates/chat/session.html:221
+#: flask/templates/chat/session.html:227
 msgid "Translate memory in-place to your language"
 msgstr "将记忆原地翻译为您的语言"
 
-#: flask/templates/chat/session.html:238
+#: flask/templates/chat/session.html:234
+msgid "No memories generated yet (created automatically every 10 messages)."
+msgstr ""
+
+#: flask/templates/chat/session.html:244
 msgid "Active Persona"
 msgstr "当前角色设定"
 
-#: flask/templates/chat/session.html:243
+#: flask/templates/chat/session.html:249
 msgid "Edit player persona"
 msgstr "编辑玩家角色设定"
 
-#: flask/templates/chat/session.html:261
+#: flask/templates/chat/session.html:267
 msgid "Unknown"
 msgstr "未知"
 
-#: flask/templates/chat/session.html:262
+#: flask/templates/chat/session.html:268
 msgid "Persona is locked for this chat after the 1st message"
 msgstr "发送第 1 条消息后，此聊天的玩家角色设定将被锁定"
 
-#: flask/templates/chat/session.html:282
+#: flask/templates/chat/session.html:288
 msgid "Warning:"
 msgstr "警告："
 
-#: flask/templates/chat/session.html:282
+#: flask/templates/chat/session.html:288
 msgid "Switching worlds during an active chat may lead to inconsistencies with earlier memories."
 msgstr "在活跃聊天中切换世界可能会导致与早期记忆不一致。"
 
-#: flask/templates/chat/session.html:288
+#: flask/templates/chat/session.html:294
 msgid "No World (Neutral)"
 msgstr "无世界（中立）"
 
-#: flask/templates/chat/session.html:296
+#: flask/templates/chat/session.html:302
 msgid "Switch world"
 msgstr "切换世界"
 
-#: flask/templates/chat/session.html:310
+#: flask/templates/chat/session.html:316
 msgid "Enable random events"
 msgstr "启用随机事件"
 
-#: flask/templates/chat/session.html:323
+#: flask/templates/chat/session.html:329
 msgid "Relationship Settings"
 msgstr "关系设置"
 
-#: flask/templates/chat/session.html:326
+#: flask/templates/chat/session.html:332
 msgid "Show relationship debug labels"
 msgstr "显示关系调试标签"
 
-#: flask/templates/chat/session.html:334
+#: flask/templates/chat/session.html:340
 msgid "Reset relationship to default and recalculate from chat history"
 msgstr "将关系重置为默认值并根据聊天记录重新计算"
 
-#: flask/templates/chat/session.html:337
+#: flask/templates/chat/session.html:343
 msgid "Recalculate relationship"
 msgstr "重新计算关系"
 
-#: flask/templates/lorebooks/detail.html:22
+#: flask/templates/lorebooks/detail.html:7
+msgid "Lorebook:"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:7 flask/templates/lorebooks/detail.html:24 flask/templates/lorebooks/detail.html:42 flask/templates/macros/cards.html:252
+msgid "New Lorebook"
+msgstr "新建设定集"
+
+#: flask/templates/lorebooks/detail.html:26
 msgid "Lorebook & Encyclopedia"
 msgstr "世界书与百科全书"
 
-#: flask/templates/lorebooks/detail.html:26 flask/templates/worldinfo/detail.html:31
+#: flask/templates/lorebooks/detail.html:30 flask/templates/worldinfo/detail.html:35
 msgid "Basic Settings"
 msgstr "基本设置"
 
-#: flask/templates/lorebooks/detail.html:47
+#: flask/templates/lorebooks/detail.html:50
 msgid "Really delete Lorebook?"
 msgstr "确定要删除世界书吗？"
 
-#: flask/templates/lorebooks/detail.html:48
+#: flask/templates/lorebooks/detail.html:51
 msgid "Read-only (External Lorebook)"
 msgstr "只读（外部世界书）"
 
-#: flask/templates/lorebooks/detail.html:49
+#: flask/templates/lorebooks/detail.html:52
 msgid "Save Lorebook"
 msgstr "保存世界书"
 
-#: flask/templates/lorebooks/detail.html:62
+#: flask/templates/lorebooks/detail.html:64
 msgid "Lorebook Name"
 msgstr "世界书名称"
 
-#: flask/templates/lorebooks/detail.html:63
+#: flask/templates/lorebooks/detail.html:65
 msgid "The title of this knowledge compendium."
 msgstr "此知识图鉴的标题。"
 
-#: flask/templates/lorebooks/detail.html:68 flask/templates/lorebooks/detail.html:151 flask/templates/lorebooks/detail.html:219 flask/templates/macros/event_manager.html:54 flask/templates/worldinfo/detail.html:75
+#: flask/templates/lorebooks/detail.html:70 flask/templates/lorebooks/detail.html:147 flask/templates/lorebooks/detail.html:216 flask/templates/macros/event_manager.html:55 flask/templates/worldinfo/detail.html:76
 msgid "Proper Noun (Do not translate)"
 msgstr "专有名词（不翻译）"
 
-#: flask/templates/lorebooks/detail.html:82
+#: flask/templates/lorebooks/detail.html:84
 msgid "Short Description"
 msgstr "简短描述"
 
-#: flask/templates/lorebooks/detail.html:83
+#: flask/templates/lorebooks/detail.html:85
 msgid "A brief summary of the topic for quick orientation in the overview."
 msgstr "主题的简要概述，便于在概览中快速了解。"
 
-#: flask/templates/lorebooks/detail.html:88
+#: flask/templates/lorebooks/detail.html:90
 msgid "Short overview of the lorebook content..."
 msgstr "世界书内容的简短概述..."
 
-#: flask/templates/lorebooks/detail.html:106
+#: flask/templates/lorebooks/detail.html:102
 msgid "New Entry"
 msgstr "新建条目"
 
-#: flask/templates/lorebooks/detail.html:115
+#: flask/templates/lorebooks/detail.html:112
 msgid "Private (Secret Lore)"
 msgstr "私密（机密设定）"
 
-#: flask/templates/lorebooks/detail.html:115
+#: flask/templates/lorebooks/detail.html:112
 msgid "Private entry: hidden from other players, but injected via RAG in roleplay."
 msgstr "私密条目：对其他玩家隐藏，但在角色扮演中通过 RAG 注入。"
 
-#: flask/templates/lorebooks/detail.html:129
-msgid "Click to edit"
-msgstr "点击编辑"
-
-#: flask/templates/lorebooks/detail.html:138
+#: flask/templates/lorebooks/detail.html:134
 msgid "Lorebook Entry:"
 msgstr "世界书条目："
 
-#: flask/templates/lorebooks/detail.html:145 flask/templates/lorebooks/detail.html:213 flask/templates/macros/event_manager.html:34
+#: flask/templates/lorebooks/detail.html:141 flask/templates/lorebooks/detail.html:210 flask/templates/macros/event_manager.html:35
 msgid "Title"
 msgstr "标题"
 
-#: flask/templates/lorebooks/detail.html:146 flask/templates/lorebooks/detail.html:214
+#: flask/templates/lorebooks/detail.html:142 flask/templates/lorebooks/detail.html:211
 msgid "Concise title of the lore entry."
 msgstr "设定的简明标题。"
 
-#: flask/templates/lorebooks/detail.html:158 flask/templates/lorebooks/detail.html:226
+#: flask/templates/lorebooks/detail.html:154 flask/templates/lorebooks/detail.html:223
 msgid "Public (Readable in overview)"
 msgstr "公开（可在概览中阅读）"
 
-#: flask/templates/lorebooks/detail.html:158 flask/templates/lorebooks/detail.html:226
+#: flask/templates/lorebooks/detail.html:154 flask/templates/lorebooks/detail.html:223
 msgid "Private (Secret Lore / Spoiler Protection)"
 msgstr "私密（机密设定 / 防剧透）"
 
-#: flask/templates/lorebooks/detail.html:165 flask/templates/lorebooks/detail.html:233
+#: flask/templates/lorebooks/detail.html:161 flask/templates/lorebooks/detail.html:230
 msgid "Keywords that trigger loading this entry into [RELEVANT_LOREBOOKS] when mentioned in chat."
 msgstr "在聊天中提及时触发将此条目加载到 [RELEVANT_LOREBOOKS] 中的关键词。"
 
-#: flask/templates/lorebooks/detail.html:167 flask/templates/lorebooks/detail.html:235
+#: flask/templates/lorebooks/detail.html:163 flask/templates/lorebooks/detail.html:232
 msgid "Suggest Tags"
 msgstr "推荐标签"
 
-#: flask/templates/lorebooks/detail.html:173 flask/templates/lorebooks/detail.html:241
+#: flask/templates/lorebooks/detail.html:169 flask/templates/lorebooks/detail.html:238
 msgid "Prose Text / Lore Content"
 msgstr "正文 / 设定内容"
 
-#: flask/templates/lorebooks/detail.html:174 flask/templates/lorebooks/detail.html:242
+#: flask/templates/lorebooks/detail.html:170 flask/templates/lorebooks/detail.html:239
 msgid "Compact facts, history, or rules the AI can retrieve and use in dialogue."
 msgstr "供 AI 检索并在对话中使用的精炼事实、历史或规则。"
 
-#: flask/templates/lorebooks/detail.html:206
+#: flask/templates/lorebooks/detail.html:192
+msgid "Really delete this lorebook entry?"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:203
 msgid "Create New Lorebook Entry"
 msgstr "创建新世界书条目"
 
-#: flask/templates/lorebooks/detail.html:232 flask/templates/worldinfo/detail.html:231 flask/templates/worldinfo/detail.html:374
+#: flask/templates/lorebooks/detail.html:229 flask/templates/worldinfo/detail.html:229 flask/templates/worldinfo/detail.html:376
 msgid "Tags (Comma-separated)"
 msgstr "标签（逗号分隔）"
 
-#: flask/templates/lorebooks/detail.html:237
+#: flask/templates/lorebooks/detail.html:234
 msgid "magic, guild, capital"
 msgstr "魔法, 公会, 首都"
 
-#: flask/templates/lorebooks/detail.html:258
+#: flask/templates/lorebooks/detail.html:255
 msgid "Save Entry"
 msgstr "保存条目"
 
@@ -2166,19 +2318,19 @@ msgstr "显示"
 msgid "Show/hide API key"
 msgstr "显示/隐藏 API 密钥"
 
-#: flask/templates/macros/buttons.html:96 flask/templates/macros/cards.html:114 flask/templates/settings/creations.html:103
+#: flask/templates/macros/buttons.html:97 flask/templates/macros/cards.html:114 flask/templates/macros/cards.html:226 flask/templates/overview/tabs/lorebooks.html:9 flask/templates/overview/tabs/worldinfo.html:9
 msgid "Public"
 msgstr "公开"
 
-#: flask/templates/macros/buttons.html:97 flask/templates/macros/cards.html:116 flask/templates/settings/creations.html:105
+#: flask/templates/macros/buttons.html:98 flask/templates/macros/cards.html:116 flask/templates/macros/cards.html:228 flask/templates/overview/tabs/lorebooks.html:10 flask/templates/overview/tabs/worldinfo.html:10
 msgid "Private"
 msgstr "私密"
 
-#: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111
+#: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111 flask/templates/macros/cards.html:223
 msgid "Translation pending"
 msgstr "等待翻译"
 
-#: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111
+#: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111 flask/templates/macros/cards.html:223
 msgid "Translation into your language is pending"
 msgstr "正在等待翻译为您的语言"
 
@@ -2218,9 +2370,17 @@ msgstr "设为默认玩家设定"
 msgid "New Persona"
 msgstr "新建人设"
 
-#: flask/templates/macros/cards.html:206
+#: flask/templates/macros/cards.html:206 flask/templates/worldinfo/detail.html:10 flask/templates/worldinfo/detail.html:29 flask/templates/worldinfo/detail.html:48 flask/templates/worldinfo/detail.html:133
 msgid "New World"
 msgstr "新建世界"
+
+#: flask/templates/macros/cards.html:226
+msgid "Public lorebook"
+msgstr ""
+
+#: flask/templates/macros/cards.html:228
+msgid "Private lorebook"
+msgstr ""
 
 #: flask/templates/macros/collaboration.html:14
 msgid "Collaborators receive full edit access to this creation (content, sprites, locations & events), but can never delete it or manage collaborators."
@@ -2234,10 +2394,6 @@ msgstr "保存协作者"
 msgid "Saves all changes in the form"
 msgstr "保存表单中的所有更改"
 
-#: flask/templates/macros/collaboration.html:66 flask/templates/macros/editor_header.html:47
-msgid "Copy"
-msgstr "复制"
-
 #: flask/templates/macros/collaboration.html:66
 msgid "Copy creator tag"
 msgstr "复制创作者标签"
@@ -2250,23 +2406,23 @@ msgstr "移除协作者"
 msgid "Really delete permanently?"
 msgstr "确定要永久删除吗？"
 
-#: flask/templates/macros/editor_header.html:32
+#: flask/templates/macros/editor_header.html:32 flask/templates/setup/first_boot.html:71
 msgid "Back"
 msgstr "返回"
 
-#: flask/templates/macros/event_manager.html:12
+#: flask/templates/macros/event_manager.html:13
 msgid "Entire Character (Location-independent)"
 msgstr "整个角色（不限地点）"
 
-#: flask/templates/macros/event_manager.html:12
+#: flask/templates/macros/event_manager.html:13
 msgid "No recommended world with locations linked"
 msgstr "未关联带有地点的推荐世界"
 
-#: flask/templates/macros/event_manager.html:19 flask/templates/macros/event_manager.html:164
+#: flask/templates/macros/event_manager.html:20 flask/templates/macros/event_manager.html:166
 msgid "Entire World"
 msgstr "整个世界"
 
-#: flask/templates/macros/event_manager.html:35
+#: flask/templates/macros/event_manager.html:36
 msgid ""
 "Event Title:\n"
 "Name of the random event (e.g., 'Sudden Thunderstorm', 'Carrier Pigeon Arrives')."
@@ -2274,11 +2430,11 @@ msgstr ""
 "事件标题：\n"
 "随机事件的名称（例如“突然的雷雨”、“信鸽抵达”）。"
 
-#: flask/templates/macros/event_manager.html:60
+#: flask/templates/macros/event_manager.html:61
 msgid "Probability (0 - 100%%)"
 msgstr "概率 (0 - 100%%)"
 
-#: flask/templates/macros/event_manager.html:61
+#: flask/templates/macros/event_manager.html:62
 msgid ""
 "Probability (1-100%%):\n"
 "Relative weight in the shared event pool. Every 10 to 100 messages (cooldown counter), one event is triggered by weight."
@@ -2286,11 +2442,11 @@ msgstr ""
 "概率 (1-100%%)：\n"
 "共享事件池中的相对权重。每 10 到 100 条消息（冷却计数器）按权重触发一个事件。"
 
-#: flask/templates/macros/event_manager.html:67 flask/templates/macros/event_manager.html:178
+#: flask/templates/macros/event_manager.html:68
 msgid "One-Shot (Max. 1x per session)"
 msgstr "一次性（每次会话最多1次）"
 
-#: flask/templates/macros/event_manager.html:68
+#: flask/templates/macros/event_manager.html:69
 msgid ""
 "One-Shot (Single Event):\n"
 "When enabled, this event triggers at most once per chat session and is then removed from the active pool."
@@ -2298,11 +2454,11 @@ msgstr ""
 "一次性（单次事件）：\n"
 "启用后，此事件在每个聊天会话中最多触发一次，随后从活动池中移除。"
 
-#: flask/templates/macros/event_manager.html:75
+#: flask/templates/macros/event_manager.html:76
 msgid "Assignment (Location-independent or bound to a specific location)"
 msgstr "归属（不限地点或绑定到特定地点）"
 
-#: flask/templates/macros/event_manager.html:76
+#: flask/templates/macros/event_manager.html:77
 msgid ""
 "Location Restriction:\n"
 "Choose whether this character event can occur anywhere in chats with this character or is additionally bound to a specific location."
@@ -2310,11 +2466,11 @@ msgstr ""
 "地点限制：\n"
 "选择此角色事件是可以在与该角色的任意聊天中发生，还是额外绑定到特定地点。"
 
-#: flask/templates/macros/event_manager.html:78
+#: flask/templates/macros/event_manager.html:79
 msgid "Assignment (Exclusive: Either Entire World OR specific location)"
 msgstr "归属（互斥：整个世界或特定地点）"
 
-#: flask/templates/macros/event_manager.html:79
+#: flask/templates/macros/event_manager.html:80
 msgid ""
 "Location Assignment:\n"
 "Choose whether this event can only occur at a specific location or applies as a global event for the entire world."
@@ -2322,11 +2478,11 @@ msgstr ""
 "地点分配：\n"
 "选择此事件是仅在特定地点发生，还是作为整个世界的全局事件生效。"
 
-#: flask/templates/macros/event_manager.html:91
+#: flask/templates/macros/event_manager.html:92
 msgid "Relationship Range (From – To)"
 msgstr "关系范围（从 – 到）"
 
-#: flask/templates/macros/event_manager.html:92
+#: flask/templates/macros/event_manager.html:93
 msgid ""
 "Relationship Range:\n"
 "Optionally restricts the event to a relationship range. If both sliders are at the outer ends, the event is active at all relationship tiers."
@@ -2334,19 +2490,19 @@ msgstr ""
 "关系范围：\n"
 "可选地将事件限制在特定关系范围内。如果两个滑块都在最外端，则事件在所有关系等级下均有效。"
 
-#: flask/templates/macros/event_manager.html:108
+#: flask/templates/macros/event_manager.html:109
 msgid "Minimum relationship tier"
 msgstr "最低关系等级"
 
-#: flask/templates/macros/event_manager.html:117
+#: flask/templates/macros/event_manager.html:118
 msgid "Maximum relationship tier"
 msgstr "最高关系等级"
 
-#: flask/templates/macros/event_manager.html:124
+#: flask/templates/macros/event_manager.html:125
 msgid "Scenic Event Description"
 msgstr "事件场景描述"
 
-#: flask/templates/macros/event_manager.html:125
+#: flask/templates/macros/event_manager.html:126
 msgid ""
 "Event Description:\n"
 "The narrative occurrence. When triggered, this description is placed in the [WORLD_INFO] section of the prompt for the next turn so the AI reacts appropriately."
@@ -2354,31 +2510,39 @@ msgstr ""
 "事件描述：\n"
 "叙事事件内容。触发时，此描述会放置在下一轮提示词的 [WORLD_INFO] 部分，以便 AI 做出恰当反应。"
 
-#: flask/templates/macros/event_manager.html:147
+#: flask/templates/macros/event_manager.html:148
 msgid "New Event"
 msgstr "新事件"
 
-#: flask/templates/macros/event_manager.html:162
-msgid "Character-wide (Everywhere)"
-msgstr "角色全局（任意地点）"
+#: flask/templates/macros/event_manager.html:164
+msgid "Character-wide"
+msgstr ""
 
-#: flask/templates/macros/event_manager.html:167
+#: flask/templates/macros/event_manager.html:169
 msgid "Relationship-bound"
 msgstr "关系绑定"
 
-#: flask/templates/macros/event_manager.html:178
+#: flask/templates/macros/event_manager.html:183
+msgid "One-Shot"
+msgstr ""
+
+#: flask/templates/macros/event_manager.html:183
 msgid "Repeatable"
 msgstr "可重复"
 
-#: flask/templates/macros/event_manager.html:186
+#: flask/templates/macros/event_manager.html:193
 msgid "Edit Event:"
 msgstr "编辑事件："
 
-#: flask/templates/macros/event_manager.html:210
+#: flask/templates/macros/event_manager.html:206
+msgid "Really delete this event?"
+msgstr ""
+
+#: flask/templates/macros/event_manager.html:217
 msgid "Create New Event"
 msgstr "创建新事件"
 
-#: flask/templates/macros/event_manager.html:217
+#: flask/templates/macros/event_manager.html:224
 msgid "Save Event"
 msgstr "保存事件"
 
@@ -2498,11 +2662,11 @@ msgstr "尚未添加额外自定义世界书。点击“添加世界书”以添
 msgid "Add Lorebook to Chat"
 msgstr "添加世界书到聊天"
 
-#: flask/templates/macros/lorebook_manager.html:226
+#: flask/templates/macros/lorebook_manager.html:225
 msgid "Already active"
 msgstr "已激活"
 
-#: flask/templates/macros/lorebook_manager.html:232
+#: flask/templates/macros/lorebook_manager.html:242
 msgid "No lorebooks available."
 msgstr "暂无可用世界书。"
 
@@ -2570,6 +2734,10 @@ msgstr "世界"
 msgid "Open menu"
 msgstr "打开菜单"
 
+#: flask/templates/macros/top_header.html:33
+msgid "User menu"
+msgstr ""
+
 #: flask/templates/macros/top_header.html:60
 msgid "Logout"
 msgstr "退出登录"
@@ -2581,6 +2749,10 @@ msgstr "在 Ko-fi 上支持我们"
 #: flask/templates/macros/top_header.html:74 flask/templates/macros/top_header.html:79
 msgid "Visit our Website"
 msgstr "访问我们的网站"
+
+#: flask/templates/overview/index.html:2
+msgid "Hub Dashboard"
+msgstr ""
 
 #: flask/templates/overview/index.html:11
 msgid "Some content is still being translated into your language. The selection of available content may still change."
@@ -2610,11 +2782,11 @@ msgstr "已聊过"
 msgid "Not Chatted Yet"
 msgstr "尚未聊过"
 
-#: flask/templates/overview/tabs/characters.html:23 flask/templates/settings/creations.html:37
+#: flask/templates/overview/tabs/characters.html:23 flask/templates/overview/tabs/lorebooks.html:24 flask/templates/overview/tabs/worldinfo.html:24 flask/templates/settings/creations.html:37
 msgid "Sort Order"
 msgstr "排序方式"
 
-#: flask/templates/overview/tabs/characters.html:25 flask/templates/settings/creations.html:40
+#: flask/templates/overview/tabs/characters.html:25 flask/templates/overview/tabs/lorebooks.html:26 flask/templates/overview/tabs/worldinfo.html:26 flask/templates/settings/creations.html:40
 msgid "Newest First"
 msgstr "最新优先"
 
@@ -2626,21 +2798,33 @@ msgstr "消息最多"
 msgid "Best Relationship"
 msgstr "关系最佳"
 
-#: flask/templates/overview/tabs/characters.html:32 flask/templates/settings/creations.html:28
+#: flask/templates/overview/tabs/characters.html:32 flask/templates/overview/tabs/lorebooks.html:15 flask/templates/overview/tabs/worldinfo.html:15 flask/templates/settings/creations.html:28
 msgid "Author"
 msgstr "作者"
 
-#: flask/templates/overview/tabs/characters.html:35 flask/templates/settings/creations.html:31
+#: flask/templates/overview/tabs/characters.html:35 flask/templates/overview/tabs/lorebooks.html:18 flask/templates/overview/tabs/worldinfo.html:18 flask/templates/settings/creations.html:31
 msgid "Only Mine (Creator)"
 msgstr "仅我的（创作者）"
 
-#: flask/templates/overview/tabs/characters.html:36 flask/templates/settings/creations.html:32
+#: flask/templates/overview/tabs/characters.html:36 flask/templates/overview/tabs/lorebooks.html:19 flask/templates/overview/tabs/worldinfo.html:19 flask/templates/settings/creations.html:32
 msgid "Collaborations"
 msgstr "协作作品"
 
-#: flask/templates/overview/tabs/lorebooks.html:6
-msgid "New Lorebook"
-msgstr "新建设定集"
+#: flask/templates/overview/tabs/lorebooks.html:8 flask/templates/overview/tabs/worldinfo.html:8
+msgid "All"
+msgstr ""
+
+#: flask/templates/overview/tabs/lorebooks.html:17
+msgid "All Lorebooks"
+msgstr ""
+
+#: flask/templates/overview/tabs/lorebooks.html:27 flask/templates/overview/tabs/worldinfo.html:27 flask/templates/settings/creations.html:39
+msgid "Name (A-Z)"
+msgstr "名称 (A-Z)"
+
+#: flask/templates/overview/tabs/worldinfo.html:17
+msgid "All Worlds"
+msgstr ""
 
 #: flask/templates/settings/account.html:8
 msgid "Creator Tag"
@@ -2682,6 +2866,18 @@ msgstr "语言"
 msgid "Language of the interface and displayed content translations."
 msgstr "界面语言以及显示内容的翻译语言。"
 
+#: flask/templates/settings/account.html:49
+msgid "Appearance"
+msgstr ""
+
+#: flask/templates/settings/account.html:49
+msgid "Visual background effects for your personal interface."
+msgstr ""
+
+#: flask/templates/settings/account.html:51
+msgid "Animated Ember Bokeh Background"
+msgstr ""
+
 #: flask/templates/settings/creations.html:4 flask/templates/settings/layout.html:24
 msgid "My Creations"
 msgstr "我的创作"
@@ -2709,10 +2905,6 @@ msgstr "角色"
 #: flask/templates/settings/creations.html:30
 msgid "All Works"
 msgstr "所有作品"
-
-#: flask/templates/settings/creations.html:39
-msgid "Name (A-Z)"
-msgstr "名称 (A-Z)"
 
 #: flask/templates/settings/creations.html:45
 msgid "Search"
@@ -2782,35 +2974,207 @@ msgstr "人设"
 msgid "Account"
 msgstr "账户"
 
+#: flask/templates/setup/first_boot.html:5
+msgid "First-Boot Wizard"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:13
+msgid "AImo First-Boot Wizard"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:15
+msgid "Configure the non-revocable initial administrator and your exclusive AI backend."
+msgstr ""
+
 #: flask/templates/setup/first_boot.html:18
 msgid "Setup steps"
 msgstr "设置步骤"
 
-#: flask/templates/worldinfo/detail.html:27
+#: flask/templates/setup/first_boot.html:21
+msgid "Administrator"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:25
+msgid "Select AI Backend"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:29
+msgid "Configure Backend"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:38
+msgid "1. Initial Administrator"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:41
+msgid "This first user permanently receives all system permissions and cannot be deleted or downgraded."
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:56
+msgid "Continue to Backend Selection"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:62
+msgid "2. Select AI Backend"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:65
+msgid "Exclusive choice:"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:65
+msgid "AImo supports either local Ollama or Google AI Cloud – parallel operation of both AI backends is not supported. You can switch this anytime later under Admin → Services & Models."
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:72
+msgid "Continue to Setup"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:79
+msgid "3. Configure Ollama"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:84
+msgid "Ollama Server URL (Required)"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:87
+msgid "Test Connection"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:94
+msgid "Setup Helper for Ollama: Recommended Models per Role"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:97
+msgid "Pull these 3 models on your Ollama server (AImo assigns task roles automatically):"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:107
+msgid "Unchecked"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:113
+msgid "Terminal commands to copy:"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:115
+msgid "Copy command:"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:122
+msgid "Customize Model Assignment per Role (Optional)"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:137
+msgid "Optional Additional Services"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:143 flask/templates/setup/first_boot.html:212
+msgid "ComfyUI URL"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:152 flask/templates/setup/first_boot.html:225
+msgid "SearXNG URL"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:163
+msgid "3. Configure Google AI Cloud"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:170
+msgid "Required"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:170
+msgid "Optional — Env fallback active"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:180
+msgid "Google AI Model Assignment (Text & Vision)"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:183
+msgid "Recommended Gemini models per role (populated with your available models after key verification):"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:200
+msgid "Choose whether scene images should be generated via Google AI (Gemini Image), a local ComfyUI server, or not at all:"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:220
+msgid "Choose whether future web searches should use Google Search Grounding, SearXNG, or no search:"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:233
+msgid "Back to Backend Selection"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:234
+msgid "Initialize & Launch System"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:246
+msgid "Configure Google AI"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:247
+msgid "Configure Ollama"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:250
+msgid "Checking connection"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:251
+msgid "Checking connection..."
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:252
+msgid "API key valid — {count} text/vision models and {img_count} image models available."
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:253
+msgid "Ollama reachable — {count} installed model(s) found."
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:254
+msgid "Connection failed."
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:255
+msgid "Connection error while testing backend."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:10
+msgid "WorldInfo:"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:31
 msgid "WorldInfo & Locations"
 msgstr "世界信息与地点"
 
-#: flask/templates/worldinfo/detail.html:32
+#: flask/templates/worldinfo/detail.html:36
 msgid "Locations & Backgrounds"
 msgstr "地点与背景"
 
-#: flask/templates/worldinfo/detail.html:53
+#: flask/templates/worldinfo/detail.html:56
 msgid "Really delete WorldInfo?"
 msgstr "确定要删除世界信息吗？"
 
-#: flask/templates/worldinfo/detail.html:54
+#: flask/templates/worldinfo/detail.html:57
 msgid "Read-only (External World)"
 msgstr "只读（外部世界）"
 
-#: flask/templates/worldinfo/detail.html:55
+#: flask/templates/worldinfo/detail.html:58
 msgid "Save WorldInfo"
 msgstr "保存世界信息"
 
-#: flask/templates/worldinfo/detail.html:69
+#: flask/templates/worldinfo/detail.html:70
 msgid "World Name"
 msgstr "世界名称"
 
-#: flask/templates/worldinfo/detail.html:70
+#: flask/templates/worldinfo/detail.html:71
 msgid "The name of the universe or setting. Included as primary world in the prompt context."
 msgstr "宇宙或设定的名称。作为主世界包含在提示词上下文中。"
 
@@ -2834,131 +3198,135 @@ msgstr "选择封面"
 msgid "Crop"
 msgstr "裁剪"
 
-#: flask/templates/worldinfo/detail.html:119
+#: flask/templates/worldinfo/detail.html:118
 msgid "World Backdrop (16:9)"
 msgstr "世界背景 (16:9)"
 
-#: flask/templates/worldinfo/detail.html:120
+#: flask/templates/worldinfo/detail.html:119
 msgid "Optional 16:9 chat background for this world. Overrides the System Backdrop when a location has no background image of its own (Priority: System → World → Location)."
 msgstr "此世界的可选 16:9 聊天背景。当地点没有自己的背景图片时覆盖系统背景（优先级：系统 → 世界 → 地点）。"
 
-#: flask/templates/worldinfo/detail.html:128
+#: flask/templates/worldinfo/detail.html:127
 msgid "No world backdrop set"
 msgstr "未设置世界背景"
 
-#: flask/templates/worldinfo/detail.html:129
+#: flask/templates/worldinfo/detail.html:128
 msgid "Uses System Backdrop unless a location defines its own background."
 msgstr "除非地点定义了自己的背景，否则使用系统背景。"
 
-#: flask/templates/worldinfo/detail.html:132
+#: flask/templates/worldinfo/detail.html:131
 msgid "Priority in chat: System → World → Location"
 msgstr "聊天中的优先级：系统 → 世界 → 地点"
 
-#: flask/templates/worldinfo/detail.html:141
+#: flask/templates/worldinfo/detail.html:139
 msgid "Linked Lorebook (Optional)"
 msgstr "关联世界书（可选）"
 
-#: flask/templates/worldinfo/detail.html:142
+#: flask/templates/worldinfo/detail.html:140
 msgid "An optional lorebook automatically included alongside character lorebooks in all chats using this world."
 msgstr "可选世界书，在所有使用此世界的聊天中与角色世界书一同自动包含。"
 
-#: flask/templates/worldinfo/detail.html:145
+#: flask/templates/worldinfo/detail.html:143
 msgid "No lorebook linked"
 msgstr "未关联世界书"
 
-#: flask/templates/worldinfo/detail.html:167
+#: flask/templates/worldinfo/detail.html:159
 msgid "New Location"
 msgstr "新建地点"
 
-#: flask/templates/worldinfo/detail.html:174 flask/templates/worldinfo/detail.html:177 flask/templates/worldinfo/detail.html:201
+#: flask/templates/worldinfo/detail.html:172
 msgid "This location is bound to"
 msgstr "此地点绑定至"
 
-#: flask/templates/worldinfo/detail.html:212
+#: flask/templates/worldinfo/detail.html:210
 msgid "Edit Location:"
 msgstr "编辑地点："
 
-#: flask/templates/worldinfo/detail.html:218 flask/templates/worldinfo/detail.html:361
+#: flask/templates/worldinfo/detail.html:216 flask/templates/worldinfo/detail.html:363
 msgid "Location Name"
 msgstr "地点名称"
 
-#: flask/templates/worldinfo/detail.html:219 flask/templates/worldinfo/detail.html:362
+#: flask/templates/worldinfo/detail.html:217 flask/templates/worldinfo/detail.html:364
 msgid "Name of the location (e.g. Old Library, Griffin Tavern)."
 msgstr "地点的名称（例如：古老图书馆、狮鹫酒馆）。"
 
-#: flask/templates/worldinfo/detail.html:232 flask/templates/worldinfo/detail.html:375
+#: flask/templates/worldinfo/detail.html:230 flask/templates/worldinfo/detail.html:377
 msgid "Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet)."
 msgstr "描述环境的逗号分隔关键词（例如：室内, 舒适, 安静）。"
 
-#: flask/templates/worldinfo/detail.html:234 flask/templates/worldinfo/detail.html:377
+#: flask/templates/worldinfo/detail.html:232 flask/templates/worldinfo/detail.html:379
 msgid "Extract Tags"
 msgstr "提取标签"
 
-#: flask/templates/worldinfo/detail.html:242 flask/templates/worldinfo/detail.html:385
+#: flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:387
 msgid "16:9 Background Image (PNG, JPG, WEBP)"
 msgstr "16:9 背景图片 (PNG, JPG, WEBP)"
 
-#: flask/templates/worldinfo/detail.html:243 flask/templates/worldinfo/detail.html:386
+#: flask/templates/worldinfo/detail.html:241 flask/templates/worldinfo/detail.html:388
 msgid "Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference."
 msgstr "用作聊天舞台背景和 ComfyUI 参考图的横向 16:9 图片。"
 
-#: flask/templates/worldinfo/detail.html:253 flask/templates/worldinfo/detail.html:396
+#: flask/templates/worldinfo/detail.html:251 flask/templates/worldinfo/detail.html:398
 msgid "No location backdrop set"
 msgstr "未设置地点背景"
 
-#: flask/templates/worldinfo/detail.html:254 flask/templates/worldinfo/detail.html:397
+#: flask/templates/worldinfo/detail.html:252 flask/templates/worldinfo/detail.html:399
 msgid "Uses World Backdrop or System Backdrop if none is set."
 msgstr "若未设置，则使用世界背景或系统背景。"
 
-#: flask/templates/worldinfo/detail.html:259 flask/templates/worldinfo/detail.html:401
+#: flask/templates/worldinfo/detail.html:257 flask/templates/worldinfo/detail.html:403
 msgid "Analyze & Describe Image"
 msgstr "分析并描述图片"
 
-#: flask/templates/worldinfo/detail.html:266 flask/templates/worldinfo/detail.html:408
+#: flask/templates/worldinfo/detail.html:264 flask/templates/worldinfo/detail.html:410
 msgid "Location Description"
 msgstr "地点描述"
 
-#: flask/templates/worldinfo/detail.html:267 flask/templates/worldinfo/detail.html:409
+#: flask/templates/worldinfo/detail.html:265 flask/templates/worldinfo/detail.html:411
 msgid "Atmospheric description of the environment, sounds, and mood."
 msgstr "关于环境、声音和氛围的描写。"
 
-#: flask/templates/worldinfo/detail.html:284 flask/templates/worldinfo/detail.html:426
+#: flask/templates/worldinfo/detail.html:282 flask/templates/worldinfo/detail.html:428
 msgid "Character Binding (Optional)"
 msgstr "角色绑定（可选）"
 
-#: flask/templates/worldinfo/detail.html:285 flask/templates/worldinfo/detail.html:427
+#: flask/templates/worldinfo/detail.html:283 flask/templates/worldinfo/detail.html:429
 msgid "If selected, this location can only be entered when chatting with that specific character."
 msgstr "如果选择，仅在与该特定角色聊天时才能进入此地点。"
 
-#: flask/templates/worldinfo/detail.html:288 flask/templates/worldinfo/detail.html:430
+#: flask/templates/worldinfo/detail.html:286 flask/templates/worldinfo/detail.html:432
 msgid "No character (Freely accessible)"
 msgstr "无角色限制（自由进入）"
 
-#: flask/templates/worldinfo/detail.html:298
+#: flask/templates/worldinfo/detail.html:296
 msgid "Assigned Location Events:"
 msgstr "已分配的地点事件："
 
-#: flask/templates/worldinfo/detail.html:303
+#: flask/templates/worldinfo/detail.html:301
 msgid "No specific location events assigned."
 msgstr "未分配特定地点事件。"
 
-#: flask/templates/worldinfo/detail.html:355
+#: flask/templates/worldinfo/detail.html:314
+msgid "Really delete this location?"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:357
 msgid "Create New Location"
 msgstr "创建新地点"
 
-#: flask/templates/worldinfo/detail.html:379
+#: flask/templates/worldinfo/detail.html:381
 msgid "tavern, forest, castle"
 msgstr "酒馆, 森林, 城堡"
 
-#: flask/templates/worldinfo/detail.html:441
+#: flask/templates/worldinfo/detail.html:443
 msgid "Save Location"
 msgstr "保存地点"
 
-#: flask/templates/worldinfo/detail.html:448
+#: flask/templates/worldinfo/detail.html:450
 msgid "Set 1:1 World Cover"
 msgstr "设置 1:1 世界封面"
 
-#: flask/templates/worldinfo/detail.html:448
+#: flask/templates/worldinfo/detail.html:450
 msgid "1:1 Cover"
 msgstr "1:1 封面"
 

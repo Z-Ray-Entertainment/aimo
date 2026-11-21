@@ -36,7 +36,7 @@
           {% if u.is_initial_admin %}
             {{ action_button(_("Protected"), icon="🔒", disabled=true, title=_("Initial administrator cannot be deleted")) }}
           {% else %}
-            <form method="POST" action="{{ url_for('admin.delete_user', user_id=u.id) }}" onsubmit="return confirm({{ _('Really delete user %(username)s?', username=u.username) | tojson | string | escape }});">
+            <form method="POST" action="{{ url_for('admin.delete_user', user_id=u.id) }}" data-confirm="{{ _('Really delete user %(username)s?', username=u.username) }}">
               {{ action_button(_("Delete"), type="submit", variant="danger", icon="🗑️") }}
             </form>
           {% endif %}

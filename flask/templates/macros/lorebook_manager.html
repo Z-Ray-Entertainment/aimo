@@ -201,30 +201,40 @@
 
     <!-- Lorebook Grid View (Exakt selbes Grid-Layout wie in Übersicht, Klick fügt direkt hinzu) -->
     <div style="overflow-y: auto; flex: 1; padding: 0.5rem 0 1rem 0;">
-      <div class="card-grid" id="{{ modal_id }}-grid">
+      <div class="aimo-card-grid" id="{{ modal_id }}-grid">
         {% for lb in available_lorebooks %}
-          <div class="card-tile lorebook-picker-card {% if lb.is_added %}already-added{% endif %}"
+          <div class="aimo-card-tile lorebook-picker-card {% if lb.is_added %}already-added{% endif %}"
                data-lorebook-id="{{ lb.id }}"
                data-lorebook-name="{{ lb.name|lower }}"
                data-lorebook-fullname="{{ lb.name }}"
                data-lorebook-desc="{{ lb.description or '' }}"
                data-lorebook-tags="{{ lb.tags|join(',') }}"
                data-lorebook-entries="{{ lb.entry_count }}"
-               style="padding: 1.25rem; justify-content: space-between;">
-            <div>
-              <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;"><span class="icon-mono">📜</span> {{ lb.name }}</h3>
-              <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">{{ lb.description }}</p>
-              <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
-                {% for tag in lb.tags %}
-                  {{ pill_badge("#" ~ tag, variant="outline") }}
-                {% endfor %}
+               style="background: radial-gradient(circle at center, rgba(42, 28, 19, 0.95), rgba(15, 10, 7, 0.98));">
+            {% if lb.description %}
+              <div class="aimo-card-scroll-overlay">
+                <strong style="color: var(--gold-accent); display: block; margin-bottom: 0.35rem;">{{ lb.name }}</strong>
+                <p style="margin: 0;">{{ lb.description }}</p>
               </div>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; font-size: 0.85rem;">
-              <span style="color: var(--text-muted);">{{ lb.entry_count }} {{ _("Entries") }}</span>
-              <span class="lorebook-picker-action-label" style="color: {% if lb.is_added %}var(--text-muted){% else %}var(--gold-accent){% endif %}; font-weight: 600;">
-                {% if lb.is_added %}✓ {{ _("Already active") }}{% else %}+ {{ _("Add") }}{% endif %}
-              </span>
+            {% endif %}
+            <div class="aimo-card-overlay"></div>
+            <div class="aimo-card-content">
+              <div class="aimo-card-header">
+                <div></div>
+                <span class="aimo-card-stat-pill lorebook-picker-action-label" style="color: {% if lb.is_added %}var(--text-muted){% else %}var(--gold-accent){% endif %};">
+                  {% if lb.is_added %}✓ {{ _("Already active") }}{% else %}+ {{ _("Add") }}{% endif %}
+                </span>
+              </div>
+              <div class="aimo-card-center-icon">📜</div>
+              <div class="aimo-card-footer">
+                <h3 class="aimo-card-title">{{ lb.name }}</h3>
+                <div class="aimo-card-stats">
+                  <span class="aimo-card-stat-pill">📜 {{ lb.entry_count }} {{ _("Entries") }}</span>
+                  {% for tag in lb.tags[:2] %}
+                    <span class="aimo-card-stat-pill">#{{ tag }}</span>
+                  {% endfor %}
+                </div>
+              </div>
             </div>
           </div>
         {% else %}

@@ -12,16 +12,16 @@ The WorldInfo Editor is organized in a two-column layout with a vertical sidebar
 - **Left Sidebar Navigation:**
   - **Sidebar Header:** Displays the world name and globe icon (`🗺️`).
   - **Vertical Navigation Menu:**
-    1. **📋 Basic Settings (`Grundeinstellungen`):** Title, 1:1 cover artwork, visibility, and bound world lorebooks.
-    2. **📍 Places (`Orte & Hintergründe`):** Gallery of all locations and 16:9 backgrounds (displays total count).
-    3. **🎲 Random Events (`Zufalls-Events`):** Configured random encounters and probabilities (displays total count).
-    4. **👥 Collaboration (`Kollaboration`):** Co-creator access management.
-  - **Sidebar Footer:** Quick return button (`← Zurück zur Übersicht`) to jump directly back to the world overview or creations grid.
+    1. **📋 Basic Settings:** Title, 1:1 cover artwork, 16:9 world backdrop, visibility, and bound world lorebook.
+    2. **📍 Locations & Backgrounds:** Square card gallery of all locations and 16:9 backgrounds (displays total count). Locked until basic settings are saved once when creating a new world.
+    3. **🎲 Random Events:** Configured random encounters and probabilities (displays total count). Locked until basic settings are saved once.
+    4. **👥 Collaboration:** Co-creator access management. Locked until basic settings are saved once.
+  - **Sidebar Footer:** Quick return button to jump directly back to the world overview or creations grid.
 - **Right Main Stage:**
   - **Header Bar:** Shows the world title, read-only status (for non-editable worlds), and action buttons:
-    - **Save (`💾 Speichern`):** Saves world settings and collaborator permissions.
-    - **Duplicate (`📄 Kopieren`):** Deep-clones the entire world setting — including all locations, 16:9 backgrounds, and random event pools — into an independent duplicate for the creator.
-    - **Delete (`🗑️ Löschen`):** Strictly reserved for the author and administrators.
+    - **Save (`💾`):** Single save action for world settings and collaborator permissions.
+    - **Copy (`📄`):** Deep-clones the entire world setting — including all locations, 16:9 backgrounds, and random event pools — into an independent duplicate for the creator.
+    - **Delete (`🗑️`):** Strictly reserved for the author and administrators, protected by a confirmation dialog.
 
 ---
 
@@ -34,7 +34,6 @@ The WorldInfo Editor is organized in a two-column layout with a vertical sidebar
 - **Bound Lorebook (Optional):** Creators can attach an encyclopedia ([Lorebook](lorebooks.md)) directly to the world.
   - Whenever a chat session is played in this world, this lorebook is automatically loaded as an active default lorebook.
   - Useful for overarching world lore, political factions, pantheons, and geography that apply to any character visiting this realm.
-- **Save Button (`💾 Speichern`):** Direct save trigger at the foot of the settings form.
 
 ---
 
@@ -43,9 +42,9 @@ The WorldInfo Editor is organized in a two-column layout with a vertical sidebar
 A gallery of all locales in this world:
 - First tile (`+`) to register a new place.
 - **Grid Overview & Locked Locations:**
-  - Each place is displayed as an atmospheric card tile (capsule) with its 16:9 preview and description snippet. Places with a background image also display a `🖼️` button in the upper-right corner of the preview to open the backdrop directly in the fullscreen Image Viewer.
-  - **Character Lock (`🔒`):** Locations bound to a specific character display a lock badge in the upper-left corner of the capsule and a character pill next to the title.
-  - **Hover Tooltip:** Hovering the mouse cursor over a locked capsule displays the tooltip: *"Dieser Ort ist an [Name] gebunden"*.
+  - Each place is displayed as a square card tile with its background artwork, tag pills, and hover description overlay. Places with a background image also display a `🖼️` button in the upper-right header to open the backdrop directly in the fullscreen Image Viewer.
+  - **Character Lock (`🔒`):** Locations bound to a specific character display a lock badge with the bound character's name in the upper-left card header.
+  - **Hover Tooltip:** Hovering over the lock badge displays *"This location is bound to [Name]"*.
 - **Location Overlay (Modal):**
   - **Name:** E.g., *"The Drunken Troll Tavern"*, *"Forgotten Glade"*.
   - **Tags:** Keywords for environment matching.

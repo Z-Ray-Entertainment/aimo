@@ -203,10 +203,53 @@
 {% macro worldinfo_grid(worldinfo_cards, can_create=false) %}
   {% call aimo_card_grid() %}
     {% if can_create %}
-      {{ new_button(_("New World"), modal="new-worldinfo-modal") }}
+      {{ new_button(_("New World"), href=url_for('worldinfo.new_worldinfo')) }}
     {% endif %}
     {% for item in worldinfo_cards %}
       {{ worldinfo_card(item) }}
+    {% endfor %}
+  {% endcall %}
+{% endmacro %}
+
+{# Lorebook Card for Hub Grid (1:1 Dark Frame, Visibility & Translation Badges, Center Icon, Stats Overlay) #}
+{% macro lorebook_card(item) %}
+  {% set lb = item.lorebook %}
+  {% set bg_style = "background: radial-gradient(circle at center, rgba(42, 28, 19, 0.95), rgba(15, 10, 7, 0.98));" %}
+  {% set detail_url = url_for('lorebooks.detail', lorebook_id=lb.id) %}
+  {% call aimo_card_container(detail_url, lb.name, bg_style, description=lb.description) %}
+    <div class="aimo-card-header">
+      <div style="flex: 1;"></div>
+      {% if item.translation_pending %}
+        {{ pill_badge(_("Translation pending"), icon="🌐", variant="dark", title=_("Translation into your language is pending"), extra_class="aimo-card-badge") }}
+      {% endif %}
+      {% if lb.visibility == 'public' %}
+        {{ pill_badge(_("Public"), icon="🌍", variant="dark", title=_("Public lorebook"), extra_class="aimo-card-badge") }}
+      {% else %}
+        {{ pill_badge(_("Private"), icon="🔒", variant="dark", title=_("Private lorebook"), extra_class="aimo-card-badge") }}
+      {% endif %}
+    </div>
+
+    <div class="aimo-card-center-icon">
+      📜
+    </div>
+
+    <div class="aimo-card-footer">
+      <h3 class="aimo-card-title">{{ lb.name }}</h3>
+      <div class="aimo-card-stats">
+        <span class="aimo-card-stat-pill">📜 {{ item.entry_count }} {{ _("Entries") }}</span>
+      </div>
+    </div>
+  {% endcall %}
+{% endmacro %}
+
+{# Unified Lorebook Grid View (Includes "Add Lorebook" tile & cards) #}
+{% macro lorebook_grid(lorebook_cards, can_create=false) %}
+  {% call aimo_card_grid() %}
+    {% if can_create %}
+      {{ new_button(_("New Lorebook"), href=url_for('lorebooks.new_lorebook')) }}
+    {% endif %}
+    {% for item in lorebook_cards %}
+      {{ lorebook_card(item) }}
     {% endfor %}
   {% endcall %}
 {% endmacro %}

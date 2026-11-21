@@ -84,7 +84,7 @@ async function deleteMessagesFrom(msgIdx) {
   const promptText = window.t(
     "Permanently delete this message and all subsequent messages (including associated memories)?"
   );
-  if (!confirm(promptText)) return;
+  if (!(await window.aimoConfirm({ message: promptText }))) return;
   const sessionId = getSessionId();
   const resp = await fetch(`/api/chat/${sessionId}/messages/${msgIdx}`, {
     method: "DELETE",

@@ -1,5 +1,6 @@
 {% extends "admin/layout.html" %}
 {% from "macros/buttons.html" import action_button %}
+{% from "macros/badges.html" import pill_badge %}
 {% from "macros/backdrop_selector.html" import backdrop_selector %}
 
 {% block admin_head %}
@@ -15,13 +16,9 @@
       </p>
       <div>
         {% if settings.default_backdrop_path %}
-          <span class="backdrop-meta-badge" title="{{ _('Custom backdrop is active') }}">
-            <span style="color: #4CAF50;">●</span> {{ _('Custom backdrop active') }}
-          </span>
+          {{ pill_badge(_('Custom backdrop active'), icon="●", variant="success", title=_('Custom backdrop is active')) }}
         {% else %}
-          <span class="backdrop-meta-badge" title="{{ _('Default RPG theme cover is active') }}" style="color: var(--text-muted); border-color: var(--border-wood-dark);">
-            <span>🕯️</span> {{ _('Default Theme (Cover)') }}
-          </span>
+          {{ pill_badge(_('Default Theme (Cover)'), icon="🕯️", variant="dark", title=_('Default RPG theme cover is active')) }}
         {% endif %}
       </div>
     </div>

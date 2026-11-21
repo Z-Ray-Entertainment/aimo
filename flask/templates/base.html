@@ -1,5 +1,6 @@
 {% from "macros/image_viewer.html" import image_viewer_overlay %}
 {% from "macros/ember_bokeh.html" import ember_bokeh_overlay %}
+{% from "macros/confirm_modal.html" import confirm_modal %}
 <!DOCTYPE html>
 <html lang="{{ ui_language | default('en') }}" dir="{{ ui_dir | default('ltr') }}">
 <head>
@@ -45,6 +46,7 @@
   <div id="aimo-toast-container" class="toast-container" aria-live="polite"></div>
 
   {{ image_viewer_overlay() }}
+  {{ confirm_modal() }}
 
   <script>
     window.AIMO_LANGUAGES = {{ aimo_languages | tojson }};

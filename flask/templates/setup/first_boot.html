@@ -2,7 +2,7 @@
 {% from "macros/buttons.html" import action_button %}
 {% from "macros/copy_field.html" import copy_field %}
 {% from "macros/backend_selector.html" import api_key_field, google_ai_steps_guide, image_gen_options, llm_backend_cards, search_options %}
-{% block title %}AImo — Erststart-Einrichtung (First-Boot Wizard){% endblock %}
+{% block title %}AImo — {{ _("First-Boot Wizard") }}{% endblock %}
 
 {% block extra_head %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin_setup.css') }}">
@@ -10,23 +10,23 @@
 
 {% block content %}
 <div class="aimo-frame" style="max-width: 720px; margin: 2rem auto; padding: 2rem;">
-  <h1 style="color: var(--gold-accent); margin-bottom: 0.45rem;">⚔️ AImo First-Boot Wizard</h1>
+  <h1 style="color: var(--gold-accent); margin-bottom: 0.45rem;">⚔️ {{ _("AImo First-Boot Wizard") }}</h1>
   <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.92rem;">
-    Richte den unentziehbaren initialen Administrator sowie dein exklusives KI-Backend ein.
+    {{ _("Configure the non-revocable initial administrator and your exclusive AI backend.") }}
   </p>
 
   <div class="aimo-wizard-stepper" id="setup-stepper" role="tablist" aria-label="{{ _('Setup steps') }}">
     <div class="aimo-wizard-step{% if form.active_step == 1 %} is-active{% elif form.active_step > 1 %} is-done{% endif %}" data-step-indicator="1">
       <span class="aimo-wizard-step-num">1</span>
-      <span>Administrator</span>
+      <span>{{ _("Administrator") }}</span>
     </div>
     <div class="aimo-wizard-step{% if form.active_step == 2 %} is-active{% elif form.active_step > 2 %} is-done{% endif %}" data-step-indicator="2">
       <span class="aimo-wizard-step-num">2</span>
-      <span>KI-Backend wählen</span>
+      <span>{{ _("Select AI Backend") }}</span>
     </div>
     <div class="aimo-wizard-step{% if form.active_step == 3 %} is-active{% endif %}" data-step-indicator="3">
       <span class="aimo-wizard-step-num">3</span>
-      <span id="stepper-step3-label">Backend einrichten</span>
+      <span id="stepper-step3-label">{{ _("Configure Backend") }}</span>
     </div>
   </div>
 
@@ -35,66 +35,66 @@
 
     <section class="wizard-step-pane{% if form.active_step == 1 %} active{% endif %}" data-step-pane="1">
       <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.35rem;">
-        1. Initialer Administrator
+        {{ _("1. Initial Administrator") }}
       </h3>
       <p style="color: var(--text-muted); font-size: 0.85rem;">
-        Dieser erste Benutzer erhält dauerhaft alle Systemberechtigungen und kann nicht gelöscht oder herabgestuft werden.
+        {{ _("This first user permanently receives all system permissions and cannot be deleted or downgraded.") }}
       </p>
       <div>
-        <label for="username">Benutzername *</label>
+        <label for="username">{{ _("Username") }} *</label>
         <input type="text" id="username" name="username" value="{{ form.username }}" required>
       </div>
       <div>
-        <label for="email">E-Mail-Adresse *</label>
+        <label for="email">{{ _("Email address") }} *</label>
         <input type="email" id="email" name="email" value="{{ form.email }}" required>
       </div>
       <div>
-        <label for="password">Passwort *</label>
+        <label for="password">{{ _("Password") }} *</label>
         <input type="password" id="password" name="password" required>
       </div>
       <div class="wizard-nav-bar" style="justify-content: flex-end;">
-        {{ action_button("Weiter zur Backend-Auswahl", arrow="right", onclick="goToSetupStep(2)") }}
+        {{ action_button(_("Continue to Backend Selection"), arrow="right", onclick="goToSetupStep(2)") }}
       </div>
     </section>
 
     <section class="wizard-step-pane{% if form.active_step == 2 %} active{% endif %}" data-step-pane="2">
       <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.35rem;">
-        2. KI-Backend auswählen
+        {{ _("2. Select AI Backend") }}
       </h3>
       <div class="backend-notice-banner">
-        <strong>Exklusive Wahl:</strong> AImo unterstützt entweder lokales <strong>Ollama</strong> oder <strong>Google AI Cloud</strong> – ein Parallelbetrieb beider KI-Backends ist nicht vorgesehen. Du kannst dies später jederzeit unter <em>Admin → Services &amp; Modelle</em> umstellen.
+        <strong>{{ _("Exclusive choice:") }}</strong> {{ _("AImo supports either local Ollama or Google AI Cloud – parallel operation of both AI backends is not supported. You can switch this anytime later under Admin → Services & Models.") }}
       </div>
 
       {{ llm_backend_cards(form.llm_backend, field_name="llm_backend", id_prefix="setup-backend") }}
 
       <div class="wizard-nav-bar">
-        {{ action_button("Zurück", arrow="left", onclick="goToSetupStep(1)") }}
-        {{ action_button("Weiter zur Einrichtung", arrow="right", onclick="goToSetupStep(3)") }}
+        {{ action_button(_("Back"), arrow="left", onclick="goToSetupStep(1)") }}
+        {{ action_button(_("Continue to Setup"), arrow="right", onclick="goToSetupStep(3)") }}
       </div>
     </section>
 
     <section class="wizard-step-pane{% if form.active_step == 3 %} active{% endif %}" data-step-pane="3">
       <div id="setup-step3-ollama" class="backend-panel" {% if form.llm_backend != 'ollama' %}hidden{% endif %}>
         <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.35rem;">
-          3. Ollama einrichten
+          {{ _("3. Configure Ollama") }}
         </h3>
 
         <div style="display: flex; flex-direction: column; gap: 0.9rem;">
           <div>
-            <label for="setup-ollama-url">Ollama Server-URL (Pflichtfeld) *</label>
+            <label for="setup-ollama-url">{{ _("Ollama Server URL (Required)") }} *</label>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
               <input type="url" id="setup-ollama-url" name="ollama_url" value="{{ form.ollama_url }}" required style="flex: 1 1 auto;">
-              {{ action_button("Verbindung prüfen", icon="🔌", id="verify-ollama-btn", onclick="verifySetupBackend('ollama')") }}
+              {{ action_button(_("Test Connection"), icon="🔌", id="verify-ollama-btn", onclick="verifySetupBackend('ollama')") }}
             </div>
             <div id="setup-ollama-status" class="backend-status-line"></div>
           </div>
 
           <div class="setup-helper-box">
             <div style="color: var(--gold-accent); font-size: 0.9rem; font-weight: 700;">
-              <span class="icon-mono">🧙‍♂️</span> Setup-Helper für Ollama: Empfohlene Modelle pro Rolle
+              <span class="icon-mono">🧙‍♂️</span> {{ _("Setup Helper for Ollama: Recommended Models per Role") }}
             </div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">
-              Lade diese 3 Modelle auf deinem Ollama-Server (AImo weist die Aufgabenrollen automatisch zu):
+              {{ _("Pull these 3 models on your Ollama server (AImo assigns task roles automatically):") }}
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 0.45rem;" id="setup-ollama-role-cards">
@@ -104,22 +104,22 @@
                     <strong>{{ info.role_name }}</strong>
                     <code style="color: var(--gold-accent); font-size: 0.76rem;">{{ info.model }}</code>
                   </div>
-                  <span class="ollama-model-check-badge" style="font-size: 0.75rem; color: var(--text-muted);">Ungeprüft</span>
+                  <span class="ollama-model-check-badge" style="font-size: 0.75rem; color: var(--text-muted);">{{ _("Unchecked") }}</span>
                 </div>
               {% endfor %}
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.25rem;">
-              <span style="font-size: 0.78rem; color: var(--text-muted);">Terminal-Befehle zum Kopieren:</span>
+              <span style="font-size: 0.78rem; color: var(--text-muted);">{{ _("Terminal commands to copy:") }}</span>
               {% for m in ollama_unique_models %}
-                {{ copy_field("ollama pull " ~ m, "Befehl kopieren: ollama pull " ~ m) }}
+                {{ copy_field("ollama pull " ~ m, _("Copy command:") ~ " ollama pull " ~ m) }}
               {% endfor %}
             </div>
           </div>
 
           <details class="setup-helper-box">
             <summary style="cursor: pointer; color: var(--gold-accent); font-size: 0.88rem; font-weight: 600;">
-              Modell-Zuweisung pro Rolle anpassen (Optional)
+              {{ _("Customize Model Assignment per Role (Optional)") }}
             </summary>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; margin-top: 0.6rem;">
               {% for role_key, info in ollama_recommended.items() %}
@@ -134,22 +134,22 @@
           </details>
 
           <div class="aimo-form-section">
-            <h3>Optionale Zusatz-Services</h3>
+            <h3>{{ _("Optional Additional Services") }}</h3>
             <div style="display: flex; flex-direction: column; gap: 0.85rem;">
               <div>
-                <label style="margin-bottom: 0.45rem; display: block;">Bildgenerierung (Szenenbilder im Chat)</label>
+                <label style="margin-bottom: 0.45rem; display: block;">{{ _("Image Generation (Scene images in chat)") }}</label>
                 {{ image_gen_options('disabled', allow_google=false, id_prefix="setup-ollama-img", disable_providers=true) }}
                 <div class="conditional-service-box" id="setup-ollama-comfy-box" style="margin-top: 0.6rem;" hidden>
-                  <label for="setup-ollama-comfyui-url">ComfyUI URL *</label>
+                  <label for="setup-ollama-comfyui-url">{{ _("ComfyUI URL") }} *</label>
                   <input type="url" id="setup-ollama-comfyui-url" name="comfyui_url" value="{{ form.comfyui_url }}">
                 </div>
               </div>
 
               <div>
-                <label style="margin-bottom: 0.45rem; display: block;">Websuche (Vorbereitet)</label>
+                <label style="margin-bottom: 0.45rem; display: block;">{{ _("Web Search (Prepared)") }}</label>
                 {{ search_options('disabled', allow_google=false, id_prefix="setup-ollama-search", disable_providers=true) }}
                 <div class="conditional-service-box" id="setup-ollama-searxng-box" style="margin-top: 0.6rem;" hidden>
-                  <label for="setup-ollama-searxng-url">SearXNG URL *</label>
+                  <label for="setup-ollama-searxng-url">{{ _("SearXNG URL") }} *</label>
                   <input type="url" id="setup-ollama-searxng-url" name="searxng_url" value="{{ form.searxng_url }}">
                 </div>
               </div>
@@ -160,27 +160,27 @@
 
       <div id="setup-step3-google_ai" class="backend-panel" {% if form.llm_backend != 'google_ai' %}hidden{% endif %}>
         <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.35rem;">
-          3. Google AI Cloud einrichten
+          {{ _("3. Configure Google AI Cloud") }}
         </h3>
 
         <div style="display: flex; flex-direction: column; gap: 0.95rem;">
           {{ google_ai_steps_guide() }}
 
           <div>
-            <label for="setup-google-api-key">Google AI API-Key {% if not has_env_google_key %}(Pflichtfeld) *{% else %}(Optional — Env-Fallback aktiv){% endif %}</label>
+            <label for="setup-google-api-key">{{ _("Google AI API Key") }} {% if not has_env_google_key %}({{ _("Required") }}) *{% else %}({{ _("Optional — Env fallback active") }}){% endif %}</label>
             {{ api_key_field("setup-google-api-key", name="google_ai_api_key", has_existing=has_env_google_key, masked_hint=env_google_key_hint, required=(not has_env_google_key)) }}
             <div style="margin-top: 0.5rem;">
-              {{ action_button("API-Key & Modelle prüfen", icon="🔌", id="verify-google-btn", onclick="verifySetupBackend('google_ai')") }}
+              {{ action_button(_("Test API Key & Models"), icon="🔌", id="verify-google-btn", onclick="verifySetupBackend('google_ai')") }}
             </div>
             <div id="setup-google_ai-status" class="backend-status-line"></div>
           </div>
 
           <details class="setup-helper-box" open>
             <summary style="cursor: pointer; color: var(--gold-accent); font-size: 0.9rem; font-weight: 700;">
-              ✨ Google AI Modell-Zuweisung (Text &amp; Vision)
+              ✨ {{ _("Google AI Model Assignment (Text & Vision)") }}
             </summary>
             <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem;">
-              Empfohlene Gemini-Modelle pro Rolle (werden nach Key-Prüfung mit deinen verfügbaren Modellen ergänzt):
+              {{ _("Recommended Gemini models per role (populated with your available models after key verification):") }}
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; margin-top: 0.65rem;">
               {% for role_key, info in google_recommended.items() %}
@@ -195,34 +195,34 @@
           </details>
 
           <div class="aimo-form-section">
-            <h3>Bildgenerierung (Szenenbilder im Chat)</h3>
+            <h3>{{ _("Image Generation (Scene images in chat)") }}</h3>
             <p style="font-size: 0.81rem; color: var(--text-muted); margin-bottom: 0.6rem;">
-              Wähle, ob Szenenbilder über Google AI (Gemini Image), einen lokalen ComfyUI-Server oder gar nicht erzeugt werden sollen:
+              {{ _("Choose whether scene images should be generated via Google AI (Gemini Image), a local ComfyUI server, or not at all:") }}
             </p>
             {{ image_gen_options('disabled', allow_google=true, id_prefix="setup-google-img", disable_providers=true) }}
 
             <div class="conditional-service-box" id="setup-google-image-model-box" style="margin-top: 0.65rem;" hidden>
-              <label for="setup-google-image-model">Google AI Bild-Modell *</label>
+              <label for="setup-google-image-model">{{ _("Google AI Image Model") }} *</label>
               <select id="setup-google-image-model" name="google_ai_image_model">
                 <option value="{{ recommended_google_image_model }}" selected>{{ recommended_google_image_model }}</option>
               </select>
             </div>
 
             <div class="conditional-service-box" id="setup-google-comfy-box" style="margin-top: 0.65rem;" hidden>
-              <label for="setup-google-comfyui-url">ComfyUI URL *</label>
+              <label for="setup-google-comfyui-url">{{ _("ComfyUI URL") }} *</label>
               <input type="url" id="setup-google-comfyui-url" name="comfyui_url" value="{{ form.comfyui_url }}">
             </div>
           </div>
 
           <div class="aimo-form-section">
-            <h3>Websuche (Vorbereitet)</h3>
+            <h3>{{ _("Web Search (Prepared)") }}</h3>
             <p style="font-size: 0.81rem; color: var(--text-muted); margin-bottom: 0.6rem;">
-              Wähle, ob für künftige Websuchen Google Search Grounding, SearXNG oder keine Suche verwendet werden soll:
+              {{ _("Choose whether future web searches should use Google Search Grounding, SearXNG, or no search:") }}
             </p>
             {{ search_options('disabled', allow_google=true, id_prefix="setup-google-search", disable_providers=true) }}
 
             <div class="conditional-service-box" id="setup-google-searxng-box" style="margin-top: 0.65rem;" hidden>
-              <label for="setup-google-searxng-url">SearXNG URL *</label>
+              <label for="setup-google-searxng-url">{{ _("SearXNG URL") }} *</label>
               <input type="url" id="setup-google-searxng-url" name="searxng_url" value="{{ form.searxng_url }}">
             </div>
           </div>
@@ -230,8 +230,8 @@
       </div>
 
       <div class="wizard-nav-bar">
-        {{ action_button("Zurück zur Backend-Auswahl", arrow="left", onclick="goToSetupStep(2)") }}
-        {{ action_button("System initialisieren & Starten", type="submit", icon="✨", size="lg") }}
+        {{ action_button(_("Back to Backend Selection"), arrow="left", onclick="goToSetupStep(2)") }}
+        {{ action_button(_("Initialize & Launch System"), type="submit", icon="✨", size="lg") }}
       </div>
     </section>
   </form>
@@ -242,6 +242,18 @@
 <script>
   const SETUP_RECOMMENDED = {{ recommended_by_backend|tojson }};
   const SETUP_DEFAULT_IMG_MODEL = {{ recommended_google_image_model|tojson }};
+  const SETUP_I18N = {
+    configureGoogle: {{ _("Configure Google AI") | tojson }},
+    configureOllama: {{ _("Configure Ollama") | tojson }},
+    ready: {{ _("Ready") | tojson }},
+    missing: {{ _("Missing") | tojson }},
+    checkingConn: {{ _("Checking connection") | tojson }},
+    checkingConnDot: {{ _("Checking connection...") | tojson }},
+    googleValid: {{ _("API key valid — {count} text/vision models and {img_count} image models available.") | tojson }},
+    ollamaReachable: {{ _("Ollama reachable — {count} installed model(s) found.") | tojson }},
+    connFailed: {{ _("Connection failed.") | tojson }},
+    connError: {{ _("Connection error while testing backend.") | tojson }}
+  };
   let currentStep = {{ form.active_step }};
 
   function getSelectedBackend() {
@@ -293,7 +305,7 @@
     });
 
     if (step3Label) {
-      step3Label.textContent = backend === "google_ai" ? "Google AI einrichten" : "Ollama einrichten";
+      step3Label.textContent = backend === "google_ai" ? SETUP_I18N.configureGoogle : SETUP_I18N.configureOllama;
     }
     syncConditionalSubservices(backend);
   }
@@ -404,10 +416,10 @@
         if (!badge) return;
         if (installedSet.has(targetModel)) {
           badge.style.color = "#58D68D";
-          badge.textContent = "✔ Bereit";
+          badge.textContent = `✔ ${SETUP_I18N.ready}`;
         } else {
           badge.style.color = "#F5B041";
-          badge.textContent = "⏳ Fehlt";
+          badge.textContent = `⏳ ${SETUP_I18N.missing}`;
         }
       });
     }
@@ -419,10 +431,10 @@
     const ollamaUrl = document.getElementById("setup-ollama-url")?.value?.trim() || "";
     const apiKey = document.getElementById("setup-google-api-key")?.value?.trim() || "";
 
-    const origHtml = window.setButtonLoading ? window.setButtonLoading(btn, "Prüfe Verbindung") : null;
+    const origHtml = window.setButtonLoading ? window.setButtonLoading(btn, SETUP_I18N.checkingConn) : null;
     if (statusEl) {
       statusEl.className = "backend-status-line is-warn";
-      statusEl.textContent = "⏳ Verbindung wird geprüft...";
+      statusEl.textContent = `⏳ ${SETUP_I18N.checkingConnDot}`;
     }
 
     try {
@@ -442,20 +454,20 @@
           statusEl.className = "backend-status-line is-ok";
           statusEl.textContent =
             backend === "google_ai"
-              ? `✓ API-Key gültig — ${count} Text-/Vision-Modelle und ${(data.image_models || []).length} Bildmodelle verfügbar.`
-              : `✓ Ollama erreichbar — ${count} installierte(s) Modell(e) gefunden.`;
+              ? `✓ ${SETUP_I18N.googleValid.replace("{count}", count).replace("{img_count}", (data.image_models || []).length)}`
+              : `✓ ${SETUP_I18N.ollamaReachable.replace("{count}", count)}`;
         }
         populateSetupSelectOptions(backend, data.models || [], data.image_models || []);
       } else {
         if (statusEl) {
           statusEl.className = "backend-status-line is-err";
-          statusEl.textContent = `✕ ${data.error || "Verbindung fehlgeschlagen."}`;
+          statusEl.textContent = `✕ ${data.error || SETUP_I18N.connFailed}`;
         }
       }
     } catch (_) {
       if (statusEl) {
         statusEl.className = "backend-status-line is-err";
-        statusEl.textContent = "✕ Verbindungsfehler beim Testen des Backends.";
+        statusEl.textContent = `✕ ${SETUP_I18N.connError}`;
       }
     } finally {
       if (window.resetButtonLoading && origHtml !== null) {

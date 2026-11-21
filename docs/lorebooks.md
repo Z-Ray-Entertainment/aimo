@@ -12,15 +12,15 @@ The Lorebook editor is organized into a clean two-column layout with a vertical 
 - **Left Sidebar Navigation:**
   - **Sidebar Header:** Displays the lorebook name and book icon (`📖`).
   - **Vertical Navigation Menu:**
-    1. **📋 Basic Settings (`Grundeinstellungen`):** Title, visibility, and compendium overview description.
-    2. **📜 Entries (`Einträge`):** Interactive card grid of all knowledge entries (displays total count).
-    3. **👥 Collaboration (`Kollaboration`):** Co-creator access management.
-  - **Sidebar Footer:** Quick return button (`← Zurück zur Übersicht`) to jump back directly to the lorebook library or creations grid.
+    1. **📋 Basic Settings:** Title, visibility, and compendium overview description.
+    2. **📜 Entries:** Square card grid of all knowledge entries (displays total count). When creating a new lorebook, this tab remains locked until basic settings are saved once.
+    3. **👥 Collaboration:** Co-creator access management. Also locked until basic settings are saved once.
+  - **Sidebar Footer:** Quick return button to jump back directly to the lorebook library or creations grid.
 - **Right Main Stage:**
   - **Header Bar:** Shows the lorebook title, read-only status (for non-editable lorebooks), and action buttons:
-    - **Save (`💾 Speichern`):** Saves all basic settings and collaborator tags.
-    - **Duplicate (`📄 Kopieren`):** Allows any creator to clone any visible lorebook and its complete entries into their own private collection.
-    - **Delete (`🗑️ Löschen`):** Strictly reserved for the author and all administrators.
+    - **Save (`💾`):** Single save action for the lorebook settings and collaborator tags.
+    - **Copy (`📄`):** Allows any creator to clone any visible lorebook and its complete entries into their own private collection.
+    - **Delete (`🗑️`):** Strictly reserved for the author and all administrators, protected by a confirmation dialog.
 
 ---
 
@@ -33,16 +33,17 @@ The Lorebook editor is organized into a clean two-column layout with a vertical 
 
 ---
 
-## 📜 2. Entries (`📜 Einträge`)
+## 📜 2. Entries
 - **Tile Overview:**
   - **First Tile (`+`):** Opens a modal to author a new lorebook entry.
-  - **Entry Tiles:** Display entry title, linked tags, and a short snippet preview. Clicking a tile opens the editor modal.
+  - **Entry Tiles:** Display entry title and privacy badge (`🔒`) in a uniform square card layout; hovering reveals the full prose text overlay. Clicking a tile opens the editor modal.
 - **Entry Editor (Modal Dialog):**
   - **Title:** E.g., *"The Order of Shadow Mages"*.
   - **Visibility (Top Right):** Eye icon toggle button at the top right of the dialog switching between **Public** (open eye, readable in library) and **Private** (closed eye, secret lore / spoiler protection). Hovering displays the active visibility mode.
   - **Tags (Keywords):** Comma-separated list of keywords for Vectorless Tag-RAG.
-  - **AI Tag Suggestion (`✨ Tags vorschlagen`):** Automatically infers relevant keywords from title and content.
+  - **AI Tag Suggestion (`✨`):** Automatically infers relevant keywords from title and content.
   - **Prose Content:** The factual knowledge text injected into the LLM context when triggered.
+  - **Delete (`🗑️`):** Removes the entry after confirmation via the confirmation dialog.
 
 ---
 

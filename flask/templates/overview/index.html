@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}AImo — Hub-Dashboard{% endblock %}
+{% block title %}AImo — {{ _("Hub Dashboard") }}{% endblock %}
 
 {% block extra_head %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/components/cards.css') }}">
@@ -17,7 +17,4 @@
   {% include "overview/tabs/lorebooks.html" %}
   {% include "overview/tabs/worldinfo.html" %}
 </div>
-
-{% include "overview/modals/new_lorebook.html" %}
-{% include "overview/modals/new_worldinfo.html" %}
 {% endblock %}

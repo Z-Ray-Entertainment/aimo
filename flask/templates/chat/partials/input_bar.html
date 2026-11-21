@@ -17,7 +17,7 @@
           {{ menu_item(_('Sessions'), icon='💬', modal='chat-sessions-modal') }}
           {{ menu_item(_('Start new chat'), icon='➕', href=url_for('chat.new_character_chat', character_id=character.id, configure=1)) }}
           <div class="chat-menu-dropdown-divider"></div>
-          {{ menu_item(_('Delete chat'), icon='🗑️', danger=true, onclick="if (confirm('" ~ _('Do you really want to permanently delete this chat?') ~ "')) { document.getElementById('delete-current-chat-form').submit(); }") }}
+          {{ menu_item(_('Delete chat'), icon='🗑️', danger=true, data={'confirm': _('Do you really want to permanently delete this chat?'), 'confirm-submit-form': 'delete-current-chat-form'}) }}
         </div>
       </div>
 

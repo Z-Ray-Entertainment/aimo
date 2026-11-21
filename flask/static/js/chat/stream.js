@@ -89,12 +89,12 @@ export class AimoChatStream {
     }
 
     const tile = document.createElement("div");
-    tile.className = "card-tile";
-    tile.style.minHeight = "180px";
+    tile.className = "aimo-card-tile";
+    tile.style.backgroundImage = `url('${encodeURI(imgUrl)}')`;
     if (mediaKey) {
       tile.setAttribute("data-media-path", mediaKey);
     }
-    tile.innerHTML = `<img src="${escapeHtml(imgUrl)}" alt="Chat Media" style="width: 100%; height: 100%; object-fit: cover;">`;
+    tile.innerHTML = `<img src="${escapeHtml(imgUrl)}" alt="Chat Media" style="display: none;">`;
     grid.appendChild(tile);
     return tile;
   }
@@ -947,7 +947,7 @@ export class AimoChatStream {
 
   openGridGallery(gridEl, clickedTile) {
     if (!window.AimoImageViewer || !gridEl || !clickedTile) return;
-    const tiles = Array.from(gridEl.querySelectorAll(".card-tile"));
+    const tiles = Array.from(gridEl.querySelectorAll(".aimo-card-tile"));
     const items = [];
     let startIndex = 0;
 
@@ -1028,7 +1028,7 @@ export class AimoChatStream {
     const unlockedGrid = document.getElementById("unlocked-gallery-grid");
     if (unlockedGrid) {
       unlockedGrid.addEventListener("click", (e) => {
-        const tile = e.target instanceof Element ? e.target.closest(".card-tile") : null;
+        const tile = e.target instanceof Element ? e.target.closest(".aimo-card-tile") : null;
         if (tile) this.openGridGallery(unlockedGrid, tile);
       });
     }
@@ -1036,7 +1036,7 @@ export class AimoChatStream {
     const sessionMediaGrid = document.getElementById("session-media-grid");
     if (sessionMediaGrid) {
       sessionMediaGrid.addEventListener("click", (e) => {
-        const tile = e.target instanceof Element ? e.target.closest(".card-tile") : null;
+        const tile = e.target instanceof Element ? e.target.closest(".aimo-card-tile") : null;
         if (tile) this.openGridGallery(sessionMediaGrid, tile);
       });
     }

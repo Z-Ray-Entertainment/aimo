@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button, new_button, tab_button, modal_close_button, visibility_toggle %}
 {% from "macros/badges.html" import pill_badge %}
+{% from "macros/cards.html" import aimo_card_grid, aimo_card_container %}
 {% from "macros/editor_header.html" import editor_header %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
 {% from "macros/collaboration.html" import collaboration_manager %}
 {% from "macros/event_manager.html" import event_editor %}
 {% from "macros/backdrop_selector.html" import backdrop_selector %}
-{% block title %}AImo — WorldInfo: {{ worldinfo.name }}{% endblock %}
+{% block title %}AImo — {{ (_("WorldInfo:") ~ " " ~ worldinfo.name) if worldinfo else _("New World") }}{% endblock %}
 
 {% block extra_head %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/components/cards.css') }}">
@@ -16,22 +17,25 @@
 {% endblock %}
 
 {% block content %}
+{% set eff_name = worldinfo.name if worldinfo else (form_data.name if form_data is defined else '') %}
+{% set eff_vis = worldinfo.visibility if worldinfo else (form_data.visibility if form_data is defined else 'private') %}
+{% set eff_lb_id = worldinfo.lorebook_id if worldinfo else (form_data.lorebook_id if form_data is defined else none) %}
+{% set eff_proper = worldinfo.is_proper_noun if worldinfo else (form_data.is_proper_noun if form_data is defined else false) %}
 <div class="aimo-sidebar-layout" data-tab-group>
-  <!-- Vertikale Seitenleiste links -->
   <aside class="aimo-frame aimo-sidebar">
     <div class="aimo-sidebar-header">
       <div class="aimo-sidebar-title">
         <span class="icon-mono">🗺️</span>
-        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ worldinfo.name }}</span>
+        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ worldinfo.name if worldinfo else _("New World") }}</span>
       </div>
       <p class="aimo-sidebar-subtitle">{{ _("WorldInfo & Locations") }}</p>
     </div>
 
     <nav class="aimo-sidebar-nav">
       {{ tab_button(_("Basic Settings"), "tab-info", icon="📋", active=((active_tab|default('info')) == 'info'), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button(_("Locations & Backgrounds"), "tab-places", icon="📍", active=(active_tab == 'places'), count=(locations|length), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button(_("Random Events"), "tab-events", icon="🎲", active=(active_tab == 'events'), count=(events|length), extra_class="aimo-sidebar-nav-item") }}
-      {{ tab_button(_("Collaboration"), "tab-collab", icon="👥", active=(active_tab == 'collab'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Locations & Backgrounds"), "tab-places", icon="📍", active=(active_tab == 'places'), count=(locations|length if worldinfo else none), disabled=(not worldinfo), title=(_("Please save basic info first") if not worldinfo else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Random Events"), "tab-events", icon="🎲", active=(active_tab == 'events'), count=(events|length if worldinfo else none), disabled=(not worldinfo), title=(_("Please save basic info first") if not worldinfo else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Collaboration"), "tab-collab", icon="👥", active=(active_tab == 'collab'), disabled=(not worldinfo), title=(_("Please save basic info first") if not worldinfo else none), extra_class="aimo-sidebar-nav-item") }}
     </nav>
 
     <div class="aimo-sidebar-footer">
@@ -39,39 +43,36 @@
     </div>
   </aside>
 
-  <!-- Rechter Hauptbereich für Inhalte -->
   <section class="aimo-sidebar-stage">
     {{ editor_header(
-        title=worldinfo.name,
+        title=worldinfo.name if worldinfo else _("New World"),
         back_url=get_safe_back_url(url_for('overview.index', tab='worldinfo')),
         form_id="worldinfo-meta-form",
         is_editable=is_editable,
-        copy_url=url_for('worldinfo.duplicate_worldinfo', worldinfo_id=worldinfo.id),
-        can_copy=has_perm('worldinfo_create'),
-        delete_url=url_for('worldinfo.delete_worldinfo', worldinfo_id=worldinfo.id),
-        can_delete=(has_perm('worldinfo_delete') and is_author),
+        copy_url=(url_for('worldinfo.duplicate_worldinfo', worldinfo_id=worldinfo.id) if worldinfo else none),
+        can_copy=(worldinfo is not none and has_perm('worldinfo_create')),
+        delete_url=(url_for('worldinfo.delete_worldinfo', worldinfo_id=worldinfo.id) if worldinfo else none),
+        can_delete=(worldinfo is not none and has_perm('worldinfo_delete') and is_author),
         delete_confirm_msg=_("Really delete WorldInfo?"),
         readonly_badge_text=_("Read-only (External World)"),
         save_title=_("Save WorldInfo"),
         show_back=false
     ) }}
 
-  <!-- TAB 1: Grundeinstellungen -->
   <section id="tab-info" class="tab-pane {% if (active_tab|default('info')) == 'info' %}active{% endif %}">
-    <form id="worldinfo-meta-form" method="POST" action="{{ url_for('worldinfo.detail', worldinfo_id=worldinfo.id) }}" enctype="multipart/form-data">
+    <form id="worldinfo-meta-form" method="POST" action="{% if worldinfo %}{{ url_for('worldinfo.detail', worldinfo_id=worldinfo.id) }}{% else %}{{ url_for('worldinfo.new_worldinfo') }}{% endif %}" enctype="multipart/form-data">
       <input type="hidden" name="return_to" value="{{ get_safe_back_url(url_for('overview.index', tab='worldinfo')) }}">
       <input type="hidden" name="active_tab" value="{{ active_tab }}">
       <div class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem;">
-        <!-- Welt-Name & Sichtbarkeit -->
         <div class="editor-settings-top-row">
           <div class="editor-settings-top-main">
             <label style="font-weight: 600;">
               {{ _("World Name") }} *
               <span class="field-help-btn" title="{{ _('The name of the universe or setting. Included as primary world in the prompt context.') }}">?</span>
             </label>
-            <input type="text" name="name" value="{{ worldinfo.name }}" required style="width: 100%; font-size: 1rem; font-weight: 700;" {% if not is_editable %}disabled readonly{% endif %}>
+            <input type="text" name="name" value="{{ eff_name }}" required style="width: 100%; font-size: 1rem; font-weight: 700;" {% if not is_editable %}disabled readonly{% endif %}>
             <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.4rem; font-size: 0.85rem; color: var(--text-muted); cursor: pointer;">
-              <input type="checkbox" name="is_proper_noun" value="1" {% if worldinfo.is_proper_noun %}checked{% endif %} {% if not is_editable %}disabled{% endif %}>
+              <input type="checkbox" name="is_proper_noun" value="1" {% if eff_proper %}checked{% endif %} {% if not is_editable %}disabled{% endif %}>
               <span>{{ _("Proper Noun (Do not translate)") }}</span>
             </label>
           </div>
@@ -80,11 +81,10 @@
             <label style="font-weight: 600;">
               {{ _("Visibility") }}
             </label>
-            {{ visibility_toggle(value=worldinfo.visibility, disabled=not is_editable) }}
+            {{ visibility_toggle(value=eff_vis, disabled=not is_editable) }}
           </div>
         </div>
 
-        <!-- 1:1 Cover Image & Vorschau -->
         <div>
           <label style="font-weight: 600;">
             {{ _("Cover Image (1:1)") }}
@@ -92,9 +92,9 @@
           </label>
           <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
             <div id="worldinfo-cover-preview-wrap" style="width: 80px; height: 80px; border-radius: 12px; border: 2px solid var(--gold-accent); overflow: hidden; background: rgba(15, 11, 8, 0.9); display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="{{ _('1:1 World Cover') }}">
-              <img id="worldinfo-cover-preview-img" src="{% if worldinfo.cover_image_path %}{{ url_for('uploaded_file', filename=worldinfo.cover_image_path) }}{% endif %}" alt="Cover" style="{% if not worldinfo.cover_image_path %}display: none;{% endif %} width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; document.getElementById('worldinfo-cover-placeholder-icon').style.display='flex';">
-              <div id="worldinfo-cover-placeholder-icon" style="{% if worldinfo.cover_image_path %}display: none;{% else %}display: flex;{% endif %} align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 2.5rem; user-select: none;">
-                {{ worldinfo.icon or '🌐' }}
+              <img id="worldinfo-cover-preview-img" src="{% if worldinfo and worldinfo.cover_image_path %}{{ url_for('uploaded_file', filename=worldinfo.cover_image_path) }}{% endif %}" alt="Cover" style="{% if not (worldinfo and worldinfo.cover_image_path) %}display: none;{% endif %} width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; document.getElementById('worldinfo-cover-placeholder-icon').style.display='flex';">
+              <div id="worldinfo-cover-placeholder-icon" style="{% if worldinfo and worldinfo.cover_image_path %}display: none;{% else %}display: flex;{% endif %} align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 2.5rem; user-select: none;">
+                {{ (worldinfo.icon if worldinfo else none) or '🌐' }}
               </div>
             </div>
 
@@ -105,7 +105,7 @@
                   <label for="worldinfo-cover-input" class="aimo-btn" style="cursor: pointer; margin-bottom: 0; text-align: center;">
                     <span class="icon-mono">📷</span> {{ _("Choose Cover") }}
                   </label>
-                  {{ action_button(_("Crop"), icon="✂️", id="open-worldinfo-crop-btn", disabled=(not worldinfo.cover_image_path)) }}
+                  {{ action_button(_("Crop"), icon="✂️", id="open-worldinfo-crop-btn", disabled=(not (worldinfo and worldinfo.cover_image_path))) }}
                 </div>
                 <span id="worldinfo-cover-crop-badge" style="display: none; font-size: 0.78rem; color: #4CAF50; font-weight: 600;">✓ {{ _("1:1 Cover active") }}</span>
               </div>
@@ -113,7 +113,6 @@
           </div>
         </div>
 
-        <!-- 16:9 World Backdrop & Vorschau -->
         <div>
           <label style="font-weight: 600;">
             {{ _("World Backdrop (16:9)") }}
@@ -121,7 +120,7 @@
           </label>
           {{ backdrop_selector(
               id_prefix="worldinfo-backdrop",
-              image_url=(url_for('uploaded_file', filename=worldinfo.backdrop_image_path) if worldinfo.backdrop_image_path else ""),
+              image_url=(url_for('uploaded_file', filename=worldinfo.backdrop_image_path) if worldinfo and worldinfo.backdrop_image_path else ""),
               input_name="backdrop_file",
               remove_input_name="remove_backdrop",
               placeholder_icon="🖼️",
@@ -131,11 +130,10 @@
               remove_label=_("Remove Backdrop"),
               status_text=_("Priority in chat: System → World → Location"),
               is_editable=is_editable,
-              viewer_title=worldinfo.name
+              viewer_title=worldinfo.name if worldinfo else _("New World")
           ) }}
         </div>
 
-        <!-- Gebundenes Lorebook -->
         <div>
           <label style="font-weight: 600;">
             {{ _("Linked Lorebook (Optional)") }}
@@ -144,211 +142,215 @@
           <select name="lorebook_id" style="width: 100%;" {% if not is_editable %}disabled{% endif %}>
             <option value="">{{ _("No lorebook linked") }}</option>
             {% for lb in lorebooks %}
-              <option value="{{ lb.id }}" {% if worldinfo.lorebook_id == lb.id %}selected{% endif %}>
+              <option value="{{ lb.id }}" {% if eff_lb_id == lb.id %}selected{% endif %}>
                 📜 {{ lb.name }}
               </option>
             {% endfor %}
           </select>
         </div>
-
-        {% if is_editable %}
-          <div style="margin-top: 0.5rem;">
-            {{ action_button(_("Save"), type="submit", icon="💾") }}
-          </div>
-        {% endif %}
       </div>
     </form>
   </section>
 
-  <!-- TAB 2: Places -->
   <section id="tab-places" class="tab-pane {% if active_tab == 'places' %}active{% endif %}">
-    <div class="card-grid">
-      {% if is_editable %}
-        {{ new_button(_("New Location"), modal="new-location-modal") }}
-      {% endif %}
+    {% if worldinfo %}
+      {% call aimo_card_grid() %}
+        {% if is_editable %}
+          {{ new_button(_("New Location"), modal="new-location-modal") }}
+        {% endif %}
 
-      {% for loc in locations %}
-        {% set bound_char = character_map.get(loc.character_id) if loc.character_id and character_map else none %}
-        <div class="card-tile location-card-tile {% if bound_char %}is-locked{% endif %}"
-             style="{% if is_editable %}cursor: pointer;{% endif %} justify-content: space-between;"
-             {% if bound_char %}title="{{ _('This location is bound to') }} {{ bound_char.name }}"{% endif %}
-             {% if is_editable %}data-modal-open="edit-location-modal-{{ loc.id }}"{% endif %}>
-          {% if bound_char %}
-            <div class="location-lock-badge" title="{{ _('This location is bound to') }} {{ bound_char.name }}">
-              <span class="lock-icon">🔒</span>
-            </div>
-          {% endif %}
-          <div style="height: 140px; background-image: url('{% if loc.background_image_path %}{{ url_for('uploaded_file', filename=loc.background_image_path) }}{% else %}/static/img/cover.svg{% endif %}'); background-size: cover; background-position: center; border-bottom: 1px solid var(--border-wood-dark); position: relative;">
-            {% if loc.background_image_path %}
-              <button type="button"
-                      class="chat-input-btn loc-backdrop-viewer-btn"
-                      data-viewer-src="{{ url_for('uploaded_file', filename=loc.background_image_path) }}"
-                      data-viewer-title="{{ loc.name }}"
-                      title="{{ _('View location backdrop') }}"
-                      aria-label="{{ _('View location backdrop') }}"
-                      style="position: absolute; top: 0.45rem; right: 0.45rem; width: 30px; height: 30px; font-size: 0.85rem;">
-                <span class="icon-mono" aria-hidden="true">🖼️</span>
-              </button>
-            {% endif %}
-          </div>
-          <div style="padding: 1rem; flex: 1;">
-            {% set loc_disp = loc_display.get(loc.id, {}) if loc_display is defined else {} %}
-            {% set disp_loc_name = loc_disp.get("name", loc.name) %}
-            {% set disp_loc_desc = loc_disp.get("description", loc.description) %}
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.4rem;">
-              <h3 style="color: var(--gold-accent); margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">📍 {{ disp_loc_name }}</h3>
+        {% for loc in locations %}
+          {% set bound_char = character_map.get(loc.character_id) if loc.character_id and character_map else none %}
+          {% set loc_disp = loc_display.get(loc.id, {}) if loc_display is defined else {} %}
+          {% set disp_loc_name = loc_disp.get("name", loc.name) %}
+          {% set disp_loc_desc = loc_disp.get("description", loc.description) %}
+          {% set bg_style = "background-image: url('" ~ url_for('uploaded_file', filename=loc.background_image_path) ~ "');" if loc.background_image_path else "background: radial-gradient(circle at center, rgba(42, 28, 19, 0.95), rgba(15, 10, 7, 0.98));" %}
+          {% set click_attrs = {'data-modal-open': 'edit-location-modal-' ~ loc.id} if is_editable else none %}
+          {% call aimo_card_container(none, disp_loc_name, bg_style, description=disp_loc_desc, extra_class=('is-locked' if bound_char else ''), click_attrs=click_attrs) %}
+            <div class="aimo-card-header">
               {% if bound_char %}
-                {{ pill_badge(bound_char.name, icon="🔒", variant="dark", title=_("This location is bound to") ~ " " ~ bound_char.name) }}
+                {{ pill_badge(bound_char.name, icon="🔒", variant="dark", title=_("This location is bound to") ~ " " ~ bound_char.name, extra_class="aimo-card-badge") }}
+              {% else %}
+                <div></div>
+              {% endif %}
+              {% if loc.background_image_path %}
+                <button type="button"
+                        class="aimo-card-action-btn loc-backdrop-viewer-btn"
+                        data-viewer-src="{{ url_for('uploaded_file', filename=loc.background_image_path) }}"
+                        data-viewer-title="{{ loc.name }}"
+                        title="{{ _('View location backdrop') }}"
+                        aria-label="{{ _('View location backdrop') }}">
+                  <span class="icon-mono" aria-hidden="true">🖼️</span>
+                </button>
               {% endif %}
             </div>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">{{ disp_loc_desc[:120] }}{% if disp_loc_desc|length > 120 %}...{% endif %}</p>
-          </div>
-        </div>
 
-        <!-- Modal: Ort bearbeiten -->
-        <div class="modal-backdrop" id="edit-location-modal-{{ loc.id }}" aria-hidden="true">
-          <div class="modal-frame">
-            <div class="modal-header">
-              <h3 style="color: var(--gold-accent);">{{ _("Edit Location:") }} {{ loc.name }}</h3>
-              {{ modal_close_button("edit-location-modal-" ~ loc.id) }}
+            {% if not loc.background_image_path %}
+              <div class="aimo-card-center-icon">
+                📍
+              </div>
+            {% endif %}
+
+            <div class="aimo-card-footer">
+              <h3 class="aimo-card-title">{{ disp_loc_name }}</h3>
+              {% if loc.tags %}
+                <div class="aimo-card-stats">
+                  {% for tag in loc.tags[:3] %}
+                    <span class="aimo-card-stat-pill">#{{ tag }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
             </div>
-            <form method="POST" action="{{ url_for('worldinfo.edit_location', worldinfo_id=worldinfo.id, location_id=loc.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
-              <div>
-                <label>
-                  {{ _("Location Name") }} *
-                  <span class="field-help-btn" title="{{ _('Name of the location (e.g. Old Library, Griffin Tavern).') }}">?</span>
-                </label>
-                <input type="text" name="name" value="{{ loc.name }}" required>
-                <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; font-size: 0.82rem; color: var(--text-muted); cursor: pointer;">
-                  <input type="checkbox" name="is_proper_noun" value="1" {% if loc.is_proper_noun %}checked{% endif %}>
-                  <span>{{ _("Proper Noun (Do not translate)") }}</span>
-                </label>
-              </div>
+          {% endcall %}
 
-              <div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                  <label style="margin-bottom: 0;">
-                    {{ _("Tags (Comma-separated)") }}
-                    <span class="field-help-btn" title="{{ _('Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet).') }}">?</span>
-                  </label>
-                  {{ action_button(_("Extract Tags"), icon="🏷️", size="sm", extra_class="extract-tags-btn", data={"desc-id": "edit-loc-desc-" ~ loc.id, "tags-id": "edit-loc-tags-" ~ loc.id, "status-id": "edit-loc-tags-status-" ~ loc.id}) }}
+          {% if is_editable %}
+            <div class="modal-backdrop" id="edit-location-modal-{{ loc.id }}" aria-hidden="true">
+              <div class="modal-frame">
+                <div class="modal-header">
+                  <h3 style="color: var(--gold-accent);">{{ _("Edit Location:") }} {{ loc.name }}</h3>
+                  {{ modal_close_button("edit-location-modal-" ~ loc.id) }}
                 </div>
-                <input type="text" id="edit-loc-tags-{{ loc.id }}" name="tags" value="{{ loc.tags|join(', ') }}">
-                <span id="edit-loc-tags-status-{{ loc.id }}" style="display: none; font-size: 0.75rem; color: #4CAF50; font-weight: 600; margin-top: 0.2rem;"></span>
-              </div>
+                <form method="POST" action="{{ url_for('worldinfo.edit_location', worldinfo_id=worldinfo.id, location_id=loc.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;">
+                  <div>
+                    <label>
+                      {{ _("Location Name") }} *
+                      <span class="field-help-btn" title="{{ _('Name of the location (e.g. Old Library, Griffin Tavern).') }}">?</span>
+                    </label>
+                    <input type="text" name="name" value="{{ loc.name }}" required>
+                    <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; font-size: 0.82rem; color: var(--text-muted); cursor: pointer;">
+                      <input type="checkbox" name="is_proper_noun" value="1" {% if loc.is_proper_noun %}checked{% endif %}>
+                      <span>{{ _("Proper Noun (Do not translate)") }}</span>
+                    </label>
+                  </div>
 
-              <div>
-                <label>
-                  {{ _("16:9 Background Image (PNG, JPG, WEBP)") }}
-                  <span class="field-help-btn" title="{{ _('Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference.') }}">?</span>
-                </label>
-                <input type="hidden" id="edit-loc-bg-path-{{ loc.id }}" name="background_image_path" value="{{ loc.background_image_path or '' }}">
-                <input type="hidden" id="edit-loc-vision-alt-{{ loc.id }}" name="vision_alt_text" value="{{ loc.vision_alt_text or '' }}">
-                {% call backdrop_selector(
-                    id_prefix="edit-loc-bg-" ~ loc.id,
-                    image_url=(url_for('uploaded_file', filename=loc.background_image_path) if loc.background_image_path else ""),
-                    input_name="background_file",
-                    remove_input_name="remove_background",
-                    placeholder_icon="🖼️",
-                    placeholder_title=_("No location backdrop set"),
-                    placeholder_text=_("Uses World Backdrop or System Backdrop if none is set."),
-                    choose_label=_("Choose Backdrop"),
-                    remove_label=_("Remove Backdrop"),
-                    viewer_title=loc.name
-                ) %}
-                  {{ action_button(_("Analyze & Describe Image"), icon="👁️", size="sm", extra_class="edit-loc-analyze-btn", disabled=(not loc.background_image_path), data={"loc-id": loc.id, "input-id": "edit-loc-bg-" ~ loc.id ~ "-input", "path-id": "edit-loc-bg-path-" ~ loc.id, "alt-id": "edit-loc-vision-alt-" ~ loc.id, "desc-id": "edit-loc-desc-" ~ loc.id, "status-id": "edit-loc-analyze-status-" ~ loc.id}) }}
-                {% endcall %}
-                <span id="edit-loc-analyze-status-{{ loc.id }}" style="display: block; margin-top: 0.25rem; font-size: 0.75rem; color: var(--text-muted);"></span>
-              </div>
+                  <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                      <label style="margin-bottom: 0;">
+                        {{ _("Tags (Comma-separated)") }}
+                        <span class="field-help-btn" title="{{ _('Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet).') }}">?</span>
+                      </label>
+                      {{ action_button(_("Extract Tags"), icon="🏷️", size="sm", extra_class="extract-tags-btn", data={"desc-id": "edit-loc-desc-" ~ loc.id, "tags-id": "edit-loc-tags-" ~ loc.id, "status-id": "edit-loc-tags-status-" ~ loc.id}) }}
+                    </div>
+                    <input type="text" id="edit-loc-tags-{{ loc.id }}" name="tags" value="{{ loc.tags|join(', ') }}">
+                    <span id="edit-loc-tags-status-{{ loc.id }}" style="display: none; font-size: 0.75rem; color: #4CAF50; font-weight: 600; margin-top: 0.2rem;"></span>
+                  </div>
 
-              <div>
-                <label>
-                  {{ _("Location Description") }} *
-                  <span class="field-help-btn" title="{{ _('Atmospheric description of the environment, sounds, and mood.') }}">?</span>
-                </label>
-                <input type="hidden" name="i18n_description" id="i18n-wi-loc-{{ loc.id }}" value='{{ (loc_translations.get(loc.id, {}).get("description", {}) if loc_translations is defined else {}) | tojson }}'>
-                <textarea
-                  id="edit-loc-desc-{{ loc.id }}"
-                  name="description"
-                  rows="4"
-                  required
-                  data-i18n-field="description"
-                  data-i18n-entity-type="worldinfo_location"
-                  data-i18n-entity-id="{{ loc.id }}"
-                  data-i18n-origin="{{ worldinfo.origin_language if worldinfo else ui_language }}"
-                  data-i18n-hidden="i18n-wi-loc-{{ loc.id }}">{{ loc.description }}</textarea>
-              </div>
+                  <div>
+                    <label>
+                      {{ _("16:9 Background Image (PNG, JPG, WEBP)") }}
+                      <span class="field-help-btn" title="{{ _('Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference.') }}">?</span>
+                    </label>
+                    <input type="hidden" id="edit-loc-bg-path-{{ loc.id }}" name="background_image_path" value="{{ loc.background_image_path or '' }}">
+                    <input type="hidden" id="edit-loc-vision-alt-{{ loc.id }}" name="vision_alt_text" value="{{ loc.vision_alt_text or '' }}">
+                    {% call backdrop_selector(
+                        id_prefix="edit-loc-bg-" ~ loc.id,
+                        image_url=(url_for('uploaded_file', filename=loc.background_image_path) if loc.background_image_path else ""),
+                        input_name="background_file",
+                        remove_input_name="remove_background",
+                        placeholder_icon="🖼️",
+                        placeholder_title=_("No location backdrop set"),
+                        placeholder_text=_("Uses World Backdrop or System Backdrop if none is set."),
+                        choose_label=_("Choose Backdrop"),
+                        remove_label=_("Remove Backdrop"),
+                        viewer_title=loc.name
+                    ) %}
+                      {{ action_button(_("Analyze & Describe Image"), icon="👁️", size="sm", extra_class="edit-loc-analyze-btn", disabled=(not loc.background_image_path), data={"loc-id": loc.id, "input-id": "edit-loc-bg-" ~ loc.id ~ "-input", "path-id": "edit-loc-bg-path-" ~ loc.id, "alt-id": "edit-loc-vision-alt-" ~ loc.id, "desc-id": "edit-loc-desc-" ~ loc.id, "status-id": "edit-loc-analyze-status-" ~ loc.id}) }}
+                    {% endcall %}
+                    <span id="edit-loc-analyze-status-{{ loc.id }}" style="display: block; margin-top: 0.25rem; font-size: 0.75rem; color: var(--text-muted);"></span>
+                  </div>
 
-              <div>
-                <label>
-                  {{ _("Character Binding (Optional)") }}
-                  <span class="field-help-btn" title="{{ _('If selected, this location can only be entered when chatting with that specific character.') }}">?</span>
-                </label>
-                <select name="character_id">
-                  <option value="">-- {{ _("No character (Freely accessible)") }} --</option>
-                  {% for char in available_characters %}
-                    <option value="{{ char.id }}" {% if loc.character_id == char.id %}selected{% endif %}>
-                      👤 {{ char.name }}
-                    </option>
-                  {% endfor %}
-                </select>
-              </div>
+                  <div>
+                    <label>
+                      {{ _("Location Description") }} *
+                      <span class="field-help-btn" title="{{ _('Atmospheric description of the environment, sounds, and mood.') }}">?</span>
+                    </label>
+                    <input type="hidden" name="i18n_description" id="i18n-wi-loc-{{ loc.id }}" value='{{ (loc_translations.get(loc.id, {}).get("description", {}) if loc_translations is defined else {}) | tojson }}'>
+                    <textarea
+                      id="edit-loc-desc-{{ loc.id }}"
+                      name="description"
+                      rows="4"
+                      required
+                      data-i18n-field="description"
+                      data-i18n-entity-type="worldinfo_location"
+                      data-i18n-entity-id="{{ loc.id }}"
+                      data-i18n-origin="{{ worldinfo.origin_language if worldinfo else ui_language }}"
+                      data-i18n-hidden="i18n-wi-loc-{{ loc.id }}">{{ loc.description }}</textarea>
+                  </div>
 
-              <div>
-                <label>{{ _("Assigned Location Events:") }}</label>
-                <ul style="margin-left: 1.2rem; font-size: 0.85rem; color: var(--text-muted);">
-                  {% for ev in events if ev.location_id == loc.id %}
-                    <li>{{ ev.title }} ({{ ev.probability }}%)</li>
-                  {% else %}
-                    <li>{{ _("No specific location events assigned.") }}</li>
-                  {% endfor %}
-                </ul>
-              </div>
+                  <div>
+                    <label>
+                      {{ _("Character Binding (Optional)") }}
+                      <span class="field-help-btn" title="{{ _('If selected, this location can only be entered when chatting with that specific character.') }}">?</span>
+                    </label>
+                    <select name="character_id">
+                      <option value="">-- {{ _("No character (Freely accessible)") }} --</option>
+                      {% for char in available_characters %}
+                        <option value="{{ char.id }}" {% if loc.character_id == char.id %}selected{% endif %}>
+                          👤 {{ char.name }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
 
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
-                {{ action_button(_("Delete"), type="submit", form="delete-loc-form-" ~ loc.id, variant="danger", icon="🗑️") }}
-                <div style="display: flex; gap: 0.5rem;">
-                  {{ action_button(_("Cancel"), modal_close="edit-location-modal-" ~ loc.id) }}
-                  {{ action_button(_("Save"), type="submit", icon="💾") }}
-                </div>
+                  <div>
+                    <label>{{ _("Assigned Location Events:") }}</label>
+                    <ul style="margin-left: 1.2rem; font-size: 0.85rem; color: var(--text-muted);">
+                      {% for ev in events if ev.location_id == loc.id %}
+                        <li>{{ ev.title }} ({{ ev.probability }}%)</li>
+                      {% else %}
+                        <li>{{ _("No specific location events assigned.") }}</li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
+                    {{ action_button(_("Delete"), type="submit", form="delete-loc-form-" ~ loc.id, variant="danger", icon="🗑️") }}
+                    <div style="display: flex; gap: 0.5rem;">
+                      {{ action_button(_("Cancel"), modal_close="edit-location-modal-" ~ loc.id) }}
+                      {{ action_button(_("Save"), type="submit", icon="💾") }}
+                    </div>
+                  </div>
+                </form>
+                <form id="delete-loc-form-{{ loc.id }}" method="POST" action="{{ url_for('worldinfo.delete_location', worldinfo_id=worldinfo.id, location_id=loc.id) }}" data-confirm="{{ _('Really delete this location?') }}" style="display: none;"></form>
               </div>
-            </form>
-            <form id="delete-loc-form-{{ loc.id }}" method="POST" action="{{ url_for('worldinfo.delete_location', worldinfo_id=worldinfo.id, location_id=loc.id) }}" style="display: none;"></form>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endcall %}
+    {% endif %}
   </section>
 
-  <!-- TAB 3: Events -->
   <section id="tab-events" class="tab-pane {% if active_tab == 'events' %}active{% endif %}">
-    {{ event_editor(
-        events=events,
-        is_editable=is_editable,
-        add_url=url_for('worldinfo.add_event', worldinfo_id=worldinfo.id),
-        edit_endpoint='worldinfo.edit_event',
-        delete_endpoint='worldinfo.delete_event',
-        entity_id_param='worldinfo_id',
-        entity_id=worldinfo.id,
-        loc_map=loc_map,
-        ev_translations=ev_translations,
-        scope_type='worldinfo',
-        locations=locations,
-        modal_prefix='wi',
-        ev_display=ev_display,
-        loc_display=loc_display,
-        origin_language=(worldinfo.origin_language if worldinfo else ui_language)
-    ) }}
+    {% if worldinfo %}
+      {{ event_editor(
+          events=events,
+          is_editable=is_editable,
+          add_url=url_for('worldinfo.add_event', worldinfo_id=worldinfo.id),
+          edit_endpoint='worldinfo.edit_event',
+          delete_endpoint='worldinfo.delete_event',
+          entity_id_param='worldinfo_id',
+          entity_id=worldinfo.id,
+          loc_map=loc_map,
+          ev_translations=ev_translations,
+          scope_type='worldinfo',
+          locations=locations,
+          modal_prefix='wi',
+          ev_display=ev_display,
+          loc_display=loc_display,
+          origin_language=(worldinfo.origin_language if worldinfo else ui_language)
+      ) }}
+    {% endif %}
   </section>
 
-  <!-- TAB 4: Kollaboration -->
   <section id="tab-collab" class="tab-pane {% if active_tab == 'collab' %}active{% endif %}">
-    {{ collaboration_manager(worldinfo.collaborator_creator_tags, is_author=is_author, is_editable=is_editable, form_id='worldinfo-meta-form') }}
+    {% if worldinfo %}
+      {{ collaboration_manager(worldinfo.collaborator_creator_tags, is_author=is_author, is_editable=is_editable, form_id='worldinfo-meta-form') }}
+    {% endif %}
   </section>
   </section>
 </div>
 
-<!-- Modal: Neuer Ort -->
+{% if worldinfo and is_editable %}
 <div class="modal-backdrop" id="new-location-modal" aria-hidden="true">
   <div class="modal-frame">
     <div class="modal-header">
@@ -443,8 +445,8 @@
     </form>
   </div>
 </div>
+{% endif %}
 
-<!-- Reusable Image Crop Modal for 1:1 World Cover -->
 {{ image_cropper_modal("worldinfo-cover-crop-modal", title=_("Set 1:1 World Cover"), targets=[{"id": "cover", "label": _("1:1 Cover"), "icon": "🌐", "ratio": 1.0, "preview_width": 80, "preview_height": 80}]) }}
 {% endblock %}
 

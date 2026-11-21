@@ -33,6 +33,7 @@ def index():
     gender_filter = request.args.get("gender", "").strip().lower()
     chat_filter = request.args.get("chatted", "").strip().lower()
     author_filter = request.args.get("author", "").strip().lower()
+    visibility_filter = request.args.get("visibility", "").strip().lower()
     sort_by = request.args.get("sort", "newest").strip().lower()
     active_tab = request.args.get("tab", "characters").strip().lower()
     if active_tab not in ("characters", "lorebooks", "worldinfo"):
@@ -105,7 +106,20 @@ def index():
             has_missing_translations = True
             if not is_editable:
                 continue
-        lb.name = trans_repo.get_localized_field("lorebook", lb.id, "name", sys_lang, lb.name)
+        if visibility_filter in ("public", "private") and lb.visibility != visibility_filter:
+            continue
+        if author_filter == "mine" and lb.user_id != user.id:
+            continue
+        if author_filter == "collaborations":
+            is_collab = (
+                lb.user_id != user.id
+                and bool(user.creator_tag)
+                and (user.creator_tag in (lb.collaborator_creator_tags or []))
+            )
+            if not is_collab:
+                continue
+        if not getattr(lb, "is_proper_noun", False):
+            lb.name = trans_repo.get_localized_field("lorebook", lb.id, "name", sys_lang, lb.name)
         lb.description = trans_repo.get_localized_field(
             "lorebook", lb.id, "description", sys_lang, lb.description
         )
@@ -125,6 +139,11 @@ def index():
             }
         )
 
+    if sort_by == "name":
+        lorebook_cards.sort(key=lambda item: (item["lorebook"].name or "").lower())
+    else:
+        lorebook_cards.sort(key=lambda item: item["lorebook"].id or 0, reverse=True)
+
     worldinfos = wi_repo.list_visible(user.id)
     worldinfo_cards = []
     for wi in worldinfos:
@@ -135,6 +154,18 @@ def index():
         if not is_ready:
             has_missing_translations = True
             if not is_editable:
+                continue
+        if visibility_filter in ("public", "private") and wi.visibility != visibility_filter:
+            continue
+        if author_filter == "mine" and wi.user_id != user.id:
+            continue
+        if author_filter == "collaborations":
+            is_collab = (
+                wi.user_id != user.id
+                and bool(user.creator_tag)
+                and (user.creator_tag in (wi.collaborator_creator_tags or []))
+            )
+            if not is_collab:
                 continue
         locations = wi_repo.list_locations(wi.id)
         events = wi_repo.list_events(wi.id)
@@ -149,6 +180,11 @@ def index():
                 "translation_pending": not is_ready,
             }
         )
+
+    if sort_by == "name":
+        worldinfo_cards.sort(key=lambda item: (item["worldinfo"].name or "").lower())
+    else:
+        worldinfo_cards.sort(key=lambda item: item["worldinfo"].id or 0, reverse=True)
 
     personas = persona_repo.list_for_user(user.id)
     persona_items = []
@@ -173,6 +209,7 @@ def index():
         gender_filter=gender_filter,
         chat_filter=chat_filter,
         author_filter=author_filter,
+        visibility_filter=visibility_filter,
         sort_by=sort_by,
         active_tab=active_tab,
         has_missing_translations=has_missing_translations,
