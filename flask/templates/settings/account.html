@@ -5,8 +5,6 @@
 
 {% block settings_content %}
 <form method="POST" action="{{ url_for('settings.update_account') }}" class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
-  <h2 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.5rem;">{{ _("Account") }}</h2>
-
   {% call form_section(_("Creator Tag"), _("Other creators can add you as a collaborator using this tag.")) %}
     {{ copy_field(g.current_user.creator_tag, _("Copy Creator Tag"), id="account-creator-tag") }}
   {% endcall %}
@@ -48,8 +46,22 @@
     </div>
   {% endcall %}
 
+  {% call form_section(_("Appearance"), _("Visual background effects for your personal interface.")) %}
+    <label for="account-ember-particles" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; cursor: pointer; margin: 0;">
+      <span>{{ _("Animated Ember Bokeh Background") }}</span>
+      <span class="aimo-switch">
+        <input type="checkbox"
+               id="account-ember-particles"
+               name="ember_particles_enabled"
+               value="1"
+               {% if g.current_user.ember_particles_enabled %}checked{% endif %}>
+        <span class="aimo-switch-slider"></span>
+      </span>
+    </label>
+  {% endcall %}
+
   <div style="display: flex; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid var(--border-wood-dark);">
-    {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
+    {{ action_button(_("Save"), type="submit", icon="💾") }}
   </div>
 </form>
 {% endblock %}

@@ -26,9 +26,9 @@ The Lorebook editor is organized into a clean two-column layout with a vertical 
 
 ## 📋 1. Basic Settings (`📋 Grundeinstellungen`)
 - **Lorebook Name:** The title of this compendium (e.g., *"History of Eldoria"*, *"Magic & Arcane Spells"*).
-- **Visibility:**
-  - `Private`: Visible only to you and designated collaborators.
-  - `Public`: Available in the library for other users to explore and reference in their characters.
+- **Visibility (Top Right):** Compact eye icon toggle button at the top right of the settings page (hovering displays the current state):
+  - **Closed eye (`Private`):** Visible only to you and designated collaborators.
+  - **Open eye (`Public`):** Available in the library for other users to explore and reference in their characters.
 - **Short Description:** A concise summary of the lorebook's theme for orientation in the library catalog.
 
 ---
@@ -39,7 +39,7 @@ The Lorebook editor is organized into a clean two-column layout with a vertical 
   - **Entry Tiles:** Display entry title, linked tags, and a short snippet preview. Clicking a tile opens the editor modal.
 - **Entry Editor (Modal Dialog):**
   - **Title:** E.g., *"The Order of Shadow Mages"*.
-  - **Visibility:** `🌍 Public` (readable in library) or `🔒 Private` (secret lore / spoiler protection).
+  - **Visibility (Top Right):** Eye icon toggle button at the top right of the dialog switching between **Public** (open eye, readable in library) and **Private** (closed eye, secret lore / spoiler protection). Hovering displays the active visibility mode.
   - **Tags (Keywords):** Comma-separated list of keywords for Vectorless Tag-RAG.
   - **AI Tag Suggestion (`✨ Tags vorschlagen`):** Automatically infers relevant keywords from title and content.
   - **Prose Content:** The factual knowledge text injected into the LLM context when triggered.
@@ -73,7 +73,7 @@ Lorebooks can be connected at three distinct levels:
 
 ## 🔍 How Knowledge is Injected into Chat (Vectorless Tag-RAG)
 
-aimo utilizes **strict rule-based tag matching** without external vector databases:
+AImo utilizes **strict rule-based tag matching** without external vector databases:
 - If words mentioned in the ongoing dialogue match any tags in an active lorebook entry, that entry is automatically loaded into the AI's context for the next response.
 - **Smart Relevance Prioritization:** Entries matching words from your latest message or fitting the current conversation topic (such as character-linked lorebooks during personal conversations or world lorebooks during exploration) are prioritized. When many entries match at once, the top entries are included in full detail while secondary matches are provided as concise key-fact summaries.
 - If a topic is not mentioned, the entry remains dormant. This keeps the AI's working memory lean and focused.

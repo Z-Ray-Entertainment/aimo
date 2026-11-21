@@ -162,7 +162,7 @@ window.openEditPersonaFromBtn = function openEditPersonaFromBtn(btn) {
   const preuploadedInput = document.getElementById("edit-persona-preuploaded-portrait");
   const statusEl = document.getElementById("edit-persona-vision-status");
   const nameInput = document.getElementById("edit-persona-name");
-  const genderSelect = document.getElementById("edit-persona-gender");
+  const genderEl = document.getElementById("edit-persona-gender");
   const descInput = document.getElementById("edit-persona-description");
   const appInput = document.getElementById("edit-persona-appearance");
   const deleteForm = document.getElementById("edit-persona-delete-form");
@@ -173,7 +173,15 @@ window.openEditPersonaFromBtn = function openEditPersonaFromBtn(btn) {
   if (preuploadedInput) preuploadedInput.value = "";
   if (statusEl) statusEl.textContent = "";
   if (nameInput) nameInput.value = name;
-  if (genderSelect) genderSelect.value = gender;
+  if (genderEl) {
+    if (genderEl.tagName === "SELECT") {
+      genderEl.value = gender;
+    } else {
+      const radio = genderEl.querySelector(`input[name="gender"][value="${gender}"]`)
+        || genderEl.querySelector('input[name="gender"][value="non-binary"]');
+      if (radio) radio.checked = true;
+    }
+  }
   if (descInput) descInput.value = desc;
   if (appInput) appInput.value = appearance;
   if (deleteForm) deleteForm.action = `/personas/${id}/delete`;

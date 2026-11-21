@@ -23,46 +23,20 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // 1b. Setup 16:9 World Backdrop live preview & removal
-  const wiBackdropInput = document.getElementById("worldinfo-backdrop-input");
-  const wiBackdropPreview = document.getElementById("worldinfo-backdrop-preview");
-  const wiBackdropPlaceholder = document.getElementById("worldinfo-backdrop-placeholder");
-  const wiRemoveBackdropBtn = document.getElementById("worldinfo-remove-backdrop-btn");
-  const wiRemoveBackdropInput = document.getElementById("worldinfo-remove-backdrop-input");
-
-  if (wiBackdropInput && wiBackdropPreview) {
-    wiBackdropInput.addEventListener("change", () => {
-      const file = wiBackdropInput.files?.[0];
-      if (!file) return;
-      if (wiRemoveBackdropInput) wiRemoveBackdropInput.value = "0";
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target?.result) {
-          wiBackdropPreview.style.backgroundImage = `url('${e.target.result}')`;
-          if (wiBackdropPlaceholder) wiBackdropPlaceholder.style.display = "none";
-          if (wiRemoveBackdropBtn) wiRemoveBackdropBtn.style.display = "inline-flex";
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  if (wiRemoveBackdropBtn && wiBackdropPreview) {
-    wiRemoveBackdropBtn.addEventListener("click", () => {
-      if (wiRemoveBackdropInput) wiRemoveBackdropInput.value = "1";
-      if (wiBackdropInput) wiBackdropInput.value = "";
-      wiBackdropPreview.style.backgroundImage = "";
-      if (wiBackdropPlaceholder) wiBackdropPlaceholder.style.display = "";
-      wiRemoveBackdropBtn.style.display = "none";
-    });
-  }
-
-  // Enable / disable new location image analyze button on file pick
+  // Enable / disable new location image analyze button on file pick or removal
   const newLocFileInput = document.getElementById("new-loc-bg-input");
   const newLocAnalyzeBtn = document.getElementById("new-loc-analyze-btn");
+  const newLocSelector = document.getElementById("new-loc-bg-selector");
   if (newLocFileInput && newLocAnalyzeBtn) {
     newLocFileInput.addEventListener("change", () => {
       newLocAnalyzeBtn.disabled = !newLocFileInput.files || !newLocFileInput.files[0];
+    });
+  }
+  if (newLocSelector && newLocAnalyzeBtn) {
+    newLocSelector.addEventListener("backdrop:change", (e) => {
+      if (e.detail?.removed) {
+        newLocAnalyzeBtn.disabled = true;
+      }
     });
   }
 
@@ -123,6 +97,15 @@ document.addEventListener("DOMContentLoaded", () => {
       fileInputEl.addEventListener("change", () => {
         if (fileInputEl.files && fileInputEl.files[0]) {
           btn.disabled = false;
+        }
+      });
+    }
+
+    const selectorEl = document.getElementById(`edit-loc-bg-${locId}-selector`);
+    if (selectorEl) {
+      selectorEl.addEventListener("backdrop:change", (e) => {
+        if (e.detail?.removed) {
+          btn.disabled = true;
         }
       });
     }
@@ -259,16 +242,6 @@ document.addEventListener("DOMContentLoaded", () => {
       wiCoverImg.addEventListener("click", () => {
         if (wiCoverImg.src && wiCoverImg.style.display !== "none") {
           window.AimoImageViewer.openSingle(wiCoverImg.src, wiCoverImg.alt || "Cover");
-        }
-      });
-    }
-
-    if (wiBackdropPreview) {
-      wiBackdropPreview.addEventListener("click", () => {
-        const bg = wiBackdropPreview.style.backgroundImage || "";
-        const match = bg.match(/^url\(["']?(.+?)["']?\)$/);
-        if (match && match[1]) {
-          window.AimoImageViewer.openSingle(match[1], "World Backdrop");
         }
       });
     }

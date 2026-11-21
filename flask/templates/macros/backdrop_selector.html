@@ -1,0 +1,76 @@
+{% macro backdrop_selector(
+    id_prefix,
+    image_url="",
+    input_name="backdrop_file",
+    remove_input_name="",
+    placeholder_icon="🖼️",
+    placeholder_title="",
+    placeholder_text="",
+    choose_label="",
+    remove_label="",
+    status_text="",
+    is_editable=true,
+    viewer_title=""
+) %}
+  {% set has_image = (image_url|length > 0) %}
+  <div class="backdrop-selector" data-backdrop-selector id="{{ id_prefix }}-selector">
+    <div id="{{ id_prefix }}-preview"
+         class="backdrop-preview-container"
+         data-backdrop-preview
+         data-backdrop-has-image="{{ '1' if has_image else '0' }}"
+         {% if has_image %}
+           style="background-image: url('{{ image_url }}');"
+           data-viewer-src="{{ image_url }}"
+         {% endif %}
+         {% if viewer_title %}data-viewer-title="{{ viewer_title }}"{% endif %}>
+      <div id="{{ id_prefix }}-placeholder"
+           class="backdrop-preview-placeholder"
+           data-backdrop-placeholder
+           {% if has_image %}style="display: none;"{% endif %}>
+        <span style="font-size: 1.75rem; opacity: 0.85;">{{ placeholder_icon }}</span>
+        {% if placeholder_title %}
+          <strong style="color: var(--gold-accent); font-size: 0.92rem;">{{ placeholder_title }}</strong>
+        {% endif %}
+        {% if placeholder_text %}
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0; max-width: 420px; line-height: 1.45;">
+            {{ placeholder_text }}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if is_editable %}
+      {% if remove_input_name %}
+        <input type="hidden" id="{{ id_prefix }}-remove-input" name="{{ remove_input_name }}" value="0" data-backdrop-remove-input>
+      {% endif %}
+      <div class="backdrop-selector-actions">
+        <input type="file"
+               id="{{ id_prefix }}-input"
+               name="{{ input_name }}"
+               accept=".png,.jpg,.jpeg,.webp"
+               style="display: none;"
+               data-backdrop-input>
+        <label for="{{ id_prefix }}-input" class="aimo-btn" style="cursor: pointer; margin-bottom: 0;">
+          <span class="icon-mono">🖼️</span> {{ choose_label or _("Choose Backdrop") }}
+        </label>
+        {% if remove_input_name %}
+          <button type="button"
+                  id="{{ id_prefix }}-remove-btn"
+                  class="aimo-btn aimo-btn-danger"
+                  data-backdrop-remove-btn
+                  {% if not has_image %}style="display: none;"{% endif %}>
+            <span class="icon-mono">🗑️</span> {{ remove_label or _("Remove Backdrop") }}
+          </button>
+        {% endif %}
+        {% if caller is defined %}
+          {{ caller() }}
+        {% endif %}
+      </div>
+      {% if status_text %}
+        <span id="{{ id_prefix }}-status" class="backdrop-selector-status">
+          {{ status_text }}
+        </span>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endmacro %}

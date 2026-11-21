@@ -229,6 +229,7 @@ def update_account():
         auth_service.update_name(user, form.username)
         auth_service.update_email(user, form.email)
         auth_service.assign_language(user, form.language)
+        auth_service.set_ember_particles_enabled(user, form.ember_particles_enabled)
         if password_changed:
             auth_service.change_password(user, form.new_password)
         user_repo.update(user)

@@ -61,4 +61,5 @@ The **Account** view contains the following sections:
 - **E-Mail-Adresse:** Change your login e-mail. The address must not be used by another account, and you must enter your current password to confirm.
 - **Passwort:** Enter your current password and the new password twice.
 - **Sprache:** Choose the language of the interface and translations. On your first login the language of your browser is selected automatically.
+- **Darstellung (Animated Ember Bokeh Background):** Toggle the gentle animated fire-ember bokeh particles rising over the background on or off for your account.
 

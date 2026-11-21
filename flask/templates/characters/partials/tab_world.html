@@ -1,86 +1,108 @@
+{% from "macros/buttons.html" import action_button %}
     <section id="tab-char-world" class="tab-pane {% if active_tab == 'world' %}active{% endif %}">
       <div class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
         <div>
-          <h3 style="color: var(--gold-accent); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
-            🗺️ {{ _("Game World & Locations") }}
-            <span class="field-help-btn" title="{{ _('Links a recommended world. Once selected, initial, preferred, and disliked locations can be chosen.') }}">?</span>
-          </h3>
-          <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">
-            {{ _("Select a recommended world for this character. It will be pre-selected when starting a new chat.") }}
+          <p class="aimo-page-hint">
+            {{ _("Links a recommended world. Once selected, initial, preferred, and disliked locations can be chosen.") }}
           </p>
 
-          <div>
-            <label>
-              {{ _("Recommended WorldInfo") }}
-              <span class="field-help-btn" title="{{ _('Locations and events of this world are included in roleplay.') }}">?</span>
-            </label>
-            <select name="suggested_worldinfo_id" id="char-worldinfo-select">
-              <option value="">-- {{ _("No WorldInfo linked") }} --</option>
-              {% for wi in worldinfos %}
-                <option value="{{ wi.id }}" {% if form.suggested_worldinfo_id == wi.id %}selected{% endif %}>{{ wi.name }}</option>
-              {% endfor %}
-            </select>
+          <div class="world-locations-grid">
+            <div>
+              <label>
+                {{ _("Recommended WorldInfo") }}
+                <span class="field-help-btn" title="{{ _('Locations and events of this world are included in roleplay.') }}">?</span>
+              </label>
+              <select name="suggested_worldinfo_id" id="char-worldinfo-select">
+                <option value="">-- {{ _("No WorldInfo linked") }} --</option>
+                {% for wi in worldinfos %}
+                  <option value="{{ wi.id }}" {% if form.suggested_worldinfo_id == wi.id %}selected{% endif %}>{{ wi.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div id="char-initial-location-wrapper" style="{% if not form.suggested_worldinfo_id %}display: none;{% endif %}">
+              <label>
+                {{ _("Initial Location of First Message") }}
+                <span class="field-help-btn" title="{{ _('Starting location for the conversation within the linked world.') }}">?</span>
+              </label>
+              <select name="initial_location_id" id="char-initial-location-select">
+                <option value="">-- {{ _("No fixed starting location") }} --</option>
+                {% for loc in all_locations %}
+                  <option value="{{ loc.id }}"
+                          data-worldinfo-id="{{ loc.worldinfo_id }}"
+                          {% if form.initial_location_id == loc.id %}selected{% endif %}>
+                    {{ loc.name }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
           </div>
         </div>
 
         <!-- Conditional Container: Nur sichtbar, wenn eine Welt ausgewählt ist -->
-        <div id="worldinfo-locations-container" style="{% if not form.suggested_worldinfo_id %}display: none;{% endif %} display: flex; flex-direction: column; gap: 1.25rem; border-top: 1px solid var(--border-wood-dark); padding-top: 1.25rem;">
-          <div>
-            <label>
-              {{ _("Initial Location of First Message") }}
-              <span class="field-help-btn" title="{{ _('Starting location for the conversation within the linked world.') }}">?</span>
-            </label>
-            <select name="initial_location_id" id="char-initial-location-select">
-              <option value="">-- {{ _("No fixed starting location") }} --</option>
-              {% for loc in all_locations %}
-                <option value="{{ loc.id }}"
-                        data-worldinfo-id="{{ loc.worldinfo_id }}"
-                        {% if form.initial_location_id == loc.id %}selected{% endif %}>
-                  {{ loc.name }}
-                </option>
-              {% endfor %}
-            </select>
-          </div>
+        <div id="worldinfo-locations-container" style="{% if not form.suggested_worldinfo_id %}display: none;{% endif %} display: flex; flex-direction: column; gap: 1.25rem;">
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
-            <div>
-              <label>
-                {{ _("Preferred Locations (from linked world)") }}
-                <span class="field-help-btn" title="{{ _('Locations where the character feels comfortable or likes to spend time.') }}">?</span>
-              </label>
-              <select name="preferred_location_ids" id="char-preferred-locations-select" multiple size="5">
+          <div class="world-locations-grid">
+            <div class="world-location-column">
+              <div class="world-location-column-header">
+                <label>
+                  {{ _("Preferred Locations (from linked world)") }}
+                  <span class="field-help-btn" title="{{ _('Locations where the character feels comfortable or likes to spend time.') }}">?</span>
+                </label>
+                {% if is_editable %}
+                  {{ action_button(_("Add"), icon="➕", size="sm", extra_class="add-world-location-btn", data={"location-target": "preferred"}) }}
+                {% endif %}
+              </div>
+              <div id="preferred-locations-list" class="world-location-list">
                 {% for loc in all_locations %}
-                  <option value="{{ loc.id }}"
-                          data-worldinfo-id="{{ loc.worldinfo_id }}"
-                          {% if loc.id in form.preferred_location_ids %}selected{% endif %}>
-                    {{ loc.name }}
-                  </option>
+                  {% if form.suggested_worldinfo_id and loc.worldinfo_id == form.suggested_worldinfo_id and loc.id in form.preferred_location_ids %}
+                    <div class="world-location-item" data-location-id="{{ loc.id }}">
+                      <input type="hidden" name="preferred_location_ids" value="{{ loc.id }}">
+                      <span class="world-location-name">{{ loc.name }}</span>
+                      {% if is_editable %}
+                        {{ action_button(_("Remove"), icon="🗑️", layout="icon", variant="danger", size="sm", extra_class="remove-world-location-btn", title=_("Remove location")) }}
+                      {% endif %}
+                    </div>
+                  {% endif %}
                 {% endfor %}
-              </select>
-              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.25rem;">
-                {{ _("Tip: Hold Ctrl/Cmd to select multiple.") }}
+              </div>
+              <div id="preferred-locations-empty" class="world-location-empty" style="{% if form.suggested_worldinfo_id and form.preferred_location_ids %}display: none;{% endif %}">
+                {{ _("No preferred locations selected.") }}
               </div>
             </div>
 
-            <div>
-              <label>
-                {{ _("Disliked Locations (from linked world)") }}
-                <span class="field-help-btn" title="{{ _('Locations the character avoids, fears, or dislikes.') }}">?</span>
-              </label>
-              <select name="disliked_location_ids" id="char-disliked-locations-select" multiple size="5">
+            <div class="world-location-column">
+              <div class="world-location-column-header">
+                <label>
+                  {{ _("Disliked Locations (from linked world)") }}
+                  <span class="field-help-btn" title="{{ _('Locations the character avoids, fears, or dislikes.') }}">?</span>
+                </label>
+                {% if is_editable %}
+                  {{ action_button(_("Add"), icon="➕", size="sm", extra_class="add-world-location-btn", data={"location-target": "disliked"}) }}
+                {% endif %}
+              </div>
+              <div id="disliked-locations-list" class="world-location-list">
                 {% for loc in all_locations %}
-                  <option value="{{ loc.id }}"
-                          data-worldinfo-id="{{ loc.worldinfo_id }}"
-                          {% if loc.id in form.disliked_location_ids %}selected{% endif %}>
-                    {{ loc.name }}
-                  </option>
+                  {% if form.suggested_worldinfo_id and loc.worldinfo_id == form.suggested_worldinfo_id and loc.id in form.disliked_location_ids %}
+                    <div class="world-location-item" data-location-id="{{ loc.id }}">
+                      <input type="hidden" name="disliked_location_ids" value="{{ loc.id }}">
+                      <span class="world-location-name">{{ loc.name }}</span>
+                      {% if is_editable %}
+                        {{ action_button(_("Remove"), icon="🗑️", layout="icon", variant="danger", size="sm", extra_class="remove-world-location-btn", title=_("Remove location")) }}
+                      {% endif %}
+                    </div>
+                  {% endif %}
                 {% endfor %}
-              </select>
-              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.25rem;">
-                {{ _("Tip: Hold Ctrl/Cmd to select multiple.") }}
+              </div>
+              <div id="disliked-locations-empty" class="world-location-empty" style="{% if form.suggested_worldinfo_id and form.disliked_location_ids %}display: none;{% endif %}">
+                {{ _("No disliked locations selected.") }}
               </div>
             </div>
           </div>
+
+          <script type="application/json" id="world-locations-catalog">
+            [{% for loc in all_locations %}{"id": {{ loc.id }}, "worldinfo_id": {{ loc.worldinfo_id }}, "name": {{ loc.name | tojson }}, "description": {{ (loc.description or "") | tojson }}}{% if not loop.last %},{% endif %}{% endfor %}]
+          </script>
         </div>
       </div>
     </section>

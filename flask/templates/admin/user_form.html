@@ -42,7 +42,7 @@
 
     <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-        <label style="font-weight: 700; color: var(--gold-accent);">{{ _('Quick Select via Preset') }}</label>
+        <label style="font-weight: 700; color: var(--gold-accent); margin-bottom: 0;">{{ _('Quick Select via Preset') }}</label>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
           {% for preset_name in presets %}
             {{ action_button(_("Preset:") ~ " " ~ preset_name, onclick="applyPreset('" ~ preset_name ~ "')", disabled=(target_user and target_user.is_initial_admin and preset_name != 'Admin')) }}
@@ -70,7 +70,7 @@
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
       {{ action_button(_("Cancel"), href=url_for('admin.users_list'), arrow="left") }}
-      {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
+      {{ action_button(_("Save"), type="submit", icon="💾") }}
     </div>
   </form>
 </div>

@@ -1,6 +1,6 @@
 {% from "macros/buttons.html" import action_button, new_button, modal_close_button %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
-  {% if character %}
+  {% if character and is_editable %}
     <div class="modal-backdrop" id="add-gallery-modal" aria-hidden="true">
       <div class="modal-frame" style="max-width: 440px;">
         <div class="modal-header">
@@ -28,13 +28,50 @@
               {% endfor %}
             </select>
           </div>
-          <div style="text-align: right; display: flex; justify-content: flex-end; gap: 0.5rem;">
+          <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
             {{ action_button(_("Cancel"), modal_close="add-gallery-modal") }}
-            {{ action_button(_("Upload"), type="submit", variant="primary") }}
+            {{ action_button(_("Upload"), type="submit", icon="💾") }}
           </div>
         </form>
       </div>
     </div>
+
+    {% if available_emotions|length > 0 %}
+      <div class="modal-backdrop" id="add-sprite-modal" aria-hidden="true">
+        <div class="modal-frame" style="max-width: 440px;">
+          <div class="modal-header">
+            <h3 style="color: var(--gold-accent);">{{ _("Add Emotional Sprite") }}</h3>
+            {{ modal_close_button("add-sprite-modal") }}
+          </div>
+          <form method="POST" action="{{ url_for('characters.upload_sprite', character_id=character.id) }}" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.85rem;" data-save-sprite-scroll="1">
+            <div>
+              <label>
+                {{ _("Emotion") }} *
+                <span class="field-help-btn" title="{{ _('Select which emotion this sprite represents.') }}">?</span>
+              </label>
+              <select name="emotion" required>
+                {% for em in available_emotions %}
+                  <option value="{{ em }}">
+                    {{ _(em) }}{% if em == 'neutral' %} ({{ _("Fallback") }}){% endif %}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label>
+                {{ _("Sprite File (PNG, WEBP)") }} *
+                <span class="field-help-btn" title="{{ _('Transparent PNG or WEBP sprite image for this emotion.') }}">?</span>
+              </label>
+              <input type="file" name="sprite_file" accept=".png,.webp" required>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
+              {{ action_button(_("Cancel"), modal_close="add-sprite-modal") }}
+              {{ action_button(_("Upload"), type="submit", icon="💾") }}
+            </div>
+          </form>
+        </div>
+      </div>
+    {% endif %}
   {% endif %}
 
   <!-- MODAL: Gesprächsstil hinzufügen (Overlay Frame) -->
@@ -66,7 +103,7 @@
         </div>
         <div style="display: flex; gap: 0.65rem;">
           {{ action_button(_("Cancel"), icon="✕", modal_close="add-dialogue-modal") }}
-          {{ action_button(_("Add"), icon="➕", variant="primary", id="confirm-add-dialogue-btn") }}
+          {{ action_button(_("Add"), icon="➕", id="confirm-add-dialogue-btn") }}
         </div>
       </div>
     </div>
@@ -102,6 +139,32 @@
       </div>
       <div style="display: flex; justify-content: flex-end; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
         {{ action_button(_("Cancel"), modal_close="add-lorebook-modal") }}
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Ort hinzufügen (Overlay Frame mit Suchfilter) -->
+  <div class="modal-backdrop"
+       id="add-world-location-modal"
+       aria-hidden="true"
+       data-title-preferred="{{ _('Add Preferred Location') }}"
+       data-title-disliked="{{ _('Add Disliked Location') }}"
+       data-add-label="+ {{ _('Add') }}"
+       data-remove-title="{{ _('Remove location') }}"
+       data-empty-all-assigned="{{ _('All locations of this world are already assigned.') }}"
+       data-empty-search="{{ _('No matching locations found.') }}">
+    <div class="modal-frame" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 style="color: var(--gold-accent);" id="world-location-modal-title"><span class="icon-mono">📍</span> {{ _("Add Location") }}</h3>
+        {{ modal_close_button("add-world-location-modal") }}
+      </div>
+      <div style="padding: 0.5rem 0 1rem 0;">
+        <input type="text" id="world-location-filter-input" placeholder="{{ _('Search locations by name or description...') }}" class="search-input" style="width: 100%; margin-bottom: 0.85rem;" autocomplete="off">
+        <div id="world-location-picker-list" class="lorebook-picker-list"></div>
+        <div id="world-location-picker-empty" class="world-location-empty" style="display: none;"></div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; border-top: 1px solid var(--border-wood-dark); padding-top: 0.75rem;">
+        {{ action_button(_("Close"), modal_close="add-world-location-modal") }}
       </div>
     </div>
   </div>

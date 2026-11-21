@@ -110,14 +110,3 @@
   border-radius: 6px !important;
 }
 
-.i18n-translate-btn {
-  padding: 0.24rem 0.6rem !important;
-  font-size: 0.78rem !important;
-  border-radius: 6px !important;
-}
-
-.i18n-delete-btn:hover {
-  border-color: var(--danger, #e5534b) !important;
-  color: var(--danger, #e5534b) !important;
-}
-

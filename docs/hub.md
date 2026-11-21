@@ -2,7 +2,7 @@
 
 [← Back to Overview](README.md) | [← Initial Setup](first_boot.md) | [Player Personas →](personas.md)
 
-Following a successful login, you land directly on the main central hub of aimo. From here, you have immediate access to all roleplay characters, lorebooks, and world settings.
+Following a successful login, you land directly on the main central hub of AImo. From here, you have immediate access to all roleplay characters, lorebooks, and world settings.
 
 ---
 

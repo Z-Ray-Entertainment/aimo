@@ -192,7 +192,7 @@
               {{ action_button(_("Delete"), type="submit", form="delete-ev-form-" ~ modal_prefix ~ "-" ~ ev.id, variant="danger", icon="🗑️") }}
               <div style="display: flex; gap: 0.5rem;">
                 {{ action_button(_("Cancel"), modal_close="edit-event-modal-" ~ modal_prefix ~ "-" ~ ev.id) }}
-                {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
+                {{ action_button(_("Save"), type="submit", icon="💾") }}
               </div>
             </div>
           </form>
@@ -214,7 +214,7 @@
         {{ _event_form_fields(scope_type, ev=none, locations=locations, ev_translations=ev_translations, modal_prefix=modal_prefix, tier_names_map=tier_names_map, loc_display=loc_display, origin_language=origin_language) }}
         <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
           {{ action_button(_("Cancel"), modal_close="new-event-modal-" ~ modal_prefix) }}
-          {{ action_button(_("Save Event"), type="submit", variant="primary", icon="💾") }}
+          {{ action_button(_("Save Event"), type="submit", icon="💾") }}
         </div>
       </form>
     </div>

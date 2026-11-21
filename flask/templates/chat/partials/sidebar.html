@@ -14,118 +14,37 @@
       </button>
     </form>
 
-    <div class="chat-character-portrait-name">
-      {{ character.name }}
-    </div>
-  </div>
-
-  <div class="relationship-bar-wrap aimo-frame chat-glass-panel" data-relationship-score="{{ chat_session.relationship_value }}" style="border-radius: 10px; padding: 0.65rem;">
-    <div class="relationship-header">
-      <span>{{ _('Relationship:') }} <strong id="rel-score-label">{{ relationship_tier_name }}</strong></span>
-      <span class="heart-icon">❤️</span>
-    </div>
-    <div class="relationship-track">
+    <div
+      class="chat-character-portrait-name relationship-bar-wrap"
+      data-relationship-score="{{ chat_session.relationship_value }}"
+      title="{{ relationship_tier_name }}">
       <div class="relationship-fill"></div>
+      <span class="heart-icon" aria-hidden="true">❤️</span>
+      <span class="chat-character-portrait-name-text">{{ character.name }}</span>
     </div>
   </div>
 
-  <div class="chat-sidebar-section">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-      <span class="chat-sidebar-label" style="margin-bottom: 0;">{{ _('Active Persona') }}</span>
-      {% if persona %}
-        <button
-          type="button"
-          style="background: none; border: none; cursor: pointer; color: var(--gold-accent);"
-          title="{{ _('Edit player persona') }}"
-          data-persona-id="{{ persona.id }}"
-          data-persona-name="{{ persona.name }}"
-          data-persona-gender="{{ persona.gender.value }}"
-          data-persona-description="{{ persona.description }}"
-          data-persona-appearance="{{ persona.appearance }}"
-          data-persona-i18n-description='{{ (persona_i18n_description or {}) | tojson }}'
-          data-persona-i18n-appearance='{{ (persona_i18n_appearance or {}) | tojson }}'
-          data-persona-portrait-url="{{ url_for('uploaded_file', filename=persona.portrait_path) }}"
-          data-persona-in-use="1"
-          onclick="openEditPersonaFromBtn(this);">
-          <span class="icon-mono">✏️</span>
-        </button>
-      {% endif %}
-    </div>
-    {% if chat_session.persona_locked %}
-      <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.45rem 0.65rem; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--border-wood-dark);">
-        <span>👤 {{ persona.name if persona else _('Unknown') }}</span>
-        <span title="{{ _('Persona is locked for this chat after the 1st message') }}">🔒</span>
-      </div>
-    {% else %}
-      <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}">
-        <input type="hidden" name="action" value="change_persona">
-        <select name="persona_id" onchange="this.form.submit()" style="padding: 0.4rem;">
-          {% for p in user_personas %}
-            <option value="{{ p.id }}" {% if persona and p.id == persona.id %}selected{% endif %}>{{ p.name }}</option>
-          {% endfor %}
-        </select>
-      </form>
-    {% endif %}
-  </div>
-
-  <div class="chat-sidebar-world-section">
-    <div>
-      <span class="chat-sidebar-label">{{ _('World') }}</span>
-      <div class="chat-field-box">
-        <div class="chat-field-content">
-          {% if worldinfo %}
-            {{ worldinfo.icon or '🌐' }} {{ worldinfo.name }}
-          {% else %}
-            {{ _('No World (Neutral)') }}
-          {% endif %}
+  {% if (worldinfo and worldinfo_locations) or (((worldinfo and worldinfo_events) or character_events) and can_view_event_counter) %}
+    <div class="chat-sidebar-world-section">
+      {% if worldinfo and worldinfo_locations %}
+        <div>
+          <label for="chat-location-select" class="chat-sidebar-label">{{ _('Current Location') }}</label>
+          <select id="chat-location-select" class="chat-sidebar-select">
+            <option value="world" {% if not current_location %}selected{% endif %}>
+              🌐 {{ worldinfo.name }} ({{ _('World') }})
+            </option>
+            {% for loc in worldinfo_locations %}
+              {% if not loc.character_id or loc.character_id == character.id %}
+                <option value="{{ loc.id }}" {% if current_location and loc.id == current_location.id %}selected{% endif %}>
+                  📍 {{ loc.name }}
+                </option>
+              {% endif %}
+            {% endfor %}
+          </select>
         </div>
-        <button
-          type="button"
-          id="chat-world-backdrop-btn"
-          class="chat-input-btn chat-backdrop-viewer-btn"
-          data-backdrop-url="{{ url_for('uploaded_file', filename=worldinfo.backdrop_image_path) if worldinfo and worldinfo.backdrop_image_path else '' }}"
-          data-backdrop-title="{{ worldinfo.name if worldinfo else '' }}"
-          title="{{ _('View world backdrop') }}"
-          aria-label="{{ _('View world backdrop') }}"
-          {% if not (worldinfo and worldinfo.backdrop_image_path) %}hidden{% endif %}>
-          <span class="icon-mono" aria-hidden="true">🖼️</span>
-        </button>
-        <button type="button" class="chat-input-btn" data-modal-open="switch-worldinfo-modal" title="{{ _('Switch world') }}" aria-label="{{ _('Switch world') }}">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
-            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-          </svg>
-        </button>
-      </div>
-    </div>
+      {% endif %}
 
-    {% if worldinfo and worldinfo_locations %}
-      <div>
-        <label for="chat-location-select" class="chat-sidebar-label">{{ _('Current Location') }}</label>
-        <select id="chat-location-select" class="chat-sidebar-select">
-          <option value="world" {% if not current_location %}selected{% endif %}>
-            🌐 {{ worldinfo.name }} ({{ _('World') }})
-          </option>
-          {% for loc in worldinfo_locations %}
-            {% if not loc.character_id or loc.character_id == character.id %}
-              <option value="{{ loc.id }}" {% if current_location and loc.id == current_location.id %}selected{% endif %}>
-                📍 {{ loc.name }}
-              </option>
-            {% endif %}
-          {% endfor %}
-        </select>
-      </div>
-    {% endif %}
-
-    {% if (worldinfo and worldinfo_events) or character_events %}
-      <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" class="chat-sidebar-events-toggle">
-        <input type="hidden" name="action" value="toggle_events">
-        <label>
-          <input type="checkbox" name="events_enabled" value="1" {% if chat_session.events_enabled %}checked{% endif %} onchange="this.form.submit()">
-          <span>🎲 {{ _('Enable random events') }}</span>
-        </label>
-      </form>
-
-      {% if can_view_event_counter %}
+      {% if ((worldinfo and worldinfo_events) or character_events) and can_view_event_counter %}
         <div class="chat-sidebar-admin-event-counter" id="admin-event-counter-box" title="{{ _('Admin & creator info: Cooldown until the next random event') }}">
           <span class="icon-mono">⏳</span> {{ _('Next event:') }}
           <span id="admin-event-counter-status">
@@ -139,6 +58,6 @@
           </span>
         </div>
       {% endif %}
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 </aside>

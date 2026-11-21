@@ -11,4 +11,5 @@ class User:
     creator_tag: str = ""
     language: str = ""
     is_initial_admin: bool = False
+    ember_particles_enabled: bool = True
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))

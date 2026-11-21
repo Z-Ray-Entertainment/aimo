@@ -58,6 +58,9 @@ class AuthService:
     def assign_language(self, user: User, raw_language: str) -> None:
         user.language = Language.resolve(raw_language).value
 
+    def set_ember_particles_enabled(self, user: User, enabled: bool) -> None:
+        user.ember_particles_enabled = bool(enabled)
+
     def change_password(self, user: User, new_password: str) -> None:
         if not new_password:
             raise AuthError("New password must not be empty.")

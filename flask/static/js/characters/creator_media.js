@@ -12,7 +12,6 @@ export function initDialogueManager() {
   const nameInput = document.getElementById("char-name-input");
   const sparkleModalBtn = document.getElementById("sparkle-modal-dialogue-btn");
   const descTextarea = document.getElementById("char-description-textarea");
-  const genderSelect = document.querySelector('select[name="gender"]');
 
   if (!hiddenInput || !listContainer) return;
 
@@ -231,9 +230,10 @@ export function initDialogueManager() {
     }
 
     const userLang = (document.documentElement.lang || "de").slice(0, 2).toLowerCase();
+    const genderInput = document.querySelector('input[name="gender"]:checked') || document.querySelector('select[name="gender"]');
     const payload = {
       name: getCharacterName(),
-      gender: genderSelect ? genderSelect.value : "",
+      gender: genderInput ? genderInput.value : "",
       description: desc,
       language: userLang,
       current_trigger: (triggerInput.value || "").trim(),
@@ -327,20 +327,12 @@ export function initImageViewer() {
 
   const galleryGrid = document.getElementById("char-gallery-grid");
   if (galleryGrid) {
-    galleryGrid.addEventListener("click", (e) => {
-      const target = e.target;
-      if (!(target instanceof Element)) return;
-      if (target.closest("form, button, a")) return;
-      const preview = target.closest(".char-gallery-preview");
-      if (!preview) return;
-
+    const openGalleryViewer = (startIndex) => {
       const previews = Array.from(galleryGrid.querySelectorAll(".char-gallery-preview"));
       const items = [];
-      let startIndex = 0;
       for (const el of previews) {
         const src = el.getAttribute("data-viewer-src");
         if (!src) continue;
-        if (el === preview) startIndex = items.length;
         items.push({
           src,
           title: el.getAttribute("data-viewer-title") || "",
@@ -348,49 +340,64 @@ export function initImageViewer() {
         });
       }
       if (items.length > 0) {
-        window.AimoImageViewer.open(items, startIndex);
+        const safeIndex = Number.isFinite(startIndex) && startIndex >= 0 && startIndex < items.length ? startIndex : 0;
+        window.AimoImageViewer.open(items, safeIndex);
       }
+    };
+
+    galleryGrid.addEventListener("click", (e) => {
+      const target = e.target;
+      if (!(target instanceof Element)) return;
+
+      const zoomBtn = target.closest(".char-gallery-zoom-btn");
+      if (zoomBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const preview = zoomBtn.closest(".char-gallery-preview");
+        const idx = preview ? Number.parseInt(preview.getAttribute("data-gallery-index") || "0", 10) : 0;
+        openGalleryViewer(idx);
+        return;
+      }
+
+      const cardTile = target.closest(".card-tile");
+      if (cardTile && cardTile.hasAttribute("data-modal-open")) return;
+      if (target.closest("form, button, a")) return;
+
+      const preview = target.closest(".char-gallery-preview");
+      if (!preview) return;
+      const idx = Number.parseInt(preview.getAttribute("data-gallery-index") || "0", 10);
+      openGalleryViewer(idx);
+    });
+
+    document.addEventListener("click", (e) => {
+      const target = e.target;
+      if (!(target instanceof Element)) return;
+      const modalPreview = target.closest(".char-gallery-modal-preview");
+      if (!modalPreview) return;
+      const idx = Number.parseInt(modalPreview.getAttribute("data-gallery-index") || "0", 10);
+      openGalleryViewer(idx);
     });
   }
 
-  const spritesTab = document.getElementById("tab-char-sprites");
-  if (spritesTab) {
-    spritesTab.addEventListener("click", (e) => {
+  const spritesGrid = document.getElementById("char-sprites-grid");
+  if (spritesGrid) {
+    spritesGrid.addEventListener("click", (e) => {
       const target = e.target;
       if (!(target instanceof Element)) return;
       if (target.closest("form, button, label, a")) return;
 
-      const modalImg = target.closest('[id^="sprite-modal-"] .card-tile img');
-      if (modalImg) {
-        const modal = modalImg.closest('[id^="sprite-modal-"]');
-        const modalImgs = Array.from(modal.querySelectorAll(".card-tile img"));
-        const items = modalImgs.map((img) => ({
-          src: img.src,
-          title: img.getAttribute("alt") || "",
-        }));
-        const idx = Math.max(0, modalImgs.indexOf(modalImg));
-        window.AimoImageViewer.open(items, idx);
-        return;
-      }
+      const clickArea = target.closest(".aimo-sprite-card .aimo-card-click-area[data-viewer-src]");
+      if (!clickArea) return;
 
-      const spritePreview = target.closest(".char-sprite-preview");
-      if (spritePreview) {
-        const emotion = spritePreview.getAttribute("data-emotion") || "";
-        const modal = emotion ? document.getElementById(`sprite-modal-${emotion}`) : null;
-        if (modal) {
-          const modalImgs = Array.from(modal.querySelectorAll(".card-tile img"));
-          if (modalImgs.length > 0) {
-            window.AimoImageViewer.open(
-              modalImgs.map((img) => ({ src: img.src, title: img.getAttribute("alt") || "" })),
-              0
-            );
-            return;
-          }
-        }
-        const src = spritePreview.getAttribute("data-viewer-src");
-        if (src) {
-          window.AimoImageViewer.openSingle(src, spritePreview.getAttribute("data-viewer-title") || emotion);
-        }
+      const allAreas = Array.from(spritesGrid.querySelectorAll(".aimo-sprite-card .aimo-card-click-area[data-viewer-src]"));
+      const items = allAreas.map((el) => ({
+        src: el.getAttribute("data-viewer-src") || "",
+        title: el.getAttribute("data-viewer-title") || "",
+      })).filter((item) => item.src);
+
+      if (items.length > 0) {
+        const idx = Math.max(0, allAreas.indexOf(clickArea));
+        window.AimoImageViewer.open(items, idx);
       }
     });
   }

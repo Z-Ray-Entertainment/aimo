@@ -316,6 +316,8 @@ def edit_location(worldinfo_id: int, location_id: int):
     if loc is not None and loc.worldinfo_id == worldinfo_id:
         try:
             bg_path = form.background_image_path or loc.background_image_path
+            if request.form.get("remove_background") == "1":
+                bg_path = None
             bg_file = request.files.get("background_file")
             if bg_file and bg_file.filename:
                 bg_path = storage.save_background(bg_file.stream, bg_file.filename)

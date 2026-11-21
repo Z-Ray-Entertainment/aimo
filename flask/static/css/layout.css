@@ -86,7 +86,7 @@
 }
 
 .hamburger-btn:hover,
-.hamburger-btn:focus {
+.hamburger-btn:focus-visible {
   border-color: var(--gold-accent);
   box-shadow: 0 0 8px var(--gold-glow);
   background: var(--bg-leather);
@@ -257,7 +257,8 @@
 #chat-pane-messages.tab-pane.active,
 #chat-pane-media.tab-pane.active,
 #chat-pane-memories.tab-pane.active,
-#chat-pane-lorebooks.tab-pane.active {
+#chat-pane-lorebooks.tab-pane.active,
+#chat-pane-settings.tab-pane.active {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -268,7 +269,8 @@
   gap: 0.75rem;
 }
 
-#chat-pane-media.tab-pane.active {
+#chat-pane-media.tab-pane.active,
+#chat-pane-settings.tab-pane.active {
   overflow-y: auto;
   padding-right: 0.4rem;
 }
@@ -549,6 +551,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   width: 17px;
   height: 17px;
   border-radius: 50%;
@@ -564,6 +567,11 @@
   vertical-align: middle;
   transition: all 0.15s ease;
   user-select: none;
+}
+
+label > .field-help-btn,
+h3 > .field-help-btn {
+  margin-left: 0;
 }
 
 .field-help-btn:hover {
@@ -710,6 +718,27 @@ button.aimo-sidebar-nav-item:disabled {
 
 .aimo-sidebar-stage {
   min-width: 0;
+}
+
+.editor-settings-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem 1.25rem;
+  flex-wrap: wrap;
+}
+
+.editor-settings-top-main {
+  flex: 1;
+  min-width: 220px;
+}
+
+.editor-settings-visibility {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .aimo-split-stage-grid {
@@ -980,8 +1009,7 @@ body.aimo-iv-scroll-lock {
 #portrait-preview-img,
 #avatar-preview-img,
 .char-gallery-preview,
-.char-sprite-preview,
-[id^="sprite-modal-"] .card-tile img,
+.aimo-sprite-card .aimo-card-click-area,
 #worldinfo-cover-preview-img,
 #worldinfo-backdrop-preview {
   cursor: zoom-in;

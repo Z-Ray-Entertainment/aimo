@@ -1,4 +1,5 @@
-{% from "macros/buttons.html" import action_button %}
+{% from "macros/buttons.html" import action_button, visibility_toggle %}
+{% from "macros/badges.html" import pill_radio_group %}
     <section id="tab-char-info" class="tab-pane {% if active_tab == 'info' %}active{% endif %}">
       <div class="aimo-frame" style="padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
         <div>
@@ -8,27 +9,28 @@
           </label>
           <input type="text" id="char-name-input" name="name" value="{{ form.name }}" required>
         </div>
-        <div style="display: flex; gap: 1rem;">
-          <div style="flex: 1;">
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 220px;">
             <label>
               {{ _("Gender") }} *
-              <span class="field-help-btn" title="{{ _('Sets gender and derived pronouns for the system prompt.') }}">?</span>
             </label>
-            <select name="gender" required>
-              <option value="female" {% if form.gender == 'female' %}selected{% endif %}>{{ _("Female") }}</option>
-              <option value="male" {% if form.gender == 'male' %}selected{% endif %}>{{ _("Male") }}</option>
-              <option value="non-binary" {% if form.gender == 'non-binary' %}selected{% endif %}>{{ _("Non-Binary") }}</option>
-            </select>
+            {{ pill_radio_group(
+                name="gender",
+                options=[
+                  {"value": "female", "title": _("Female"), "icon": "♀️"},
+                  {"value": "male", "title": _("Male"), "icon": "♂️"},
+                  {"value": "non-binary", "title": _("Non-Binary"), "icon": "⚧️"}
+                ],
+                selected=form.gender or "non-binary",
+                required=true,
+                aria_label=_("Gender")
+            ) }}
           </div>
-          <div style="flex: 1;">
+          <div class="editor-settings-visibility">
             <label>
               {{ _("Visibility") }} *
-              <span class="field-help-btn" title="{{ _('Private = only playable in your account. Public = visible to all users in the Hub.') }}">?</span>
             </label>
-            <select name="visibility" required>
-              <option value="private" {% if form.visibility == 'private' %}selected{% endif %}>{{ _("Private") }}</option>
-              <option value="public" {% if form.visibility == 'public' %}selected{% endif %}>{{ _("Public") }}</option>
-            </select>
+            {{ visibility_toggle(value=form.visibility) }}
           </div>
         </div>
 
@@ -85,7 +87,7 @@
         <!-- Charakterbeschreibung -->
         <div style="grid-column: 1 / -1;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-            <label>
+            <label style="margin-bottom: 0;">
               {{ _("Character Description & Personality") }} *
               <span class="field-help-btn" title="{{ _('Core identity, traits, backstory, fears, and motivations.') }}">?</span>
             </label>
@@ -108,7 +110,7 @@
         <!-- Aussehen des Charakters mit Vision-AI Extraktion -->
         <div style="grid-column: 1 / -1;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-            <label>
+            <label style="margin-bottom: 0;">
               {{ _("Physical Appearance") }}
               <span class="field-help-btn" title="{{ _('Detailed visual appearance for prompts and AI image generation.') }}">?</span>
             </label>
@@ -147,7 +149,7 @@
 
         <!-- Bottom Save Action Row -->
         <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-wood-dark);">
-          {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
+          {{ action_button(_("Save"), type="submit", icon="💾") }}
         </div>
       </div>
     </section>

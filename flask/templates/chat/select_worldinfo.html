@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button, tab_button %}
 {% from "macros/lorebook_manager.html" import lorebook_manager, lorebook_picker_modal %}
-{% block title %}AIMO — {{ _("New Adventure with") }} {{ character.name }}{% endblock %}
+{% block title %}AImo — {{ _("New Adventure with") }} {{ character.name }}{% endblock %}
 
 {% block extra_head %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/components/cards.css') }}">
@@ -90,7 +90,7 @@
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
       {{ action_button(_("Back to Hub"), href=url_for('overview.index'), arrow="left", size="lg") }}
-      {{ action_button(_("Start Adventure"), type="submit", arrow="right", variant="primary", size="lg") }}
+      {{ action_button(_("Start Adventure"), type="submit", arrow="right", size="lg") }}
     </div>
   </form>
 </div>

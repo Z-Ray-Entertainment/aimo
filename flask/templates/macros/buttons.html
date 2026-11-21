@@ -53,7 +53,7 @@
 
 {# Reusable Action/Navigation Button Component (System-weite .aimo-btn Basisklasse); layout: 'full' (Icon + Text) oder 'icon' (nur Icon) #}
 {% macro action_button(text="", href=none, type="button", icon=none, icon_src=none, arrow=none, variant="default", size="default", extra_class="", id=none, title=none, onclick=none, modal=none, modal_close=none, layout="full", active=false, disabled=false, form=none, style=none, target=none, aria_label=none, data={}) %}
-  {% set variant_class = ' primary' if variant == 'primary' else (' danger' if variant == 'danger' else '') %}
+  {% set variant_class = ' danger' if variant == 'danger' else '' %}
   {% set size_class = ' aimo-btn-lg' if size == 'lg' else (' aimo-btn-sm' if size == 'sm' else '') %}
   {% set layout_class = ' aimo-btn-icon' if layout == 'icon' else '' %}
   {% set active_class = ' active' if active else '' %}
@@ -88,4 +88,35 @@
 {# Reusable Animated Thinking Dots Component (Chat-style 3 Bouncing Dots) #}
 {% macro thinking_dots() %}
   <span class="thinking-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+{% endmacro %}
+
+{# Reusable Visibility Toggle Button (Open Eye = Public, Closed Eye = Private) #}
+{% macro visibility_toggle(value="private", name="visibility", disabled=false, id=none, public_title=none, private_title=none, extra_class="") %}
+  {% set current_value = "public" if value == "public" else "private" %}
+  {% set eff_public_title = public_title if public_title is not none else _("Public") %}
+  {% set eff_private_title = private_title if private_title is not none else _("Private") %}
+  {% set eff_title = eff_public_title if current_value == "public" else eff_private_title %}
+  <span class="aimo-visibility-toggle-wrap">
+    <input type="hidden" name="{{ name }}" value="{{ current_value }}">
+    <button type="button"
+            class="aimo-btn aimo-btn-icon aimo-visibility-toggle{% if extra_class %} {{ extra_class }}{% endif %}"
+            {% if id %}id="{{ id }}"{% endif %}
+            data-visibility-toggle
+            data-state="{{ current_value }}"
+            data-public-title="{{ eff_public_title }}"
+            data-private-title="{{ eff_private_title }}"
+            title="{{ eff_title }}"
+            aria-label="{{ eff_title }}"
+            aria-pressed="{{ 'true' if current_value == 'public' else 'false' }}"
+            {% if disabled %}disabled{% endif %}>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visibility-icon-open" aria-hidden="true">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visibility-icon-closed" aria-hidden="true">
+        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+        <line x1="1" y1="1" x2="23" y2="23"/>
+      </svg>
+    </button>
+  </span>
 {% endmacro %}

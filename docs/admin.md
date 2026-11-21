@@ -22,7 +22,7 @@ The Administration area shares the exact same two-column layout as the [User Set
 
 ## 👥 User Management (`/admin/users`)
 
-aimo avoids rigid role hierarchies in favor of a **functional permission model**:
+AImo avoids rigid role hierarchies in favor of a **functional permission model**:
 - **Create User:** Provision new user accounts with username, email, and initial password.
 - **Permission Presets:**
   - `Admin`: Automatically grants all available permissions (Super User).

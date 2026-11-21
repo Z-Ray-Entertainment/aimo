@@ -32,7 +32,8 @@ The Character Designer uses a modern two-column layout consistent with the Admin
 ## 📝 1. Main Information (`📋 Hauptinformationen`)
 
 - **Name:** Character's name.
-- **Gender:** `male`, `female`, or `non-binary`.
+- **Gender:** Icon-only single-select icon buttons (`♀️`, `♂️`, `⚧️`, with `Non-Binary` selected by default). Hovering over a button displays the corresponding label (`Female`, `Male`, or `Non-Binary`).
+- **Visibility (Top Right):** Compact eye icon toggle button at the top right of the settings page switching between **Public** (open eye icon) and **Private** (closed eye icon). Hovering over the button displays the current state label (`Public` or `Private`).
 - **Primary Portrait (Mandatory):** Main 9:16 portrait and 1:1 avatar image used for tiles and default chat presentation. Clicking either preview thumbnail opens it in the fullscreen Image Viewer.
 - **Description & AI Sparkle ✨:**
   - Define personality, speech patterns, quirks, and mannerisms.
@@ -44,23 +45,24 @@ The Character Designer uses a modern two-column layout consistent with the Admin
 ## 🖼️ 2. Unlockable Gallery Images (`🖼️ Galeriebilder`)
 
 - Smartphone/portrait-oriented images (9:16 aspect ratio).
-- **Affection Threshold:** Assign a relationship tier (from *Pure Hatred* to *Blind Devotion*) to each image. As soon as your relationship in a chat reaches this tier, the image unlocks under the *"Media"* tab!
-- **Fullscreen Gallery:** Clicking any gallery image opens all uploaded gallery images in a browsable fullscreen Image Viewer.
+- **Adding Images:** Click the **Add 9:16 Image** tile in the gallery grid to upload a new image and select its unlock relationship tier.
+- **Affection Threshold & Editing:** Assign a relationship tier (from *Pure Hatred* to *Blind Devotion*) to each image. As soon as your relationship in a chat reaches this tier, the image unlocks under the *"Media"* tab! Clicking any gallery card opens the edit dialog, where you can change the unlock relationship tier or delete the image.
+- **Fullscreen Gallery:** Clicking the **🔍** button on a gallery card (or clicking the preview image inside the edit dialog) opens all uploaded gallery images in a browsable fullscreen Image Viewer. In read-only view, clicking a card directly opens the fullscreen viewer.
 
 ---
 
 ## 🎭 3. Emotional Sprites (`🎭 Emotionale Sprites`)
 
-aimo supports dynamic, transparent sprites (PNG or WEBP) that adapt to the AI character's current emotional state during conversations.
+AImo supports dynamic, transparent sprites (PNG or WEBP) that adapt to the AI character's current emotional state during conversations.
 
 ### The 28 Supported Emotions
 `admire`, `amused`, `anger`, `annoyed`, `approval`, `caring`, `confused`, `curious`, `desire`, `disappointed`, `disapproval`, `disgust`, `embarrassed`, `excited`, `fear`, `gratitude`, `grief`, `joy`, `love`, `nervousness`, `neutral` (Default & Fallback), `optimistic`, `pride`, `realize`, `relief`, `remorse`, `sad`, `surprise`.
 
-### Variants & Stackview
-- **Multiple Variants per Emotion:** You can upload multiple sprites for any single emotion (e.g., `joy_1.png`, `joy_2.webp`).
-- **Paper-Plus Button (📄➕):** Becomes visible once at least one sprite exists for an emotion, enabling you to add additional variants.
-- **Stackview & Eye Button (👁️):** When multiple variants exist, a layered stack effect indicates the variety. Clicking the eye button opens a modal popup to inspect variants and delete individual images. Clicking a sprite preview or variant image opens it in the fullscreen Image Viewer (browsable across all variants of that emotion).
-- **Runtime Random Selection:** When the AI expresses an emotion, the system selects one of the available variants at random.
+### Managing Sprites
+- **Sprite Grid:** Displays all currently assigned emotional sprites for the character, starting with `neutral` (marked with a **Fallback** badge) followed by the remaining assigned emotions in alphabetical order.
+- **Adding Sprites (`+`):** As long as not all 28 emotions have a sprite assigned, an **Add Sprite** tile appears at the beginning of the grid. Clicking it opens a dialog where you select one of the remaining unassigned emotions and upload a PNG or WEBP file. Once all 28 emotions are assigned, the **Add Sprite** tile is hidden.
+- **Fullscreen Preview & Deleting:** Clicking any sprite card opens it in the browsable fullscreen Image Viewer. In edit mode, clicking the trash icon (**🗑️**) in the top-right corner of a card deletes that sprite and makes its emotion available again.
+- **Fallback Behavior:** If the AI expresses an emotion that has no dedicated sprite assigned, the `neutral` sprite is used as a fallback (or the primary portrait if no `neutral` sprite is set).
 
 ---
 
@@ -79,7 +81,12 @@ Representative conversation snippets (Few-Shot trigger and response pairs) that 
 ## 🗺️ 5. World Settings (`🗺️ World`)
 
 - **Recommended WorldInfo:** Select a suggested [WorldInfo](worldinfo.md) setting.
-- **Location Preferences:** Specify **preferred locations** (places the character enjoys visiting) and **disliked locations** (places they avoid).
+- **Initial Location of First Message:** Optionally choose a fixed starting location from the linked world for new chats.
+- **Location Preferences (Two-Column Layout):** Specify **Preferred Locations** (places the character enjoys visiting) on the left and **Disliked Locations** (places they avoid) on the right:
+  - Click **➕ Add** in either column header to open a searchable location overlay for the linked world.
+  - Locations already assigned to either *Preferred* or *Disliked* are automatically hidden from the overlay so each location can only belong to one category.
+  - Click any location in the overlay to add it immediately; the overlay stays open so you can add multiple locations in one go, and can be closed with **✕** or **Close**.
+  - Click **🗑️** next to an assigned location to remove it from that list.
 
 ---
 

@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button %}
-{% block title %}AIMO — Administration{% endblock %}
+{% block title %}AImo — Administration{% endblock %}
 
 {% block extra_head %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin_setup.css') }}">
+  {% block admin_head %}{% endblock %}
+{% endblock %}
+
+{% block extra_scripts %}
+  {% block admin_scripts %}{% endblock %}
 {% endblock %}
 
 {% block content %}

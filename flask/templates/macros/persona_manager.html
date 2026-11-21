@@ -5,6 +5,7 @@
    ============================================================================= #}
 {% from "macros/buttons.html" import action_button, modal_close_button %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
+{% from "macros/badges.html" import pill_radio_group %}
 {% macro persona_portrait_field(prefix, label) %}
   <div>
     <label>{{ label }}</label>
@@ -65,17 +66,23 @@
           </div>
           <div>
             <label>{{ _('Gender') }} *</label>
-            <select name="gender">
-              <option value="female">{{ _('Female') }}</option>
-              <option value="male">{{ _('Male') }}</option>
-              <option value="non-binary">{{ _('Non-Binary') }}</option>
-            </select>
+            {{ pill_radio_group(
+                name="gender",
+                options=[
+                  {"value": "female", "title": _("Female"), "icon": "♀️"},
+                  {"value": "male", "title": _("Male"), "icon": "♂️"},
+                  {"value": "non-binary", "title": _("Non-Binary"), "icon": "⚧️"}
+                ],
+                selected="non-binary",
+                required=true,
+                aria_label=_("Gender")
+            ) }}
           </div>
           {{ persona_portrait_field('new', _('Portrait image (PNG/JPG/WEBP)')) }}
           {{ persona_text_fields('new') }}
           <div style="display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
             {{ action_button(_("Cancel"), modal_close="persona-manager-modal", data={"persona-lockable": "1"}) }}
-            {{ action_button(_("Save Persona"), type="submit", variant="primary", icon="💾", id="new-persona-submit-btn", data={"persona-lockable": "1"}) }}
+            {{ action_button(_("Save Persona"), type="submit", icon="💾", id="new-persona-submit-btn", data={"persona-lockable": "1"}) }}
           </div>
         </form>
       </div>
@@ -91,11 +98,18 @@
           </div>
           <div>
             <label>{{ _('Gender') }} *</label>
-            <select id="edit-persona-gender" name="gender">
-              <option value="female">{{ _('Female') }}</option>
-              <option value="male">{{ _('Male') }}</option>
-              <option value="non-binary">{{ _('Non-Binary') }}</option>
-            </select>
+            {{ pill_radio_group(
+                name="gender",
+                id="edit-persona-gender",
+                options=[
+                  {"value": "female", "title": _("Female"), "icon": "♀️"},
+                  {"value": "male", "title": _("Male"), "icon": "♂️"},
+                  {"value": "non-binary", "title": _("Non-Binary"), "icon": "⚧️"}
+                ],
+                selected="non-binary",
+                required=true,
+                aria_label=_("Gender")
+            ) }}
           </div>
           {{ persona_portrait_field('edit', _('New portrait image (optional, PNG/JPG/WEBP)')) }}
           {{ persona_text_fields('edit') }}
@@ -103,7 +117,7 @@
             {{ action_button(_("Delete"), type="submit", form="edit-persona-delete-form", variant="danger", icon="🗑️", id="edit-persona-delete-btn", data={"persona-lockable": "1"}) }}
             <div style="display: flex; gap: 0.5rem;">
               {{ action_button(_("Cancel"), modal_close="persona-manager-modal", data={"persona-lockable": "1"}) }}
-              {{ action_button(_("Save changes"), type="submit", variant="primary", icon="💾", id="edit-persona-submit-btn", data={"persona-lockable": "1"}) }}
+              {{ action_button(_("Save changes"), type="submit", icon="💾", id="edit-persona-submit-btn", data={"persona-lockable": "1"}) }}
             </div>
           </div>
         </form>

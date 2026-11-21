@@ -1,4 +1,4 @@
-{% from "macros/buttons.html" import action_button %}
+{% from "macros/buttons.html" import action_button, visibility_toggle %}
 <div class="modal-backdrop" id="new-lorebook-modal" aria-hidden="true">
   <div class="modal-frame" style="max-width: 540px;">
     <div class="modal-header">
@@ -6,17 +6,14 @@
       {{ action_button("Schließen", icon="✕", layout="icon", modal_close="new-lorebook-modal") }}
     </div>
     <form method="POST" action="{{ url_for('lorebooks.create_lorebook') }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
-      <div style="display: flex; gap: 0.75rem;">
-        <div style="flex: 1;">
+      <div class="editor-settings-top-row">
+        <div class="editor-settings-top-main">
           <label>Name des Lorebooks *</label>
           <input type="text" name="name" required>
         </div>
-        <div style="width: 150px;">
-          <label>Sichtbarkeit</label>
-          <select name="visibility">
-            <option value="private" selected>Privat</option>
-            <option value="public">Öffentlich</option>
-          </select>
+        <div class="editor-settings-visibility">
+          <label>{{ _("Visibility") }}</label>
+          {{ visibility_toggle(value="private") }}
         </div>
       </div>
       <div>
@@ -24,7 +21,7 @@
         <textarea name="description" rows="3" placeholder="Kurzbeschreibung..."></textarea>
       </div>
       <div style="text-align: right;">
-        {{ action_button("Anlegen", type="submit", variant="primary") }}
+        {{ action_button("Anlegen", type="submit") }}
       </div>
     </form>
   </div>

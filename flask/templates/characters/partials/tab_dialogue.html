@@ -1,17 +1,11 @@
 {% from "macros/buttons.html" import new_button %}
     <section id="tab-char-dialogue" class="tab-pane {% if active_tab == 'dialogue' %}active{% endif %}">
       <div class="aimo-frame" style="padding: 1.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
-          <div>
-            <h3 style="color: var(--gold-accent); margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
-              💬 {{ _("Dialogue Styles (Few-Shot Examples)") }}
-              <span class="field-help-btn" title="{{ _('Typical player trigger and character response pairs injected into the prompt.') }}">?</span>
-            </h3>
-            <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
-              {{ _("Define typical trigger-response examples to guide the AI's tone, dialect, and reactions.") }}
-            </p>
-          </div>
-          {{ action_button(_("Add Dialogue Style"), icon="➕", variant="primary", modal="add-dialogue-modal") }}
+        <div class="aimo-page-hint-row">
+          <p class="aimo-page-hint">
+            {{ _("Typical player trigger and character response pairs injected into the prompt.") }}
+          </p>
+          {{ action_button(_("Add Dialogue Style"), icon="➕", modal="add-dialogue-modal") }}
         </div>
 
         <div id="dialogue-examples-list" class="dialogue-examples-list">

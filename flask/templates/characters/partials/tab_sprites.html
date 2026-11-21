@@ -1,95 +1,56 @@
-{% from "macros/buttons.html" import action_button, new_button, modal_close_button %}
+{% from "macros/buttons.html" import action_button, new_button %}
+{% from "macros/cards.html" import aimo_card_grid, aimo_card_container %}
+{% from "macros/badges.html" import pill_badge %}
   <section id="tab-char-sprites" class="tab-pane {% if active_tab == 'sprites' %}active{% endif %}">
     {% if character %}
-      <div class="aimo-frame" style="padding: 1.5rem;">
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-          🎭 {{ _("Emotional Sprites (28 Emotions with Variant Stack View)") }}
-          <span class="field-help-btn" title="{{ _('Image variants for 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait.') }}">?</span>
-        </h3>
-        <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
-          {{ _("When an emotion is detected, a random variant is selected. If none exists, neutral is used as fallback.") }}
+      <div class="aimo-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.25rem;">
+        <p class="aimo-page-hint" style="margin: 0;">
+          {{ _("Emotional sprites (PNG/WEBP) for up to 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait.") }}
         </p>
+      </div>
 
-        <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));">
-          {% for emotion in emotions %}
-            {% set sp_list = sprites_by_emotion.get(emotion, []) %}
-            <div class="card-tile sprite-stack {% if sp_list|length > 1 %}has-multiple{% endif %}" style="min-height: 240px; justify-content: space-between;">
-              {% if sp_list|length == 0 %}
-                <form method="POST" action="{{ url_for('characters.upload_sprite', character_id=character.id) }}" enctype="multipart/form-data" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem;">
-                  <input type="hidden" name="emotion" value="{{ emotion }}">
-                  <label style="cursor: pointer; text-align: center; color: var(--text-muted);">
-                    <div style="font-size: 2rem; margin-bottom: 0.3rem;">➕</div>
-                    <div style="font-size: 0.8rem;">{{ _("Choose PNG/WEBP") }}</div>
-                    <input type="file" name="sprite_file" accept=".png,.webp" style="display: none;" data-sprite-auto-submit="1">
-                  </label>
-                </form>
-              {% else %}
-                <div class="char-sprite-preview"
-                     data-emotion="{{ emotion }}"
-                     data-viewer-src="{{ url_for('uploaded_file', filename=sp_list[0].file_path) }}"
-                     data-viewer-title="{{ character.name }} — {{ emotion }}"
-                     style="flex: 1; background-image: url('{{ url_for('uploaded_file', filename=sp_list[0].file_path) }}'); background-size: contain; background-repeat: no-repeat; background-position: center; position: relative; min-height: 185px;">
-                  <!-- Top Right Action Overlay -->
-                  <div style="position: absolute; top: 0.4rem; right: 0.4rem; display: flex; gap: 0.35rem;">
-                    <form method="POST" action="{{ url_for('characters.upload_sprite', character_id=character.id) }}" enctype="multipart/form-data">
-                      <input type="hidden" name="emotion" value="{{ emotion }}">
-                      <label class="aimo-btn" style="padding: 0.25rem 0.45rem; font-size: 0.78rem; cursor: pointer;" title="{{ _('Upload another variant') }}">
-                        <span class="icon-mono">📄➕</span>
-                        <input type="file" name="sprite_file" accept=".png,.webp" style="display: none;" data-sprite-auto-submit="1">
-                      </label>
-                    </form>
+      <div id="char-sprites-grid">
+        {% call aimo_card_grid() %}
+          {% if is_editable and available_emotions|length > 0 %}
+            {{ new_button(_("Add Sprite"), modal="add-sprite-modal") }}
+          {% endif %}
 
-                    {% if sp_list|length > 1 %}
-                      {{ action_button(sp_list|length|string, icon="👁️", size="sm", modal="sprite-modal-" ~ emotion, title=_("View all variants")) }}
-                    {% else %}
-                      <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp_list[0].variant) }}" data-save-sprite-scroll="1">
-                        {{ action_button(_("Delete"), type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title=_("Delete sprite")) }}
-                      </form>
-                    {% endif %}
-                  </div>
-                </div>
-              {% endif %}
-
-              <div style="padding: 0.45rem; text-align: center; background: rgba(18, 13, 9, 0.95); border-top: 1px solid var(--border-wood-dark); font-weight: 600; font-size: 0.85rem;">
-                {{ emotion }} {% if emotion == 'neutral' %}<span style="color: var(--gold-accent);">({{ _("Fallback") }})</span>{% endif %}
+          {% for emotion, sp in sprite_by_emotion.items() %}
+            {% set sprite_url = url_for('uploaded_file', filename=sp.file_path) %}
+            {% set bg_style = "background-image: url('" ~ sprite_url ~ "');" %}
+            {% set emotion_label = _(emotion) %}
+            {% set click_attrs = {
+              'data-sprite-index': loop.index0,
+              'data-viewer-src': sprite_url,
+              'data-viewer-title': character.name ~ ' — ' ~ emotion_label
+            } %}
+            {% call aimo_card_container(none, character.name ~ ' — ' ~ emotion_label, bg_style, extra_class='aimo-sprite-card', click_attrs=click_attrs) %}
+              <div class="aimo-card-header">
+                {% if emotion == 'neutral' %}
+                  {{ pill_badge(_("Fallback"), variant="gold", title=_("Used when no sprite matches the detected emotion"), extra_class="aimo-card-badge") }}
+                {% else %}
+                  <div></div>
+                {% endif %}
+                {% if is_editable %}
+                  <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp.variant) }}" style="margin: 0;" data-save-sprite-scroll="1">
+                    {{ action_button(_("Delete"), type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title=_("Delete sprite")) }}
+                  </form>
+                {% endif %}
               </div>
-            </div>
 
-            {% if sp_list|length > 1 %}
-              <!-- Modal für alle Varianten einer Emotion -->
-              <div class="modal-backdrop" id="sprite-modal-{{ emotion }}" aria-hidden="true">
-                <div class="modal-frame">
-                  <div class="modal-header">
-                    <h3 style="color: var(--gold-accent);">{{ _("Variants for emotion:") }} {{ emotion }}</h3>
-                    {{ modal_close_button("sprite-modal-" ~ emotion) }}
-                  </div>
-                  <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));">
-                    {% for sp in sp_list %}
-                      <div class="card-tile" style="min-height: 200px; position: relative;">
-                        <img src="{{ url_for('uploaded_file', filename=sp.file_path) }}" alt="{{ emotion }}_{{ sp.variant }}" style="width: 100%; height: 160px; object-fit: contain;">
-                        <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp.variant) }}" style="position: absolute; top: 0.4rem; right: 0.4rem;" data-save-sprite-scroll="1">
-                          {{ action_button(_("Delete"), type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title=_("Delete variant")) }}
-                        </form>
-                        <div style="text-align: center; padding: 0.35rem; font-size: 0.8rem;">
-                          {{ emotion }}_{{ sp.variant }}
-                        </div>
-                      </div>
-                    {% endfor %}
-                  </div>
-                </div>
+              <div class="aimo-card-footer">
+                <h3 class="aimo-card-title">{{ emotion_label }}</h3>
               </div>
-            {% endif %}
+            {% endcall %}
           {% endfor %}
-        </div>
+        {% endcall %}
       </div>
     {% else %}
       <div class="aimo-frame" style="padding: 2.5rem; text-align: center;">
         <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎭</div>
-        <h3 style="color: var(--gold-accent); margin-bottom: 0.5rem;">{{ _("Emotional Sprites") }}</h3>
         <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
           {{ _("Please save the character's basic info first to upload sprites for the 28 emotions.") }}
         </p>
       </div>
     {% endif %}
   </section>
-

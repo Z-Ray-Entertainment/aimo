@@ -1,16 +1,18 @@
 {% extends "base.html" %}
-{% from "macros/buttons.html" import action_button, new_button, tab_button, modal_close_button %}
+{% from "macros/buttons.html" import action_button, new_button, tab_button, modal_close_button, visibility_toggle %}
 {% from "macros/badges.html" import pill_badge %}
 {% from "macros/editor_header.html" import editor_header %}
 {% from "macros/image_cropper.html" import image_cropper_modal %}
 {% from "macros/collaboration.html" import collaboration_manager %}
 {% from "macros/event_manager.html" import event_editor %}
-{% block title %}AIMO — WorldInfo: {{ worldinfo.name }}{% endblock %}
+{% from "macros/backdrop_selector.html" import backdrop_selector %}
+{% block title %}AImo — WorldInfo: {{ worldinfo.name }}{% endblock %}
 
 {% block extra_head %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/components/cards.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/components/i18n_editor.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/components/image_cropper.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/backdrop_selector.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -59,27 +61,32 @@
     <form id="worldinfo-meta-form" method="POST" action="{{ url_for('worldinfo.detail', worldinfo_id=worldinfo.id) }}" enctype="multipart/form-data">
       <input type="hidden" name="return_to" value="{{ get_safe_back_url(url_for('overview.index', tab='worldinfo')) }}">
       <input type="hidden" name="active_tab" value="{{ active_tab }}">
-      <div class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; max-width: 800px;">
-        <h3 style="color: var(--gold-accent); margin-top: 0; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-          <span class="icon-mono">📋</span> {{ _("Basic Settings") }}
-        </h3>
+      <div class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem;">
+        <!-- Welt-Name & Sichtbarkeit -->
+        <div class="editor-settings-top-row">
+          <div class="editor-settings-top-main">
+            <label style="font-weight: 600;">
+              {{ _("World Name") }} *
+              <span class="field-help-btn" title="{{ _('The name of the universe or setting. Included as primary world in the prompt context.') }}">?</span>
+            </label>
+            <input type="text" name="name" value="{{ worldinfo.name }}" required style="width: 100%; font-size: 1rem; font-weight: 700;" {% if not is_editable %}disabled readonly{% endif %}>
+            <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.4rem; font-size: 0.85rem; color: var(--text-muted); cursor: pointer;">
+              <input type="checkbox" name="is_proper_noun" value="1" {% if worldinfo.is_proper_noun %}checked{% endif %} {% if not is_editable %}disabled{% endif %}>
+              <span>{{ _("Proper Noun (Do not translate)") }}</span>
+            </label>
+          </div>
 
-        <!-- Welt-Name -->
-        <div>
-          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">
-            {{ _("World Name") }} *
-            <span class="field-help-btn" title="{{ _('The name of the universe or setting. Included as primary world in the prompt context.') }}">?</span>
-          </label>
-          <input type="text" name="name" value="{{ worldinfo.name }}" required style="width: 100%; font-size: 1rem; font-weight: 700;" {% if not is_editable %}disabled readonly{% endif %}>
-          <label style="display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.4rem; font-size: 0.85rem; color: var(--text-muted); cursor: pointer;">
-            <input type="checkbox" name="is_proper_noun" value="1" {% if worldinfo.is_proper_noun %}checked{% endif %} {% if not is_editable %}disabled{% endif %}>
-            <span>{{ _("Proper Noun (Do not translate)") }}</span>
-          </label>
+          <div class="editor-settings-visibility">
+            <label style="font-weight: 600;">
+              {{ _("Visibility") }}
+            </label>
+            {{ visibility_toggle(value=worldinfo.visibility, disabled=not is_editable) }}
+          </div>
         </div>
 
         <!-- 1:1 Cover Image & Vorschau -->
         <div>
-          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">
+          <label style="font-weight: 600;">
             {{ _("Cover Image (1:1)") }}
             <span class="field-help-btn" title="{{ _('Square cover image for the world card in the Hub and world selection.') }}">?</span>
           </label>
@@ -108,67 +115,33 @@
 
         <!-- 16:9 World Backdrop & Vorschau -->
         <div>
-          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">
+          <label style="font-weight: 600;">
             {{ _("World Backdrop (16:9)") }}
             <span class="field-help-btn" title="{{ _('Optional 16:9 chat background for this world. Overrides the System Backdrop when a location has no background image of its own (Priority: System → World → Location).') }}">?</span>
           </label>
-          <div style="display: flex; flex-direction: column; gap: 0.65rem; max-width: 440px;">
-            <div id="worldinfo-backdrop-preview"
-                 class="backdrop-preview-container"
-                 {% if worldinfo.backdrop_image_path %}
-                   style="background-image: url('{{ url_for('uploaded_file', filename=worldinfo.backdrop_image_path) }}');"
-                 {% endif %}>
-              <div id="worldinfo-backdrop-placeholder"
-                   class="backdrop-preview-placeholder"
-                   {% if worldinfo.backdrop_image_path %}style="display: none;"{% endif %}>
-                <span style="font-size: 1.75rem; opacity: 0.85;">🖼️</span>
-                <strong style="color: var(--gold-accent); font-size: 0.92rem;">{{ _("No world backdrop set") }}</strong>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">
-                  {{ _("Uses System Backdrop unless a location defines its own background.") }}
-                </p>
-              </div>
-            </div>
-
-            {% if is_editable %}
-              <input type="hidden" id="worldinfo-remove-backdrop-input" name="remove_backdrop" value="0">
-              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                <input type="file" id="worldinfo-backdrop-input" name="backdrop_file" accept=".png,.jpg,.jpeg,.webp" style="display: none;">
-                <label for="worldinfo-backdrop-input" class="aimo-btn" style="cursor: pointer; margin-bottom: 0;">
-                  <span class="icon-mono">🖼️</span> {{ _("Choose Backdrop") }}
-                </label>
-                <button type="button"
-                        id="worldinfo-remove-backdrop-btn"
-                        class="aimo-btn aimo-btn-danger"
-                        {% if not worldinfo.backdrop_image_path %}style="display: none;"{% endif %}>
-                  <span class="icon-mono">🗑️</span> {{ _("Remove Backdrop") }}
-                </button>
-              </div>
-              <span id="worldinfo-backdrop-status" style="font-size: 0.78rem; color: var(--text-muted);">
-                {{ _("Priority in chat: System → World → Location") }}
-              </span>
-            {% endif %}
-          </div>
-        </div>
-
-        <!-- Sichtbarkeit -->
-        <div>
-          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">
-            {{ _("Visibility") }}
-            <span class="field-help-btn" title="{{ _('Private = only accessible to you. Public = accessible to all users for chats.') }}">?</span>
-          </label>
-          <select name="visibility" style="width: 220px;" {% if not is_editable %}disabled{% endif %}>
-            <option value="private" {% if worldinfo.visibility != 'public' %}selected{% endif %}>🔒 {{ _("Private") }}</option>
-            <option value="public" {% if worldinfo.visibility == 'public' %}selected{% endif %}>🌍 {{ _("Public") }}</option>
-          </select>
+          {{ backdrop_selector(
+              id_prefix="worldinfo-backdrop",
+              image_url=(url_for('uploaded_file', filename=worldinfo.backdrop_image_path) if worldinfo.backdrop_image_path else ""),
+              input_name="backdrop_file",
+              remove_input_name="remove_backdrop",
+              placeholder_icon="🖼️",
+              placeholder_title=_("No world backdrop set"),
+              placeholder_text=_("Uses System Backdrop unless a location defines its own background."),
+              choose_label=_("Choose Backdrop"),
+              remove_label=_("Remove Backdrop"),
+              status_text=_("Priority in chat: System → World → Location"),
+              is_editable=is_editable,
+              viewer_title=worldinfo.name
+          ) }}
         </div>
 
         <!-- Gebundenes Lorebook -->
         <div>
-          <label style="display: block; margin-bottom: 0.35rem; font-weight: 600;">
+          <label style="font-weight: 600;">
             {{ _("Linked Lorebook (Optional)") }}
             <span class="field-help-btn" title="{{ _('An optional lorebook automatically included alongside character lorebooks in all chats using this world.') }}">?</span>
           </label>
-          <select name="lorebook_id" style="width: 100%; max-width: 400px;" {% if not is_editable %}disabled{% endif %}>
+          <select name="lorebook_id" style="width: 100%;" {% if not is_editable %}disabled{% endif %}>
             <option value="">{{ _("No lorebook linked") }}</option>
             {% for lb in lorebooks %}
               <option value="{{ lb.id }}" {% if worldinfo.lorebook_id == lb.id %}selected{% endif %}>
@@ -180,7 +153,7 @@
 
         {% if is_editable %}
           <div style="margin-top: 0.5rem;">
-            {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
+            {{ action_button(_("Save"), type="submit", icon="💾") }}
           </div>
         {% endif %}
       </div>
@@ -269,16 +242,23 @@
                   {{ _("16:9 Background Image (PNG, JPG, WEBP)") }}
                   <span class="field-help-btn" title="{{ _('Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference.') }}">?</span>
                 </label>
-                <input type="file" id="edit-loc-bg-input-{{ loc.id }}" name="background_file" accept=".png,.jpg,.jpeg,.webp">
                 <input type="hidden" id="edit-loc-bg-path-{{ loc.id }}" name="background_image_path" value="{{ loc.background_image_path or '' }}">
                 <input type="hidden" id="edit-loc-vision-alt-{{ loc.id }}" name="vision_alt_text" value="{{ loc.vision_alt_text or '' }}">
-                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.35rem; flex-wrap: wrap;">
-                  {{ action_button(_("Analyze & Describe Image"), icon="👁️", size="sm", extra_class="edit-loc-analyze-btn", disabled=(not loc.background_image_path), data={"loc-id": loc.id, "input-id": "edit-loc-bg-input-" ~ loc.id, "path-id": "edit-loc-bg-path-" ~ loc.id, "alt-id": "edit-loc-vision-alt-" ~ loc.id, "desc-id": "edit-loc-desc-" ~ loc.id, "status-id": "edit-loc-analyze-status-" ~ loc.id}) }}
-                  {% if loc.background_image_path %}
-                    {{ action_button(_("View backdrop"), icon="🖼️", layout="icon", size="sm", extra_class="edit-loc-viewer-btn", title=_("View location backdrop"), data={"viewer-src": url_for('uploaded_file', filename=loc.background_image_path), "viewer-title": loc.name}) }}
-                  {% endif %}
-                  <span id="edit-loc-analyze-status-{{ loc.id }}" style="font-size: 0.75rem; color: var(--text-muted);"></span>
-                </div>
+                {% call backdrop_selector(
+                    id_prefix="edit-loc-bg-" ~ loc.id,
+                    image_url=(url_for('uploaded_file', filename=loc.background_image_path) if loc.background_image_path else ""),
+                    input_name="background_file",
+                    remove_input_name="remove_background",
+                    placeholder_icon="🖼️",
+                    placeholder_title=_("No location backdrop set"),
+                    placeholder_text=_("Uses World Backdrop or System Backdrop if none is set."),
+                    choose_label=_("Choose Backdrop"),
+                    remove_label=_("Remove Backdrop"),
+                    viewer_title=loc.name
+                ) %}
+                  {{ action_button(_("Analyze & Describe Image"), icon="👁️", size="sm", extra_class="edit-loc-analyze-btn", disabled=(not loc.background_image_path), data={"loc-id": loc.id, "input-id": "edit-loc-bg-" ~ loc.id ~ "-input", "path-id": "edit-loc-bg-path-" ~ loc.id, "alt-id": "edit-loc-vision-alt-" ~ loc.id, "desc-id": "edit-loc-desc-" ~ loc.id, "status-id": "edit-loc-analyze-status-" ~ loc.id}) }}
+                {% endcall %}
+                <span id="edit-loc-analyze-status-{{ loc.id }}" style="display: block; margin-top: 0.25rem; font-size: 0.75rem; color: var(--text-muted);"></span>
               </div>
 
               <div>
@@ -329,7 +309,7 @@
                 {{ action_button(_("Delete"), type="submit", form="delete-loc-form-" ~ loc.id, variant="danger", icon="🗑️") }}
                 <div style="display: flex; gap: 0.5rem;">
                   {{ action_button(_("Cancel"), modal_close="edit-location-modal-" ~ loc.id) }}
-                  {{ action_button(_("Save"), type="submit", variant="primary", icon="💾") }}
+                  {{ action_button(_("Save"), type="submit", icon="💾") }}
                 </div>
               </div>
             </form>
@@ -405,13 +385,22 @@
           {{ _("16:9 Background Image (PNG, JPG, WEBP)") }}
           <span class="field-help-btn" title="{{ _('Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference.') }}">?</span>
         </label>
-        <input type="file" id="new-loc-bg-input" name="background_file" accept=".png,.jpg,.jpeg,.webp">
         <input type="hidden" id="new-loc-bg-path" name="background_image_path">
         <input type="hidden" id="new-loc-vision-alt" name="vision_alt_text">
-        <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.35rem;">
+        {% call backdrop_selector(
+            id_prefix="new-loc-bg",
+            image_url="",
+            input_name="background_file",
+            remove_input_name="remove_background",
+            placeholder_icon="🖼️",
+            placeholder_title=_("No location backdrop set"),
+            placeholder_text=_("Uses World Backdrop or System Backdrop if none is set."),
+            choose_label=_("Choose Backdrop"),
+            remove_label=_("Remove Backdrop")
+        ) %}
           {{ action_button(_("Analyze & Describe Image"), icon="👁️", size="sm", id="new-loc-analyze-btn", disabled=true) }}
-          <span id="new-loc-analyze-status" style="font-size: 0.75rem; color: var(--text-muted);"></span>
-        </div>
+        {% endcall %}
+        <span id="new-loc-analyze-status" style="display: block; margin-top: 0.25rem; font-size: 0.75rem; color: var(--text-muted);"></span>
       </div>
 
       <div>
@@ -449,7 +438,7 @@
 
       <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
         {{ action_button(_("Cancel"), modal_close="new-location-modal") }}
-        {{ action_button(_("Save Location"), type="submit", variant="primary", icon="💾") }}
+        {{ action_button(_("Save Location"), type="submit", icon="💾") }}
       </div>
     </form>
   </div>
@@ -462,5 +451,6 @@
 {% block extra_scripts %}
 <script src="{{ url_for('static', filename='js/image_cropper.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/i18n_editor.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/backdrop_selector.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/worldinfo_detail.js') }}" defer></script>
 {% endblock %}

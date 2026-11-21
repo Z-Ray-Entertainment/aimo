@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     creator_tag TEXT UNIQUE,
     language TEXT NOT NULL DEFAULT '',
     is_initial_admin INTEGER NOT NULL DEFAULT 0,
+    ember_particles_enabled INTEGER NOT NULL DEFAULT 1,
     created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_users_email ON users (email);

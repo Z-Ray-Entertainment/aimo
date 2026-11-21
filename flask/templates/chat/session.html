@@ -2,7 +2,7 @@
 {% from "macros/buttons.html" import action_button, tab_button %}
 {% from "macros/lorebook_manager.html" import lorebook_manager, lorebook_picker_modal %}
 {% from "macros/system_message.html" import chat_system_message %}
-{% block title %}AIMO — {{ chat_session.title }} ({{ character.name }}){% endblock %}
+{% block title %}AImo — {{ chat_session.title }} ({{ character.name }}){% endblock %}
 {% block body_class %} chat-page{% endblock %}
 
 {% block extra_head %}
@@ -23,13 +23,11 @@
           {{ action_button("Zurück zur Übersicht", href=url_for('overview.index', tab='characters'), arrow="left", layout="icon") }}
           <div class="chat-header-vdivider"></div>
           <div class="rpg-tabs" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0; gap: 0.5rem;">
-            {{ tab_button("Chat", "chat-pane-messages", icon="💬", active=true) }}
+            {{ tab_button("Chat", "chat-pane-messages", icon="💬", active=(active_tab != 'settings')) }}
             {{ tab_button("Medien", "chat-pane-media", icon="🖼️") }}
             {{ tab_button(('Erinnerungen (<span id="memories-count">' ~ (memories|length) ~ '</span>)')|safe, "chat-pane-memories", icon="🧠") }}
             {{ tab_button(('Lorebooks (<span id="session-lorebooks-count">' ~ lorebook_data.active_count ~ '</span>)')|safe, "chat-pane-lorebooks", icon="📜") }}
-            {% if can_debug_relationship %}
-              {{ tab_button(_("Settings"), "chat-pane-settings", icon="⚙️") }}
-            {% endif %}
+            {{ tab_button(_("Settings"), "chat-pane-settings", icon="⚙️", active=(active_tab == 'settings')) }}
             <div class="chat-header-vdivider mobile-tab-only"></div>
             {{ tab_button(_("Info"), "chat-pane-sidebar", icon="👤", extra_class="mobile-tab-only", title=_("Sidebar / Character Info")) }}
           </div>
@@ -60,7 +58,7 @@
         </div>
       </div>
 
-      <div id="chat-pane-messages" class="tab-pane active">
+      <div id="chat-pane-messages" class="tab-pane{% if active_tab != 'settings' %} active{% endif %}">
         <div
           id="chat-messages-list"
           class="chat-messages-list"
@@ -179,6 +177,21 @@
             <p id="session-media-empty" style="color: var(--text-muted); font-size: 0.9rem;">Noch keine Bilder in diesem Chat hochgeladen.</p>
           {% endfor %}
         </div>
+
+        <div class="chat-media-world-row" {% if not (worldinfo and worldinfo.backdrop_image_path) %}hidden{% endif %}>
+          <button
+            type="button"
+            id="chat-world-backdrop-btn"
+            class="aimo-btn chat-backdrop-viewer-btn"
+            data-backdrop-url="{{ url_for('uploaded_file', filename=worldinfo.backdrop_image_path) if worldinfo and worldinfo.backdrop_image_path else '' }}"
+            data-backdrop-title="{{ worldinfo.name if worldinfo else '' }}"
+            title="{{ _('View world backdrop') }}"
+            aria-label="{{ _('View world backdrop') }}"
+            {% if not (worldinfo and worldinfo.backdrop_image_path) %}hidden{% endif %}>
+            <span class="icon-mono" aria-hidden="true">🖼️</span>
+            <span>{{ _('View world backdrop') }}</span>
+          </button>
+        </div>
       </div>
 
       <div id="chat-pane-memories" class="tab-pane">
@@ -207,7 +220,7 @@
                   {{ action_button(_("Recalculate"), icon="🔄", size="sm", data={"action": "recalculate-memory", "session-id": chat_session.id, "mem-id": mem.id}, title=_("Recalculate memory from associated episode messages")) }}
                   {{ action_button(_("Translate"), icon="🌐", size="sm", data={"action": "translate-memory", "session-id": chat_session.id, "mem-id": mem.id}, title=_("Translate memory in-place to your language")) }}
                 </div>
-                {{ action_button(_("Save"), type="submit", variant="primary", size="sm", icon="💾") }}
+                {{ action_button(_("Save"), type="submit", size="sm", icon="💾") }}
               </div>
             </form>
           {% endfor %}
@@ -219,29 +232,116 @@
         {{ lorebook_manager(lorebook_data, is_new_chat=false, session_id=chat_session.id, modal_id="session-add-lorebook-modal") }}
       </div>
 
-      {% if can_debug_relationship %}
-        <div id="chat-pane-settings" class="tab-pane" style="padding: 1rem 0;">
-          <h3 style="color: var(--gold-accent); margin-bottom: 0.75rem;">{{ _('Relationship Settings') }}</h3>
-          <div class="aimo-frame chat-glass-panel" style="padding: 1rem; border-radius: 10px; display: flex; flex-direction: column; gap: 1rem; width: 100%;">
-            <label style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; cursor: pointer;" for="toggle-rel-debug-checkbox">
-              <span>{{ _('Show relationship debug labels') }}</span>
-              <span class="aimo-switch">
-                <input type="checkbox" id="toggle-rel-debug-checkbox">
-                <span class="aimo-switch-slider"></span>
-              </span>
-            </label>
-            {% if is_admin %}
-              <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 0.85rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
-                <span style="font-size: 0.88rem; color: var(--text-muted);">{{ _('Reset relationship to default and recalculate from chat history') }}</span>
-                <button type="button" id="recalculate-rel-btn" class="aimo-btn" data-action="recalculate-rel">
-                  <span class="icon-mono">🔄</span>
-                  <span>{{ _('Recalculate relationship') }}</span>
-                </button>
+      <div id="chat-pane-settings" class="tab-pane chat-settings-pane{% if active_tab == 'settings' %} active{% endif %}">
+        <div class="chat-settings-section">
+          <div class="chat-settings-section-header">
+            <h3>{{ _('Active Persona') }}</h3>
+            {% if persona %}
+              <button
+                type="button"
+                class="chat-settings-icon-btn"
+                title="{{ _('Edit player persona') }}"
+                data-persona-id="{{ persona.id }}"
+                data-persona-name="{{ persona.name }}"
+                data-persona-gender="{{ persona.gender.value }}"
+                data-persona-description="{{ persona.description }}"
+                data-persona-appearance="{{ persona.appearance }}"
+                data-persona-i18n-description='{{ (persona_i18n_description or {}) | tojson }}'
+                data-persona-i18n-appearance='{{ (persona_i18n_appearance or {}) | tojson }}'
+                data-persona-portrait-url="{{ url_for('uploaded_file', filename=persona.portrait_path) }}"
+                data-persona-in-use="1"
+                onclick="openEditPersonaFromBtn(this);">
+                <span class="icon-mono">✏️</span>
+              </button>
+            {% endif %}
+          </div>
+          <div class="aimo-frame chat-glass-panel chat-settings-card">
+            {% if chat_session.persona_locked %}
+              <div class="chat-settings-locked-value">
+                <span>👤 {{ persona.name if persona else _('Unknown') }}</span>
+                <span title="{{ _('Persona is locked for this chat after the 1st message') }}">🔒</span>
               </div>
+            {% else %}
+              <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}">
+                <input type="hidden" name="action" value="change_persona">
+                <input type="hidden" name="return_tab" value="settings">
+                <select name="persona_id" onchange="this.form.submit()">
+                  {% for p in user_personas %}
+                    <option value="{{ p.id }}" {% if persona and p.id == persona.id %}selected{% endif %}>{{ p.name }}</option>
+                  {% endfor %}
+                </select>
+              </form>
             {% endif %}
           </div>
         </div>
-      {% endif %}
+
+        <div class="chat-settings-section">
+          <h3>{{ _('World') }}</h3>
+          <div class="aimo-frame chat-glass-panel chat-settings-card">
+            <div class="chat-settings-warning">
+              ⚠️ <strong>{{ _('Warning:') }}</strong> {{ _('Switching worlds during an active chat may lead to inconsistencies with earlier memories.') }}
+            </div>
+            <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" class="chat-settings-world-form">
+              <input type="hidden" name="action" value="switch_worldinfo">
+              <input type="hidden" name="return_tab" value="settings">
+              <select name="worldinfo_id">
+                <option value="none" {% if not chat_session.active_worldinfo_id %}selected{% endif %}>{{ _('No World (Neutral)') }}</option>
+                {% for wi in all_worldinfos %}
+                  <option value="{{ wi.id }}" {% if chat_session.active_worldinfo_id == wi.id %}selected{% endif %}>
+                    {{ wi.icon or '🌐' }} {{ wi.name }}
+                  </option>
+                {% endfor %}
+              </select>
+              <div class="chat-settings-form-actions">
+                {{ action_button(_("Switch world"), type="submit") }}
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {% if (worldinfo and worldinfo_events) or character_events %}
+          <div class="chat-settings-section">
+            <h3>{{ _('Random Events') }}</h3>
+            <div class="aimo-frame chat-glass-panel chat-settings-card">
+              <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" class="chat-settings-events-toggle">
+                <input type="hidden" name="action" value="toggle_events">
+                <input type="hidden" name="return_tab" value="settings">
+                <label class="chat-settings-switch-row" for="toggle-events-checkbox">
+                  <span>🎲 {{ _('Enable random events') }}</span>
+                  <span class="aimo-switch">
+                    <input type="checkbox" id="toggle-events-checkbox" name="events_enabled" value="1" {% if chat_session.events_enabled %}checked{% endif %} onchange="this.form.submit()">
+                    <span class="aimo-switch-slider"></span>
+                  </span>
+                </label>
+              </form>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if can_debug_relationship %}
+          <div class="chat-settings-section">
+            <h3>{{ _('Relationship Settings') }}</h3>
+            <div class="aimo-frame chat-glass-panel chat-settings-card">
+              <label class="chat-settings-switch-row" for="toggle-rel-debug-checkbox">
+                <span>{{ _('Show relationship debug labels') }}</span>
+                <span class="aimo-switch">
+                  <input type="checkbox" id="toggle-rel-debug-checkbox">
+                  <span class="aimo-switch-slider"></span>
+                </span>
+              </label>
+              {% if is_admin %}
+                <div class="chat-settings-divider-row">
+                  <span class="chat-settings-muted-hint">{{ _('Reset relationship to default and recalculate from chat history') }}</span>
+                  <button type="button" id="recalculate-rel-btn" class="aimo-btn" data-action="recalculate-rel">
+                    <span class="icon-mono">🔄</span>
+                    <span>{{ _('Recalculate relationship') }}</span>
+                  </button>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
     </div>
   </section>
 
