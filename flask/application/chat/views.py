@@ -108,16 +108,8 @@ def view_session(session_id: int):
         None,
     )
     character_events = list(getattr(character, "events", []) or [])
-    rel_score = float(getattr(chat_session, "relationship_value", 0.0) or 0.0)
-    unlocked_gallery = [
-        img
-        for img in (getattr(character, "gallery_images", []) or [])
-        if getattr(img, "unlock_threshold", 0) <= rel_score
-    ]
-    active_sprite = next(
-        (sp for sp in (getattr(character, "sprites", []) or []) if sp.emotion == "neutral"),
-        None,
-    )
+    unlocked_gallery = wrap_dto(data.get("unlocked_gallery", []))
+    active_sprite = wrap_dto(data["active_sprite"]) if data.get("active_sprite") else None
     session_media_images = [m.image_path for m in messages if getattr(m, "image_path", None)]
     gallery_threshold_names = {t.level: t.name for t in wrap_dto(tiers_data.get("tiers", []))}
     lorebook_data = data.get("lorebook_data", {})

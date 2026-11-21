@@ -7,6 +7,9 @@ from application.api.chat import api_chat_bp
 from application.api.chat.shared import _get_authorized_session
 from application.api.helpers import parse_request_payload
 from application.chat_services.lorebook_resolver import build_worldinfo_lorebooks_map, resolve_session_lorebooks
+from domain.characters.models import Emotion
+from domain.characters.services import CharacterService
+from domain.chat.models import MessageRole
 from domain.chat.services import ChatService
 from domain.permissions.models import FunctionPermission
 from infrastructure.repositories.character_repository import CharacterRepository
@@ -137,6 +140,33 @@ def get_chat_session(session_id: int):
         chat_session=chat_session,
         is_admin=admin_flag,
     )
+    active_sprite_data = None
+    unlocked_gallery_data = []
+    if character is not None:
+        char_svc = CharacterService()
+        last_emotion = next(
+            (
+                m.emotion_tag
+                for m in reversed(messages)
+                if m.role == MessageRole.CHARACTER and m.emotion_tag
+            ),
+            Emotion.NEUTRAL,
+        )
+        sp = char_svc.select_sprite_for_emotion(character, last_emotion)
+        active_sprite_data = {
+            "id": sp.id,
+            "emotion": sp.emotion.value,
+            "variant": sp.variant,
+            "file_path": sp.file_path,
+        }
+        unlocked_gallery_data = [
+            {
+                "id": img.id,
+                "file_path": img.file_path,
+                "unlock_threshold": img.unlock_threshold,
+            }
+            for img in char_svc.get_unlocked_images(character, chat_session.relationship_value)
+        ]
     return jsonify(
         {
             "session": {
@@ -156,6 +186,8 @@ def get_chat_session(session_id: int):
                 "custom_lorebook_ids": list(chat_session.custom_lorebook_ids or []),
             },
             "lorebook_data": lorebook_data,
+            "active_sprite": active_sprite_data,
+            "unlocked_gallery": unlocked_gallery_data,
             "messages": [
                 {
                     "id": m.id,
