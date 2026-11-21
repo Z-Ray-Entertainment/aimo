@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from flask import Blueprint, jsonify, request
+import json
+from flask import Blueprint, Response, jsonify, request, stream_with_context
 
 from application.api.helpers import parse_request_payload
 from domain.auth.services import AuthService
@@ -66,6 +67,36 @@ def verify_setup_backend():
         return jsonify({"healthy": healthy, "models": models, "backend": llm_cls.PROVIDER_ID})
     except AimoError as exc:
         return jsonify({"error": str(exc), "healthy": False}), 400
+
+
+@api_setup_bp.route("/models/pull", methods=["POST"])
+def pull_setup_ollama_model():
+    if UserRepository().count_users() > 0:
+        return jsonify({"error": "Setup already completed."}), 403
+    data = parse_request_payload()
+    model_name = str(data.get("name") or "").strip()
+    if not model_name:
+        return jsonify({"error": "Model name is required."}), 400
+    raw_url = str(data.get("ollama_url") or data.get("base_url") or "").strip()
+    llm_cls = get_llm_provider_class("ollama")
+    validated = llm_cls.validate_active_config(
+        {"base_url": raw_url} if raw_url else {},
+        llm_cls.get_default_config(),
+    )
+    llm = llm_cls(**validated)
+
+    def generate():
+        try:
+            for chunk in llm.pull_model(model_name):
+                yield f"data: {json.dumps(chunk)}\n\n"
+            yield f"data: {json.dumps({'status': 'success', 'completed': True})}\n\n"
+        except AimoError as exc:
+            yield f"data: {json.dumps({'status': 'error', 'error': str(exc)})}\n\n"
+
+    return Response(
+        stream_with_context(generate()),
+        content_type="text/event-stream; charset=utf-8",
+    )
 
 
 @api_setup_bp.route("/first-boot", methods=["POST"])

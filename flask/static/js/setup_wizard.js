@@ -4,49 +4,28 @@
   const SETUP_RECOMMENDED = cfg.recommendedByBackend || {};
   const SETUP_DEFAULT_IMG_MODEL = cfg.defaultImageModel || "";
   const SETUP_VERIFY_URL = cfg.verifyUrl || "/setup/verify-backend";
+  const SETUP_PULL_URL = cfg.pullUrl || "/api/setup/models/pull";
   const SETUP_I18N = cfg.i18n || {};
   let currentStep = Number(cfg.activeStep || 1);
+  let installedOllamaModels = new Set();
+  let hasVerifiedOllamaOnce = false;
 
   function getSelectedBackend() {
     const checked = document.querySelector('input[name="llm_backend"]:checked');
     return checked ? checked.value : "ollama";
   }
 
-  function syncConditionalSubservices(backend) {
-    const prefix = backend === "google_ai" ? "setup-google" : "setup-ollama";
-    const panel = document.getElementById(backend === "google_ai" ? "setup-step3-google_ai" : "setup-step3-ollama");
-    if (!panel) return;
-
-    const imgRadio = panel.querySelector('input[name="image_gen_backend"]:checked');
-    const imgChoice = imgRadio ? imgRadio.value : "disabled";
-    const comfyBox = document.getElementById(`${prefix}-comfy-box`);
-    const comfyInput = document.getElementById(`${prefix}-comfyui-url`);
-    if (comfyBox && comfyInput) {
-      const showComfy = imgChoice === "comfyui";
-      comfyBox.hidden = !showComfy;
-      comfyInput.disabled = !showComfy || panel.hidden;
-      comfyInput.required = showComfy && !panel.hidden;
-    }
-
-    if (backend === "google_ai") {
-      const gImgBox = document.getElementById("setup-google-image-model-box");
-      const gImgSelect = document.getElementById("setup-google-image-model");
-      if (gImgBox && gImgSelect) {
-        const showGImg = imgChoice === "google_ai";
-        gImgBox.hidden = !showGImg;
-        gImgSelect.disabled = !showGImg || panel.hidden;
-      }
-    }
-
-    const searchRadio = panel.querySelector('input[name="search_backend"]:checked');
-    const searchChoice = searchRadio ? searchRadio.value : "disabled";
-    const searxBox = document.getElementById(`${prefix}-searxng-box`);
-    const searxInput = document.getElementById(`${prefix}-searxng-url`);
-    if (searxBox && searxInput) {
-      const showSearx = searchChoice === "searxng";
-      searxBox.hidden = !showSearx;
-      searxInput.disabled = !showSearx || panel.hidden;
-      searxInput.required = showSearx && !panel.hidden;
+  function updateStep3StepperLabel() {
+    const step3Label = document.getElementById("stepper-step3-label");
+    if (!step3Label) return;
+    if (currentStep < 3) {
+      step3Label.textContent = SETUP_I18N.configureBackend || "Configure Backend";
+    } else {
+      const backend = getSelectedBackend();
+      step3Label.textContent =
+        backend === "google_ai"
+          ? (SETUP_I18N.configureGoogle || "Configure Google AI")
+          : (SETUP_I18N.configureOllama || "Configure Ollama");
     }
   }
 
@@ -54,49 +33,19 @@
     const backend = getSelectedBackend();
     const ollamaPanel = document.getElementById("setup-step3-ollama");
     const googlePanel = document.getElementById("setup-step3-google_ai");
-    const step3Label = document.getElementById("stepper-step3-label");
 
     [
-      [ollamaPanel, backend === "ollama", { image_gen_backend: "disabled", search_backend: "disabled" }],
-      [googlePanel, backend === "google_ai", { image_gen_backend: "disabled", search_backend: "disabled" }],
-    ].forEach(([panel, active, defaults]) => {
+      [ollamaPanel, backend === "ollama"],
+      [googlePanel, backend === "google_ai"],
+    ].forEach(([panel, active]) => {
       if (!panel) return;
       panel.hidden = !active;
       panel.querySelectorAll("input, select, textarea").forEach((el) => {
-        if (el.type === "radio") {
-          const fieldName = el.dataset.fieldName || el.getAttribute("name");
-          if (fieldName) {
-            el.dataset.fieldName = fieldName;
-          }
-          if (active && el.dataset.fieldName) {
-            el.setAttribute("name", el.dataset.fieldName);
-          } else if (!active) {
-            el.removeAttribute("name");
-          }
-        }
         el.disabled = !active;
       });
-
-      if (active) {
-        Object.entries(defaults).forEach(([groupName, fallbackVal]) => {
-          const groupRadios = Array.from(
-            panel.querySelectorAll(`input[type="radio"][name="${groupName}"]`)
-          );
-          if (groupRadios.length > 0 && !groupRadios.some((r) => r.checked)) {
-            const targetRadio =
-              groupRadios.find((r) => r.defaultChecked) ||
-              groupRadios.find((r) => r.value === fallbackVal) ||
-              groupRadios[0];
-            if (targetRadio) targetRadio.checked = true;
-          }
-        });
-      }
     });
 
-    if (step3Label) {
-      step3Label.textContent = backend === "google_ai" ? SETUP_I18N.configureGoogle : SETUP_I18N.configureOllama;
-    }
-    syncConditionalSubservices(backend);
+    updateStep3StepperLabel();
   }
 
   function goToSetupStep(targetStep) {
@@ -124,9 +73,33 @@
       ind.classList.toggle("is-done", num < targetStep);
     });
 
-    if (targetStep === 3) {
-      syncStep3Panels();
+    syncStep3Panels();
+
+    if (targetStep === 3 && getSelectedBackend() === "ollama" && !hasVerifiedOllamaOnce) {
+      hasVerifiedOllamaOnce = true;
+      verifySetupBackend("ollama");
     }
+  }
+
+  function updateOllamaRoleCards(textModels) {
+    installedOllamaModels = new Set(textModels || []);
+    document.querySelectorAll("#setup-ollama-role-cards [data-recommended-model]").forEach((row) => {
+      const targetModel = row.getAttribute("data-recommended-model");
+      const badge = row.querySelector(".ollama-model-check-badge");
+      const pullBtn = row.querySelector(".ollama-model-pull-btn");
+      if (!badge) return;
+      if (installedOllamaModels.has(targetModel)) {
+        badge.style.color = "#58D68D";
+        badge.style.fontWeight = "700";
+        badge.textContent = `✔ ${SETUP_I18N.ready || "Ready"}`;
+        if (pullBtn) pullBtn.hidden = true;
+      } else {
+        badge.style.color = "#F5B041";
+        badge.style.fontWeight = "400";
+        badge.textContent = `⏳ ${SETUP_I18N.missing || "Missing"}`;
+        if (pullBtn) pullBtn.hidden = false;
+      }
+    });
   }
 
   function populateSetupSelectOptions(backend, textModels, imageModels) {
@@ -160,19 +133,7 @@
         });
       }
     } else {
-      const installedSet = new Set(textModels || []);
-      document.querySelectorAll("#setup-ollama-role-cards [data-recommended-model]").forEach((row) => {
-        const targetModel = row.getAttribute("data-recommended-model");
-        const badge = row.querySelector(".ollama-model-check-badge");
-        if (!badge) return;
-        if (installedSet.has(targetModel)) {
-          badge.style.color = "#58D68D";
-          badge.textContent = `✔ ${SETUP_I18N.ready}`;
-        } else {
-          badge.style.color = "#F5B041";
-          badge.textContent = `⏳ ${SETUP_I18N.missing}`;
-        }
-      });
+      updateOllamaRoleCards(textModels);
     }
   }
 
@@ -212,6 +173,9 @@
       } else if (statusEl) {
         statusEl.className = "backend-status-line is-err";
         statusEl.textContent = `✕ ${data.error || SETUP_I18N.connFailed}`;
+        if (backend === "ollama") {
+          updateOllamaRoleCards([]);
+        }
       }
     } catch (_) {
       if (statusEl) {
@@ -225,23 +189,81 @@
     }
   }
 
+  async function pullSetupOllamaModel(modelName) {
+    if (!modelName) return false;
+    const box = document.getElementById("setup-pull-progress-box");
+    const ollamaUrl = document.getElementById("setup-ollama-url")?.value?.trim() || "";
+    const allPullBtns = document.querySelectorAll(".ollama-model-pull-btn");
+    allPullBtns.forEach((b) => { b.disabled = true; });
+
+    if (box) {
+      box.style.display = "block";
+      box.textContent = (SETUP_I18N.downloadingModel || "Downloading model '{model}'...").replace("{model}", modelName);
+    }
+
+    try {
+      const resp = await fetch(SETUP_PULL_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: modelName, ollama_url: ollamaUrl }),
+      });
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let hasError = false;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const text = decoder.decode(value);
+        for (const line of text.split("\n")) {
+          if (line.startsWith("data: ")) {
+            try {
+              const payload = JSON.parse(line.slice(6));
+              if (payload.error) {
+                hasError = true;
+                if (box) box.textContent = `✕ ${payload.error}`;
+              } else if (payload.completed && payload.total && typeof payload.completed === "number") {
+                const pct = Math.round((payload.completed / payload.total) * 100);
+                if (box) box.textContent = `${payload.status || "Downloading"} '${modelName}': ${pct}%`;
+              } else if (payload.status && box) {
+                box.textContent = `${modelName}: ${payload.status}`;
+              }
+            } catch (_) {}
+          }
+        }
+      }
+
+      if (!hasError) {
+        if (box) {
+          box.textContent = `✓ ${(SETUP_I18N.modelInstalled || "Model '{model}' installed successfully!").replace("{model}", modelName)}`;
+        }
+        installedOllamaModels.add(modelName);
+        populateSetupSelectOptions("ollama", Array.from(installedOllamaModels), []);
+        await verifySetupBackend("ollama");
+        return true;
+      }
+      return false;
+    } catch (_) {
+      if (box) {
+        box.textContent = `✕ ${(SETUP_I18N.downloadError || "Error downloading '{model}'.").replace("{model}", modelName)}`;
+      }
+      return false;
+    } finally {
+      allPullBtns.forEach((b) => { b.disabled = false; });
+    }
+  }
+
   window.goToSetupStep = goToSetupStep;
   window.syncStep3Panels = syncStep3Panels;
-  window.syncConditionalSubservices = syncConditionalSubservices;
   window.verifySetupBackend = verifySetupBackend;
+  window.pullSetupOllamaModel = pullSetupOllamaModel;
 
   document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('input[name="llm_backend"]').forEach((radio) => {
       radio.addEventListener("change", () => {
-        if (currentStep === 3) {
-          syncStep3Panels();
-        }
-      });
-    });
-
-    document.querySelectorAll('input[name="image_gen_backend"], input[name="search_backend"]').forEach((radio) => {
-      radio.addEventListener("change", () => {
-        syncConditionalSubservices(getSelectedBackend());
+        hasVerifiedOllamaOnce = false;
+        syncStep3Panels();
       });
     });
 

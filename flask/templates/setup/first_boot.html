@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% from "macros/buttons.html" import action_button %}
-{% from "macros/copy_field.html" import copy_field %}
-{% from "macros/backend_selector.html" import api_key_field, google_ai_steps_guide, image_gen_options, llm_backend_cards, search_options %}
+{% from "macros/backend_selector.html" import api_key_field, google_ai_steps_guide, llm_backend_cards %}
 {% block title %}AImo — {{ _("First-Boot Wizard") }}{% endblock %}
 
 {% block extra_head %}
@@ -32,6 +31,8 @@
 
   <form id="first-boot-form" method="POST" action="{{ url_for('setup.first_boot') }}">
     <input type="hidden" name="active_step" id="setup-active-step" value="{{ form.active_step }}">
+    <input type="hidden" name="image_gen_backend" value="disabled">
+    <input type="hidden" name="search_backend" value="disabled">
 
     <section class="wizard-step-pane{% if form.active_step == 1 %} active{% endif %}" data-step-pane="1">
       <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.35rem;">
@@ -94,7 +95,7 @@
               <span class="icon-mono">🧙‍♂️</span> {{ _("Setup Helper for Ollama: Recommended Models per Role") }}
             </div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">
-              {{ _("Pull these 3 models on your Ollama server (AImo assigns task roles automatically):") }}
+              {{ _("Recommended models per role (missing models can be downloaded directly via Pull):") }}
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 0.45rem;" id="setup-ollama-role-cards">
@@ -104,16 +105,23 @@
                     <strong>{{ info.role_name }}</strong>
                     <code style="color: var(--gold-accent); font-size: 0.76rem;">{{ info.model }}</code>
                   </div>
-                  <span class="ollama-model-check-badge" style="font-size: 0.75rem; color: var(--text-muted);">{{ _("Unchecked") }}</span>
+                  <div style="display: flex; align-items: center; gap: 0.45rem; flex-shrink: 0;">
+                    <span class="ollama-model-check-badge" style="font-size: 0.75rem; color: var(--text-muted);">{{ _("Unchecked") }}</span>
+                    <button type="button"
+                            class="aimo-btn aimo-btn-sm ollama-model-pull-btn"
+                            data-pull-model="{{ info.model }}"
+                            onclick="pullSetupOllamaModel('{{ info.model }}')"
+                            hidden>
+                      <span class="icon-mono">📥</span>
+                      <span>{{ _("Pull") }}</span>
+                    </button>
+                  </div>
                 </div>
               {% endfor %}
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.25rem;">
-              <span style="font-size: 0.78rem; color: var(--text-muted);">{{ _("Terminal commands to copy:") }}</span>
-              {% for m in ollama_unique_models %}
-                {{ copy_field("ollama pull " ~ m, _("Copy command:") ~ " ollama pull " ~ m) }}
-              {% endfor %}
+            <div id="setup-pull-progress-box" style="display: none; margin-top: 0.5rem; padding: 0.6rem; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--gold-accent); font-size: 0.8rem; color: var(--gold-accent);">
+              {{ _("Starting download...") }}
             </div>
           </div>
 
@@ -132,29 +140,6 @@
               {% endfor %}
             </div>
           </details>
-
-          <div class="aimo-form-section">
-            <h3>{{ _("Optional Additional Services") }}</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.85rem;">
-              <div>
-                <label style="margin-bottom: 0.45rem; display: block;">{{ _("Image Generation (Scene images in chat)") }}</label>
-                {{ image_gen_options('disabled', allow_google=false, id_prefix="setup-ollama-img", disable_providers=true) }}
-                <div class="conditional-service-box" id="setup-ollama-comfy-box" style="margin-top: 0.6rem;" hidden>
-                  <label for="setup-ollama-comfyui-url">{{ _("ComfyUI URL") }} *</label>
-                  <input type="url" id="setup-ollama-comfyui-url" name="comfyui_url" value="{{ form.comfyui_url }}">
-                </div>
-              </div>
-
-              <div>
-                <label style="margin-bottom: 0.45rem; display: block;">{{ _("Web Search (Prepared)") }}</label>
-                {{ search_options('disabled', allow_google=false, id_prefix="setup-ollama-search", disable_providers=true) }}
-                <div class="conditional-service-box" id="setup-ollama-searxng-box" style="margin-top: 0.6rem;" hidden>
-                  <label for="setup-ollama-searxng-url">{{ _("SearXNG URL") }} *</label>
-                  <input type="url" id="setup-ollama-searxng-url" name="searxng_url" value="{{ form.searxng_url }}">
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -193,39 +178,6 @@
               {% endfor %}
             </div>
           </details>
-
-          <div class="aimo-form-section">
-            <h3>{{ _("Image Generation (Scene images in chat)") }}</h3>
-            <p style="font-size: 0.81rem; color: var(--text-muted); margin-bottom: 0.6rem;">
-              {{ _("Choose whether scene images should be generated via Google AI (Gemini Image), a local ComfyUI server, or not at all:") }}
-            </p>
-            {{ image_gen_options('disabled', allow_google=true, id_prefix="setup-google-img", disable_providers=true) }}
-
-            <div class="conditional-service-box" id="setup-google-image-model-box" style="margin-top: 0.65rem;" hidden>
-              <label for="setup-google-image-model">{{ _("Google AI Image Model") }} *</label>
-              <select id="setup-google-image-model" name="google_ai_image_model">
-                <option value="{{ recommended_google_image_model }}" selected>{{ recommended_google_image_model }}</option>
-              </select>
-            </div>
-
-            <div class="conditional-service-box" id="setup-google-comfy-box" style="margin-top: 0.65rem;" hidden>
-              <label for="setup-google-comfyui-url">{{ _("ComfyUI URL") }} *</label>
-              <input type="url" id="setup-google-comfyui-url" name="comfyui_url" value="{{ form.comfyui_url }}">
-            </div>
-          </div>
-
-          <div class="aimo-form-section">
-            <h3>{{ _("Web Search (Prepared)") }}</h3>
-            <p style="font-size: 0.81rem; color: var(--text-muted); margin-bottom: 0.6rem;">
-              {{ _("Choose whether future web searches should use Google Search Grounding, SearXNG, or no search:") }}
-            </p>
-            {{ search_options('disabled', allow_google=true, id_prefix="setup-google-search", disable_providers=true) }}
-
-            <div class="conditional-service-box" id="setup-google-searxng-box" style="margin-top: 0.65rem;" hidden>
-              <label for="setup-google-searxng-url">{{ _("SearXNG URL") }} *</label>
-              <input type="url" id="setup-google-searxng-url" name="searxng_url" value="{{ form.searxng_url }}">
-            </div>
-          </div>
         </div>
       </div>
 
@@ -243,8 +195,10 @@
   "recommendedByBackend": recommended_by_backend,
   "defaultImageModel": recommended_google_image_model,
   "verifyUrl": url_for('setup.verify_backend'),
+  "pullUrl": "/api/setup/models/pull",
   "activeStep": form.active_step,
   "i18n": {
+    "configureBackend": _("Configure Backend"),
     "configureGoogle": _("Configure Google AI"),
     "configureOllama": _("Configure Ollama"),
     "ready": _("Ready"),
@@ -254,7 +208,10 @@
     "googleValid": _("API key valid — {count} text/vision models and {img_count} image models available."),
     "ollamaReachable": _("Ollama reachable — {count} installed model(s) found."),
     "connFailed": _("Connection failed."),
-    "connError": _("Connection error while testing backend.")
+    "connError": _("Connection error while testing backend."),
+    "downloadingModel": _("Downloading model '{model}'..."),
+    "modelInstalled": _("Model '{model}' installed successfully!"),
+    "downloadError": _("Error downloading '{model}'.")
   }
 }|tojson }}</script>
 <script src="{{ url_for('static', filename='js/setup_wizard.js') }}" defer></script>
