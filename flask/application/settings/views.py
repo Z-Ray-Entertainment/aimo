@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Blueprint, abort, flash, make_response, redirect, render_template, request, url_for
 
 from application.auth.decorators import get_current_user, has_creator_permission, require_auth
@@ -8,6 +10,62 @@ from application.view_models import LANGUAGE_METADATA, wrap_dto
 from i18n import gettext_noop as _
 
 settings_bp = Blueprint("settings", __name__, url_prefix="/settings")
+
+_GENDER_LABELS = {
+    "female": _("Female"),
+    "male": _("Male"),
+    "non-binary": _("Non-Binary"),
+}
+
+
+def _format_created_at(raw_dt: str | None) -> str:
+    if not raw_dt:
+        return "—"
+    try:
+        return datetime.fromisoformat(raw_dt).strftime("%Y-%m-%d")
+    except ValueError:
+        return raw_dt[:10]
+
+
+def _append_creation_items(
+    target: list[dict],
+    entities: list,
+    *,
+    user_id: int,
+    role_filter: str,
+    q: str,
+    item_type: str,
+    type_label: str,
+    type_icon: str,
+    build_fields,
+) -> None:
+    for entity in entities:
+        name = entity.name or ""
+        if q and q not in name.lower():
+            continue
+        is_owner = getattr(entity, "user_id", None) == user_id
+        if role_filter in ("owner", "author", "mine") and not is_owner:
+            continue
+        if role_filter in ("collaboration", "collaborator", "collaborations") and is_owner:
+            continue
+
+        created_at_raw = getattr(entity, "created_at", None)
+        extra = build_fields(entity)
+        target.append(
+            {
+                "type": item_type,
+                "type_label": type_label,
+                "type_icon": type_icon,
+                "id": entity.id,
+                "name": name,
+                "visibility": entity.visibility,
+                "is_owner": is_owner,
+                "role": "owner" if is_owner else "collaboration",
+                "created_at_raw": created_at_raw or "",
+                "created_at_formatted": _format_created_at(created_at_raw),
+                **extra,
+            }
+        )
 
 
 @settings_bp.route("/", methods=["GET"])
@@ -45,78 +103,66 @@ def creations():
     total_count = char_count + world_count + lorebook_count
 
     all_items: list[dict] = []
-    if type_filter in ("all", "character"):
-        for c in editable_chars:
-            if q and q not in (c.name or "").lower():
-                continue
-            role = "author" if getattr(c, "user_id", None) == user.id else "collaborator"
-            if role_filter in ("author", "mine") and role != "author":
-                continue
-            if role_filter in ("collaborator", "collaborations") and role != "collaborator":
-                continue
-            img_path = getattr(c, "avatar_path", None) or getattr(c, "primary_portrait_path", None)
-            all_items.append(
-                {
-                    "type": "character",
-                    "id": c.id,
-                    "name": c.name,
-                    "visibility": c.visibility,
-                    "role": role,
-                    "image_url": url_for("uploaded_file", filename=img_path) if img_path else None,
-                    "edit_url": url_for("characters.edit_character", character_id=c.id),
-                    "url": url_for("characters.edit_character", character_id=c.id),
-                }
-            )
-    if type_filter in ("all", "worldinfo"):
-        for w in editable_worlds:
-            if q and q not in (w.name or "").lower():
-                continue
-            role = "author" if getattr(w, "user_id", None) == user.id else "collaborator"
-            if role_filter in ("author", "mine") and role != "author":
-                continue
-            if role_filter in ("collaborator", "collaborations") and role != "collaborator":
-                continue
-            cover = getattr(w, "cover_image_path", None)
-            all_items.append(
-                {
-                    "type": "worldinfo",
-                    "id": w.id,
-                    "name": w.name,
-                    "visibility": w.visibility,
-                    "role": role,
-                    "icon": getattr(w, "icon", "🌐") or "🌐",
-                    "image_url": url_for("uploaded_file", filename=cover) if cover else None,
-                    "edit_url": url_for("worldinfo.detail", worldinfo_id=w.id),
-                    "url": url_for("worldinfo.detail", worldinfo_id=w.id),
-                }
-            )
-    if type_filter in ("all", "lorebook"):
-        for lb in editable_lbs:
-            if q and q not in (lb.name or "").lower():
-                continue
-            role = "author" if getattr(lb, "user_id", None) == user.id else "collaborator"
-            if role_filter in ("author", "mine") and role != "author":
-                continue
-            if role_filter in ("collaborator", "collaborations") and role != "collaborator":
-                continue
-            all_items.append(
-                {
-                    "type": "lorebook",
-                    "id": lb.id,
-                    "name": lb.name,
-                    "visibility": lb.visibility,
-                    "role": role,
-                    "icon": "📜",
-                    "image_url": None,
-                    "edit_url": url_for("lorebooks.detail", lorebook_id=lb.id),
-                    "url": url_for("lorebooks.detail", lorebook_id=lb.id),
-                }
-            )
+    if type_filter in ("all", "character", "characters"):
+        _append_creation_items(
+            all_items,
+            editable_chars,
+            user_id=user.id,
+            role_filter=role_filter,
+            q=q,
+            item_type="characters",
+            type_label=tr(_("Character")),
+            type_icon="🎭",
+            build_fields=lambda c: {
+                "icon": "🎭",
+                "image_path": getattr(c, "avatar_path", None) or getattr(c, "primary_portrait_path", None),
+                "details": (
+                    tr(_GENDER_LABELS[str(getattr(c, "gender", "")).lower()])
+                    if str(getattr(c, "gender", "")).lower() in _GENDER_LABELS
+                    else ""
+                ),
+                "editor_url": url_for("characters.edit_character", character_id=c.id),
+            },
+        )
+    if type_filter in ("all", "worldinfo", "worlds", "world"):
+        _append_creation_items(
+            all_items,
+            editable_worlds,
+            user_id=user.id,
+            role_filter=role_filter,
+            q=q,
+            item_type="worldinfo",
+            type_label=tr(_("World")),
+            type_icon="🌐",
+            build_fields=lambda w: {
+                "icon": getattr(w, "icon", None) or "🌐",
+                "image_path": getattr(w, "cover_image_path", None),
+                "details": f"{getattr(w, 'location_count', 0)} {tr(_('Locations'))} · {getattr(w, 'event_count', 0)} {tr(_('Events'))}",
+                "editor_url": url_for("worldinfo.detail", worldinfo_id=w.id),
+            },
+        )
+    if type_filter in ("all", "lorebook", "lorebooks"):
+        _append_creation_items(
+            all_items,
+            editable_lbs,
+            user_id=user.id,
+            role_filter=role_filter,
+            q=q,
+            item_type="lorebooks",
+            type_label=tr(_("Lorebook")),
+            type_icon="📜",
+            build_fields=lambda lb: {
+                "icon": "📜",
+                "image_path": None,
+                "details": f"{getattr(lb, 'entry_count', 0)} {tr(_('Entries'))}",
+                "editor_url": url_for("lorebooks.detail", lorebook_id=lb.id),
+            },
+        )
 
     if sort_by == "name":
         all_items.sort(key=lambda item: (item["name"] or "").lower())
     else:
-        all_items.sort(key=lambda item: item["id"] or 0, reverse=True)
+        all_items.sort(key=lambda item: (item.get("created_at_raw") or "", item["id"] or 0), reverse=True)
 
     return render_template(
         "settings/creations.html",

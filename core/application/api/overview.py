@@ -69,6 +69,7 @@ def get_overview():
                 "translation_pending": not is_ready,
                 "editable": editable,
                 "deletable": char.is_deletable_by_user(user.id, admin_flag),
+                "created_at": char.created_at.isoformat() if char.created_at else None,
             }
         )
 
@@ -99,6 +100,7 @@ def get_overview():
                 "translation_pending": not is_ready,
                 "editable": editable,
                 "deletable": wi.is_deletable_by_user(user.id, admin_flag),
+                "created_at": wi.created_at.isoformat() if wi.created_at else None,
             }
         )
 
@@ -125,6 +127,7 @@ def get_overview():
                 "translation_pending": not is_ready,
                 "editable": editable,
                 "deletable": lb.is_deletable_by_user(user.id, admin_flag),
+                "created_at": lb.created_at.isoformat() if lb.created_at else None,
             }
         )
 
