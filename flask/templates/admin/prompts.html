@@ -1,0 +1,60 @@
+{% extends "admin/layout.html" %}
+{% from "macros/buttons.html" import action_button %}
+
+{% block extra_head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/i18n_editor.css') }}">
+  <script src="{{ url_for('static', filename='js/admin_prompts.js') }}" defer></script>
+{% endblock %}
+
+{% block admin_content %}
+  <form method="POST" action="{{ url_for('admin.prompts_config') }}" class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
+    <div class="system-ui-notice" style="margin: 0; padding: 0.85rem 1rem; border-left: 3px solid var(--gold-accent);">
+      <div style="font-weight: 700; color: var(--gold-accent); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+        <span class="icon-mono">ℹ️</span> <span>{{ _("Prompt Placeholders") }}</span>
+      </div>
+      <p style="font-size: 0.84rem; line-height: 1.5; color: var(--text-color); opacity: 0.95; margin: 0;">
+        {{ _("You can use") }} <code style="color: var(--gold-accent); background: rgba(0, 0, 0, 0.3); padding: 0.1rem 0.3rem; border-radius: 3px;">&#123;&#123;char&#125;&#125;</code> {{ _("(character name) and") }} <code style="color: var(--gold-accent); background: rgba(0, 0, 0, 0.3); padding: 0.1rem 0.3rem; border-radius: 3px;">&#123;&#123;user&#125;&#125;</code> {{ _("(player persona name) in prompts. These are replaced dynamically at runtime.") }}
+      </p>
+    </div>
+
+    {% set prompt_defs = [
+      ("roleplay_prompt", _("Roleplay Prompt"), 5, settings.prompts.roleplay_prompt, defaults.roleplay_prompt),
+      ("memory_prompt", _("Memory Prompt"), 4, settings.prompts.memory_prompt, defaults.memory_prompt),
+      ("diffuser_prompt", _("Diffuser Prompt"), 4, settings.prompts.diffuser_prompt, defaults.diffuser_prompt),
+      ("sparkle_assistant_prompt", _("AI Author Prompt"), 4, settings.prompts.sparkle_assistant_prompt, defaults.sparkle_assistant_prompt),
+      ("vision_persona_prompt", _("Vision Prompt"), 3, settings.prompts.vision_persona_prompt, defaults.vision_persona_prompt),
+      ("dialogue_author_prompt", _("AI Dialogue Author Prompt"), 4, settings.prompts.dialogue_author_prompt, defaults.dialogue_author_prompt),
+    ] %}
+
+    {% for key, label, rows, current_val, default_val in prompt_defs %}
+    {% set is_disabled = (key == 'diffuser_prompt') %}
+    <div style="{% if not loop.first %}border-top: 1px solid var(--border-wood-dark); padding-top: 1rem; {% endif %}display: flex; flex-direction: column; gap: 0.4rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+        <label for="prompt-{{ key }}" style="font-weight: bold; margin: 0;">{{ label }}</label>
+        {{ action_button(_("Restore Default"), icon="🔄", size="sm", extra_class="btn-reset-prompt", disabled=is_disabled, data={"target": key}, title=_("Resets all languages of this prompt to factory default")) }}
+      </div>
+      <input type="hidden" name="i18n_{{ key }}" id="i18n-prompt-{{ key }}" value='{{ prompt_variants[key] | tojson }}'>
+      <textarea name="{{ key }}"
+                id="prompt-{{ key }}"
+                rows="{{ rows }}"
+                {% if is_disabled %}disabled{% else %}required{% endif %}
+                data-default-prompt="{{ default_val }}"
+                data-default-variants='{{ default_prompt_variants[key] | tojson }}'
+                data-i18n-field="{{ key }}"
+                data-i18n-entity-type="system_prompt"
+                data-i18n-entity-id="1"
+                data-i18n-origin="en"
+                data-i18n-hidden="i18n-prompt-{{ key }}">{{ current_val }}</textarea>
+    </div>
+    {% endfor %}
+
+    <div style="text-align: right; margin-top: 0.5rem; border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
+      {{ action_button(_("Save Prompts"), type="submit", icon="💾") }}
+    </div>
+  </form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/i18n_editor.js') }}" defer></script>
+{% endblock %}

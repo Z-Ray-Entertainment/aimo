@@ -1,0 +1,2515 @@
+msgid ""
+msgstr ""
+"Language: de\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "User not found."
+msgstr "Benutzer nicht gefunden."
+
+msgid "User '%(username)s' deleted."
+msgstr "Benutzer '%(username)s' gelöscht."
+
+msgid "User '%(username)s' created successfully."
+msgstr "Benutzer '%(username)s' erfolgreich angelegt."
+
+msgid "User '%(username)s' updated."
+msgstr "Benutzer '%(username)s' aktualisiert."
+
+msgid "System prompts saved successfully."
+msgstr "System-Prompts erfolgreich gespeichert."
+
+msgid "Suggested models assigned for all 5 roles successfully!"
+msgstr "Vorgeschlagene Modelle für alle 5 Rollen erfolgreich zugewiesen!"
+
+msgid "Service settings and models saved successfully."
+msgstr "Service-Einstellungen und Modelle erfolgreich gespeichert."
+
+msgid "System-wide default backdrop reset (default theme active)."
+msgstr "Systemweiter Standard-Backdrop zurückgesetzt (Standard-Design aktiv)."
+
+msgid "World Backdrop"
+msgstr "Welt-Backdrop"
+
+msgid "Please select an image file (PNG, JPG, WEBP) to upload."
+msgstr "Bitte wählen Sie eine Bilddatei (PNG, JPG, WEBP) zum Hochladen aus."
+
+msgid "New system-wide default backdrop saved successfully."
+msgstr "Neuer systemweiter Standard-Backdrop erfolgreich gespeichert."
+
+msgid "System-wide default backdrop assigned successfully."
+msgstr "Systemweiter Standard-Backdrop erfolgreich zugewiesen."
+
+msgid "Invalid email address or password."
+msgstr "Ungültige E-Mail-Adresse oder Passwort."
+
+msgid "Too many login attempts. Please wait a moment and try again."
+msgstr ""
+
+msgid "Copy '%(name)s' created as draft."
+msgstr "Kopie '%(name)s' als Entwurf erstellt."
+
+msgid "Character deleted."
+msgstr "Charakter gelöscht."
+
+msgid "Gallery image removed."
+msgstr "Galeriebild entfernt."
+
+msgid "Sprite %(name)s deleted."
+msgstr "Sprite %(name)s gelöscht."
+
+msgid "Character not found."
+msgstr "Charakter nicht gefunden."
+
+msgid "Access denied: You can only edit your own characters or creations shared with you."
+msgstr "Zugriff verweigert: Du kannst nur deine eigenen Charaktere oder für dich freigegebene Kreationen bearbeiten."
+
+msgid "Character not found or no permission to delete."
+msgstr "Charakter nicht gefunden oder keine Berechtigung zum Löschen."
+
+msgid "Character not found or no permission."
+msgstr "Charakter nicht gefunden oder keine Berechtigung."
+
+msgid "Gallery image not found."
+msgstr "Galeriebild nicht gefunden."
+
+msgid "Gallery image updated."
+msgstr "Galeriebild aktualisiert."
+
+msgid "Invalid or inaccessible location selected."
+msgstr "Ungültiger oder nicht zugänglicher Ort ausgewählt."
+
+msgid "Event '%(title)s' added."
+msgstr "Event '%(title)s' hinzugefügt."
+
+msgid "Event deleted."
+msgstr "Event gelöscht."
+
+msgid "Character '%(name)s' created successfully!"
+msgstr "Charakter '%(name)s' erfolgreich angelegt!"
+
+msgid "Character '%(name)s' saved."
+msgstr "Charakter '%(name)s' gespeichert."
+
+msgid "9:16 gallery image added."
+msgstr "9:16-Galeriebild hinzugefügt."
+
+msgid "Sprite '%(name)s' uploaded."
+msgstr "Sprite '%(name)s' hochgeladen."
+
+msgid "Event updated."
+msgstr "Event aktualisiert."
+
+msgid "Memory deleted."
+msgstr "Erinnerung gelöscht."
+
+msgid "Chat session not found."
+msgstr "Chat-Session nicht gefunden."
+
+msgid "Memory not found."
+msgstr "Erinnerung nicht gefunden."
+
+msgid "No messages found for this memory episode."
+msgstr "Keine Nachrichten für diese Erinnerungsepisode gefunden."
+
+msgid "Memory recalculated successfully."
+msgstr "Erinnerung erfolgreich neu berechnet."
+
+msgid "Memory updated."
+msgstr "Erinnerung aktualisiert."
+
+msgid "Recalculation failed."
+msgstr ""
+
+msgid "Chat session deleted."
+msgstr "Chat-Session gelöscht."
+
+msgid "Associated character not found."
+msgstr "Zugehöriger Charakter nicht gefunden."
+
+msgid "Session not found."
+msgstr "Session nicht gefunden."
+
+msgid "Persona updated for this session."
+msgstr "Persona für diese Session aktualisiert."
+
+msgid "Invalid WorldInfo."
+msgstr "Ungültige WorldInfo."
+
+msgid "This world is not yet available in your language."
+msgstr "Diese Welt ist in deiner Sprache noch nicht verfügbar."
+
+msgid "Invalid persona."
+msgstr "Ungültige Persona."
+
+msgid "WorldInfo changed for this chat."
+msgstr "WorldInfo für diesen Chat gewechselt."
+
+msgid "Event setting saved."
+msgstr "Event-Einstellung gespeichert."
+
+msgid "Thinking enabled."
+msgstr "Thinking aktiviert."
+
+msgid "Thinking disabled."
+msgstr "Thinking deaktiviert."
+
+msgid "Chat title updated."
+msgstr "Chat-Titel aktualisiert."
+
+msgid "Copy '%(name)s' created successfully."
+msgstr "Kopie '%(name)s' erfolgreich angelegt."
+
+msgid "Lorebook deleted."
+msgstr "Lorebook gelöscht."
+
+msgid "Entry deleted."
+msgstr "Eintrag gelöscht."
+
+msgid "Lorebook '%(name)s' created."
+msgstr "Lorebook '%(name)s' erstellt."
+
+msgid "Lorebook not found."
+msgstr "Lorebook nicht gefunden."
+
+msgid "Lorebook not found or no permission to delete."
+msgstr "Lorebook nicht gefunden oder keine Berechtigung zum Löschen."
+
+msgid "Lorebook not found or no permission."
+msgstr "Lorebook nicht gefunden oder keine Berechtigung."
+
+msgid "Entry '%(title)s' added."
+msgstr "Eintrag '%(title)s' hinzugefügt."
+
+msgid "Entry not found."
+msgstr ""
+
+msgid "Access denied: You can only edit your own lorebooks or creations shared with you."
+msgstr "Zugriff verweigert: Du kannst nur deine eigenen Lorebooks oder für dich freigegebene Kreationen bearbeiten."
+
+msgid "Lorebook updated."
+msgstr "Lorebook aktualisiert."
+
+msgid "This lorebook is not yet available in your language."
+msgstr "Dieses Lorebook ist in deiner Sprache noch nicht verfügbar."
+
+msgid "Entry saved."
+msgstr "Eintrag gespeichert."
+
+msgid "Persona '%(name)s' created successfully."
+msgstr "Persona '%(name)s' erfolgreich erstellt."
+
+msgid "Persona not found."
+msgstr "Persona nicht gefunden."
+
+msgid "Persona '%(name)s' updated."
+msgstr "Persona '%(name)s' aktualisiert."
+
+msgid "'%(name)s' is now your default persona."
+msgstr "'%(name)s' ist nun deine Standard-Persona."
+
+msgid "Persona '%(name)s' deleted."
+msgstr "Persona '%(name)s' gelöscht."
+
+msgid "Female"
+msgstr "Weiblich"
+
+msgid "Male"
+msgstr "Männlich"
+
+msgid "Non-Binary"
+msgstr "Nicht-Binär"
+
+msgid "Account settings saved."
+msgstr "Account-Einstellungen gespeichert."
+
+msgid "Character"
+msgstr "Charakter"
+
+msgid "World"
+msgstr "Welt"
+
+msgid "Lorebook"
+msgstr "Lorebook"
+
+msgid "The new passwords do not match."
+msgstr "Die neuen Passwörter stimmen nicht überein."
+
+msgid "Owner"
+msgstr "Eigentümer"
+
+msgid "Collaborator"
+msgstr "Kollaborateur"
+
+msgid "The current password is incorrect."
+msgstr "Das aktuelle Passwort ist falsch."
+
+msgid "A user with this email address already exists."
+msgstr "Ein Benutzer mit dieser E-Mail-Adresse existiert bereits."
+
+msgid "Locations"
+msgstr "Orte"
+
+msgid "Events"
+msgstr "Events"
+
+msgid "Entries"
+msgstr "Einträge"
+
+msgid "Initial administrator and AI backend configured successfully!"
+msgstr "Initialer Administrator und KI-Backend erfolgreich eingerichtet!"
+
+msgid "Cloud AI mode: automatic background translation is disabled. Use the greyed-out flag pill-badges to translate into other registered user languages."
+msgstr "Cloud-KI-Modus: Automatische Hintergrund-Übersetzung ist deaktiviert. Nutze die ausgegrauten Flaggen-Pill-Badges, um in andere registrierte Benutzersprachen zu übersetzen."
+
+msgid "WorldInfo deleted."
+msgstr "WorldInfo gelöscht."
+
+msgid "Location deleted."
+msgstr "Ort gelöscht."
+
+msgid "WorldInfo '%(name)s' created."
+msgstr "WorldInfo '%(name)s' erstellt."
+
+msgid "WorldInfo not found."
+msgstr "WorldInfo nicht gefunden."
+
+msgid "WorldInfo not found or no permission to delete."
+msgstr "WorldInfo nicht gefunden oder keine Berechtigung zum Löschen."
+
+msgid "WorldInfo not found or no permission."
+msgstr "WorldInfo nicht gefunden oder keine Berechtigung."
+
+msgid "Location '%(name)s' created."
+msgstr "Ort '%(name)s' angelegt."
+
+msgid "Location not found."
+msgstr ""
+
+msgid "Event not found."
+msgstr ""
+
+msgid "Access denied: You can only edit your own WorldInfos or creations shared with you."
+msgstr "Zugriff verweigert: Du kannst nur deine eigenen WorldInfos oder für dich freigegebene Kreationen bearbeiten."
+
+msgid "WorldInfo saved."
+msgstr "WorldInfo gespeichert."
+
+msgid "Location updated."
+msgstr "Ort aktualisiert."
+
+msgid "Error adding lorebook."
+msgstr "Fehler beim Hinzufügen des Lorebooks."
+
+msgid "Network error while adding lorebook."
+msgstr "Netzwerkfehler beim Hinzufügen des Lorebooks."
+
+msgid "Error toggling lorebook."
+msgstr "Fehler beim Umschalten des Lorebooks."
+
+msgid "Network error while toggling lorebook."
+msgstr "Netzwerkfehler beim Umschalten des Lorebooks."
+
+msgid "Error removing lorebook."
+msgstr "Fehler beim Entfernen des Lorebooks."
+
+msgid "Network error while removing lorebook."
+msgstr "Netzwerkfehler beim Entfernen des Lorebooks."
+
+msgid "Reset this prompt in all languages back to the built-in default?"
+msgstr "Diesen Prompt in allen Sprachen auf den Standard zurücksetzen?"
+
+msgid "Please select a portrait image first."
+msgstr "Bitte wähle zuerst ein Porträtbild aus."
+
+msgid "Image analysis error: {error}"
+msgstr "Fehler bei der Bildanalyse: {error}"
+
+msgid "Please enter at least one trigger or response."
+msgstr "Bitte gib mindestens einen Trigger oder eine Response ein."
+
+msgid "Please enter a meaningful character description in the 'Basic Info' tab first."
+msgstr "Bitte gib zuerst im Reiter 'Basis-Info' eine aussagekräftige Charakterbeschreibung ein."
+
+msgid "Please enter a title or prose text first so the assistant can derive relevant tags."
+msgstr "Bitte trage zuerst einen Titel oder Fließtext ein, damit der Assistent relevante Tags ableiten kann."
+
+msgid "Error deriving tags: {error}"
+msgstr "Fehler bei der Tag-Ermittlung: {error}"
+
+msgid "Connection error: {error}"
+msgstr "Verbindungsfehler: {error}"
+
+msgid "Timeout while sending."
+msgstr "Zeitüberschreitung beim Senden."
+
+msgid "Timeout"
+msgstr "Timeout"
+
+msgid "Connection to backend (aimo-core) lost."
+msgstr "Verbindung zum Backend (aimo-core) verloren."
+
+msgid "Backend connection error"
+msgstr "Backend-Verbindungsfehler"
+
+msgid "Connection to AI backend lost."
+msgstr "Verbindung zum KI-Backend verloren."
+
+msgid "AI connection error"
+msgstr "KI-Verbindungsfehler"
+
+msgid "Error sending message."
+msgstr "Fehler beim Senden der Nachricht."
+
+msgid "Error"
+msgstr "Fehler"
+
+msgid "Connection to backend lost: {error}"
+msgstr "Verbindung zum Backend verloren: {error}"
+
+msgid "Timeout: {error}"
+msgstr "Timeout: {error}"
+
+msgid "Ollama connection error: {error}"
+msgstr "Ollama-Verbindungsfehler: {error}"
+
+msgid "Connection to Ollama (or LLMProvider) lost."
+msgstr "Verbindung zu Ollama (bzw. LLMProvider) verloren."
+
+msgid "Ollama connection error"
+msgstr "Ollama-Verbindungsfehler"
+
+msgid "Timeout while regenerating."
+msgstr "Zeitüberschreitung beim Neu-Generieren."
+
+msgid "Error while regenerating."
+msgstr "Fehler beim Neu-Generieren."
+
+msgid "Ollama error"
+msgstr "Ollama-Fehler"
+
+msgid "Success"
+msgstr "Erfolg"
+
+msgid "Warning"
+msgstr "Warnung"
+
+msgid "Notice"
+msgstr "Hinweis"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "Confirm action"
+msgstr "Aktion bestätigen"
+
+msgid "Confirm"
+msgstr "Bestätigen"
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "Please fill in all required fields."
+msgstr "Bitte fülle alle Pflichtfelder aus."
+
+msgid "Hide API key"
+msgstr "API-Key verbergen"
+
+msgid "Show API key"
+msgstr "API-Key anzeigen"
+
+msgid "Crops active"
+msgstr "Ausschnitte aktiv"
+
+msgid "1:1 Cover active"
+msgstr "1:1 Cover aktiv"
+
+msgid "Analyzing image"
+msgstr "Analysiere Bild"
+
+msgid "✨ Analyzing portrait and extracting appearance"
+msgstr "✨ Analysiere Porträt und extrahiere Aussehen"
+
+msgid "Drafting dialogue"
+msgstr "Entwerfe Dialog"
+
+msgid "✨ Analyzing character description"
+msgstr "✨ Analysiere Charakterbeschreibung"
+
+msgid "✨ Formulating response"
+msgstr "✨ Formuliere Antwort"
+
+msgid "⏳ Analyzing image (Save & Close locked)"
+msgstr "⏳ Analysiere Bild (Speichern & Schließen gesperrt)"
+
+msgid "Not translated yet (click to enter manually or AI translate)"
+msgstr "Noch nicht übersetzt (klicken zum manuellen Eingeben oder KI-Übersetzen)"
+
+msgid "Translation may be outdated (click to review)"
+msgstr "Übersetzung möglicherweise veraltet (klicken zum Prüfen)"
+
+msgid "Appearance extracted from image successfully."
+msgstr "Aussehen erfolgreich aus Bild extrahiert."
+
+msgid "No appearance extracted."
+msgstr "Kein Aussehen extrahiert."
+
+msgid "Server error ({status}): Could not extract appearance."
+msgstr "Serverfehler ({status}): Aussehen konnte nicht extrahiert werden."
+
+msgid "Please select a portrait image first to extract image features."
+msgstr "Bitte wähle zuerst ein Porträtbild aus, um die Bild-Features zu extrahieren."
+
+msgid "Image features extracted"
+msgstr "Bild-Features extrahiert"
+
+msgid "Image analysis failed."
+msgstr "Bildanalyse fehlgeschlagen."
+
+msgid "Image analysis error"
+msgstr "Bildanalyse-Fehler"
+
+msgid "Connection error during image analysis."
+msgstr "Verbindungsfehler bei der Bildanalyse."
+
+msgid "Connection error"
+msgstr "Verbindungsfehler"
+
+msgid "Create New Persona"
+msgstr "Neue Persona anlegen"
+
+msgid "Edit Persona"
+msgstr "Persona bearbeiten"
+
+msgid "Used in active chats (deletion protection)"
+msgstr "Wird in aktiven Chats verwendet (Lösch-Schutz)"
+
+msgid "Delete persona"
+msgstr "Persona löschen"
+
+msgid "Deletion locked"
+msgstr "Löschen gesperrt"
+
+msgid "Delete"
+msgstr "Löschen"
+
+msgid "Translating..."
+msgstr "Übersetze..."
+
+msgid "Translation paused"
+msgstr "Übersetzung pausiert"
+
+msgid "Cloud AI Mode (On-Demand)"
+msgstr "Cloud-KI-Modus (On-Demand)"
+
+msgid "Idle"
+msgstr "Bereit (Inaktiv)"
+
+msgid "No active translation"
+msgstr "Keine aktive Übersetzung"
+
+msgid "Last finished:"
+msgstr "Zuletzt abgeschlossen:"
+
+msgid "Error:"
+msgstr "Fehler:"
+
+msgid "Lorebook Entry"
+msgstr "Lorebook-Eintrag"
+
+msgid "Location"
+msgstr "Ort"
+
+msgid "Location Tags"
+msgstr "Orts-Tags"
+
+msgid "Event"
+msgstr "Event"
+
+msgid "Character Event"
+msgstr "Charakter-Event"
+
+msgid "admire"
+msgstr "Bewunderung"
+
+msgid "amused"
+msgstr "Amüsiert"
+
+msgid "anger"
+msgstr "Wut"
+
+msgid "annoyed"
+msgstr "Genervt"
+
+msgid "approval"
+msgstr "Zustimmung"
+
+msgid "caring"
+msgstr "Fürsorglich"
+
+msgid "confused"
+msgstr "Verwirrt"
+
+msgid "curious"
+msgstr "Neugierig"
+
+msgid "desire"
+msgstr "Verlangen"
+
+msgid "disappointed"
+msgstr "Enttäuscht"
+
+msgid "disapproval"
+msgstr "Missbilligung"
+
+msgid "disgust"
+msgstr "Ekel"
+
+msgid "embarrassed"
+msgstr "Verlegen"
+
+msgid "excited"
+msgstr "Aufgeregt"
+
+msgid "fear"
+msgstr "Angst"
+
+msgid "gratitude"
+msgstr "Dankbarkeit"
+
+msgid "grief"
+msgstr "Trauer"
+
+msgid "joy"
+msgstr "Freude"
+
+msgid "love"
+msgstr "Liebe"
+
+msgid "nervousness"
+msgstr "Nervosität"
+
+msgid "neutral"
+msgstr "Neutral"
+
+msgid "optimistic"
+msgstr "Optimistisch"
+
+msgid "pride"
+msgstr "Stolz"
+
+msgid "realize"
+msgstr "Erkenntnis"
+
+msgid "relief"
+msgstr "Erleichterung"
+
+msgid "remorse"
+msgstr "Reue"
+
+msgid "sad"
+msgstr "Traurig"
+
+msgid "surprise"
+msgstr "Überraschung"
+
+msgid "Global atmospheric background for all pages and base fallback for roleplay chats."
+msgstr "Globaler atmosphärischer Hintergrund für alle Seiten und Basis-Fallback für Rollenspiel-Chats."
+
+msgid "Custom backdrop active"
+msgstr "Eigener Backdrop aktiv"
+
+msgid "Custom backdrop is active"
+msgstr "Eigener Backdrop ist aktiv"
+
+msgid "Default Theme (Cover)"
+msgstr "Standard-Thema (Cover)"
+
+msgid "Default RPG theme cover is active"
+msgstr "Standard RPG-Theme Cover ist aktiv"
+
+msgid "No custom backdrop set"
+msgstr "Kein benutzerdefinierter Backdrop festgelegt"
+
+msgid "Currently using the dark RPG default cover. Choose a 16:9 image below or select an existing location."
+msgstr "Derzeit wird das dunkle RPG-Standardcover verwendet. Wähle unten ein 16:9-Bild oder einen bestehenden Ort aus."
+
+msgid "Choose Backdrop"
+msgstr "Backdrop wählen"
+
+msgid "Remove Backdrop"
+msgstr "Backdrop entfernen"
+
+msgid "Recommended: 16:9 widescreen (e.g., 1920×1080 or 2560×1440). Supported formats: PNG, JPG, WEBP."
+msgstr "Empfohlen: 16:9 Breitbild (z. B. 1920×1080 oder 2560×1440). Unterstützte Formate: PNG, JPG, WEBP."
+
+msgid "System Backdrop"
+msgstr "System-Backdrop"
+
+msgid "Rule: Priority in Chat"
+msgstr "Regelwerk: Priorität im Chat"
+
+msgid "This default backdrop forms the foundational background (Priority: System → World → Location). In chat, it is overridden by the active WorldInfo backdrop if set, and further overridden when the current location has its own background image."
+msgstr "Dieses Standard-Hintergrundbild bildet die Basis (Priorität: System → Welt → Ort). Im Chat wird es vom Backdrop der aktiven WorldInfo überschrieben, sofern gesetzt, und weiter vom eigenen Hintergrundbild des aktuellen Schauplatzes überlagert."
+
+msgid "Save as System Backdrop"
+msgstr "Als System-Backdrop speichern"
+
+msgid "Choose from Existing Locations"
+msgstr "Aus vorhandenen Schauplätzen wählen"
+
+msgid "available"
+msgstr "verfügbar"
+
+msgid "Click on an existing location to adopt its background image as the system default:"
+msgstr "Klicke auf einen vorhandenen Ort, um dessen Hintergrundbild als System-Standard zu übernehmen:"
+
+msgid "No locations with background images have been saved in WorldInfos yet."
+msgstr "Bisher keine Schauplätze mit Hintergrundbild in den WorldInfos hinterlegt."
+
+msgid "Administration"
+msgstr "Administration"
+
+msgid "System & Configuration"
+msgstr "System & Konfiguration"
+
+msgid "User Management"
+msgstr "Benutzerverwaltung"
+
+msgid "Services & Models"
+msgstr "Services & Modelle"
+
+msgid "System Prompts"
+msgstr "System-Prompts"
+
+msgid "Content Translations"
+msgstr "Content-Übersetzungen"
+
+msgid "Back to Hub"
+msgstr "Zurück zum Hub"
+
+msgid "Prompt Placeholders"
+msgstr "Hinweis zu Prompt-Platzhaltern"
+
+msgid "You can use"
+msgstr "In den Prompts können die Variablen"
+
+msgid "(character name) and"
+msgstr "(Name des Charakters) und"
+
+msgid "(player persona name) in prompts. These are replaced dynamically at runtime."
+msgstr "(Name der Spieler-Persona) verwendet werden. Diese werden zur Laufzeit dynamisch ersetzt."
+
+msgid "Roleplay Prompt"
+msgstr "Rollenspiel-Prompt"
+
+msgid "Memory Prompt"
+msgstr "Memory-Prompt"
+
+msgid "Diffuser Prompt"
+msgstr "Diffuser-Prompt"
+
+msgid "AI Author Prompt"
+msgstr "KI-Autor-Prompt"
+
+msgid "Vision Prompt"
+msgstr "Vision-Prompt"
+
+msgid "AI Dialogue Author Prompt"
+msgstr "KI-Autor-Dialog-Prompt"
+
+msgid "Restore Default"
+msgstr "Standard wiederherstellen"
+
+msgid "Resets all languages of this prompt to factory default"
+msgstr "Setzt alle Sprachen dieses Prompts auf den Werksstandard zurück"
+
+msgid "Save Prompts"
+msgstr "Prompts speichern"
+
+msgid "1. Active AI Backend (Exclusive)"
+msgstr "1. Aktives KI-Backend (Exklusiv)"
+
+msgid "AImo always operates exactly one AI backend (either Ollama or Google AI Cloud) – no parallel operation."
+msgstr "AImo betreibt immer genau ein KI-Backend (entweder Ollama oder Google AI Cloud) – kein Parallelbetrieb."
+
+msgid "Ollama API URL"
+msgstr "Ollama API URL"
+
+msgid "Connected"
+msgstr "Verbunden"
+
+msgid "Unreachable"
+msgstr "Nicht erreichbar"
+
+msgid "Test"
+msgstr "Testen"
+
+msgid "Google AI API Key"
+msgstr "Google AI API-Key"
+
+msgid "Unreachable / invalid"
+msgstr "Nicht erreichbar / ungültig"
+
+msgid "Not configured"
+msgstr "Nicht konfiguriert"
+
+msgid "Test API Key & Models"
+msgstr "API-Key & Modelle testen"
+
+msgid "2. Image Generation & Web Search"
+msgstr "2. Bildgenerierung & Websuche"
+
+msgid "Image Generation (Scene images in chat)"
+msgstr "Bildgenerierung (Szenenbilder im Chat)"
+
+msgid "ComfyUI API URL"
+msgstr "ComfyUI API URL"
+
+msgid "Offline"
+msgstr "Offline"
+
+msgid "Google AI Image Model"
+msgstr "Google AI Bild-Modell"
+
+msgid "Ready"
+msgstr "Bereit"
+
+msgid "Not checked / Offline"
+msgstr "Nicht geprüft / Offline"
+
+msgid "Web Search (Prepared)"
+msgstr "Websuche (Vorbereitet)"
+
+msgid "SearXNG URL (Prepared)"
+msgstr "SearXNG URL (Vorbereitet)"
+
+msgid "3. Task-Specific Model Assignment"
+msgstr "3. Task-spezifische Modell-Zuweisung"
+
+msgid "Assign suggested models"
+msgstr "Vorgeschlagene Modelle zuweisen"
+
+msgid "Sets all 5 dropdowns to the recommended default models for the selected backend"
+msgstr "Setzt alle 5 Dropdowns auf die empfohlenen Standard-Modelle des gewählten Backends"
+
+msgid ""
+"Roleplay Model:\n"
+"Primary language model for narrative dialogue generation and roleplay in chat."
+msgstr ""
+"Roleplay-Modell:\n"
+"Primäres Sprachmodell für die narrative Dialog-Generierung und das Rollenspiel im Chat."
+
+msgid ""
+"Classification Model:\n"
+"Fast, lightweight model for downstream detection of emotions (avatar sprites) and location change suggestions in a single pass."
+msgstr ""
+"Classification-Modell:\n"
+"Schnelles, leichtgewichtiges Modell für die nachgelagerte Erkennung von Emotionen (Avatar-Sprites) und Ortswechsel-Vorschlägen in einem Durchlauf."
+
+msgid ""
+"Memory Model:\n"
+"Automatically creates episodic summaries (memories) every 10 messages and updates the chat title."
+msgstr ""
+"Memory-Modell:\n"
+"Erstellt alle 10 Nachrichten automatisch episodische Zusammenfassungen (Memories) und aktualisiert den Chat-Titel."
+
+msgid ""
+"Assistant Model:\n"
+"Responsible for AI author optimization (Sparkle ✨), text translations, and scene image prompts."
+msgstr ""
+"Assistant-Modell:\n"
+"Zuständig für KI-Autor Optimierung (Sparkle ✨), Text-Übersetzungen und Szenenbild-Prompts."
+
+msgid ""
+"Vision Model:\n"
+"Multimodal model for visual analysis of persona portraits, 16:9 location images, and image uploads in chat."
+msgstr ""
+"Vision-Modell:\n"
+"Multimodales Modell zur optischen Analyse von Persona-Porträts, 16:9 Schauplatz-Bildern und Bild-Uploads im Chat."
+
+msgid "4. LLM Inference Hyperparameters"
+msgstr "4. LLM Inferenz-Hyperparameter"
+
+msgid "Controls the token budget for history, memories, and lorebooks (also active for Google AI as a cost/history limit)."
+msgstr "Steuert das Token-Budget für Verlauf, Memories und Lorebooks (auch bei Google AI als Kosten-/Verlaufsgrenze aktiv)."
+
+msgid "Repetition penalty for local Ollama models."
+msgstr "Wiederholungsstrafe für lokale Ollama-Modelle."
+
+msgid "Save Services & Model Settings"
+msgstr "Services & Modell-Einstellungen speichern"
+
+msgid "Ollama Model Manager"
+msgstr "Ollama Modell-Manager"
+
+msgid "Setup Helper for Ollama"
+msgstr "Setup-Helper für Ollama"
+
+msgid "Install missing"
+msgstr "Fehlende installieren"
+
+msgid "Recommended models per role:"
+msgstr "Empfohlene Modelle pro Rolle:"
+
+msgid "Click to copy into pull input"
+msgstr "Klicken zum Übernehmen in die Pull-Eingabe"
+
+msgid "Missing"
+msgstr "Fehlt"
+
+msgid "Pull"
+msgstr "Pull"
+
+msgid "Install new model (Pull)"
+msgstr "Neues Modell installieren (Pull)"
+
+msgid "Enter model tag..."
+msgstr "Modell-Tag eingeben..."
+
+msgid "Quick select:"
+msgstr "Schnellwahl:"
+
+msgid "Starting download..."
+msgstr "Starte Download..."
+
+msgid "Installed Models"
+msgstr "Installierte Modelle"
+
+msgid "Delete model"
+msgstr "Modell löschen"
+
+msgid "No models found or Ollama offline."
+msgstr "Keine Modelle gefunden oder Ollama offline."
+
+msgid "Google AI Cloud Setup"
+msgstr "Google AI Cloud Setup"
+
+msgid "Recommended Google AI Models"
+msgstr "Empfohlene Google AI Modelle"
+
+msgid "Image Generation"
+msgstr "Bildgenerierung"
+
+msgid "Available Cloud Models"
+msgstr "Verfügbare Cloud-Modelle"
+
+msgid "Click \"Test API Key & Models\" to load the Gemini models available with your key."
+msgstr "Klicke auf „API-Key & Modelle testen“, um die mit deinem Key verfügbaren Gemini-Modelle zu laden."
+
+msgid "All recommended models are already installed on the Ollama server!"
+msgstr "Alle empfohlenen Modelle sind bereits auf dem Ollama-Server installiert!"
+
+msgid "Download the following %(count)s recommended model(s) sequentially?"
+msgstr "Folgende %(count)s empfohlene(n) Modell(e) nacheinander herunterladen?"
+
+msgid "Download of '%(model)s' failed. Continue with the next model anyway?"
+msgstr "Download von '%(model)s' fehlgeschlagen. Trotzdem mit dem nächsten Modell fortfahren?"
+
+msgid "Really delete model '%(model)s' from Ollama?"
+msgstr "Modell '%(model)s' wirklich von Ollama löschen?"
+
+msgid "Deletion failed."
+msgstr "Löschen fehlgeschlagen."
+
+msgid "Background translation status for characters, lorebooks, worlds, locations, and events."
+msgstr "Status der Hintergrund-Übersetzungen für Charaktere, Lorebooks, Welten, Orte und Events."
+
+msgid "Start Translation Sync"
+msgstr "Übersetzungs-Sync starten"
+
+msgid "Status:"
+msgstr "Status:"
+
+msgid "Loading..."
+msgstr "Lade..."
+
+msgid "Currently translating:"
+msgstr "Wird gerade übersetzt:"
+
+msgid "Edit User:"
+msgstr "Benutzer bearbeiten:"
+
+msgid "Create New User"
+msgstr "Neuen Benutzer anlegen"
+
+msgid "Super-Admin Protection:"
+msgstr "Super-Admin-Schutz:"
+
+msgid "This is the initial administrator. Their permissions are permanently locked to full access (Admin) and cannot be revoked."
+msgstr "Dies ist der initiale Administrator. Seine Berechtigungen sind dauerhaft auf Vollzugriff (Admin) fixiert und können nicht entzogen werden."
+
+msgid "Username"
+msgstr "Benutzername"
+
+msgid "Email address"
+msgstr "E-Mail-Adresse"
+
+msgid "New Password (leave blank to keep current password)"
+msgstr "Neues Passwort (leer lassen, um Passwort beizubehalten)"
+
+msgid "Initial Password"
+msgstr "Initialpasswort"
+
+msgid "Quick Select via Preset"
+msgstr "Schnellauswahl über Preset"
+
+msgid "Preset:"
+msgstr "Preset:"
+
+msgid "Individual functional permissions (FunctionPermission):"
+msgstr "Einzelne funktionale Berechtigungen (FunctionPermission):"
+
+msgid "Save"
+msgstr "Speichern"
+
+msgid "Granular control of individual function permissions. The initial administrator is permanently protected."
+msgstr "Granulare Steuerung einzelner Funktionsrechte. Der initiale Administrator ist dauerhaft geschützt."
+
+msgid "New User"
+msgstr "Neuer Benutzer"
+
+msgid "Initial Super-Admin (Non-revocable)"
+msgstr "Initialer Super-Admin (Unentziehbar)"
+
+msgid "No permissions assigned"
+msgstr "Keine Berechtigungen zugewiesen"
+
+msgid "Edit"
+msgstr "Bearbeiten"
+
+msgid "Protected"
+msgstr "Geschützt"
+
+msgid "Initial administrator cannot be deleted"
+msgstr "Initialer Administrator kann nicht gelöscht werden"
+
+msgid "Really delete user %(username)s?"
+msgstr "Benutzer %(username)s wirklich löschen?"
+
+msgid "AImo — Login"
+msgstr "AImo — Anmeldung"
+
+msgid "AImo Login"
+msgstr "AImo Anmeldung"
+
+msgid "Sign in to enter your roleplay worlds."
+msgstr "Melde dich an, um deine Rollenspiel-Welten zu betreten."
+
+msgid "Password"
+msgstr "Passwort"
+
+msgid "Enter"
+msgstr "Betreten"
+
+msgid "Character Designer"
+msgstr "Charakter-Designer"
+
+msgid "New Character"
+msgstr "Neuer Charakter"
+
+msgid "Main Info"
+msgstr "Hauptinformationen"
+
+msgid "Gallery Images"
+msgstr "Galeriebilder"
+
+msgid "Please save basic info first"
+msgstr "Bitte zuerst Grunddaten speichern"
+
+msgid "Emotional Sprites"
+msgstr "Emotionale Sprites"
+
+msgid "Dialogue Styles"
+msgstr "Gesprächsstile"
+
+msgid "Random Events"
+msgstr "Zufalls-Events"
+
+msgid "Lorebooks"
+msgstr "Lorebooks"
+
+msgid "Collaboration"
+msgstr "Kollaboration"
+
+msgid "Back to Overview"
+msgstr "Zurück zur Übersicht"
+
+msgid "Really delete character permanently?"
+msgstr "Charakter wirklich unwiderruflich löschen?"
+
+msgid "Save character"
+msgstr "Charakter speichern"
+
+msgid "Upload 9:16 Gallery Image"
+msgstr "9:16-Galeriebild hochladen"
+
+msgid "Image File (9:16 Portrait)"
+msgstr "Bilddatei (9:16 Hochformat)"
+
+msgid "Exclusive portrait image for this character."
+msgstr "Exklusives Hochformat-Bild für diesen Charakter."
+
+msgid "Unlock Relationship Level"
+msgstr "Freischalt-Beziehungsstufe"
+
+msgid "Required relationship level to unlock this image in chat."
+msgstr "Erforderliche Beziehungsstufe zum Freischalten dieses Bildes."
+
+msgid "Upload"
+msgstr "Hochladen"
+
+msgid "Add Emotional Sprite"
+msgstr "Emotionalen Sprite hinzufügen"
+
+msgid "Emotion"
+msgstr "Emotion"
+
+msgid "Select which emotion this sprite represents."
+msgstr "Wähle aus, welche Emotion dieser Sprite darstellt."
+
+msgid "Fallback"
+msgstr "Fallback"
+
+msgid "Sprite File (PNG, WEBP)"
+msgstr "Sprite-Datei (PNG, WEBP)"
+
+msgid "Transparent PNG or WEBP sprite image for this emotion."
+msgstr "Transparentes PNG- oder WEBP-Sprite-Bild für diese Emotion."
+
+msgid "Add New Dialogue Style"
+msgstr "Neuen Gesprächsstil hinzufügen"
+
+msgid "You"
+msgstr "Du"
+
+msgid "Trigger (Player Input)"
+msgstr "Trigger (Spieler-Eingabe)"
+
+msgid "e.g. Hello! What are you doing out here so late?"
+msgstr "z. B. Hallo! Was machst du hier draußen so spät?"
+
+msgid "Response (Character Reply)"
+msgstr "Response (Charakter-Antwort)"
+
+msgid "e.g. Greetings, wanderer. The woods hold secrets at night..."
+msgstr "z. B. Sey gegrüßt, Wanderer. Die Wälder bergen nachts Geheimnisse..."
+
+msgid "Fill with AI"
+msgstr "Mit KI ausfüllen"
+
+msgid "Generates trigger and response based on character description"
+msgstr "Erzeugt Trigger und Response basierend auf der Charakterbeschreibung"
+
+msgid "Add"
+msgstr "Hinzufügen"
+
+msgid "Link Lorebook"
+msgstr "Lorebook verknüpfen"
+
+msgid "Filter by lorebook name..."
+msgstr "Nach Lorebook-Name filtern..."
+
+msgid "Linked"
+msgstr "Verknüpft"
+
+msgid "Add Preferred Location"
+msgstr "Bevorzugten Ort hinzufügen"
+
+msgid "Add Disliked Location"
+msgstr "Gemiedenen Ort hinzufügen"
+
+msgid "Remove location"
+msgstr "Ort entfernen"
+
+msgid "All locations of this world are already assigned."
+msgstr "Alle Orte dieser Welt sind bereits zugewiesen."
+
+msgid "No matching locations found."
+msgstr "Keine passenden Orte gefunden."
+
+msgid "Add Location"
+msgstr "Ort hinzufügen"
+
+msgid "Search locations by name or description..."
+msgstr "Orte nach Name oder Beschreibung suchen..."
+
+msgid "Set Image Crops"
+msgstr "Bild-Ausschnitte festlegen"
+
+msgid "Portrait"
+msgstr "Porträt"
+
+msgid "Avatar"
+msgstr "Avatar"
+
+msgid "Typical player trigger and character response pairs injected into the prompt."
+msgstr "Typische Dialog-Paare aus Spieler-Trigger und Charakter-Antwort für den Prompt."
+
+msgid "Add Dialogue Style"
+msgstr "Gesprächsstil hinzufügen"
+
+msgid "Example"
+msgstr "Beispiel"
+
+msgid "Edit example"
+msgstr "Beispiel bearbeiten"
+
+msgid "Delete example"
+msgstr "Beispiel löschen"
+
+msgid "No dialogue styles added yet. Click 'Add Dialogue Style' to create examples."
+msgstr "Noch keine Gesprächsstile angelegt. Klicke auf „Gesprächsstil hinzufügen“, um Dialogbeispiele zu hinterlegen."
+
+msgid "Dynamic events that can trigger exclusively in chats with this character."
+msgstr "Dynamische Ereignisse, die exklusiv in Chats mit diesem Charakter eintreten können."
+
+msgid "Please save the character's basic info first to create character-specific random events."
+msgstr "Bitte speichere die Grunddaten des Charakters zuerst ab, um charakter-spezifische Zufalls-Events anzulegen."
+
+msgid "Exclusive portrait graphics unlocked when reaching a relationship threshold in chat."
+msgstr "Exklusive Hochformat-Grafiken, die bei einer Beziehungsstufe im Chat freigeschaltet werden."
+
+msgid "Add 9:16 Image"
+msgstr "9:16 Bild hinzufügen"
+
+msgid "Unlocks at relationship:"
+msgstr "Freischaltung ab Beziehung:"
+
+msgid "View fullscreen"
+msgstr "Vollbild anzeigen"
+
+msgid "Edit 9:16 Gallery Image"
+msgstr "9:16-Galeriebild bearbeiten"
+
+msgid "Really delete this gallery image?"
+msgstr "Dieses Galeriebild wirklich löschen?"
+
+msgid "Please save the character's basic info first to upload and manage 9:16 gallery images."
+msgstr "Bitte speichere die Grunddaten des Charakters zuerst ab, um 9:16-Galeriebilder hochzuladen."
+
+msgid "Character Name"
+msgstr "Name des Charakters"
+
+msgid "The unique name of your AI character. Replaces {{char}} in prompts."
+msgstr "Der eindeutige Rufname deiner KI-Figur. Ersetzt {{char}} in Prompts."
+
+msgid "Gender"
+msgstr "Geschlecht"
+
+msgid "Visibility"
+msgstr "Sichtbarkeit"
+
+msgid "Primary Portrait (9:16) & Avatar (1:1) (Required upload)"
+msgstr "Primäres Porträt (9:16) & Avatar (1:1) (Pflicht-Upload)"
+
+msgid ""
+"Character images:\n"
+"• 9:16 Portrait: Chat sidebar & fullscreen view\n"
+"• 1:1 Avatar: Character cards in Hub & chat bubbles"
+msgstr ""
+"Charakterbilder:\n"
+"• 9:16 Porträt: Chat-Seitenleiste & Vollbild-Ansicht\n"
+"• 1:1 Avatar: Charakterkarten im Hub & Chat-Bubbles"
+
+msgid "Adjust crops"
+msgstr "Ausschnitte anpassen"
+
+msgid "Initial Relationship Status"
+msgstr "Initialer Beziehungsstatus"
+
+msgid ""
+"Initial Relationship Status:\n"
+"Starting level of affection (e.g., Pure Hatred, Neutral, Blind Devotion). Controls the initial roleplay behavior of {{char}} toward the player."
+msgstr ""
+"Initialer Beziehungsstatus:\n"
+"Startstufe der Zuneigung (z. B. Pure Hatred, Neutral, Blind Devotion). Steuert das anfängliche Rollenspielverhalten von {{char}} gegenüber dem Spieler."
+
+msgid "Character Description & Personality"
+msgstr "Charakterbeschreibung & Persönlichkeit"
+
+msgid "Core identity, traits, backstory, fears, and motivations."
+msgstr "Kernidentität, Eigenarten, Hintergrundgeschichte, Ängste und Motivationen."
+
+msgid "AI Author Optimization"
+msgstr "KI-Autor Optimierung"
+
+msgid "Physical Appearance"
+msgstr "Aussehen des Charakters"
+
+msgid "Detailed visual appearance for prompts and AI image generation."
+msgstr "Detaillierte visuelle Beschreibung für Prompts und KI-Bildgenerierung."
+
+msgid "Extract Appearance from Image"
+msgstr "Aussehen aus Bild extrahieren"
+
+msgid "Analyzes the portrait image using a Vision LLM"
+msgstr "Analysiert das Porträtbild mit einem Vision-LLM"
+
+msgid "Physical appearance (e.g. emerald eyes, shoulder-length black hair, silver armor)..."
+msgstr "Körperliches Aussehen (z. B. smaragdgrüne Augen, schulterlanges schwarzes Haar, silberne Rüstung)..."
+
+msgid "First Message (Welcome Message)"
+msgstr "Erste Nachricht (Welcome Message)"
+
+msgid "The character's direct opening greeting to the player."
+msgstr "Die direkte erste Begrüßung des Charakters an den Spieler."
+
+msgid "Knowledge compendiums for this character. Matching entries are automatically loaded into the prompt via tags."
+msgstr "Wissenskompendien für diesen Charakter. Passende Einträge werden per Tag-Matching in den Prompt geladen."
+
+msgid "Add Lorebook"
+msgstr "Lorebook hinzufügen"
+
+msgid "When should this lorebook be active?"
+msgstr "Wann soll dieses Lorebook aktiv sein?"
+
+msgid "All Worlds (Always active)"
+msgstr "Alle Welten (Immer aktiv)"
+
+msgid "Only in world:"
+msgstr "Nur in Welt:"
+
+msgid "Unlink"
+msgstr "Entkoppeln"
+
+msgid "Unlink lorebook"
+msgstr "Lorebook entkoppeln"
+
+msgid "No lorebooks linked. Click 'Add Lorebook' to select compendiums."
+msgstr "Keine Lorebooks verknüpft. Klicke auf „Lorebook hinzufügen“, um Kompendien auszuwählen."
+
+msgid "Emotional sprites (PNG/WEBP) for up to 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait."
+msgstr "Emotionale Sprites (PNG/WEBP) für bis zu 28 Emotionen. Das System klassifiziert die KI-Emotion nach jeder Antwort und aktualisiert das Chat-Porträt."
+
+msgid "Add Sprite"
+msgstr "Sprite hinzufügen"
+
+msgid "Used when no sprite matches the detected emotion"
+msgstr "Wird verwendet, wenn kein Sprite zur erkannten Emotion passt"
+
+msgid "Really delete this sprite?"
+msgstr "Diesen Sprite wirklich löschen?"
+
+msgid "Delete sprite"
+msgstr "Sprite löschen"
+
+msgid "Please save the character's basic info first to upload sprites for the 28 emotions."
+msgstr "Bitte speichere die Grunddaten des Charakters zuerst ab, um Sprites hochzuladen."
+
+msgid "Links a recommended world. Once selected, initial, preferred, and disliked locations can be chosen."
+msgstr "Verknüpft eine empfohlene Spielwelt. Danach können Start-, bevorzugte und gemiedene Orte gewählt werden."
+
+msgid "Recommended WorldInfo"
+msgstr "Empfohlene WorldInfo"
+
+msgid "Locations and events of this world are included in roleplay."
+msgstr "Orte und Ereignisse dieser Welt fließen in das Rollenspiel ein."
+
+msgid "No WorldInfo linked"
+msgstr "Keine WorldInfo verknüpft"
+
+msgid "Initial Location of First Message"
+msgstr "Initialort der First Message"
+
+msgid "Starting location for the conversation within the linked world."
+msgstr "Startort für das Gespräch innerhalb der verknüpften Welt."
+
+msgid "No fixed starting location"
+msgstr "Kein fester Startort"
+
+msgid "Preferred Locations (from linked world)"
+msgstr "Bevorzugte Orte (aus der verknüpften Welt)"
+
+msgid "Locations where the character feels comfortable or likes to spend time."
+msgstr "Orte, an denen sich der Charakter wohlfühlt oder gern aufhält."
+
+msgid "Remove"
+msgstr "Entfernen"
+
+msgid "No preferred locations selected."
+msgstr "Keine bevorzugten Orte ausgewählt."
+
+msgid "Disliked Locations (from linked world)"
+msgstr "Gemiedene Orte (aus der verknüpften Welt)"
+
+msgid "Locations the character avoids, fears, or dislikes."
+msgstr "Orte, die der Charakter meidet, fürchtet oder verabscheut."
+
+msgid "No disliked locations selected."
+msgstr "Keine gemiedenen Orte ausgewählt."
+
+msgid "AI system notice"
+msgstr "KI-Systemhinweis"
+
+msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
+msgstr "Dies ist ein KI-Chatbot. Antworten werden automatisiert durch lokale oder externe Sprachmodelle generiert und können unvollständig oder fehlerhaft sein."
+
+msgid "Chat options & sessions"
+msgstr "Chat-Optionen & Sitzungen"
+
+msgid "Chat options"
+msgstr "Chat-Optionen"
+
+msgid "Sessions"
+msgstr "Sitzungen"
+
+msgid "Start new chat"
+msgstr "Neuer Chat starten"
+
+msgid "Delete chat"
+msgstr "Chat löschen"
+
+msgid "Do you really want to permanently delete this chat?"
+msgstr "Wollen Sie diesen Chat wirklich unwiderruflich löschen?"
+
+msgid "Attach image (Vision ALT analysis)"
+msgstr "Bild anhängen (Vision ALT-Analyse)"
+
+msgid "Generate scene image"
+msgstr "Szenenbild generieren"
+
+msgid "Cancel image generation"
+msgstr "Bildgenerierung abbrechen"
+
+msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
+msgstr "Schreibe deine Antwort oder Handlung... (Enter zum Senden, Shift+Enter für Zeilenumbruch)"
+
+msgid "Regenerate response – replaces the last AI reply or retries generation"
+msgstr "Antwort neu generieren (Re-Generate) – Ersetzt die letzte KI-Antwort bzw. wiederholt die Generierung"
+
+msgid "Cancel response generation"
+msgstr "Antwort-Generierung abbrechen"
+
+msgid "Send message (Enter)"
+msgstr "Nachricht senden (Enter)"
+
+msgid "Sessions with"
+msgstr "Sitzungen mit"
+
+msgid "New Chat"
+msgstr "Neuer Chat"
+
+msgid "Untitled Chat"
+msgstr "Unbenannter Chat"
+
+msgid "Active"
+msgstr "Aktiv"
+
+msgid "Created:"
+msgstr "Erstellt:"
+
+msgid "Persona:"
+msgstr "Persona:"
+
+msgid "Switch"
+msgstr "Wechseln"
+
+msgid "Do you really want to delete this session?"
+msgstr "Wollen Sie diese Sitzung wirklich löschen?"
+
+msgid "Delete session"
+msgstr "Sitzung löschen"
+
+msgid "No other sessions available."
+msgstr "Keine weiteren Sitzungen vorhanden."
+
+msgid "Edit message"
+msgstr "Nachricht bearbeiten"
+
+msgid "Save changes (Sync canon)"
+msgstr "Änderung speichern (Sync Kanon)"
+
+msgid "LLM Generation Prompt (Admin Debug)"
+msgstr "LLM-Generierungs-Prompt (Admin-Debug)"
+
+msgid "Copy"
+msgstr "Kopieren"
+
+msgid "In-memory snapshot at inference time (not persisted to database)"
+msgstr "In-Memory-Snapshot zum Inferenzzeitpunkt (nicht in Datenbank persistiert)"
+
+msgid "Thinking: Enabled (Click to disable)"
+msgstr "Thinking: Aktiviert (Klicken zum Deaktivieren)"
+
+msgid "Thinking: Disabled (Click to enable)"
+msgstr "Thinking: Deaktiviert (Klicken zum Aktivieren)"
+
+msgid "Disable thinking"
+msgstr "Thinking deaktivieren"
+
+msgid "Enable thinking"
+msgstr "Thinking aktivieren"
+
+msgid "Current Location"
+msgstr "Aktueller Ort"
+
+msgid "Admin & creator info: Cooldown until the next random event"
+msgstr "Admin- & Ersteller-Info: Cooldown bis zum nächsten Zufalls-Event"
+
+msgid "Next event:"
+msgstr "Nächstes Event:"
+
+msgid "in"
+msgstr "in"
+
+msgid "message"
+msgstr "Nachricht"
+
+msgid "messages"
+msgstr "Nachrichten"
+
+msgid "paused"
+msgstr "pausiert"
+
+msgid "next message"
+msgstr "nächste Nachricht"
+
+msgid "New Adventure with"
+msgstr "Neues Abenteuer mit"
+
+msgid "New Chat with"
+msgstr "Neuer Chat mit"
+
+msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
+msgstr "Konfiguriere deine Spieler-Persona, die aktive WorldInfo und Lorebooks für diese Sitzung."
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgid "Select Player Persona"
+msgstr "Spieler-Persona auswählen"
+
+msgid "Default"
+msgstr "Standard"
+
+msgid "Note: After sending the first message, the persona is permanently locked for this chat."
+msgstr "Hinweis: Nach dem Absenden der ersten Nachricht wird die Persona für diesen Chat fest gesperrt."
+
+msgid "Automatically assigned"
+msgstr "Automatisch zugewiesen"
+
+msgid "Active WorldInfo (At most one per session)"
+msgstr "Aktive WorldInfo (Maximal eine pro Session)"
+
+msgid "No WorldInfo (Default — Neutral background, no events)"
+msgstr "Keine WorldInfo (Standard — Neutraler Hintergrund, keine Events)"
+
+msgid "Recommended for"
+msgstr "Empfohlen für"
+
+msgid "This character recommends a WorldInfo, but you can freely choose another or start without one."
+msgstr "Dieser Charakter empfiehlt eine WorldInfo, du kannst jedoch frei wählen oder ohne WorldInfo starten."
+
+msgid "Optional Session Title"
+msgstr "Optionaler Sitzungstitel"
+
+msgid "Chat with"
+msgstr "Chat mit"
+
+msgid "Enable Thinking (Reasoning)"
+msgstr "Thinking (Reasoning) aktivieren"
+
+msgid "Enables extended chain-of-thought reasoning for compatible models (e.g. Gemma 4, DeepSeek-R1). Disable for faster replies without thinking steps."
+msgstr "Aktiviert erweitertes Chain-of-Thought-Denken für kompatible Modelle (z. B. Gemma 4, DeepSeek-R1). Deaktiviert für schnellere Antworten."
+
+msgid "Start Adventure"
+msgstr "Abenteuer starten"
+
+msgid "Chat"
+msgstr "Chat"
+
+msgid "Media"
+msgstr "Medien"
+
+msgid "Memories"
+msgstr "Erinnerungen"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Sidebar / Character Info"
+msgstr "Seitenleiste / Charakterinfo"
+
+msgid "Location:"
+msgstr "Ort:"
+
+msgid "World:"
+msgstr "Welt:"
+
+msgid "Neutral Setting"
+msgstr "Neutraler Schauplatz"
+
+msgid "View location backdrop"
+msgstr "Ortshintergrund anzeigen"
+
+msgid "View LLM prompt (Admin)"
+msgstr "LLM-Prompt ansehen (Admin)"
+
+msgid "Translate message (on-demand)"
+msgstr "Nachricht übersetzen (On-Demand)"
+
+msgid "Duplicate chat from here (Fork)"
+msgstr "Chat ab hier duplizieren (Fork)"
+
+msgid "Delete from here"
+msgstr "Ab hier löschen"
+
+msgid "Show/hide ALT text (image description)"
+msgstr "ALT-Text (Bildbeschreibung) ein-/ausblenden"
+
+msgid "No image description available."
+msgstr "Keine Bildbeschreibung verfügbar."
+
+msgid "Unlocked 9:16 Character Images (Relationship:"
+msgstr "Freigeschaltete 9:16 Charakter-Bilder (Beziehung:"
+
+msgid "Unlock at:"
+msgstr "Freischaltung ab:"
+
+msgid "No gallery images unlocked for the current relationship level yet."
+msgstr "Noch keine Galeriebilder für den aktuellen Beziehungswert freigeschaltet."
+
+msgid "Images Shared & Generated in This Session"
+msgstr "In dieser Sitzung geteilte & generierte Bilder"
+
+msgid "Chat Media"
+msgstr "Chat-Medien"
+
+msgid "No images uploaded in this chat yet."
+msgstr "Noch keine Bilder in diesem Chat hochgeladen."
+
+msgid "View world backdrop"
+msgstr "Welthintergrund anzeigen"
+
+msgid "Saved Episodic Memories (10-Message Interval)"
+msgstr "Gespeicherte Episoden-Erinnerungen (10-Nachrichten-Intervall)"
+
+msgid "Memories are summarized automatically in the background and injected into the prompt via keyword tags."
+msgstr "Erinnerungen werden automatisch im Hintergrund zusammengefasst und über Keyword-Tags in den Prompt eingebunden."
+
+msgid "Message #{idx}"
+msgstr "Nachricht #{idx}"
+
+msgid "Tags (Comma-separated for vectorless RAG)"
+msgstr "Tags (Kommagetrennt für vektorloses RAG)"
+
+msgid "Summary"
+msgstr "Zusammenfassung"
+
+msgid "Recalculate"
+msgstr "Neu berechnen"
+
+msgid "Recalculate memory from associated episode messages"
+msgstr "Erinnerung aus den zugehörigen Episoden-Nachrichten neu berechnen"
+
+msgid "Translate"
+msgstr "Übersetzen"
+
+msgid "Translate memory in-place to your language"
+msgstr "Erinnerung direkt (in-place) in deine Sprache übersetzen"
+
+msgid "No memories generated yet (created automatically every 10 messages)."
+msgstr "Noch keine Erinnerungen generiert (entstehen automatisch alle 10 Nachrichten)."
+
+msgid "Active Persona"
+msgstr "Aktive Persona"
+
+msgid "Edit player persona"
+msgstr "Spieler-Persona bearbeiten"
+
+msgid "Unknown"
+msgstr "Unbekannt"
+
+msgid "Persona is locked for this chat after the 1st message"
+msgstr "Persona ist nach der 1. Nachricht für diesen Chat gesperrt"
+
+msgid "Warning:"
+msgstr "Warnung:"
+
+msgid "Switching worlds during an active chat may lead to inconsistencies with earlier memories."
+msgstr "Ein Weltwechsel während eines laufenden Chats kann zu Unstimmigkeiten mit früheren Erinnerungen führen."
+
+msgid "No World (Neutral)"
+msgstr "Ohne Welt (Neutral)"
+
+msgid "Switch world"
+msgstr "Welt wechseln"
+
+msgid "Enable random events"
+msgstr "Zufalls-Events aktivieren"
+
+msgid "Relationship Settings"
+msgstr "Beziehungseinstellungen"
+
+msgid "Show relationship debug labels"
+msgstr "Beziehungs-Debug-Labels anzeigen"
+
+msgid "Reset relationship to default and recalculate from chat history"
+msgstr "Beziehung auf Standard zurücksetzen und aus dem Chatverlauf neu berechnen"
+
+msgid "Recalculate relationship"
+msgstr "Beziehung neu berechnen"
+
+msgid "Lorebook:"
+msgstr "Lorebook:"
+
+msgid "New Lorebook"
+msgstr "Neues Lorebook"
+
+msgid "Lorebook & Encyclopedia"
+msgstr "Lorebook & Enzyklopädie"
+
+msgid "Basic Settings"
+msgstr "Grundeinstellungen"
+
+msgid "Really delete Lorebook?"
+msgstr "Lorebook wirklich löschen?"
+
+msgid "Read-only (External Lorebook)"
+msgstr "Schreibgeschützt (Fremdes Lorebook)"
+
+msgid "Save Lorebook"
+msgstr "Lorebook speichern"
+
+msgid "Lorebook Name"
+msgstr "Name des Lorebooks"
+
+msgid "The title of this knowledge compendium."
+msgstr "Der Titel dieses Wissenskompendiums."
+
+msgid "Proper Noun (Do not translate)"
+msgstr "Eigenname (Nicht übersetzen)"
+
+msgid "Short Description"
+msgstr "Kurzbeschreibung"
+
+msgid "A brief summary of the topic for quick orientation in the overview."
+msgstr "Eine knappe Zusammenfassung des Themenbereichs zur Orientierung in der Übersicht."
+
+msgid "Short overview of the lorebook content..."
+msgstr "Kurze Übersicht über den Inhalt des Lorebooks..."
+
+msgid "New Entry"
+msgstr "Neuer Eintrag"
+
+msgid "Private (Secret Lore)"
+msgstr "Privat (Geheimwissen)"
+
+msgid "Private entry: hidden from other players, but injected via RAG in roleplay."
+msgstr "Privater Eintrag: Nur für den Ersteller sichtbar. Wird im Rollenspiel über RAG injiziert."
+
+msgid "Lorebook Entry:"
+msgstr "Lorebook-Eintrag:"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Concise title of the lore entry."
+msgstr "Die prägnante Bezeichnung des Wissensartikels."
+
+msgid "Public (Readable in overview)"
+msgstr "Öffentlich (In Übersicht lesbar)"
+
+msgid "Private (Secret Lore / Spoiler Protection)"
+msgstr "Privat (Geheimwissen / Spoiler-Schutz)"
+
+msgid "Keywords that trigger loading this entry into [RELEVANT_LOREBOOKS] when mentioned in chat."
+msgstr "Stichwörter, die diesen Eintrag automatisch in [RELEVANT_LOREBOOKS] laden."
+
+msgid "Suggest Tags"
+msgstr "Tags vorschlagen"
+
+msgid "Prose Text / Lore Content"
+msgstr "Fließtext / Wissensinhalt"
+
+msgid "Compact facts, history, or rules the AI can retrieve and use in dialogue."
+msgstr "Kompakte Fakten, Geschichten oder Regeln für die KI."
+
+msgid "Really delete this lorebook entry?"
+msgstr "Diesen Lorebook-Eintrag wirklich löschen?"
+
+msgid "Create New Lorebook Entry"
+msgstr "Neuen Lorebook-Eintrag anlegen"
+
+msgid "Tags (Comma-separated)"
+msgstr "Tags (Kommagetrennt)"
+
+msgid "magic, guild, capital"
+msgstr "magie, gilde, hauptstadt"
+
+msgid "Save Entry"
+msgstr "Eintrag speichern"
+
+msgid "Show"
+msgstr "Anzeigen"
+
+msgid "Show/hide API key"
+msgstr "API-Key ein-/ausblenden"
+
+msgid "Public"
+msgstr "Öffentlich"
+
+msgid "Private"
+msgstr "Privat"
+
+msgid "Translation pending"
+msgstr "Übersetzung ausstehend"
+
+msgid "Translation into your language is pending"
+msgstr "Übersetzung in deine Sprache steht noch aus"
+
+msgid "Exchanged messages"
+msgstr "Ausgetauschte Nachrichten"
+
+msgid "Edit character"
+msgstr "Charakter bearbeiten"
+
+msgid "Duplicate character"
+msgstr "Charakter duplizieren"
+
+msgid "Relationship:"
+msgstr "Beziehung:"
+
+msgid "Public world"
+msgstr "Öffentliche Welt"
+
+msgid "Private world"
+msgstr "Private Welt"
+
+msgid "Default Persona"
+msgstr "Standard-Persona"
+
+msgid "Set as default persona"
+msgstr "Als Standard-Persona festlegen"
+
+msgid "New Persona"
+msgstr "Neue Persona"
+
+msgid "New World"
+msgstr "Neue Welt"
+
+msgid "Public lorebook"
+msgstr "Öffentliches Lorebook"
+
+msgid "Private lorebook"
+msgstr "Privates Lorebook"
+
+msgid "Collaborators receive full edit access to this creation (content, sprites, locations & events), but can never delete it or manage collaborators."
+msgstr "Kollaboratoren erhalten vollen Bearbeitungszugriff auf diese Kreation (Inhalte, Sprites, Orte & Events), können sie jedoch niemals löschen oder Kollaboratoren verwalten."
+
+msgid "Save collaborators"
+msgstr "Kollaboratoren speichern"
+
+msgid "Saves all changes in the form"
+msgstr "Speichert alle Änderungen des Formulars"
+
+msgid "Copy creator tag"
+msgstr "Creator-Tag kopieren"
+
+msgid "Remove collaborator"
+msgstr "Kollaborator entfernen"
+
+msgid "Really delete permanently?"
+msgstr "Wirklich unwiderruflich löschen?"
+
+msgid "Back"
+msgstr "Zurück"
+
+msgid "Entire Character (Location-independent)"
+msgstr "Gesamter Charakter (Ortsunabhängig)"
+
+msgid "No recommended world with locations linked"
+msgstr "Keine empfohlene Welt mit Orten verknüpft"
+
+msgid "Entire World"
+msgstr "Gesamte Welt"
+
+msgid ""
+"Event Title:\n"
+"Name of the random event (e.g., 'Sudden Thunderstorm', 'Carrier Pigeon Arrives')."
+msgstr ""
+"Event-Titel:\n"
+"Name des Zufallsereignisses (z. B. 'Plötzlicher Gewittersturm', 'Brieftaube trifft ein')."
+
+msgid "Probability (0 - 100%%)"
+msgstr "Wahrscheinlichkeit (0 - 100%%)"
+
+msgid ""
+"Probability (1-100%%):\n"
+"Relative weight in the shared event pool. Every 10 to 100 messages (cooldown counter), one event is triggered by weight."
+msgstr ""
+"Wahrscheinlichkeit (1-100%%):\n"
+"Relative Gewichtung im gemeinsamen Ereignis-Pool. Alle 10 bis 100 Nachrichten (Cooldown-Zähler) wird ein Ereignis gewichtet ausgelöst."
+
+msgid "One-Shot (Max. 1x per session)"
+msgstr "One-Shot (Max. 1x pro Session)"
+
+msgid ""
+"One-Shot (Single Event):\n"
+"When enabled, this event triggers at most once per chat session and is then removed from the active pool."
+msgstr ""
+"One-Shot (Einmaliges Ereignis):\n"
+"Wenn aktiviert, wird dieses Ereignis pro Chat-Sitzung maximal ein einziges Mal ausgelöst und danach aus dem aktiven Pool entfernt."
+
+msgid "Assignment (Location-independent or bound to a specific location)"
+msgstr "Zugehörigkeit (Ortsunabhängig oder an konkreten Ort gebunden)"
+
+msgid ""
+"Location Restriction:\n"
+"Choose whether this character event can occur anywhere in chats with this character or is additionally bound to a specific location."
+msgstr ""
+"Orts-Eingrenzung:\n"
+"Wähle, ob dieses Charakter-Event überall in Chats mit diesem Charakter eintreten darf oder zusätzlich an einen bestimmten Schauplatz gebunden ist."
+
+msgid "Assignment (Exclusive: Either Entire World OR specific location)"
+msgstr "Zugehörigkeit (Exklusiv: Entweder Gesamte Welt ODER konkreter Ort)"
+
+msgid ""
+"Location Assignment:\n"
+"Choose whether this event can only occur at a specific location or applies as a global event for the entire world."
+msgstr ""
+"Orts-Zuordnung:\n"
+"Wähle, ob dieses Ereignis nur an einem bestimmten Schauplatz auftreten kann oder als globales Ereignis für die gesamte Welt gilt."
+
+msgid "Relationship Range (From – To)"
+msgstr "Beziehungsbereich (Von – Bis)"
+
+msgid ""
+"Relationship Range:\n"
+"Optionally restricts the event to a relationship range. If both sliders are at the outer ends, the event is active at all relationship tiers."
+msgstr ""
+"Beziehungsbereich:\n"
+"Grenzt das Event optional auf einen Beziehungsbereich ein. Stehen beide Regler ganz außen, ist das Event auf allen Beziehungsstufen aktiv."
+
+msgid "Minimum relationship tier"
+msgstr "Mindest-Beziehungsstufe"
+
+msgid "Maximum relationship tier"
+msgstr "Höchst-Beziehungsstufe"
+
+msgid "Scenic Event Description"
+msgstr "Szenische Beschreibung des Ereignisses"
+
+msgid ""
+"Event Description:\n"
+"The narrative occurrence. When triggered, this description is placed in the [WORLD_INFO] section of the prompt for the next turn so the AI reacts appropriately."
+msgstr ""
+"Event-Beschreibung:\n"
+"Der narrative Vorfall. Bei Auslösung wird diese Beschreibung für den nächsten Zug im [WORLD_INFO]-Bereich des Prompts platziert, damit die KI passend darauf reagiert."
+
+msgid "New Event"
+msgstr "Neues Event"
+
+msgid "Character-wide"
+msgstr "Charakterweit"
+
+msgid "Relationship-bound"
+msgstr "Beziehungsgebunden"
+
+msgid "One-Shot"
+msgstr "Einmalig"
+
+msgid "Repeatable"
+msgstr "Wiederholbar"
+
+msgid "Edit Event:"
+msgstr "Event bearbeiten:"
+
+msgid "Really delete this event?"
+msgstr "Dieses Ereignis wirklich löschen?"
+
+msgid "Create New Event"
+msgstr "Neues Event anlegen"
+
+msgid "Save Event"
+msgstr "Event speichern"
+
+msgid "Set image crop"
+msgstr "Bild-Ausschnitt festlegen"
+
+msgid "Crop Source"
+msgstr "Crop-Quelle"
+
+msgid "Resize"
+msgstr "Größe ändern"
+
+msgid "Click to adjust %(label)s"
+msgstr "Klicken, um %(label)s anzupassen"
+
+msgid "Apply crops"
+msgstr "Ausschnitte übernehmen"
+
+msgid "Apply crop"
+msgstr "Ausschnitt übernehmen"
+
+msgid "Image Viewer"
+msgstr "Bildbetrachter"
+
+msgid "Close (Esc)"
+msgstr "Schließen (Esc)"
+
+msgid "Previous image"
+msgstr "Vorheriges Bild"
+
+msgid "Next image"
+msgstr "Nächstes Bild"
+
+msgid "Active Knowledge Books (Lorebooks)"
+msgstr "Aktive Wissensbücher (Lorebooks)"
+
+msgid "Lorebooks expand the model's context with relevant world and background knowledge via keyword tags."
+msgstr "Lorebooks erweitern den Kontext des Modells durch relevantes Welt- und Hintergrundwissen über Keyword-Tags."
+
+msgid "Default Lorebooks (Character & World)"
+msgstr "Standard-Lorebooks (Charakter & Welt)"
+
+msgid "Session Toggle (Slider)"
+msgstr "Sitzungs-Toggle (Slider)"
+
+msgid "Lorebook source"
+msgstr "Herkunft des Lorebooks"
+
+msgid "Creator Lore"
+msgstr "Ersteller-Wissen"
+
+msgid "Creator Lore: hidden from other players, but used by the AI in chat."
+msgstr "Ersteller-Wissen: Inhalt ist vor anderen Spielern verborgen, wird aber von der KI im Chat genutzt."
+
+msgid "Inactive — Requires world:"
+msgstr "Inaktiv — Erfordert Welt:"
+
+msgid "This lorebook requires the world"
+msgstr "Dieses Lorebook erfordert die Welt"
+
+msgid "Locked: matching world is not active."
+msgstr "Gesperrt: Passende Welt ist nicht aktiv."
+
+msgid "Deactivate lorebook"
+msgstr "Lorebook deaktivieren"
+
+msgid "Activate lorebook"
+msgstr "Lorebook aktivieren"
+
+msgid "No default lorebooks assigned for this session."
+msgstr "Keine Standard-Lorebooks für diese Sitzung zugewiesen."
+
+msgid "Custom Lorebooks (Chat-specific)"
+msgstr "Benutzerdefinierte Lorebooks (Chat-spezifisch)"
+
+msgid "Actions (Toggle & Delete)"
+msgstr "Aktionen (Slider & Löschen)"
+
+msgid "Custom"
+msgstr "Benutzerdefiniert"
+
+msgid "Remove lorebook from chat"
+msgstr "Lorebook aus Chat entfernen"
+
+msgid "No additional custom lorebooks added. Click 'Add Lorebook' to add knowledge."
+msgstr "Keine zusätzlichen benutzerdefinierten Lorebooks hinzugefügt. Klicke auf „Lorebook hinzufügen“, um Wissen zu ergänzen."
+
+msgid "Add Lorebook to Chat"
+msgstr "Lorebook zum Chat hinzufügen"
+
+msgid "Already active"
+msgstr "Bereits aktiv"
+
+msgid "No lorebooks available."
+msgstr "Keine Lorebooks verfügbar."
+
+msgid "Adjust crop"
+msgstr "Ausschnitt anpassen"
+
+msgid "Crop active"
+msgstr "Ausschnitt aktiv"
+
+msgid "Background / Personality"
+msgstr "Hintergrund / Persönlichkeit"
+
+msgid "max. 1,200 characters"
+msgstr "max. 1.200 Zeichen"
+
+msgid "Extract image features"
+msgstr "Bild-Features extrahieren"
+
+msgid "Automatically extract appearance from portrait image via vision model"
+msgstr "Aussehen per Vision-Modell automatisch aus dem Porträtbild extrahieren"
+
+msgid "Persona"
+msgstr "Persona"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Portrait image (PNG/JPG/WEBP)"
+msgstr "Porträtbild (PNG/JPG/WEBP)"
+
+msgid "Save Persona"
+msgstr "Persona speichern"
+
+msgid "New portrait image (optional, PNG/JPG/WEBP)"
+msgstr "Neues Porträtbild (optional, PNG/JPG/WEBP)"
+
+msgid "Save changes"
+msgstr "Änderungen speichern"
+
+msgid "Really delete persona?"
+msgstr "Persona wirklich löschen?"
+
+msgid "AI Characters"
+msgstr "KI-Charaktere"
+
+msgid "Worlds"
+msgstr "Worlds"
+
+msgid "Open menu"
+msgstr "Menü öffnen"
+
+msgid "User menu"
+msgstr "Benutzermenü"
+
+msgid "Logout"
+msgstr "Abmelden"
+
+msgid "Support us on ko-fi"
+msgstr "Unterstütze uns auf Ko-fi"
+
+msgid "Visit our Website"
+msgstr "Unsere Website besuchen"
+
+msgid "Hub Dashboard"
+msgstr "Hub-Dashboard"
+
+msgid "Some content is still being translated into your language. The selection of available content may still change."
+msgstr "Einige Inhalte werden noch in deine Sprache übersetzt. Die Auswahl verfügbarer Inhalte kann sich noch ändern."
+
+msgid "Translations in Progress"
+msgstr "Übersetzungen laufen"
+
+msgid "All Genders"
+msgstr "Alle Geschlechter"
+
+msgid "Chat Status"
+msgstr "Chat-Status"
+
+msgid "All Characters"
+msgstr "Alle Charaktere"
+
+msgid "Already Chatted"
+msgstr "Bereits gechattet"
+
+msgid "Not Chatted Yet"
+msgstr "Noch nicht gechattet"
+
+msgid "Sort Order"
+msgstr "Sortierung"
+
+msgid "Newest First"
+msgstr "Neueste zuerst"
+
+msgid "Most Messages"
+msgstr "Meiste Nachrichten"
+
+msgid "Best Relationship"
+msgstr "Bester Beziehungswert"
+
+msgid "Author"
+msgstr "Urheber"
+
+msgid "Only Mine (Creator)"
+msgstr "Nur eigene (Ersteller)"
+
+msgid "Collaborations"
+msgstr "Kollaborationen"
+
+msgid "All"
+msgstr "Alle"
+
+msgid "All Lorebooks"
+msgstr "Alle Lorebooks"
+
+msgid "Name (A-Z)"
+msgstr "Name (A-Z)"
+
+msgid "All Worlds"
+msgstr "Alle Welten"
+
+msgid "Creator Tag"
+msgstr "Creator-Tag"
+
+msgid "Other creators can add you as a collaborator using this tag."
+msgstr "Mit diesem Tag können dich andere Creator als Mitbearbeiter eintragen."
+
+msgid "Copy Creator Tag"
+msgstr "Creator-Tag kopieren"
+
+msgid "Name & Email Address"
+msgstr "Name & E-Mail-Adresse"
+
+msgid "Your current password is only required when changing your email address or password. Leave the new password fields empty to keep your current password."
+msgstr "Das aktuelle Passwort wird nur benötigt, wenn du die E-Mail-Adresse oder das Passwort änderst. Neue Passwortfelder leer lassen, um das Passwort zu behalten."
+
+msgid "Current password"
+msgstr "Aktuelles Passwort"
+
+msgid "New password"
+msgstr "Neues Passwort"
+
+msgid "Confirm new password"
+msgstr "Neues Passwort wiederholen"
+
+msgid "Language"
+msgstr "Sprache"
+
+msgid "Language of the interface and displayed content translations."
+msgstr "Sprache der Oberfläche und der angezeigten Übersetzungen."
+
+msgid "Appearance"
+msgstr "Erscheinungsbild"
+
+msgid "Visual background effects for your personal interface."
+msgstr "Visuelle Hintergrundeffekte für deine persönliche Oberfläche."
+
+msgid "Animated Ember Bokeh Background"
+msgstr "Animierter Glut-Bokeh-Hintergrund"
+
+msgid "My Creations"
+msgstr "Meine Kreationen"
+
+msgid "Overview of all characters, worlds, and lorebooks you created or collaborate on. Click any item to open its editor."
+msgstr "Übersicht aller von dir erstellten Charaktere, Welten und Lorebooks sowie deiner Kollaborationen. Ein Klick öffnet direkt den passenden Editor."
+
+msgid "Total:"
+msgstr "Gesamt:"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "All Types"
+msgstr "Alle Typen"
+
+msgid "Characters"
+msgstr "Charaktere"
+
+msgid "All Works"
+msgstr "Alle Werke"
+
+msgid "Search"
+msgstr "Suche"
+
+msgid "Search name..."
+msgstr "Name suchen..."
+
+msgid "Search creations"
+msgstr "Kreationen durchsuchen"
+
+msgid "Preview"
+msgstr "Vorschau"
+
+msgid "Details"
+msgstr "Details"
+
+msgid "Role"
+msgstr "Rolle"
+
+msgid "Created"
+msgstr "Erstellt"
+
+msgid "Action"
+msgstr "Aktion"
+
+msgid "Editor"
+msgstr "Editor"
+
+msgid "Open editor"
+msgstr "Editor öffnen"
+
+msgid "No creations found"
+msgstr "Keine Kreationen gefunden"
+
+msgid "No works were found matching the selected filters or created/shared with you."
+msgstr "Es wurden keine Werke gefunden, die den gewählten Filtern entsprechen oder von dir erstellt bzw. mit dir geteilt wurden."
+
+msgid "Reset all filters"
+msgstr "Alle Filter zurücksetzen"
+
+msgid "Manage your roleplay identities. The star marks your default persona."
+msgstr "Verwalte deine Rollenspiel-Identitäten. Der Stern markiert deine Standard-Persona."
+
+msgid "User & Personalization"
+msgstr "Benutzer & Personalisierung"
+
+msgid "Personas"
+msgstr "Personas"
+
+msgid "Account"
+msgstr "Account"
+
+msgid "First-Boot Wizard"
+msgstr "Erststart-Einrichtung"
+
+msgid "AImo First-Boot Wizard"
+msgstr "AImo First-Boot Wizard"
+
+msgid "Configure the non-revocable initial administrator and your exclusive AI backend."
+msgstr "Richte den unentziehbaren initialen Administrator sowie dein exklusives KI-Backend ein."
+
+msgid "Setup steps"
+msgstr "Einrichtungsschritte"
+
+msgid "Administrator"
+msgstr "Administrator"
+
+msgid "Select AI Backend"
+msgstr "KI-Backend wählen"
+
+msgid "Configure Backend"
+msgstr "Backend einrichten"
+
+msgid "1. Initial Administrator"
+msgstr "1. Initialer Administrator"
+
+msgid "This first user permanently receives all system permissions and cannot be deleted or downgraded."
+msgstr "Dieser erste Benutzer erhält dauerhaft alle Systemberechtigungen und kann nicht gelöscht oder herabgestuft werden."
+
+msgid "Continue to Backend Selection"
+msgstr "Weiter zur Backend-Auswahl"
+
+msgid "2. Select AI Backend"
+msgstr "2. KI-Backend auswählen"
+
+msgid "Exclusive choice:"
+msgstr "Exklusive Wahl:"
+
+msgid "AImo supports either local Ollama or Google AI Cloud – parallel operation of both AI backends is not supported. You can switch this anytime later under Admin → Services & Models."
+msgstr "AImo unterstützt entweder lokales Ollama oder Google AI Cloud – ein Parallelbetrieb beider KI-Backends ist nicht vorgesehen. Du kannst dies später jederzeit unter Admin → Services & Modelle umstellen."
+
+msgid "Continue to Setup"
+msgstr "Weiter zur Einrichtung"
+
+msgid "3. Configure Ollama"
+msgstr "3. Ollama einrichten"
+
+msgid "Ollama Server URL (Required)"
+msgstr "Ollama Server-URL (Pflichtfeld)"
+
+msgid "Test Connection"
+msgstr "Verbindung prüfen"
+
+msgid "Setup Helper for Ollama: Recommended Models per Role"
+msgstr "Setup-Helper für Ollama: Empfohlene Modelle pro Rolle"
+
+msgid "Pull these 3 models on your Ollama server (AImo assigns task roles automatically):"
+msgstr "Lade diese 3 Modelle auf deinem Ollama-Server (AImo weist die Aufgabenrollen automatisch zu):"
+
+msgid "Unchecked"
+msgstr "Ungeprüft"
+
+msgid "Terminal commands to copy:"
+msgstr "Terminal-Befehle zum Kopieren:"
+
+msgid "Copy command:"
+msgstr "Befehl kopieren:"
+
+msgid "Customize Model Assignment per Role (Optional)"
+msgstr "Modell-Zuweisung pro Rolle anpassen (Optional)"
+
+msgid "Optional Additional Services"
+msgstr "Optionale Zusatz-Services"
+
+msgid "ComfyUI URL"
+msgstr "ComfyUI URL"
+
+msgid "SearXNG URL"
+msgstr "SearXNG URL"
+
+msgid "3. Configure Google AI Cloud"
+msgstr "3. Google AI Cloud einrichten"
+
+msgid "Required"
+msgstr "Pflichtfeld"
+
+msgid "Optional — Env fallback active"
+msgstr "Optional — Env-Fallback aktiv"
+
+msgid "Google AI Model Assignment (Text & Vision)"
+msgstr "Google AI Modell-Zuweisung (Text & Vision)"
+
+msgid "Recommended Gemini models per role (populated with your available models after key verification):"
+msgstr "Empfohlene Gemini-Modelle pro Rolle (werden nach Key-Prüfung mit deinen verfügbaren Modellen ergänzt):"
+
+msgid "Choose whether scene images should be generated via Google AI (Gemini Image), a local ComfyUI server, or not at all:"
+msgstr "Wähle, ob Szenenbilder über Google AI (Gemini Image), einen lokalen ComfyUI-Server oder gar nicht erzeugt werden sollen:"
+
+msgid "Choose whether future web searches should use Google Search Grounding, SearXNG, or no search:"
+msgstr "Wähle, ob für künftige Websuchen Google Search Grounding, SearXNG oder keine Suche verwendet werden soll:"
+
+msgid "Back to Backend Selection"
+msgstr "Zurück zur Backend-Auswahl"
+
+msgid "Initialize & Launch System"
+msgstr "System initialisieren & Starten"
+
+msgid "Configure Google AI"
+msgstr "Google AI einrichten"
+
+msgid "Configure Ollama"
+msgstr "Ollama einrichten"
+
+msgid "Checking connection"
+msgstr "Prüfe Verbindung"
+
+msgid "Checking connection..."
+msgstr "Verbindung wird geprüft..."
+
+msgid "API key valid — {count} text/vision models and {img_count} image models available."
+msgstr "API-Key gültig — {count} Text-/Vision-Modelle und {img_count} Bildmodelle verfügbar."
+
+msgid "Ollama reachable — {count} installed model(s) found."
+msgstr "Ollama erreichbar — {count} installierte(s) Modell(e) gefunden."
+
+msgid "Connection failed."
+msgstr "Verbindung fehlgeschlagen."
+
+msgid "Connection error while testing backend."
+msgstr "Verbindungsfehler beim Testen des Backends."
+
+msgid "WorldInfo:"
+msgstr "WorldInfo:"
+
+msgid "WorldInfo & Locations"
+msgstr "WorldInfo & Schauplätze"
+
+msgid "Locations & Backgrounds"
+msgstr "Orte & Hintergründe"
+
+msgid "Really delete WorldInfo?"
+msgstr "WorldInfo wirklich löschen?"
+
+msgid "Read-only (External World)"
+msgstr "Schreibgeschützt (Fremde Welt)"
+
+msgid "Save WorldInfo"
+msgstr "WorldInfo speichern"
+
+msgid "World Name"
+msgstr "Welt-Name"
+
+msgid "The name of the universe or setting. Included as primary world in the prompt context."
+msgstr "Der Name des Universums oder Schauplatzes. Wird als Primärwelt in den Prompt-Kontext eingebunden."
+
+msgid "Cover Image (1:1)"
+msgstr "Cover-Bild (1:1)"
+
+msgid "Square cover image for the world card in the Hub and world selection."
+msgstr "Quadratisches Titelbild für die Weltkarte im Hub und die Weltenauswahl."
+
+msgid "1:1 World Cover"
+msgstr "1:1 Welt-Cover"
+
+msgid "Choose Cover"
+msgstr "Cover wählen"
+
+msgid "Crop"
+msgstr "Zuschneiden"
+
+msgid "World Backdrop (16:9)"
+msgstr "Welt-Backdrop (16:9)"
+
+msgid "Optional 16:9 chat background for this world. Overrides the System Backdrop when a location has no background image of its own (Priority: System → World → Location)."
+msgstr "Optionaler 16:9-Chat-Hintergrund für diese Welt. Überschreibt den System-Backdrop, wenn ein Schauplatz kein eigenes Hintergrundbild hat (Priorität: System → Welt → Ort)."
+
+msgid "No world backdrop set"
+msgstr "Kein Welt-Backdrop festgelegt"
+
+msgid "Uses System Backdrop unless a location defines its own background."
+msgstr "Verwendet den System-Backdrop, sofern ein Schauplatz keinen eigenen Hintergrund hat."
+
+msgid "Priority in chat: System → World → Location"
+msgstr "Priorität im Chat: System → Welt → Ort"
+
+msgid "Linked Lorebook (Optional)"
+msgstr "Gebundenes Lorebook (Optional)"
+
+msgid "An optional lorebook automatically included alongside character lorebooks in all chats using this world."
+msgstr "Ein optionales Lorebook, das in allen Chats in dieser Welt automatisch neben dem Charakter-Lorebook herangezogen wird."
+
+msgid "No lorebook linked"
+msgstr "Kein Lorebook gebunden"
+
+msgid "New Location"
+msgstr "Neuer Ort"
+
+msgid "This location is bound to"
+msgstr "Dieser Ort ist gebunden an"
+
+msgid "Edit Location:"
+msgstr "Ort bearbeiten:"
+
+msgid "Location Name"
+msgstr "Name des Orts"
+
+msgid "Name of the location (e.g. Old Library, Griffin Tavern)."
+msgstr "Bezeichnung des Orts (z. B. Alte Bibliothek, Taverne zum Greifen)."
+
+msgid "Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet)."
+msgstr "Kommagetrennte Schlagwörter zur Beschreibung der Umgebung (z. B. drinnen, gemütlich, ruhig)."
+
+msgid "Extract Tags"
+msgstr "Tags extrahieren"
+
+msgid "16:9 Background Image (PNG, JPG, WEBP)"
+msgstr "16:9-Hintergrundbild (PNG, JPG, WEBP)"
+
+msgid "Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference."
+msgstr "Querformat-Bild (16:9) als Kulisse für die Chat-Bühne und ComfyUI-Referenz."
+
+msgid "No location backdrop set"
+msgstr "Kein Ortshintergrund festgelegt"
+
+msgid "Uses World Backdrop or System Backdrop if none is set."
+msgstr "Verwendet den Welthintergrund oder Systemhintergrund, falls keiner festgelegt ist."
+
+msgid "Analyze & Describe Image"
+msgstr "Bild analysieren & beschreiben"
+
+msgid "Location Description"
+msgstr "Ortsbeschreibung"
+
+msgid "Atmospheric description of the environment, sounds, and mood."
+msgstr "Atmosphärische Schilderung der Umgebung, Geräusche und Stimmung."
+
+msgid "Character Binding (Optional)"
+msgstr "Charakter-Bindung (Optional)"
+
+msgid "If selected, this location can only be entered when chatting with that specific character."
+msgstr "Wenn ausgewählt, kann dieser Ort nur im Chat mit diesem spezifischen Charakter betreten werden."
+
+msgid "No character (Freely accessible)"
+msgstr "Kein Charakter (Frei betretbar)"
+
+msgid "Assigned Location Events:"
+msgstr "Zugeordnete Orts-Events:"
+
+msgid "No specific location events assigned."
+msgstr "Keine spezifischen Orts-Events zugeordnet."
+
+msgid "Really delete this location?"
+msgstr "Diesen Ort wirklich löschen?"
+
+msgid "Create New Location"
+msgstr "Neuen Ort anlegen"
+
+msgid "tavern, forest, castle"
+msgstr "taverne, wald, schloss"
+
+msgid "Save Location"
+msgstr "Ort speichern"
+
+msgid "Set 1:1 World Cover"
+msgstr "1:1 Welt-Cover festlegen"
+
+msgid "1:1 Cover"
+msgstr "1:1 Cover"
+

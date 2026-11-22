@@ -1,0 +1,3332 @@
+msgid ""
+msgstr ""
+"Language: ko\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: flask/application/admin/views.py:130 flask/application/admin/views.py:187
+msgid "User not found."
+msgstr "사용자를 찾을 수 없습니다."
+
+#: flask/application/admin/views.py:193
+msgid "User '%(username)s' deleted."
+msgstr "사용자 '%(username)s'을(를) 삭제했습니다."
+
+#: flask/application/admin/views.py:106
+msgid "User '%(username)s' created successfully."
+msgstr "사용자 '%(username)s'을(를) 생성했습니다."
+
+#: flask/application/admin/views.py:158
+msgid "User '%(username)s' updated."
+msgstr "사용자 '%(username)s'을(를) 업데이트했습니다."
+
+#: flask/application/admin/views.py:421
+msgid "System prompts saved successfully."
+msgstr "시스템 프롬프트를 저장했습니다."
+
+#: flask/application/admin/views.py:214
+msgid "Suggested models assigned for all 5 roles successfully!"
+msgstr "5개 역할 모두에 추천 모델을 할당했습니다!"
+
+#: flask/application/admin/views.py:277
+msgid "Service settings and models saved successfully."
+msgstr "서비스 설정과 모델을 저장했습니다."
+
+#: flask/application/admin/views.py:472
+msgid "System-wide default backdrop reset (default theme active)."
+msgstr "시스템 전체 기본 배경을 재설정했습니다 (기본 테마 활성)."
+
+#: flask/application/admin/views.py:510
+msgid "World Backdrop"
+msgstr "세계 배경"
+
+#: flask/application/admin/views.py:489
+msgid "Please select an image file (PNG, JPG, WEBP) to upload."
+msgstr "업로드할 이미지 파일(PNG, JPG, WEBP)을 선택하세요."
+
+#: flask/application/admin/views.py:484
+msgid "New system-wide default backdrop saved successfully."
+msgstr "새 시스템 전체 기본 배경을 저장했습니다."
+
+#: flask/application/admin/views.py:497
+msgid "System-wide default backdrop assigned successfully."
+msgstr "시스템 전체 기본 배경을 할당했습니다."
+
+#: flask/application/auth/views.py:45
+msgid "Invalid email address or password."
+msgstr "이메일 주소 또는 비밀번호가 올바르지 않습니다."
+
+#: flask/application/auth/views.py:25
+msgid "Too many login attempts. Please wait a moment and try again."
+msgstr ""
+
+#: flask/application/characters/views.py:401
+msgid "Copy '%(name)s' created as draft."
+msgstr "사본 '%(name)s'을(를) 초안으로 생성했습니다."
+
+#: flask/application/characters/views.py:417
+msgid "Character deleted."
+msgstr "캐릭터를 삭제했습니다."
+
+#: flask/application/characters/views.py:493
+msgid "Gallery image removed."
+msgstr "갤러리 이미지를 제거했습니다."
+
+#: flask/application/characters/views.py:543
+msgid "Sprite %(name)s deleted."
+msgstr "스프라이트 %(name)s을(를) 삭제했습니다."
+
+#: flask/application/characters/views.py:292 flask/application/characters/views.py:397 flask/application/chat/views.py:45 flask/application/chat/views.py:69
+msgid "Character not found."
+msgstr "캐릭터를 찾을 수 없습니다."
+
+#: flask/application/characters/views.py:296
+msgid "Access denied: You can only edit your own characters or creations shared with you."
+msgstr "접근 거부: 자신의 캐릭터 또는 공유된 작품만 편집할 수 있습니다."
+
+#: flask/application/characters/views.py:413
+msgid "Character not found or no permission to delete."
+msgstr "캐릭터를 찾을 수 없거나 삭제 권한이 없습니다."
+
+#: flask/application/characters/views.py:432 flask/application/characters/views.py:459 flask/application/characters/views.py:485 flask/application/characters/views.py:508 flask/application/characters/views.py:539
+msgid "Character not found or no permission."
+msgstr "캐릭터를 찾을 수 없거나 권한이 없습니다."
+
+#: flask/application/characters/views.py:463 flask/application/characters/views.py:489
+msgid "Gallery image not found."
+msgstr "갤러리 이미지를 찾을 수 없습니다."
+
+#: flask/application/characters/views.py:470
+msgid "Gallery image updated."
+msgstr "갤러리 이미지가 업데이트되었습니다."
+
+#: flask/application/characters/views.py:580 flask/application/characters/views.py:625
+msgid "Invalid or inaccessible location selected."
+msgstr "잘못되었거나 접근할 수 없는 장소가 선택되었습니다."
+
+#: flask/application/characters/views.py:605 flask/application/worldinfo/views.py:472
+msgid "Event '%(title)s' added."
+msgstr "이벤트 '%(title)s'을(를) 추가했습니다."
+
+#: flask/application/characters/views.py:672 flask/application/worldinfo/views.py:534
+msgid "Event deleted."
+msgstr "이벤트를 삭제했습니다."
+
+#: flask/application/characters/views.py:268
+msgid "Character '%(name)s' created successfully!"
+msgstr "캐릭터 '%(name)s'을(를) 생성했습니다!"
+
+#: flask/application/characters/views.py:354
+msgid "Character '%(name)s' saved."
+msgstr "캐릭터 '%(name)s'을(를) 저장했습니다."
+
+#: flask/application/characters/views.py:442
+msgid "9:16 gallery image added."
+msgstr "9:16 갤러리 이미지를 추가했습니다."
+
+#: flask/application/characters/views.py:524
+msgid "Sprite '%(name)s' uploaded."
+msgstr "스프라이트 '%(name)s'을(를) 업로드했습니다."
+
+#: flask/application/characters/views.py:651 flask/application/worldinfo/views.py:511
+msgid "Event updated."
+msgstr "이벤트를 업데이트했습니다."
+
+#: flask/application/chat/memory_views.py:80
+msgid "Memory deleted."
+msgstr "메모리를 삭제했습니다."
+
+#: flask/application/chat/memory_views.py:99 flask/application/chat/views.py:221
+msgid "Chat session not found."
+msgstr "채팅 세션을 찾을 수 없습니다."
+
+#: flask/application/chat/memory_views.py:106
+msgid "Memory not found."
+msgstr "메모리를 찾을 수 없습니다."
+
+#: flask/application/chat/memory_views.py:122
+msgid "No messages found for this memory episode."
+msgstr "이 메모리 에피소드에 대한 메시지를 찾을 수 없습니다."
+
+#: flask/application/chat/memory_views.py:153
+msgid "Memory recalculated successfully."
+msgstr "메모리를 다시 계산했습니다."
+
+#: flask/application/chat/memory_views.py:58
+msgid "Memory updated."
+msgstr "메모리를 업데이트했습니다."
+
+#: flask/application/chat/memory_views.py:157
+msgid "Recalculation failed."
+msgstr ""
+
+#: flask/application/chat/views.py:479
+msgid "Chat session deleted."
+msgstr "채팅 세션을 삭제했습니다."
+
+#: flask/application/chat/views.py:229
+msgid "Associated character not found."
+msgstr "연결된 캐릭터를 찾을 수 없습니다."
+
+#: flask/application/chat/views.py:398
+msgid "Session not found."
+msgstr "세션을 찾을 수 없습니다."
+
+#: flask/application/chat/views.py:415
+msgid "Persona updated for this session."
+msgstr "이 세션의 페르소나를 업데이트했습니다."
+
+#: flask/application/chat/views.py:101 flask/application/chat/views.py:423
+msgid "Invalid WorldInfo."
+msgstr "잘못된 WorldInfo입니다."
+
+#: flask/application/chat/views.py:106 flask/application/chat/views.py:430 flask/application/worldinfo/views.py:202 flask/application/worldinfo/views.py:310
+msgid "This world is not yet available in your language."
+msgstr "이 세계는 아직 귀하의 언어로 제공되지 않습니다."
+
+#: flask/application/chat/views.py:412
+msgid "Invalid persona."
+msgstr "잘못된 페르소나입니다."
+
+#: flask/application/chat/views.py:439
+msgid "WorldInfo changed for this chat."
+msgstr "이 채팅의 WorldInfo를 변경했습니다."
+
+#: flask/application/chat/views.py:442
+msgid "Event setting saved."
+msgstr "이벤트 설정을 저장했습니다."
+
+#: flask/application/chat/views.py:450
+msgid "Thinking enabled."
+msgstr "사고가 활성화되었습니다."
+
+#: flask/application/chat/views.py:452
+msgid "Thinking disabled."
+msgstr "사고가 비활성화되었습니다."
+
+#: flask/application/chat/views.py:457
+msgid "Chat title updated."
+msgstr "채팅 제목을 업데이트했습니다."
+
+#: flask/application/lorebooks/views.py:181 flask/application/worldinfo/views.py:313
+msgid "Copy '%(name)s' created successfully."
+msgstr "사본 '%(name)s'을(를) 생성했습니다."
+
+#: flask/application/lorebooks/views.py:196
+msgid "Lorebook deleted."
+msgstr "로어북을 삭제했습니다."
+
+#: flask/application/lorebooks/views.py:283
+msgid "Entry deleted."
+msgstr "항목을 삭제했습니다."
+
+#: flask/application/lorebooks/views.py:77 flask/application/lorebooks/views.py:45
+msgid "Lorebook '%(name)s' created."
+msgstr "로어북 '%(name)s'을(를) 생성했습니다."
+
+#: flask/application/lorebooks/views.py:94 flask/application/lorebooks/views.py:178
+msgid "Lorebook not found."
+msgstr "로어북을 찾을 수 없습니다."
+
+#: flask/application/lorebooks/views.py:193
+msgid "Lorebook not found or no permission to delete."
+msgstr "로어북을 찾을 수 없거나 삭제 권한이 없습니다."
+
+#: flask/application/lorebooks/views.py:208 flask/application/lorebooks/views.py:240 flask/application/lorebooks/views.py:274
+msgid "Lorebook not found or no permission."
+msgstr "로어북을 찾을 수 없거나 권한이 없습니다."
+
+#: flask/application/lorebooks/views.py:226
+msgid "Entry '%(title)s' added."
+msgstr "항목 '%(title)s'을(를) 추가했습니다."
+
+#: flask/application/lorebooks/views.py:279
+msgid "Entry not found."
+msgstr ""
+
+#: flask/application/lorebooks/views.py:102
+msgid "Access denied: You can only edit your own lorebooks or creations shared with you."
+msgstr "접근 거부: 자신의 로어북 또는 공유된 작품만 편집할 수 있습니다."
+
+#: flask/application/lorebooks/views.py:119
+msgid "Lorebook updated."
+msgstr "로어북을 업데이트했습니다."
+
+#: flask/application/lorebooks/views.py:134
+msgid "This lorebook is not yet available in your language."
+msgstr "이 로어북은 아직 귀하의 언어로 제공되지 않습니다."
+
+#: flask/application/lorebooks/views.py:260
+msgid "Entry saved."
+msgstr "항목을 저장했습니다."
+
+#: flask/application/personas/views.py:62
+msgid "Persona '%(name)s' created successfully."
+msgstr "페르소나 '%(name)s'을(를) 생성했습니다."
+
+#: flask/application/personas/views.py:81 flask/application/personas/views.py:141
+msgid "Persona not found."
+msgstr "페르소나를 찾을 수 없습니다."
+
+#: flask/application/personas/views.py:111
+msgid "Persona '%(name)s' updated."
+msgstr "페르소나 '%(name)s'을(를) 업데이트했습니다."
+
+#: flask/application/personas/views.py:127
+msgid "'%(name)s' is now your default persona."
+msgstr "'%(name)s'이(가) 이제 기본 페르소나입니다."
+
+#: flask/application/personas/views.py:148
+msgid "Persona '%(name)s' deleted."
+msgstr "페르소나 '%(name)s'을(를) 삭제했습니다."
+
+#: flask/application/settings/views.py:63 flask/templates/characters/partials/tab_info.html:20 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:155 flask/templates/macros/persona_manager.html:72
+msgid "Female"
+msgstr "여성"
+
+#: flask/application/settings/views.py:64 flask/templates/characters/partials/tab_info.html:21 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:157 flask/templates/macros/persona_manager.html:73
+msgid "Male"
+msgstr "남성"
+
+#: flask/application/settings/views.py:65 flask/templates/characters/partials/tab_info.html:22 flask/templates/macros/persona_manager.html:74 flask/templates/macros/persona_manager.html:107 flask/templates/overview/tabs/characters.html:11
+msgid "Non-Binary"
+msgstr "논바이너리"
+
+#: flask/application/settings/views.py:245
+msgid "Account settings saved."
+msgstr "계정 설정이 저장되었습니다."
+
+#: flask/application/settings/views.py:74 flask/i18n.py:138 flask/templates/characters/partials/modals.html:94 flask/templates/characters/partials/tab_dialogue.html:23 flask/templates/characters/partials/tab_dialogue.html:28
+msgid "Character"
+msgstr "캐릭터"
+
+#: flask/application/settings/views.py:100 flask/i18n.py:141 flask/templates/characters/creator.html:30 flask/templates/chat/partials/sidebar.html:34 flask/templates/chat/session.html:285
+msgid "World"
+msgstr "세계"
+
+#: flask/application/settings/views.py:125 flask/i18n.py:139
+msgid "Lorebook"
+msgstr "로어북"
+
+#: flask/application/settings/views.py:227
+msgid "The new passwords do not match."
+msgstr "새 비밀번호가 일치하지 않습니다."
+
+#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:110
+msgid "Owner"
+msgstr "소유자"
+
+#: flask/application/settings/views.py:80 flask/application/settings/views.py:106 flask/application/settings/views.py:131 flask/templates/settings/creations.html:112
+msgid "Collaborator"
+msgstr "공동 작업자"
+
+#: flask/application/settings/views.py:221
+msgid "The current password is incorrect."
+msgstr "현재 비밀번호가 올바르지 않습니다."
+
+#: flask/application/settings/views.py:225
+msgid "A user with this email address already exists."
+msgstr "이 이메일 주소를 사용하는 사용자가 이미 존재합니다."
+
+#: flask/application/settings/views.py:111 flask/templates/macros/cards.html:129
+msgid "Locations"
+msgstr "장소"
+
+#: flask/application/settings/views.py:111 flask/templates/macros/cards.html:130
+msgid "Events"
+msgstr "이벤트"
+
+#: flask/application/settings/views.py:136 flask/templates/lorebooks/detail.html:31 flask/templates/macros/cards.html:239 flask/templates/macros/lorebook_manager.html:78 flask/templates/macros/lorebook_manager.html:151
+msgid "Entries"
+msgstr "항목"
+
+#: flask/application/setup/views.py:127
+msgid "Initial administrator and AI backend configured successfully!"
+msgstr "초기 관리자 및 AI 백엔드를 구성했습니다!"
+
+#: flask/application/ui_helpers.py:102
+msgid "Cloud AI mode: automatic background translation is disabled. Use the greyed-out flag pill-badges to translate into other registered user languages."
+msgstr "클라우드 AI 모드: 자동 백그라운드 번역이 비활성화되어 있습니다. 회색으로 표시된 국기 배지를 사용하여 다른 등록된 사용자 언어로 번역하세요."
+
+#: flask/application/worldinfo/views.py:328
+msgid "WorldInfo deleted."
+msgstr "WorldInfo를 삭제했습니다."
+
+#: flask/application/worldinfo/views.py:437
+msgid "Location deleted."
+msgstr "장소를 삭제했습니다."
+
+#: flask/application/worldinfo/views.py:111 flask/application/worldinfo/views.py:66
+msgid "WorldInfo '%(name)s' created."
+msgstr "WorldInfo '%(name)s'을(를) 생성했습니다."
+
+#: flask/application/worldinfo/views.py:128 flask/application/worldinfo/views.py:302
+msgid "WorldInfo not found."
+msgstr "WorldInfo를 찾을 수 없습니다."
+
+#: flask/application/worldinfo/views.py:325
+msgid "WorldInfo not found or no permission to delete."
+msgstr "WorldInfo를 찾을 수 없거나 삭제 권한이 없습니다."
+
+#: flask/application/worldinfo/views.py:340 flask/application/worldinfo/views.py:382 flask/application/worldinfo/views.py:428 flask/application/worldinfo/views.py:449 flask/application/worldinfo/views.py:486
+msgid "WorldInfo not found or no permission."
+msgstr "WorldInfo를 찾을 수 없거나 권한이 없습니다."
+
+#: flask/application/worldinfo/views.py:367
+msgid "Location '%(name)s' created."
+msgstr "장소 '%(name)s'을(를) 생성했습니다."
+
+#: flask/application/worldinfo/views.py:433
+msgid "Location not found."
+msgstr ""
+
+#: flask/application/worldinfo/views.py:530
+msgid "Event not found."
+msgstr ""
+
+#: flask/application/worldinfo/views.py:136
+msgid "Access denied: You can only edit your own WorldInfos or creations shared with you."
+msgstr "접근 거부: 자신의 WorldInfo 또는 공유된 작품만 편집할 수 있습니다."
+
+#: flask/application/worldinfo/views.py:172
+msgid "WorldInfo saved."
+msgstr "WorldInfo를 저장했습니다."
+
+#: flask/application/worldinfo/views.py:413
+msgid "Location updated."
+msgstr "장소를 업데이트했습니다."
+
+#: flask/i18n.py:66
+msgid "Error adding lorebook."
+msgstr "로어북을 추가하는 중 오류가 발생했습니다."
+
+#: flask/i18n.py:67
+msgid "Network error while adding lorebook."
+msgstr "로어북을 추가하는 중 네트워크 오류가 발생했습니다."
+
+#: flask/i18n.py:68
+msgid "Error toggling lorebook."
+msgstr "로어북을 전환하는 중 오류가 발생했습니다."
+
+#: flask/i18n.py:69
+msgid "Network error while toggling lorebook."
+msgstr "로어북을 전환하는 중 네트워크 오류가 발생했습니다."
+
+#: flask/i18n.py:70
+msgid "Error removing lorebook."
+msgstr "로어북을 제거하는 중 오류가 발생했습니다."
+
+#: flask/i18n.py:71
+msgid "Network error while removing lorebook."
+msgstr "로어북을 제거하는 중 네트워크 오류가 발생했습니다."
+
+#: flask/i18n.py:72
+msgid "Reset this prompt in all languages back to the built-in default?"
+msgstr "모든 언어에서 이 프롬프트를 기본값으로 재설정하시겠습니까?"
+
+#: flask/i18n.py:73
+msgid "Please select a portrait image first."
+msgstr "먼저 초상화 이미지를 선택하세요."
+
+#: flask/i18n.py:74
+msgid "Image analysis error: {error}"
+msgstr "이미지 분석 오류: {error}"
+
+#: flask/i18n.py:75
+msgid "Please enter at least one trigger or response."
+msgstr "트리거 또는 응답을 하나 이상 입력하세요."
+
+#: flask/i18n.py:76
+msgid "Please enter a meaningful character description in the 'Basic Info' tab first."
+msgstr "먼저 '기본 정보' 탭에서 캐릭터 설명을 입력하세요."
+
+#: flask/i18n.py:77
+msgid "Please enter a title or prose text first so the assistant can derive relevant tags."
+msgstr "어시스턴트가 관련 태그를 도출할 수 있도록 먼저 제목이나 본문을 입력하세요."
+
+#: flask/i18n.py:78
+msgid "Error deriving tags: {error}"
+msgstr "태그 추출 오류: {error}"
+
+#: flask/i18n.py:79
+msgid "Connection error: {error}"
+msgstr "연결 오류: {error}"
+
+#: flask/i18n.py:80
+msgid "Timeout while sending."
+msgstr "전송 중 시간이 초과되었습니다."
+
+#: flask/i18n.py:81
+msgid "Timeout"
+msgstr "시간 초과"
+
+#: flask/i18n.py:82
+msgid "Connection to backend (aimo-core) lost."
+msgstr "백엔드(aimo-core)와의 연결이 끊어졌습니다."
+
+#: flask/i18n.py:83
+msgid "Backend connection error"
+msgstr "백엔드 연결 오류"
+
+#: flask/i18n.py:84
+msgid "Connection to AI backend lost."
+msgstr "AI 백엔드와의 연결이 끊어졌습니다."
+
+#: flask/i18n.py:85
+msgid "AI connection error"
+msgstr "AI 연결 오류"
+
+#: flask/i18n.py:86
+msgid "Error sending message."
+msgstr "메시지 전송 중 오류가 발생했습니다."
+
+#: flask/i18n.py:87
+msgid "Error"
+msgstr "오류"
+
+#: flask/i18n.py:88
+msgid "Connection to backend lost: {error}"
+msgstr "백엔드와의 연결이 끊어졌습니다: {error}"
+
+#: flask/i18n.py:89
+msgid "Timeout: {error}"
+msgstr "시간 초과: {error}"
+
+#: flask/i18n.py:90
+msgid "Ollama connection error: {error}"
+msgstr "Ollama 연결 오류: {error}"
+
+#: flask/i18n.py:91
+msgid "Connection to Ollama (or LLMProvider) lost."
+msgstr "Ollama(또는 LLMProvider)와의 연결이 끊어졌습니다."
+
+#: flask/i18n.py:92
+msgid "Ollama connection error"
+msgstr "Ollama 연결 오류"
+
+#: flask/i18n.py:93
+msgid "Timeout while regenerating."
+msgstr "다시 생성하는 중 시간이 초과되었습니다."
+
+#: flask/i18n.py:94
+msgid "Error while regenerating."
+msgstr "다시 생성하는 중 오류가 발생했습니다."
+
+#: flask/i18n.py:95
+msgid "Ollama error"
+msgstr "Ollama 오류"
+
+#: flask/i18n.py:96
+msgid "Success"
+msgstr "성공"
+
+#: flask/i18n.py:97
+msgid "Warning"
+msgstr "경고"
+
+#: flask/i18n.py:98
+msgid "Notice"
+msgstr "알림"
+
+#: flask/i18n.py:99 flask/templates/characters/partials/modals.html:167 flask/templates/macros/buttons.html:84 flask/templates/macros/buttons.html:85 flask/templates/macros/image_viewer.html:12
+msgid "Close"
+msgstr "닫기"
+
+#: flask/i18n.py:100 flask/templates/macros/confirm_modal.html:6
+msgid "Confirm action"
+msgstr ""
+
+#: flask/i18n.py:101 flask/templates/macros/confirm_modal.html:12
+msgid "Confirm"
+msgstr ""
+
+#: flask/i18n.py:102 flask/templates/admin/translations.html:13 flask/templates/admin/user_form.html:72 flask/templates/characters/partials/modals.html:32 flask/templates/characters/partials/modals.html:68
+msgid "Cancel"
+msgstr "취소"
+
+#: flask/i18n.py:103
+msgid "Please fill in all required fields."
+msgstr ""
+
+#: flask/i18n.py:104
+msgid "Hide API key"
+msgstr ""
+
+#: flask/i18n.py:105
+msgid "Show API key"
+msgstr ""
+
+#: flask/i18n.py:106 flask/templates/characters/partials/tab_info.html:67
+msgid "Crops active"
+msgstr "자르기 활성"
+
+#: flask/i18n.py:107 flask/templates/worldinfo/detail.html:110
+msgid "1:1 Cover active"
+msgstr "1:1 커버 활성"
+
+#: flask/i18n.py:108
+msgid "Analyzing image"
+msgstr "이미지 분석 중"
+
+#: flask/i18n.py:109
+msgid "✨ Analyzing portrait and extracting appearance"
+msgstr "✨ 초상화를 분석하고 외모를 추출하는 중"
+
+#: flask/i18n.py:110
+msgid "Drafting dialogue"
+msgstr "대화 작성 중"
+
+#: flask/i18n.py:111
+msgid "✨ Analyzing character description"
+msgstr "✨ 캐릭터 설명 분석 중"
+
+#: flask/i18n.py:112
+msgid "✨ Formulating response"
+msgstr "✨ 응답 작성 중"
+
+#: flask/i18n.py:113
+msgid "⏳ Analyzing image (Save & Close locked)"
+msgstr "⏳ 이미지 분석 중 (저장 및 닫기 잠김)"
+
+#: flask/i18n.py:114
+msgid "Not translated yet (click to enter manually or AI translate)"
+msgstr "아직 번역되지 않음 (클릭하여 직접 입력하거나 AI 번역)"
+
+#: flask/i18n.py:115
+msgid "Translation may be outdated (click to review)"
+msgstr "번역이 오래되었을 수 있습니다 (클릭하여 검토)"
+
+#: flask/i18n.py:116
+msgid "Appearance extracted from image successfully."
+msgstr "이미지에서 외모를 성공적으로 추출했습니다."
+
+#: flask/i18n.py:117
+msgid "No appearance extracted."
+msgstr "외모가 추출되지 않았습니다."
+
+#: flask/i18n.py:118
+msgid "Server error ({status}): Could not extract appearance."
+msgstr "서버 오류 ({status}): 외모를 추출할 수 없습니다."
+
+#: flask/i18n.py:119
+msgid "Please select a portrait image first to extract image features."
+msgstr "이미지 특징을 추출하려면 먼저 초상화 이미지를 선택하세요."
+
+#: flask/i18n.py:120
+msgid "Image features extracted"
+msgstr "이미지 특징 추출됨"
+
+#: flask/i18n.py:121
+msgid "Image analysis failed."
+msgstr "이미지 분석에 실패했습니다."
+
+#: flask/i18n.py:122
+msgid "Image analysis error"
+msgstr "이미지 분석 오류"
+
+#: flask/i18n.py:123
+msgid "Connection error during image analysis."
+msgstr "이미지 분석 중 연결 오류가 발생했습니다."
+
+#: flask/i18n.py:124
+msgid "Connection error"
+msgstr "연결 오류"
+
+#: flask/i18n.py:125
+msgid "Create New Persona"
+msgstr "새 페르소나 만들기"
+
+#: flask/i18n.py:126
+msgid "Edit Persona"
+msgstr "페르소나 편집"
+
+#: flask/i18n.py:127
+msgid "Used in active chats (deletion protection)"
+msgstr "활성 채팅에서 사용 중 (삭제 보호)"
+
+#: flask/i18n.py:128
+msgid "Delete persona"
+msgstr "페르소나 삭제"
+
+#: flask/i18n.py:129
+msgid "Deletion locked"
+msgstr "삭제 잠김"
+
+#: flask/i18n.py:130 flask/templates/admin/services.html:250 flask/templates/admin/users.html:40 flask/templates/characters/partials/tab_dialogue.html:18 flask/templates/characters/partials/tab_gallery.html:74
+msgid "Delete"
+msgstr "삭제"
+
+#: flask/i18n.py:131
+msgid "Translating..."
+msgstr "번역 중..."
+
+#: flask/i18n.py:132
+msgid "Translation paused"
+msgstr "번역 일시 중지됨"
+
+#: flask/i18n.py:133
+msgid "Cloud AI Mode (On-Demand)"
+msgstr "클라우드 AI 모드 (요청 시)"
+
+#: flask/i18n.py:134
+msgid "Idle"
+msgstr "대기 중"
+
+#: flask/i18n.py:135
+msgid "No active translation"
+msgstr "활성 번역 없음"
+
+#: flask/i18n.py:136
+msgid "Last finished:"
+msgstr "마지막 완료:"
+
+#: flask/i18n.py:137
+msgid "Error:"
+msgstr "오류:"
+
+#: flask/i18n.py:140
+msgid "Lorebook Entry"
+msgstr "로어북 항목"
+
+#: flask/i18n.py:142
+msgid "Location"
+msgstr "장소"
+
+#: flask/i18n.py:143
+msgid "Location Tags"
+msgstr "장소 태그"
+
+#: flask/i18n.py:144
+msgid "Event"
+msgstr "이벤트"
+
+#: flask/i18n.py:145
+msgid "Character Event"
+msgstr "캐릭터 이벤트"
+
+#: flask/i18n.py:146
+msgid "admire"
+msgstr "감탄"
+
+#: flask/i18n.py:147
+msgid "amused"
+msgstr "즐거움"
+
+#: flask/i18n.py:148
+msgid "anger"
+msgstr "분노"
+
+#: flask/i18n.py:149
+msgid "annoyed"
+msgstr "짜증"
+
+#: flask/i18n.py:150
+msgid "approval"
+msgstr "승인"
+
+#: flask/i18n.py:151
+msgid "caring"
+msgstr "배려"
+
+#: flask/i18n.py:152
+msgid "confused"
+msgstr "혼란"
+
+#: flask/i18n.py:153
+msgid "curious"
+msgstr "호기심"
+
+#: flask/i18n.py:154
+msgid "desire"
+msgstr "열망"
+
+#: flask/i18n.py:155
+msgid "disappointed"
+msgstr "실망"
+
+#: flask/i18n.py:156
+msgid "disapproval"
+msgstr "반대"
+
+#: flask/i18n.py:157
+msgid "disgust"
+msgstr "혐오"
+
+#: flask/i18n.py:158
+msgid "embarrassed"
+msgstr "당황"
+
+#: flask/i18n.py:159
+msgid "excited"
+msgstr "신남"
+
+#: flask/i18n.py:160
+msgid "fear"
+msgstr "두려움"
+
+#: flask/i18n.py:161
+msgid "gratitude"
+msgstr "감사"
+
+#: flask/i18n.py:162
+msgid "grief"
+msgstr "비통"
+
+#: flask/i18n.py:163
+msgid "joy"
+msgstr "기쁨"
+
+#: flask/i18n.py:164
+msgid "love"
+msgstr "사랑"
+
+#: flask/i18n.py:165
+msgid "nervousness"
+msgstr "긴장"
+
+#: flask/i18n.py:166
+msgid "neutral"
+msgstr "중립"
+
+#: flask/i18n.py:167
+msgid "optimistic"
+msgstr "낙관적"
+
+#: flask/i18n.py:168
+msgid "pride"
+msgstr "자부심"
+
+#: flask/i18n.py:169
+msgid "realize"
+msgstr "깨달음"
+
+#: flask/i18n.py:170
+msgid "relief"
+msgstr "안도"
+
+#: flask/i18n.py:171
+msgid "remorse"
+msgstr "후회"
+
+#: flask/i18n.py:172
+msgid "sad"
+msgstr "슬픔"
+
+#: flask/i18n.py:173
+msgid "surprise"
+msgstr "놀람"
+
+#: flask/templates/admin/backdrop.html:15
+msgid "Global atmospheric background for all pages and base fallback for roleplay chats."
+msgstr "모든 페이지의 전역 분위기 배경 및 롤플레이 채팅의 기본 폴백."
+
+#: flask/templates/admin/backdrop.html:19
+msgid "Custom backdrop active"
+msgstr "사용자 지정 배경 활성"
+
+#: flask/templates/admin/backdrop.html:19
+msgid "Custom backdrop is active"
+msgstr "사용자 지정 배경이 활성화됨"
+
+#: flask/templates/admin/backdrop.html:21
+msgid "Default Theme (Cover)"
+msgstr "기본 테마 (커버)"
+
+#: flask/templates/admin/backdrop.html:21
+msgid "Default RPG theme cover is active"
+msgstr "기본 RPG 테마 커버가 활성화됨"
+
+#: flask/templates/admin/backdrop.html:34
+msgid "No custom backdrop set"
+msgstr "사용자 지정 배경이 설정되지 않음"
+
+#: flask/templates/admin/backdrop.html:35
+msgid "Currently using the dark RPG default cover. Choose a 16:9 image below or select an existing location."
+msgstr "현재 어두운 RPG 기본 커버를 사용 중입니다. 아래에서 16:9 이미지를 선택하거나 기존 장소를 선택하세요."
+
+#: flask/templates/admin/backdrop.html:36 flask/templates/macros/backdrop_selector.html:54 flask/templates/worldinfo/detail.html:129 flask/templates/worldinfo/detail.html:253 flask/templates/worldinfo/detail.html:400
+msgid "Choose Backdrop"
+msgstr "배경 선택"
+
+#: flask/templates/admin/backdrop.html:37 flask/templates/macros/backdrop_selector.html:62 flask/templates/worldinfo/detail.html:130 flask/templates/worldinfo/detail.html:254 flask/templates/worldinfo/detail.html:401
+msgid "Remove Backdrop"
+msgstr "배경 제거"
+
+#: flask/templates/admin/backdrop.html:38
+msgid "Recommended: 16:9 widescreen (e.g., 1920×1080 or 2560×1440). Supported formats: PNG, JPG, WEBP."
+msgstr "권장: 16:9 와이드스크린 (예: 1920×1080 또는 2560×1440). 지원 형식: PNG, JPG, WEBP."
+
+#: flask/templates/admin/backdrop.html:39 flask/templates/admin/layout.html:31
+msgid "System Backdrop"
+msgstr "시스템 배경"
+
+#: flask/templates/admin/backdrop.html:44
+msgid "Rule: Priority in Chat"
+msgstr "규칙: 채팅 내 우선순위"
+
+#: flask/templates/admin/backdrop.html:47
+msgid "This default backdrop forms the foundational background (Priority: System → World → Location). In chat, it is overridden by the active WorldInfo backdrop if set, and further overridden when the current location has its own background image."
+msgstr "이 기본 배경은 기본 바탕이 됩니다(우선순위: 시스템 → 세계 → 장소). 채팅에서 활성 WorldInfo 배경이 설정되어 있으면 덮어쓰며, 현재 장소에 자체 배경 이미지가 있으면 다시 덮어씁니다."
+
+#: flask/templates/admin/backdrop.html:52
+msgid "Save as System Backdrop"
+msgstr "시스템 배경으로 저장"
+
+#: flask/templates/admin/backdrop.html:61
+msgid "Choose from Existing Locations"
+msgstr "기존 장소에서 선택"
+
+#: flask/templates/admin/backdrop.html:63
+msgid "available"
+msgstr "개 사용 가능"
+
+#: flask/templates/admin/backdrop.html:68
+msgid "Click on an existing location to adopt its background image as the system default:"
+msgstr "기존 장소를 클릭하여 해당 배경 이미지를 시스템 기본값으로 적용하세요:"
+
+#: flask/templates/admin/backdrop.html:86
+msgid "No locations with background images have been saved in WorldInfos yet."
+msgstr "WorldInfo에 배경 이미지가 있는 장소가 아직 저장되지 않았습니다."
+
+#: flask/templates/admin/layout.html:21 flask/templates/macros/top_header.html:56
+msgid "Administration"
+msgstr "관리"
+
+#: flask/templates/admin/layout.html:23
+msgid "System & Configuration"
+msgstr "시스템 및 구성"
+
+#: flask/templates/admin/layout.html:27
+msgid "User Management"
+msgstr "사용자 관리"
+
+#: flask/templates/admin/layout.html:28
+msgid "Services & Models"
+msgstr "서비스 및 모델"
+
+#: flask/templates/admin/layout.html:29
+msgid "System Prompts"
+msgstr "시스템 프롬프트"
+
+#: flask/templates/admin/layout.html:30
+msgid "Content Translations"
+msgstr "콘텐츠 번역"
+
+#: flask/templates/admin/layout.html:35 flask/templates/chat/select_worldinfo.html:92 flask/templates/settings/layout.html:30
+msgid "Back to Hub"
+msgstr "허브로 돌아가기"
+
+#: flask/templates/admin/prompts.html:14
+msgid "Prompt Placeholders"
+msgstr "프롬프트 플레이스홀더"
+
+#: flask/templates/admin/prompts.html:17
+msgid "You can use"
+msgstr "사용 가능한 변수:"
+
+#: flask/templates/admin/prompts.html:17
+msgid "(character name) and"
+msgstr "(캐릭터 이름) 및"
+
+#: flask/templates/admin/prompts.html:17
+msgid "(player persona name) in prompts. These are replaced dynamically at runtime."
+msgstr "(플레이어 페르소나 이름)을(를) 프롬프트에서 사용할 수 있으며 실행 시 동적으로 치환됩니다."
+
+#: flask/templates/admin/prompts.html:22
+msgid "Roleplay Prompt"
+msgstr "롤플레이 프롬프트"
+
+#: flask/templates/admin/prompts.html:23
+msgid "Memory Prompt"
+msgstr "메모리 프롬프트"
+
+#: flask/templates/admin/prompts.html:24
+msgid "Diffuser Prompt"
+msgstr "이미지 생성 프롬프트"
+
+#: flask/templates/admin/prompts.html:25
+msgid "AI Author Prompt"
+msgstr "AI 작성 도우미 프롬프트"
+
+#: flask/templates/admin/prompts.html:26
+msgid "Vision Prompt"
+msgstr "비전 분석 프롬프트"
+
+#: flask/templates/admin/prompts.html:27
+msgid "AI Dialogue Author Prompt"
+msgstr "AI 대사 예시 작성 프롬프트"
+
+#: flask/templates/admin/prompts.html:35
+msgid "Restore Default"
+msgstr "기본값 복원"
+
+#: flask/templates/admin/prompts.html:35
+msgid "Resets all languages of this prompt to factory default"
+msgstr "이 프롬프트의 모든 언어를 기본값으로 초기화합니다"
+
+#: flask/templates/admin/prompts.html:53
+msgid "Save Prompts"
+msgstr "프롬프트 저장"
+
+#: flask/templates/admin/services.html:10
+msgid "1. Active AI Backend (Exclusive)"
+msgstr "1. 활성 AI 백엔드 (단독)"
+
+#: flask/templates/admin/services.html:12
+msgid "AImo always operates exactly one AI backend (either Ollama or Google AI Cloud) – no parallel operation."
+msgstr "AImo는 항상 정확히 하나의 AI 백엔드(Ollama 또는 Google AI Cloud)만 운영합니다 – 병렬 운영 없음."
+
+#: flask/templates/admin/services.html:18
+msgid "Ollama API URL"
+msgstr "Ollama API URL"
+
+#: flask/templates/admin/services.html:20 flask/templates/admin/services.html:33 flask/templates/admin/services.html:55
+msgid "Connected"
+msgstr "연결됨"
+
+#: flask/templates/admin/services.html:20
+msgid "Unreachable"
+msgstr "연결 불가"
+
+#: flask/templates/admin/services.html:25
+msgid "Test"
+msgstr "테스트"
+
+#: flask/templates/admin/services.html:31 flask/templates/setup/first_boot.html:170
+msgid "Google AI API Key"
+msgstr "Google AI API 키"
+
+#: flask/templates/admin/services.html:33
+msgid "Unreachable / invalid"
+msgstr "연결 불가 / 유효하지 않음"
+
+#: flask/templates/admin/services.html:33
+msgid "Not configured"
+msgstr "구성되지 않음"
+
+#: flask/templates/admin/services.html:38 flask/templates/setup/first_boot.html:173
+msgid "Test API Key & Models"
+msgstr "API 키 및 모델 테스트"
+
+#: flask/templates/admin/services.html:45
+msgid "2. Image Generation & Web Search"
+msgstr "2. 이미지 생성 및 웹 검색"
+
+#: flask/templates/admin/services.html:49 flask/templates/setup/first_boot.html:140 flask/templates/setup/first_boot.html:198
+msgid "Image Generation (Scene images in chat)"
+msgstr "이미지 생성 (채팅 내 장면 이미지)"
+
+#: flask/templates/admin/services.html:53
+msgid "ComfyUI API URL"
+msgstr "ComfyUI API URL"
+
+#: flask/templates/admin/services.html:55
+msgid "Offline"
+msgstr "오프라인"
+
+#: flask/templates/admin/services.html:62 flask/templates/setup/first_boot.html:205
+msgid "Google AI Image Model"
+msgstr "Google AI 이미지 모델"
+
+#: flask/templates/admin/services.html:64 flask/templates/admin/services.html:215 flask/templates/setup/first_boot.html:248
+msgid "Ready"
+msgstr "준비됨"
+
+#: flask/templates/admin/services.html:64
+msgid "Not checked / Offline"
+msgstr "확인되지 않음 / 오프라인"
+
+#: flask/templates/admin/services.html:76 flask/templates/setup/first_boot.html:149 flask/templates/setup/first_boot.html:218
+msgid "Web Search (Prepared)"
+msgstr "웹 검색 (준비됨)"
+
+#: flask/templates/admin/services.html:80
+msgid "SearXNG URL (Prepared)"
+msgstr "SearXNG URL (준비됨)"
+
+#: flask/templates/admin/services.html:89
+msgid "3. Task-Specific Model Assignment"
+msgstr "3. 작업별 모델 할당"
+
+#: flask/templates/admin/services.html:90
+msgid "Assign suggested models"
+msgstr "추천 모델 할당"
+
+#: flask/templates/admin/services.html:90
+msgid "Sets all 5 dropdowns to the recommended default models for the selected backend"
+msgstr "선택한 백엔드의 권장 기본 모델로 5개 드롭다운을 모두 설정합니다"
+
+#: flask/templates/admin/services.html:96
+msgid ""
+"Roleplay Model:\n"
+"Primary language model for narrative dialogue generation and roleplay in chat."
+msgstr ""
+"롤플레이 모델:\n"
+"채팅에서 서사적 대화 생성 및 롤플레이를 위한 기본 언어 모델."
+
+#: flask/templates/admin/services.html:107
+msgid ""
+"Classification Model:\n"
+"Fast, lightweight model for downstream detection of emotions (avatar sprites) and location change suggestions in a single pass."
+msgstr ""
+"분류 모델:\n"
+"단일 패스로 감정(아바타 스프라이트) 및 위치 변경 제안을 후속 감지하는 빠르고 가벼운 모델."
+
+#: flask/templates/admin/services.html:118
+msgid ""
+"Memory Model:\n"
+"Automatically creates episodic summaries (memories) every 10 messages and updates the chat title."
+msgstr ""
+"메모리 모델:\n"
+"10개의 메시지마다 자동으로 에피소드 요약(기억)을 생성하고 채팅 제목을 업데이트합니다."
+
+#: flask/templates/admin/services.html:129
+msgid ""
+"Assistant Model:\n"
+"Responsible for AI author optimization (Sparkle ✨), text translations, and scene image prompts."
+msgstr ""
+"어시스턴트 모델:\n"
+"AI 작성자 최적화(Sparkle ✨), 텍스트 번역 및 장면 이미지 프롬프트를 담당합니다."
+
+#: flask/templates/admin/services.html:140
+msgid ""
+"Vision Model:\n"
+"Multimodal model for visual analysis of persona portraits, 16:9 location images, and image uploads in chat."
+msgstr ""
+"비전 모델:\n"
+"페르소나 초상화, 16:9 장소 이미지 및 채팅 내 업로드 이미지의 시각적 분석을 위한 멀티모달 모델."
+
+#: flask/templates/admin/services.html:152
+msgid "4. LLM Inference Hyperparameters"
+msgstr "4. LLM 추론 하이퍼파라미터"
+
+#: flask/templates/admin/services.html:157
+msgid "Controls the token budget for history, memories, and lorebooks (also active for Google AI as a cost/history limit)."
+msgstr "기록, 메모리 및 로어북의 토큰 예산을 제어합니다(Google AI에서도 비용/기록 제한으로 활성화됨)."
+
+#: flask/templates/admin/services.html:172
+msgid "Repetition penalty for local Ollama models."
+msgstr "로컬 Ollama 모델에 대한 반복 페널티."
+
+#: flask/templates/admin/services.html:180
+msgid "Save Services & Model Settings"
+msgstr "서비스 및 모델 설정 저장"
+
+#: flask/templates/admin/services.html:186
+msgid "Ollama Model Manager"
+msgstr "Ollama 모델 관리자"
+
+#: flask/templates/admin/services.html:192
+msgid "Setup Helper for Ollama"
+msgstr "Ollama 설정 도우미"
+
+#: flask/templates/admin/services.html:194
+msgid "Install missing"
+msgstr "누락된 항목 설치"
+
+#: flask/templates/admin/services.html:197
+msgid "Recommended models per role:"
+msgstr "역할별 권장 모델:"
+
+#: flask/templates/admin/services.html:204
+msgid "Click to copy into pull input"
+msgstr "클릭하여 Pull 입력란에 복사"
+
+#: flask/templates/admin/services.html:217 flask/templates/setup/first_boot.html:249
+msgid "Missing"
+msgstr "누락"
+
+#: flask/templates/admin/services.html:218 flask/templates/admin/services.html:230
+msgid "Pull"
+msgstr "받기 (Pull)"
+
+#: flask/templates/admin/services.html:227
+msgid "Install new model (Pull)"
+msgstr "새 모델 설치 (Pull)"
+
+#: flask/templates/admin/services.html:229
+msgid "Enter model tag..."
+msgstr "모델 태그 입력..."
+
+#: flask/templates/admin/services.html:233
+msgid "Quick select:"
+msgstr "빠른 선택:"
+
+#: flask/templates/admin/services.html:240
+msgid "Starting download..."
+msgstr "다운로드 시작 중..."
+
+#: flask/templates/admin/services.html:245
+msgid "Installed Models"
+msgstr "설치된 모델"
+
+#: flask/templates/admin/services.html:250
+msgid "Delete model"
+msgstr "모델 삭제"
+
+#: flask/templates/admin/services.html:253
+msgid "No models found or Ollama offline."
+msgstr "모델을 찾을 수 없거나 Ollama가 오프라인입니다."
+
+#: flask/templates/admin/services.html:261
+msgid "Google AI Cloud Setup"
+msgstr "Google AI Cloud 설정"
+
+#: flask/templates/admin/services.html:268
+msgid "Recommended Google AI Models"
+msgstr "권장 Google AI 모델"
+
+#: flask/templates/admin/services.html:278
+msgid "Image Generation"
+msgstr "이미지 생성"
+
+#: flask/templates/admin/services.html:286
+msgid "Available Cloud Models"
+msgstr "사용 가능한 클라우드 모델"
+
+#: flask/templates/admin/services.html:297
+msgid "Click \"Test API Key & Models\" to load the Gemini models available with your key."
+msgstr "\"API 키 및 모델 테스트\"를 클릭하여 키로 사용할 수 있는 Gemini 모델을 불러오세요."
+
+#: flask/templates/admin/services.html:555
+msgid "All recommended models are already installed on the Ollama server!"
+msgstr "권장 모델이 모두 Ollama 서버에 이미 설치되어 있습니다!"
+
+#: flask/templates/admin/services.html:564
+msgid "Download the following %(count)s recommended model(s) sequentially?"
+msgstr "다음 %(count)s개의 권장 모델을 순차적으로 다운로드하시겠습니까?"
+
+#: flask/templates/admin/services.html:575
+msgid "Download of '%(model)s' failed. Continue with the next model anyway?"
+msgstr "'%(model)s' 다운로드에 실패했습니다. 그래도 다음 모델로 계속하시겠습니까?"
+
+#: flask/templates/admin/services.html:645
+msgid "Really delete model '%(model)s' from Ollama?"
+msgstr "Ollama에서 모델 '%(model)s'을(를) 정말 삭제하시겠습니까?"
+
+#: flask/templates/admin/services.html:654
+msgid "Deletion failed."
+msgstr "삭제에 실패했습니다."
+
+#: flask/templates/admin/translations.html:9
+msgid "Background translation status for characters, lorebooks, worlds, locations, and events."
+msgstr "캐릭터, 로어북, 세계, 장소 및 이벤트의 백그라운드 번역 상태."
+
+#: flask/templates/admin/translations.html:12
+msgid "Start Translation Sync"
+msgstr "번역 동기화 시작"
+
+#: flask/templates/admin/translations.html:20
+msgid "Status:"
+msgstr "상태:"
+
+#: flask/templates/admin/translations.html:21
+msgid "Loading..."
+msgstr "불러오는 중..."
+
+#: flask/templates/admin/translations.html:34
+msgid "Currently translating:"
+msgstr "현재 번역 중:"
+
+#: flask/templates/admin/user_form.html:8
+msgid "Edit User:"
+msgstr "사용자 편집:"
+
+#: flask/templates/admin/user_form.html:10
+msgid "Create New User"
+msgstr "새 사용자 만들기"
+
+#: flask/templates/admin/user_form.html:16
+msgid "Super-Admin Protection:"
+msgstr "슈퍼 관리자 보호:"
+
+#: flask/templates/admin/user_form.html:16
+msgid "This is the initial administrator. Their permissions are permanently locked to full access (Admin) and cannot be revoked."
+msgstr "초기 관리자입니다. 권한이 전체 액세스(Admin)로 영구 고정되어 있으며 철회할 수 없습니다."
+
+#: flask/templates/admin/user_form.html:23 flask/templates/setup/first_boot.html:44
+msgid "Username"
+msgstr "사용자 이름"
+
+#: flask/templates/admin/user_form.html:27 flask/templates/auth/login.html:14 flask/templates/settings/account.html:18 flask/templates/setup/first_boot.html:48
+msgid "Email address"
+msgstr "이메일 주소"
+
+#: flask/templates/admin/user_form.html:35
+msgid "New Password (leave blank to keep current password)"
+msgstr "새 비밀번호 (현재 비밀번호를 유지하려면 비워 두세요)"
+
+#: flask/templates/admin/user_form.html:37
+msgid "Initial Password"
+msgstr "초기 비밀번호"
+
+#: flask/templates/admin/user_form.html:45
+msgid "Quick Select via Preset"
+msgstr "프리셋으로 빠른 선택"
+
+#: flask/templates/admin/user_form.html:48
+msgid "Preset:"
+msgstr "프리셋:"
+
+#: flask/templates/admin/user_form.html:56
+msgid "Individual functional permissions (FunctionPermission):"
+msgstr "개별 기능 권한 (FunctionPermission):"
+
+#: flask/templates/admin/user_form.html:73 flask/templates/characters/partials/tab_gallery.html:77 flask/templates/chat/session.html:229 flask/templates/lorebooks/detail.html:188 flask/templates/macros/collaboration.html:111
+msgid "Save"
+msgstr "저장"
+
+#: flask/templates/admin/users.html:8
+msgid "Granular control of individual function permissions. The initial administrator is permanently protected."
+msgstr "개별 기능 권한을 세밀하게 제어합니다. 초기 관리자는 영구적으로 보호됩니다."
+
+#: flask/templates/admin/users.html:9
+msgid "New User"
+msgstr "새 사용자"
+
+#: flask/templates/admin/users.html:21
+msgid "Initial Super-Admin (Non-revocable)"
+msgstr "초기 슈퍼 관리자 (철회 불가)"
+
+#: flask/templates/admin/users.html:29
+msgid "No permissions assigned"
+msgstr "할당된 권한 없음"
+
+#: flask/templates/admin/users.html:35 flask/templates/characters/partials/tab_dialogue.html:17
+msgid "Edit"
+msgstr "편집"
+
+#: flask/templates/admin/users.html:37
+msgid "Protected"
+msgstr "보호됨"
+
+#: flask/templates/admin/users.html:37
+msgid "Initial administrator cannot be deleted"
+msgstr "초기 관리자는 삭제할 수 없습니다"
+
+#: flask/templates/admin/users.html:39
+msgid "Really delete user %(username)s?"
+msgstr "사용자 %(username)s을(를) 정말 삭제하시겠습니까?"
+
+#: flask/templates/auth/login.html:3
+msgid "AImo — Login"
+msgstr "AImo — 로그인"
+
+#: flask/templates/auth/login.html:7
+msgid "AImo Login"
+msgstr "AImo 로그인"
+
+#: flask/templates/auth/login.html:9
+msgid "Sign in to enter your roleplay worlds."
+msgstr "롤플레이 세계에 들어가려면 로그인하세요."
+
+#: flask/templates/auth/login.html:18 flask/templates/settings/account.html:23 flask/templates/setup/first_boot.html:52
+msgid "Password"
+msgstr "비밀번호"
+
+#: flask/templates/auth/login.html:22
+msgid "Enter"
+msgstr "입장"
+
+#: flask/templates/characters/creator.html:5 flask/templates/characters/creator.html:22
+msgid "Character Designer"
+msgstr "캐릭터 디자이너"
+
+#: flask/templates/characters/creator.html:20 flask/templates/characters/creator.html:43 flask/templates/macros/cards.html:194
+msgid "New Character"
+msgstr "새 캐릭터"
+
+#: flask/templates/characters/creator.html:26
+msgid "Main Info"
+msgstr "기본 정보"
+
+#: flask/templates/characters/creator.html:27
+msgid "Gallery Images"
+msgstr "갤러리 이미지"
+
+#: flask/templates/characters/creator.html:27 flask/templates/characters/creator.html:28 flask/templates/characters/creator.html:29 flask/templates/characters/creator.html:30 flask/templates/characters/creator.html:31
+msgid "Please save basic info first"
+msgstr "먼저 기본 정보를 저장해 주세요"
+
+#: flask/templates/characters/creator.html:28
+msgid "Emotional Sprites"
+msgstr "감정 스프라이트"
+
+#: flask/templates/characters/creator.html:29
+msgid "Dialogue Styles"
+msgstr "대사 스타일"
+
+#: flask/templates/characters/creator.html:31 flask/templates/chat/session.html:310 flask/templates/worldinfo/detail.html:37
+msgid "Random Events"
+msgstr "무작위 이벤트"
+
+#: flask/templates/characters/creator.html:32 flask/templates/chat/select_worldinfo.html:23 flask/templates/chat/session.html:29 flask/templates/macros/top_header.html:18 flask/templates/macros/top_header.html:45
+msgid "Lorebooks"
+msgstr "로어북"
+
+#: flask/templates/characters/creator.html:33 flask/templates/lorebooks/detail.html:32 flask/templates/worldinfo/detail.html:38
+msgid "Collaboration"
+msgstr "협업"
+
+#: flask/templates/characters/creator.html:37 flask/templates/chat/session.html:23 flask/templates/lorebooks/detail.html:36 flask/templates/worldinfo/detail.html:42
+msgid "Back to Overview"
+msgstr "개요로 돌아가기"
+
+#: flask/templates/characters/creator.html:51
+msgid "Really delete character permanently?"
+msgstr "캐릭터를 영구적으로 삭제하시겠습니까?"
+
+#: flask/templates/characters/creator.html:52
+msgid "Save character"
+msgstr "캐릭터 저장"
+
+#: flask/templates/characters/partials/modals.html:7
+msgid "Upload 9:16 Gallery Image"
+msgstr "9:16 갤러리 이미지 업로드"
+
+#: flask/templates/characters/partials/modals.html:13
+msgid "Image File (9:16 Portrait)"
+msgstr "이미지 파일 (9:16 초상화)"
+
+#: flask/templates/characters/partials/modals.html:14
+msgid "Exclusive portrait image for this character."
+msgstr "이 캐릭터 전용 초상화 이미지입니다."
+
+#: flask/templates/characters/partials/modals.html:20 flask/templates/characters/partials/tab_gallery.html:62
+msgid "Unlock Relationship Level"
+msgstr "잠금 해제 관계 수준"
+
+#: flask/templates/characters/partials/modals.html:21 flask/templates/characters/partials/tab_gallery.html:63
+msgid "Required relationship level to unlock this image in chat."
+msgstr "채팅에서 이 이미지를 잠금 해제하는 데 필요한 관계 수준입니다."
+
+#: flask/templates/characters/partials/modals.html:33 flask/templates/characters/partials/modals.html:69
+msgid "Upload"
+msgstr "업로드"
+
+#: flask/templates/characters/partials/modals.html:43
+msgid "Add Emotional Sprite"
+msgstr "감정 스프라이트 추가"
+
+#: flask/templates/characters/partials/modals.html:49
+msgid "Emotion"
+msgstr "감정"
+
+#: flask/templates/characters/partials/modals.html:50
+msgid "Select which emotion this sprite represents."
+msgstr "이 스프라이트가 나타내는 감정을 선택하세요."
+
+#: flask/templates/characters/partials/modals.html:55 flask/templates/characters/partials/tab_sprites.html:30
+msgid "Fallback"
+msgstr "대체(Fallback)"
+
+#: flask/templates/characters/partials/modals.html:62
+msgid "Sprite File (PNG, WEBP)"
+msgstr "스프라이트 파일 (PNG, WEBP)"
+
+#: flask/templates/characters/partials/modals.html:63
+msgid "Transparent PNG or WEBP sprite image for this emotion."
+msgstr "이 감정을 위한 투명 PNG 또는 WEBP 스프라이트 이미지."
+
+#: flask/templates/characters/partials/modals.html:81
+msgid "Add New Dialogue Style"
+msgstr "새 대사 스타일 추가"
+
+#: flask/templates/characters/partials/modals.html:87 flask/templates/characters/partials/tab_dialogue.html:23 flask/templates/characters/partials/tab_dialogue.html:24 flask/templates/characters/partials/tab_dialogue.html:29
+msgid "You"
+msgstr "당신"
+
+#: flask/templates/characters/partials/modals.html:88
+msgid "Trigger (Player Input)"
+msgstr "트리거 (플레이어 입력)"
+
+#: flask/templates/characters/partials/modals.html:90
+msgid "e.g. Hello! What are you doing out here so late?"
+msgstr "예: 안녕하세요! 이렇게 늦은 밤에 여기서 뭐 하세요?"
+
+#: flask/templates/characters/partials/modals.html:95
+msgid "Response (Character Reply)"
+msgstr "응답 (캐릭터 대답)"
+
+#: flask/templates/characters/partials/modals.html:97
+msgid "e.g. Greetings, wanderer. The woods hold secrets at night..."
+msgstr "예: 반갑소, 방랑자여. 밤의 숲에는 비밀이 깃들어 있지..."
+
+#: flask/templates/characters/partials/modals.html:102
+msgid "Fill with AI"
+msgstr "AI로 채우기"
+
+#: flask/templates/characters/partials/modals.html:102
+msgid "Generates trigger and response based on character description"
+msgstr "캐릭터 설명을 바탕으로 트리거와 응답을 생성합니다"
+
+#: flask/templates/characters/partials/modals.html:106 flask/templates/characters/partials/modals.html:134 flask/templates/characters/partials/modals.html:152 flask/templates/characters/partials/tab_world.html:53 flask/templates/characters/partials/tab_world.html:81
+msgid "Add"
+msgstr "추가"
+
+#: flask/templates/characters/partials/modals.html:116
+msgid "Link Lorebook"
+msgstr "로어북 연결"
+
+#: flask/templates/characters/partials/modals.html:120 flask/templates/macros/lorebook_manager.html:197
+msgid "Filter by lorebook name..."
+msgstr "로어북 이름으로 필터링..."
+
+#: flask/templates/characters/partials/modals.html:134
+msgid "Linked"
+msgstr "연결됨"
+
+#: flask/templates/characters/partials/modals.html:150
+msgid "Add Preferred Location"
+msgstr "선호 장소 추가"
+
+#: flask/templates/characters/partials/modals.html:151
+msgid "Add Disliked Location"
+msgstr "피하는 장소 추가"
+
+#: flask/templates/characters/partials/modals.html:153 flask/templates/characters/partials/tab_world.html:63 flask/templates/characters/partials/tab_world.html:91
+msgid "Remove location"
+msgstr "장소 제거"
+
+#: flask/templates/characters/partials/modals.html:154
+msgid "All locations of this world are already assigned."
+msgstr "이 세계의 모든 장소가 이미 지정되었습니다."
+
+#: flask/templates/characters/partials/modals.html:155
+msgid "No matching locations found."
+msgstr "일치하는 장소를 찾을 수 없습니다."
+
+#: flask/templates/characters/partials/modals.html:158
+msgid "Add Location"
+msgstr "장소 추가"
+
+#: flask/templates/characters/partials/modals.html:162
+msgid "Search locations by name or description..."
+msgstr "이름 또는 설명으로 장소 검색..."
+
+#: flask/templates/characters/partials/modals.html:173
+msgid "Set Image Crops"
+msgstr "이미지 자르기 설정"
+
+#: flask/templates/characters/partials/modals.html:174 flask/templates/characters/partials/tab_info.html:46 flask/templates/characters/partials/tab_info.html:47 flask/templates/characters/partials/tab_info.html:49 flask/templates/macros/persona_manager.html:13
+msgid "Portrait"
+msgstr "초상화"
+
+#: flask/templates/characters/partials/modals.html:175 flask/templates/characters/partials/tab_info.html:54 flask/templates/characters/partials/tab_info.html:55 flask/templates/characters/partials/tab_info.html:57
+msgid "Avatar"
+msgstr "아바타"
+
+#: flask/templates/characters/partials/tab_dialogue.html:6
+msgid "Typical player trigger and character response pairs injected into the prompt."
+msgstr "프롬프트에 삽입되는 대표적인 플레이어 입력과 캐릭터 응답 쌍입니다."
+
+#: flask/templates/characters/partials/tab_dialogue.html:8
+msgid "Add Dialogue Style"
+msgstr "대사 스타일 추가"
+
+#: flask/templates/characters/partials/tab_dialogue.html:15
+msgid "Example"
+msgstr "예시"
+
+#: flask/templates/characters/partials/tab_dialogue.html:17
+msgid "Edit example"
+msgstr "예시 편집"
+
+#: flask/templates/characters/partials/tab_dialogue.html:18
+msgid "Delete example"
+msgstr "예시 삭제"
+
+#: flask/templates/characters/partials/tab_dialogue.html:36
+msgid "No dialogue styles added yet. Click 'Add Dialogue Style' to create examples."
+msgstr "아직 추가된 대사 스타일이 없습니다. '대사 스타일 추가'를 클릭해 예시를 만드세요."
+
+#: flask/templates/characters/partials/tab_events.html:6
+msgid "Dynamic events that can trigger exclusively in chats with this character."
+msgstr "이 캐릭터와의 채팅에서만 발생할 수 있는 동적 이벤트입니다."
+
+#: flask/templates/characters/partials/tab_events.html:32
+msgid "Please save the character's basic info first to create character-specific random events."
+msgstr "캐릭터 전용 무작위 이벤트를 만들려면 먼저 기본 정보를 저장하세요."
+
+#: flask/templates/characters/partials/tab_gallery.html:7
+msgid "Exclusive portrait graphics unlocked when reaching a relationship threshold in chat."
+msgstr "채팅에서 특정 관계 수준에 도달하면 잠금 해제되는 전용 초상화 이미지입니다."
+
+#: flask/templates/characters/partials/tab_gallery.html:14
+msgid "Add 9:16 Image"
+msgstr "9:16 이미지 추가"
+
+#: flask/templates/characters/partials/tab_gallery.html:21 flask/templates/characters/partials/tab_gallery.html:30
+msgid "Unlocks at relationship:"
+msgstr "잠금 해제 관계 수준:"
+
+#: flask/templates/characters/partials/tab_gallery.html:31 flask/templates/characters/partials/tab_gallery.html:32 flask/templates/characters/partials/tab_gallery.html:57
+msgid "View fullscreen"
+msgstr "전체 화면으로 보기"
+
+#: flask/templates/characters/partials/tab_gallery.html:48
+msgid "Edit 9:16 Gallery Image"
+msgstr "9:16 갤러리 이미지 편집"
+
+#: flask/templates/characters/partials/tab_gallery.html:81
+msgid "Really delete this gallery image?"
+msgstr ""
+
+#: flask/templates/characters/partials/tab_gallery.html:92
+msgid "Please save the character's basic info first to upload and manage 9:16 gallery images."
+msgstr "9:16 갤러리 이미지를 업로드하고 관리하려면 먼저 캐릭터의 기본 정보를 저장하세요."
+
+#: flask/templates/characters/partials/tab_info.html:7
+msgid "Character Name"
+msgstr "캐릭터 이름"
+
+#: flask/templates/characters/partials/tab_info.html:8
+msgid "The unique name of your AI character. Replaces {{char}} in prompts."
+msgstr "AI 캐릭터의 고유 이름입니다. 프롬프트의 {{char}}을(를) 대체합니다."
+
+#: flask/templates/characters/partials/tab_info.html:15 flask/templates/characters/partials/tab_info.html:26 flask/templates/macros/cards.html:60 flask/templates/macros/cards.html:62 flask/templates/macros/cards.html:64
+msgid "Gender"
+msgstr "성별"
+
+#: flask/templates/characters/partials/tab_info.html:31 flask/templates/lorebooks/detail.html:76 flask/templates/lorebooks/detail.html:152 flask/templates/lorebooks/detail.html:221 flask/templates/overview/tabs/lorebooks.html:6
+msgid "Visibility"
+msgstr "공개 여부"
+
+#: flask/templates/characters/partials/tab_info.html:39
+msgid "Primary Portrait (9:16) & Avatar (1:1) (Required upload)"
+msgstr "기본 초상화 (9:16) 및 아바타 (1:1) (필수 업로드)"
+
+#: flask/templates/characters/partials/tab_info.html:40
+msgid ""
+"Character images:\n"
+"• 9:16 Portrait: Chat sidebar & fullscreen view\n"
+"• 1:1 Avatar: Character cards in Hub & chat bubbles"
+msgstr ""
+"캐릭터 이미지:\n"
+"• 9:16 초상화: 채팅 사이드바 및 전체 화면 보기\n"
+"• 1:1 아바타: 허브의 캐릭터 카드 및 채팅 말풍선"
+
+#: flask/templates/characters/partials/tab_info.html:66
+msgid "Adjust crops"
+msgstr "자르기 조정"
+
+#: flask/templates/characters/partials/tab_info.html:75
+msgid "Initial Relationship Status"
+msgstr "초기 관계 상태"
+
+#: flask/templates/characters/partials/tab_info.html:76
+msgid ""
+"Initial Relationship Status:\n"
+"Starting level of affection (e.g., Pure Hatred, Neutral, Blind Devotion). Controls the initial roleplay behavior of {{char}} toward the player."
+msgstr ""
+"초기 관계 상태:\n"
+"호감도의 시작 단계(예: 순수한 증오, 중립, 맹목적 헌신). 플레이어에 대한 {{char}}의 초기 롤플레이 행동을 제어합니다."
+
+#: flask/templates/characters/partials/tab_info.html:91
+msgid "Character Description & Personality"
+msgstr "캐릭터 설명 및 성격"
+
+#: flask/templates/characters/partials/tab_info.html:92
+msgid "Core identity, traits, backstory, fears, and motivations."
+msgstr "핵심 정체성, 특성, 배경 이야기, 두려움, 동기 등."
+
+#: flask/templates/characters/partials/tab_info.html:94
+msgid "AI Author Optimization"
+msgstr "AI 작성 최적화"
+
+#: flask/templates/characters/partials/tab_info.html:114 flask/templates/macros/persona_manager.html:38
+msgid "Physical Appearance"
+msgstr "외모"
+
+#: flask/templates/characters/partials/tab_info.html:115
+msgid "Detailed visual appearance for prompts and AI image generation."
+msgstr "프롬프트 및 AI 이미지 생성을 위한 상세한 외모 묘사입니다."
+
+#: flask/templates/characters/partials/tab_info.html:117
+msgid "Extract Appearance from Image"
+msgstr "이미지에서 외모 추출"
+
+#: flask/templates/characters/partials/tab_info.html:117
+msgid "Analyzes the portrait image using a Vision LLM"
+msgstr "비전 LLM을 사용하여 초상화 이미지를 분석합니다"
+
+#: flask/templates/characters/partials/tab_info.html:129
+msgid "Physical appearance (e.g. emerald eyes, shoulder-length black hair, silver armor)..."
+msgstr "외모 (예: 에메랄드빛 눈, 어깨 길이의 검은 머리, 은빛 갑옷)..."
+
+#: flask/templates/characters/partials/tab_info.html:135
+msgid "First Message (Welcome Message)"
+msgstr "첫 메시지 (환영 메시지)"
+
+#: flask/templates/characters/partials/tab_info.html:136
+msgid "The character's direct opening greeting to the player."
+msgstr "플레이어에게 건네는 캐릭터의 첫 인사말입니다."
+
+#: flask/templates/characters/partials/tab_lorebooks.html:6
+msgid "Knowledge compendiums for this character. Matching entries are automatically loaded into the prompt via tags."
+msgstr "이 캐릭터를 위한 지식 백과입니다. 일치하는 항목이 태그를 통해 자동으로 프롬프트에 로드됩니다."
+
+#: flask/templates/characters/partials/tab_lorebooks.html:8 flask/templates/macros/lorebook_manager.html:24
+msgid "Add Lorebook"
+msgstr "로어북 추가"
+
+#: flask/templates/characters/partials/tab_lorebooks.html:23
+msgid "When should this lorebook be active?"
+msgstr "이 로어북을 언제 활성화할까요?"
+
+#: flask/templates/characters/partials/tab_lorebooks.html:24
+msgid "All Worlds (Always active)"
+msgstr "모든 세계 (항상 활성)"
+
+#: flask/templates/characters/partials/tab_lorebooks.html:26
+msgid "Only in world:"
+msgstr "특정 세계에서만:"
+
+#: flask/templates/characters/partials/tab_lorebooks.html:29
+msgid "Unlink"
+msgstr "연결 해제"
+
+#: flask/templates/characters/partials/tab_lorebooks.html:29
+msgid "Unlink lorebook"
+msgstr "로어북 연결 해제"
+
+#: flask/templates/characters/partials/tab_lorebooks.html:37
+msgid "No lorebooks linked. Click 'Add Lorebook' to select compendiums."
+msgstr "연결된 로어북이 없습니다. '로어북 추가'를 클릭해 선택하세요."
+
+#: flask/templates/characters/partials/tab_sprites.html:8
+msgid "Emotional sprites (PNG/WEBP) for up to 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait."
+msgstr "최대 28가지 감정을 위한 감정 스프라이트(PNG/WEBP). 시스템이 매 응답 후 AI 감정을 분류하여 채팅 초상화를 업데이트합니다."
+
+#: flask/templates/characters/partials/tab_sprites.html:15
+msgid "Add Sprite"
+msgstr "스프라이트 추가"
+
+#: flask/templates/characters/partials/tab_sprites.html:30
+msgid "Used when no sprite matches the detected emotion"
+msgstr "감지된 감정과 일치하는 스프라이트가 없을 때 사용됨"
+
+#: flask/templates/characters/partials/tab_sprites.html:35
+msgid "Really delete this sprite?"
+msgstr ""
+
+#: flask/templates/characters/partials/tab_sprites.html:36
+msgid "Delete sprite"
+msgstr "스프라이트 삭제"
+
+#: flask/templates/characters/partials/tab_sprites.html:52
+msgid "Please save the character's basic info first to upload sprites for the 28 emotions."
+msgstr "28가지 감정 스프라이트를 업로드하려면 먼저 캐릭터의 기본 정보를 저장하세요."
+
+#: flask/templates/characters/partials/tab_world.html:6
+msgid "Links a recommended world. Once selected, initial, preferred, and disliked locations can be chosen."
+msgstr "추천 세계를 연결합니다. 선택하면 시작 위치, 선호 장소, 기피 장소를 지정할 수 있습니다."
+
+#: flask/templates/characters/partials/tab_world.html:12
+msgid "Recommended WorldInfo"
+msgstr "추천 WorldInfo"
+
+#: flask/templates/characters/partials/tab_world.html:13
+msgid "Locations and events of this world are included in roleplay."
+msgstr "이 세계의 장소와 이벤트가 롤플레이에 포함됩니다."
+
+#: flask/templates/characters/partials/tab_world.html:16
+msgid "No WorldInfo linked"
+msgstr "연결된 WorldInfo 없음"
+
+#: flask/templates/characters/partials/tab_world.html:25
+msgid "Initial Location of First Message"
+msgstr "첫 메시지의 시작 위치"
+
+#: flask/templates/characters/partials/tab_world.html:26
+msgid "Starting location for the conversation within the linked world."
+msgstr "연결된 세계 내에서 대화가 시작되는 위치입니다."
+
+#: flask/templates/characters/partials/tab_world.html:29
+msgid "No fixed starting location"
+msgstr "고정된 시작 위치 없음"
+
+#: flask/templates/characters/partials/tab_world.html:49
+msgid "Preferred Locations (from linked world)"
+msgstr "선호하는 장소 (연결된 세계)"
+
+#: flask/templates/characters/partials/tab_world.html:50
+msgid "Locations where the character feels comfortable or likes to spend time."
+msgstr "캐릭터가 편안함을 느끼거나 시간을 보내기 좋아하는 장소입니다."
+
+#: flask/templates/characters/partials/tab_world.html:63 flask/templates/characters/partials/tab_world.html:91 flask/templates/macros/collaboration.html:74 flask/templates/macros/lorebook_manager.html:170
+msgid "Remove"
+msgstr "제거"
+
+#: flask/templates/characters/partials/tab_world.html:70
+msgid "No preferred locations selected."
+msgstr "선택된 선호 장소가 없습니다."
+
+#: flask/templates/characters/partials/tab_world.html:77
+msgid "Disliked Locations (from linked world)"
+msgstr "꺼리는 장소 (연결된 세계)"
+
+#: flask/templates/characters/partials/tab_world.html:78
+msgid "Locations the character avoids, fears, or dislikes."
+msgstr "캐릭터가 피하거나 두려워하거나 싫어하는 장소입니다."
+
+#: flask/templates/characters/partials/tab_world.html:98
+msgid "No disliked locations selected."
+msgstr "선택된 피하는 장소가 없습니다."
+
+#: flask/templates/chat/partials/input_bar.html:3
+msgid "AI system notice"
+msgstr "AI 시스템 안내"
+
+#: flask/templates/chat/partials/input_bar.html:5
+msgid "This is an AI chatbot. Responses are automatically generated by local or external language models and may be incomplete or inaccurate."
+msgstr "이것은 AI 챗봇입니다. 응답은 로컬 또는 외부 언어 모델에 의해 자동으로 생성되며 불완전하거나 부정확할 수 있습니다."
+
+#: flask/templates/chat/partials/input_bar.html:11
+msgid "Chat options & sessions"
+msgstr "채팅 옵션 및 세션"
+
+#: flask/templates/chat/partials/input_bar.html:11
+msgid "Chat options"
+msgstr "채팅 옵션"
+
+#: flask/templates/chat/partials/input_bar.html:17
+msgid "Sessions"
+msgstr "세션"
+
+#: flask/templates/chat/partials/input_bar.html:18
+msgid "Start new chat"
+msgstr "새 채팅 시작"
+
+#: flask/templates/chat/partials/input_bar.html:20
+msgid "Delete chat"
+msgstr "채팅 삭제"
+
+#: flask/templates/chat/partials/input_bar.html:20
+msgid "Do you really want to permanently delete this chat?"
+msgstr "이 채팅을 영구적으로 삭제하시겠습니까?"
+
+#: flask/templates/chat/partials/input_bar.html:24
+msgid "Attach image (Vision ALT analysis)"
+msgstr "이미지 첨부 (Vision ALT 분석)"
+
+#: flask/templates/chat/partials/input_bar.html:32
+msgid "Generate scene image"
+msgstr "장면 이미지 생성"
+
+#: flask/templates/chat/partials/input_bar.html:38
+msgid "Cancel image generation"
+msgstr "이미지 생성 취소"
+
+#: flask/templates/chat/partials/input_bar.html:48
+msgid "Write your response or action... (Enter to send, Shift+Enter for new line)"
+msgstr "답변이나 행동을 입력하세요... (Enter로 전송, Shift+Enter로 줄바꿈)"
+
+#: flask/templates/chat/partials/input_bar.html:52
+msgid "Regenerate response – replaces the last AI reply or retries generation"
+msgstr "응답 다시 생성 – 마지막 AI 답변을 대체하거나 생성을 다시 시도합니다"
+
+#: flask/templates/chat/partials/input_bar.html:58
+msgid "Cancel response generation"
+msgstr "응답 생성 취소"
+
+#: flask/templates/chat/partials/input_bar.html:64
+msgid "Send message (Enter)"
+msgstr "메시지 전송 (Enter)"
+
+#: flask/templates/chat/partials/modals.html:8
+msgid "Sessions with"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:11
+msgid "New Chat"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:21
+msgid "Untitled Chat"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:24
+msgid "Active"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:28
+msgid "Created:"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:29
+msgid "Persona:"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:34
+msgid "Switch"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:36
+msgid "Do you really want to delete this session?"
+msgstr "이 세션을 정말 삭제하시겠습니까?"
+
+#: flask/templates/chat/partials/modals.html:38
+msgid "Delete session"
+msgstr "세션 삭제"
+
+#: flask/templates/chat/partials/modals.html:43
+msgid "No other sessions available."
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:52 flask/templates/chat/session.html:95 flask/templates/chat/session.html:121
+msgid "Edit message"
+msgstr "메시지 편집"
+
+#: flask/templates/chat/partials/modals.html:60
+msgid "Save changes (Sync canon)"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:71
+msgid "LLM Generation Prompt (Admin Debug)"
+msgstr ""
+
+#: flask/templates/chat/partials/modals.html:74 flask/templates/macros/collaboration.html:66 flask/templates/macros/editor_header.html:47
+msgid "Copy"
+msgstr "복사"
+
+#: flask/templates/chat/partials/modals.html:82
+msgid "In-memory snapshot at inference time (not persisted to database)"
+msgstr ""
+
+#: flask/templates/chat/partials/sidebar.html:11
+msgid "Thinking: Enabled (Click to disable)"
+msgstr "사고: 활성화됨 (클릭하여 비활성화)"
+
+#: flask/templates/chat/partials/sidebar.html:11
+msgid "Thinking: Disabled (Click to enable)"
+msgstr "사고: 비활성화됨 (클릭하여 활성화)"
+
+#: flask/templates/chat/partials/sidebar.html:12
+msgid "Disable thinking"
+msgstr "사고 비활성화"
+
+#: flask/templates/chat/partials/sidebar.html:12
+msgid "Enable thinking"
+msgstr "사고 활성화"
+
+#: flask/templates/chat/partials/sidebar.html:31
+msgid "Current Location"
+msgstr "현재 위치"
+
+#: flask/templates/chat/partials/sidebar.html:48
+msgid "Admin & creator info: Cooldown until the next random event"
+msgstr "관리자 및 제작자 정보: 다음 무작위 이벤트까지 대기"
+
+#: flask/templates/chat/partials/sidebar.html:49
+msgid "Next event:"
+msgstr "다음 이벤트:"
+
+#: flask/templates/chat/partials/sidebar.html:52 flask/templates/chat/partials/sidebar.html:56
+msgid "in"
+msgstr "남은"
+
+#: flask/templates/chat/partials/sidebar.html:52
+msgid "message"
+msgstr "메시지"
+
+#: flask/templates/chat/partials/sidebar.html:52 flask/templates/chat/partials/sidebar.html:56
+msgid "messages"
+msgstr "메시지"
+
+#: flask/templates/chat/partials/sidebar.html:52
+msgid "paused"
+msgstr "일시 중지됨"
+
+#: flask/templates/chat/partials/sidebar.html:54
+msgid "next message"
+msgstr "다음 메시지"
+
+#: flask/templates/chat/select_worldinfo.html:4
+msgid "New Adventure with"
+msgstr "새로운 모험:"
+
+#: flask/templates/chat/select_worldinfo.html:15
+msgid "New Chat with"
+msgstr "새 채팅:"
+
+#: flask/templates/chat/select_worldinfo.html:16
+msgid "Configure your player persona, active WorldInfo, and lorebooks for this session."
+msgstr "이 세션에 사용할 플레이어 페르소나, 활성 WorldInfo 및 로어북을 설정합니다."
+
+#: flask/templates/chat/select_worldinfo.html:22 flask/templates/chat/session.html:30 flask/templates/macros/top_header.html:53 flask/templates/settings/layout.html:3 flask/templates/settings/layout.html:16
+msgid "Settings"
+msgstr "설정"
+
+#: flask/templates/chat/select_worldinfo.html:31
+msgid "Select Player Persona"
+msgstr "플레이어 페르소나 선택"
+
+#: flask/templates/chat/select_worldinfo.html:36
+msgid "Default"
+msgstr "기본값"
+
+#: flask/templates/chat/select_worldinfo.html:41
+msgid "Note: After sending the first message, the persona is permanently locked for this chat."
+msgstr "참고: 첫 메시지를 보낸 후에는 이 채팅의 페르소나가 영구적으로 고정됩니다."
+
+#: flask/templates/chat/select_worldinfo.html:46
+msgid "Automatically assigned"
+msgstr "자동 할당됨"
+
+#: flask/templates/chat/select_worldinfo.html:52
+msgid "Active WorldInfo (At most one per session)"
+msgstr "활성 WorldInfo (세션당 최대 1개)"
+
+#: flask/templates/chat/select_worldinfo.html:54
+msgid "No WorldInfo (Default — Neutral background, no events)"
+msgstr "WorldInfo 없음 (기본값 — 중립 배경, 이벤트 없음)"
+
+#: flask/templates/chat/select_worldinfo.html:58
+msgid "Recommended for"
+msgstr "추천 대상:"
+
+#: flask/templates/chat/select_worldinfo.html:64
+msgid "This character recommends a WorldInfo, but you can freely choose another or start without one."
+msgstr "이 캐릭터는 추천 WorldInfo가 있지만, 다른 세계를 자유롭게 선택하거나 없이 시작할 수 있습니다."
+
+#: flask/templates/chat/select_worldinfo.html:70
+msgid "Optional Session Title"
+msgstr "선택적 세션 제목"
+
+#: flask/templates/chat/select_worldinfo.html:71
+msgid "Chat with"
+msgstr "채팅:"
+
+#: flask/templates/chat/select_worldinfo.html:77
+msgid "Enable Thinking (Reasoning)"
+msgstr "사고 과정(추론) 활성화"
+
+#: flask/templates/chat/select_worldinfo.html:80
+msgid "Enables extended chain-of-thought reasoning for compatible models (e.g. Gemma 4, DeepSeek-R1). Disable for faster replies without thinking steps."
+msgstr "호환 모델(예: Gemma 4, DeepSeek-R1)에서 확장된 사고 과정을 활성화합니다. 사고 단계 없이 더 빠른 응답을 원하면 비활성화하세요."
+
+#: flask/templates/chat/select_worldinfo.html:93
+msgid "Start Adventure"
+msgstr "모험 시작"
+
+#: flask/templates/chat/session.html:26
+msgid "Chat"
+msgstr ""
+
+#: flask/templates/chat/session.html:27
+msgid "Media"
+msgstr ""
+
+#: flask/templates/chat/session.html:28
+msgid "Memories"
+msgstr ""
+
+#: flask/templates/chat/session.html:32
+msgid "Info"
+msgstr "정보"
+
+#: flask/templates/chat/session.html:32
+msgid "Sidebar / Character Info"
+msgstr "사이드바 / 캐릭터 정보"
+
+#: flask/templates/chat/session.html:39 flask/templates/chat/session.html:76 flask/templates/macros/event_manager.html:17 flask/templates/macros/event_manager.html:23
+msgid "Location:"
+msgstr "위치:"
+
+#: flask/templates/chat/session.html:41
+msgid "World:"
+msgstr "세계:"
+
+#: flask/templates/chat/session.html:43
+msgid "Neutral Setting"
+msgstr "중립 배경"
+
+#: flask/templates/chat/session.html:53 flask/templates/chat/session.html:54 flask/templates/worldinfo/detail.html:181 flask/templates/worldinfo/detail.html:182
+msgid "View location backdrop"
+msgstr "장소 배경 보기"
+
+#: flask/templates/chat/session.html:92
+msgid "View LLM prompt (Admin)"
+msgstr "LLM 프롬프트 보기 (관리자)"
+
+#: flask/templates/chat/session.html:94 flask/templates/chat/session.html:120
+msgid "Translate message (on-demand)"
+msgstr "메시지 번역 (요청 시)"
+
+#: flask/templates/chat/session.html:96 flask/templates/chat/session.html:122
+msgid "Duplicate chat from here (Fork)"
+msgstr "여기서부터 채팅 복제 (포크)"
+
+#: flask/templates/chat/session.html:98 flask/templates/chat/session.html:123 flask/templates/macros/system_message.html:31
+msgid "Delete from here"
+msgstr "여기서부터 삭제"
+
+#: flask/templates/chat/session.html:130
+msgid "Show/hide ALT text (image description)"
+msgstr "ALT 텍스트(이미지 설명) 표시/숨기기"
+
+#: flask/templates/chat/session.html:134
+msgid "No image description available."
+msgstr ""
+
+#: flask/templates/chat/session.html:156
+msgid "Unlocked 9:16 Character Images (Relationship:"
+msgstr ""
+
+#: flask/templates/chat/session.html:159 flask/templates/chat/session.html:166
+msgid "Unlock at:"
+msgstr "해금 조건:"
+
+#: flask/templates/chat/session.html:172
+msgid "No gallery images unlocked for the current relationship level yet."
+msgstr ""
+
+#: flask/templates/chat/session.html:176
+msgid "Images Shared & Generated in This Session"
+msgstr ""
+
+#: flask/templates/chat/session.html:180
+msgid "Chat Media"
+msgstr ""
+
+#: flask/templates/chat/session.html:183
+msgid "No images uploaded in this chat yet."
+msgstr ""
+
+#: flask/templates/chat/session.html:194 flask/templates/chat/session.html:195 flask/templates/chat/session.html:198
+msgid "View world backdrop"
+msgstr "세계 배경 보기"
+
+#: flask/templates/chat/session.html:205
+msgid "Saved Episodic Memories (10-Message Interval)"
+msgstr ""
+
+#: flask/templates/chat/session.html:206
+msgid "Memories are summarized automatically in the background and injected into the prompt via keyword tags."
+msgstr ""
+
+#: flask/templates/chat/session.html:214
+msgid "Message #{idx}"
+msgstr ""
+
+#: flask/templates/chat/session.html:217 flask/templates/lorebooks/detail.html:160
+msgid "Tags (Comma-separated for vectorless RAG)"
+msgstr "태그 (벡터리스 RAG용 쉼표 구분)"
+
+#: flask/templates/chat/session.html:221
+msgid "Summary"
+msgstr "요약"
+
+#: flask/templates/chat/session.html:226
+msgid "Recalculate"
+msgstr "다시 계산"
+
+#: flask/templates/chat/session.html:226
+msgid "Recalculate memory from associated episode messages"
+msgstr "연결된 에피소드 메시지에서 메모리 다시 계산"
+
+#: flask/templates/chat/session.html:227
+msgid "Translate"
+msgstr "번역"
+
+#: flask/templates/chat/session.html:227
+msgid "Translate memory in-place to your language"
+msgstr "메모리를 현재 언어(in-place)로 바로 번역"
+
+#: flask/templates/chat/session.html:234
+msgid "No memories generated yet (created automatically every 10 messages)."
+msgstr ""
+
+#: flask/templates/chat/session.html:244
+msgid "Active Persona"
+msgstr "활성 페르소나"
+
+#: flask/templates/chat/session.html:249
+msgid "Edit player persona"
+msgstr "플레이어 페르소나 편집"
+
+#: flask/templates/chat/session.html:267
+msgid "Unknown"
+msgstr "알 수 없음"
+
+#: flask/templates/chat/session.html:268
+msgid "Persona is locked for this chat after the 1st message"
+msgstr "첫 번째 메시지 이후 이 채팅의 페르소나는 잠깁니다"
+
+#: flask/templates/chat/session.html:288
+msgid "Warning:"
+msgstr "경고:"
+
+#: flask/templates/chat/session.html:288
+msgid "Switching worlds during an active chat may lead to inconsistencies with earlier memories."
+msgstr "진행 중인 채팅에서 세계를 전환하면 이전 기억과 불일치가 발생할 수 있습니다."
+
+#: flask/templates/chat/session.html:294
+msgid "No World (Neutral)"
+msgstr "세계 없음 (중립)"
+
+#: flask/templates/chat/session.html:302
+msgid "Switch world"
+msgstr "세계 전환"
+
+#: flask/templates/chat/session.html:316
+msgid "Enable random events"
+msgstr "무작위 이벤트 활성화"
+
+#: flask/templates/chat/session.html:329
+msgid "Relationship Settings"
+msgstr "관계 설정"
+
+#: flask/templates/chat/session.html:332
+msgid "Show relationship debug labels"
+msgstr "관계 디버그 라벨 표시"
+
+#: flask/templates/chat/session.html:340
+msgid "Reset relationship to default and recalculate from chat history"
+msgstr "관계를 기본값으로 재설정하고 채팅 기록에서 다시 계산"
+
+#: flask/templates/chat/session.html:343
+msgid "Recalculate relationship"
+msgstr "관계 다시 계산"
+
+#: flask/templates/lorebooks/detail.html:7
+msgid "Lorebook:"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:7 flask/templates/lorebooks/detail.html:24 flask/templates/lorebooks/detail.html:42 flask/templates/macros/cards.html:252
+msgid "New Lorebook"
+msgstr "새 로어북"
+
+#: flask/templates/lorebooks/detail.html:26
+msgid "Lorebook & Encyclopedia"
+msgstr "로어북 및 백과사전"
+
+#: flask/templates/lorebooks/detail.html:30 flask/templates/worldinfo/detail.html:35
+msgid "Basic Settings"
+msgstr "기본 설정"
+
+#: flask/templates/lorebooks/detail.html:50
+msgid "Really delete Lorebook?"
+msgstr "로어북을 정말 삭제하시겠습니까?"
+
+#: flask/templates/lorebooks/detail.html:51
+msgid "Read-only (External Lorebook)"
+msgstr "읽기 전용 (외부 로어북)"
+
+#: flask/templates/lorebooks/detail.html:52
+msgid "Save Lorebook"
+msgstr "로어북 저장"
+
+#: flask/templates/lorebooks/detail.html:64
+msgid "Lorebook Name"
+msgstr "로어북 이름"
+
+#: flask/templates/lorebooks/detail.html:65
+msgid "The title of this knowledge compendium."
+msgstr "이 지식 백과의 제목입니다."
+
+#: flask/templates/lorebooks/detail.html:70 flask/templates/lorebooks/detail.html:147 flask/templates/lorebooks/detail.html:216 flask/templates/macros/event_manager.html:55 flask/templates/worldinfo/detail.html:76
+msgid "Proper Noun (Do not translate)"
+msgstr "고유 명사 (번역 안 함)"
+
+#: flask/templates/lorebooks/detail.html:84
+msgid "Short Description"
+msgstr "간단한 설명"
+
+#: flask/templates/lorebooks/detail.html:85
+msgid "A brief summary of the topic for quick orientation in the overview."
+msgstr "목록에서 주제를 빠르게 파악하기 위한 짧은 요약입니다."
+
+#: flask/templates/lorebooks/detail.html:90
+msgid "Short overview of the lorebook content..."
+msgstr "로어북 내용의 간단한 개요..."
+
+#: flask/templates/lorebooks/detail.html:102
+msgid "New Entry"
+msgstr "새 항목"
+
+#: flask/templates/lorebooks/detail.html:112
+msgid "Private (Secret Lore)"
+msgstr "비공개 (비밀 설정)"
+
+#: flask/templates/lorebooks/detail.html:112
+msgid "Private entry: hidden from other players, but injected via RAG in roleplay."
+msgstr "비공개 항목: 다른 플레이어에게는 숨겨지지만 롤플레이 중 RAG를 통해 삽입됩니다."
+
+#: flask/templates/lorebooks/detail.html:134
+msgid "Lorebook Entry:"
+msgstr "로어북 항목:"
+
+#: flask/templates/lorebooks/detail.html:141 flask/templates/lorebooks/detail.html:210 flask/templates/macros/event_manager.html:35
+msgid "Title"
+msgstr "제목"
+
+#: flask/templates/lorebooks/detail.html:142 flask/templates/lorebooks/detail.html:211
+msgid "Concise title of the lore entry."
+msgstr "지식 항목의 간결한 제목입니다."
+
+#: flask/templates/lorebooks/detail.html:154 flask/templates/lorebooks/detail.html:223
+msgid "Public (Readable in overview)"
+msgstr "공개 (목록에서 읽기 가능)"
+
+#: flask/templates/lorebooks/detail.html:154 flask/templates/lorebooks/detail.html:223
+msgid "Private (Secret Lore / Spoiler Protection)"
+msgstr "비공개 (비밀 설정 / 스포일러 방지)"
+
+#: flask/templates/lorebooks/detail.html:161 flask/templates/lorebooks/detail.html:230
+msgid "Keywords that trigger loading this entry into [RELEVANT_LOREBOOKS] when mentioned in chat."
+msgstr "채팅에서 언급될 때 이 항목을 [RELEVANT_LOREBOOKS]로 불러오는 키워드입니다."
+
+#: flask/templates/lorebooks/detail.html:163 flask/templates/lorebooks/detail.html:232
+msgid "Suggest Tags"
+msgstr "태그 제안"
+
+#: flask/templates/lorebooks/detail.html:169 flask/templates/lorebooks/detail.html:238
+msgid "Prose Text / Lore Content"
+msgstr "본문 / 설정 내용"
+
+#: flask/templates/lorebooks/detail.html:170 flask/templates/lorebooks/detail.html:239
+msgid "Compact facts, history, or rules the AI can retrieve and use in dialogue."
+msgstr "AI가 검색하여 대화에 활용할 수 있는 간결한 사실, 역사 또는 규칙입니다."
+
+#: flask/templates/lorebooks/detail.html:192
+msgid "Really delete this lorebook entry?"
+msgstr ""
+
+#: flask/templates/lorebooks/detail.html:203
+msgid "Create New Lorebook Entry"
+msgstr "새 로어북 항목 만들기"
+
+#: flask/templates/lorebooks/detail.html:229 flask/templates/worldinfo/detail.html:229 flask/templates/worldinfo/detail.html:376
+msgid "Tags (Comma-separated)"
+msgstr "태그 (쉼표로 구분)"
+
+#: flask/templates/lorebooks/detail.html:234
+msgid "magic, guild, capital"
+msgstr "마법, 길드, 수도"
+
+#: flask/templates/lorebooks/detail.html:255
+msgid "Save Entry"
+msgstr "항목 저장"
+
+#: flask/templates/macros/backend_selector.html:126
+msgid "Show"
+msgstr "표시"
+
+#: flask/templates/macros/backend_selector.html:126
+msgid "Show/hide API key"
+msgstr "API 키 표시/숨기기"
+
+#: flask/templates/macros/buttons.html:97 flask/templates/macros/cards.html:114 flask/templates/macros/cards.html:226 flask/templates/overview/tabs/lorebooks.html:9 flask/templates/overview/tabs/worldinfo.html:9
+msgid "Public"
+msgstr "공개"
+
+#: flask/templates/macros/buttons.html:98 flask/templates/macros/cards.html:116 flask/templates/macros/cards.html:228 flask/templates/overview/tabs/lorebooks.html:10 flask/templates/overview/tabs/worldinfo.html:10
+msgid "Private"
+msgstr "비공개"
+
+#: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111 flask/templates/macros/cards.html:223
+msgid "Translation pending"
+msgstr "번역 대기 중"
+
+#: flask/templates/macros/cards.html:68 flask/templates/macros/cards.html:111 flask/templates/macros/cards.html:223
+msgid "Translation into your language is pending"
+msgstr "사용자의 언어로 번역 대기 중입니다"
+
+#: flask/templates/macros/cards.html:71
+msgid "Exchanged messages"
+msgstr "주고받은 메시지"
+
+#: flask/templates/macros/cards.html:74
+msgid "Edit character"
+msgstr "캐릭터 편집"
+
+#: flask/templates/macros/cards.html:79
+msgid "Duplicate character"
+msgstr "캐릭터 복제"
+
+#: flask/templates/macros/cards.html:91
+msgid "Relationship:"
+msgstr "관계:"
+
+#: flask/templates/macros/cards.html:114
+msgid "Public world"
+msgstr "공개 세계"
+
+#: flask/templates/macros/cards.html:116
+msgid "Private world"
+msgstr "비공개 세계"
+
+#: flask/templates/macros/cards.html:162
+msgid "Default Persona"
+msgstr "기본 페르소나"
+
+#: flask/templates/macros/cards.html:165
+msgid "Set as default persona"
+msgstr "기본 페르소나로 설정"
+
+#: flask/templates/macros/cards.html:182
+msgid "New Persona"
+msgstr "새 페르소나"
+
+#: flask/templates/macros/cards.html:206 flask/templates/worldinfo/detail.html:10 flask/templates/worldinfo/detail.html:29 flask/templates/worldinfo/detail.html:48 flask/templates/worldinfo/detail.html:133
+msgid "New World"
+msgstr "새 월드"
+
+#: flask/templates/macros/cards.html:226
+msgid "Public lorebook"
+msgstr ""
+
+#: flask/templates/macros/cards.html:228
+msgid "Private lorebook"
+msgstr ""
+
+#: flask/templates/macros/collaboration.html:14
+msgid "Collaborators receive full edit access to this creation (content, sprites, locations & events), but can never delete it or manage collaborators."
+msgstr "공동 작업자는 이 창작물에 대한 전체 편집 권한(콘텐츠, 스프라이트, 장소 및 이벤트)을 받지만, 삭제하거나 공동 작업자를 관리할 수 없습니다."
+
+#: flask/templates/macros/collaboration.html:17
+msgid "Save collaborators"
+msgstr "공동 작업자 저장"
+
+#: flask/templates/macros/collaboration.html:17 flask/templates/macros/collaboration.html:111
+msgid "Saves all changes in the form"
+msgstr "양식의 모든 변경 사항을 저장합니다"
+
+#: flask/templates/macros/collaboration.html:66
+msgid "Copy creator tag"
+msgstr "제작자 태그 복사"
+
+#: flask/templates/macros/collaboration.html:74
+msgid "Remove collaborator"
+msgstr "공동 작업자 제거"
+
+#: flask/templates/macros/editor_header.html:27
+msgid "Really delete permanently?"
+msgstr "정말 영구적으로 삭제하시겠습니까?"
+
+#: flask/templates/macros/editor_header.html:32 flask/templates/setup/first_boot.html:71
+msgid "Back"
+msgstr "뒤로"
+
+#: flask/templates/macros/event_manager.html:13
+msgid "Entire Character (Location-independent)"
+msgstr "전체 캐릭터 (위치 무관)"
+
+#: flask/templates/macros/event_manager.html:13
+msgid "No recommended world with locations linked"
+msgstr "위치가 연결된 추천 세계가 없습니다"
+
+#: flask/templates/macros/event_manager.html:20 flask/templates/macros/event_manager.html:166
+msgid "Entire World"
+msgstr "전체 세계"
+
+#: flask/templates/macros/event_manager.html:36
+msgid ""
+"Event Title:\n"
+"Name of the random event (e.g., 'Sudden Thunderstorm', 'Carrier Pigeon Arrives')."
+msgstr ""
+"이벤트 제목:\n"
+"무작위 이벤트 이름(예: '갑작스러운 뇌우', '전서구 도착')."
+
+#: flask/templates/macros/event_manager.html:61
+msgid "Probability (0 - 100%%)"
+msgstr "확률 (0 - 100%%)"
+
+#: flask/templates/macros/event_manager.html:62
+msgid ""
+"Probability (1-100%%):\n"
+"Relative weight in the shared event pool. Every 10 to 100 messages (cooldown counter), one event is triggered by weight."
+msgstr ""
+"확률 (1-100%%):\n"
+"공유 이벤트 풀에서의 상대적 가중치. 10~100개 메시지마다(재사용 대기 카운터) 가중치에 따라 하나의 이벤트가 발생합니다."
+
+#: flask/templates/macros/event_manager.html:68
+msgid "One-Shot (Max. 1x per session)"
+msgstr "원샷 (세션당 최대 1회)"
+
+#: flask/templates/macros/event_manager.html:69
+msgid ""
+"One-Shot (Single Event):\n"
+"When enabled, this event triggers at most once per chat session and is then removed from the active pool."
+msgstr ""
+"원샷 (단발성 이벤트):\n"
+"활성화하면 이 이벤트는 채팅 세션당 최대 한 번만 발생하고 이후 활성 풀에서 제거됩니다."
+
+#: flask/templates/macros/event_manager.html:76
+msgid "Assignment (Location-independent or bound to a specific location)"
+msgstr "할당 (위치 무관 또는 특정 위치에 귀속)"
+
+#: flask/templates/macros/event_manager.html:77
+msgid ""
+"Location Restriction:\n"
+"Choose whether this character event can occur anywhere in chats with this character or is additionally bound to a specific location."
+msgstr ""
+"장소 제한:\n"
+"이 캐릭터 이벤트가 이 캐릭터와의 모든 채팅에서 발생할 수 있는지 또는 특정 장소에 묶여 있는지 선택합니다."
+
+#: flask/templates/macros/event_manager.html:79
+msgid "Assignment (Exclusive: Either Entire World OR specific location)"
+msgstr "할당 (배타적: 전체 세계 또는 특정 위치)"
+
+#: flask/templates/macros/event_manager.html:80
+msgid ""
+"Location Assignment:\n"
+"Choose whether this event can only occur at a specific location or applies as a global event for the entire world."
+msgstr ""
+"장소 지정:\n"
+"이 이벤트가 특정 장소에서만 발생할 수 있는지 또는 전체 세계의 전역 이벤트로 적용되는지 선택합니다."
+
+#: flask/templates/macros/event_manager.html:92
+msgid "Relationship Range (From – To)"
+msgstr "관계 범위 (최소 – 최대)"
+
+#: flask/templates/macros/event_manager.html:93
+msgid ""
+"Relationship Range:\n"
+"Optionally restricts the event to a relationship range. If both sliders are at the outer ends, the event is active at all relationship tiers."
+msgstr ""
+"관계 범위:\n"
+"이벤트를 특정 관계 범위로 선택적으로 제한합니다. 두 슬라이더가 양 끝에 있으면 모든 관계 단계에서 활성화됩니다."
+
+#: flask/templates/macros/event_manager.html:109
+msgid "Minimum relationship tier"
+msgstr "최소 관계 단계"
+
+#: flask/templates/macros/event_manager.html:118
+msgid "Maximum relationship tier"
+msgstr "최대 관계 단계"
+
+#: flask/templates/macros/event_manager.html:125
+msgid "Scenic Event Description"
+msgstr "이벤트 장면 설명"
+
+#: flask/templates/macros/event_manager.html:126
+msgid ""
+"Event Description:\n"
+"The narrative occurrence. When triggered, this description is placed in the [WORLD_INFO] section of the prompt for the next turn so the AI reacts appropriately."
+msgstr ""
+"이벤트 설명:\n"
+"서사적 사건. 발생 시 AI가 적절히 반응할 수 있도록 다음 턴 프롬프트의 [WORLD_INFO] 섹션에 배치됩니다."
+
+#: flask/templates/macros/event_manager.html:148
+msgid "New Event"
+msgstr "새 이벤트"
+
+#: flask/templates/macros/event_manager.html:164
+msgid "Character-wide"
+msgstr ""
+
+#: flask/templates/macros/event_manager.html:169
+msgid "Relationship-bound"
+msgstr "관계 연동"
+
+#: flask/templates/macros/event_manager.html:183
+msgid "One-Shot"
+msgstr ""
+
+#: flask/templates/macros/event_manager.html:183
+msgid "Repeatable"
+msgstr "반복 가능"
+
+#: flask/templates/macros/event_manager.html:193
+msgid "Edit Event:"
+msgstr "이벤트 편집:"
+
+#: flask/templates/macros/event_manager.html:206
+msgid "Really delete this event?"
+msgstr ""
+
+#: flask/templates/macros/event_manager.html:217
+msgid "Create New Event"
+msgstr "새 이벤트 만들기"
+
+#: flask/templates/macros/event_manager.html:224
+msgid "Save Event"
+msgstr "이벤트 저장"
+
+#: flask/templates/macros/image_cropper.html:4 flask/templates/macros/persona_manager.html:129 flask/templates/macros/persona_manager.html:132
+msgid "Set image crop"
+msgstr "이미지 자르기 설정"
+
+#: flask/templates/macros/image_cropper.html:16
+msgid "Crop Source"
+msgstr "원본 이미지"
+
+#: flask/templates/macros/image_cropper.html:18
+msgid "Resize"
+msgstr "크기 조정"
+
+#: flask/templates/macros/image_cropper.html:26
+msgid "Click to adjust %(label)s"
+msgstr "클릭하여 %(label)s 조정"
+
+#: flask/templates/macros/image_cropper.html:38
+msgid "Apply crops"
+msgstr "자르기 적용"
+
+#: flask/templates/macros/image_cropper.html:38
+msgid "Apply crop"
+msgstr "자르기 적용"
+
+#: flask/templates/macros/image_viewer.html:4
+msgid "Image Viewer"
+msgstr "이미지 뷰어"
+
+#: flask/templates/macros/image_viewer.html:12
+msgid "Close (Esc)"
+msgstr "닫기 (Esc)"
+
+#: flask/templates/macros/image_viewer.html:17
+msgid "Previous image"
+msgstr "이전 이미지"
+
+#: flask/templates/macros/image_viewer.html:25
+msgid "Next image"
+msgstr "다음 이미지"
+
+#: flask/templates/macros/lorebook_manager.html:18
+msgid "Active Knowledge Books (Lorebooks)"
+msgstr "활성 지식 책 (로어북)"
+
+#: flask/templates/macros/lorebook_manager.html:20
+msgid "Lorebooks expand the model's context with relevant world and background knowledge via keyword tags."
+msgstr "로어북은 키워드 태그를 통해 관련 세계 및 배경 지식으로 모델의 컨텍스트를 확장합니다."
+
+#: flask/templates/macros/lorebook_manager.html:49
+msgid "Default Lorebooks (Character & World)"
+msgstr "기본 로어북 (캐릭터 및 세계)"
+
+#: flask/templates/macros/lorebook_manager.html:52
+msgid "Session Toggle (Slider)"
+msgstr "세션 전환 (슬라이더)"
+
+#: flask/templates/macros/lorebook_manager.html:67
+msgid "Lorebook source"
+msgstr "로어북 출처"
+
+#: flask/templates/macros/lorebook_manager.html:69 flask/templates/macros/lorebook_manager.html:142
+msgid "Creator Lore"
+msgstr "제작자 로어"
+
+#: flask/templates/macros/lorebook_manager.html:69 flask/templates/macros/lorebook_manager.html:142
+msgid "Creator Lore: hidden from other players, but used by the AI in chat."
+msgstr "제작자 로어: 다른 플레이어에게는 숨겨지지만 채팅 중 AI가 사용합니다."
+
+#: flask/templates/macros/lorebook_manager.html:91
+msgid "Inactive — Requires world:"
+msgstr "비활성 — 필요한 세계:"
+
+#: flask/templates/macros/lorebook_manager.html:91
+msgid "This lorebook requires the world"
+msgstr "이 로어북에는 다음 세계가 필요합니다:"
+
+#: flask/templates/macros/lorebook_manager.html:92
+msgid "Locked: matching world is not active."
+msgstr "잠김: 일치하는 세계가 활성화되지 않았습니다."
+
+#: flask/templates/macros/lorebook_manager.html:101 flask/templates/macros/lorebook_manager.html:163
+msgid "Deactivate lorebook"
+msgstr "로어북 비활성화"
+
+#: flask/templates/macros/lorebook_manager.html:101 flask/templates/macros/lorebook_manager.html:163
+msgid "Activate lorebook"
+msgstr "로어북 활성화"
+
+#: flask/templates/macros/lorebook_manager.html:113
+msgid "No default lorebooks assigned for this session."
+msgstr "이 세션에 할당된 기본 로어북이 없습니다."
+
+#: flask/templates/macros/lorebook_manager.html:122
+msgid "Custom Lorebooks (Chat-specific)"
+msgstr "사용자 지정 로어북 (채팅 전용)"
+
+#: flask/templates/macros/lorebook_manager.html:125
+msgid "Actions (Toggle & Delete)"
+msgstr "작업 (전환 및 삭제)"
+
+#: flask/templates/macros/lorebook_manager.html:134 flask/templates/macros/lorebook_manager.html:140
+msgid "Custom"
+msgstr "사용자 지정"
+
+#: flask/templates/macros/lorebook_manager.html:170
+msgid "Remove lorebook from chat"
+msgstr "채팅에서 로어북 제거"
+
+#: flask/templates/macros/lorebook_manager.html:175
+msgid "No additional custom lorebooks added. Click 'Add Lorebook' to add knowledge."
+msgstr "추가된 사용자 지정 로어북이 없습니다. '로어북 추가'를 클릭해 지식을 추가하세요."
+
+#: flask/templates/macros/lorebook_manager.html:188
+msgid "Add Lorebook to Chat"
+msgstr "채팅에 로어북 추가"
+
+#: flask/templates/macros/lorebook_manager.html:225
+msgid "Already active"
+msgstr "이미 활성 상태"
+
+#: flask/templates/macros/lorebook_manager.html:242
+msgid "No lorebooks available."
+msgstr "사용 가능한 로어북이 없습니다."
+
+#: flask/templates/macros/persona_manager.html:19
+msgid "Adjust crop"
+msgstr "자르기 조정"
+
+#: flask/templates/macros/persona_manager.html:20
+msgid "Crop active"
+msgstr "자르기 활성"
+
+#: flask/templates/macros/persona_manager.html:29
+msgid "Background / Personality"
+msgstr "배경 / 성격"
+
+#: flask/templates/macros/persona_manager.html:29
+msgid "max. 1,200 characters"
+msgstr "최대 1,200자"
+
+#: flask/templates/macros/persona_manager.html:41
+msgid "Extract image features"
+msgstr "이미지 특징 추출"
+
+#: flask/templates/macros/persona_manager.html:41
+msgid "Automatically extract appearance from portrait image via vision model"
+msgstr "비전 모델을 통해 초상화 이미지에서 외모를 자동으로 추출"
+
+#: flask/templates/macros/persona_manager.html:55
+msgid "Persona"
+msgstr "페르소나"
+
+#: flask/templates/macros/persona_manager.html:64 flask/templates/macros/persona_manager.html:96 flask/templates/settings/account.html:15 flask/templates/settings/creations.html:64
+msgid "Name"
+msgstr "이름"
+
+#: flask/templates/macros/persona_manager.html:81
+msgid "Portrait image (PNG/JPG/WEBP)"
+msgstr "초상화 이미지 (PNG/JPG/WEBP)"
+
+#: flask/templates/macros/persona_manager.html:85
+msgid "Save Persona"
+msgstr "페르소나 저장"
+
+#: flask/templates/macros/persona_manager.html:114
+msgid "New portrait image (optional, PNG/JPG/WEBP)"
+msgstr "새 초상화 이미지 (선택 사항, PNG/JPG/WEBP)"
+
+#: flask/templates/macros/persona_manager.html:120
+msgid "Save changes"
+msgstr "변경 사항 저장"
+
+#: flask/templates/macros/persona_manager.html:124
+msgid "Really delete persona?"
+msgstr "페르소나를 정말 삭제하시겠습니까?"
+
+#: flask/templates/macros/top_header.html:17 flask/templates/macros/top_header.html:44
+msgid "AI Characters"
+msgstr "AI 캐릭터"
+
+#: flask/templates/macros/top_header.html:19 flask/templates/macros/top_header.html:46 flask/templates/settings/creations.html:22
+msgid "Worlds"
+msgstr "월드"
+
+#: flask/templates/macros/top_header.html:30
+msgid "Open menu"
+msgstr "메뉴 열기"
+
+#: flask/templates/macros/top_header.html:33
+msgid "User menu"
+msgstr ""
+
+#: flask/templates/macros/top_header.html:60
+msgid "Logout"
+msgstr "로그아웃"
+
+#: flask/templates/macros/top_header.html:66 flask/templates/macros/top_header.html:71
+msgid "Support us on ko-fi"
+msgstr "Ko-fi에서 후원하기"
+
+#: flask/templates/macros/top_header.html:74 flask/templates/macros/top_header.html:79
+msgid "Visit our Website"
+msgstr "웹사이트 방문"
+
+#: flask/templates/overview/index.html:2
+msgid "Hub Dashboard"
+msgstr ""
+
+#: flask/templates/overview/index.html:11
+msgid "Some content is still being translated into your language. The selection of available content may still change."
+msgstr "일부 콘텐츠가 아직 사용자의 언어로 번역 중입니다. 사용 가능한 콘텐츠 목록은 변경될 수 있습니다."
+
+#: flask/templates/overview/index.html:12
+msgid "Translations in Progress"
+msgstr "번역 진행 중"
+
+#: flask/templates/overview/tabs/characters.html:8
+msgid "All Genders"
+msgstr "모든 성별"
+
+#: flask/templates/overview/tabs/characters.html:15
+msgid "Chat Status"
+msgstr "채팅 상태"
+
+#: flask/templates/overview/tabs/characters.html:17 flask/templates/overview/tabs/characters.html:34
+msgid "All Characters"
+msgstr "모든 캐릭터"
+
+#: flask/templates/overview/tabs/characters.html:18
+msgid "Already Chatted"
+msgstr "대화한 적 있음"
+
+#: flask/templates/overview/tabs/characters.html:19
+msgid "Not Chatted Yet"
+msgstr "아직 대화 안 함"
+
+#: flask/templates/overview/tabs/characters.html:23 flask/templates/overview/tabs/lorebooks.html:24 flask/templates/overview/tabs/worldinfo.html:24 flask/templates/settings/creations.html:37
+msgid "Sort Order"
+msgstr "정렬 순서"
+
+#: flask/templates/overview/tabs/characters.html:25 flask/templates/overview/tabs/lorebooks.html:26 flask/templates/overview/tabs/worldinfo.html:26 flask/templates/settings/creations.html:40
+msgid "Newest First"
+msgstr "최신순"
+
+#: flask/templates/overview/tabs/characters.html:26
+msgid "Most Messages"
+msgstr "메시지 많은 순"
+
+#: flask/templates/overview/tabs/characters.html:27
+msgid "Best Relationship"
+msgstr "관계 좋은 순"
+
+#: flask/templates/overview/tabs/characters.html:32 flask/templates/overview/tabs/lorebooks.html:15 flask/templates/overview/tabs/worldinfo.html:15 flask/templates/settings/creations.html:28
+msgid "Author"
+msgstr "작성자"
+
+#: flask/templates/overview/tabs/characters.html:35 flask/templates/overview/tabs/lorebooks.html:18 flask/templates/overview/tabs/worldinfo.html:18 flask/templates/settings/creations.html:31
+msgid "Only Mine (Creator)"
+msgstr "내 작품만"
+
+#: flask/templates/overview/tabs/characters.html:36 flask/templates/overview/tabs/lorebooks.html:19 flask/templates/overview/tabs/worldinfo.html:19 flask/templates/settings/creations.html:32
+msgid "Collaborations"
+msgstr "협업 작품"
+
+#: flask/templates/overview/tabs/lorebooks.html:8 flask/templates/overview/tabs/worldinfo.html:8
+msgid "All"
+msgstr ""
+
+#: flask/templates/overview/tabs/lorebooks.html:17
+msgid "All Lorebooks"
+msgstr ""
+
+#: flask/templates/overview/tabs/lorebooks.html:27 flask/templates/overview/tabs/worldinfo.html:27 flask/templates/settings/creations.html:39
+msgid "Name (A-Z)"
+msgstr "이름순 (A-Z)"
+
+#: flask/templates/overview/tabs/worldinfo.html:17
+msgid "All Worlds"
+msgstr ""
+
+#: flask/templates/settings/account.html:8
+msgid "Creator Tag"
+msgstr "크리에이터 태그"
+
+#: flask/templates/settings/account.html:8
+msgid "Other creators can add you as a collaborator using this tag."
+msgstr "다른 제작자가 이 태그를 사용하여 당신을 공동 작업자로 추가할 수 있습니다."
+
+#: flask/templates/settings/account.html:9
+msgid "Copy Creator Tag"
+msgstr "크리에이터 태그 복사"
+
+#: flask/templates/settings/account.html:12
+msgid "Name & Email Address"
+msgstr "이름 및 이메일 주소"
+
+#: flask/templates/settings/account.html:23
+msgid "Your current password is only required when changing your email address or password. Leave the new password fields empty to keep your current password."
+msgstr "현재 비밀번호는 이메일 주소나 비밀번호를 변경할 때만 필요합니다. 현재 비밀번호를 유지하려면 새 비밀번호 입력란을 비워 두세요."
+
+#: flask/templates/settings/account.html:26
+msgid "Current password"
+msgstr "현재 비밀번호"
+
+#: flask/templates/settings/account.html:29
+msgid "New password"
+msgstr "새 비밀번호"
+
+#: flask/templates/settings/account.html:32
+msgid "Confirm new password"
+msgstr "새 비밀번호 확인"
+
+#: flask/templates/settings/account.html:37
+msgid "Language"
+msgstr "언어"
+
+#: flask/templates/settings/account.html:37
+msgid "Language of the interface and displayed content translations."
+msgstr "인터페이스 및 표시되는 콘텐츠 번역의 언어입니다."
+
+#: flask/templates/settings/account.html:49
+msgid "Appearance"
+msgstr ""
+
+#: flask/templates/settings/account.html:49
+msgid "Visual background effects for your personal interface."
+msgstr ""
+
+#: flask/templates/settings/account.html:51
+msgid "Animated Ember Bokeh Background"
+msgstr ""
+
+#: flask/templates/settings/creations.html:4 flask/templates/settings/layout.html:24
+msgid "My Creations"
+msgstr "내 작품"
+
+#: flask/templates/settings/creations.html:9
+msgid "Overview of all characters, worlds, and lorebooks you created or collaborate on. Click any item to open its editor."
+msgstr "내가 만들었거나 협업 중인 모든 캐릭터, 세계, 로어북 목록입니다. 항목을 클릭하면 편집기가 열립니다."
+
+#: flask/templates/settings/creations.html:11
+msgid "Total:"
+msgstr "총계:"
+
+#: flask/templates/settings/creations.html:18 flask/templates/settings/creations.html:62
+msgid "Type"
+msgstr "유형"
+
+#: flask/templates/settings/creations.html:20
+msgid "All Types"
+msgstr "모든 유형"
+
+#: flask/templates/settings/creations.html:21
+msgid "Characters"
+msgstr "캐릭터"
+
+#: flask/templates/settings/creations.html:30
+msgid "All Works"
+msgstr "모든 작품"
+
+#: flask/templates/settings/creations.html:45
+msgid "Search"
+msgstr "검색"
+
+#: flask/templates/settings/creations.html:50
+msgid "Search name..."
+msgstr "이름 검색..."
+
+#: flask/templates/settings/creations.html:52
+msgid "Search creations"
+msgstr "작품 검색"
+
+#: flask/templates/settings/creations.html:63
+msgid "Preview"
+msgstr "미리보기"
+
+#: flask/templates/settings/creations.html:65
+msgid "Details"
+msgstr "세부 정보"
+
+#: flask/templates/settings/creations.html:67
+msgid "Role"
+msgstr "역할"
+
+#: flask/templates/settings/creations.html:68
+msgid "Created"
+msgstr "생성일"
+
+#: flask/templates/settings/creations.html:69
+msgid "Action"
+msgstr "작업"
+
+#: flask/templates/settings/creations.html:119
+msgid "Editor"
+msgstr "편집기"
+
+#: flask/templates/settings/creations.html:119
+msgid "Open editor"
+msgstr "편집기 열기"
+
+#: flask/templates/settings/creations.html:129
+msgid "No creations found"
+msgstr "작품을 찾을 수 없습니다"
+
+#: flask/templates/settings/creations.html:131
+msgid "No works were found matching the selected filters or created/shared with you."
+msgstr "선택한 필터와 일치하거나 생성/공유된 작품이 없습니다."
+
+#: flask/templates/settings/creations.html:134
+msgid "Reset all filters"
+msgstr "모든 필터 초기화"
+
+#: flask/templates/settings/index.html:13
+msgid "Manage your roleplay identities. The star marks your default persona."
+msgstr "롤플레이 정체성을 관리합니다. 별표는 기본 페르소나를 나타냅니다."
+
+#: flask/templates/settings/layout.html:18
+msgid "User & Personalization"
+msgstr "사용자 및 개인화"
+
+#: flask/templates/settings/layout.html:22
+msgid "Personas"
+msgstr "페르소나"
+
+#: flask/templates/settings/layout.html:26
+msgid "Account"
+msgstr "계정"
+
+#: flask/templates/setup/first_boot.html:5
+msgid "First-Boot Wizard"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:13
+msgid "AImo First-Boot Wizard"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:15
+msgid "Configure the non-revocable initial administrator and your exclusive AI backend."
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:18
+msgid "Setup steps"
+msgstr "설정 단계"
+
+#: flask/templates/setup/first_boot.html:21
+msgid "Administrator"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:25
+msgid "Select AI Backend"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:29
+msgid "Configure Backend"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:38
+msgid "1. Initial Administrator"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:41
+msgid "This first user permanently receives all system permissions and cannot be deleted or downgraded."
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:56
+msgid "Continue to Backend Selection"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:62
+msgid "2. Select AI Backend"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:65
+msgid "Exclusive choice:"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:65
+msgid "AImo supports either local Ollama or Google AI Cloud – parallel operation of both AI backends is not supported. You can switch this anytime later under Admin → Services & Models."
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:72
+msgid "Continue to Setup"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:79
+msgid "3. Configure Ollama"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:84
+msgid "Ollama Server URL (Required)"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:87
+msgid "Test Connection"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:94
+msgid "Setup Helper for Ollama: Recommended Models per Role"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:97
+msgid "Pull these 3 models on your Ollama server (AImo assigns task roles automatically):"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:107
+msgid "Unchecked"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:113
+msgid "Terminal commands to copy:"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:115
+msgid "Copy command:"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:122
+msgid "Customize Model Assignment per Role (Optional)"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:137
+msgid "Optional Additional Services"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:143 flask/templates/setup/first_boot.html:212
+msgid "ComfyUI URL"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:152 flask/templates/setup/first_boot.html:225
+msgid "SearXNG URL"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:163
+msgid "3. Configure Google AI Cloud"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:170
+msgid "Required"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:170
+msgid "Optional — Env fallback active"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:180
+msgid "Google AI Model Assignment (Text & Vision)"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:183
+msgid "Recommended Gemini models per role (populated with your available models after key verification):"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:200
+msgid "Choose whether scene images should be generated via Google AI (Gemini Image), a local ComfyUI server, or not at all:"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:220
+msgid "Choose whether future web searches should use Google Search Grounding, SearXNG, or no search:"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:233
+msgid "Back to Backend Selection"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:234
+msgid "Initialize & Launch System"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:246
+msgid "Configure Google AI"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:247
+msgid "Configure Ollama"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:250
+msgid "Checking connection"
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:251
+msgid "Checking connection..."
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:252
+msgid "API key valid — {count} text/vision models and {img_count} image models available."
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:253
+msgid "Ollama reachable — {count} installed model(s) found."
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:254
+msgid "Connection failed."
+msgstr ""
+
+#: flask/templates/setup/first_boot.html:255
+msgid "Connection error while testing backend."
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:10
+msgid "WorldInfo:"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:31
+msgid "WorldInfo & Locations"
+msgstr "WorldInfo 및 장소"
+
+#: flask/templates/worldinfo/detail.html:36
+msgid "Locations & Backgrounds"
+msgstr "장소 및 배경"
+
+#: flask/templates/worldinfo/detail.html:56
+msgid "Really delete WorldInfo?"
+msgstr "WorldInfo를 정말 삭제하시겠습니까?"
+
+#: flask/templates/worldinfo/detail.html:57
+msgid "Read-only (External World)"
+msgstr "읽기 전용 (외부 세계)"
+
+#: flask/templates/worldinfo/detail.html:58
+msgid "Save WorldInfo"
+msgstr "WorldInfo 저장"
+
+#: flask/templates/worldinfo/detail.html:70
+msgid "World Name"
+msgstr "세계 이름"
+
+#: flask/templates/worldinfo/detail.html:71
+msgid "The name of the universe or setting. Included as primary world in the prompt context."
+msgstr "세계관이나 배경의 이름입니다. 프롬프트 컨텍스트의 기본 세계로 포함됩니다."
+
+#: flask/templates/worldinfo/detail.html:90
+msgid "Cover Image (1:1)"
+msgstr "커버 이미지 (1:1)"
+
+#: flask/templates/worldinfo/detail.html:91
+msgid "Square cover image for the world card in the Hub and world selection."
+msgstr "허브 및 세계 선택 화면의 카드에 표시되는 정사각형 커버 이미지입니다."
+
+#: flask/templates/worldinfo/detail.html:94
+msgid "1:1 World Cover"
+msgstr "1:1 세계 커버"
+
+#: flask/templates/worldinfo/detail.html:106
+msgid "Choose Cover"
+msgstr "커버 선택"
+
+#: flask/templates/worldinfo/detail.html:108
+msgid "Crop"
+msgstr "자르기"
+
+#: flask/templates/worldinfo/detail.html:118
+msgid "World Backdrop (16:9)"
+msgstr "세계 배경 (16:9)"
+
+#: flask/templates/worldinfo/detail.html:119
+msgid "Optional 16:9 chat background for this world. Overrides the System Backdrop when a location has no background image of its own (Priority: System → World → Location)."
+msgstr "이 세계의 선택적 16:9 채팅 배경입니다. 장소에 자체 배경 이미지가 없으면 시스템 배경을 덮어씁니다(우선순위: 시스템 → 세계 → 장소)."
+
+#: flask/templates/worldinfo/detail.html:127
+msgid "No world backdrop set"
+msgstr "세계 배경이 설정되지 않음"
+
+#: flask/templates/worldinfo/detail.html:128
+msgid "Uses System Backdrop unless a location defines its own background."
+msgstr "장소에 자체 배경이 정의되지 않은 경우 시스템 배경을 사용합니다."
+
+#: flask/templates/worldinfo/detail.html:131
+msgid "Priority in chat: System → World → Location"
+msgstr "채팅 우선순위: 시스템 → 세계 → 장소"
+
+#: flask/templates/worldinfo/detail.html:139
+msgid "Linked Lorebook (Optional)"
+msgstr "연결된 로어북 (선택 사항)"
+
+#: flask/templates/worldinfo/detail.html:140
+msgid "An optional lorebook automatically included alongside character lorebooks in all chats using this world."
+msgstr "이 세계를 사용하는 모든 채팅에서 캐릭터 로어북과 함께 자동으로 포함되는 선택적 로어북입니다."
+
+#: flask/templates/worldinfo/detail.html:143
+msgid "No lorebook linked"
+msgstr "연결된 로어북 없음"
+
+#: flask/templates/worldinfo/detail.html:159
+msgid "New Location"
+msgstr "새 장소"
+
+#: flask/templates/worldinfo/detail.html:172
+msgid "This location is bound to"
+msgstr "이 장소는 다음 캐릭터에 귀속됨:"
+
+#: flask/templates/worldinfo/detail.html:210
+msgid "Edit Location:"
+msgstr "장소 편집:"
+
+#: flask/templates/worldinfo/detail.html:216 flask/templates/worldinfo/detail.html:363
+msgid "Location Name"
+msgstr "장소 이름"
+
+#: flask/templates/worldinfo/detail.html:217 flask/templates/worldinfo/detail.html:364
+msgid "Name of the location (e.g. Old Library, Griffin Tavern)."
+msgstr "장소의 이름 (예: 오래된 도서관, 그리핀 선술집)."
+
+#: flask/templates/worldinfo/detail.html:230 flask/templates/worldinfo/detail.html:377
+msgid "Comma-separated keywords describing the environment (e.g. indoors, cozy, quiet)."
+msgstr "환경을 설명하는 쉼표로 구분된 키워드 (예: 실내, 아늑함, 조용함)."
+
+#: flask/templates/worldinfo/detail.html:232 flask/templates/worldinfo/detail.html:379
+msgid "Extract Tags"
+msgstr "태그 추출"
+
+#: flask/templates/worldinfo/detail.html:240 flask/templates/worldinfo/detail.html:387
+msgid "16:9 Background Image (PNG, JPG, WEBP)"
+msgstr "16:9 배경 이미지 (PNG, JPG, WEBP)"
+
+#: flask/templates/worldinfo/detail.html:241 flask/templates/worldinfo/detail.html:388
+msgid "Landscape 16:9 image used as the chat stage backdrop and ComfyUI reference."
+msgstr "채팅 무대 배경 및 ComfyUI 참조용으로 사용되는 16:9 가로 이미지입니다."
+
+#: flask/templates/worldinfo/detail.html:251 flask/templates/worldinfo/detail.html:398
+msgid "No location backdrop set"
+msgstr "장소 배경이 설정되지 않음"
+
+#: flask/templates/worldinfo/detail.html:252 flask/templates/worldinfo/detail.html:399
+msgid "Uses World Backdrop or System Backdrop if none is set."
+msgstr "설정되지 않은 경우 세계 배경 또는 시스템 배경을 사용합니다."
+
+#: flask/templates/worldinfo/detail.html:257 flask/templates/worldinfo/detail.html:403
+msgid "Analyze & Describe Image"
+msgstr "이미지 분석 및 설명 생성"
+
+#: flask/templates/worldinfo/detail.html:264 flask/templates/worldinfo/detail.html:410
+msgid "Location Description"
+msgstr "장소 설명"
+
+#: flask/templates/worldinfo/detail.html:265 flask/templates/worldinfo/detail.html:411
+msgid "Atmospheric description of the environment, sounds, and mood."
+msgstr "환경의 분위기, 소리, 느낌에 대한 서술적 설명입니다."
+
+#: flask/templates/worldinfo/detail.html:282 flask/templates/worldinfo/detail.html:428
+msgid "Character Binding (Optional)"
+msgstr "캐릭터 귀속 (선택 사항)"
+
+#: flask/templates/worldinfo/detail.html:283 flask/templates/worldinfo/detail.html:429
+msgid "If selected, this location can only be entered when chatting with that specific character."
+msgstr "선택하면 해당 특정 캐릭터와 채팅할 때만 이 장소에 입장할 수 있습니다."
+
+#: flask/templates/worldinfo/detail.html:286 flask/templates/worldinfo/detail.html:432
+msgid "No character (Freely accessible)"
+msgstr "캐릭터 지정 없음 (자유 입장 가능)"
+
+#: flask/templates/worldinfo/detail.html:296
+msgid "Assigned Location Events:"
+msgstr "할당된 장소 이벤트:"
+
+#: flask/templates/worldinfo/detail.html:301
+msgid "No specific location events assigned."
+msgstr "할당된 특정 장소 이벤트가 없습니다."
+
+#: flask/templates/worldinfo/detail.html:314
+msgid "Really delete this location?"
+msgstr ""
+
+#: flask/templates/worldinfo/detail.html:357
+msgid "Create New Location"
+msgstr "새 장소 만들기"
+
+#: flask/templates/worldinfo/detail.html:381
+msgid "tavern, forest, castle"
+msgstr "선술집, 숲, 성"
+
+#: flask/templates/worldinfo/detail.html:443
+msgid "Save Location"
+msgstr "장소 저장"
+
+#: flask/templates/worldinfo/detail.html:450
+msgid "Set 1:1 World Cover"
+msgstr "1:1 세계 커버 설정"
+
+#: flask/templates/worldinfo/detail.html:450
+msgid "1:1 Cover"
+msgstr "1:1 커버"
+

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}AImo — {{ _("Hub Dashboard") }}{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/cards.css') }}">
+{% endblock %}
+
+{% block content %}
+{% if has_missing_translations %}
+<div id="overview-missing-translations"
+     data-message="{{ _('Some content is still being translated into your language. The selection of available content may still change.') }}"
+     data-title="{{ _('Translations in Progress') }}"
+     hidden></div>
+{% endif %}
+<div data-tab-group id="overview-tabs-group">
+  {% include "overview/tabs/characters.html" %}
+  {% include "overview/tabs/lorebooks.html" %}
+  {% include "overview/tabs/worldinfo.html" %}
+</div>
+{% endblock %}

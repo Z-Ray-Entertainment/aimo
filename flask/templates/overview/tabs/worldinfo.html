@@ -1,0 +1,33 @@
+{% from "macros/cards.html" import worldinfo_grid %}
+<section id="tab-worldinfo" class="tab-pane{% if (active_tab|default('')) == 'worldinfo' %} active{% endif %}">
+  <form method="GET" action="{{ url_for('overview.index') }}" class="aimo-frame" style="padding: 0.85rem 1.2rem; margin-bottom: 1.25rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+    <input type="hidden" name="tab" value="worldinfo">
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Visibility") }}</label>
+      <select name="visibility" onchange="this.form.submit()">
+        <option value="" {% if not visibility_filter %}selected{% endif %}>{{ _("All") }}</option>
+        <option value="public" {% if visibility_filter == 'public' %}selected{% endif %}>{{ _("Public") }}</option>
+        <option value="private" {% if visibility_filter == 'private' %}selected{% endif %}>{{ _("Private") }}</option>
+      </select>
+    </div>
+    {% if has_perm('worldinfo_create') %}
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Author") }}</label>
+      <select name="author" onchange="this.form.submit()">
+        <option value="" {% if not author_filter %}selected{% endif %}>{{ _("All Worlds") }}</option>
+        <option value="mine" {% if author_filter == 'mine' %}selected{% endif %}>{{ _("Only Mine (Creator)") }}</option>
+        <option value="collaborations" {% if author_filter == 'collaborations' %}selected{% endif %}>{{ _("Collaborations") }}</option>
+      </select>
+    </div>
+    {% endif %}
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Sort Order") }}</label>
+      <select name="sort" onchange="this.form.submit()">
+        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>{{ _("Newest First") }}</option>
+        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>{{ _("Name (A-Z)") }}</option>
+      </select>
+    </div>
+  </form>
+
+  {{ worldinfo_grid(worldinfo_cards, can_create=has_perm('worldinfo_create')) }}
+</section>

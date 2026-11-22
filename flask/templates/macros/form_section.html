@@ -1,0 +1,8 @@
+{# Reusable titled form section with divider (used in settings panels) #}
+{% macro form_section(title, hint="") %}
+<div class="aimo-form-section">
+  <h3>{{ title }}</h3>
+  {% if hint %}<p class="text-muted" style="font-size: 0.85rem; margin-bottom: 0.75rem;">{{ hint }}</p>{% endif %}
+  {{ caller() }}
+</div>
+{% endmacro %}

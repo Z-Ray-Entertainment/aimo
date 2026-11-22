@@ -1,0 +1,90 @@
+{% extends "admin/layout.html" %}
+{% from "macros/buttons.html" import action_button %}
+
+{% block admin_content %}
+<div class="aimo-frame" style="padding: 1.5rem;">
+  <h2 style="color: var(--gold-accent); margin-bottom: 1rem;">
+    {% if target_user %}
+      {{ _('Edit User:') }} {{ target_user.username }}
+    {% else %}
+      {{ _('Create New User') }}
+    {% endif %}
+  </h2>
+
+  {% if target_user and target_user.is_initial_admin %}
+    <div style="padding: 0.75rem 1rem; margin-bottom: 1.25rem; border-radius: 8px; border: 1px solid var(--gold-accent); background: rgba(65, 45, 25, 0.5); font-size: 0.88rem;">
+      🛡️ <strong>{{ _('Super-Admin Protection:') }}</strong> {{ _('This is the initial administrator. Their permissions are permanently locked to full access (Admin) and cannot be revoked.') }}
+    </div>
+  {% endif %}
+
+  <form method="POST" style="display: flex; flex-direction: column; gap: 1.1rem;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div>
+        <label>{{ _('Username') }} *</label>
+        <input type="text" name="username" value="{{ form.username }}" required>
+      </div>
+      <div>
+        <label>{{ _('Email address') }} *</label>
+        <input type="email" name="email" value="{{ form.email }}" required>
+      </div>
+    </div>
+
+    <div>
+      <label>
+        {% if target_user %}
+          {{ _('New Password (leave blank to keep current password)') }}
+        {% else %}
+          {{ _('Initial Password') }} *
+        {% endif %}
+      </label>
+      <input type="password" name="password" {% if not target_user %}required{% endif %}>
+    </div>
+
+    <div style="border-top: 1px solid var(--border-wood-dark); padding-top: 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+        <label style="font-weight: 700; color: var(--gold-accent); margin-bottom: 0;">{{ _('Quick Select via Preset') }}</label>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          {% for preset_name in presets %}
+            {{ action_button(_("Preset:") ~ " " ~ preset_name, onclick="applyPreset('" ~ preset_name ~ "')", disabled=(target_user and target_user.is_initial_admin and preset_name != 'Admin')) }}
+          {% endfor %}
+        </div>
+      </div>
+
+      <input type="hidden" name="preset" id="selected-preset-input" value="">
+
+      <label style="display: block; margin-bottom: 0.5rem; font-size: 0.88rem; color: var(--text-muted);">
+        {{ _('Individual functional permissions (FunctionPermission):') }}
+      </label>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 0.55rem; background: var(--bg-input); padding: 1rem; border-radius: 10px; border: 1px solid var(--border-wood-dark);">
+        {% for perm in all_permissions %}
+          <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.86rem; cursor: pointer;">
+            <input type="checkbox" class="perm-checkbox" name="permissions" value="{{ perm }}"
+              {% if perm in form.permissions or (target_user and target_user.is_initial_admin) %}checked{% endif %}
+              {% if target_user and target_user.is_initial_admin %}disabled{% endif %}
+              onchange="document.getElementById('selected-preset-input').value = '';">
+            <span>{{ perm }}</span>
+          </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+      {{ action_button(_("Cancel"), href=url_for('admin.users_list'), arrow="left") }}
+      {{ action_button(_("Save"), type="submit", icon="💾") }}
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const PRESET_MAP = {{ preset_map|tojson }};
+  function applyPreset(presetName) {
+    const allowed = PRESET_MAP[presetName] || [];
+    document.querySelectorAll(".perm-checkbox").forEach((cb) => {
+      cb.checked = allowed.includes(cb.value);
+    });
+    document.getElementById("selected-preset-input").value = presetName;
+  }
+</script>
+{% endblock %}

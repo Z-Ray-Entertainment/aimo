@@ -1,0 +1,56 @@
+{% from "macros/buttons.html" import action_button, new_button %}
+{% from "macros/cards.html" import aimo_card_grid, aimo_card_container %}
+{% from "macros/badges.html" import pill_badge %}
+  <section id="tab-char-sprites" class="tab-pane {% if active_tab == 'sprites' %}active{% endif %}">
+    {% if character %}
+      <div class="aimo-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.25rem;">
+        <p class="aimo-page-hint" style="margin: 0;">
+          {{ _("Emotional sprites (PNG/WEBP) for up to 28 emotions. The system classifies the AI emotion after each reply and updates the chat portrait.") }}
+        </p>
+      </div>
+
+      <div id="char-sprites-grid">
+        {% call aimo_card_grid() %}
+          {% if is_editable and available_emotions|length > 0 %}
+            {{ new_button(_("Add Sprite"), modal="add-sprite-modal") }}
+          {% endif %}
+
+          {% for emotion, sp in sprite_by_emotion.items() %}
+            {% set sprite_url = url_for('uploaded_file', filename=sp.file_path) %}
+            {% set bg_style = "background-image: url('" ~ sprite_url ~ "');" %}
+            {% set emotion_label = _(emotion) %}
+            {% set click_attrs = {
+              'data-sprite-index': loop.index0,
+              'data-viewer-src': sprite_url,
+              'data-viewer-title': character.name ~ ' — ' ~ emotion_label
+            } %}
+            {% call aimo_card_container(none, character.name ~ ' — ' ~ emotion_label, bg_style, extra_class='aimo-sprite-card', click_attrs=click_attrs) %}
+              <div class="aimo-card-header">
+                {% if emotion == 'neutral' %}
+                  {{ pill_badge(_("Fallback"), variant="gold", title=_("Used when no sprite matches the detected emotion"), extra_class="aimo-card-badge") }}
+                {% else %}
+                  <div></div>
+                {% endif %}
+                {% if is_editable %}
+                  <form method="POST" action="{{ url_for('characters.delete_sprite', character_id=character.id, emotion=emotion, variant=sp.variant) }}" style="margin: 0;" data-save-sprite-scroll="1" data-confirm="{{ _('Really delete this sprite?') }}">
+                    {{ action_button(_("Delete"), type="submit", icon="🗑️", layout="icon", variant="danger", size="sm", title=_("Delete sprite")) }}
+                  </form>
+                {% endif %}
+              </div>
+
+              <div class="aimo-card-footer">
+                <h3 class="aimo-card-title">{{ emotion_label }}</h3>
+              </div>
+            {% endcall %}
+          {% endfor %}
+        {% endcall %}
+      </div>
+    {% else %}
+      <div class="aimo-frame" style="padding: 2.5rem; text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎭</div>
+        <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
+          {{ _("Please save the character's basic info first to upload sprites for the 28 emotions.") }}
+        </p>
+      </div>
+    {% endif %}
+  </section>

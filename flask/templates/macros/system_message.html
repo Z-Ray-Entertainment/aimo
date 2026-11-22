@@ -1,0 +1,48 @@
+{# Reusable Chat System Message Component #}
+{% macro chat_system_message(msg, is_admin=false, persona_name=none, character_name=none) %}
+  <div class="chat-system-message-row" data-message-idx="{{ msg.message_idx }}" data-system-type="{{ msg.system_type or 'general' }}">
+    <div class="chat-system-message{% if msg.system_type %} system-msg-{{ msg.system_type }}{% endif %}">
+      <div class="chat-system-message-header">
+        <div class="chat-system-message-badge">
+          <span class="chat-system-message-icon">
+            {%- if msg.system_type == 'location_change' -%}
+              {%- if msg.metadata and msg.metadata.location_id is none -%}
+                🌐
+              {%- else -%}
+                📍
+              {%- endif -%}
+            {%- elif msg.system_type == 'event_trigger' -%}
+              ⚡
+            {%- else -%}
+              ⚙️
+            {%- endif -%}
+          </span>
+          <span class="chat-system-message-title">
+            {%- if msg.system_type == 'location_change' -%}
+              Ortswechsel: {{ (msg.metadata.location_name if msg.metadata and msg.metadata.location_name else '') }}
+            {%- elif msg.system_type == 'event_trigger' -%}
+              Ereignis{% if msg.metadata and msg.metadata.event_title %}: {{ msg.metadata.event_title }}{% endif %}
+            {%- else -%}
+              System
+            {%- endif -%}
+          </span>
+        </div>
+        <div class="chat-system-message-actions">
+          <button type="button" data-action="delete-from" data-msg-idx="{{ msg.message_idx }}" class="system-msg-action-btn" title="{{ _('Delete from here') }}">
+            <span class="icon-mono">🗑️</span>
+          </button>
+        </div>
+      </div>
+      <div class="chat-system-message-content">
+        {%- set text = msg.localized_content -%}
+        {%- if persona_name -%}
+          {%- set text = text.replace('{{user}}', persona_name) -%}
+        {%- endif -%}
+        {%- if character_name -%}
+          {%- set text = text.replace('{{char}}', character_name) -%}
+        {%- endif -%}
+        {{ text }}
+      </div>
+    </div>
+  </div>
+{% endmacro %}

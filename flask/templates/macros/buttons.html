@@ -1,0 +1,123 @@
+{# Reusable "New Button" for Action Cards #}
+{% macro new_button(text, href=none, modal=none, onclick=none, min_height=none, extra_class='', id=none, title=none) %}
+  {% set classes = 'aimo-add-card-tile' ~ (' ' ~ extra_class if extra_class else '') %}
+  {% if href %}
+    <a href="{{ href }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if min_height %} style="min-height: {{ min_height }};"{% endif %}>
+      <div class="plus-symbol">+</div>
+      <div class="tile-label">{{ text }}</div>
+    </a>
+  {% else %}
+    <button type="button" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if modal %} data-modal-open="{{ modal }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{% if min_height %} style="min-height: {{ min_height }};"{% endif %}>
+      <div class="plus-symbol">+</div>
+      <div class="tile-label">{{ text }}</div>
+    </button>
+  {% endif %}
+{% endmacro %}
+
+{# Reusable Menu Dropdown Item Component #}
+{% macro menu_item(text, icon=none, href=none, modal=none, onclick=none, danger=false, id=none, title=none, extra_class='', data={}) %}
+  {% set danger_class = ' danger' if danger else '' %}
+  {% set classes = 'chat-menu-dropdown-item' ~ danger_class ~ (' ' ~ extra_class if extra_class else '') %}
+  {% set data_attrs %}{% for key, value in data.items() %} data-{{ key }}="{{ value }}"{% endfor %}{% endset %}
+  {% if href %}
+    <a href="{{ href }}" class="{{ classes }}" role="menuitem"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{{ data_attrs }}>
+      {% if icon %}<span class="icon-mono">{{ icon }}</span>{% endif %}
+      <span>{{ text }}</span>
+    </a>
+  {% else %}
+    <button type="button" class="{{ classes }}" role="menuitem"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if modal %} data-modal-open="{{ modal }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{{ data_attrs }}>
+      {% if icon %}<span class="icon-mono">{{ icon }}</span>{% endif %}
+      <span>{{ text }}</span>
+    </button>
+  {% endif %}
+{% endmacro %}
+
+{# Interner Inhalt fuer action_button (Icon, Text, Pfeile) #}
+{% macro _btn_content(text, icon, arrow, layout, icon_src=none) %}
+  {% if arrow == 'left' %}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="btn-arrow btn-arrow-left" aria-hidden="true">
+      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+    </svg>
+  {% endif %}
+  {% if icon_src %}
+    <img src="{{ icon_src }}" alt="" class="aimo-btn-img" aria-hidden="true">
+  {% elif icon %}
+    <span class="icon-mono">{{ icon }}</span>
+  {% endif %}
+  {% if text and layout != 'icon' %}<span>{{ text }}</span>{% endif %}
+  {% if arrow == 'right' %}
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="btn-arrow btn-arrow-right" aria-hidden="true">
+      <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+    </svg>
+  {% endif %}
+{% endmacro %}
+
+{# Reusable Action/Navigation Button Component (System-weite .aimo-btn Basisklasse); layout: 'full' (Icon + Text) oder 'icon' (nur Icon) #}
+{% macro action_button(text="", href=none, type="button", icon=none, icon_src=none, arrow=none, variant="default", size="default", extra_class="", id=none, title=none, onclick=none, modal=none, modal_close=none, layout="full", active=false, disabled=false, form=none, style=none, target=none, aria_label=none, data={}) %}
+  {% set variant_class = ' danger' if variant == 'danger' else '' %}
+  {% set size_class = ' aimo-btn-lg' if size == 'lg' else (' aimo-btn-sm' if size == 'sm' else '') %}
+  {% set layout_class = ' aimo-btn-icon' if layout == 'icon' else '' %}
+  {% set active_class = ' active' if active else '' %}
+  {% set disabled_class = ' disabled' if disabled and href else '' %}
+  {% set data_attrs %}{% for key, value in data.items() %} data-{{ key }}="{{ value }}"{% endfor %}{% endset %}
+  {% set classes = 'aimo-btn' ~ variant_class ~ size_class ~ layout_class ~ active_class ~ disabled_class ~ (' ' ~ extra_class if extra_class else '') %}
+  {% set label = aria_label if aria_label else (title if title else (text if layout == 'icon' else none)) %}
+  {% if href %}
+    <a href="{{ href }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if label and (layout == 'icon' or aria_label) %} aria-label="{{ label }}"{% endif %}{% if disabled %} aria-disabled="true" tabindex="-1"{% endif %}{% if target %} target="{{ target }}"{% if target == '_blank' %} rel="noopener noreferrer"{% endif %}{% endif %}{% if style %} style="{{ style }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{{ data_attrs }}>
+      {{ _btn_content(text, icon, arrow, layout, icon_src) }}
+    </a>
+  {% else %}
+    <button type="{{ type }}" class="{{ classes }}"{% if id %} id="{{ id }}"{% endif %}{% if form %} form="{{ form }}"{% endif %}{% if title %} title="{{ title }}"{% endif %}{% if label and (layout == 'icon' or aria_label) %} aria-label="{{ label }}"{% endif %}{% if disabled %} disabled{% endif %}{% if style %} style="{{ style }}"{% endif %}{% if modal %} data-modal-open="{{ modal }}"{% endif %}{% if modal_close %} data-modal-close="{{ modal_close }}"{% endif %}{% if onclick %} onclick="{{ onclick }}"{% endif %}{{ data_attrs }}>
+      {{ _btn_content(text, icon, arrow, layout, icon_src) }}
+    </button>
+  {% endif %}
+{% endmacro %}
+
+{# Reusable Tab Navigation Button Component #}
+{% macro tab_button(text, target, icon=none, active=false, disabled=false, title=none, id=none, extra_class="", size="default", count=none) %}
+  {% set tab_text = (text ~ ' (' ~ count ~ ')') if count is not none else text %}
+  {{ action_button(tab_text, icon=icon, active=active, disabled=disabled, title=title, id=id, extra_class=extra_class, size=size, data={"tab-target": target}) }}
+{% endmacro %}
+
+{# Reusable Modal Header Close Button (✕ Icon) #}
+{% macro modal_close_button(modal_id, text=none, title=none, id=none, extra_class="") %}
+  {% set text = text if text is not none else _("Close") %}
+  {% set title = title if title is not none else _("Close") %}
+  {{ action_button(text, icon="✕", layout="icon", modal_close=modal_id, title=title, id=id, extra_class=extra_class) }}
+{% endmacro %}
+
+{# Reusable Animated Thinking Dots Component (Chat-style 3 Bouncing Dots) #}
+{% macro thinking_dots() %}
+  <span class="thinking-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+{% endmacro %}
+
+{# Reusable Visibility Toggle Button (Open Eye = Public, Closed Eye = Private) #}
+{% macro visibility_toggle(value="private", name="visibility", disabled=false, id=none, public_title=none, private_title=none, extra_class="") %}
+  {% set current_value = "public" if value == "public" else "private" %}
+  {% set eff_public_title = public_title if public_title is not none else _("Public") %}
+  {% set eff_private_title = private_title if private_title is not none else _("Private") %}
+  {% set eff_title = eff_public_title if current_value == "public" else eff_private_title %}
+  <span class="aimo-visibility-toggle-wrap">
+    <input type="hidden" name="{{ name }}" value="{{ current_value }}">
+    <button type="button"
+            class="aimo-btn aimo-btn-icon aimo-visibility-toggle{% if extra_class %} {{ extra_class }}{% endif %}"
+            {% if id %}id="{{ id }}"{% endif %}
+            data-visibility-toggle
+            data-state="{{ current_value }}"
+            data-public-title="{{ eff_public_title }}"
+            data-private-title="{{ eff_private_title }}"
+            title="{{ eff_title }}"
+            aria-label="{{ eff_title }}"
+            aria-pressed="{{ 'true' if current_value == 'public' else 'false' }}"
+            {% if disabled %}disabled{% endif %}>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visibility-icon-open" aria-hidden="true">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="visibility-icon-closed" aria-hidden="true">
+        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+        <line x1="1" y1="1" x2="23" y2="23"/>
+      </svg>
+    </button>
+  </span>
+{% endmacro %}

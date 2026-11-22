@@ -1,0 +1,42 @@
+{# Reusable Image Cropper Modal Macro for 1:1, 9:16 or multi-target cropping #}
+{% from "macros/buttons.html" import action_button, modal_close_button %}
+{% macro image_cropper_modal(modal_id, title=none, targets=[]) %}
+{% set title = title if title is not none else _("Set image crop") %}
+<div class="modal-backdrop" id="{{ modal_id }}" aria-hidden="true">
+  <div class="modal-frame" style="max-width: 680px;">
+    <div class="modal-header">
+      <h3 style="color: var(--gold-accent);"><span class="icon-mono">✂️</span> {{ title }}</h3>
+      {{ modal_close_button(modal_id) }}
+    </div>
+
+    <div style="display: flex; gap: 1.25rem; align-items: flex-start; flex-wrap: wrap;">
+      <!-- Crop Stage -->
+      <div id="{{ modal_id }}-stage-wrap" style="flex: 1; min-width: 280px; display: flex; justify-content: center; align-items: center; background: rgba(10, 7, 5, 0.92); border: 2px solid var(--border-wood-dark); border-radius: 10px; padding: 0.75rem; overflow: hidden; user-select: none;">
+        <div id="{{ modal_id }}-image-container" style="position: relative; display: inline-block; line-height: 0;">
+          <img id="{{ modal_id }}-source-img" src="" alt="{{ _('Crop Source') }}" style="max-width: 420px; max-height: 420px; display: block; pointer-events: none;" crossorigin="anonymous">
+          <div id="{{ modal_id }}-selection-box" class="crop-selection-box" data-target="{{ targets[0].id if targets else 'cover' }}">
+            <div id="{{ modal_id }}-resize-handle" class="crop-resize-handle" title="{{ _('Resize') }}"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Mini-Vorschau -->
+      <div style="width: 140px; display: flex; flex-direction: column; gap: 0.85rem; align-items: center;">
+        {% for target in targets %}
+        <div class="crop-preview-tab{% if loop.first %} active{% endif %}" style="text-align: center; cursor: pointer;" id="{{ modal_id }}-preview-tab-{{ target.id }}" data-crop-target="{{ target.id }}" title="{{ _('Click to adjust %(label)s', label=target.label) }}">
+          <div style="font-size: 0.74rem; color: {{ target.accent_color or 'var(--gold-accent)' }}; font-weight: 600; margin-bottom: 0.25rem;">
+            {% if target.icon %}{{ target.icon }} {% endif %}{{ target.short_label or target.label }}
+          </div>
+          <canvas id="{{ modal_id }}-preview-canvas-{{ target.id }}" width="{{ target.preview_width or 72 }}" height="{{ target.preview_height or 72 }}" style="border: 2px solid {{ target.accent_color or 'var(--gold-accent)' }}; border-radius: 6px; background: #14100C;"></canvas>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 0.65rem; margin-top: 1.2rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
+      {{ action_button(_("Cancel"), modal_close=modal_id) }}
+      {{ action_button((_("Apply crops") if targets|length > 1 else _("Apply crop")), icon="✂️", id=modal_id ~ "-apply-btn") }}
+    </div>
+  </div>
+</div>
+{% endmacro %}

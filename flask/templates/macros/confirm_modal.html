@@ -1,0 +1,16 @@
+{% from "macros/buttons.html" import action_button, modal_close_button %}
+{% macro confirm_modal() %}
+<div class="modal-backdrop" id="aimo-confirm-modal" aria-hidden="true" role="alertdialog" aria-modal="true" aria-labelledby="aimo-confirm-title" aria-describedby="aimo-confirm-message" style="z-index: 1200;">
+  <div class="modal-frame" style="max-width: 460px;">
+    <div class="modal-header">
+      <h3 id="aimo-confirm-title" style="color: var(--gold-accent); margin: 0;">{{ _("Confirm action") }}</h3>
+      {{ modal_close_button("aimo-confirm-modal") }}
+    </div>
+    <p id="aimo-confirm-message" style="color: var(--text-color); font-size: 0.94rem; line-height: 1.5; margin: 0.25rem 0 0 0; white-space: pre-line;"></p>
+    <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.15rem; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
+      {{ action_button(_("Cancel"), id="aimo-confirm-cancel-btn", modal_close="aimo-confirm-modal") }}
+      {{ action_button(_("Confirm"), id="aimo-confirm-ok-btn", variant="danger") }}
+    </div>
+  </div>
+</div>
+{% endmacro %}

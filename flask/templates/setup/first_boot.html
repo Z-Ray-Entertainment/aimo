@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% from "macros/buttons.html" import action_button %}
+{% from "macros/backend_selector.html" import api_key_field, google_ai_steps_guide, llm_backend_cards %}
+{% block title %}AImo — {{ _("First-Boot Wizard") }}{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/setup.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="aimo-frame" style="max-width: 720px; margin: 2rem auto; padding: 2rem;">
+  <h1 style="color: var(--gold-accent); margin-bottom: 0.45rem;"><img src="{{ url_for('static', filename='img/favicon.svg') }}" alt="" class="aimo-brand-icon" aria-hidden="true"> {{ _("AImo First-Boot Wizard") }}</h1>
+  <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.92rem;">
+    {{ _("Configure the non-revocable initial administrator and your exclusive AI backend.") }}
+  </p>
+
+  <div class="aimo-wizard-stepper" id="setup-stepper" role="tablist" aria-label="{{ _('Setup steps') }}">
+    <div class="aimo-wizard-step{% if form.active_step == 1 %} is-active{% elif form.active_step > 1 %} is-done{% endif %}" data-step-indicator="1">
+      <span class="aimo-wizard-step-num">1</span>
+      <span>{{ _("Administrator") }}</span>
+    </div>
+    <div class="aimo-wizard-step{% if form.active_step == 2 %} is-active{% elif form.active_step > 2 %} is-done{% endif %}" data-step-indicator="2">
+      <span class="aimo-wizard-step-num">2</span>
+      <span>{{ _("Select AI Backend") }}</span>
+    </div>
+    <div class="aimo-wizard-step{% if form.active_step == 3 %} is-active{% endif %}" data-step-indicator="3">
+      <span class="aimo-wizard-step-num">3</span>
+      <span id="stepper-step3-label">{{ _("Configure Backend") }}</span>
+    </div>
+  </div>
+
+  <form id="first-boot-form" method="POST" action="{{ url_for('setup.first_boot') }}">
+    <input type="hidden" name="active_step" id="setup-active-step" value="{{ form.active_step }}">
+    <input type="hidden" name="image_gen_backend" value="disabled">
+    <input type="hidden" name="search_backend" value="disabled">
+
+    <section class="wizard-step-pane{% if form.active_step == 1 %} active{% endif %}" data-step-pane="1">
+      <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.35rem;">
+        {{ _("1. Initial Administrator") }}
+      </h3>
+      <p style="color: var(--text-muted); font-size: 0.85rem;">
+        {{ _("This first user permanently receives all system permissions and cannot be deleted or downgraded.") }}
+      </p>
+      <div>
+        <label for="username">{{ _("Username") }} *</label>
+        <input type="text" id="username" name="username" value="{{ form.username }}" required>
+      </div>
+      <div>
+        <label for="email">{{ _("Email address") }} *</label>
+        <input type="email" id="email" name="email" value="{{ form.email }}" required>
+      </div>
+      <div>
+        <label for="password">{{ _("Password") }} *</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div class="wizard-nav-bar" style="justify-content: flex-end;">
+        {{ action_button(_("Continue to Backend Selection"), arrow="right", onclick="goToSetupStep(2)") }}
+      </div>
+    </section>
+
+    <section class="wizard-step-pane{% if form.active_step == 2 %} active{% endif %}" data-step-pane="2">
+      <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.35rem;">
+        {{ _("2. Select AI Backend") }}
+      </h3>
+      <div class="backend-notice-banner">
+        <strong>{{ _("Exclusive choice:") }}</strong> {{ _("AImo supports either local Ollama or Google AI Cloud – parallel operation of both AI backends is not supported. You can switch this anytime later under Admin → Services & Models.") }}
+      </div>
+
+      {{ llm_backend_cards(form.llm_backend, field_name="llm_backend", id_prefix="setup-backend") }}
+
+      <div class="wizard-nav-bar">
+        {{ action_button(_("Back"), arrow="left", onclick="goToSetupStep(1)") }}
+        {{ action_button(_("Continue to Setup"), arrow="right", onclick="goToSetupStep(3)") }}
+      </div>
+    </section>
+
+    <section class="wizard-step-pane{% if form.active_step == 3 %} active{% endif %}" data-step-pane="3">
+      <div id="setup-step3-ollama" class="backend-panel" {% if form.llm_backend != 'ollama' %}hidden{% endif %}>
+        <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.35rem;">
+          {{ _("3. Configure Ollama") }}
+        </h3>
+
+        <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+          <div>
+            <label for="setup-ollama-url">{{ _("Ollama Server URL (Required)") }} *</label>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <input type="url" id="setup-ollama-url" name="ollama_url" value="{{ form.ollama_url }}" required style="flex: 1 1 auto;">
+              {{ action_button(_("Test Connection"), icon="🔌", id="verify-ollama-btn", onclick="verifySetupBackend('ollama')") }}
+            </div>
+            <div id="setup-ollama-status" class="backend-status-line"></div>
+          </div>
+
+          <div class="setup-helper-box">
+            <div style="color: var(--gold-accent); font-size: 0.9rem; font-weight: 700;">
+              <span class="icon-mono">🧙‍♂️</span> {{ _("Setup Helper for Ollama: Recommended Models per Role") }}
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              {{ _("Recommended models per role (missing models can be downloaded directly via Pull):") }}
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.45rem;" id="setup-ollama-role-cards">
+              {% for role_key, info in ollama_recommended.items() %}
+                <div class="setup-helper-row" data-recommended-model="{{ info.model }}">
+                  <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
+                    <strong>{{ info.role_name }}</strong>
+                    <code style="color: var(--gold-accent); font-size: 0.76rem;">{{ info.model }}</code>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 0.45rem; flex-shrink: 0;">
+                    <span class="ollama-model-check-badge" style="font-size: 0.75rem; color: var(--text-muted);">{{ _("Unchecked") }}</span>
+                    <button type="button"
+                            class="aimo-btn aimo-btn-sm ollama-model-pull-btn"
+                            data-pull-model="{{ info.model }}"
+                            onclick="pullSetupOllamaModel('{{ info.model }}')"
+                            style="display: none;"
+                            hidden>
+                      <span class="icon-mono">📥</span>
+                      <span>{{ _("Pull") }}</span>
+                    </button>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <div id="setup-pull-progress-box" style="display: none; margin-top: 0.5rem; padding: 0.6rem; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--gold-accent); font-size: 0.8rem; color: var(--gold-accent);">
+              {{ _("Starting download...") }}
+            </div>
+          </div>
+
+          <details class="setup-helper-box">
+            <summary style="cursor: pointer; color: var(--gold-accent); font-size: 0.88rem; font-weight: 600;">
+              {{ _("Customize Model Assignment per Role (Optional)") }}
+            </summary>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; margin-top: 0.6rem;">
+              {% for role_key, info in ollama_recommended.items() %}
+                <div>
+                  <label for="setup-ollama-{{ role_key }}">{{ info.role_name }}</label>
+                  <select id="setup-ollama-{{ role_key }}" name="{{ role_key }}_model" data-role-select="ollama:{{ role_key }}">
+                    <option value="{{ info.model }}" selected>{{ info.model }}</option>
+                  </select>
+                </div>
+              {% endfor %}
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <div id="setup-step3-google_ai" class="backend-panel" {% if form.llm_backend != 'google_ai' %}hidden{% endif %}>
+        <h3 style="color: var(--gold-accent); border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.35rem;">
+          {{ _("3. Configure Google AI Cloud") }}
+        </h3>
+
+        <div style="display: flex; flex-direction: column; gap: 0.95rem;">
+          {{ google_ai_steps_guide() }}
+
+          <div>
+            <label for="setup-google-api-key">{{ _("Google AI API Key") }} {% if not has_env_google_key %}({{ _("Required") }}) *{% else %}({{ _("Optional — Env fallback active") }}){% endif %}</label>
+            {{ api_key_field("setup-google-api-key", name="google_ai_api_key", has_existing=has_env_google_key, masked_hint=env_google_key_hint, required=(not has_env_google_key)) }}
+            <div style="margin-top: 0.5rem;">
+              {{ action_button(_("Test API Key & Models"), icon="🔌", id="verify-google-btn", onclick="verifySetupBackend('google_ai')") }}
+            </div>
+            <div id="setup-google_ai-status" class="backend-status-line"></div>
+          </div>
+
+          <details class="setup-helper-box" open>
+            <summary style="cursor: pointer; color: var(--gold-accent); font-size: 0.9rem; font-weight: 700;">
+              ✨ {{ _("Google AI Model Assignment (Text & Vision)") }}
+            </summary>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem;">
+              {{ _("Recommended Gemini models per role (populated with your available models after key verification):") }}
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; margin-top: 0.65rem;">
+              {% for role_key, info in google_recommended.items() %}
+                <div>
+                  <label for="setup-google-{{ role_key }}">{{ info.role_name }}</label>
+                  <select id="setup-google-{{ role_key }}" name="{{ role_key }}_model" data-role-select="google_ai:{{ role_key }}">
+                    <option value="{{ info.model }}" selected>{{ info.model }}</option>
+                  </select>
+                </div>
+              {% endfor %}
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <div class="wizard-nav-bar">
+        {{ action_button(_("Back to Backend Selection"), arrow="left", onclick="goToSetupStep(2)") }}
+        {{ action_button(_("Initialize & Launch System"), type="submit", icon="✨", size="lg") }}
+      </div>
+    </section>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script id="setup-wizard-config" type="application/json">{{ {
+  "recommendedByBackend": recommended_by_backend,
+  "defaultImageModel": recommended_google_image_model,
+  "verifyUrl": url_for('setup.verify_backend'),
+  "pullUrl": "/api/setup/models/pull",
+  "activeStep": form.active_step,
+  "i18n": {
+    "configureBackend": _("Configure Backend"),
+    "configureGoogle": _("Configure Google AI"),
+    "configureOllama": _("Configure Ollama"),
+    "ready": _("Ready"),
+    "missing": _("Missing"),
+    "checkingConn": _("Checking connection"),
+    "checkingConnDot": _("Checking connection..."),
+    "googleValid": _("API key valid — {count} text/vision models and {img_count} image models available."),
+    "ollamaReachable": _("Ollama reachable — {count} installed model(s) found."),
+    "connFailed": _("Connection failed."),
+    "connError": _("Connection error while testing backend."),
+    "downloadingModel": _("Downloading model '{model}'..."),
+    "modelInstalled": _("Model '{model}' installed successfully!"),
+    "downloadError": _("Error downloading '{model}'.")
+  }
+}|tojson }}</script>
+<script src="{{ url_for('static', filename='js/setup_wizard.js') }}" defer></script>
+{% endblock %}

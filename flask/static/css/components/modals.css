@@ -1,0 +1,232 @@
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 6, 4, 0.8);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-backdrop.open {
+  display: flex;
+}
+
+.modal-frame {
+  width: 100%;
+  max-width: 720px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-wood-dark);
+}
+
+.modal-header .aimo-btn {
+  padding: 0.25rem 0.55rem;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+/* Unified Fullscreen Image Viewer */
+body.aimo-iv-scroll-lock {
+  overflow: hidden;
+}
+
+.aimo-iv-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2200;
+  background: rgba(6, 4, 3, 0.92);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 1rem 1rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.aimo-iv-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.aimo-iv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.35rem 0.5rem 0.65rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  flex-shrink: 0;
+}
+
+.aimo-iv-meta {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.aimo-iv-title {
+  color: var(--gold-accent);
+  font-weight: 700;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.aimo-iv-subtitle {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.aimo-iv-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.aimo-iv-counter {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-color);
+  background: rgba(25, 18, 12, 0.85);
+  border: 1px solid var(--border-wood-dark);
+  border-radius: 6px;
+  padding: 0.25rem 0.55rem;
+  display: none;
+}
+
+.aimo-iv-backdrop.is-gallery .aimo-iv-counter {
+  display: inline-block;
+}
+
+.aimo-iv-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+}
+
+.aimo-iv-img-wrap {
+  flex: 1;
+  height: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aimo-iv-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 2px solid var(--border-wood);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.75);
+  transform: scale(0.96);
+  transition: transform 0.22s ease;
+  user-select: none;
+}
+
+.aimo-iv-backdrop.open .aimo-iv-img {
+  transform: scale(1);
+}
+
+.aimo-iv-nav-btn {
+  flex-shrink: 0;
+  width: 46px;
+  height: 64px;
+  padding: 0;
+  font-size: 2rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(22, 16, 11, 0.82);
+}
+
+.aimo-iv-nav-btn[hidden] {
+  display: none;
+}
+
+.aimo-clickable-image {
+  cursor: zoom-in;
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.aimo-clickable-image:hover {
+  filter: brightness(1.06);
+}
+
+.chat-character-portrait-frame #active-character-sprite {
+  cursor: zoom-in;
+}
+
+.chat-avatar[data-viewer-src],
+.chat-bubble-row.character .chat-avatar,
+.chat-uploaded-image-wrap img,
+.chat-generated-scene-img,
+#chat-pane-media .aimo-card-tile,
+#portrait-preview-img,
+#avatar-preview-img,
+.char-gallery-preview,
+.aimo-sprite-card .aimo-card-click-area,
+#worldinfo-cover-preview-img,
+#worldinfo-backdrop-preview {
+  cursor: zoom-in;
+}
+
+.chat-backdrop-viewer-btn[hidden] {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .aimo-iv-backdrop {
+    padding: 0.5rem;
+  }
+
+  .aimo-iv-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 52px;
+    font-size: 1.6rem;
+    z-index: 2;
+  }
+
+  .aimo-iv-prev {
+    left: 0.25rem;
+  }
+
+  .aimo-iv-next {
+    right: 0.25rem;
+  }
+}

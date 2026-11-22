@@ -1,0 +1,75 @@
+{% from "macros/image_viewer.html" import image_viewer_overlay %}
+{% from "macros/ember_bokeh.html" import ember_bokeh_overlay %}
+{% from "macros/confirm_modal.html" import confirm_modal %}
+<!DOCTYPE html>
+<html lang="{{ ui_language | default('en') }}" dir="{{ ui_dir | default('ltr') }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+  <title>{% block title %}AImo — Immersive Roleplay Hub{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/forms_buttons.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/sidebar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/modals.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/toasts.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/relationship.css') }}">
+  {% if ember_particles_enabled %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components/ember_bokeh.css') }}">
+  {% endif %}
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="has-system-backdrop{% block body_class %}{% endblock %}" data-user-language="{{ ui_language | default('en') }}" style="--system-backdrop-url: url('{%- block backdrop_image %}{{ system_backdrop_url }}{% endblock -%}');">
+  <div class="app-overlay">
+    {% block page_backdrop %}
+      <div id="system-default-backdrop"
+           class="system-default-backdrop"
+           data-default-backdrop="{{ system_backdrop_url }}"
+           data-world-backdrop="{% block world_backdrop_image %}{% endblock %}">
+      </div>
+    {% endblock %}
+
+    {% if ember_particles_enabled %}
+      {{ ember_bokeh_overlay() }}
+    {% endif %}
+
+    {% include "macros/top_header.html" %}
+
+    <main class="main-container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <script id="aimo-flashed-data" type="application/json">{{ messages | tojson }}</script>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  <!-- On-Site Toast Container (für Hintergrund-Antworten der KI) -->
+  <div id="aimo-toast-container" class="toast-container" aria-live="polite"></div>
+
+  {{ image_viewer_overlay() }}
+  {{ confirm_modal() }}
+
+  <script>
+    window.AIMO_LANGUAGES = {{ aimo_languages | tojson }};
+    window.AIMO_I18N = {{ aimo_js_i18n | tojson }};
+    window.t = function(key, vars) {
+      let s = (window.AIMO_I18N && window.AIMO_I18N[key]) || key;
+      if (vars) {
+        for (const [k, v] of Object.entries(vars)) {
+          s = s.replaceAll(`{${k}}`, String(v));
+        }
+      }
+      return s;
+    };
+  </script>
+  <script src="{{ url_for('static', filename='js/modals.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/image_viewer.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/toasts.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

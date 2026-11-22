@@ -1,0 +1,44 @@
+{% from "macros/cards.html" import character_grid %}
+<section id="tab-characters" class="tab-pane{% if (active_tab|default('characters')) == 'characters' %} active{% endif %}">
+  <form method="GET" action="{{ url_for('overview.index') }}" class="aimo-frame" style="padding: 0.85rem 1.2rem; margin-bottom: 1.25rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+    <input type="hidden" name="tab" value="characters">
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Gender") }}</label>
+      <select name="gender" onchange="this.form.submit()">
+        <option value="" {% if not gender_filter %}selected{% endif %}>{{ _("All Genders") }}</option>
+        <option value="female" {% if gender_filter == 'female' %}selected{% endif %}>{{ _("Female") }}</option>
+        <option value="male" {% if gender_filter == 'male' %}selected{% endif %}>{{ _("Male") }}</option>
+        <option value="non-binary" {% if gender_filter == 'non-binary' %}selected{% endif %}>{{ _("Non-Binary") }}</option>
+      </select>
+    </div>
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Chat Status") }}</label>
+      <select name="chatted" onchange="this.form.submit()">
+        <option value="" {% if not chat_filter %}selected{% endif %}>{{ _("All Characters") }}</option>
+        <option value="chatted" {% if chat_filter == 'chatted' %}selected{% endif %}>{{ _("Already Chatted") }}</option>
+        <option value="unchatted" {% if chat_filter == 'unchatted' %}selected{% endif %}>{{ _("Not Chatted Yet") }}</option>
+      </select>
+    </div>
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Sort Order") }}</label>
+      <select name="sort" onchange="this.form.submit()">
+        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>{{ _("Newest First") }}</option>
+        <option value="chatted_first" {% if sort_by == 'chatted_first' %}selected{% endif %}>{{ _("Most Messages") }}</option>
+        <option value="relationship" {% if sort_by == 'relationship' %}selected{% endif %}>{{ _("Best Relationship") }}</option>
+      </select>
+    </div>
+    {% if has_perm('character_create') %}
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Author") }}</label>
+      <select name="author" onchange="this.form.submit()">
+        <option value="" {% if not author_filter %}selected{% endif %}>{{ _("All Characters") }}</option>
+        <option value="mine" {% if author_filter == 'mine' %}selected{% endif %}>{{ _("Only Mine (Creator)") }}</option>
+        <option value="collaborations" {% if author_filter == 'collaborations' %}selected{% endif %}>{{ _("Collaborations") }}</option>
+      </select>
+    </div>
+    {% endif %}
+  </form>
+
+  {{ character_grid(character_cards, can_create=has_perm('character_create'), can_edit=has_perm('character_edit')) }}
+</section>
+

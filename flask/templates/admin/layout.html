@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "macros/buttons.html" import action_button %}
+{% block title %}AImo — Administration{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/setup.css') }}">
+  {% block admin_head %}{% endblock %}
+{% endblock %}
+
+{% block extra_scripts %}
+  {% block admin_scripts %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+<div class="aimo-sidebar-layout">
+  <!-- Vertikale Seitenleiste links -->
+  <aside class="aimo-frame aimo-sidebar">
+    <div class="aimo-sidebar-header">
+      <div class="aimo-sidebar-title">
+        <span class="icon-mono">🛡️</span>
+        <span>{{ _("Administration") }}</span>
+      </div>
+      <p class="aimo-sidebar-subtitle">{{ _("System & Configuration") }}</p>
+    </div>
+
+    <nav class="aimo-sidebar-nav">
+      {{ action_button(_("User Management"), href=url_for('admin.users_list'), icon="👥", active=(request.endpoint in ('admin.users_list', 'admin.create_user', 'admin.edit_user')), extra_class="aimo-sidebar-nav-item") }}
+      {{ action_button(_("Services & Models"), href=url_for('admin.services_config'), icon="⚙️", active=(request.endpoint == 'admin.services_config'), extra_class="aimo-sidebar-nav-item") }}
+      {{ action_button(_("System Prompts"), href=url_for('admin.prompts_config'), icon="📜", active=(request.endpoint == 'admin.prompts_config'), extra_class="aimo-sidebar-nav-item") }}
+      {{ action_button(_("Content Translations"), href=url_for('admin.translations_config'), icon="🌐", active=(request.endpoint == 'admin.translations_config'), extra_class="aimo-sidebar-nav-item") }}
+      {{ action_button(_("System Backdrop"), href=url_for('admin.backdrop_config'), icon="🖼️", active=(request.endpoint == 'admin.backdrop_config'), extra_class="aimo-sidebar-nav-item") }}
+    </nav>
+
+    <div class="aimo-sidebar-footer">
+      {{ action_button(_("Back to Hub"), href=url_for('overview.index'), arrow="left", extra_class="aimo-sidebar-back-btn") }}
+    </div>
+  </aside>
+
+  <!-- Rechter Hauptbereich für Inhalte -->
+  <section class="aimo-sidebar-stage">
+    {% block admin_content %}{% endblock %}
+  </section>
+</div>
+{% endblock %}

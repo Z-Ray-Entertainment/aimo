@@ -1,0 +1,23 @@
+{% extends "settings/layout.html" %}
+{% from "macros/cards.html" import persona_grid %}
+
+{% block extra_head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/cards.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/image_cropper.css') }}">
+{% endblock %}
+
+{% block settings_content %}
+<div class="aimo-frame" style="padding: 1.5rem;">
+  <div class="aimo-page-hint-row aimo-page-hint-row--bordered">
+    <p class="aimo-page-hint">{{ _("Manage your roleplay identities. The star marks your default persona.") }}</p>
+  </div>
+
+  {{ persona_grid(g.persona_items, can_manage=has_perm('persona_manage')) }}
+</div>
+{% include "macros/persona_manager.html" %}
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="{{ url_for('static', filename='js/image_cropper.js') }}" defer></script>
+{% endblock %}

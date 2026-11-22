@@ -1,0 +1,143 @@
+{% extends "settings/layout.html" %}
+{% from "macros/buttons.html" import action_button %}
+{% from "macros/badges.html" import pill_badge %}
+{% block title %}AImo — {{ _("My Creations") }}{% endblock %}
+
+{% block settings_content %}
+<div class="aimo-frame" style="padding: 1.5rem;">
+  <div class="aimo-page-hint-row aimo-page-hint-row--bordered">
+    <p class="aimo-page-hint">{{ _("Overview of all characters, worlds, and lorebooks you created or collaborate on. Click any item to open its editor.") }}</p>
+    <div style="display: flex; gap: 0.5rem; align-items: center;">
+      {{ pill_badge(_("Total:") ~ " " ~ total_count, variant="gold") }}
+    </div>
+  </div>
+
+  <!-- Filterleiste (im gleichen Layout wie im Hub-Dashboard) -->
+  <form method="GET" action="{{ url_for('settings.creations') }}" id="creations-filter-form" class="aimo-frame" style="padding: 0.85rem 1.2rem; margin-bottom: 1.25rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Type") }}</label>
+      <select name="type" onchange="this.form.submit()">
+        <option value="all" {% if type_filter == 'all' %}selected{% endif %}>{{ _("All Types") }} ({{ total_count }})</option>
+        <option value="characters" {% if type_filter == 'characters' %}selected{% endif %}>{{ _("Characters") }} ({{ char_count }})</option>
+        <option value="worldinfo" {% if type_filter == 'worldinfo' %}selected{% endif %}>{{ _("Worlds") }} ({{ world_count }})</option>
+        <option value="lorebooks" {% if type_filter == 'lorebooks' %}selected{% endif %}>{{ _("Lorebooks") }} ({{ lorebook_count }})</option>
+      </select>
+    </div>
+
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Author") }}</label>
+      <select name="role" onchange="this.form.submit()">
+        <option value="all" {% if role_filter == 'all' %}selected{% endif %}>{{ _("All Works") }}</option>
+        <option value="owner" {% if role_filter in ('owner', 'mine') %}selected{% endif %}>{{ _("Only Mine (Creator)") }}</option>
+        <option value="collaboration" {% if role_filter in ('collaboration', 'collaborations') %}selected{% endif %}>{{ _("Collaborations") }}</option>
+      </select>
+    </div>
+
+    <div style="flex: 1; min-width: 160px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Sort Order") }}</label>
+      <select name="sort" onchange="this.form.submit()">
+        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>{{ _("Name (A-Z)") }}</option>
+        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>{{ _("Newest First") }}</option>
+      </select>
+    </div>
+
+    <div style="flex: 1.5; min-width: 200px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted);">{{ _("Search") }}</label>
+      <input type="text"
+             name="q"
+             id="creations-search-input"
+             value="{{ q }}"
+             placeholder="{{ _('Search name...') }}"
+             autocomplete="off"
+             aria-label="{{ _('Search creations') }}">
+    </div>
+  </form>
+
+  <!-- Tabelle der Kreationen -->
+  {% if items %}
+    <div class="aimo-table-wrap">
+      <table class="aimo-table creations-table" id="creations-table">
+        <thead>
+          <tr>
+            <th style="width: 130px;">{{ _("Type") }}</th>
+            <th style="width: 55px; text-align: center;">{{ _("Preview") }}</th>
+            <th>{{ _("Name") }}</th>
+            <th>{{ _("Details") }}</th>
+            <th class="col-creations-visibility" style="width: 120px;">{{ _("Visibility") }}</th>
+            <th style="width: 140px;">{{ _("Role") }}</th>
+            <th class="col-creations-created" style="width: 110px;">{{ _("Created") }}</th>
+            <th style="width: 110px; text-align: right;">{{ _("Action") }}</th>
+          </tr>
+        </thead>
+        <tbody id="creations-table-body">
+          {% for item in items %}
+            <tr class="aimo-clickable-row"
+                data-href="{{ item.editor_url }}"
+                data-type="{{ item.type }}"
+                data-role="{{ 'owner' if item.is_owner else 'collaboration' }}"
+                data-name="{{ item.name|lower }}">
+              <td>
+                {{ pill_badge(item.type_label, icon=item.type_icon, icon_mono=true, variant="dark") }}
+              </td>
+              <td style="text-align: center;">
+                {% if item.image_path %}
+                  <img src="{{ url_for('uploaded_file', filename=item.image_path) }}"
+                       alt="{{ item.name }}"
+                       class="creations-table-thumb"
+                       onerror="this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.style.display='inline-flex';}">
+                  <span class="creations-table-thumb" style="display: none;">{{ item.icon or item.type_icon }}</span>
+                {% else %}
+                  <span class="creations-table-thumb">{{ item.icon or item.type_icon }}</span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="{{ item.editor_url }}" class="creations-name-link">
+                  {{ item.name }}
+                </a>
+              </td>
+              <td>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">{{ item.details }}</span>
+              </td>
+              <td class="col-creations-visibility">
+                {% if item.visibility == 'public' %}
+                  {{ pill_badge(_("Public"), variant="success") }}
+                {% else %}
+                  {{ pill_badge(_("Private"), variant="dark") }}
+                {% endif %}
+              </td>
+              <td>
+                {% if item.is_owner %}
+                  {{ pill_badge(_("Owner"), icon="👑", variant="gold") }}
+                {% else %}
+                  {{ pill_badge(_("Collaborator"), icon="🤝", variant="info") }}
+                {% endif %}
+              </td>
+              <td class="col-creations-created">
+                <span style="font-size: 0.82rem; color: var(--text-muted);">{{ item.created_at_formatted }}</span>
+              </td>
+              <td style="text-align: right;">
+                {{ action_button(_("Editor"), href=item.editor_url, icon="✏️", size="sm", title=_("Open editor")) }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="creations-empty-frame">
+      <div class="creations-empty-icon">📜</div>
+      <h3 style="font-size: 1.1rem; color: var(--gold-accent); margin-bottom: 0.35rem;">{{ _("No creations found") }}</h3>
+      <p style="font-size: 0.88rem; max-width: 480px; margin: 0 auto 1rem auto;">
+        {{ _("No works were found matching the selected filters or created/shared with you.") }}
+      </p>
+      {% if type_filter != 'all' or role_filter != 'all' or q %}
+        {{ action_button(_("Reset all filters"), href=url_for('settings.creations')) }}
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/creations_table.js') }}"></script>
+{% endblock %}

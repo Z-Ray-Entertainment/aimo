@@ -1,0 +1,67 @@
+{% extends "settings/layout.html" %}
+{% from "macros/buttons.html" import action_button %}
+{% from "macros/form_section.html" import form_section %}
+{% from "macros/copy_field.html" import copy_field %}
+
+{% block settings_content %}
+<form method="POST" action="{{ url_for('settings.update_account') }}" class="aimo-frame" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
+  {% call form_section(_("Creator Tag"), _("Other creators can add you as a collaborator using this tag.")) %}
+    {{ copy_field(g.current_user.creator_tag, _("Copy Creator Tag"), id="account-creator-tag") }}
+  {% endcall %}
+
+  {% call form_section(_("Name & Email Address")) %}
+    <div class="account-form">
+      <div>
+        <input type="text" id="account-username" name="username" value="{{ g.current_user.username }}" required placeholder="{{ _('Name') }}">
+      </div>
+      <div>
+        <input type="email" id="account-email" name="email" value="{{ g.current_user.email }}" required placeholder="{{ _('Email address') }}">
+      </div>
+    </div>
+  {% endcall %}
+
+  {% call form_section(_("Password"), _("Your current password is only required when changing your email address or password. Leave the new password fields empty to keep your current password.")) %}
+    <div class="account-form">
+      <div>
+        <input type="password" id="account-current-password" name="current_password" autocomplete="current-password" placeholder="{{ _('Current password') }}">
+      </div>
+      <div>
+        <input type="password" id="account-new-password" name="new_password" autocomplete="new-password" placeholder="{{ _('New password') }}">
+      </div>
+      <div>
+        <input type="password" id="account-confirm-password" name="confirm_password" autocomplete="new-password" placeholder="{{ _('Confirm new password') }}">
+      </div>
+    </div>
+  {% endcall %}
+
+  {% call form_section(_("Language"), _("Language of the interface and displayed content translations.")) %}
+    <div class="account-form">
+      <div>
+        <select id="account-language" name="language">
+          {% for code, meta in languages.items() %}
+            <option value="{{ code }}" {% if g.current_user.language == code %}selected{% endif %}>{{ meta.flag }} {{ meta.label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  {% endcall %}
+
+  {% call form_section(_("Appearance"), _("Visual background effects for your personal interface.")) %}
+    <label for="account-ember-particles" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; cursor: pointer; margin: 0;">
+      <span>{{ _("Animated Ember Bokeh Background") }}</span>
+      <span class="aimo-switch">
+        <input type="checkbox"
+               id="account-ember-particles"
+               name="ember_particles_enabled"
+               value="1"
+               {% if g.current_user.ember_particles_enabled %}checked{% endif %}>
+        <span class="aimo-switch-slider"></span>
+      </span>
+    </label>
+  {% endcall %}
+
+  <div style="display: flex; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid var(--border-wood-dark);">
+    {{ action_button(_("Save"), type="submit", icon="💾") }}
+  </div>
+</form>
+{% endblock %}

@@ -1,41 +1,105 @@
-# 🛡️ Administration & Einstellungen
+# 🛡️ Administration & Settings
 
-[← Zurück zur Übersicht](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/README.md) | [← Das Chat-Interface](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/chat.md)
+[← Back to Overview](README.md) | [← The Hub Dashboard](hub.md)
 
-Das Admin-Panel ist Benutzern mit der Berechtigung `ADMIN_ACCESS` vorbehalten. Hier verwaltest du Benutzerkonten, funktionale Rechte und deine lokalen KI-Modelle.
-
----
-
-## 👥 Benutzerverwaltung (`/admin/users`)
-
-aimo verzichtet bewusst auf starre Rollenhierarchien und setzt auf ein **funktionales Berechtigungsmodell**:
-- **Benutzer anlegen:** Erstelle neue Benutzerkonten mit Name, E-Mail und Initialpasswort.
-- **Berechtigungs-Presets:**
-  - `Admin`: Weist automatisch alle Rechte zu (Super User).
-  - `Creator`: Erlaubt das Erstellen und Bearbeiten von Charakteren, Lorebooks, WorldInfos und Personas.
-  - `User`: Grundlegender Zugriff für Chats und eigene Personas.
-- **Granulare Checkboxen:** Jedes Recht (`character_create`, `chat_access`, `worldinfo_edit` etc.) kann auch einzeln vergeben oder entzogen werden.
-- **Schutzregel für den initialen Admin:** Der beim First-Boot erstellte Administrator kann weder gelöscht noch können ihm Rechte entzogen werden.
+The Admin Panel is reserved for users holding the `ADMIN_ACCESS` permission. Here, you manage user accounts, assign functional permissions, configure local AI models, and customize the system backdrop.
 
 ---
 
-## 🔌 Service- & Modell-Management (`/admin/services`)
+## 🧭 Navigation & Layout
 
-### 1. Ollama-Modellverwaltung
-- **Installierte Modelle:** Sieh auf einen Blick alle auf deinem Server vorhandenen Modelle.
-- **Neues Modell installieren (Pull):** Gib den Modellnamen ein (z. B. `llama3:8b`, `qwen2.5:7b`), um es direkt über die Web-UI auf deinen Ollama-Server herunterzuladen.
-- **Modell löschen:** Entferne nicht mehr benötigte Modelle per Klick, um Festplattenplatz freizugeben.
+The Administration area shares the exact same two-column layout as the [User Settings](settings.md):
+- **Left Sidebar (`Administration`):**
+  - **Benutzerverwaltung (`👥`):** Opens the user and functional permission management.
+  - **Services & Modelle (`⚙️`):** Opens configuration for AI service connections, model routing, and inference hyperparameters.
+  - **System-Prompts (`📜`):** Opens configuration for system prompts and default reset capabilities.
+  - **System-Backdrop (`🖼️`):** Opens the configuration for the global system background wallpaper.
+  - **Zurück zum Hub (`← Zurück zum Hub`):** Returns you directly to the central Hub dashboard at any time.
+- **Right Main Area:**
+  - Displays the active administration section with responsive wrapping for mobile touch screens.
 
-### 2. Task-spezifische Zuweisung
-Weise unterschiedlichen Aufgaben spezialisierte Modelle zu:
-- **Roleplay:** Dein bestes Modell für atmosphärische Dialoge und Charakterdarstellung.
-- **Memory:** Ein schnelles Modell für 10-Nachrichten-Zusammenfassungen und Tag-Extraktion.
-- **Assistant:** Modell für Werkzeugaufrufe, Übersetzung und Koordination.
-- **Vision:** Multimodales Modell (z. B. `llava`, `llama3.2-vision`) für Bildbeschreibungen und Persona-Aussehen.
+---
 
-### 3. Inferenzparameter & System-Prompts
-- Passe Hyperparameter feinfühlig an:
-  - `num_ctx`: Kontextfenster-Größe (z. B. 4096, 8192).
-  - `temperature`: Kreativität / Zufälligkeit (z. B. 0.7).
-  - `top_p` und `repeat_penalty`.
-- **System-Prompts editieren:** Passe die grundlegenden Direktiven für den Roleplay-Prompt, Memory-Prompt, ComfyUI-Diffuser-Prompt und den Sparkle-Assistenten ✨ direkt in Textareas an.
+## 👥 User Management (`/admin/users`)
+
+AImo avoids rigid role hierarchies in favor of a **functional permission model**:
+- **Create User:** Provision new user accounts with username, email, and initial password.
+- **Permission Presets:**
+  - `Admin`: Automatically grants all available permissions (Super User).
+  - `Creator`: Allows creating, editing, and duplicating characters, lorebooks, WorldInfo settings, and personas, as well as accessing the Creator-Tag collaboration system.
+  - `User`: Basic access for roleplay chats and personal persona management.
+- **Granular Checkboxes:** Any permission (`character_create`, `chat_access`, `worldinfo_edit`, etc.) can also be granted or revoked individually.
+- **Full Access to Creations:** Every administrator can view, edit, and delete all characters, lorebooks, and worlds, even if they are neither the author nor a collaborator.
+- **Creator-Tag Privacy & Protection:** A unique UUID4 creator tag is provisioned in the database for every user. Every user can see and copy their own Creator-Tag in **Settings → Account**.
+- **Protection for Initial Admin:** The administrator created during first boot cannot be deleted, nor can their permissions be revoked or modified.
+
+---
+
+## 🔌 Service & Model Management (`/admin/services`)
+
+### 1. Active AI Backend (Exclusive Selection)
+Choose **strictly one** primary AI backend at any time (Ollama and Google AI Cloud are never operated simultaneously):
+- **🦙 Ollama (Local / Self-Hosted):** Connect to your Ollama server URL and test reachability directly from the panel.
+- **✨ Google AI Cloud (Gemini API):** Enter your Google AI Studio API key (stored masked once saved — leave the input empty to keep the existing key) and click **API-Key & Modelle testen** to verify access and load available cloud models.
+
+### 2. Image Generation & Web Search Services
+Both **Image Generation** (Google AI Image, ComfyUI) and **Web Search** (Google Search, SearXNG) are currently set to **Deaktiviert** by default, with the active provider options disabled in the settings interface.
+
+### 3. Model Management & Setup-Helper
+- **When Ollama is active (Ollama Model Manager):**
+  - **Setup-Helper:** Overview of the recommended local models (`igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest`, `gemma4:e4b`, `llama3.2:1b`).
+  - **One-Click Actions:** `✨ Vorgeschlagene Modelle zuweisen` binds the recommended models to all 5 roles; `⚡ Fehlende installieren` sequentially pulls missing recommended models with live download progress.
+  - **Pull & Delete:** Enter any model tag to download onto your Ollama server, view installed models, and remove unused models.
+- **When Google AI Cloud is active (Google AI Cloud Setup):**
+  - Displays the API key setup instructions, recommended Gemini models (`gemini-4-hydrogen` and `gemini-3.1-flash-lite` plus `gemini-3.1-flash-image-preview` for images), and the list of cloud models available to your key.
+
+### 4. Task-Specific Model Assignments
+Route specific duties to specialized models of the active backend:
+- **Roleplay:** Primary model for dialogue, character depiction, and narrative nuance.
+- **Classification:** Fast, lightweight model for autonomous post-streaming emotion and location detection.
+- **Memory:** Efficient model for 10-message event summaries and tag extraction.
+- **Assistant:** Dedicated model for Sparkle assistant, translation, and image scene prompts.
+- **Vision:** Multimodal model for image analysis and persona appearance scans.
+
+### 5. Inference Parameters
+- Fine-tune generation hyperparameters:
+  - `num_ctx`: Context window budget controlling how much conversation history and lore fit into prompts (active for both Ollama and Google AI).
+  - `temperature`: Creativity and randomness (e.g., 0.7).
+  - `top_p` and `repeat_penalty` (applied to Ollama).
+
+---
+
+## 📜 System-Prompts (`/admin/prompts`)
+
+Manage and customize the system-level instructions that guide AI models across all core tasks.
+
+### Placeholders
+In roleplay prompts, dynamic template tags can be inserted:
+- `{{char}}`: Dynamically substituted with the active character's name.
+- `{{user}}`: Dynamically substituted with the active player persona's name.
+
+### Configurable Prompts
+- **Rollenspiel-Prompt:** The foundation prompt governing how the primary roleplay model embodies characters and generates pure dialogue and narrative text.
+- **Memory-Prompt:** Directives instructing the memory model on creating concise, episodic summaries and relevant tags every 10 messages.
+- **Diffuser-Prompt:** Formulates scenic descriptions into visual diffusion prompts *(currently disabled in the editor, including its translation and reset buttons)*.
+- **KI-Autor-Prompt:** Powers the Sparkle assistant (✨) in the character editor to write immersive, third-person descriptive prose based on author notes.
+- **Vision-Prompt:** Directs multimodal vision models in extracting physical appearance features from persona portrait images.
+- **KI-Autor-Dialog-Prompt:** Guides the AI author in formulating authentic, situational dialogue examples (`{{user}}` trigger and `{{char}}` response) based on the character description.
+
+### Restoring Defaults
+Each prompt section features a **Standard wiederherstellen** button. Clicking it prompts for confirmation and immediately inserts the factory default prompt into the respective editor field. Changes take effect once you click **Prompts speichern**.
+
+---
+
+## 🖼️ System-Backdrop (`/admin/backdrop`)
+
+Configure the global fallback background wallpaper for the application:
+- **Upload Wallpaper:** Upload any 16:9 widescreen wallpaper (PNG, JPG, WEBP) to serve as the global atmospheric background across the entire interface and as the base fallback in chats (Priority: **System → World → Location**).
+- **Select from Worlds & Locations:** Quick-pick background art directly from any existing WorldInfo backdrop or location background.
+- **Reset:** Revert to the default parchment and wood texture theme at any time.
+
+### Multi-Language System Prompts & Translation Sync
+- Each system prompt displays country-flag pill badges for all 20 supported languages (existing translations appear first; missing languages appear greyed out at the end).
+- Clicking any flag badge loads that language's prompt for inspection, manual editing, on-demand **AI Translate**, or deleting the translation (via the trash button next to **AI Translate**) so the background Translation Worker can regenerate it from the English original when needed.
+- **Restore Default** resets all languages of that prompt back to the built-in factory defaults.
+- **Synchronize Missing Translations:** Starts a dependency-ordered translation run across all customized prompts, characters, worlds, and lorebooks with live progress and a **Cancel** button (especially useful when using Cloud AI providers, where automatic background translation is disabled to protect token quotas).

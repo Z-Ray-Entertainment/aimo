@@ -1,0 +1,63 @@
+<aside id="chat-pane-sidebar" class="aimo-frame chat-glass-panel chat-sidebar-pane">
+  <div class="aimo-frame chat-glass-panel chat-character-portrait-frame">
+    <img id="active-character-sprite" src="{{ url_for('uploaded_file', filename=active_sprite.file_path) }}" alt="{{ character.name }}" onerror="this.src='/static/img/cover.svg'">
+
+    <form method="POST" action="{{ url_for('chat.update_session_settings', session_id=chat_session.id) }}" class="chat-thinking-overlay-form">
+      <input type="hidden" name="action" value="toggle_thinking">
+      <input type="hidden" name="thinking_enabled" value="{{ '0' if chat_session.thinking_enabled else '1' }}">
+      <button
+        type="submit"
+        class="chat-thinking-badge-btn {% if chat_session.thinking_enabled %}is-active{% else %}is-inactive{% endif %}"
+        title="{{ _('Thinking: Enabled (Click to disable)') if chat_session.thinking_enabled else _('Thinking: Disabled (Click to enable)') }}"
+        aria-label="{{ _('Disable thinking') if chat_session.thinking_enabled else _('Enable thinking') }}">
+        <span class="chat-thinking-brain-icon" aria-hidden="true">🧠</span>
+      </button>
+    </form>
+
+    <div
+      class="chat-character-portrait-name relationship-bar-wrap"
+      data-relationship-score="{{ chat_session.relationship_value }}"
+      title="{{ relationship_tier_name }}">
+      <div class="relationship-fill"></div>
+      <span class="heart-icon" aria-hidden="true">❤️</span>
+      <span class="chat-character-portrait-name-text">{{ character.name }}</span>
+    </div>
+  </div>
+
+  {% if (worldinfo and worldinfo_locations) or (((worldinfo and worldinfo_events) or character_events) and can_view_event_counter) %}
+    <div class="chat-sidebar-world-section">
+      {% if worldinfo and worldinfo_locations %}
+        <div>
+          <label for="chat-location-select" class="chat-sidebar-label">{{ _('Current Location') }}</label>
+          <select id="chat-location-select" class="chat-sidebar-select">
+            <option value="world" {% if not current_location %}selected{% endif %}>
+              🌐 {{ worldinfo.name }} ({{ _('World') }})
+            </option>
+            {% for loc in worldinfo_locations %}
+              {% if not loc.character_id or loc.character_id == character.id %}
+                <option value="{{ loc.id }}" {% if current_location and loc.id == current_location.id %}selected{% endif %}>
+                  📍 {{ loc.name }}
+                </option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+      {% endif %}
+
+      {% if ((worldinfo and worldinfo_events) or character_events) and can_view_event_counter %}
+        <div class="chat-sidebar-admin-event-counter" id="admin-event-counter-box" title="{{ _('Admin & creator info: Cooldown until the next random event') }}">
+          <span class="icon-mono">⏳</span> {{ _('Next event:') }}
+          <span id="admin-event-counter-status">
+            {%- if not chat_session.events_enabled -%}
+              {{ _('in') }} <strong id="admin-event-counter-val">{{ chat_session.cooldown_counter }}</strong> {{ _('message') if chat_session.cooldown_counter == 1 else _('messages') }} <span class="counter-paused-label">({{ _('paused') }})</span>
+            {%- elif chat_session.cooldown_counter <= 1 -%}
+              <strong id="admin-event-counter-val">{{ _('next message') }}</strong>
+            {%- else -%}
+              {{ _('in') }} <strong id="admin-event-counter-val">{{ chat_session.cooldown_counter }}</strong> {{ _('messages') }}
+            {%- endif -%}
+          </span>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</aside>

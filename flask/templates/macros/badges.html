@@ -1,0 +1,34 @@
+{# =============================================================================
+   AIMO Reusable Pill Badge Component (.aimo-pill-badge)
+   Variants: default, wood, heart, danger, dark, leather, outline, gold, success, info
+   ============================================================================= #}
+{% macro pill_badge(text="", icon=none, variant="default", title=none, extra_class="", icon_mono=false) %}
+  {% set valid_variants = ["default", "wood", "heart", "danger", "dark", "leather", "outline", "gold", "success", "info"] %}
+  {% set badge_variant = variant if variant in valid_variants else "default" %}
+  <span class="aimo-pill-badge{% if badge_variant != 'default' %} aimo-pill-badge--{{ badge_variant }}{% endif %}{% if extra_class %} {{ extra_class }}{% endif %}"{% if title %} title="{{ title }}"{% endif %}>
+    {%- if icon %}<span class="aimo-pill-badge-icon{% if icon_mono %} icon-mono{% endif %}">{{ icon }}</span>{% endif -%}
+    {%- if text %}<span>{{ text }}</span>{% endif -%}
+  </span>
+{% endmacro %}
+
+{% macro pill_radio_group(name, options, selected=none, id=none, required=false, aria_label=none, extra_class="") %}
+  <div{% if id %} id="{{ id }}"{% endif %} class="aimo-pill-radio-group{% if extra_class %} {{ extra_class }}{% endif %}" role="radiogroup"{% if aria_label %} aria-label="{{ aria_label }}"{% endif %}>
+    {%- for opt in options %}
+      {% set is_selected = (selected == opt.value) %}
+      {% set tooltip = opt.get("title") or opt.get("label") %}
+      <label class="aimo-pill-radio"{% if tooltip %} title="{{ tooltip }}"{% endif %}>
+        <input type="radio"
+               class="aimo-pill-radio-input"
+               name="{{ name }}"
+               value="{{ opt.value }}"
+               {% if tooltip %}aria-label="{{ tooltip }}"{% endif %}
+               {% if is_selected %}checked{% endif %}
+               {% if required and loop.first %}required{% endif %}>
+        <span class="aimo-btn {% if not opt.get('label') %}aimo-btn-icon {% endif %}aimo-pill-radio-badge">
+          {%- if opt.get("icon") %}<span class="icon-mono">{{ opt.icon }}</span>{% endif -%}
+          {%- if opt.get("label") %}<span>{{ opt.label }}</span>{% endif -%}
+        </span>
+      </label>
+    {%- endfor %}
+  </div>
+{% endmacro %}

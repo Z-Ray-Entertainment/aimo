@@ -1,62 +1,76 @@
-# 📖 aimo — Benutzerhandbuch & Dokumentation
+# 📖 AImo — User Manual & Documentation
 
-Willkommen im offiziellen Benutzerhandbuch für **aimo**, der Plattform für immersives, lokales KI-Rollenspiel im modernen RPG-Design.
+Welcome to the official user manual for **AImo**, the platform for immersive local AI roleplay with a modern RPG design.
 
-Dieses Handbuch richtet sich an Endbenutzer, Autoren und Administratoren und beschreibt alle Funktionen und Interaktionsmöglichkeiten der Anwendung im Detail.
-
----
-
-## 🧭 Inhaltsverzeichnis
-
-1. [**Ersteinrichtung & First-Boot**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/first_boot.md)
-   - Erstmaliger Systemstart und Setup-Wizard
-   - Administrator-Konto und Verbindung zu lokalen KI-Diensten (Ollama, ComfyUI)
-   - Sicheres Anmelden nach dem Erststart
-
-2. [**Das Hub-Dashboard**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/hub.md)
-   - Navigation über die drei Haupt-Reiter: Charaktere 👤, Lorebooks 📜, WorldInfo 🌐
-   - Persona-Manager-Button im Header
-   - Filter, Beziehungsanzeigen und Nachrichtenstatistiken
-
-3. [**Spieler-Personas**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/personas.md)
-   - Eigene Rollenspiel-Identitäten anlegen
-   - Porträt-Upload und automatische KI-Vision-Erkennung des Aussehens
-   - Schutz aktiver Personas vor versehentlichem Löschen
-
-4. [**KI-Charaktere & Designer**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/characters.md)
-   - Charaktere erstellen und verwalten
-   - KI-Schreibassistent ✨ (Sparkle) zur Optimierung von Beschreibungen
-   - Transparente Emotions-Sprites & Varianten-Verwaltung
-   - Freischaltbare 9:16-Galeriebilder mit Beziehungsschwellenwert
-
-5. [**Lorebooks & Wissensbücher**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/lorebooks.md)
-   - Strukturierung von Hintergrundwissen und Enzyklopädien
-   - Kachel-Übersicht und modaler Eintragseditor
-   - Verschlagwortung (Tags) für kontextuelles Rollenspiel-Wissen
-
-6. [**Welten, Orte & Ereignisse (WorldInfo)**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/worldinfo.md)
-   - Welten anlegen und mit Icons versehen
-   - Orte mit 16:9-Hintergrundbildern und Vision-ALT-Erweiterung
-   - Zufalls-Events, Cooldown-Zähler und Eintrittswahrscheinlichkeiten
-
-7. [**Das Chat- & Rollenspiel-Interface**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/chat.md)
-   - Dialogstart, Welcome Message und Erstauswahl
-   - Live-Streaming mit nahtloser Lokalisierung
-   - Interaktiver Ortswechsel (Textadventure mit 60s-Countdown)
-   - Multimodale Features (Bild-Upload mit ALT-Text, ComfyUI-Zauberstab ✨)
-   - Beziehungsbalken, automatische Erinnerungen (Memories) und Chat-Forks
-
-8. [**Administration & Einstellungen**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/admin.md)
-   - Benutzer anlegen, verwalten und Presets zuweisen
-   - Lokale Ollama-Modelle herunterladen, zuweisen und löschen
-   - System-Prompts und Inferenz-Parameter feinjustieren
+This manual is intended for end users, story creators, and administrators, detailing all features and interaction mechanics within the application.
 
 ---
 
-## 🎨 Design & Bedienkonzept
+## 🧭 Table of Contents
 
-aimo setzt auf ein immersives **modernes RPG-Interface**:
-- **Hintergrund:** Halbtransparent mit stimmungsvollem Cover-Bild.
-- **Rahmen:** Warme hellbraune Holztöne mit abgerundeten Ecken für alle Textfelder, Overlays und Kacheln.
-- **Buttons:** Hellbrauner Hintergrund mit edlem, dezentem Goldrand.
-- **Icons:** Einheitlich monochrom gehalten; emotionale Elemente (Herzen für den Beziehungsstatus 💔 bis 💖) und magische Aktionen (Sparkles ✨) leuchten in Farbe.
+1. [**Initial Setup & First-Boot**](first_boot.md)
+   - Three-step launch wizard (Administrator, Exclusive AI Backend Choice, Backend Setup)
+   - Choice between local Ollama or Google AI Cloud (Gemini API), plus image and search service options
+   - Secure authentication post-setup
+
+2. [**The Hub Dashboard**](hub.md)
+   - Navigation via the three primary tabs: Characters 👤, Lorebooks 📜, WorldInfo 🌐
+   - Top-right Persona Avatar menu (User settings, Admin settings, Logout)
+   - Filtering, relationship meters, and message counters
+
+3. [**Player Personas**](personas.md)
+   - Square persona grid in the user settings with default star
+   - Creating custom roleplay identities with 1:1 image crop
+   - Portrait upload and automated AI Vision appearance analysis
+   - Deletion protection for active personas
+
+4. [**AI Characters & Designer**](characters.md)
+   - 8-tab character creation suite with 1-click duplication
+   - AI Writing Assistant ✨ (Sparkle) for description optimization
+   - Transparent emotional sprites & variant stacks
+   - Unlockable 9:16 gallery images with affection thresholds
+   - Character-specific random events with optional location binding
+   - Linked lorebooks with optional world-specific conditions
+   - Collaborator management via private Creator-Tags
+
+5. [**Lorebooks & Encyclopedias**](lorebooks.md)
+   - 3-tab compendium editor (Basic Settings, Entries, Collaboration)
+   - Header action bar with Save, 1-Click Duplication, and Delete
+   - Tile grid overview and modal entry editor with AI tag suggestions ✨
+   - Tagging system for contextual roleplay knowledge (Vectorless Tag-RAG)
+   - Private Lorebooks & Creator Knowledge protection (`🔒 Ersteller-Wissen`)
+   - Attachment to Characters and WorldInfos
+
+6. [**Worlds, Places & Events (WorldInfo)**](worldinfo.md)
+   - 3-tab world setting suite (Places, Events, Collaboration) with 1-click duplication
+   - Creating worlds, assigning icons, and attaching world lorebooks
+   - Locations with 16:9 background images and Vision ALT enhancement
+   - Random event pool, cooldown counter cycle, and probabilities
+
+7. [**Chat & Roleplay Interface**](chat.md)
+   - Dialogue launch and "New Chat" tabbed configuration (Settings & Lorebooks)
+   - Live streaming with seamless localization
+   - Four-tab central interface: Chat, Media, Memories, and Lorebooks
+   - In-chat Lorebook manager (Default toggles, conditional locks, custom additions)
+   - Interactive location change (text adventure with 60s countdown)
+   - Multimodal features (image upload with ALT text, AI scene image generation via magic wand ✨)
+   - Relationship bar, automatic memories, and chat forks
+
+8. [**User Settings**](settings.md)
+   - Persona management as first view
+   - Dedicated two-column view for user-specific preferences
+
+9. [**Administration & Settings**](admin.md)
+   - User creation, management, and permission presets
+   - Exclusive AI backend switching (Ollama or Google AI Cloud), model assignment, and image/search service setup
+   - System prompts and fine-tuning inference parameters
+
+---
+
+## 🎨 Design & Interaction Concept
+
+AImo features an immersive **modern RPG interface**:
+- **Background:** Semi-transparent with an atmospheric cover image.
+- **Borders & Frames:** Warm light brown wood tones with rounded corners for all input fields, overlays, and cards.
+- **Buttons:** Warm leather-brown backgrounds with subtle gold borders.
+- **Icons:** Uniform monochrome styling for navigation; emotional elements (relationship status hearts 💔 to 💖) and magical actions (Sparkles ✨) glow in vibrant color.

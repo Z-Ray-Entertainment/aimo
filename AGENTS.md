@@ -1,79 +1,81 @@
-# AGENTS.md — Architektur-Regelwerk für Coding Assistants
+# AGENTS.md — Architecture Guidelines for Coding Assistants
 
 > [!IMPORTANT]
-> **Rolle des Assistenten:** Du bist der **Architektur-Wächter** für das `aimo`-Projekt. Deine Aufgabe ist es, alle Code-Änderungen strikt an die in diesem Dokument definierten Regeln und DDD-Schichten zu halten.
+> **Role of the Assistant:** You are the **Architecture Guardian** for the `aimo` project. Your mission is to hold all code changes strictly to the rules and DDD layers defined in this document.
+>
+> **Language Rule:** `AGENTS.md` must **ALWAYS** be maintained strictly and exclusively in English.
 
 ---
 
-## 🏛️ 1. Architektur & Schichten-Disziplin (Domain-Driven Design)
+## 🏛️ 1. Architecture & Layer Discipline (Domain-Driven Design)
 
-Das Projekt folgt einer strikten Schichtentrennung. Abhängigkeiten zeigen **ausschließlich nach innen** zur Domäne.
+The project adheres to strict separation of concerns. Dependencies point **exclusively inwards** toward the domain.
 
 ```
 aimo/
-├── domain/                # Reine Geschäftslogik & Entitäten (KEIN I/O, KEIN HTTP, KEIN DB, KEIN Framework)
-│   ├── auth/              # User, Passwort-Hashing, Authentifizierungs-Logik
-│   ├── permissions/       # Funktionales Berechtigungsmodell (Flags & Presets)
-│   ├── characters/        # KI-Charaktere, Emotionen (28 Enums), Sprites, 9:16-Galeriebilder
-│   ├── personas/          # Spieler-Personas (Name, Gender, Porträt, Aussehen, Lösch-Schutz)
-│   ├── lorebooks/         # Lorebooks & Einträge (Titel, Tags, Fließtext)
-│   ├── worldinfo/         # WorldInfo, Orte (16:9-Hintergründe) & Events (Wahrscheinlichkeit, Cooldown)
-│   ├── memories/          # Erinnerungen (10-Nachrichten-Intervall) & vektorloses Tag-RAG
-│   ├── translation/       # Lokalisierungs-Schicht & englischer Original-Kanon
-│   ├── chat/              # ChatSession, Beziehungsdynamik (+0.1/-0.1), 7-Stufen-PromptBuilder
-│   └── settings/          # ServiceSettings, Task-Zuordnungen, Inferenzparameter, System-Prompts
-├── infrastructure/        # Persistenz, Externe Dienste & Dateispeicher
-│   ├── database.py        # SQLite-Connection mit WAL-Modus & Concurrency (timeout=30s)
-│   ├── repositories/      # SQLAlchemy ORM-Mappings & Repositories für alle Domänen
-│   ├── llm/               # Modulare LLM-Provider-Schicht (interface.py, factory.py, ollama.py)
-│   ├── image_gen/         # Modulare Bildgenerierungs-Schicht (interface.py, factory.py, comfyui.py)
-│   ├── voice/             # Modulare Voice-TTS-Schicht (interface.py, factory.py, stub.py)
-│   ├── search/            # SearXNG-Schnittstelle (vorerst deaktiviert / TODO)
-│   ├── translation/       # Übersetzungs-Adapter (nutzt LLMProvider)
-│   ├── migrations/        # Alembic-Migrationen
-│   └── storage/           # Dateispeicher für Porträts, Sprites, Hintergründe und Generationen
-├── application/           # Orchestrierung, Web-Views, Decorators, Forms & REST-API
-│   ├── setup/             # First-Boot Wizard (/setup)
-│   ├── auth/              # Login- & Session-Management (/login, /logout)
-│   ├── overview/          # Hub-Dashboard Controller
-│   ├── characters/        # Character Designer Controller (/characters/new, /characters/<id>)
-│   ├── personas/          # Persona-Controller & Vision-Trigger
-│   ├── lorebooks/         # Lorebook- & Eintrags-Controller
-│   ├── worldinfo/         # WorldInfo-, Orts- & Event-Controller
-│   ├── chat/              # Chat-Interface Controller
-│   ├── admin/             # Admin-Panel (/admin/users, /admin/services)
-│   └── api/               # REST-API Controller für Headless Core (SSE-Stream, Chat, Entitäten)
-├── shared/                # Querschnittliche Utilities & Basiskomponenten
-│   ├── config.py          # Globale System-Konfiguration via Env (keine hardcodierten Secrets!)
-│   ├── utils.py           # bcrypt-Hashing, parse_tags(), tags_overlap(), sanitize_filename()
-│   └── exceptions.py      # Globale Ausnahmehierarchie (AimoError, DomainError, etc.)
-├── static/                # Statische Web-Assets & CSS-Theme
-│   ├── css/theme.css      # Modernes RPG-Theme (Holztöne, goldene Button-Rahmen, Rundungen)
-│   ├── js/                # Client-Skripte (stream.js, main.js, modals.js)
-│   └── img/               # Cover-Image & System-Grafiken
-├── templates/             # Modulare Jinja2-Templates
-├── tasks/                 # Sequenzieller Implementierungs-Fahrplan (001_... bis 022_...)
-├── docs/                  # Ausführliche Endbenutzer-Dokumentation
-├── Containerfile          # Podman Rootless User Container
-├── app.py                 # Flask Application Factory
-├── wsgi.py                # WSGI Entry Point
-└── requirements.txt       # PyPI-Abhängigkeiten
+├── domain/                # Pure business logic & entities (NO I/O, NO HTTP, NO DB, NO Framework)
+│   ├── auth/              # User, password hashing, authentication logic
+│   ├── permissions/       # Functional permission model (flags & presets)
+│   ├── characters/        # AI characters, emotions (28 enums), sprites, 9:16 gallery images
+│   ├── personas/          # Player personas (name, gender, portrait, appearance, deletion protection)
+│   ├── lorebooks/         # Lorebooks & entries (title, tags, prose text)
+│   ├── worldinfo/         # WorldInfo, locations (16:9 backgrounds) & events (probability, cooldown)
+│   ├── memories/          # Memories (10-message interval) & vectorless tag-based RAG
+│   ├── translation/       # Localization layer & English canonical original
+│   ├── chat/              # ChatSession, relationship dynamics (+0.1/-0.1), 7-stage PromptBuilder
+│   └── settings/          # ServiceSettings, task assignments, inference parameters, system prompts
+├── infrastructure/        # Persistence, external services & file storage
+│   ├── database.py        # SQLite connection with WAL mode & concurrency (timeout=30s)
+│   ├── repositories/      # SQLite repositories (BaseRepository & CollaborativeRepository) for all domains
+│   ├── llm/               # Modular LLM provider layer (interface.py, factory.py, ollama.py)
+│   ├── image_gen/         # Modular image generation layer (interface.py, factory.py, comfyui.py)
+│   ├── voice/             # Modular voice TTS layer (interface.py, factory.py, stub.py)
+│   ├── search/            # SearXNG interface (temporarily disabled / TODO)
+│   ├── translation/       # Translation adapter (uses LLMProvider)
+│   ├── migrations/        # Alembic migrations
+│   └── storage/           # File storage for portraits, sprites, backgrounds, and generations
+├── application/           # Orchestration, web views, decorators, forms & REST API
+│   ├── setup/             # First-boot wizard (/setup)
+│   ├── auth/              # Login & session management (/login, /logout)
+│   ├── overview/          # Hub dashboard controller
+│   ├── characters/        # Character designer controller (/characters/new, /characters/<id>)
+│   ├── personas/          # Persona controller & vision trigger
+│   ├── lorebooks/         # Lorebook & entry controller
+│   ├── worldinfo/         # WorldInfo, location & event controller
+│   ├── chat/              # Chat interface controller
+│   ├── admin/             # Admin panel (/admin/users, /admin/services)
+│   └── api/               # REST API controllers for headless core (SSE stream, chat, entities)
+├── shared/                # Cross-cutting utilities & base components
+│   ├── config.py          # Global system configuration via env (no hardcoded secrets!)
+│   ├── utils.py           # bcrypt hashing, parse_tags(), tags_overlap(), sanitize_filename()
+│   └── exceptions.py      # Global exception hierarchy (AimoError, DomainError, etc.)
+├── static/                # Static web assets & CSS theme
+│   ├── css/theme.css      # Modern RPG theme (wood tones, gold button borders, rounded corners)
+│   ├── js/                # Client scripts (stream.js, main.js, modals.js)
+│   └── img/               # Cover image & system graphics
+├── templates/             # Modular Jinja2 templates
+├── tasks/                 # Sequential implementation roadmap (001_... to 022_...)
+├── docs/                  # Comprehensive end-user documentation
+├── Containerfile          # Podman rootless user container
+├── app.py                 # Flask application factory
+├── wsgi.py                # WSGI entry point
+└── requirements.txt       # PyPI dependencies
 ```
 
 ---
 
-## 🔒 2. Verbindliche Architektur-Invariante (Unverhandelbare Regeln)
+## 🔒 2. Mandatory Architectural Invariants (Non-Negotiable Rules)
 
-Jeder Coding Assistant muss diese Kernregeln ausnahmslos einhalten:
+Every coding assistant must follow these core rules without exception:
 
-### 1. Reiner Roleplay-Kontext & Zero-Control-Tags
-- **Keine Steuercodes im Prompt oder Output:** Das Roleplay-LLM erhält ausschließlich reinen narrativen Kontext und generiert zu 100 % reine Dialoge und Erzähltexte.
-- Dem Modell dürfen **niemals** Formatierungsanweisungen (wie `[EMOTION: joy]` oder `<location: ...>`) auferlegt werden, die anschließend per Regex herausgefiltert werden müssten.
-- **Autarke Klassifikation nach dem Streaming:** Nach Abschluss des englischen Streamings und vor der Übersetzung scannt ein separater, nachgelagerter Klassifikations-Call (über dasselbe Modell) den Text, um die wahrscheinlichste Emotion und narrative Ortswechsel-Vorschläge isoliert zu ermitteln.
-- **Keine UI-Daten im LLM-Kontext:** Systemmeldungen (*"Ihr seid nach {ort} gegangen"*, *"Bild wird generiert..."*), URLs oder technische IDs dürfen **niemals** in den Chat-Verlauf für das LLM wandern.
+### 1. Pure Roleplay Context & Zero-Control-Tags
+- **No control codes in prompt or output:** The roleplay LLM receives exclusively pure narrative context and generates 100% pure dialogue and narrative text.
+- Formatting directives (such as `[EMOTION: joy]` or `<location: ...>`) that must later be filtered out via regex must **never** be imposed on the model.
+- **Autonomous post-streaming classification:** After English streaming completes and before translation, a separate downstream classification call (using the same model) scans the text to extract the most likely emotion and narrative location change suggestions in isolation.
+- **No UI data in LLM context:** System messages (*"You travelled to {location}"*, *"Generating image..."*), URLs, or technical IDs must **never** enter the chat history fed to the LLM.
 
-### 2. Verbindliches 7-Stufen-Prompt-Layout
-Der Prompt für das Roleplay-Modell muss zwingend exakt in folgender Reihenfolge mit geschlossenen Begrenzern assembliert werden:
+### 2. Mandatory Assembled Prompt Layout
+The prompt for the roleplay model must strictly be assembled in this exact order using closed delimiters:
 ```text
 [SYSTEM_PROMPT]
 {roleplay_system_prompt}
@@ -82,14 +84,6 @@ Der Prompt für das Roleplay-Modell muss zwingend exakt in folgender Reihenfolge
 [CHARACTER_DEFINITION]
 {character_definition}
 [/CHARACTER_DEFINITION]
-
-[USER_PERSONA]
-{user_persona}
-[/USER_PERSONA]
-
-[WORLD_INFO]
-{world_info_and_location_and_triggered_event}
-[/WORLD_INFO]
 
 [CHAT_HISTORY]
 {last_10_messages}
@@ -102,106 +96,144 @@ Der Prompt für das Roleplay-Modell muss zwingend exakt in folgender Reihenfolge
 [RELEVANT_LOREBOOKS]
 {matched_lorebooks}
 [/RELEVANT_LOREBOOKS]
+
+[WORLD_INFO]
+{world_info_and_location_and_triggered_event}
+[/WORLD_INFO]
+
+[USER_PERSONA]
+{user_persona}
+[/USER_PERSONA]
+
+[RELATION]
+{relationship_status_description_and_behavior_rules}
+[/RELATION]
+
+[DIALOGUE_EXAMPLES]
+{dialogue_examples}
+[/DIALOGUE_EXAMPLES]
 ```
-- **Prompt-Disziplin:** Das Roleplay-Modell darf **niemals** für den Benutzer sprechen oder dessen Handlungen, Gedanken oder Antworten vorgeben!
+- **Prompt discipline:** The roleplay model must **never** speak for the user or dictate their actions, thoughts, or responses!
 
-### 3. Vektorloses RAG (Keine Vektordatenbank!)
-- Nachrichten, Lorebooks und Memories dürfen **nicht vektorisiert** werden.
-- RAG erfolgt ausschließlich regelbasiert über Keyword- und Tag-Matching (`shared.utils.tags_overlap(tags_a, tags_b) >= 1`, case-insensitive).
+### 3. Vectorless RAG (No Vector Database!)
+- Messages, lorebooks, and memories must **not be vectorized**.
+- RAG operates strictly rule-based via keyword and tag matching (`shared.utils.tags_overlap(tags_a, tags_b) >= 1`, case-insensitive).
 
-### 4. Kanonischer englischer LLM-Kanon
-- Alle Backend-Prompts und Kontexte werden primär auf Englisch geführt.
-- Benutzereingaben werden vor dem Generieren ins Englische übersetzt.
-- Die Web-UI zeigt übersetzten Text in der Nutzersprache an. Übersetzungen werden persistent in SQLite (`TranslationRecord`) gecacht.
-- Bei Textänderungen durch den Nutzer wird das englische Original sofort aktualisiert und abhängige Cache-Einträge werden invalidiert.
+### 4. English Standard, Shared `gettext` & Pre-Translated Native-Language Chat
+- English is the internal standard language across source code, UI strings, default system prompts, and relationship guardrails.
+- **Shared `gettext` (`locales/`):** Both `core/` and `flask/` use Python's `gettext` (`.pot`/`.po`/`.mo`) for UI strings, default system prompts, 21 relationship tiers/guardrails, and `PromptBuilder` labels/directives across all 20 supported languages.
+- **Dynamic Entity Translations (`entity_field_translations`):** Author-created content and customized system prompts are stored per language in SQLite. For local LLMs, a dependency-ordered background worker translates missing languages for all registered user languages (plus English), yielding while active chats run. For **Cloud AI** providers (`IS_CLOUD = True`), automatic background translation is disabled and translations run strictly on-demand via Admin or Author triggers.
+- **Language-Gated Visibility & Native Chat:** Regular users only see content ready in their language; authors/admins always see their own/editable creations. At runtime, prompts are assembled and streamed directly in the user's language, and episodic memories are generated directly in the user's language without translation.
 
-### 5. Beziehungsdynamik & Over-Time Decay
-- Wertebereich: Fest gedeckelt von **`-100.0` bis `+100.0`**.
-- Zuwachs: Jede Spielernachricht erhöht den Wert um **`+0.1`**.
-- Verfall: Bei Inaktivität sinkt der Wert um **`-0.1` pro Tag** (berechnet anhand von `last_message_at`).
-- Zuneigungswerte sind strikt an die jeweilige `ChatSession` gebunden (nicht statisch an den Charakter).
+### 5. Relationship Dynamics & Over-Time Decay
+- Value range: Firmly clamped between **`-100.0` and `+100.0`**.
+- Turn-Based Interaction Evaluation: Post-streaming classification (`classify_turn`) evaluates the interaction pair (player message + character reply) in the context of the current relationship tier across five discrete categories (`very_negative`: `-2.0`, `negative`: `-0.5`, `neutral`: `+0.1`, `positive`: `+0.5`, `very_positive`: `+2.0`), storing the applied delta in `Message.metadata` so regeneration and message deletion revert it cleanly.
+- Decay: During inactivity, the score decreases by **`-0.1` per day** (calculated based on `last_message_at`).
+- Affection scores are strictly bound to the specific `ChatSession` (not statically tied to the character).
+- **21 Behavioral Tiers:** Score maps into 21 qualitative tiers (in 10-point steps from -100 "Pure Hatred" to +100 "Blind Devotion"). Instead of raw numbers, the roleplay model receives concrete narrative behavioral guidelines inside `[RELATION]...[/RELATION]`. In the UI, the player sees exclusively the relationship status title without numerical scores or hover tooltips.
 
-### 6. Single-WorldInfo-Regel & Sonderregeln
-- Pro Chat-Session kann **maximal genau eine WorldInfo aktiv** sein (oder `None`).
-- Bei `None`: Neutrale Standardhintergründe, keine Ortspräferenzen, **keine Events**, kein Hintergrund an ComfyUI.
-- Die am Charakter hinterlegte WorldInfo ist **nur eine Empfehlung**. Der Nutzer kann sie frei wählen oder wechseln.
+### 6. Single-WorldInfo Rule & Special Constraints
+- Exactly **one WorldInfo can be active at most** per chat session (or `None`).
+- If `None`: Neutral fallback backgrounds, no location preferences, **no events**, no background image sent to ComfyUI.
+- The WorldInfo attached to a character is **merely a recommendation**. The user can choose or switch freely.
 
-### 7. Einheitlicher Event-Pool & Cooldown-Zähler
-- Welt-Events und Orts-Events des aktuellen Orts liegen in einem einzigen gemeinsamen Pool.
-- **Kreislauf:** Start bei `random(10, 100)`; jede Nachricht verringert den Zähler um 1 (`counter -= 1`); bei `counter == 0` wird genau ein Event gewichtet nach `probability` getriggert (bereits ausgelöste `one_shot`-Events scheiden aus); danach wird eine neue Zahl (10–100) gewürfelt.
+### 7. Unified Event Pool & Cooldown Counter
+- World events and location events for the current location share a single common pool.
+- **Cycle:** Starts at `random(10, 100)`; each message decrements the counter by 1 (`counter -= 1`); when `counter == 0`, exactly one event is triggered weighted by `probability` (already triggered `one_shot` events are excluded); then a new number (10–100) is rolled.
 
-### 8. Asynchrone Memories & Kaskaden-Löschung
-- Alle 10 ungesicherten Nachrichten wird ein `Memory` (Titel, Tags, 300–500 Zeichen Zusammenfassung) erzeugt und der Chat-Titel aktualisiert. Läuft **asynchron im Hintergrund**.
-- **Löschen:** Wird eine Nachricht gelöscht, werden alle Folge-Nachrichten und kaskadierend alle Memories mit `memory.message_idx > deleted_idx` gelöscht.
+### 8. Asynchronous Memories & Cascade Deletion
+- Every 10 unsummarized messages, a `Memory` (title, tags, 300–500 character summary) is generated and the chat title is updated. Runs **asynchronously in the background**.
+- **Deletion:** When a message is deleted, all subsequent messages and cascaded memories where `memory.message_idx > deleted_idx` are deleted.
 
-### 9. Persona-Sperre & Lösch-Schutz
-- Nach der 1. Benutzernachricht ist die Persona für diese Chat-Session unveränderlich gesperrt.
-- Personas, die in aktiven Chats referenziert werden, dürfen **nicht gelöscht werden** (`PersonaInUseError`).
+### 9. Persona Lock & Deletion Protection
+- After the first user message, the persona for that chat session is permanently locked.
+- Personas referenced in active chats **must not be deleted** (`PersonaInUseError`).
 
-### 10. Unentziehbarer initialer Administrator
-- Der beim First-Boot erstellte Benutzer (`is_initial_admin = True`) erhält dauerhaft alle Berechtigungen.
-- Der Code in `domain/permissions/` muss strikt verhindern, dass dieser Benutzer gelöscht, deaktiviert oder ihm Rechte entzogen werden können (`SuperAdminProtectionError`).
+### 10. Non-Revocable Initial Administrator
+- The user created during first boot (`is_initial_admin = True`) permanently retains all permissions.
+- Code in `domain/permissions/` must strictly prevent this user from being deleted, deactivated, or having permissions revoked (`SuperAdminProtectionError`).
 
-### 11. Funktionales Rechtemodell
-- Keine starren RBAC-Rollen, sondern granulare funktionale Flags (`character_create`, `chat_access`, `worldinfo_edit` etc.).
-- Bündelung über Presets (`Admin`, `Creator`, `User`).
+### 11. Functional Permission Model
+- No rigid RBAC roles; instead, granular functional flags (`character_create`, `chat_access`, `worldinfo_edit`, etc.).
+- Bundling via presets (`Admin`, `Creator`, `User`).
 
-### 12. Modulare Provider-Abstraktion (Backend-Entkopplung)
-- Der Kern kommuniziert **niemals direkt** mit konkreten APIs (Ollama, ComfyUI etc.).
-- Sämtliche Zugriffe laufen über standardisierte Interfaces:
-  - `LLMProvider` (`infrastructure/llm/interface.py`) -> Implementierung: `OllamaLLMProvider`.
-  - `ImageGenProvider` (`infrastructure/image_gen/interface.py`) -> Implementierung: `ComfyUIImageGenProvider`.
-  - `VoiceTTSProvider` (`infrastructure/voice/interface.py`) -> Implementierung: `VoiceTTSStubProvider` (TODO).
+### 12. Modular Provider Abstraction (Backend Decoupling)
+- The core **never communicates directly** with concrete external APIs (Ollama, ComfyUI, etc.).
+- All access routes through standardized interfaces:
+  - `LLMProvider` (`infrastructure/llm/interface.py`) -> Implementation: `OllamaLLMProvider`.
+  - `ImageGenProvider` (`infrastructure/image_gen/interface.py`) -> Implementation: `ComfyUIImageGenProvider`.
+  - `VoiceTTSProvider` (`infrastructure/voice/interface.py`) -> Implementation: `VoiceTTSStubProvider` (TODO).
 
-### 13. Headless Core & REST-API (`application/api/`)
-- Der Core läuft als vollwertiger Hintergrund-Dienst mit vollständiger REST-API.
-- Sowohl das Web-UI als auch alternative Clients (z. B. eine native **GTK4/Libadwaita-App für Flathub**) nutzen dieselben Endpunkte.
+### 13. Headless Core & REST API (`application/api/`)
+- The core runs as a full-fledged background service with a complete REST API.
+- Both the Web UI and alternative clients (e.g., a native **GTK4/Libadwaita app for Flathub**) consume the same endpoints.
+- **Mandatory CLIENT_KEY in Request Header:** The core service strictly requires a valid `CLIENT_KEY` passed exclusively via HTTP request headers (`X-Client-Key`, `X-API-Key`, or `Authorization: Bearer <key>`) for all REST calls. Calls without a valid header key must be rejected immediately with HTTP 401. Passing client keys via query parameters is strictly forbidden.
 
-### 14. SQLite Concurrency & WAL-Modus
-- Die SQLite-Verbindung in `infrastructure/database.py` wird zwingend mit folgenden Pragmas initialisiert:
+### 14. SQLite Concurrency & WAL Mode
+- The SQLite connection in `infrastructure/database.py` must be initialized with the following pragmas:
   - `PRAGMA journal_mode=WAL;`
-  - `PRAGMA busy_timeout=30000;` (30 Sekunden)
+  - `PRAGMA busy_timeout=30000;` (30 seconds)
   - `PRAGMA synchronous=NORMAL;`
   - `PRAGMA foreign_keys=ON;`
 
----
-
-## 💻 3. Coding Conventions & Richtlinien
-
-- **Objektorientierung (OOP):** Durchgängige Kapselung in Klassen, Entitäten und Value Objects.
-- **Sprechende Namen & minimaler Kommentaraufwand:** Code erklärt sich durch saubere Struktur und Typannotationen selbst. Keine trivialen Kommentare.
-- **Keine defensiven `None`-Checks:** Vermeide defensive `None`-Prüfungen, es sei denn, `None` stellt einen expliziten, fachlich validen Domänenzustand dar.
-- **Geheimhaltung:** Niemals Secrets oder API-Keys hardcodieren; alles wird über `shared/config.py` aus Umgebungsvariablen bezogen.
-- **Test-Policy:** Automatisierte Tests werden **ausschließlich dann geschrieben, wenn der Benutzer dies explizit verlangt**.
-- **PyPI-Minimalismus:** Bevorzuge die Python-Standardbibliothek. Externe Pakete nur nach strikter Notwendigkeit (`Flask`, `SQLAlchemy`, `bcrypt`, `requests`, `python-dotenv`).
+### 15. Mandatory Access Control (MAC) & Default-Deny Discipline
+- **Default-Deny Policy (Zero Trust):** The absolute baseline across the entire application is **zero access to anything by default**. No user has implicit permission to access, view, modify, or delete any entity or resource. Access must be granted explicitly.
+- **Consistent Application-Wide Enforcement:** Every single controller route (`flask/application/`), REST API endpoint (`core/application/api/`), SSE stream, background worker, and action handler that takes an ID or accesses a resource **must strictly enforce access control without exception**.
+- **Domain-Encapsulated Authorization Logic:** Business rules governing visibility and editability (`is_visible_to_user`, `is_editable_by_user`) belong strictly to domain entities (`Character`, `Lorebook`, `WorldInfo`, etc.). Controllers in `application/` are obligated to call these domain methods before performing any operation.
+- **Zero Tolerance for IDOR (Insecure Direct Object References):** Merely changing or guessing a numeric ID or URL path (e.g. `/characters/<id>`, `/chat/session/<id>`, `/api/chat/<session_id>/...`) must never grant access to private resources of another user. Unauthorized attempts must be blocked immediately (redirecting or returning HTTP 404/403).
 
 ---
 
-## 🚨 4. Was du NICHT tun darfst
+## 💻 3. Coding Conventions & Guidelines
 
-- ❌ Das verbindliche 7-stufige Prompt-Layout verändern oder Abschnitte ohne eindeutige Segment-Begrenzungen vermischen.
-- ❌ Dem Roleplay-Modell Steuersignale, Kontroll-Tags (z. B. `[EMOTION: ...]`, `<location: ...>`) oder Markup abverlangen, die nachträglich aus dem Antworttext herausgefiltert werden müssen (Kontext und Output müssen rein narrativ bleiben).
-- ❌ UI-Systemmeldungen, Bildpfade oder technische Metadaten in den Chat-Verlauf für das Roleplay-LLM einspeisen.
-- ❌ Vektordatenbanken (Chroma, FAISS etc.) oder Embeddings einbinden (RAG rein über Tag-Listen).
-- ❌ Dem Roleplay-Modell gestatten, für den User zu antworten oder dessen Handlungen vorzuschreiben.
-- ❌ Nicht-englische Prompts/Kontexte ungefiltert an das LLM übergeben, ohne die Übersetzungsschicht zu nutzen.
-- ❌ Externe KI-Dienste (Ollama, ComfyUI, TTS) direkt in Domain- oder Application-Services verdrahten (immer das jeweilige Provider-Interface nutzen).
-- ❌ Niemals zulassen, dass der initiale Administrator seine Berechtigungen verliert oder sich selbst entziehen kann.
-- ❌ SQL-Queries direkt in `domain/` oder `application/` ausführen (nur über Repositories).
-- ❌ Web-Framework-Code (`flask`, `render_template`, `request`) in `domain/` oder `infrastructure/` importieren.
-- ❌ Keine unaufgeforderten automatisierten Tests anlegen.
-- ❌ Keine externe Datenbank konfigurieren (rein SQLite).
+- **Object-Oriented Programming (OOP):** Consistent encapsulation in classes, entities, and value objects.
+- **File Size & Domain Modularization:** Keep source files, templates, stylesheets, and scripts focused on a single sub-domain or responsibility (soft limit: ~500 lines; hard limit: 700 lines). Files exceeding this threshold must be split into smaller domain-specific modules or packages. Include CSS, JS, and Jinja2 template fragments strictly on the pages/views that actually require them rather than loading page-specific assets globally in `base.html`.
+- **Expressive names & minimal comments:** Code and templates must be self-explanatory through meaningful naming, clean structure, and type hints. Comments in code and templates are only permitted when the code cannot explain itself or when complex domain logic and non-trivial relationships cannot be understood immediately. Trivial or redundant comments (e.g., above self-explanatory includes, functions, HTML elements, or control structures) are strictly forbidden.
+- **No defensive `None` checks:** Avoid defensive `None` checks unless `None` represents an explicit, valid domain state.
+- **Confidentiality:** Never hardcode secrets or API keys; everything is retrieved via `shared/config.py` from environment variables.
+- **Testing Policy:** Automated tests are **written only when explicitly requested by the user**.
+- **PyPI Minimalism:** Favor the Python standard library. External packages only when strictly necessary (`Flask`, `bcrypt`, `requests`, `python-dotenv`).
+- **CSS-First for Layout & Animations:** Layout wrapping (`flex-wrap: wrap`, CSS Grid with `repeat(auto-fit, minmax(...))`, media queries) and visual animations (transitions, `@keyframes`, opacity, transforms, hover states) **must strictly be implemented with pure CSS**. JavaScript must only be used if a layout or animation behavior is technically impossible to achieve via CSS alone.
+- **Reusable UI Components First:** For EVERY UI element (buttons, modals, badges, dropdowns, cards, form fields, icons, etc.), reusable, standardized components (shared CSS classes, Jinja2 macros such as in `templates/macros/`, standardized HTML/SVG snippets) must be created and consistently reused whenever possible, rather than implementing ad-hoc isolated solutions or duplicating styles. Existing base components (e.g., `.aimo-btn`, `.chat-input-btn`, `.modal-backdrop`, `.aimo-card-tile`) must always be prioritized and extended.
+- **Synchronous Documentation Maintenance (Current State / IST-Zustand):** With EVERY new feature and EVERY modification to existing features or UI workflows, end-user documentation in `docs/` (e.g., `README.md`, `lorebooks.md`, `characters.md`, `worldinfo.md`, `hub.md`, `chat.md`, etc.) **must** be updated simultaneously in the same step. Documentation always describes **exclusively the current state (IST-Zustand)** (no changelogs, no before/after comparisons, and no explanations of historical states).
+- **User-Oriented Manual (No Developer Details):** Documentation in `docs/` serves strictly as an end-user manual for consumers who may lack technical knowledge. Technical implementation details (such as CSS keyframes, class names, HTTP status codes, internal API endpoints, file paths, or architectural concepts) do not belong in user documentation. It describes exclusively the user-facing behavior: what the user sees, what indicators and colors mean, what actions are available, and how the interface is operated.
 
 ---
 
-## ✅ 5. Wie du antwortest
+## 🚨 4. What You MUST NOT Do
 
-Wenn eine Programmier- oder Anpassungsaufgabe gestellt wird:
+- ❌ Alter the mandatory 7-stage prompt layout or mix sections without clear segment delimiters.
+- ❌ Demand control signals, tags (e.g., `[EMOTION: ...]`, `<location: ...>`), or markup from the roleplay model that must be parsed out of the generated prose (context and output must stay purely narrative).
+- ❌ Feed UI system messages, image paths, or technical metadata into the chat history for the roleplay LLM.
+- ❌ Integrate vector databases (Chroma, FAISS, etc.) or embeddings (RAG operates purely on tag lists).
+- ❌ Allow the roleplay model to speak for the user or dictate user actions.
+- ❌ Pass non-English prompts/contexts directly to the LLM without routing through the translation layer.
+- ❌ Wire external AI services (Ollama, ComfyUI, TTS) directly into domain or application services (always use the respective provider interface).
+- ❌ Ever allow the initial administrator to lose permissions or revoke their own permissions.
+- ❌ Expose or implement any route, view, or API endpoint without explicit access control and authorization checks (violating Mandatory Access Control and Default-Deny).
+- ❌ Allow unauthorized access, viewing, editing, copying, streaming, or deletion of private entities (characters, chat sessions, personas, lorebooks, worldinfos) via manipulated IDs or URLs (IDOR).
+- ❌ Allow any REST call to reach the core without a valid CLIENT_KEY in the request header, or accept client keys passed via URL query parameters.
+- ❌ Execute SQL queries directly inside `domain/` or `application/` (only via repositories).
+- ❌ Import web framework code (`flask`, `render_template`, `request`) into `domain/` or `infrastructure/`.
+- ❌ Use JavaScript for layout wrapping, element dimensions, or animations when CSS (Flexbox, Grid, `@keyframes`, transitions) can achieve the result.
+- ❌ Build ad-hoc duplicated UI elements or reinvent inline buttons/components instead of using existing, reusable UI classes and macros.
+- ❌ Add redundant or trivial comments in code or templates that merely paraphrase what self-explanatory code, includes, tags, or functions already express.
+- ❌ Leave documentation in `docs/` outdated when modifying or adding features, or add historical changelogs into `docs/` instead of maintaining the pure current state ("IST-Zustand").
+- ❌ Overload end-user documentation in `docs/` with developer implementation details, CSS keyframes, HTTP status codes, or internal backend architecture concepts (docs/ serves strictly as an accessible user manual for non-technical users).
+- ❌ Create unsolicited automated tests.
+- ❌ Configure any external database (strictly SQLite).
 
-1. **Analysiere**, welche Schicht betroffen ist (`domain`, `infrastructure`, `application`, `shared`).
-2. **Wähle** die passende Datei im DDD-Modell.
-3. **Schreibe** den Code mit genau einer klaren Verantwortung.
-4. **Erwähne** explizit, welche Schicht du berührst und warum.
+---
 
-Beispiel:
-> *"Ich ändere `domain/characters/services.py`, um die zufällige Sprite-Auswahl für erkannte Emotionen zu implementieren. Ich berühre keine Templates oder Controller, da dies eine reine Domain-Komponente ist."*
+## ✅ 5. How You Respond
+
+When given a coding or customization task:
+
+1. **Analyze** which layer is affected (`domain`, `infrastructure`, `application`, `shared`).
+2. **Choose** the appropriate file in the DDD model.
+3. **Write** code with exactly one single responsibility.
+4. **Update Documentation:** Ensure any feature additions or behavioral changes are immediately reflected in `docs/` (exclusively current state / IST-Zustand).
+5. **Explicitly mention** which layer you are touching and why.
+
+Example:
+> *"I am modifying `domain/characters/services.py` to implement random sprite selection for detected emotions. I am not touching templates or controllers, as this is a pure domain component."*

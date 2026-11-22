@@ -1,0 +1,11 @@
+__pycache__/
+**/__pycache__/
+*.py[cod]
+venv/
+.venv/
+aimo-data/
+aimo-uploads/
+data/
+uploads/
+*.mo
+flask/static/.min/

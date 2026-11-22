@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% from "macros/buttons.html" import action_button, tab_button %}
+{% from "macros/editor_header.html" import editor_header %}
+{% from "macros/collaboration.html" import collaboration_manager %}
+{% block title %}AImo — {{ _("Character Designer") }}{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/character_creator.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/cards.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/i18n_editor.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components/image_cropper.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="aimo-sidebar-layout" data-tab-group>
+  <aside class="aimo-frame aimo-sidebar">
+    <div class="aimo-sidebar-header">
+      <div class="aimo-sidebar-title">
+        <span class="icon-mono">🎭</span>
+        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ character.name if character else _("New Character") }}</span>
+      </div>
+      <p class="aimo-sidebar-subtitle">{{ _("Character Designer") }}</p>
+    </div>
+
+    <nav class="aimo-sidebar-nav">
+      {{ tab_button(_("Main Info"), "tab-char-info", icon="📋", active=(active_tab == 'info'), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Gallery Images"), "tab-char-gallery", icon="🖼️", active=(active_tab == 'gallery'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Emotional Sprites"), "tab-char-sprites", icon="🎭", active=(active_tab == 'sprites'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Dialogue Styles"), "tab-char-dialogue", icon="💬", active=(active_tab == 'dialogue'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("World"), "tab-char-world", icon="🗺️", active=(active_tab == 'world'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Random Events"), "tab-char-events", icon="🎲", active=(active_tab == 'events'), count=(events|length if character else none), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Lorebooks"), "tab-char-lorebooks", icon="📖", active=(active_tab == 'lorebooks'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
+      {{ tab_button(_("Collaboration"), "tab-char-collab", icon="👥", active=(active_tab == 'collab'), disabled=(not character), title=(_("Please save basic info first") if not character else none), extra_class="aimo-sidebar-nav-item") }}
+    </nav>
+
+    <div class="aimo-sidebar-footer">
+      {{ action_button(_("Back to Overview"), href=get_safe_back_url(url_for('overview.index', tab='characters')), arrow="left", extra_class="aimo-sidebar-back-btn") }}
+    </div>
+  </aside>
+
+  <section class="aimo-sidebar-stage">
+    {{ editor_header(
+        title=character.name if character else _("New Character"),
+        back_url=get_safe_back_url(url_for('overview.index', tab='characters')),
+        form_id="character-main-form",
+        is_editable=is_editable,
+        copy_url=(url_for('characters.copy_character', character_id=character.id) if character else none),
+        can_copy=(character is not none and character.id is not none),
+        delete_url=(url_for('characters.delete_character', character_id=character.id) if character else none),
+        can_delete=(character is not none and is_author),
+        delete_confirm_msg=_("Really delete character permanently?"),
+        save_title=_("Save character"),
+        show_back=false
+    ) }}
+
+  <form id="character-main-form"
+        method="POST"
+        action="{% if character %}{{ url_for('characters.edit_character', character_id=character.id) }}{% else %}{{ url_for('characters.new_character') }}{% endif %}"
+        enctype="multipart/form-data"
+        data-character-id="{{ character.id if character else '' }}"
+        data-character-name="{{ character.name if character else '' }}"
+        data-active-persona="{{ (g.default_persona.name if g.default_persona else 'Du') }}">
+    <input type="hidden" name="return_to" value="{{ get_safe_back_url(url_for('overview.index', tab='characters')) }}">
+    <input type="hidden" name="active_tab" id="character-active-tab-input" value="{{ active_tab }}">
+    <input type="hidden" name="dialogue_examples_json" id="dialogue-examples-json" value='{{ form.dialogue_examples | tojson }}'>
+
+    {% include "characters/partials/tab_info.html" %}
+    {% include "characters/partials/tab_dialogue.html" %}
+    {% include "characters/partials/tab_world.html" %}
+    {% include "characters/partials/tab_lorebooks.html" %}
+
+    <section id="tab-char-collab" class="tab-pane {% if active_tab == 'collab' %}active{% endif %}">
+      {{ collaboration_manager(form.collaborator_creator_tags, is_author=is_author, is_editable=is_editable, form_id='character-main-form') }}
+    </section>
+  </form>
+
+  {% include "characters/partials/tab_gallery.html" %}
+  {% include "characters/partials/tab_sprites.html" %}
+  {% include "characters/partials/tab_events.html" %}
+  {% include "characters/partials/modals.html" %}
+  </section>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/image_cropper.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/i18n_editor.js') }}" defer></script>
+<script type="module" src="{{ url_for('static', filename='js/characters/creator_core.js') }}"></script>
+{% endblock %}

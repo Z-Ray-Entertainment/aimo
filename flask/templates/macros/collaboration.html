@@ -1,0 +1,120 @@
+{# =============================================================================
+   AIMO Reusable Collaboration Manager Component
+   Shared component for managing creator tags and collaborator permissions
+   Used in Character Designer, WorldInfo Detail, and Lorebook Detail
+   ============================================================================= #}
+{% from "macros/buttons.html" import action_button %}
+{% from "macros/badges.html" import pill_badge %}
+
+{% macro collaboration_manager(collaborator_tags, is_author=true, is_editable=true, form_id=none, input_name="collaborator_creator_tags") %}
+<div class="collaboration-manager-root aimo-frame" data-form-id="{{ form_id or '' }}" style="padding: 1.5rem;">
+
+  <div class="aimo-page-hint-row aimo-page-hint-row--bordered">
+    <p class="aimo-page-hint">
+      {{ _("Collaborators receive full edit access to this creation (content, sprites, locations & events), but can never delete it or manage collaborators.") }}
+    </p>
+    {% if is_author and form_id %}
+      {{ action_button(_("Save collaborators"), type="submit", form=form_id, icon="💾", extra_class="collab-save-btn", title=_("Saves all changes in the form")) }}
+    {% endif %}
+  </div>
+
+  <!-- Read-only notice for collaborators -->
+  {% if not is_author %}
+    <div class="aimo-frame" style="background: rgba(45, 34, 24, 0.7); border-color: var(--gold-accent); padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
+      <span style="font-size: 1.4rem;">🔒</span>
+      <div>
+        <strong style="color: var(--gold-accent); display: block; font-size: 0.92rem;">Kollaborator-Ansicht</strong>
+        <span style="color: var(--text-muted); font-size: 0.84rem;">
+          Du bearbeitest diesen Inhalt als autorisierter Kollaborator. Die Liste der Kollaboratoren kann nur vom ursprünglichen Autor verwaltet werden.
+        </span>
+      </div>
+    </div>
+  {% else %}
+    <p class="aimo-page-hint">
+      Füge den persönlichen <strong>Creator-Tag (UUID4)</strong> befreundeter Autoren hinzu, um ihnen Schreibrechte zu gewähren.
+    </p>
+  {% endif %}
+
+  <!-- Hidden input holding current tags for form submission -->
+  <input
+    type="hidden"
+    class="collab-tags-hidden-input"
+    name="{{ input_name }}"
+    value="{{ (collaborator_tags or [])|join(', ') }}"
+    {% if form_id %}form="{{ form_id }}"{% endif %}>
+
+  <!-- Collaborators Table -->
+  <div class="aimo-table-wrap" style="margin-bottom: 1.25rem;">
+    <table class="aimo-table collab-table">
+      <thead>
+        <tr>
+          <th style="width: 50px; text-align: center;">#</th>
+          <th>Creator-Tag (UUID4)</th>
+          <th style="width: 220px;">Berechtigung</th>
+          {% if is_author %}
+            <th style="width: 140px; text-align: right;">Aktion</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody class="collab-table-body">
+        {% for tag in (collaborator_tags or []) %}
+          <tr class="collab-row" data-tag="{{ tag }}">
+            <td style="text-align: center; color: var(--text-muted); font-weight: 600;" class="collab-row-idx">{{ loop.index }}</td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <code class="collab-tag-code" style="font-family: monospace; font-size: 0.88rem; background: rgba(0, 0, 0, 0.4); padding: 0.22rem 0.55rem; border-radius: 6px; border: 1px solid var(--border-wood-dark); color: var(--gold-accent); letter-spacing: 0.5px;">{{ tag }}</code>
+                {{ action_button(_("Copy"), icon="📋", layout="icon", size="sm", extra_class="copy-collab-tag-btn", data={"tag": tag}, title=_("Copy creator tag")) }}
+              </div>
+            </td>
+            <td>
+              {{ pill_badge("Bearbeiten erlaubt", icon="✏️", variant="gold", extra_class="aimo-card-badge") }}
+            </td>
+            {% if is_author %}
+              <td style="text-align: right;">
+                {{ action_button(_("Remove"), icon="🗑️", variant="danger", size="sm", extra_class="remove-collab-tag-btn", data={"tag": tag}, title=_("Remove collaborator")) }}
+              </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Empty State Notice -->
+    <div class="collab-empty-notice" style="text-align: center; padding: 2.2rem 1rem; color: var(--text-muted); font-size: 0.9rem; {% if (collaborator_tags or [])|length > 0 %}display: none;{% endif %}">
+      <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.6;">👥</span>
+      Bislang sind keine Kollaboratoren eingetragen.
+      {% if is_author %}
+        <br><span style="font-size: 0.82rem; color: var(--gold-accent); margin-top: 0.25rem; display: inline-block;">Füge unten den Creator-Tag eines anderen Autors ein, um die Zusammenarbeit zu starten.</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Add Creator Interface (Author Only) -->
+  {% if is_author %}
+    <div class="collab-add-box aimo-frame" style="padding: 1.25rem; background: rgba(24, 17, 12, 0.75); border-color: var(--border-wood-dark);">
+      <h4 style="color: var(--gold-accent); margin: 0 0 0.35rem 0; font-size: 0.95rem; display: flex; align-items: center; gap: 0.45rem;">
+        <span class="icon-mono">➕</span> Neuen Creator hinzufügen
+      </h4>
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        Gib den persönlichen Creator-Tag (36 Zeichen lange UUID4) des Autors ein. Du kannst auch mehrere kommagetrennte Tags auf einmal einfügen.
+      </p>
+      <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 280px;">
+          <input
+            type="text"
+            class="collab-new-tag-input"
+            placeholder="z. B. 123e4567-e89b-12d3-a456-426614174000"
+            style="width: 100%; font-family: monospace; font-size: 0.88rem;">
+        </div>
+        {{ action_button("Hinzufügen", icon="➕", extra_class="add-collab-tag-btn") }}
+        {% if form_id %}
+          {{ action_button(_("Save"), type="submit", form=form_id, icon="💾", extra_class="collab-save-btn", title=_("Saves all changes in the form")) }}
+        {% endif %}
+      </div>
+      <div class="collab-feedback-msg" style="margin-top: 0.65rem; font-size: 0.84rem; display: none;"></div>
+    </div>
+  {% endif %}
+
+</div>
+<script src="{{ url_for('static', filename='js/collaboration.js') }}" defer></script>
+{% endmacro %}

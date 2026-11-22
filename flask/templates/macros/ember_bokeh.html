@@ -1,0 +1,7 @@
+{% macro ember_bokeh_overlay(count=26) %}
+<div class="ember-bokeh-layer" aria-hidden="true">
+  {% for _ in range(count) %}
+    <span class="ember-particle"></span>
+  {% endfor %}
+</div>
+{% endmacro %}

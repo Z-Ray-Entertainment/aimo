@@ -1,0 +1,253 @@
+{# =============================================================================
+   AIMO Reusable Lorebook Manager Component
+   Shared component for managing active, disabled and custom chat lorebooks
+   Used in both the New Chat Dialog and the active Chat Session Interface
+   ============================================================================= #}
+{% from "macros/buttons.html" import action_button, modal_close_button %}
+{% from "macros/badges.html" import pill_badge %}
+
+{% macro lorebook_manager(lorebook_data, is_new_chat=false, session_id=none, modal_id="chat-add-lorebook-modal") %}
+<div class="lorebook-manager-root"
+     data-is-new-chat="{{ 'true' if is_new_chat else 'false' }}"
+     {% if session_id %}data-session-id="{{ session_id }}"{% endif %}
+     data-modal-id="{{ modal_id }}">
+
+  <!-- Header with Info & Add Button -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+    <div>
+      <h3 style="color: var(--gold-accent); margin: 0 0 0.25rem 0;">{{ _("Active Knowledge Books (Lorebooks)") }}</h3>
+      <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">
+        {{ _("Lorebooks expand the model's context with relevant world and background knowledge via keyword tags.") }}
+      </p>
+    </div>
+    <div>
+      {{ action_button(_("Add Lorebook"), icon="➕", modal=modal_id, id="open-lorebook-picker-btn") }}
+    </div>
+  </div>
+
+  <!-- Hidden inputs for new chat form submission -->
+  {% if is_new_chat %}
+    <div id="new-chat-lorebook-hidden-inputs">
+      {% for lb in lorebook_data.default_lorebooks %}
+        {% if not lb.is_active %}
+          <input type="hidden" name="disabled_lorebook_ids" value="{{ lb.id }}" data-default-disabled-id="{{ lb.id }}">
+        {% endif %}
+      {% endfor %}
+      {% for lb in lorebook_data.custom_lorebooks %}
+        <input type="hidden" name="custom_lorebook_ids" value="{{ lb.id }}" data-custom-id="{{ lb.id }}">
+        {% if not lb.is_active %}
+          <input type="hidden" name="disabled_lorebook_ids" value="{{ lb.id }}" data-custom-disabled-id="{{ lb.id }}">
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Section 1: Default Lorebooks (Character & WorldInfo) -->
+  <div class="lorebook-section" style="margin-bottom: 1.5rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.4rem;">
+      <span style="font-weight: 700; font-size: 0.9rem; color: var(--gold-accent);">
+        {{ _("Default Lorebooks (Character & World)") }}
+      </span>
+      <span style="font-size: 0.8rem; color: var(--text-muted);">
+        {{ _("Session Toggle (Slider)") }}
+      </span>
+    </div>
+
+    <div id="default-lorebooks-list" class="lorebook-list" style="display: flex; flex-direction: column; gap: 0.6rem;">
+      {% for lb in lorebook_data.default_lorebooks %}
+        <div class="lorebook-list-item"
+             data-lorebook-id="{{ lb.id }}"
+             data-name="{{ lb.name|lower }}"
+             data-source="{{ lb.source }}">
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+              <span style="font-weight: 700; color: var(--text-color); font-size: 0.95rem;">
+                <span class="icon-mono">📜</span> {{ lb.name }}
+              </span>
+              {{ pill_badge(lb.source, variant="dark", title=_("Lorebook source"), extra_class="aimo-card-badge") }}
+              {% if lb.is_private_to_user %}
+                {{ pill_badge(_("Creator Lore"), icon="🔒", variant="danger", title=_("Creator Lore: hidden from other players, but used by the AI in chat."), extra_class="aimo-card-badge danger") }}
+              {% endif %}
+            </div>
+            {% if lb.description %}
+              <p style="margin: 0.2rem 0 0.4rem 0; font-size: 0.84rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ lb.description }}
+              </p>
+            {% endif %}
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <span style="font-size: 0.75rem; color: var(--gold-accent);">{{ lb.entry_count }} {{ _("Entries") }}</span>
+              {% for tag in lb.tags[:4] %}
+                <span style="font-size: 0.72rem; padding: 0.1rem 0.4rem; border: 1px solid var(--border-wood); border-radius: 8px; color: var(--text-muted);">#{{ tag }}</span>
+              {% endfor %}
+              {% if lb.tags|length > 4 %}
+                <span style="font-size: 0.72rem; color: var(--text-muted);">+{{ lb.tags|length - 4 }}</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Rechtsbündiges, vertikal zentriertes Overlay -->
+          <div class="lorebook-item-actions-overlay">
+            {% if lb.is_locked %}
+              {{ pill_badge(_("Inactive — Requires world:") ~ " " ~ lb.required_worldinfo_name, icon="🔒", variant="danger", title=_("This lorebook requires the world") ~ " '" ~ lb.required_worldinfo_name ~ "'.", extra_class="aimo-card-badge danger lorebook-condition-badge") }}
+              <label class="aimo-switch disabled" title="{{ _('Locked: matching world is not active.') }}">
+                <input type="checkbox"
+                       class="lorebook-toggle-input"
+                       data-lorebook-id="{{ lb.id }}"
+                       data-required-worldinfo-id="{{ lb.required_worldinfo_id }}"
+                       disabled>
+                <span class="aimo-switch-slider"></span>
+              </label>
+            {% else %}
+              <label class="aimo-switch" title="{{ _('Deactivate lorebook') if lb.is_active else _('Activate lorebook') }}">
+                <input type="checkbox"
+                       class="lorebook-toggle-input"
+                       data-lorebook-id="{{ lb.id }}"
+                       {% if lb.is_active %}checked{% endif %}>
+                <span class="aimo-switch-slider"></span>
+              </label>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+      <div id="default-lorebooks-empty" class="aimo-frame" style="text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.88rem; {% if lorebook_data.default_lorebooks|length > 0 %}display: none;{% endif %}">
+        {{ _("No default lorebooks assigned for this session.") }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Custom Lorebooks (User-added) -->
+  <div class="lorebook-section">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; border-bottom: 1px solid var(--border-wood-dark); padding-bottom: 0.4rem;">
+      <span style="font-weight: 700; font-size: 0.9rem; color: var(--gold-accent);">
+        {{ _("Custom Lorebooks (Chat-specific)") }}
+      </span>
+      <span style="font-size: 0.8rem; color: var(--text-muted);">
+        {{ _("Actions (Toggle & Delete)") }}
+      </span>
+    </div>
+
+    <div id="custom-lorebooks-list" class="lorebook-list" style="display: flex; flex-direction: column; gap: 0.6rem;">
+      {% for lb in lorebook_data.custom_lorebooks %}
+        <div class="lorebook-list-item"
+             data-lorebook-id="{{ lb.id }}"
+             data-name="{{ lb.name|lower }}"
+             data-source="{{ _('Custom') }}">
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+              <span style="font-weight: 700; color: var(--text-color); font-size: 0.95rem;">
+                <span class="icon-mono">📜</span> {{ lb.name }}
+              </span>
+              {{ pill_badge(_("Custom"), variant="dark", extra_class="aimo-card-badge") }}
+              {% if lb.is_private_to_user %}
+                {{ pill_badge(_("Creator Lore"), icon="🔒", variant="danger", title=_("Creator Lore: hidden from other players, but used by the AI in chat."), extra_class="aimo-card-badge danger") }}
+              {% endif %}
+            </div>
+            {% if lb.description %}
+              <p style="margin: 0.2rem 0 0.4rem 0; font-size: 0.84rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ lb.description }}
+              </p>
+            {% endif %}
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <span style="font-size: 0.75rem; color: var(--gold-accent);">{{ lb.entry_count }} {{ _("Entries") }}</span>
+              {% for tag in lb.tags[:4] %}
+                <span style="font-size: 0.72rem; padding: 0.1rem 0.4rem; border: 1px solid var(--border-wood); border-radius: 8px; color: var(--text-muted);">#{{ tag }}</span>
+              {% endfor %}
+              {% if lb.tags|length > 4 %}
+                <span style="font-size: 0.72rem; color: var(--text-muted);">+{{ lb.tags|length - 4 }}</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Rechtsbündiges, vertikal zentriertes Overlay: Toggle Slider UND Mülleimer -->
+          <div class="lorebook-item-actions-overlay">
+            <label class="aimo-switch" title="{{ _('Deactivate lorebook') if lb.is_active else _('Activate lorebook') }}">
+              <input type="checkbox"
+                     class="lorebook-toggle-input"
+                     data-lorebook-id="{{ lb.id }}"
+                     {% if lb.is_active %}checked{% endif %}>
+              <span class="aimo-switch-slider"></span>
+            </label>
+            {{ action_button(_("Remove"), icon="🗑️", layout="icon", variant="danger", extra_class="remove-custom-lorebook-btn", data={"lorebook-id": lb.id}, title=_("Remove lorebook from chat")) }}
+          </div>
+        </div>
+      {% endfor %}
+      <div id="custom-lorebooks-empty" class="aimo-frame" style="text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.88rem; {% if lorebook_data.custom_lorebooks|length > 0 %}display: none;{% endif %}">
+        {{ _("No additional custom lorebooks added. Click 'Add Lorebook' to add knowledge.") }}
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+
+{# Reusable Modal for Picking & Adding a Lorebook to Chat #}
+{% macro lorebook_picker_modal(modal_id, available_lorebooks) %}
+<div class="modal-backdrop" id="{{ modal_id }}" aria-hidden="true">
+  <div class="modal-frame" style="max-width: 820px; max-height: 85vh; display: flex; flex-direction: column;">
+    <div class="modal-header">
+      <h3 style="color: var(--gold-accent); margin: 0;"><span class="icon-mono">📜</span> {{ _("Add Lorebook to Chat") }}</h3>
+      {{ modal_close_button(modal_id) }}
+    </div>
+
+    <!-- Suchleiste nach Lorebook-Name -->
+    <div style="padding: 1rem 0 0.5rem 0;">
+      <input type="text"
+             id="{{ modal_id }}-search"
+             class="search-input"
+             placeholder="{{ _('Filter by lorebook name...') }}"
+             style="width: 100%;"
+             autocomplete="off">
+    </div>
+
+    <!-- Lorebook Grid View (Exakt selbes Grid-Layout wie in Übersicht, Klick fügt direkt hinzu) -->
+    <div style="overflow-y: auto; flex: 1; padding: 0.5rem 0 1rem 0;">
+      <div class="aimo-card-grid" id="{{ modal_id }}-grid">
+        {% for lb in available_lorebooks %}
+          <div class="aimo-card-tile lorebook-picker-card {% if lb.is_added %}already-added{% endif %}"
+               data-lorebook-id="{{ lb.id }}"
+               data-lorebook-name="{{ lb.name|lower }}"
+               data-lorebook-fullname="{{ lb.name }}"
+               data-lorebook-desc="{{ lb.description or '' }}"
+               data-lorebook-tags="{{ lb.tags|join(',') }}"
+               data-lorebook-entries="{{ lb.entry_count }}"
+               style="background: radial-gradient(circle at center, rgba(42, 28, 19, 0.95), rgba(15, 10, 7, 0.98));">
+            {% if lb.description %}
+              <div class="aimo-card-scroll-overlay">
+                <strong style="color: var(--gold-accent); display: block; margin-bottom: 0.35rem;">{{ lb.name }}</strong>
+                <p style="margin: 0;">{{ lb.description }}</p>
+              </div>
+            {% endif %}
+            <div class="aimo-card-overlay"></div>
+            <div class="aimo-card-content">
+              <div class="aimo-card-header">
+                <div></div>
+                <span class="aimo-card-stat-pill lorebook-picker-action-label" style="color: {% if lb.is_added %}var(--text-muted){% else %}var(--gold-accent){% endif %};">
+                  {% if lb.is_added %}✓ {{ _("Already active") }}{% else %}+ {{ _("Add") }}{% endif %}
+                </span>
+              </div>
+              <div class="aimo-card-center-icon">📜</div>
+              <div class="aimo-card-footer">
+                <h3 class="aimo-card-title">{{ lb.name }}</h3>
+                <div class="aimo-card-stats">
+                  <span class="aimo-card-stat-pill">📜 {{ lb.entry_count }} {{ _("Entries") }}</span>
+                  {% for tag in lb.tags[:2] %}
+                    <span class="aimo-card-stat-pill">#{{ tag }}</span>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="aimo-frame" style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--text-muted);">
+            {{ _("No lorebooks available.") }}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; padding-top: 0.75rem; border-top: 1px solid var(--border-wood-dark);">
+      {{ action_button(_("Close"), modal_close=modal_id) }}
+    </div>
+  </div>
+</div>
+{% endmacro %}

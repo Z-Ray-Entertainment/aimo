@@ -1,0 +1,96 @@
+{% from "macros/buttons.html" import action_button, new_button, modal_close_button %}
+{% from "macros/cards.html" import aimo_card_grid, aimo_card_container %}
+  <section id="tab-char-gallery" class="tab-pane {% if active_tab == 'gallery' %}active{% endif %}">
+    {% if character %}
+      <div class="aimo-frame" style="padding: 1rem 1.5rem; margin-bottom: 1.25rem;">
+        <p class="aimo-page-hint" style="margin: 0;">
+          {{ _("Exclusive portrait graphics unlocked when reaching a relationship threshold in chat.") }}
+        </p>
+      </div>
+
+      <div id="char-gallery-grid">
+        {% call aimo_card_grid() %}
+          {% if is_editable %}
+            {{ new_button(_("Add 9:16 Image"), modal="add-gallery-modal") }}
+          {% endif %}
+
+          {% for img in character.gallery_images %}
+            {% set img_url = url_for('uploaded_file', filename=img.file_path) %}
+            {% set threshold_name = gallery_threshold_names.get(img.unlock_threshold, img.unlock_threshold) %}
+            {% set bg_style = "background-image: url('" ~ img_url ~ "'), url('/static/img/cover.svg');" %}
+            {% set click_attrs = {'data-modal-open': 'edit-gallery-modal-' ~ img.id} if is_editable else {'class': 'aimo-card-click-area char-gallery-preview', 'data-gallery-index': loop.index0, 'data-viewer-src': img_url, 'data-viewer-title': character.name, 'data-viewer-subtitle': _('Unlocks at relationship:') ~ ' ' ~ threshold_name} %}
+            {% call aimo_card_container(none, character.name, bg_style, extra_class='char-gallery-card', click_attrs=click_attrs) %}
+              <div class="aimo-card-header">
+                <div></div>
+                <button type="button"
+                        class="aimo-card-action-btn char-gallery-zoom-btn"
+                        data-gallery-index="{{ loop.index0 }}"
+                        data-viewer-src="{{ img_url }}"
+                        data-viewer-title="{{ character.name }}"
+                        data-viewer-subtitle="{{ _('Unlocks at relationship:') }} {{ threshold_name }}"
+                        title="{{ _('View fullscreen') }}"
+                        aria-label="{{ _('View fullscreen') }}">
+                  <span class="icon-mono" aria-hidden="true">🔍</span>
+                </button>
+              </div>
+
+              <div class="aimo-card-footer">
+                <div class="aimo-card-stats">
+                  <span class="aimo-card-stat-pill">❤️ {{ threshold_name }}</span>
+                </div>
+              </div>
+            {% endcall %}
+
+            {% if is_editable %}
+              <div class="modal-backdrop" id="edit-gallery-modal-{{ img.id }}" aria-hidden="true">
+                <div class="modal-frame" style="max-width: 440px;">
+                  <div class="modal-header">
+                    <h3 style="color: var(--gold-accent);">{{ _("Edit 9:16 Gallery Image") }}</h3>
+                    {{ modal_close_button("edit-gallery-modal-" ~ img.id) }}
+                  </div>
+                  <form method="POST" action="{{ url_for('characters.edit_gallery_image', character_id=character.id, image_id=img.id) }}" style="display: flex; flex-direction: column; gap: 0.85rem;">
+                    <div style="display: flex; justify-content: center;">
+                      <img src="{{ img_url }}"
+                           alt="{{ character.name }}"
+                           class="char-gallery-modal-preview aimo-clickable-image"
+                           data-gallery-index="{{ loop.index0 }}"
+                           title="{{ _('View fullscreen') }}"
+                           style="max-height: 280px; max-width: 100%; border-radius: 8px; border: 1px solid var(--border-wood); object-fit: contain;">
+                    </div>
+                    <div>
+                      <label>
+                        {{ _("Unlock Relationship Level") }} *
+                        <span class="field-help-btn" title="{{ _('Required relationship level to unlock this image in chat.') }}">?</span>
+                      </label>
+                      <select name="unlock_threshold" required>
+                        {% for tier in relationship_tiers %}
+                          <option value="{{ tier.level }}" {% if tier.level == img.unlock_threshold %}selected{% endif %}>
+                            {{ tier.name }}
+                          </option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-wood-dark);">
+                      {{ action_button(_("Delete"), type="submit", form="delete-gallery-form-" ~ img.id, variant="danger", icon="🗑️") }}
+                      <div style="display: flex; gap: 0.5rem;">
+                        {{ action_button(_("Cancel"), modal_close="edit-gallery-modal-" ~ img.id) }}
+                        {{ action_button(_("Save"), type="submit", icon="💾") }}
+                      </div>
+                    </div>
+                  </form>
+                  <form id="delete-gallery-form-{{ img.id }}" method="POST" action="{{ url_for('characters.delete_gallery_image', character_id=character.id, image_id=img.id) }}" data-confirm="{{ _('Really delete this gallery image?') }}" style="display: none;"></form>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endcall %}
+      </div>
+    {% else %}
+      <div class="aimo-frame" style="padding: 2.5rem; text-align: center;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🖼️</div>
+        <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto;">
+          {{ _("Please save the character's basic info first to upload and manage 9:16 gallery images.") }}
+        </p>
+      </div>
+    {% endif %}
+  </section>

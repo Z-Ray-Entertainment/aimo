@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "macros/buttons.html" import action_button %}
+{% block title %}{{ _('AImo — Login') }}{% endblock %}
+
+{% block content %}
+<div class="aimo-frame" style="max-width: 440px; margin: 4rem auto; padding: 2rem;">
+  <h1 style="color: var(--gold-accent); margin-bottom: 0.5rem; text-align: center;"><img src="{{ url_for('static', filename='img/favicon.svg') }}" alt="" class="aimo-brand-icon" aria-hidden="true"> {{ _('AImo Login') }}</h1>
+  <p style="color: var(--text-muted); margin-bottom: 1.5rem; text-align: center;">
+    {{ _('Sign in to enter your roleplay worlds.') }}
+  </p>
+
+  <form method="POST" action="{{ url_for('auth.login', next=request.args.get('next', '')) }}" style="display: flex; flex-direction: column; gap: 1rem;">
+    <div>
+      <label for="email">{{ _('Email address') }}</label>
+      <input type="email" id="email" name="email" value="{{ form.email }}" required autofocus>
+    </div>
+    <div>
+      <label for="password">{{ _('Password') }}</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <div style="margin-top: 0.75rem;">
+      {{ action_button(_("Enter"), type="submit", extra_class="w-100") }}
+    </div>
+  </form>
+</div>
+{% endblock %}

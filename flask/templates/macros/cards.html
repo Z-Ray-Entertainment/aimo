@@ -1,0 +1,255 @@
+{# =============================================================================
+   AIMO Reusable Card & Grid System (.aimo-card-*)
+   Unified Full-Background Card & Grid Components for Character and World Grids
+   ============================================================================= #}
+{% from "macros/buttons.html" import new_button %}
+{% from "macros/badges.html" import pill_badge %}
+
+{# Reusable AIMO Card Grid Container #}
+{% macro aimo_card_grid(extra_class='') %}
+  <div class="aimo-card-grid {{ extra_class }}">
+    {{ caller() }}
+  </div>
+{% endmacro %}
+
+{# Backward-compatibility alias #}
+{% macro hero_card_grid(extra_class='') %}
+  {% call aimo_card_grid(extra_class=extra_class) %}
+    {{ caller() }}
+  {% endcall %}
+{% endmacro %}
+
+{# Reusable AIMO Card Container Component #}
+{% macro aimo_card_container(main_url, title, bg_style, description=none, extra_class='', onclick=none, click_attrs=none) %}
+  <div class="aimo-card-tile {{ extra_class }}" style="{{ bg_style }}">
+    {% if main_url %}
+      <a href="{{ main_url }}" class="aimo-card-click-area" aria-label="{{ title }}"{% if onclick %} onclick="{{ onclick }}"{% endif %}{% if click_attrs %}{% for k, v in click_attrs.items() %} {{ k }}="{{ v|forceescape }}"{% endfor %}{% endif %}>
+        {% if description %}
+          <div class="aimo-card-scroll-overlay">
+            <strong style="color: var(--gold-accent); display: block; margin-bottom: 0.35rem;">{{ title }}</strong>
+            <p style="margin: 0;">{{ description }}</p>
+          </div>
+        {% endif %}
+      </a>
+    {% else %}
+      <div role="button" tabindex="0" class="aimo-card-click-area" aria-label="{{ title }}"{% if onclick %} onclick="{{ onclick }}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();{{ onclick }}}" {% endif %}{% if click_attrs %}{% for k, v in click_attrs.items() %} {{ k }}="{{ v|forceescape }}"{% endfor %}{% endif %}>
+        {% if description %}
+          <div class="aimo-card-scroll-overlay">
+            <strong style="color: var(--gold-accent); display: block; margin-bottom: 0.35rem;">{{ title }}</strong>
+            <p style="margin: 0;">{{ description }}</p>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+    <div class="aimo-card-overlay"></div>
+    <div class="aimo-card-content">
+      {{ caller() }}
+    </div>
+  </div>
+{% endmacro %}
+
+{# Character Card for Hub Grid (1:1 Avatar Background, Name, Relationship, Badges Overlay) #}
+{% macro character_card(item, has_edit_perm=false, has_create_perm=false) %}
+  {% set char = item.character %}
+  {% set img_url = url_for('uploaded_file', filename=char.avatar_path or char.primary_portrait_path) if (char.avatar_path or char.primary_portrait_path) else '/static/img/cover.svg' %}
+  {% set bg_style = "background-image: url('" ~ img_url ~ "'), url('/static/img/cover.svg');" %}
+  {% set chat_url = url_for('chat.open_character_chat', character_id=char.id) %}
+  {% call aimo_card_container(chat_url, char.name ~ ' (' ~ char.gender.value ~ ')', bg_style, description=char.description) %}
+    <div class="aimo-card-header">
+      {% if char.gender.value == 'female' %}
+        {{ pill_badge(_("Female"), icon="♀️", variant="dark", title=_("Gender"), extra_class="aimo-card-badge") }}
+      {% elif char.gender.value == 'male' %}
+        {{ pill_badge(_("Male"), icon="♂️", variant="dark", title=_("Gender"), extra_class="aimo-card-badge") }}
+      {% else %}
+        {{ pill_badge(char.gender.value, icon="⚧️", variant="dark", title=_("Gender"), extra_class="aimo-card-badge") }}
+      {% endif %}
+      <div style="display: flex; gap: 0.35rem; align-items: center;">
+        {% if item.translation_pending %}
+          {{ pill_badge(_("Translation pending"), icon="🌐", variant="dark", title=_("Translation into your language is pending"), extra_class="aimo-card-badge") }}
+        {% endif %}
+        {% if item.message_count > 0 %}
+          {{ pill_badge(item.message_count, icon="💬", icon_mono=true, variant="dark", title=_("Exchanged messages"), extra_class="aimo-card-badge") }}
+        {% endif %}
+        {% if item.is_editable and has_edit_perm %}
+          <a href="{{ url_for('characters.edit_character', character_id=char.id) }}" class="aimo-card-action-btn" title="{{ _('Edit character') }}">
+            <span class="icon-mono">✏️</span>
+          </a>
+        {% elif has_create_perm %}
+          <form method="POST" action="{{ url_for('characters.copy_character', character_id=char.id) }}" style="display: inline; margin: 0;">
+            <button type="submit" class="aimo-card-action-btn" title="{{ _('Duplicate character') }}">
+              <span class="icon-mono">📄</span>
+            </button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="aimo-card-footer">
+      <h3 class="aimo-card-title">{{ char.name }}</h3>
+      <div class="relationship-bar-wrap aimo-card-rel-wrap" data-relationship-score="{{ item.best_relationship }}">
+        <div class="relationship-header">
+          <span>{{ _("Relationship:") }} {{ item.relationship_tier_name|default(item.best_relationship) }}</span>
+          <span class="heart-icon">❤️</span>
+        </div>
+        <div class="relationship-track">
+          <div class="relationship-fill"></div>
+        </div>
+      </div>
+    </div>
+  {% endcall %}
+{% endmacro %}
+
+{# WorldInfo Card for Hub Grid (Full Cover Background, Visibility Badge, Center Icon, Stats Overlay) #}
+{% macro worldinfo_card(item) %}
+  {% set wi = item.worldinfo %}
+  {% set bg_style = "background-image: url('" ~ url_for('uploaded_file', filename=wi.cover_image_path) ~ "');" if wi.cover_image_path else "background: radial-gradient(circle at center, rgba(42, 28, 19, 0.95), rgba(15, 10, 7, 0.98));" %}
+  {% set detail_url = url_for('worldinfo.detail', worldinfo_id=wi.id) %}
+  {% call aimo_card_container(detail_url, wi.name, bg_style, description=wi.description if wi.cover_image_path else none) %}
+    <div class="aimo-card-header">
+      <div style="flex: 1;"></div>
+      {% if item.translation_pending %}
+        {{ pill_badge(_("Translation pending"), icon="🌐", variant="dark", title=_("Translation into your language is pending"), extra_class="aimo-card-badge") }}
+      {% endif %}
+      {% if wi.visibility == 'public' %}
+        {{ pill_badge(_("Public"), icon="🌍", variant="dark", title=_("Public world"), extra_class="aimo-card-badge") }}
+      {% else %}
+        {{ pill_badge(_("Private"), icon="🔒", variant="dark", title=_("Private world"), extra_class="aimo-card-badge") }}
+      {% endif %}
+    </div>
+
+    {% if not wi.cover_image_path %}
+      <div class="aimo-card-center-icon">
+        {{ wi.icon or '🌐' }}
+      </div>
+    {% endif %}
+
+    <div class="aimo-card-footer">
+      <h3 class="aimo-card-title">{{ wi.name }}</h3>
+      <div class="aimo-card-stats">
+        <span class="aimo-card-stat-pill">📍 {{ item.location_count }} {{ _("Locations") }}</span>
+        <span class="aimo-card-stat-pill">🎲 {{ item.event_count }} {{ _("Events") }}</span>
+      </div>
+    </div>
+  {% endcall %}
+{% endmacro %}
+
+{# Persona Card for Settings Grid (1:1 Portrait, Gender Badge, Default Star Quick-Action, Name) #}
+{% macro persona_card(p_item, can_manage=true) %}
+  {% set p = p_item.persona %}
+  {% set img_url = url_for('uploaded_file', filename=p.portrait_path) if p.portrait_path else '/static/img/cover.svg' %}
+  {% set bg_style = "background-image: url('" ~ img_url ~ "'), url('/static/img/cover.svg');" %}
+  {% set click_attrs = {
+    'data-persona-id': p.id,
+    'data-persona-name': p.name,
+    'data-persona-gender': p.gender.value,
+    'data-persona-description': p.description,
+    'data-persona-appearance': p.appearance,
+    'data-persona-portrait-url': img_url,
+    'data-persona-in-use': '1' if p_item.in_use else '0',
+    'data-persona-i18n-description': (p_item.i18n_description or {}) | tojson,
+    'data-persona-i18n-appearance': (p_item.i18n_appearance or {}) | tojson
+  } %}
+  {% call aimo_card_container(none, p.name, bg_style, description=(p.description or p.appearance), onclick=("openEditPersonaFromBtn(this)" if can_manage else none), click_attrs=click_attrs) %}
+    <div class="aimo-card-header">
+      {% if p.gender.value == 'female' %}
+        {{ pill_badge(_("Female"), icon="♀️", variant="dark", title=_("Gender"), extra_class="aimo-card-badge") }}
+      {% elif p.gender.value == 'male' %}
+        {{ pill_badge(_("Male"), icon="♂️", variant="dark", title=_("Gender"), extra_class="aimo-card-badge") }}
+      {% else %}
+        {{ pill_badge(p.gender.value, icon="⚧️", variant="dark", title=_("Gender"), extra_class="aimo-card-badge") }}
+      {% endif %}
+      {% if p.is_default %}
+        <span class="aimo-card-action-btn persona-star-btn is-default" title="{{ _('Default Persona') }}" aria-label="{{ _('Default Persona') }}">★</span>
+      {% elif can_manage %}
+        <form method="POST" action="{{ url_for('personas.set_default', persona_id=p.id) }}" style="display: inline; margin: 0;">
+          <button type="submit" class="aimo-card-action-btn persona-star-btn" title="{{ _('Set as default persona') }}" aria-label="{{ _('Set as default persona') }}">☆</button>
+        </form>
+      {% else %}
+        <span class="aimo-card-action-btn persona-star-btn" aria-hidden="true">☆</span>
+      {% endif %}
+    </div>
+
+    <div class="aimo-card-footer">
+      <h3 class="aimo-card-title">{{ p.name }}</h3>
+    </div>
+  {% endcall %}
+{% endmacro %}
+
+{# Unified Persona Grid View (Includes "Add Persona" tile & cards) #}
+{% macro persona_grid(persona_items, can_manage=false) %}
+  {% call aimo_card_grid() %}
+    {% if can_manage %}
+      {{ new_button(_("New Persona"), onclick="if (!window.aimoPersonaVisionRunning) openNewPersonaForm()") }}
+    {% endif %}
+    {% for p_item in persona_items %}
+      {{ persona_card(p_item, can_manage=can_manage) }}
+    {% endfor %}
+  {% endcall %}
+{% endmacro %}
+
+{# Unified Character Grid View (Includes "Add Character" tile & cards) #}
+{% macro character_grid(character_cards, can_create=false, can_edit=false) %}
+  {% call aimo_card_grid() %}
+    {% if can_create %}
+      {{ new_button(_("New Character"), href=url_for('characters.new_character')) }}
+    {% endif %}
+    {% for item in character_cards %}
+      {{ character_card(item, has_edit_perm=can_edit, has_create_perm=can_create) }}
+    {% endfor %}
+  {% endcall %}
+{% endmacro %}
+
+{# Unified WorldInfo Grid View (Includes "Add World" tile & cards) #}
+{% macro worldinfo_grid(worldinfo_cards, can_create=false) %}
+  {% call aimo_card_grid() %}
+    {% if can_create %}
+      {{ new_button(_("New World"), href=url_for('worldinfo.new_worldinfo')) }}
+    {% endif %}
+    {% for item in worldinfo_cards %}
+      {{ worldinfo_card(item) }}
+    {% endfor %}
+  {% endcall %}
+{% endmacro %}
+
+{# Lorebook Card for Hub Grid (1:1 Dark Frame, Visibility & Translation Badges, Center Icon, Stats Overlay) #}
+{% macro lorebook_card(item) %}
+  {% set lb = item.lorebook %}
+  {% set bg_style = "background: radial-gradient(circle at center, rgba(42, 28, 19, 0.95), rgba(15, 10, 7, 0.98));" %}
+  {% set detail_url = url_for('lorebooks.detail', lorebook_id=lb.id) %}
+  {% call aimo_card_container(detail_url, lb.name, bg_style, description=lb.description) %}
+    <div class="aimo-card-header">
+      <div style="flex: 1;"></div>
+      {% if item.translation_pending %}
+        {{ pill_badge(_("Translation pending"), icon="🌐", variant="dark", title=_("Translation into your language is pending"), extra_class="aimo-card-badge") }}
+      {% endif %}
+      {% if lb.visibility == 'public' %}
+        {{ pill_badge(_("Public"), icon="🌍", variant="dark", title=_("Public lorebook"), extra_class="aimo-card-badge") }}
+      {% else %}
+        {{ pill_badge(_("Private"), icon="🔒", variant="dark", title=_("Private lorebook"), extra_class="aimo-card-badge") }}
+      {% endif %}
+    </div>
+
+    <div class="aimo-card-center-icon">
+      📜
+    </div>
+
+    <div class="aimo-card-footer">
+      <h3 class="aimo-card-title">{{ lb.name }}</h3>
+      <div class="aimo-card-stats">
+        <span class="aimo-card-stat-pill">📜 {{ item.entry_count }} {{ _("Entries") }}</span>
+      </div>
+    </div>
+  {% endcall %}
+{% endmacro %}
+
+{# Unified Lorebook Grid View (Includes "Add Lorebook" tile & cards) #}
+{% macro lorebook_grid(lorebook_cards, can_create=false) %}
+  {% call aimo_card_grid() %}
+    {% if can_create %}
+      {{ new_button(_("New Lorebook"), href=url_for('lorebooks.new_lorebook')) }}
+    {% endif %}
+    {% for item in lorebook_cards %}
+      {{ lorebook_card(item) }}
+    {% endfor %}
+  {% endcall %}
+{% endmacro %}

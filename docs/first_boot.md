@@ -1,36 +1,46 @@
-# ⚙️ Ersteinrichtung & First-Boot
+# ⚙️ Initial Setup & First-Boot
 
-[← Zurück zur Übersicht](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/README.md)
+[← Back to Overview](README.md)
 
-Beim allerersten Start von **aimo** (wenn noch keine SQLite-Datenbank bzw. keine Benutzer existieren) wird automatisch der **First-Boot-Setup-Wizard** aufgerufen.
-
----
-
-## 🧙‍♂️ Der First-Boot-Wizard (`/setup`)
-
-Bevor das System für reguläre Nutzer freigegeben wird, muss genau ein initialer Administrator angelegt und die Verbindung zu deinem lokalen KI-Server konfiguriert werden.
-
-### 1. Initialer Administrator (Super User)
-- **Benutzername:** Dein gewünschter Anzeigename.
-- **E-Mail-Adresse:** Dient zusammen mit dem Passwort zur späteren Anmeldung.
-- **Passwort:** Ein sicheres Kennwort (wird per `bcrypt` gehasht).
-- **Besonderheit:** Dieser erste Benutzer erhält automatisch sämtliche im System verfügbaren Berechtigungen. Diese Rechte sind dauerhaft geschützt und können weder entzogen noch deaktiviert werden.
-
-### 2. Service-Verbindungen
-- **Ollama-URL (Pflicht):**  
-  Die Netzwerkadresse deines Ollama-Servers (Standard: `http://localhost:11434`). Ollama wird zwingend für die Textgenerierung, Rollenspiele und Bild-Vision-Analysen benötigt.
-- **SearXNG-URL (Optional):**  
-  Adresse für Websuchen per Tool-Calling (standardmäßig deaktiviert / TODO).
-- **ComfyUI-URL (Optional):**  
-  Adresse deines ComfyUI-Servers (Standard: `http://localhost:8188`) für generative Bildworkflows im Chat. Kann auch später im [Admin-Bereich](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/admin.md) nachgetragen werden.
+On the very first launch of **AImo** (when no user accounts exist yet), the system automatically directs you to the **First-Boot Setup Wizard**.
 
 ---
 
-## 🔒 Nach dem Setup: Geschlossenes System
+## 🧙‍♂️ The First-Boot Wizard (`/setup`)
 
-Sobald der Setup-Wizard einmalig erfolgreich abgeschlossen wurde:
-1. **Dauerhafte Sperre:** Der Pfad `/setup` wird sofort unzugänglich gemacht.
-2. **Keine Selbstregistrierung:** Es gibt keinen öffentlichen Registrierungslink. Neue Konten können ausschließlich durch einen Administrator im [Admin-Panel](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/admin.md) erstellt werden.
-3. **Regulärer Login:** Alle Benutzer melden sich fortan über die Einstiegsmaske (`/login`) mit E-Mail und Passwort an.
+Before the system is made accessible for regular users, the initial administrator account and the exclusive AI backend are configured in three guided steps:
 
-Weiter zu: [**Das Hub-Dashboard →**](file:///opt/datalake/vortex/vortex_acherontic_projects/aimo/docs/hub.md)
+### 1. Initial Administrator (Super User)
+- **Username:** Your desired display name.
+- **Email Address:** Used alongside the password for subsequent logins.
+- **Password:** A strong password.
+- **Special Protection:** This first user automatically receives all functional permissions available across the system. These permissions are permanently protected and cannot be revoked or disabled.
+
+### 2. Select AI Backend
+Choose between **Ollama (Local / Self-Hosted)** and **Google AI Cloud (Gemini API)**. Only one AI backend is active at a time; you can switch your choice anytime later under **Admin → Services & Models**.
+
+### 3. Configure Backend
+Depending on your choice in Step 2, the wizard configures the selected backend:
+
+- **If Ollama is selected:**
+  - **Ollama Server URL:** The address of your Ollama server (default: `http://localhost:11434`) with a one-click connection test.
+  - **Recommended Models per Role:**
+    - **🎭 Roleplay:** `igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest`
+    - **🧠 Memory:** `igorls/gemma-4-12B-it-qat-q4_0-unquantized-heretic:latest`
+    - **✨ Assistant:** `gemma4:e4b`
+    - **👁️ Vision:** `gemma4:e4b`
+    - **🏷️ Classification:** `llama3.2:1b`
+  - **Integrated Model Manager:** After checking the Ollama connection, each role row displays **✔ Ready** if its recommended model is already installed, or a **📥 Pull** button if the model is missing so you can download and install it directly inside the wizard with live progress feedback. Once installed, the Pull button automatically yields to the **✔ Ready** badge.
+- **If Google AI Cloud is selected:**
+  - Enter and verify your **Google AI API Key** and optionally customize the Gemini model assignment per role.
+
+---
+
+## 🔒 Post-Setup: Closed System
+
+Once the setup wizard is successfully completed:
+1. **Permanent Lockout:** The `/setup` route is immediately rendered inaccessible.
+2. **No Public Registration:** There is no self-registration endpoint. New accounts can only be provisioned by an administrator through the [Admin Panel](admin.md).
+3. **Regular Login:** All users authenticate via the login portal (`/login`) using email and password.
+
+Continue to: [**The Hub Dashboard →**](hub.md)
