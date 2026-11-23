@@ -33,6 +33,7 @@ class CharacterService:
         card_image_path: str | None = None,
         appearance: str = "",
         collaborator_creator_tags: list[str] | None = None,
+        origin_language: str = "en",
     ) -> Character:
         DomainValidator.validate_positive_user_id(user_id, InvalidCharacterDataError)
         cleaned_name = DomainValidator.validate_required_string(name, "Character name", InvalidCharacterDataError)
@@ -69,6 +70,7 @@ class CharacterService:
             name=cleaned_name,
             gender=resolved_gender,
             visibility=cleaned_vis,
+            origin_language=(origin_language or "en").strip().lower()[:2] or "en",
             primary_portrait_path=cleaned_portrait,
             description=cleaned_desc,
             first_message=cleaned_first_msg,

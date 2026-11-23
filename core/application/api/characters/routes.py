@@ -151,6 +151,9 @@ def create_character():
             else:
                 card_image_path = data.get("card_image_path")
 
+        origin_language = (
+            str(data.get("origin_language") or user.language or "en").strip().lower()[:2] or "en"
+        )
         character = char_service.create_character(
             user_id=user.id,
             name=data.get("name", ""),
@@ -162,6 +165,7 @@ def create_character():
             description=data.get("description", ""),
             first_message=data.get("first_message", ""),
             visibility=data.get("visibility", "private"),
+            origin_language=origin_language,
             dialogue_examples=(
                 data.get("dialogue_examples", [])
                 if isinstance(data.get("dialogue_examples"), list)
@@ -187,6 +191,16 @@ def create_character():
             initial_relationship=int(data.get("initial_relationship", 0)),
         )
         saved = char_repo.save(character)
+        if saved.id is not None:
+            trans_repo = TranslationRepository()
+            for field_name, param_name in (
+                ("description", "i18n_description"),
+                ("appearance", "i18n_appearance"),
+                ("first_message", "i18n_first_message"),
+            ):
+                raw_variants = data.get(param_name)
+                if isinstance(raw_variants, str) and raw_variants.strip():
+                    trans_repo.save_field_variants_json("character", saved.id, field_name, raw_variants)
         return jsonify({"id": saved.id, "name": saved.name}), 201
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 400
@@ -229,6 +243,7 @@ def get_character_detail(character_id: int):
     if char is None or not char.is_visible_to_user(user.id, is_admin()):
         return jsonify({"error": "Character not found."}), 404
     events = WorldInfoRepository().list_character_events(character_id)
+    i18n_map = TranslationRepository().get_entity_translations_map("character", char.id)
     return jsonify(
         {
             "id": char.id,
@@ -270,6 +285,7 @@ def get_character_detail(character_id: int):
                 for img in char.gallery_images
             ],
             "events": [_serialize_character_event(ev) for ev in events],
+            "i18n": i18n_map,
             "editable": char.is_editable_by_user(user.id, is_admin(), user.creator_tag),
             "deletable": char.is_deletable_by_user(user.id, is_admin()),
         }
@@ -298,6 +314,16 @@ def update_character_detail(character_id: int):
             initial_relationship=int(data.get("initial_relationship", char.initial_relationship)),
         )
         saved = char_repo.save(updated)
+        if saved.id is not None:
+            trans_repo = TranslationRepository()
+            for field_name, param_name in (
+                ("description", "i18n_description"),
+                ("appearance", "i18n_appearance"),
+                ("first_message", "i18n_first_message"),
+            ):
+                raw_variants = data.get(param_name)
+                if isinstance(raw_variants, str) and raw_variants.strip():
+                    trans_repo.save_field_variants_json("character", saved.id, field_name, raw_variants)
         return jsonify({"id": saved.id, "name": saved.name})
     except (AimoError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 400
