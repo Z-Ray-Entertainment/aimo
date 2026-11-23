@@ -88,6 +88,8 @@ def detail(worldinfo_id: int):
 
     _status, lb_data = core_get("/api/lorebooks")
     _status, char_data = core_get("/api/characters")
+    available_characters = wrap_dto(char_data.get("characters", []))
+    character_map = {c.id: c for c in available_characters if getattr(c, "id", None) is not None}
     active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
     if active_tab not in ("info", "places", "events", "collab"):
         active_tab = "info"
@@ -97,7 +99,9 @@ def detail(worldinfo_id: int):
         locations=wrap_dto(data.get("locations", [])),
         events=wrap_dto(data.get("events", [])),
         lorebooks=wrap_dto(lb_data.get("lorebooks", [])),
-        characters=wrap_dto(char_data.get("characters", [])),
+        characters=available_characters,
+        available_characters=available_characters,
+        character_map=character_map,
         is_editable=is_editable,
         is_author=is_author,
         active_tab=active_tab,
