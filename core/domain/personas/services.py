@@ -26,6 +26,7 @@ class PersonaService:
         description: str,
         appearance: str = "",
         is_default: bool = False,
+        origin_language: str = "en",
     ) -> UserPersona:
         DomainValidator.validate_positive_user_id(user_id, InvalidPersonaDataError)
         cleaned_name = DomainValidator.validate_required_string(name, "Persona name", InvalidPersonaDataError)
@@ -51,6 +52,7 @@ class PersonaService:
             portrait_path=cleaned_portrait,
             description=cleaned_desc,
             appearance=cleaned_appearance,
+            origin_language=(origin_language or "en").strip().lower()[:2] or "en",
             is_default=bool(is_default),
             created_at=datetime.now(timezone.utc),
         )

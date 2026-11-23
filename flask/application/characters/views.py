@@ -93,6 +93,11 @@ def _render_creator(
         if getattr(ev, "id", None) is not None
     }
 
+    ev_translations = {
+        ev.id: getattr(ev, "i18n", {}) or {}
+        for ev in character_events
+        if getattr(ev, "id", None) is not None
+    }
     return render_template(
         "characters/creator.html",
         character=character,
@@ -112,8 +117,8 @@ def _render_creator(
         ev_display=ev_display,
         locations_by_world=locations_by_world,
         events=character_events,
-        ev_translations={},
-        event_translations={},
+        ev_translations=ev_translations,
+        event_translations=ev_translations,
         char_translations=char_translations or {},
         sprite_by_emotion=sprite_by_emotion,
         available_emotions=available_emotions,

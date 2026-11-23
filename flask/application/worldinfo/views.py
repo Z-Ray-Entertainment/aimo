@@ -16,6 +16,8 @@ worldinfo_bp = Blueprint("worldinfo", __name__, url_prefix="/worldinfo")
 def new_worldinfo():
     if request.method == "POST":
         form = WorldInfoForm.from_request(request.form)
+        user = get_current_user()
+        origin_language = (getattr(user, "language", None) or "en")[:2].lower()
         status, payload = core_post(
             "/api/worldinfo",
             json={
@@ -24,6 +26,7 @@ def new_worldinfo():
                 "visibility": form.visibility,
                 "lorebook_id": form.lorebook_id,
                 "is_proper_noun": form.is_proper_noun,
+                "origin_language": origin_language,
             },
         )
         if status < 400 and payload.get("id"):
@@ -49,8 +52,8 @@ def new_worldinfo():
         loc_map={},
         loc_display={},
         ev_display={},
-        location_i18n={},
-        event_i18n={},
+        loc_translations={},
+        ev_translations={},
     )
 
 
@@ -93,6 +96,16 @@ def detail(worldinfo_id: int):
     active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
     if active_tab not in ("info", "places", "events", "collab"):
         active_tab = "info"
+    loc_translations = {
+        loc["id"]: loc.get("i18n", {})
+        for loc in data.get("locations", [])
+        if loc.get("id")
+    }
+    ev_translations = {
+        ev["id"]: ev.get("i18n", {})
+        for ev in data.get("events", [])
+        if ev.get("id")
+    }
     return render_template(
         "worldinfo/detail.html",
         worldinfo=worldinfo,
@@ -105,8 +118,8 @@ def detail(worldinfo_id: int):
         is_editable=is_editable,
         is_author=is_author,
         active_tab=active_tab,
-        location_i18n={},
-        event_i18n={},
+        loc_translations=loc_translations,
+        ev_translations=ev_translations,
     )
 
 

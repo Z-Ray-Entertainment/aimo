@@ -83,6 +83,9 @@ def create_worldinfo():
     try:
         raw_lb = data.get("lorebook_id")
         lb_id = int(raw_lb) if raw_lb not in (None, "", "0", 0) else None
+        origin_language = (
+            str(data.get("origin_language") or user.language or "en").strip().lower()[:2] or "en"
+        )
         wi = service.create_worldinfo(
             user_id=user.id,
             name=data.get("name", ""),
@@ -91,6 +94,7 @@ def create_worldinfo():
             cover_image_path=data.get("cover_image_path"),
             backdrop_image_path=data.get("backdrop_image_path"),
             lorebook_id=lb_id,
+            origin_language=origin_language,
         )
         saved = repo.create(wi)
         return jsonify(
@@ -136,6 +140,15 @@ def create_event():
             location_id=location_id,
         )
         saved = repo.add_event(event)
+        if saved.id is not None:
+            trans_repo = TranslationRepository()
+            for field_name, param_name in (("title", "i18n_title"), ("description", "i18n_description")):
+                raw_i18n = data.get(param_name)
+                if isinstance(raw_i18n, str) and raw_i18n.strip():
+                    trans_repo.save_field_variants_json("worldinfo_event", saved.id, field_name, raw_i18n)
+        from infrastructure.translation.worker import trigger_translation_sync
+
+        trigger_translation_sync(manual=False)
         return jsonify(
             {
                 "id": saved.id,
@@ -298,6 +311,7 @@ def get_worldinfo_detail(worldinfo_id: int):
         return jsonify({"error": "WorldInfo not found."}), 404
     locations = repo.list_locations(worldinfo_id)
     events = repo.list_events(worldinfo_id)
+    trans_repo = TranslationRepository()
     return jsonify(
         {
             "id": wi.id,
@@ -320,6 +334,7 @@ def get_worldinfo_detail(worldinfo_id: int):
                     "description": loc.description,
                     "background_image_path": loc.background_image_path,
                     "character_id": loc.character_id,
+                    "i18n": trans_repo.get_entity_translations_map("worldinfo_location", loc.id),
                 }
                 for loc in locations
             ],
@@ -331,6 +346,7 @@ def get_worldinfo_detail(worldinfo_id: int):
                     "probability": ev.probability,
                     "one_shot": ev.one_shot,
                     "description": ev.description,
+                    "i18n": trans_repo.get_entity_translations_map("worldinfo_event", ev.id),
                 }
                 for ev in events
             ],
@@ -391,6 +407,9 @@ def create_worldinfo_location(worldinfo_id: int):
             bg_path=data.get("background_image_path"),
         )
         saved = repo.add_location(loc)
+        raw_i18n = data.get("i18n_description")
+        if saved.id is not None and isinstance(raw_i18n, str) and raw_i18n.strip():
+            TranslationRepository().save_field_variants_json("worldinfo_location", saved.id, "description", raw_i18n)
         return jsonify({"id": saved.id, "name": saved.name}), 201
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 400
@@ -427,6 +446,9 @@ def update_worldinfo_location(worldinfo_id: int, location_id: int):
             else None,
         )
         saved = repo.update_location(loc)
+        raw_i18n = data.get("i18n_description")
+        if saved.id is not None and isinstance(raw_i18n, str) and raw_i18n.strip():
+            TranslationRepository().save_field_variants_json("worldinfo_location", saved.id, "description", raw_i18n)
         return jsonify(
             {
                 "id": saved.id,
@@ -477,6 +499,15 @@ def update_worldinfo_event(worldinfo_id: int, event_id: int):
             max_relationship=RequestDataParser.to_opt_int(data, "max_relationship"),
         )
         saved = repo.update_event(ev)
+        if saved.id is not None:
+            trans_repo = TranslationRepository()
+            for field_name, param_name in (("title", "i18n_title"), ("description", "i18n_description")):
+                raw_i18n = data.get(param_name)
+                if isinstance(raw_i18n, str) and raw_i18n.strip():
+                    trans_repo.save_field_variants_json("worldinfo_event", saved.id, field_name, raw_i18n)
+        from infrastructure.translation.worker import trigger_translation_sync
+
+        trigger_translation_sync(manual=False)
         return jsonify({"id": saved.id, "title": saved.title})
     except (AimoError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 400

@@ -83,6 +83,10 @@ def create_user():
                 is_default=True,
             )
         )
+        if (saved.language or "en").strip().lower()[:2] != "en":
+            from infrastructure.translation.worker import trigger_translation_sync
+
+            trigger_translation_sync(manual=False)
         return jsonify(_serialize_user(saved, user_repo.get_permissions(saved.id))), 201
     except (AimoError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 400
@@ -114,12 +118,17 @@ def update_user(user_id: int):
             auth_service.update_name(target, str(data["username"]).strip())
         if "email" in data and str(data["email"]).strip():
             auth_service.update_email(target, str(data["email"]).strip().lower())
-        if "language" in data:
+        language_changed = "language" in data
+        if language_changed:
             auth_service.assign_language(target, str(data["language"]).strip())
         if "password" in data and str(data["password"]):
             auth_service.change_password(target, str(data["password"]))
 
         saved = user_repo.update(target)
+        if language_changed:
+            from infrastructure.translation.worker import trigger_translation_sync
+
+            trigger_translation_sync(manual=False)
         if "preset" in data and data["preset"]:
             current_perms = user_repo.get_permissions(user_id)
             perm_service.assign_preset(saved, current_perms, str(data["preset"]))

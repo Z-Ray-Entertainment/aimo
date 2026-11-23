@@ -65,6 +65,9 @@ def create_persona():
         existing = repo.list_for_user(user.id)
         is_default = bool(data.get("is_default")) or len(existing) == 0
 
+        origin_language = (
+            str(data.get("origin_language") or user.language or "en").strip().lower()[:2] or "en"
+        )
         persona = service.create_persona(
             user_id=user.id,
             name=data.get("name", ""),
@@ -73,6 +76,7 @@ def create_persona():
             description=data.get("description", ""),
             appearance=data.get("appearance", ""),
             is_default=is_default,
+            origin_language=origin_language,
         )
 
         saved = repo.create(persona)

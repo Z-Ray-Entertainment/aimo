@@ -91,7 +91,9 @@ def add_event(character_id: int):
         f"/api/characters/{character_id}/events",
         json={
             "title": form.title,
+            "i18n_title": request.form.get("i18n_title", ""),
             "description": form.description,
+            "i18n_description": request.form.get("i18n_description", ""),
             "probability": form.probability,
             "one_shot": form.one_shot,
             "location_id": form.location_id,
@@ -112,7 +114,9 @@ def edit_event(character_id: int, event_id: int):
         f"/api/characters/{character_id}/events/{event_id}",
         json={
             "title": form.title,
+            "i18n_title": request.form.get("i18n_title", ""),
             "description": form.description,
+            "i18n_description": request.form.get("i18n_description", ""),
             "probability": form.probability,
             "one_shot": form.one_shot,
             "location_id": form.location_id,

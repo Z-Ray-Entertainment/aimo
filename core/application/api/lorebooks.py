@@ -56,11 +56,15 @@ def create_lorebook():
     service = LorebookService()
     repo = LorebookRepository()
     try:
+        origin_language = (
+            str(data.get("origin_language") or user.language or "en").strip().lower()[:2] or "en"
+        )
         lb = service.create_lorebook(
             user_id=user.id,
             name=data.get("name", ""),
             description=data.get("description", ""),
             visibility=data.get("visibility", "private"),
+            origin_language=origin_language,
         )
         saved = repo.create(lb)
         return jsonify(
@@ -95,6 +99,14 @@ def add_lorebook_entry(lorebook_id: int):
             visibility=data.get("visibility", "public"),
         )
         saved = repo.add_entry(entry)
+        raw_i18n = data.get("i18n_content")
+        if saved.id is not None and isinstance(raw_i18n, str) and raw_i18n.strip():
+            from infrastructure.repositories.translation_repository import TranslationRepository
+
+            TranslationRepository().save_field_variants_json("lorebook_entry", saved.id, "content", raw_i18n)
+        from infrastructure.translation.worker import trigger_translation_sync
+
+        trigger_translation_sync(manual=False)
         return jsonify(
             {
                 "id": saved.id,
@@ -199,6 +211,9 @@ def get_lorebook_detail(lorebook_id: int):
     if lb is None or not lb.is_visible_to_user(user.id, is_admin()):
         return jsonify({"error": "Lorebook not found."}), 404
     entries = repo.list_entries(lorebook_id)
+    from infrastructure.repositories.translation_repository import TranslationRepository
+
+    trans_repo = TranslationRepository()
     return jsonify(
         {
             "id": lb.id,
@@ -218,6 +233,7 @@ def get_lorebook_detail(lorebook_id: int):
                     "content": e.content,
                     "visibility": e.visibility,
                     "is_proper_noun": e.is_proper_noun,
+                    "i18n": trans_repo.get_entity_translations_map("lorebook_entry", e.id) if e.id else {},
                 }
                 for e in entries
                 if e.is_visible_to_user(lb.user_id, user.id, is_admin())
@@ -282,6 +298,14 @@ def update_lorebook_entry(entry_id: int):
             is_proper_noun=bool(data.get("is_proper_noun", entry.is_proper_noun)),
         )
         saved = repo.update_entry(updated)
+        raw_i18n = data.get("i18n_content")
+        if saved.id is not None and isinstance(raw_i18n, str) and raw_i18n.strip():
+            from infrastructure.repositories.translation_repository import TranslationRepository
+
+            TranslationRepository().save_field_variants_json("lorebook_entry", saved.id, "content", raw_i18n)
+        from infrastructure.translation.worker import trigger_translation_sync
+
+        trigger_translation_sync(manual=False)
         return jsonify({"id": saved.id, "title": saved.title, "tags": saved.tags})
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 400

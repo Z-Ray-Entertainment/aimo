@@ -76,6 +76,10 @@ def register():
             is_default=True,
         )
         PersonaRepository().create(default_persona)
+        if (saved.language or "en").strip().lower()[:2] != "en":
+            from infrastructure.translation.worker import trigger_translation_sync
+
+            trigger_translation_sync(manual=False)
         return jsonify({"id": saved.id, "username": saved.username, "email": saved.email}), 201
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 400
