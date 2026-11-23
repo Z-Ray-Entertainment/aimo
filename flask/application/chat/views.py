@@ -2,6 +2,7 @@ from flask import flash, g, redirect, render_template, request, url_for
 
 from application.auth.decorators import get_current_user, is_admin, require_permission
 from application.chat import chat_bp
+from application.chat.forms import StartChatForm
 from application.core_client import core_delete, core_get, core_post, core_put
 from application.ui_helpers import tr
 from application.view_models import FunctionPermission, wrap_dto
@@ -28,14 +29,18 @@ def new_character_chat(character_id: int):
         return redirect(url_for("overview.index"))
 
     if request.method == "POST":
-        persona_id = request.form.get("persona_id") or (g.default_persona.id if getattr(g, "default_persona", None) else None)
-        worldinfo_id = request.form.get("worldinfo_id") or None
+        form = StartChatForm.from_request(request.form)
+        persona_id = form.persona_id or (g.default_persona.id if getattr(g, "default_persona", None) else None)
         status, payload = core_post(
             "/api/chat/sessions",
             json={
                 "character_id": character_id,
                 "persona_id": persona_id,
-                "worldinfo_id": worldinfo_id,
+                "worldinfo_id": form.worldinfo_id,
+                "title": form.title,
+                "disabled_lorebook_ids": form.disabled_lorebook_ids,
+                "custom_lorebook_ids": form.custom_lorebook_ids,
+                "thinking_enabled": form.thinking_enabled,
             },
         )
         if status < 400 and payload.get("id"):
