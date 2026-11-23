@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from application.auth.decorators import get_current_user, is_admin, require_auth, require_permission
@@ -144,6 +146,12 @@ def new_character():
             "i18n_description": request.form.get("i18n_description", ""),
             "i18n_appearance": request.form.get("i18n_appearance", ""),
             "i18n_first_message": request.form.get("i18n_first_message", ""),
+            "dialogue_examples_json": json.dumps(form.dialogue_examples),
+            "linked_lorebook_ids": [str(x) for x in form.linked_lorebook_ids],
+            "lorebook_world_conditions_json": json.dumps({str(k): v for k, v in form.lorebook_world_conditions.items()}),
+            "preferred_location_ids": [str(x) for x in form.preferred_location_ids],
+            "disliked_location_ids": [str(x) for x in form.disliked_location_ids],
+            "collaborator_creator_tags": form.collaborator_creator_tags_text,
             "initial_relationship": str(form.initial_relationship),
             "suggested_worldinfo_id": str(form.suggested_worldinfo_id or ""),
             "initial_location_id": str(form.initial_location_id or ""),
@@ -194,6 +202,14 @@ def edit_character(character_id: int):
                 "first_message": form.first_message,
                 "visibility": form.visibility,
                 "initial_relationship": form.initial_relationship,
+                "dialogue_examples": form.dialogue_examples,
+                "linked_lorebook_ids": form.linked_lorebook_ids,
+                "lorebook_world_conditions": {str(k): v for k, v in form.lorebook_world_conditions.items()},
+                "suggested_worldinfo_id": form.suggested_worldinfo_id,
+                "initial_location_id": form.initial_location_id,
+                "preferred_location_ids": form.preferred_location_ids,
+                "disliked_location_ids": form.disliked_location_ids,
+                "collaborator_creator_tags": form.collaborator_creator_tags,
                 "i18n_description": request.form.get("i18n_description", ""),
                 "i18n_appearance": request.form.get("i18n_appearance", ""),
                 "i18n_first_message": request.form.get("i18n_first_message", ""),
