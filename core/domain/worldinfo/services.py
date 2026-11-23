@@ -21,6 +21,7 @@ class WorldInfoService:
         lorebook_id: int | None = None,
         collaborator_creator_tags: list[str] | None = None,
         is_proper_noun: bool = False,
+        origin_language: str = "en",
     ) -> WorldInfo:
         DomainValidator.validate_positive_user_id(user_id, InvalidWorldInfoDataError)
         cleaned_name = DomainValidator.validate_required_string(name, "WorldInfo name", InvalidWorldInfoDataError)
@@ -36,6 +37,7 @@ class WorldInfoService:
             name=cleaned_name,
             icon=cleaned_icon,
             visibility=cleaned_vis,
+            origin_language=(origin_language or "en").strip().lower()[:2] or "en",
             cover_image_path=cleaned_cover,
             backdrop_image_path=cleaned_backdrop,
             lorebook_id=valid_lb_id,

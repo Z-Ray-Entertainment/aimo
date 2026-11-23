@@ -19,6 +19,7 @@ def add_location(worldinfo_id: int):
             "name": form.name,
             "tags": form.tags,
             "description": form.description,
+            "i18n_description": request.form.get("i18n_description", ""),
             "background_image_path": request.form.get("preuploaded_bg_path") or None,
         },
     )
@@ -38,6 +39,7 @@ def edit_location(worldinfo_id: int, location_id: int):
         "name": form.name,
         "tags": form.tags,
         "description": form.description,
+        "i18n_description": request.form.get("i18n_description", ""),
         "background_image_path": request.form.get("preuploaded_bg_path") or "",
         "remove_background": request.form.get("remove_background", ""),
     }
@@ -79,7 +81,9 @@ def edit_event(worldinfo_id: int, event_id: int):
         json={
             "location_id": form.location_id,
             "title": form.title,
+            "i18n_title": request.form.get("i18n_title", ""),
             "description": form.description,
+            "i18n_description": request.form.get("i18n_description", ""),
             "probability": form.probability,
             "one_shot": form.one_shot,
         },
@@ -101,7 +105,9 @@ def add_event(worldinfo_id: int):
             "worldinfo_id": worldinfo_id,
             "location_id": form.location_id,
             "title": form.title,
+            "i18n_title": request.form.get("i18n_title", ""),
             "description": form.description,
+            "i18n_description": request.form.get("i18n_description", ""),
             "probability": form.probability,
             "one_shot": form.one_shot,
         },

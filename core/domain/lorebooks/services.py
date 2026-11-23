@@ -15,6 +15,7 @@ class LorebookService:
         visibility: str = "private",
         collaborator_creator_tags: list[str] | None = None,
         is_proper_noun: bool = False,
+        origin_language: str = "en",
     ) -> Lorebook:
         DomainValidator.validate_positive_user_id(user_id, InvalidLorebookDataError)
         cleaned_name = DomainValidator.validate_required_string(name, "Lorebook name", InvalidLorebookDataError)
@@ -27,6 +28,7 @@ class LorebookService:
             name=cleaned_name,
             description=cleaned_desc,
             visibility=cleaned_vis,
+            origin_language=(origin_language or "en").strip().lower()[:2] or "en",
             collaborator_creator_tags=DomainValidator.normalize_collaborator_tags(collaborator_creator_tags),
             is_proper_noun=bool(is_proper_noun),
             created_at=utc_now(),

@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from application.auth.decorators import get_current_user, is_admin, require_auth, require_permission
@@ -42,6 +44,7 @@ def _render_creator(
     is_author: bool = True,
     is_editable: bool = True,
     active_tab: str = "info",
+    char_translations: dict | None = None,
 ):
     if active_tab not in _VALID_CHARACTER_TABS:
         active_tab = "info"
@@ -90,6 +93,11 @@ def _render_creator(
         if getattr(ev, "id", None) is not None
     }
 
+    ev_translations = {
+        ev.id: getattr(ev, "i18n", {}) or {}
+        for ev in character_events
+        if getattr(ev, "id", None) is not None
+    }
     return render_template(
         "characters/creator.html",
         character=character,
@@ -109,9 +117,9 @@ def _render_creator(
         ev_display=ev_display,
         locations_by_world=locations_by_world,
         events=character_events,
-        ev_translations={},
-        event_translations={},
-        char_translations={},
+        ev_translations=ev_translations,
+        event_translations=ev_translations,
+        char_translations=char_translations or {},
         sprite_by_emotion=sprite_by_emotion,
         available_emotions=available_emotions,
         relationship_tiers=rel_tiers,
@@ -130,6 +138,8 @@ def new_character():
             f = request.files.get(key)
             if f and f.filename:
                 files[key] = (f.filename, f.stream, f.mimetype or "application/octet-stream")
+        user = get_current_user()
+        origin_language = (getattr(user, "language", None) or "en")[:2].lower()
         form_data = {
             "name": form.name,
             "gender": form.gender,
@@ -137,6 +147,16 @@ def new_character():
             "appearance": form.appearance,
             "first_message": form.first_message,
             "visibility": form.visibility,
+            "origin_language": origin_language,
+            "i18n_description": request.form.get("i18n_description", ""),
+            "i18n_appearance": request.form.get("i18n_appearance", ""),
+            "i18n_first_message": request.form.get("i18n_first_message", ""),
+            "dialogue_examples_json": json.dumps(form.dialogue_examples),
+            "linked_lorebook_ids": [str(x) for x in form.linked_lorebook_ids],
+            "lorebook_world_conditions_json": json.dumps({str(k): v for k, v in form.lorebook_world_conditions.items()}),
+            "preferred_location_ids": [str(x) for x in form.preferred_location_ids],
+            "disliked_location_ids": [str(x) for x in form.disliked_location_ids],
+            "collaborator_creator_tags": form.collaborator_creator_tags_text,
             "initial_relationship": str(form.initial_relationship),
             "suggested_worldinfo_id": str(form.suggested_worldinfo_id or ""),
             "initial_location_id": str(form.initial_location_id or ""),
@@ -187,6 +207,17 @@ def edit_character(character_id: int):
                 "first_message": form.first_message,
                 "visibility": form.visibility,
                 "initial_relationship": form.initial_relationship,
+                "dialogue_examples": form.dialogue_examples,
+                "linked_lorebook_ids": form.linked_lorebook_ids,
+                "lorebook_world_conditions": {str(k): v for k, v in form.lorebook_world_conditions.items()},
+                "suggested_worldinfo_id": form.suggested_worldinfo_id,
+                "initial_location_id": form.initial_location_id,
+                "preferred_location_ids": form.preferred_location_ids,
+                "disliked_location_ids": form.disliked_location_ids,
+                "collaborator_creator_tags": form.collaborator_creator_tags,
+                "i18n_description": request.form.get("i18n_description", ""),
+                "i18n_appearance": request.form.get("i18n_appearance", ""),
+                "i18n_first_message": request.form.get("i18n_first_message", ""),
             },
         )
         if upd_status < 400:
@@ -203,6 +234,7 @@ def edit_character(character_id: int):
         is_author=bool(is_author),
         is_editable=is_editable,
         active_tab=active_tab,
+        char_translations=data.get("i18n", {}) or {},
     )
 
 

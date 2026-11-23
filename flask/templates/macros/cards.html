@@ -63,7 +63,7 @@
       {% else %}
         {{ pill_badge(char.gender.value, icon="⚧️", variant="dark", title=_("Gender"), extra_class="aimo-card-badge") }}
       {% endif %}
-      <div style="display: flex; gap: 0.35rem; align-items: center;">
+      <div class="aimo-card-header-actions">
         {% if item.translation_pending %}
           {{ pill_badge(_("Translation pending"), icon="🌐", variant="dark", title=_("Translation into your language is pending"), extra_class="aimo-card-badge") }}
         {% endif %}

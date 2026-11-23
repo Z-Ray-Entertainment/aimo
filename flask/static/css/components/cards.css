@@ -191,11 +191,23 @@ a.aimo-add-card-tile:active {
 
 .aimo-card-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: flex-start;
+  gap: 0.4rem 0.5rem;
   z-index: 4;
   pointer-events: auto;
+  max-width: 100%;
+}
+
+.aimo-card-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 100%;
+  margin-left: auto;
 }
 
 .aimo-card-badge {
@@ -214,6 +226,7 @@ a.aimo-add-card-tile:active {
 }
 
 .aimo-card-action-btn {
+  flex-shrink: 0;
   background: rgba(18, 13, 9, 0.85);
   border: 1px solid var(--border-wood);
   border-radius: 12px;

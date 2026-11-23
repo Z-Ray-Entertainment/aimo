@@ -2,6 +2,7 @@ from flask import flash, g, redirect, render_template, request, url_for
 
 from application.auth.decorators import get_current_user, is_admin, require_permission
 from application.chat import chat_bp
+from application.chat.forms import StartChatForm
 from application.core_client import core_delete, core_get, core_post, core_put
 from application.ui_helpers import tr
 from application.view_models import FunctionPermission, wrap_dto
@@ -22,20 +23,24 @@ def open_character_chat(character_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def new_character_chat(character_id: int):
     user = get_current_user()
-    _, char_data = core_get(f"/api/characters/{character_id}")
+    _status, char_data = core_get(f"/api/characters/{character_id}")
     if not char_data.get("id"):
         flash(tr(_("Character not found.")), "error")
         return redirect(url_for("overview.index"))
 
     if request.method == "POST":
-        persona_id = request.form.get("persona_id") or (g.default_persona.id if getattr(g, "default_persona", None) else None)
-        worldinfo_id = request.form.get("worldinfo_id") or None
+        form = StartChatForm.from_request(request.form)
+        persona_id = form.persona_id or (g.default_persona.id if getattr(g, "default_persona", None) else None)
         status, payload = core_post(
             "/api/chat/sessions",
             json={
                 "character_id": character_id,
                 "persona_id": persona_id,
-                "worldinfo_id": worldinfo_id,
+                "worldinfo_id": form.worldinfo_id,
+                "title": form.title,
+                "disabled_lorebook_ids": form.disabled_lorebook_ids,
+                "custom_lorebook_ids": form.custom_lorebook_ids,
+                "thinking_enabled": form.thinking_enabled,
             },
         )
         if status < 400 and payload.get("id"):
@@ -43,8 +48,8 @@ def new_character_chat(character_id: int):
         flash(payload.get("error") or tr(_("Failed to start chat session.")), "error")
         return redirect(url_for("overview.index"))
 
-    _, wi_data = core_get("/api/worldinfo")
-    _, setup_data = core_get(f"/api/chat/character/{character_id}/setup")
+    _status, wi_data = core_get("/api/worldinfo")
+    _status, setup_data = core_get(f"/api/chat/character/{character_id}/setup")
     character = wrap_dto(char_data)
     worldinfos = wrap_dto(wi_data.get("worldinfos", []))
 
@@ -71,12 +76,12 @@ def view_session(session_id: int):
         return redirect(url_for("overview.index"))
 
     chat_session = wrap_dto(data["session"])
-    _, char_data = core_get(f"/api/characters/{chat_session.character_id}")
-    _, mem_data = core_get(f"/api/chat/{session_id}/memories")
-    _, wi_list_data = core_get("/api/worldinfo")
-    _, tiers_data = core_get("/api/characters/relationship-tiers")
-    _, health_data = core_get("/api/admin/health")
-    _, sessions_data = core_get("/api/chat/sessions")
+    _status, char_data = core_get(f"/api/characters/{chat_session.character_id}")
+    _status, mem_data = core_get(f"/api/chat/{session_id}/memories")
+    _status, wi_list_data = core_get("/api/worldinfo")
+    _status, tiers_data = core_get("/api/characters/relationship-tiers")
+    _status, health_data = core_get("/api/admin/health")
+    _status, sessions_data = core_get("/api/chat/sessions")
 
     active_wi = None
     if chat_session.active_worldinfo_id:

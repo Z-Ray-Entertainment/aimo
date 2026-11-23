@@ -17,8 +17,10 @@ from infrastructure.repositories.chat_repository import ChatRepository
 from infrastructure.repositories.memory_repository import MemoryRepository
 from infrastructure.repositories.persona_repository import PersonaRepository
 from infrastructure.repositories.relationship_repository import RelationshipRepository
+from infrastructure.repositories.translation_repository import TranslationRepository
 from infrastructure.repositories.worldinfo_repository import WorldInfoRepository
 from shared.exceptions import AimoError
+from shared.request_parsers import RequestDataParser
 
 
 @api_chat_bp.route("/sessions", methods=["GET"])
@@ -71,14 +73,26 @@ def create_chat_session():
             return jsonify({"error": "WorldInfo not found."}), 404
 
     try:
-        session_obj = ChatService().create_session(
+        user_lang = (user.language or "en")[:2].lower()
+        localized_welcome = TranslationRepository().get_localized_field(
+            "character", char.id, "first_message", user_lang, char.first_message
+        )
+        session_obj, first_msg = ChatService().create_session(
             user_id=user.id,
             character=char,
-            persona=persona,
-            active_worldinfo_id=worldinfo_id,
+            persona_id=persona.id,
+            worldinfo_id=worldinfo_id,
             title=str(data.get("title") or "").strip() or None,
+            persona_name=persona.name,
+            localized_welcome_text=localized_welcome,
+            disabled_lorebook_ids=set(RequestDataParser.to_int_list(data, "disabled_lorebook_ids")),
+            custom_lorebook_ids=RequestDataParser.to_int_list(data, "custom_lorebook_ids"),
+            thinking_enabled=RequestDataParser.to_bool(data, "thinking_enabled"),
         )
-        saved = ChatRepository().create_session(session_obj)
+        chat_repo = ChatRepository()
+        saved = chat_repo.create_session(session_obj)
+        first_msg.session_id = saved.id
+        chat_repo.add_message(first_msg)
         return jsonify({"id": saved.id, "title": saved.title}), 201
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 400

@@ -151,6 +151,43 @@ def create_character():
             else:
                 card_image_path = data.get("card_image_path")
 
+        origin_language = (
+            str(data.get("origin_language") or user.language or "en").strip().lower()[:2] or "en"
+        )
+        raw_source = data if request.is_json else request.form
+        dialogue_examples = data.get("dialogue_examples", [])
+        if not isinstance(dialogue_examples, list):
+            if data.get("dialogue_examples_json"):
+                try:
+                    parsed_ex = json.loads(data["dialogue_examples_json"])
+                    dialogue_examples = parsed_ex if isinstance(parsed_ex, list) else []
+                except (json.JSONDecodeError, TypeError):
+                    dialogue_examples = []
+            else:
+                dialogue_examples = [
+                    line.strip()
+                    for line in str(dialogue_examples).splitlines()
+                    if line.strip()
+                ]
+
+        lorebook_world_conditions: dict[int, int] = {}
+        raw_cond = data.get("lorebook_world_conditions")
+        if not isinstance(raw_cond, dict) and data.get("lorebook_world_conditions_json"):
+            try:
+                raw_cond = json.loads(data["lorebook_world_conditions_json"])
+            except (json.JSONDecodeError, TypeError):
+                raw_cond = {}
+        if isinstance(raw_cond, dict):
+            for k, v in raw_cond.items():
+                if str(k).isdigit() and str(v).isdigit() and int(v) > 0:
+                    lorebook_world_conditions[int(k)] = int(v)
+
+        raw_collab = data.get("collaborator_creator_tags")
+        if isinstance(raw_collab, list):
+            collaborator_tags = [str(t).strip().lower() for t in raw_collab if str(t).strip()]
+        else:
+            collaborator_tags = [t.strip().lower() for t in str(raw_collab or "").split(",") if t.strip()]
+
         character = char_service.create_character(
             user_id=user.id,
             name=data.get("name", ""),
@@ -162,31 +199,28 @@ def create_character():
             description=data.get("description", ""),
             first_message=data.get("first_message", ""),
             visibility=data.get("visibility", "private"),
-            dialogue_examples=(
-                data.get("dialogue_examples", [])
-                if isinstance(data.get("dialogue_examples"), list)
-                else [
-                    line.strip()
-                    for line in str(data.get("dialogue_examples", "")).splitlines()
-                    if line.strip()
-                ]
-            ),
-            linked_lorebook_ids=[
-                int(x) for x in data.get("linked_lorebook_ids", []) if str(x).isdigit()
-            ],
-            suggested_worldinfo_id=(
-                int(data["suggested_worldinfo_id"])
-                if data.get("suggested_worldinfo_id")
-                else None
-            ),
-            initial_location_id=(
-                int(data["initial_location_id"])
-                if data.get("initial_location_id")
-                else None
-            ),
+            origin_language=origin_language,
+            dialogue_examples=dialogue_examples,
+            linked_lorebook_ids=RequestDataParser.to_int_list(raw_source, "linked_lorebook_ids"),
+            lorebook_world_conditions=lorebook_world_conditions,
+            suggested_worldinfo_id=RequestDataParser.to_opt_int(data, "suggested_worldinfo_id"),
+            initial_location_id=RequestDataParser.to_opt_int(data, "initial_location_id"),
             initial_relationship=int(data.get("initial_relationship", 0)),
+            preferred_location_ids=RequestDataParser.to_int_list(raw_source, "preferred_location_ids"),
+            disliked_location_ids=RequestDataParser.to_int_list(raw_source, "disliked_location_ids"),
+            collaborator_creator_tags=collaborator_tags,
         )
         saved = char_repo.save(character)
+        if saved.id is not None:
+            trans_repo = TranslationRepository()
+            for field_name, param_name in (
+                ("description", "i18n_description"),
+                ("appearance", "i18n_appearance"),
+                ("first_message", "i18n_first_message"),
+            ):
+                raw_variants = data.get(param_name)
+                if isinstance(raw_variants, str) and raw_variants.strip():
+                    trans_repo.save_field_variants_json("character", saved.id, field_name, raw_variants)
         return jsonify({"id": saved.id, "name": saved.name}), 201
     except AimoError as exc:
         return jsonify({"error": str(exc)}), 400
@@ -229,6 +263,7 @@ def get_character_detail(character_id: int):
     if char is None or not char.is_visible_to_user(user.id, is_admin()):
         return jsonify({"error": "Character not found."}), 404
     events = WorldInfoRepository().list_character_events(character_id)
+    i18n_map = TranslationRepository().get_entity_translations_map("character", char.id)
     return jsonify(
         {
             "id": char.id,
@@ -270,6 +305,7 @@ def get_character_detail(character_id: int):
                 for img in char.gallery_images
             ],
             "events": [_serialize_character_event(ev) for ev in events],
+            "i18n": i18n_map,
             "editable": char.is_editable_by_user(user.id, is_admin(), user.creator_tag),
             "deletable": char.is_deletable_by_user(user.id, is_admin()),
         }
@@ -286,6 +322,26 @@ def update_character_detail(character_id: int):
         return jsonify({"error": "Character not found."}), 404
     data = request.get_json(silent=True) or request.form.to_dict()
     try:
+        raw_cond = data.get("lorebook_world_conditions")
+        lorebook_world_conditions = None
+        if isinstance(raw_cond, dict):
+            lorebook_world_conditions = {
+                int(k): int(v)
+                for k, v in raw_cond.items()
+                if str(k).isdigit() and str(v).isdigit() and int(v) > 0
+            }
+
+        suggested_wi = (
+            RequestDataParser.to_opt_int(data, "suggested_worldinfo_id")
+            if "suggested_worldinfo_id" in data
+            else char.suggested_worldinfo_id
+        )
+        initial_loc = (
+            RequestDataParser.to_opt_int(data, "initial_location_id")
+            if "initial_location_id" in data
+            else char.initial_location_id
+        )
+
         updated = CharacterService().update_character(
             char,
             name=data.get("name", char.name),
@@ -295,9 +351,47 @@ def update_character_detail(character_id: int):
             first_message=data.get("first_message", char.first_message),
             visibility=data.get("visibility", char.visibility),
             appearance=data.get("appearance", char.appearance),
+            dialogue_examples=(
+                data["dialogue_examples"]
+                if "dialogue_examples" in data and isinstance(data["dialogue_examples"], list)
+                else None
+            ),
+            linked_lorebook_ids=(
+                RequestDataParser.to_int_list(data, "linked_lorebook_ids")
+                if "linked_lorebook_ids" in data
+                else None
+            ),
+            lorebook_world_conditions=lorebook_world_conditions,
+            suggested_worldinfo_id=suggested_wi,
+            initial_location_id=initial_loc,
             initial_relationship=int(data.get("initial_relationship", char.initial_relationship)),
+            preferred_location_ids=(
+                RequestDataParser.to_int_list(data, "preferred_location_ids")
+                if "preferred_location_ids" in data
+                else None
+            ),
+            disliked_location_ids=(
+                RequestDataParser.to_int_list(data, "disliked_location_ids")
+                if "disliked_location_ids" in data
+                else None
+            ),
+            collaborator_creator_tags=(
+                data["collaborator_creator_tags"]
+                if "collaborator_creator_tags" in data and isinstance(data["collaborator_creator_tags"], list)
+                else None
+            ),
         )
         saved = char_repo.save(updated)
+        if saved.id is not None:
+            trans_repo = TranslationRepository()
+            for field_name, param_name in (
+                ("description", "i18n_description"),
+                ("appearance", "i18n_appearance"),
+                ("first_message", "i18n_first_message"),
+            ):
+                raw_variants = data.get(param_name)
+                if isinstance(raw_variants, str) and raw_variants.strip():
+                    trans_repo.save_field_variants_json("character", saved.id, field_name, raw_variants)
         return jsonify({"id": saved.id, "name": saved.name})
     except (AimoError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 400

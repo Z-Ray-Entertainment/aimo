@@ -37,8 +37,10 @@ def update_profile():
     auth_service = AuthService()
 
     try:
+        language_changed = False
         if "language" in data:
             user.language = Language.resolve(str(data["language"])).value
+            language_changed = True
         if "ember_particles_enabled" in data:
             user.ember_particles_enabled = bool(data["ember_particles_enabled"])
         if "username" in data and str(data["username"]).strip():
@@ -50,6 +52,10 @@ def update_profile():
             user.password_hash = auth_service.hash_password(str(data["new_password"]))
 
         saved = user_repo.update_user(user)
+        if language_changed:
+            from infrastructure.translation.worker import trigger_translation_sync
+
+            trigger_translation_sync(manual=False)
         return jsonify(
             {
                 "id": saved.id,

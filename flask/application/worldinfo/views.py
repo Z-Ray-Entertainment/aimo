@@ -16,6 +16,8 @@ worldinfo_bp = Blueprint("worldinfo", __name__, url_prefix="/worldinfo")
 def new_worldinfo():
     if request.method == "POST":
         form = WorldInfoForm.from_request(request.form)
+        user = get_current_user()
+        origin_language = (getattr(user, "language", None) or "en")[:2].lower()
         status, payload = core_post(
             "/api/worldinfo",
             json={
@@ -24,6 +26,7 @@ def new_worldinfo():
                 "visibility": form.visibility,
                 "lorebook_id": form.lorebook_id,
                 "is_proper_noun": form.is_proper_noun,
+                "origin_language": origin_language,
             },
         )
         if status < 400 and payload.get("id"):
@@ -33,7 +36,7 @@ def new_worldinfo():
         flash(payload.get("error") or tr(_("Failed to create WorldInfo.")), "error")
         return redirect(url_for("overview.index"))
 
-    _, lb_data = core_get("/api/lorebooks")
+    _status, lb_data = core_get("/api/lorebooks")
     return render_template(
         "worldinfo/detail.html",
         worldinfo=None,
@@ -49,8 +52,8 @@ def new_worldinfo():
         loc_map={},
         loc_display={},
         ev_display={},
-        location_i18n={},
-        event_i18n={},
+        loc_translations={},
+        ev_translations={},
     )
 
 
@@ -86,23 +89,37 @@ def detail(worldinfo_id: int):
             return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id))
         flash(upd_data.get("error") or tr(_("Failed to update WorldInfo.")), "error")
 
-    _, lb_data = core_get("/api/lorebooks")
-    _, char_data = core_get("/api/characters")
+    _status, lb_data = core_get("/api/lorebooks")
+    _status, char_data = core_get("/api/characters")
+    available_characters = wrap_dto(char_data.get("characters", []))
+    character_map = {c.id: c for c in available_characters if getattr(c, "id", None) is not None}
     active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
     if active_tab not in ("info", "places", "events", "collab"):
         active_tab = "info"
+    loc_translations = {
+        loc["id"]: loc.get("i18n", {})
+        for loc in data.get("locations", [])
+        if loc.get("id")
+    }
+    ev_translations = {
+        ev["id"]: ev.get("i18n", {})
+        for ev in data.get("events", [])
+        if ev.get("id")
+    }
     return render_template(
         "worldinfo/detail.html",
         worldinfo=worldinfo,
         locations=wrap_dto(data.get("locations", [])),
         events=wrap_dto(data.get("events", [])),
         lorebooks=wrap_dto(lb_data.get("lorebooks", [])),
-        characters=wrap_dto(char_data.get("characters", [])),
+        characters=available_characters,
+        available_characters=available_characters,
+        character_map=character_map,
         is_editable=is_editable,
         is_author=is_author,
         active_tab=active_tab,
-        location_i18n={},
-        event_i18n={},
+        loc_translations=loc_translations,
+        ev_translations=ev_translations,
     )
 
 

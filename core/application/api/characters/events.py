@@ -36,7 +36,8 @@ def _parse_opt_rel_int(data, key: str) -> int | None:
     return int(raw)
 
 
-def _serialize_character_event(ev) -> dict:
+def _serialize_character_event(ev, trans_repo: TranslationRepository | None = None) -> dict:
+    repo = trans_repo or TranslationRepository()
     return {
         "id": ev.id,
         "character_id": ev.character_id,
@@ -48,6 +49,7 @@ def _serialize_character_event(ev) -> dict:
         "description": ev.description,
         "min_relationship": ev.min_relationship,
         "max_relationship": ev.max_relationship,
+        "i18n": repo.get_entity_translations_map("worldinfo_event", ev.id) if ev.id else {},
     }
 
 
@@ -117,6 +119,15 @@ def create_character_event(character_id: int):
             max_relationship=_parse_opt_rel_int(data, "max_relationship"),
         )
         saved = wi_repo.add_event(ev)
+        if saved.id is not None:
+            trans_repo = TranslationRepository()
+            for field_name, param_name in (("title", "i18n_title"), ("description", "i18n_description")):
+                raw_i18n = data.get(param_name)
+                if isinstance(raw_i18n, str) and raw_i18n.strip():
+                    trans_repo.save_field_variants_json("worldinfo_event", saved.id, field_name, raw_i18n)
+        from infrastructure.translation.worker import trigger_translation_sync
+
+        trigger_translation_sync(manual=False)
         return jsonify(_serialize_character_event(saved)), 201
     except (AimoError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 400
@@ -155,6 +166,15 @@ def update_character_event(character_id: int, event_id: int):
             max_relationship=_parse_opt_rel_int(data, "max_relationship"),
         )
         saved = wi_repo.update_event(ev)
+        if saved.id is not None:
+            trans_repo = TranslationRepository()
+            for field_name, param_name in (("title", "i18n_title"), ("description", "i18n_description")):
+                raw_i18n = data.get(param_name)
+                if isinstance(raw_i18n, str) and raw_i18n.strip():
+                    trans_repo.save_field_variants_json("worldinfo_event", saved.id, field_name, raw_i18n)
+        from infrastructure.translation.worker import trigger_translation_sync
+
+        trigger_translation_sync(manual=False)
         return jsonify(_serialize_character_event(saved))
     except (AimoError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 400

@@ -36,7 +36,7 @@ def prompts_config():
             return redirect(url_for("admin.prompts_config"))
         flash(payload.get("error") or tr(_("Failed to save prompts.")), "error")
 
-    _, data = core_get("/api/admin/prompts")
+    _status, data = core_get("/api/admin/prompts")
     prompts_dto = wrap_dto(data.get("prompts", {}))
     return render_template(
         "admin/prompts.html",
@@ -71,7 +71,7 @@ def backdrop_config():
             flash(payload.get("error") or tr(_("Failed to update backdrop.")), "error")
         return redirect(url_for("admin.backdrop_config"))
 
-    _, data = core_get("/api/admin/backdrop")
+    _status, data = core_get("/api/admin/backdrop")
     return render_template(
         "admin/backdrop.html",
         current_backdrop=data.get("default_backdrop_path"),

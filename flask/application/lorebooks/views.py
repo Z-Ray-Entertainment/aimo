@@ -16,6 +16,8 @@ lorebooks_bp = Blueprint("lorebooks", __name__, url_prefix="/lorebooks")
 def new_lorebook():
     if request.method == "POST":
         form = LorebookForm.from_request(request.form)
+        user = get_current_user()
+        origin_language = (getattr(user, "language", None) or "en")[:2].lower()
         status, payload = core_post(
             "/api/lorebooks",
             json={
@@ -23,6 +25,7 @@ def new_lorebook():
                 "description": form.description,
                 "visibility": form.visibility,
                 "is_proper_noun": form.is_proper_noun,
+                "origin_language": origin_language,
             },
         )
         if status < 400 and payload.get("id"):
@@ -76,6 +79,11 @@ def detail(lorebook_id: int):
             return redirect(url_for("lorebooks.detail", lorebook_id=lorebook_id))
         flash(upd_data.get("error") or tr(_("Failed to update lorebook.")), "error")
 
+    entry_translations = {
+        e["id"]: e.get("i18n", {})
+        for e in data.get("entries", [])
+        if e.get("id")
+    }
     return render_template(
         "lorebooks/detail.html",
         lorebook=lorebook,
@@ -83,7 +91,7 @@ def detail(lorebook_id: int):
         is_editable=is_editable,
         is_author=is_author,
         i18n_description=data.get("i18n_description", {}),
-        entry_i18n={},
+        entry_translations=entry_translations,
     )
 
 
@@ -119,6 +127,7 @@ def add_entry(lorebook_id: int):
             "title": form.title,
             "tags": form.tags,
             "content": form.content,
+            "i18n_content": request.form.get("i18n_content", ""),
             "visibility": form.visibility,
             "is_proper_noun": form.is_proper_noun,
         },
@@ -140,6 +149,7 @@ def edit_entry(lorebook_id: int, entry_id: int):
             "title": form.title,
             "tags": form.tags,
             "content": form.content,
+            "i18n_content": request.form.get("i18n_content", ""),
             "visibility": form.visibility,
             "is_proper_noun": form.is_proper_noun,
         },
