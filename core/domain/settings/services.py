@@ -64,14 +64,14 @@ class SettingsService:
         settings: ServiceSettings,
         recommended_by_role: dict[str, str],
     ) -> ServiceSettings:
-        roleplay = recommended_by_role.get("roleplay", "")
+        roleplay = recommended_by_role.get("roleplay_model") or recommended_by_role.get("roleplay") or ""
         return self.update_task_models(
             settings=settings,
             roleplay_model=roleplay,
-            memory_model=recommended_by_role.get("memory", roleplay),
-            assistant_model=recommended_by_role.get("assistant", roleplay),
-            vision_model=recommended_by_role.get("vision", roleplay),
-            classification_model=recommended_by_role.get("classification", roleplay),
+            memory_model=recommended_by_role.get("memory_model") or recommended_by_role.get("memory") or roleplay,
+            assistant_model=recommended_by_role.get("assistant_model") or recommended_by_role.get("assistant") or roleplay,
+            vision_model=recommended_by_role.get("vision_model") or recommended_by_role.get("vision") or roleplay,
+            classification_model=recommended_by_role.get("classification_model") or recommended_by_role.get("classification") or roleplay,
         )
 
     def update_parameters(
@@ -81,12 +81,14 @@ class SettingsService:
         temperature: float,
         top_p: float,
         repeat_penalty: float,
+        max_tokens: int | None = None,
     ) -> ServiceSettings:
         settings.params = ModelParameters(
             num_ctx=num_ctx,
             temperature=temperature,
             top_p=top_p,
             repeat_penalty=repeat_penalty,
+            max_tokens=max_tokens,
         )
         return settings
 

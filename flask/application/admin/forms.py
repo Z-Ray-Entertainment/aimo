@@ -44,6 +44,7 @@ class AdminServicesForm:
     temperature: float = 0.7
     top_p: float = 0.9
     repeat_penalty: float = 1.1
+    max_tokens: int | None = None
 
     @classmethod
     def from_request(cls, form_data: Any) -> "AdminServicesForm":
@@ -71,6 +72,7 @@ class AdminServicesForm:
             temperature=p.to_float(form_data, "temperature", 0.7),
             top_p=p.to_float(form_data, "top_p", 0.9),
             repeat_penalty=p.to_float(form_data, "repeat_penalty", 1.1),
+            max_tokens=p.to_opt_int(form_data, "max_tokens"),
         )
 
 

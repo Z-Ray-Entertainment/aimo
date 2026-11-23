@@ -22,7 +22,7 @@ def open_character_chat(character_id: int):
 @require_permission(FunctionPermission.CHAT_ACCESS)
 def new_character_chat(character_id: int):
     user = get_current_user()
-    _, char_data = core_get(f"/api/characters/{character_id}")
+    _status, char_data = core_get(f"/api/characters/{character_id}")
     if not char_data.get("id"):
         flash(tr(_("Character not found.")), "error")
         return redirect(url_for("overview.index"))
@@ -43,8 +43,8 @@ def new_character_chat(character_id: int):
         flash(payload.get("error") or tr(_("Failed to start chat session.")), "error")
         return redirect(url_for("overview.index"))
 
-    _, wi_data = core_get("/api/worldinfo")
-    _, setup_data = core_get(f"/api/chat/character/{character_id}/setup")
+    _status, wi_data = core_get("/api/worldinfo")
+    _status, setup_data = core_get(f"/api/chat/character/{character_id}/setup")
     character = wrap_dto(char_data)
     worldinfos = wrap_dto(wi_data.get("worldinfos", []))
 
@@ -71,12 +71,12 @@ def view_session(session_id: int):
         return redirect(url_for("overview.index"))
 
     chat_session = wrap_dto(data["session"])
-    _, char_data = core_get(f"/api/characters/{chat_session.character_id}")
-    _, mem_data = core_get(f"/api/chat/{session_id}/memories")
-    _, wi_list_data = core_get("/api/worldinfo")
-    _, tiers_data = core_get("/api/characters/relationship-tiers")
-    _, health_data = core_get("/api/admin/health")
-    _, sessions_data = core_get("/api/chat/sessions")
+    _status, char_data = core_get(f"/api/characters/{chat_session.character_id}")
+    _status, mem_data = core_get(f"/api/chat/{session_id}/memories")
+    _status, wi_list_data = core_get("/api/worldinfo")
+    _status, tiers_data = core_get("/api/characters/relationship-tiers")
+    _status, health_data = core_get("/api/admin/health")
+    _status, sessions_data = core_get("/api/chat/sessions")
 
     active_wi = None
     if chat_session.active_worldinfo_id:

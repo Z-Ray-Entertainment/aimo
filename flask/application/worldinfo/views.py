@@ -33,7 +33,7 @@ def new_worldinfo():
         flash(payload.get("error") or tr(_("Failed to create WorldInfo.")), "error")
         return redirect(url_for("overview.index"))
 
-    _, lb_data = core_get("/api/lorebooks")
+    _status, lb_data = core_get("/api/lorebooks")
     return render_template(
         "worldinfo/detail.html",
         worldinfo=None,
@@ -86,8 +86,8 @@ def detail(worldinfo_id: int):
             return redirect(url_for("worldinfo.detail", worldinfo_id=worldinfo_id))
         flash(upd_data.get("error") or tr(_("Failed to update WorldInfo.")), "error")
 
-    _, lb_data = core_get("/api/lorebooks")
-    _, char_data = core_get("/api/characters")
+    _status, lb_data = core_get("/api/lorebooks")
+    _status, char_data = core_get("/api/characters")
     active_tab = request.form.get("active_tab") or request.args.get("tab", "info")
     if active_tab not in ("info", "places", "events", "collab"):
         active_tab = "info"

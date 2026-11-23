@@ -50,9 +50,9 @@ def services_config():
             return redirect(url_for("admin.services_config"))
         flash(payload.get("error") or tr(_("Failed to save service settings.")), "error")
 
-    _, cfg = core_get("/api/admin/services")
-    _, health = core_get("/api/admin/health")
-    _, models_data = core_get("/api/admin/models")
+    _status, cfg = core_get("/api/admin/services")
+    _status, health = core_get("/api/admin/health")
+    _status, models_data = core_get("/api/admin/models")
 
     llm_cfgs = cfg.get("llm_configs", {})
     img_cfgs = cfg.get("image_gen_configs", {})
