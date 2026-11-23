@@ -47,6 +47,7 @@ def list_worldinfo():
                 "locations": [
                     {
                         "id": loc.id,
+                        "worldinfo_id": loc.worldinfo_id,
                         "name": loc.name,
                         "tags": loc.tags,
                         "description": loc.description,
